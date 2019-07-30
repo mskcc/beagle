@@ -1,4 +1,4 @@
-from file_system.models import Cohort
+from file_system.models import FileGroup
 from file_system.serializers import CohortSerializer, CreateCohortSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins, permissions
@@ -10,7 +10,7 @@ class CohortViewSet(mixins.ListModelMixin,
                     mixins.RetrieveModelMixin,
                     mixins.DestroyModelMixin,
                     GenericViewSet):
-    queryset = Cohort.objects.order_by('created_date').all()
+    queryset = FileGroup.objects.order_by('created_date').all()
     lookup_field = 'slug'
     permission_classes = (IsAuthenticated,)
 

@@ -55,7 +55,6 @@ INSTALLED_APPS = [
 
 JWT_AUTH = {
     # 'JWT_SECRET_KEY': settings.SECRET_KEY,
-
     # 'JWT_PUBLIC_KEY': None,
     # 'JWT_PRIVATE_KEY': None,
     'JWT_ALGORITHM': 'HS256',
@@ -65,10 +64,8 @@ JWT_AUTH = {
     # 'JWT_AUDIENCE': None,
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'core.views.jwt_response_payload_handler',
     # 'JWT_ISSUER': None,
-
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 
 }
@@ -165,9 +162,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'beagle.wsgi.application'
 
 
-DB_NAME = os.environ['DB_NAME']
-DB_USERNAME = os.environ['DB_USERNAME']
-DB_PASSWORD = os.environ['DB_PASSWORD']
+DB_NAME = os.environ['BEAGLE_DB_NAME']
+DB_USERNAME = os.environ['BEAGLE_DB_USERNAME']
+DB_PASSWORD = os.environ['BEAGLE_DB_PASSWORD']
 
 DATABASES = {
     'default': {
@@ -187,7 +184,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 20,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),

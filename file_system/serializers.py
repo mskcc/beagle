@@ -1,5 +1,5 @@
 import os
-from file_system.models import File, Storage, StorageType, Cohort, FileMetadata
+from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, Sample
 from slugify import slugify
 from rest_framework import serializers
 
@@ -25,14 +25,14 @@ class CreateStorageSerializer(serializers.ModelSerializer):
 
 class CohortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cohort
+        model = FileGroup
         fields = ('id', 'name', 'slug', 'storage', 'metadata')
 
 
 class CreateCohortSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Cohort
+        model = FileGroup
         fields = ('id', 'name', 'storage', 'metadata')
 
 
@@ -40,27 +40,25 @@ class Metadata(serializers.ModelSerializer):
 
     class Meta:
         model = FileMetadata
-        fields = ('file', 'metadata', 'version')
+        fields = ('id', 'file', 'metadata', 'version', 'user')
+
+
+class SampleSerializer(serializers.ModelSerializer):
+    tags = serializers.JSONField(source='metadata')
+
+    class Meta:
+        model = Sample
+        fields = ('id', 'sample_name', 'tags')
 
 
 class FileSerializer(serializers.ModelSerializer):
-    cohort = CohortSerializer()
-    filemetadata_set = Metadata(many=True)
+    file_group = CohortSerializer(source='cohort')
+    metadata = Metadata(many=True, source="filemetadata_set")
+    sample = SampleSerializer()
 
     class Meta:
         model = File
-        fields = ('id', 'file_name', 'path', 'size', 'cohort', 'sample', 'filemetadata_set', 'created_date', 'modified_date')
-
-
-class CreateFileSerializer(serializers.ModelSerializer):
-    path = serializers.CharField(max_length=400, required=True)
-    size = serializers.IntegerField(required=True)
-    cohort_id = serializers.UUIDField(required=True)
-    sample_id = serializers.UUIDField(required=False, allow_null=True)
-
-    class Meta:
-        model = File
-        fields = ('id', 'path', 'size', 'cohort_id', 'sample_id')
+        fields = ('id', 'file_name', 'path', 'size', 'file_group', 'sample', 'metadata', 'created_date', 'modified_date')
 
 
 class CreateMetadata(serializers.ModelSerializer):
@@ -68,6 +66,19 @@ class CreateMetadata(serializers.ModelSerializer):
     class Meta:
         model = FileMetadata
         fields = ('file', 'metadata')
+
+
+class CreateFileSerializer(serializers.ModelSerializer):
+    path = serializers.CharField(max_length=400, required=True)
+    size = serializers.IntegerField(required=True)
+    cohort_id = serializers.UUIDField(required=True)
+    sample_id = serializers.UUIDField(required=False, allow_null=True)
+    metadata = CreateMetadata()
+
+    class Meta:
+        model = File
+        fields = ('id', 'path', 'size', 'cohort_id', 'sample_id', 'metadata')
+
 
 
 
