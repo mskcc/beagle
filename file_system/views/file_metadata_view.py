@@ -5,9 +5,9 @@ from rest_framework import mixins, permissions
 
 
 class FileMetadataView(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     GenericViewSet):
+                       mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
+                       GenericViewSet):
     queryset = FileMetadata.objects.order_by('created_date').select_related('file').all()
 
     def get_serializer_class(self):

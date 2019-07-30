@@ -11,10 +11,11 @@ from file_system.views.file_metadata_view import FileMetadataView
 router = routers.DefaultRouter()
 router.register('storage', StorageViewSet)
 router.register('cohort', CohortViewSet)
-router.register('files', FileViewSet)
+# router.register('files', FileViewSet)
 router.register('metadata', FileMetadataView)
 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('files/', FileViewSet.as_view())
 ]

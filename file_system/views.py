@@ -1,4 +1,4 @@
-from file_system.models import File, Storage, Cohort
+from file_system.models import File, Storage, FileGroup
 from rest_framework import status
 from rest_framework.response import Response
 from file_system.serializers import FileSerializer, \
