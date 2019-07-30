@@ -1,15 +1,10 @@
-from file_system.models import File, FileMetadata
-from file_system.serializers import FileSerializer, CreateFileSerializer
-from rest_framework.viewsets import GenericViewSet
-from rest_framework import mixins, permissions
 from django.db.models import Prefetch
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Max
 from rest_framework.views import APIView
-from drf_multiple_model.views import ObjectMultipleModelAPIView
+from rest_framework.response import Response
 from rest_framework.settings import api_settings
+from file_system.models import File, SampleMetadata
+from file_system.serializers import FileSerializer, CreateFileSerializer
 
 
 class FileViewSet(APIView):
@@ -23,17 +18,16 @@ class FileViewSet(APIView):
         tags = request.query_params.get('tags', None)
         file_group = request.query_params.get('file_group', None)
         queryset = File.objects.order_by('created_date').prefetch_related(
-            Prefetch('filemetadata_set',
-                     queryset=FileMetadata.objects.select_related('file').order_by('-version'))).all()
+            Prefetch('sample__samplemetadata_set',
+                     queryset=SampleMetadata.objects.select_related('sample').order_by('-version')))
         if tags:
             key, value = tags.split(':')
-            filter_query = {'sample__metadata__' + key: value}
-            queryset = File.objects.order_by('created_date').prefetch_related(
-                Prefetch('filemetadata_set',
-                         queryset=FileMetadata.objects.select_related('file').order_by('-version'))).filter(**filter_query).all()
+            filter_query = {'sample__tags__' + key: value}
+            queryset = queryset.filter(**filter_query).all()
         if file_group:
-            queryset = queryset.filter(cohort__slug=file_group).all()
-
+            queryset = queryset.filter(file_group__slug=file_group).all()
+        else:
+            queryset = queryset.all()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.serializer_class(page, many=True)

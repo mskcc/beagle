@@ -1,6 +1,5 @@
 import os
-from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, Sample
-from slugify import slugify
+from file_system.models import File, Storage, StorageType, FileGroup, SampleMetadata, Sample
 from rest_framework import serializers
 
 
@@ -14,22 +13,18 @@ class CreateStorageSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=20)
     type = serializers.ChoiceField(choices=[(storage_type.value, storage_type.name) for storage_type in StorageType])
 
-    # def create(self, data):
-    #     storage = Storage.objects.create(name=data['name'], type=data['type'])
-    #     return storage
-
     class Meta:
         model = Storage
         fields = ('name', 'type')
 
 
-class CohortSerializer(serializers.ModelSerializer):
+class FileGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileGroup
         fields = ('id', 'name', 'slug', 'storage', 'metadata')
 
 
-class CreateCohortSerializer(serializers.ModelSerializer):
+class CreateFileGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileGroup
@@ -39,41 +34,56 @@ class CreateCohortSerializer(serializers.ModelSerializer):
 class Metadata(serializers.ModelSerializer):
 
     class Meta:
-        model = FileMetadata
-        fields = ('id', 'file', 'metadata', 'version', 'user')
-
-
-class SampleSerializer(serializers.ModelSerializer):
-    tags = serializers.JSONField(source='metadata')
-
-    class Meta:
-        model = Sample
-        fields = ('id', 'sample_name', 'tags')
-
-
-class FileSerializer(serializers.ModelSerializer):
-    file_group = CohortSerializer(source='cohort')
-    metadata = Metadata(many=True, source="filemetadata_set")
-    sample = SampleSerializer()
-
-    class Meta:
-        model = File
-        fields = ('id', 'file_name', 'path', 'size', 'file_group', 'sample', 'metadata', 'created_date', 'modified_date')
+        model = SampleMetadata
+        fields = ('id', 'metadata', 'sample', 'version', 'user')
 
 
 class CreateMetadata(serializers.ModelSerializer):
 
     class Meta:
-        model = FileMetadata
-        fields = ('file', 'metadata')
+        model = SampleMetadata
+        fields = ('sample', 'metadata')
 
 
-class CreateFileSerializer(serializers.ModelSerializer):
+class SampleSerializer(serializers.ModelSerializer):
+    metadata = serializers.SerializerMethodField()
+
+    def get_metadata(self, obj):
+        return Metadata(obj.samplemetadata_set.first()).data
+
+    class Meta:
+        model = Sample
+        fields = ('id', 'name', 'tags', 'metadata')
+
+
+class SampleSerializerFull(serializers.ModelSerializer):
+    metadata = Metadata(source='samplemetadata_set', many=True)
+
+    class Meta:
+        model = Sample
+        fields = ('id', 'name', 'tags', 'metadata')
+
+
+class FileSerializer(serializers.ModelSerializer):
+    file_group = FileGroupSerializer()
+    sample = SampleSerializer()
+
+    class Meta:
+        model = File
+        fields = ('id', 'file_name', 'path', 'size', 'file_group', 'lane', 'pair_end', 'sample', 'created_date', 'modified_date')
+
+
+class CreateFileSerializer(serializers.Serializer):
     path = serializers.CharField(max_length=400, required=True)
     size = serializers.IntegerField(required=True)
-    cohort_id = serializers.UUIDField(required=True)
-    sample_id = serializers.UUIDField(required=False, allow_null=True)
-    metadata = CreateMetadata()
+    file_group_id = serializers.UUIDField(required=True)
+    sample_id = serializers.UUIDField(required=True, allow_null=True)
+    lane = serializers.IntegerField(required=False)
+    pair_end = serializers.IntegerField(required=False)
+
+    def create(self, validated_data):
+        validated_data['file_name'] = os.path.basename(validated_data.get('path'))
+        return File.objects.create(**validated_data)
 
     class Meta:
         model = File

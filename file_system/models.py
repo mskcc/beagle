@@ -30,15 +30,29 @@ class Storage(BaseModel):
 
 
 class Sample(BaseModel):
-    sample_name = models.CharField(max_length=40, editable=True)
+    name = models.CharField(max_length=40, editable=True)
+    tags = JSONField(default=dict)
+
+
+class SampleMetadata(BaseModel):
+    sample = models.ForeignKey(Sample, blank=False, null=False, on_delete=models.CASCADE)
+    version = models.IntegerField()
     metadata = JSONField(default=dict)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        versions = SampleMetadata.objects.filter(sample_id=self.sample.id).values_list('version', flat=True)
+        version = max(versions) + 1 if versions else 0
+        self.version = version
+        self.sample.save()
+        super(SampleMetadata, self).save(*args, **kwargs)
 
 
 class FileGroup(BaseModel):
     name = models.CharField(max_length=40, editable=True)
     slug = models.SlugField(unique=True)
     storage = models.ForeignKey(Storage, blank=True, null=True, on_delete=models.SET_NULL)
-    metadata = JSONField(default=dict)
+    metadata = JSONField(default=dict, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -48,28 +62,14 @@ class FileGroup(BaseModel):
 class FileGroupMetadata(BaseModel):
     cohort = models.ForeignKey(FileGroup, blank=False, null=False, on_delete=models.CASCADE)
     version = models.IntegerField()
-    metadata = JSONField(default=dict)
+    metadata = JSONField(default=dict, blank=True, null=True)
 
 
 class File(BaseModel):
     file_name = models.CharField(max_length=100)
     path = models.CharField(max_length=400)
     size = models.BigIntegerField()
-    cohort = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
+    lane = models.IntegerField()
+    pair_end = models.IntegerField()
+    file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     sample = models.ForeignKey(Sample, blank=True, null=True, on_delete=models.CASCADE)
-
-
-class FileMetadata(BaseModel):
-    file = models.ForeignKey(File, blank=False, null=False, on_delete=models.CASCADE)
-    version = models.IntegerField()
-    metadata = JSONField(default=dict)
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-
-    def save(self, *args, **kwargs):
-        versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
-        version = max(versions) + 1 if versions else 0
-        self.version = version
-        self.file.version = versions
-        self.file.save()
-        super(FileMetadata, self).save(*args, **kwargs)
-
