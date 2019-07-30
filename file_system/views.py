@@ -5,7 +5,7 @@ from file_system.serializers import FileSerializer, \
                                     CreateFileSerializer, \
                                     StorageSerializer, \
                                     CreateStorageSerializer, \
-                                    CohortSerializer
+                                    FileGroupSerializer
 
 from rest_framework import routers, serializers, viewsets
 from rest_framework.decorators import api_view
