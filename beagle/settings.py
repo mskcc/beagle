@@ -40,6 +40,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
+    'runner.apps.RunnerConfig',
     'file_system.apps.FileSystemConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_multiple_model',
+    'rest_framework_swagger'
 ]
 
 
@@ -67,7 +69,6 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
-
 }
 
 
@@ -229,3 +230,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
