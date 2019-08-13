@@ -22,12 +22,12 @@ class FileViewSet(APIView):
                      queryset=SampleMetadata.objects.select_related('sample').order_by('-version')))
         if tags:
             key, value = tags.split(':')
-            filter_query = {'sample__tags__' + key: value}
-            queryset = queryset.filter(**filter_query).all()
+            filter_query = {'sample__tags__%s__regex' % key: value}
+            queryset = queryset.filter(**filter_query)
         if file_group:
-            queryset = queryset.filter(file_group__slug=file_group).all()
-        else:
-            queryset = queryset.all()
+            queryset = queryset.filter(file_group__slug=file_group)
+
+        queryset = queryset.all()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.serializer_class(page, many=True)
