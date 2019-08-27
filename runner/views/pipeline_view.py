@@ -1,3 +1,4 @@
+import json
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework.response import Response
@@ -73,10 +74,6 @@ class PipelineDownloadViewSet(GenericAPIView):
                                         'version': pipeline.version})
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = PipelineResolvedSerializer(data={'app': resolved_dict})
-        if serializer.is_valid():
-            response = HttpResponse(serializer.data, content_type='text/plain; charset=UTF-8')
-            response['Content-Disposition'] = ('attachment; filename={0}'.format('aplication.cwl'))
-            return response
-        return Response({}, status=status.HTTP_404_NOT_FOUND)
-
+        response = HttpResponse(json.dumps(resolved_dict), content_type='text/plain; charset=UTF-8')
+        response['Content-Disposition'] = ('attachment; filename={0}'.format('aplication.cwl'))
+        return response
