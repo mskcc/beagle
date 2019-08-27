@@ -1,0 +1,2 @@
+class MetadataValidationException(Exception):
+    pass

@@ -1,6 +1,11 @@
 import os
-from file_system.models import File, Storage, StorageType, FileGroup, SampleMetadata, Sample
+from deepdiff import DeepDiff
 from rest_framework import serializers
+from django.contrib.auth.models import User
+from rest_framework.validators import UniqueValidator
+from file_system.metadata.validator import MetadataValidator
+from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, FileType
+from file_system.exceptions import MetadataValidationException
 
 
 class StorageSerializer(serializers.ModelSerializer):
@@ -21,76 +26,154 @@ class CreateStorageSerializer(serializers.ModelSerializer):
 class FileGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileGroup
-        fields = ('id', 'name', 'slug', 'storage', 'metadata')
+        fields = ('id', 'name', 'slug', 'storage')
 
 
 class CreateFileGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileGroup
-        fields = ('id', 'name', 'storage', 'metadata')
+        fields = ('id', 'name', 'storage')
 
 
 class Metadata(serializers.ModelSerializer):
 
     class Meta:
-        model = SampleMetadata
-        fields = ('id', 'metadata', 'sample', 'version', 'user')
+        model = FileMetadata
+        fields = ('id', 'metadata', 'file', 'version', 'user')
+
+
+class FileTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FileType
+        fields = ('id', 'ext')
 
 
 class CreateMetadata(serializers.ModelSerializer):
+    metadata = serializers.JSONField()
+
+    def validate_metadata(self, data):
+        validator = MetadataValidator()
+        try:
+            validator.validate(data)
+        except MetadataValidationException as e:
+            raise serializers.ValidationError(e)
 
     class Meta:
-        model = SampleMetadata
-        fields = ('sample', 'metadata')
-
-
-class SampleSerializer(serializers.ModelSerializer):
-    metadata = serializers.SerializerMethodField()
-
-    def get_metadata(self, obj):
-        return Metadata(obj.samplemetadata_set.first()).data
-
-    class Meta:
-        model = Sample
-        fields = ('id', 'name', 'tags', 'metadata')
-
-
-class SampleSerializerFull(serializers.ModelSerializer):
-    metadata = Metadata(source='samplemetadata_set', many=True)
-
-    class Meta:
-        model = Sample
-        fields = ('id', 'name', 'tags', 'metadata')
+        model = FileMetadata
+        fields = ('file', 'metadata')
 
 
 class FileSerializer(serializers.ModelSerializer):
     file_group = FileGroupSerializer()
-    sample = SampleSerializer()
+    metadata = serializers.SerializerMethodField()
+    file_type = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+
+    def get_file_type(self, obj):
+        return obj.file_type.ext
+
+    def get_metadata(self, obj):
+        return Metadata(obj.filemetadata_set.last()).data.get('metadata', {})
+
+    def get_user(self, obj):
+        user_id = Metadata(obj.filemetadata_set.last()).data.get('user', None)
+        if user_id:
+            try:
+                return User.objects.get(id=user_id).username
+            except User.DoesNotExist:
+                return None
+        return None
 
     class Meta:
         model = File
-        fields = ('id', 'file_name', 'path', 'size', 'file_group', 'lane', 'pair_end', 'sample', 'created_date', 'modified_date')
+        fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'created_date', 'modified_date')
 
 
-class CreateFileSerializer(serializers.Serializer):
+class CreateFileSerializer(serializers.ModelSerializer):
     path = serializers.CharField(max_length=400, required=True)
-    size = serializers.IntegerField(required=True)
+    size = serializers.IntegerField(required=False)
     file_group_id = serializers.UUIDField(required=True)
-    sample_id = serializers.UUIDField(required=True, allow_null=True)
-    lane = serializers.IntegerField(required=False)
-    pair_end = serializers.IntegerField(required=False)
+    file_type = serializers.CharField(max_length=30, required=True)
+    metadata = serializers.JSONField()
+
+    def validate_file_type(self, file_type):
+        try:
+            file_type = FileType.objects.get(ext=file_type)
+        except FileType.DoesNotExist:
+            raise serializers.ValidationError("Unknown file_type: %s" % file_type)
+        return file_type
+
+    def validate_metadata(self, data):
+        validator = MetadataValidator()
+        try:
+            validator.validate(data)
+        except MetadataValidationException as e:
+            raise serializers.ValidationError(e)
+        return data
 
     def create(self, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
         validated_data['file_name'] = os.path.basename(validated_data.get('path'))
-        return File.objects.create(**validated_data)
+        validated_data['file_type'] = validated_data['file_type']
+        metadata = validated_data.pop('metadata')
+        file = File.objects.create(**validated_data)
+        metadata = FileMetadata(file=file, metadata=metadata, user=user)
+        metadata.save()
+        return file
 
     class Meta:
         model = File
-        fields = ('id', 'path', 'size', 'cohort_id', 'sample_id', 'metadata')
+        fields = ('path', 'file_type', 'size', 'file_group_id', 'metadata')
 
 
+class UpdateFileSerializer(serializers.Serializer):
+    path = serializers.CharField(max_length=400)
+    size = serializers.IntegerField(required=False)
+    file_group_id = serializers.UUIDField(required=False)
+    file_type = serializers.CharField(max_length=30, required=False)
+    metadata = serializers.JSONField(required=False)
+
+    def validate_metadata(self, data):
+        validator = MetadataValidator()
+        try:
+            validator.validate(data)
+        except MetadataValidationException as e:
+            raise serializers.ValidationError(e)
+        return data
+
+    def update(self, instance, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance.path = validated_data.get('path', instance.path)
+        instance.file_name = os.path.basename(instance.path)
+        instance.file_group_id = validated_data.get('file_group_id', instance.file_group_id)
+        instance.file_type_id = validated_data.get('file_type', instance.file_type)
+        ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.last().metadata, ignore_order=True)
+        if ddiff:
+            metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
+
+            metadata.save()
+        instance.save()
+        return instance
 
 
-
+# class BatchCreateFileSerializer(serializers.Serializer):
+#     files = serializers.ListField(required=True, allow_empty=False)
+#     metadata = serializers.JSONField(allow_null=True, default=dict)
+#     file_group = serializers.UUIDField(required=True)
+#
+#     def create(self, validated_data):
+#         request = self.context.get("request")
+#         user = request.user if request and hasattr(request, "user") else None
+#         sample = Sample(name=validated_data['name'])
+#         sample.save()
+#         metadata = SampleMetadata(sample=sample, metadata=validated_data['metadata'], user=user)
+#         metadata.save()
+#         file_group = FileGroup.objects.get(id=validated_data['file_group'])
+#         for file in validated_data['files']:
+#             File(file_name=os.path.basename(file), path=file, file_group=file_group, sample=sample).save()
+#         return sample
 
