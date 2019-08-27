@@ -1,44 +1,81 @@
 from django.db.models import Prefetch
+from file_system.models import File, FileMetadata
+from rest_framework import mixins
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from file_system.models import File, SampleMetadata
-from file_system.serializers import FileSerializer, CreateFileSerializer
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.permissions import IsAuthenticated
+from file_system.serializers import FileSerializer, CreateFileSerializer, UpdateFileSerializer
 
 
-class FileViewSet(APIView):
-    serializer_class = FileSerializer
+class FileView(mixins.CreateModelMixin,
+               mixins.DestroyModelMixin,
+               mixins.RetrieveModelMixin,
+               mixins.UpdateModelMixin,
+               mixins.ListModelMixin,
+               GenericViewSet):
+    queryset = File.objects.order_by('file_name').all()
+    permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
-    def get(self, request):
-        """
-        :return:
-        """
-        tags = request.query_params.get('tags', None)
-        file_group = request.query_params.get('file_group', None)
-        queryset = File.objects.order_by('created_date').prefetch_related(
-            Prefetch('sample__samplemetadata_set',
-                     queryset=SampleMetadata.objects.select_related('sample').order_by('-version')))
-        if tags:
-            key, value = tags.split(':')
-            filter_query = {'sample__tags__%s__regex' % key: value}
-            queryset = queryset.filter(**filter_query)
-        if file_group:
-            queryset = queryset.filter(file_group__slug=file_group)
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return FileSerializer
+        else:
+            return CreateFileSerializer
 
-        queryset = queryset.all()
+    def list(self, request, *args, **kwargs):
+        queryset = File.objects.prefetch_related(
+            Prefetch('filemetadata_set', queryset=
+            FileMetadata.objects.select_related('file').order_by('created_date'))).\
+            order_by('file_name').all()
+        file_groups = request.query_params.getlist('file_group')
+        if file_groups:
+            queryset = queryset.filter(file_group_id__in=file_groups)
+        metadata = request.query_params.getlist('metadata')
+        if metadata:
+            filter_query = dict()
+            for val in metadata:
+                k, v = val.split(':')
+                filter_query['filemetadata__metadata__%s__regex' % k] = v
+            queryset = queryset.filter(**filter_query)
+        filename = request.query_params.getlist('filename')
+        if filename:
+            queryset = queryset.filter(file_name__in=filename)
+        filename_regex = request.query_params.get('filename_regex')
+        if filename_regex:
+            queryset = queryset.filter(file_name__regex=filename_regex)
+        file_type = request.query_params.getlist('file_type')
+        if file_type:
+            queryset = queryset.filter(file_type__ext__in=file_type)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.serializer_class(page, many=True)
+            serializer = FileSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-    def post(self, request):
-        file = CreateFileSerializer(data=request.data)
-        if file.is_valid():
-            file.save()
-            return Response(file.data, status=status.HTTP_201_CREATED)
-        return Response(file.errors, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = CreateFileSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            file = serializer.save()
+            response = FileSerializer(file)
+            return Response(response.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            file = File.objects.get(id=kwargs.get('pk'))
+        except File.DoesNotExist:
+            return Response({'details': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = UpdateFileSerializer(file, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            file = File.objects.prefetch_related(
+                Prefetch('filemetadata_set', queryset=
+                FileMetadata.objects.select_related('file').order_by('created_date'))).get(id=kwargs.get('pk'))
+            response = FileSerializer(file)
+            return Response(response.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @property
     def paginator(self):
