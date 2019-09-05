@@ -15,7 +15,10 @@ class FileView(mixins.CreateModelMixin,
                mixins.UpdateModelMixin,
                mixins.ListModelMixin,
                GenericViewSet):
-    queryset = File.objects.order_by('file_name').all()
+    queryset = File.objects.prefetch_related(
+            Prefetch('filemetadata_set', queryset=
+            FileMetadata.objects.select_related('file').order_by('-created_date'))).\
+            order_by('file_name').all()
     permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
@@ -28,7 +31,7 @@ class FileView(mixins.CreateModelMixin,
     def list(self, request, *args, **kwargs):
         queryset = File.objects.prefetch_related(
             Prefetch('filemetadata_set', queryset=
-            FileMetadata.objects.select_related('file').order_by('created_date'))).\
+            FileMetadata.objects.select_related('file').order_by('-created_date'))).\
             order_by('file_name').all()
         file_groups = request.query_params.getlist('file_group')
         if file_groups:
@@ -72,7 +75,7 @@ class FileView(mixins.CreateModelMixin,
             serializer.save()
             file = File.objects.prefetch_related(
                 Prefetch('filemetadata_set', queryset=
-                FileMetadata.objects.select_related('file').order_by('created_date'))).get(id=kwargs.get('pk'))
+                FileMetadata.objects.select_related('file').order_by('-created_date'))).get(id=kwargs.get('pk'))
             response = FileSerializer(file)
             return Response(response.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

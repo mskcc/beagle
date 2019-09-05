@@ -231,4 +231,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'beagle-cache',
+    }
+}

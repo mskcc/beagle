@@ -21,7 +21,7 @@ class FileMetadataView(mixins.ListModelMixin,
         file_id = request.query_params.get('file_id')
         if not file_id:
             return Response({'details': 'file_id needs to be specified'}, status=status.HTTP_400_BAD_REQUEST)
-        queryset = FileMetadata.objects.filter(file_id=file_id).order_by('created_date').all()
+        queryset = FileMetadata.objects.filter(file_id=file_id).order_by('-created_date').all()
         page = self.paginate_queryset(queryset)
         if page:
             serializer = Metadata(page, many=True)

@@ -75,10 +75,10 @@ class FileSerializer(serializers.ModelSerializer):
         return obj.file_type.ext
 
     def get_metadata(self, obj):
-        return Metadata(obj.filemetadata_set.last()).data.get('metadata', {})
+        return Metadata(obj.filemetadata_set.first()).data.get('metadata', {})
 
     def get_user(self, obj):
-        user_id = Metadata(obj.filemetadata_set.last()).data.get('user', None)
+        user_id = Metadata(obj.filemetadata_set.first()).data.get('user', None)
         if user_id:
             try:
                 return User.objects.get(id=user_id).username
@@ -144,17 +144,24 @@ class UpdateFileSerializer(serializers.Serializer):
             raise serializers.ValidationError(e)
         return data
 
+    def validate_file_type(self, file_type):
+        try:
+            file_type = FileType.objects.get(ext=file_type)
+        except FileType.DoesNotExist:
+            raise serializers.ValidationError("Unknown file_type: %s" % file_type)
+        return file_type
+
     def update(self, instance, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
         instance.path = validated_data.get('path', instance.path)
         instance.file_name = os.path.basename(instance.path)
+        instance.size = validated_data.get('size', instance.size)
         instance.file_group_id = validated_data.get('file_group_id', instance.file_group_id)
-        instance.file_type_id = validated_data.get('file_type', instance.file_type)
-        ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.last().metadata, ignore_order=True)
+        instance.file_type = validated_data.get('file_type', instance.file_type)
+        ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.first().metadata, ignore_order=True)
         if ddiff:
             metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
-
             metadata.save()
         instance.save()
         return instance
