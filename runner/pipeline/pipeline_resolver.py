@@ -3,43 +3,9 @@ import git
 import os
 import json
 import shutil
-import datetime
 import subprocess
-from collections import OrderedDict
 from django.conf import settings
-
-
-class CacheObject(object):
-
-    def __init__(self, value):
-        self.last_used = datetime.datetime.now()
-        self.value = value
-
-    def __str__(self):
-        return "LastUsed: %s Object: %s" % (self.last_used, self.value)
-
-
-class Cache(object):
-
-    def __init__(self, size=20):
-        self.cache = OrderedDict()
-        self.cache_size = size
-        self.size = 0
-
-    def get(self, key):
-        cache_object = self.cache.get(key)
-        if cache_object:
-            self.cache[key].last_used = datetime.datetime.now()
-            return cache_object.value
-        else:
-            return None
-
-    def put(self, key, val):
-        if self.size == self.cache_size:
-            self.cache.pop(min(self.cache, key=lambda x: self.cache[x].last_used))
-            self.size = self.size - 1
-        self.cache[key] = CacheObject(val)
-        self.size = self.size + 1
+from django.core.cache import cache
 
 
 class CWLResolver(object):
@@ -57,7 +23,7 @@ class CWLResolver(object):
             subprocess.check_call([settings.RABIX_PATH, '-r', os.path.join(location, self.entrypoint)], stdout=out)
         with open(output_name) as f:
             pipeline = json.load(f)
-        self._clanup(location)
+        self._cleanup(location)
         return pipeline
 
     def create_file(self):
@@ -81,5 +47,21 @@ class CWLResolver(object):
     def _extract_dirname_from_github_link(self):
         return self.github.rsplit('/', 2)[1] if self.github.endswith('/') else self.github.rsplit('/', 1)[1]
 
-    def _clanup(self, location):
+    def _cleanup(self, location):
         shutil.rmtree(location)
+
+
+def get_pipeline(pipeline):
+    _pipeline = cache.get(pipeline.id)
+    if _pipeline and (_pipeline.get('github') == pipeline.github and
+                      _pipeline.get('entrypoint') == pipeline.entrypoint and
+                      _pipeline.get('version') == pipeline.version):
+        resolved_dict = _pipeline.get('app')
+    else:
+        cwl_resolver = CWLResolver(pipeline.github, pipeline.entrypoint, pipeline.version)
+        resolved_dict = cwl_resolver.resolve()
+        cache.set(pipeline.id, {'app': resolved_dict,
+                                'github': pipeline.github,
+                                'entrypoint': pipeline.entrypoint,
+                                'version': pipeline.version})
+    return resolved_dict

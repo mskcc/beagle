@@ -8,7 +8,7 @@ METADATA_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Metadata",
     "type": "object",
-    "required": ["requestId", "igoSampleId"],
+    # "required": ["requestId", "igoSampleId"],
     "properties": {
         "igoSampleId": {
             "type": "string"
