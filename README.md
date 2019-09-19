@@ -30,4 +30,20 @@ Beagle is backend service for managing files, pipelines and runs.
   - Try to pair fails, and create runs
   - Notify if there are some errors with files or file metadata
 
+## setup
 
+- Requirements
+  - PostgreSQL==11
+  - python 3
+  
+- Instructions
+  - virtualenv beagle
+  - pip install -r requirements.txt
+  - export BEAGLE_DB_NAME=<beagle_db_name>
+  - export BEAGLE_DB_USERNAME=<beagle_db_username>
+  - export BEAGLE_DB_PASSWORD=<beagle_db_password>
+  - export BEAGLE_AUTH_LDAP_SERVER_URI=<ldap_server_uri>
+  - export BEAGLE_RABIX_PATH=<rabix_cli_path>
+  - export BEAGLE_RABIX_URL=<rabix_url>
+  - python manage.py migrate
+  - python manage.py runserver
