@@ -47,3 +47,5 @@ Beagle is backend service for managing files, pipelines and runs.
   - export BEAGLE_RABIX_URL=<rabix_url>
   - python manage.py migrate
   - python manage.py runserver
+
+Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
