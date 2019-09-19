@@ -1,6 +1,10 @@
 # beagle
 
-Backend service for managing files, pipelines and runs.
+Beagle is backend service for managing files, pipelines and runs.
+
+![alt text](docs/pics/voyager.png "Diagram of Voyager project")
+
+## beagle responsibilities 
 
 - Users
   - Authentication using MSKCC LDAP
