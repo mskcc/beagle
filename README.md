@@ -34,6 +34,7 @@ Beagle is backend service for managing files, pipelines and runs.
 
 - Requirements
   - PostgreSQL==11
+  - RabbitMQ
   - python 3
   
 - Instructions
@@ -45,7 +46,16 @@ Beagle is backend service for managing files, pipelines and runs.
   - export BEAGLE_AUTH_LDAP_SERVER_URI=<ldap_server_uri>
   - export BEAGLE_RABIX_PATH=<rabix_cli_path>
   - export BEAGLE_RABIX_URL=<rabix_url>
+  - export BEAGLE_RABBITMQ_USERNAME=<rabbitmq_username>
+  - export BEAGLE_RABBITMQ_PASSWORD=<rabbitmq_password>
+  - export BEAGLE_RABBITMQ_URL=<rabbitmq_url>
   - python manage.py migrate
   - python manage.py runserver
+
+- Async
+  - Celery is used for scheduling tasks related to ETL from LIMS and submission to CWL Executor
+  - celery -A file_system beat -l info (starting the periodic task)
+  - celery -A file_system worker -l info (starting the worker)
+  
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
