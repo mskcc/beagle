@@ -12,3 +12,4 @@ django-rest-swagger==2.2.0
 GitPython==2.1.13
 jsonschema==3.0.2
 deepdiff==4.0.7
+celery==4.3.0
