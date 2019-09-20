@@ -240,3 +240,12 @@ CACHES = {
         'LOCATION': 'beagle-cache',
     }
 }
+
+RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
+RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')
+RABBITMQ_URL = os.environ.get('BEAGLE_RABBITMQ_URL', 'localhost')
+
+CELERY_BROKER_URL = 'amqp://%s:%s@%s//' % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
