@@ -41,6 +41,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'runner.apps.RunnerConfig',
+    'beagle_etl.apps.BeagleEtlConfig',
     'file_system.apps.FileSystemConfig',
     'django.contrib.admin',
     'django.contrib.auth',
