@@ -38,7 +38,6 @@ class CreateRunSerializer(serializers.Serializer):
     pipeline_id = serializers.UUIDField()
 
     def create(self, validated_data):
-        global pipeline_cache
         try:
             pipeline = Pipeline.objects.get(pk=validated_data.get('pipeline_id'))
         except Pipeline.DoesNotExist:
