@@ -6,8 +6,10 @@ from django.contrib.postgres.fields import JSONField
 
 class JobStatus(IntEnum):
     CREATED = 0
-    PROCESSED = 1
-    FAILED = 2
+    IN_PROGRESS = 1
+    WAITING_FOR_CHILDREN = 2
+    COMPLETED = 3
+    FAILED = 4
 
 
 class BaseModel(models.Model):
@@ -16,20 +18,11 @@ class BaseModel(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
 
-class JobBaseModel(BaseModel):
+class Job(BaseModel):
+    run = models.CharField(max_length=100)
+    args = JSONField(null=True)
     status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus])
-
-
-class RequestFetchJob(JobBaseModel):
-    request_id = models.CharField(max_length=40)
-    data = JSONField(default=dict)
-
-
-class SamplesFetchJob(JobBaseModel):
-    sample_id = models.CharField(max_length=40)
-    data = JSONField(default=dict)
-
-
-class ETLError(BaseModel):
-    job_id = models.UUIDField()
-    error = JSONField(default=dict, null=True)
+    children = JSONField()
+    retry_count = models.IntegerField(default=0)
+    message = JSONField(null=True)
+    max_retry = models.IntegerField(default=3)
