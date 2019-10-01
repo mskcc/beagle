@@ -41,6 +41,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'runner.apps.RunnerConfig',
+    'beagle_etl.apps.BeagleEtlConfig',
     'file_system.apps.FileSystemConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -240,3 +241,19 @@ CACHES = {
         'LOCATION': 'beagle-cache',
     }
 }
+
+RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
+RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')
+RABBITMQ_URL = os.environ.get('BEAGLE_RABBITMQ_URL', 'localhost')
+
+CELERY_BROKER_URL = 'amqp://%s:%s@%s/' % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+LIMS_USERNAME = os.environ.get('BEAGLE_LIMS_USERNAME')
+LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
+
+LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
+
+IMPORT_FILE_GROUP = '33c115cb-bf21-488a-964d-7eb242927753'
