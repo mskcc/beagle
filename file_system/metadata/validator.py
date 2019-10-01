@@ -20,7 +20,7 @@ METADATA_SCHEMA = {
             "type": "string"
         },
         "baitSet": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "cmoPatientId": {
             "type": "string"
@@ -66,28 +66,28 @@ METADATA_SCHEMA = {
                 "type": "object",
                 "properties": {
                     "barcodeId": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "barcodeIndex": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "captureConcentrationNm": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "captureInputNg": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "captureName": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "libaryIgoId": {
-                        "type": "string"
+                        "type": ["null", "string"]
                     },
                     "libraryConcentrationNgul": {
-                        "type": "integer"
+                        "type": ["null", "number"]
                     },
                     "libraryVolume": {
-                        "type": "integer"
+                        "type": ["null", "integer"]
                     }
                 }
             },
@@ -97,41 +97,41 @@ METADATA_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "flowCellId": {
-                            "type": "string"
+                            "type": ["null", "string"]
                         },
                         "flowCellLane": {
-                            "type": "integer"
+                            "type": ["null", "integer"]
                         },
                         "readLength": {
-                            "type": "string"
+                            "type": ["null", "string"]
                         },
                         "runDate": {
-                            "type": "string"
+                            "type": ["null", "string"]
                         },
                         "runId": {
-                            "type": "string"
+                            "type": ["null", "string"]
                         },
                         "runMode": {
-                            "type": "string"
+                            "type": ["null", "string"]
                         }
                     }
                 }
             }
         },
         "oncoTreeCode": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "preservation": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "sampleOrigin": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "species": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "tissueLocation": {
-            "type": "string"
+            "type": ["null", "string"]
         },
         "tumorOrNormal": {
             "type": "string"

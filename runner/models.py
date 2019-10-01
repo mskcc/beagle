@@ -31,6 +31,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
+    # output_directory
 
 
 class Run(BaseModel):
