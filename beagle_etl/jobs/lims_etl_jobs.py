@@ -73,8 +73,10 @@ def fetch_sample_metadata(sample_id):
     data = sampleMetadata.json()[0]
     libraries = data.pop('libraries')
     for library in libraries:
+        logger.info("Processing library %s" % library)
         runs = library.pop('runs')
         for run in runs:
+            logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
             if fastqs:
                 file_search = File.objects.filter(path=fastqs[0]).first()
@@ -89,6 +91,8 @@ def fetch_sample_metadata(sample_id):
                                 library, run)
                 else:
                     logger.info("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+            else:
+                logger.info("No fastqs found")
 
 
 def create_file(path, sample_id, file_group_id, file_type, data, library, run):
