@@ -18,7 +18,7 @@ def fetch_new_requests_lims():
                               params={"time": 5, "units": "d"},
                               auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if requestIds.status_code != 200:
-        raise Exception
+        raise Exception("Failed to fetch new requests")
     if not requestIds.json():
         logger.info("There is no new RequestIDs")
         return []
@@ -46,7 +46,7 @@ def fetch_samples(request_id):
                              params={"request": request_id},
                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleIds.status_code != 200:
-        raise Exception
+        raise Exception("Failed to fetch sampleIds for request %s" % request_id)
     for sample in sampleIds.json().get('samples', []):
         job = get_or_create_sample_job(sample['igoSampleId'])
         children.add(str(job.id))
@@ -69,7 +69,7 @@ def fetch_sample_metadata(sample_id):
                                   params={"igoSampleId": sample_id},
                                   auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleMetadata.status_code != 200:
-        raise Exception
+        raise Exception("Failed to Fetch SampleManifest for sampleId:%s" % sample_id)
     data = sampleMetadata.json()[0]
     libraries = data.pop('libraries')
     for library in libraries:
