@@ -4,11 +4,19 @@ import logging
 import requests
 from django.conf import settings
 from beagle_etl.models import JobStatus, Job
+from beagle_etl.exceptions import FailedToFetchFilesException
 from file_system.exceptions import MetadataValidationException
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 
 logger = logging.getLogger(__name__)
+
+
+TYPES = {
+    "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
+    "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
+    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata"
+}
 
 
 def fetch_new_requests_lims():
@@ -18,7 +26,7 @@ def fetch_new_requests_lims():
                               params={"time": 5, "units": "d"},
                               auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if requestIds.status_code != 200:
-        raise Exception("Failed to fetch new requests")
+        raise FailedToFetchFilesException("Failed to fetch new requests")
     if not requestIds.json():
         logger.info("There is no new RequestIDs")
         return []
@@ -46,8 +54,11 @@ def fetch_samples(request_id):
                              params={"request": request_id},
                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleIds.status_code != 200:
-        raise Exception("Failed to fetch sampleIds for request %s" % request_id)
-    for sample in sampleIds.json().get('samples', []):
+        raise FailedToFetchFilesException("Failed to fetch sampleIds for request %s" % request_id)
+
+    for sample in sampleIds.json().get('samples'):
+        if not sample:
+            raise FailedToFetchFilesException
         job = get_or_create_sample_job(sample['igoSampleId'])
         children.add(str(job.id))
     return list(children)
@@ -65,34 +76,51 @@ def get_or_create_sample_job(sample_id):
 
 
 def fetch_sample_metadata(sample_id):
+    logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = requests.get('%s/LimsRest/api/getSampleManifest' % settings.LIMS_URL,
                                   params={"igoSampleId": sample_id},
                                   auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleMetadata.status_code != 200:
-        raise Exception("Failed to Fetch SampleManifest for sampleId:%s" % sample_id)
-    data = sampleMetadata.json()[0]
+        logger.error("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
+        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
+    try:
+        data = sampleMetadata.json()[0]
+    except Exception as e:
+        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     libraries = data.pop('libraries')
+    if not libraries:
+        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
     for library in libraries:
-        logger.info("Processing library %s" % library)
+        logger.error("Processing library %s" % library)
         runs = library.pop('runs')
         for run in runs:
+            if not runs:
+                logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+                raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
+            if not fastqs:
+                logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
+                raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
             if fastqs:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
                     create_file(fastqs[0], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data,
                                 library, run)
                 else:
-                    logger.info("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+                    logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+                    raise FailedToFetchFilesException(
+                        "Failed to fetch SampleManifest for sampleId:%s. File %s already exists" % (
+                            file_search.path, sample_id))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
                     create_file(fastqs[1], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data,
                                 library, run)
                 else:
-                    logger.info("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
-            else:
-                logger.info("No fastqs found")
+                    logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+                    raise FailedToFetchFilesException(
+                        "Failed to fetch SampleManifest for sampleId:%s. File %s already exists" % (
+                            file_search.path, sample_id))
 
 
 def create_file(path, sample_id, file_group_id, file_type, data, library, run):
