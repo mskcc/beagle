@@ -105,8 +105,10 @@ def fetch_sample_metadata(sample_id):
             if fastqs:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
-                    create_file(fastqs[0], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data,
-                                library, run)
+                    if not create_file(fastqs[0], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run):
+                        raise FailedToFetchFilesException(
+                            "Failed to fetch SampleManifest for sampleId:%s. File %s already exists" % (
+                                file_search.path, sample_id))
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     raise FailedToFetchFilesException(
@@ -114,8 +116,7 @@ def fetch_sample_metadata(sample_id):
                             file_search.path, sample_id))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
-                    create_file(fastqs[1], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data,
-                                library, run)
+                    create_file(fastqs[1], sample_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     raise FailedToFetchFilesException(
@@ -125,23 +126,31 @@ def fetch_sample_metadata(sample_id):
 
 def create_file(path, sample_id, file_group_id, file_type, data, library, run):
     logger.info("Creating file %s " % path)
-    file_group_obj = FileGroup.objects.get(id=file_group_id)
-    file_type_obj = FileType.objects.filter(ext=file_type).first()
-    metadata = copy.deepcopy(data)
-    metadata['igoSampleId'] = sample_id
-    metadata['libraries'] = [copy.deepcopy(library)]
-    metadata['libraries'][0]['runs'] = [run]
-    validator = MetadataValidator(METADATA_SCHEMA)
+    try:
+        file_group_obj = FileGroup.objects.get(id=file_group_id)
+        file_type_obj = FileType.objects.filter(ext=file_type).first()
+        metadata = copy.deepcopy(data)
+        metadata['igoSampleId'] = sample_id
+        metadata['libraries'] = [copy.deepcopy(library)]
+        metadata['libraries'][0]['runs'] = [run]
+        validator = MetadataValidator(METADATA_SCHEMA)
+    except Exception as e:
+        logger.error("Failed to parse metadata for file %s path")
+        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
         logger.info(metadata)
         validator.validate(metadata)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
+        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
-                                file_type=file_type_obj)
-        f.save()
-        fm = FileMetadata(file=f, metadata=metadata)
-        fm.save()
-        return True
-    return False
+        try:
+            f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
+                                    file_type=file_type_obj)
+            f.save()
+            fm = FileMetadata(file=f, metadata=metadata)
+            fm.save()
+        except Exception as e:
+            logger.error("Failed to create file %s. Error %s" % (path, str(e)))
+            raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
+
