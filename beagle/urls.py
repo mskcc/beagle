@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^$', schema_view),
     path('v0/fs/', include('file_system.urls')),
     path('v0/run/', include('runner.urls')),
+    path('v0/etl/', include('beagle_etl.urls')),
     path('admin/', admin.site.urls),
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
