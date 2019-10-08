@@ -124,7 +124,9 @@ def fetch_sample_metadata(sample_id, request_id):
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
-        for run in runs:
+        run_dict = convert_to_dict(runs)
+        logger.info("Processing runs %s" % run_dict)
+        for run in run_dict.values():
             if not runs:
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
                 raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
@@ -150,6 +152,27 @@ def fetch_sample_metadata(sample_id, request_id):
         if conflict:
             raise FailedToFetchFilesException(
                 "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
+
+
+def convert_to_dict(runs):
+    run_dict = dict()
+    for run in runs:
+        if not run_dict.get(run['runId']):
+            run_dict[run['runId']] = run
+        else:
+            if run_dict[run['runId']].get('fastqs'):
+                logger.error("Fastq empty")
+                if run_dict[run['runId']]['fastqs'][0] != run['fastqs'][0]:
+                    logger.error(
+                        "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][0], run['fastqs'][0]))
+                    raise FailedToFetchFilesException(
+                        "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][0], run['fastqs'][0]))
+                if run_dict[run['runId']]['fastqs'][1] != run['fastqs'][1]:
+                    logger.error(
+                        "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][1], run['fastqs'][1]))
+                    raise FailedToFetchFilesException(
+                        "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][1], run['fastqs'][1]))
+    return run_dict
 
 
 def create_file(path, request_id, file_group_id, file_type, data, library, run):
@@ -181,4 +204,3 @@ def create_file(path, request_id, file_group_id, file_type, data, library, run):
         except Exception as e:
             logger.error("Failed to create file %s. Error %s" % (path, str(e)))
             raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
-
