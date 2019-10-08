@@ -77,29 +77,38 @@ def fetch_samples(request_id):
         raise FailedToFetchFilesException("LIMS returned wrong response for request %s. Got %s instead" % (request_id, sampleIds.json()['requestId']))
     if sampleIds.status_code != 200:
         raise FailedToFetchFilesException("Failed to fetch sampleIds for request %s" % request_id)
-
+    response_body = sampleIds.json()
+    request_metadata = {
+        "dataAnalystEmail": response_body['dataAnalystEmail'],
+        "dataAnalystName": response_body['dataAnalystName'],
+        "investigatorEmail": response_body['investigatorEmail'],
+        "investigatorName": response_body['investigatorName'],
+        "labHeadEmail": response_body['labHeadEmail'],
+        "labHeadName": response_body['labHeadName'],
+        "projectManagerName": response_body['projectManagerName']
+    }
     logger.info("Response: %s" % str(sampleIds.json()))
-    for sample in sampleIds.json().get('samples'):
+    for sample in response_body.get('samples'):
         if not sample:
             raise FailedToFetchFilesException
-        job = get_or_create_sample_job(sample['igoSampleId'], request_id)
+        job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
         children.add(str(job.id))
     return list(children)
 
 
-def get_or_create_sample_job(sample_id, request_id):
+def get_or_create_sample_job(sample_id, request_id, request_metadata):
     logger.info(
         "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', args__sample_id=sample_id).first()
     if not job:
         job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata',
-                  args={'sample_id': sample_id, 'request_id': request_id},
+                  args={'sample_id': sample_id, 'request_id': request_id, 'request_metadata': request_metadata},
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
 
 
-def fetch_sample_metadata(sample_id, request_id):
+def fetch_sample_metadata(sample_id, request_id, request_metadata):
     conflict = False
     conflict_files = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
@@ -137,14 +146,14 @@ def fetch_sample_metadata(sample_id, request_id):
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run)
+                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run, request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
                     conflict_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run)
+                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run, request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
@@ -175,7 +184,7 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_file(path, request_id, file_group_id, file_type, data, library, run):
+def create_file(path, request_id, file_group_id, file_type, data, library, run, request_metadata):
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
@@ -184,6 +193,7 @@ def create_file(path, request_id, file_group_id, file_type, data, library, run):
         metadata['requestId'] = request_id
         metadata['libraries'] = [copy.deepcopy(library)]
         metadata['libraries'][0]['runs'] = [run]
+        metadata['requestMetadata'] = request_metadata
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
