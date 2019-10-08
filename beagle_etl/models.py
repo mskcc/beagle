@@ -20,9 +20,10 @@ class BaseModel(models.Model):
 
 class Job(BaseModel):
     run = models.CharField(max_length=100)
-    args = JSONField(null=True)
+    args = JSONField(null=True, blank=True)
     status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus])
-    children = JSONField()
+    children = JSONField(null=True, blank=True)
     retry_count = models.IntegerField(default=0)
     message = JSONField(null=True)
     max_retry = models.IntegerField(default=3)
+    lock = models.BooleanField(default=False)

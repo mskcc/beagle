@@ -1,7 +1,10 @@
 import logging
 import importlib
+import datetime
 from celery import shared_task
+from django.db import transaction
 from beagle_etl.models import JobStatus, Job
+from beagle_etl.jobs.lims_etl_jobs import TYPES
 
 
 logger = logging.getLogger(__name__)
@@ -10,7 +13,14 @@ logger = logging.getLogger(__name__)
 @shared_task
 def fetch_requests_lims():
     logger.info("Fetching requestIDs")
-    job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims', args={}, status=JobStatus.CREATED,
+    latest = Job.objects.filter(run=TYPES['DELIVERY']).order_by('-created_date').first()
+    timestamp = None
+    if latest:
+        timestamp = int(latest.created_date.timestamp()) * 1000
+    else:
+        timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=120)).timestamp()) * 1000
+    job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims', args={'timestamp': timestamp},
+              status=JobStatus.CREATED,
               max_retry=3, children=[])
     job.save()
     logger.info("Fetching fetch_new_requests_lims job created")
@@ -18,7 +28,9 @@ def fetch_requests_lims():
 
 @shared_task
 def job_processor(job_id):
+    logger.info("Creating job: %s" % str(job_id))
     job = JobObject(job_id)
+    logger.info("Processing job: %s with args: %s" % (str(job.job.id), str(job.job.args)))
     job.process()
 
 
@@ -27,7 +39,14 @@ def scheduler():
     jobs = get_pending_jobs()
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
-        job_processor.delay(job.id)
+        with transaction.atomic():
+            if not job.lock:
+                logger.info("Submitting job: %s" % str(job.id))
+                job.lock = True
+                job.save()
+                job_processor.delay(job.id)
+            else:
+                logger.info("Job already locked: %s" % str(job.id))
 
 
 def get_pending_jobs():
@@ -58,6 +77,10 @@ class JobObject(object):
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
 
+        with transaction.atomic():
+            self.job.lock = False
+            self.job.save()
+
         logger.info("Job %s in status: %s" % (str(self.job.id), JobStatus(self.job.status).name))
         self._save()
 
@@ -82,7 +105,7 @@ class JobObject(object):
                 break
             if child_job.status == JobStatus.FAILED:
                 status = JobStatus.FAILED
-                self.job.message = {"details": "Child job %s does't exist!" % child_id}
+                self.job.message = {"details": "Child job %s failed" % child_id}
                 break
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED):
                 status = JobStatus.WAITING_FOR_CHILDREN

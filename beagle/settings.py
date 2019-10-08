@@ -89,7 +89,7 @@ AUTH_LDAP_SERVER_URI = os.environ['BEAGLE_AUTH_LDAP_SERVER_URI']
 AUTH_LDAP_AUTHORIZE_ALL_USERS = True
 
 AUTH_LDAP_CONNECTION_OPTIONS = {ldap.OPT_REFERRALS: 0}
-AUTH_LDAP_START_TLS = False
+AUTH_LDAP_START_TLS = True
 
 AUTH_LDAP_CACHE_TIMEOUT = 0
 
@@ -250,6 +250,7 @@ CELERY_BROKER_URL = 'amqp://%s:%s@%s/' % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERYD_CONCURRENCY = 1
 
 LIMS_USERNAME = os.environ.get('BEAGLE_LIMS_USERNAME')
 LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
@@ -257,3 +258,11 @@ LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
 LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
 IMPORT_FILE_GROUP = '33c115cb-bf21-488a-964d-7eb242927753'
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+}
