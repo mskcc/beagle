@@ -3,7 +3,10 @@ from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupM
 
 # Register your models here.
 
-admin.site.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'file_name', 'size')
+
+admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(FileGroup)
 admin.site.register(FileType)
