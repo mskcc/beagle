@@ -18,10 +18,10 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    # "fetch_requests_from_lims": {
-    #     "task": "beagle_etl.tasks.fetch_requests_lims",
-    #     "schedule": 900.0
-    # },
+    "fetch_requests_from_lims": {
+        "task": "beagle_etl.tasks.fetch_requests_lims",
+        "schedule": 900.0
+    },
     "scheduler_tick": {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0
