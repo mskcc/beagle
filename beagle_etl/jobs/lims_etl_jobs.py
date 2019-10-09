@@ -21,23 +21,6 @@ TYPES = {
 }
 
 
-def fetch_new_requests_lims_old():
-    logger.info("Fetching requestIds")
-    children = set()
-    requestIds = requests.get('%s/LimsRest/getRecentDeliveries' % settings.LIMS_URL,
-                              params={"time": 5, "units": "d"},
-                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
-    if requestIds.status_code != 200:
-        raise FailedToFetchFilesException("Failed to fetch new requests")
-    if not requestIds.json():
-        logger.info("There is no new RequestIDs")
-        return []
-    for request in requestIds.json()[0].get('samples', []):
-        job = get_or_create_request_job(request['project'])
-        children.add(str(job.id))
-    return list(children)
-
-
 def fetch_new_requests_lims(timestamp):
     logger.info("Fetching requestIds")
     children = set()
