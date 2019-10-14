@@ -96,7 +96,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
     size = serializers.IntegerField(required=False)
     file_group_id = serializers.UUIDField(required=True)
     file_type = serializers.CharField(max_length=30, required=True)
-    metadata = serializers.JSONField()
+    metadata = serializers.JSONField(allow_null=True)
 
     def validate_file_type(self, file_type):
         try:

@@ -21,6 +21,9 @@ class JobViewSet(mixins.CreateModelMixin,
         else:
             return CreateJobSerialzier
 
+    def create(self, request, *args, **kwargs):
+        pass
+
     def list(self, request, *args, **kwargs):
         queryset = Job.objects.order_by('created_date').all()
         job_type = request.query_params.get('type')
