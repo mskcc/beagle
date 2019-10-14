@@ -12,5 +12,6 @@ GitPython==2.1.13
 jsonschema==3.0.2
 deepdiff==4.0.7
 celery==4.3.0
+djangorestframework-simplejwt==4.3.0
+docopt==0.6.2
 psycopg2-binary
-djangorestframework-simplejwt-4.3.0
