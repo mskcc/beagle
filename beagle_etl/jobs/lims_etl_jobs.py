@@ -74,8 +74,11 @@ def fetch_samples(request_id):
     for sample in response_body.get('samples'):
         if not sample:
             raise FailedToFetchFilesException
-        job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
-        children.add(str(job.id))
+        if sample['igocomplete']:
+            job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
+            children.add(str(job.id))
+        else:
+            logger.info("Sample %s not igoComplete" % str(sample['igoSampleId']))
     return list(children)
 
 
