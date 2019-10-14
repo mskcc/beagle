@@ -169,6 +169,8 @@ def _get_file_types_command(arguments, config):
     response = requests.get(urljoin(BEAGLE_ENDPOINT, API['file-types']),
                             headers={'Authorization': 'Bearer %s' % config.token}, params=params)
     response_json = json.dumps(response.json(), indent=4)
+    config.set('prev', None)
+    config.set('next', None)
     return response_json
 
 
