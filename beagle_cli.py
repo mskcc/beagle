@@ -7,7 +7,7 @@ from os.path import expanduser
 from urllib.parse import urljoin
 
 
-BEAGLE_ENDPOINT = os.environ.get('BEAGLE_ENDPOINT', 'http://localhost:8000')
+BEAGLE_ENDPOINT = os.environ.get('BEAGLE_ENDPOINT', 'http://silo:5001')
 
 
 CONFIG_TEMPLATE = {
