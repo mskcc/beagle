@@ -37,6 +37,9 @@ class JobViewSet(mixins.CreateModelMixin,
         request_id = request.query_params.get('request_id')
         if request_id:
             queryset = queryset.filter(args__request_id=request_id)
+        st = request.query_params.get('status')
+        if st:
+            queryset = queryset.filter(status=st)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = JobSerializer(page, many=True)
