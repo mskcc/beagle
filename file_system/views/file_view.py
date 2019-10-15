@@ -52,6 +52,13 @@ class FileView(mixins.CreateModelMixin,
         file_type = request.query_params.getlist('file_type')
         if file_type:
             queryset = queryset.filter(file_type__ext__in=file_type)
+        ret = request.query_params.get('return')
+        if ret:
+            ret_str = 'filemetadata__metadata__%s' % ret
+            try:
+                queryset = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+            except Exception as e:
+                return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = FileSerializer(page, many=True, context={'request': request})
