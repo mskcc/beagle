@@ -74,8 +74,11 @@ def fetch_samples(request_id):
     for sample in response_body.get('samples'):
         if not sample:
             raise FailedToFetchFilesException
-        job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
-        children.add(str(job.id))
+        if sample['igocomplete']:
+            job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
+            children.add(str(job.id))
+        else:
+            logger.info("Sample %s not igoComplete" % str(sample['igoSampleId']))
     return list(children)
 
 
@@ -174,8 +177,8 @@ def create_file(path, request_id, file_group_id, file_type, data, library, run, 
         file_type_obj = FileType.objects.filter(ext=file_type).first()
         metadata = copy.deepcopy(data)
         metadata['requestId'] = request_id
-        metadata['libraries'] = [copy.deepcopy(library)]
-        metadata['libraries'][0]['runs'] = [run]
+        metadata['libraries'] = copy.deepcopy(library)
+        metadata['libraries']['runs'] = run
         metadata['requestMetadata'] = request_metadata
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
