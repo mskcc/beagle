@@ -162,7 +162,7 @@ def _check_is_authenticated(config):
 
 
 def _get_file_types_command(arguments, config):
-    page_size = arguments.get('--page_size')
+    page_size = arguments.get('--page-size')
     params = dict()
     if page_size:
         params['page_size'] = page_size
@@ -175,7 +175,7 @@ def _get_file_types_command(arguments, config):
 
 
 def _get_storage(arguments, config):
-    page_size = arguments.get('--page_size')
+    page_size = arguments.get('--page-size')
     params = dict()
     if page_size:
         params['page_size'] = page_size
@@ -187,10 +187,10 @@ def _get_storage(arguments, config):
 
 def _get_files(arguments, config):
     metadata = arguments.get('--metadata')
-    file_group = arguments.get('--file_group')
-    file_name = arguments.get('--file_name')
-    filename_regex = arguments.get('--filename_regex')
-    page_size = arguments.get('--page_size')
+    file_group = arguments.get('--file-group')
+    file_name = arguments.get('--file-name')
+    filename_regex = arguments.get('--filename-regex')
+    page_size = arguments.get('--page-size')
     params = dict()
     params['metadata'] = metadata
     params['file_group'] = file_group

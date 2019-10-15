@@ -30,6 +30,41 @@ Beagle is backend service for managing files, pipelines and runs.
   - Try to pair fails, and create runs
   - Notify if there are some errors with files or file metadata
 
+## beagle_cli.py
+
+- Command line utility which helps handles authentication and accessing beagle endpoints.
+
+#### setup
+- Requirements
+  - python 3
+  
+- Instructions
+  - pip install -r requirements-cli.txt
+  
+- Run  
+  - python beagle_cli.py
+  
+
+Usage:
+
+  `beagle_cli.py files create <file_path> <file_type> <file_group_id> [--metadata-path=<metadata_path>] [--size=<size>]`
+  
+  `beagle_cli.py files list [--page-size=<page_size>] [--metadata=<metadata>]... [--file-group=<file_group>]... [--file-name=<file_name>]... [--filename-regex=<filename_regex>]`
+  
+  `beagle_cli.py storage create <storage_name>`
+  
+  `beagle_cli.py storage list`
+  
+  `beagle_cli.py file-types create <file_type>`
+  
+  `beagle_cli.py file-types list`
+  
+  `beagle_cli.py --version`
+  
+ Examples:
+- List files by the igoId
+  `python beagle_cli.py files list --metadata igoId:07973_BO_6`
+
 ## setup
 
 - Requirements
