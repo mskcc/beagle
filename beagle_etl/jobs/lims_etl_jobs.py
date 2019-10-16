@@ -109,7 +109,8 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
     try:
         data = sampleMetadata.json()[0]
     except Exception as e:
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
+        raise FailedToFetchFilesException(
+            "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
         logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
@@ -136,24 +137,25 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run, request_metadata)
+                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run,
+                                request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
                     conflict_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run, request_metadata)
+                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run,
+                                request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
                     conflict_files.append((file_search.path, str(file_search.id)))
-        if conflict:
-            raise FailedToFetchFilesException(
-                "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
-        if missing_fastq:
-            raise FailedToFetchFilesException(
-                "Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+    if conflict:
+        raise FailedToFetchFilesException(
+            "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
+    if missing_fastq:
+        raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
 
 
 def convert_to_dict(runs):
