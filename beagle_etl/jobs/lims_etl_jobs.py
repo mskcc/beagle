@@ -71,9 +71,9 @@ def fetch_samples(request_id):
         "projectManagerName": response_body['projectManagerName']
     }
     logger.info("Response: %s" % str(sampleIds.json()))
-    for sample in response_body.get('samples'):
+    for sample in response_body.get('samples', []):
         if not sample:
-            raise FailedToFetchFilesException
+            raise FailedToFetchFilesException("Sample Id None")
         if sample['igocomplete']:
             job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
             children.add(str(job.id))
@@ -96,7 +96,9 @@ def get_or_create_sample_job(sample_id, request_id, request_metadata):
 
 def fetch_sample_metadata(sample_id, request_id, request_metadata):
     conflict = False
+    missing_fastq = False
     conflict_files = []
+    failed_runs = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = requests.get('%s/LimsRest/api/getSampleManifest' % settings.LIMS_URL,
                                   params={"igoSampleId": sample_id},
@@ -119,16 +121,18 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
+        if not runs:
+            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+            raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
         run_dict = convert_to_dict(runs)
         logger.info("Processing runs %s" % run_dict)
         for run in run_dict.values():
-            if not runs:
-                logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
-                raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
             if not fastqs:
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
+                missing_fastq = True
+                failed_runs.append(run['runId'])
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
@@ -147,6 +151,9 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
         if conflict:
             raise FailedToFetchFilesException(
                 "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
+        if missing_fastq:
+            raise FailedToFetchFilesException(
+                "Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
 
 
 def convert_to_dict(runs):
