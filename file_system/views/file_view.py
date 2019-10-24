@@ -61,8 +61,11 @@ class FileView(mixins.CreateModelMixin,
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = FileSerializer(page, many=True, context={'request': request})
-            return self.get_paginated_response(serializer.data)
+            if ret:
+                return self.get_paginated_response(page)
+            else:
+                serializer = FileSerializer(page, many=True, context={'request': request})
+                return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = CreateFileSerializer(data=request.data, context={'request': request})
