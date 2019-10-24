@@ -111,3 +111,27 @@ class RunStatusUpdateSerializer(serializers.Serializer):
         instance.processed = validated_data.get('processed')
         instance.save()
 
+
+class APIRunCreateSerializer(serializers.Serializer):
+    app = serializers.UUIDField()
+    inputs = serializers.JSONField(allow_null=True, required=True)
+    outputs = serializers.JSONField(allow_null=True, required=False)
+
+    def create(self, validated_data):
+        try:
+            pipeline = Pipeline.objects.get(id=validated_data.get('app'))
+        except Pipeline.DoesNotExist:
+            raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
+        name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
+        run.save()
+        cwl_resolver = CWLResolver(pipeline.github, pipeline.entrypoint, pipeline.version)
+        resolved_dict = cwl_resolver.resolve()
+        task = runner.run.run_creator.Run(resolved_dict)
+        for input in task.inputs:
+            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema, value=input.value)
+            port.save()
+        for output in task.outputs:
+            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema, value=output.value)
+            port.save()
+        return run

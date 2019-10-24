@@ -2,6 +2,7 @@ import uuid
 import git
 import os
 import json
+import yaml
 import shutil
 import subprocess
 from django.conf import settings
@@ -17,7 +18,7 @@ class CWLResolver(object):
 
     def resolve(self):
         dir = self._dir_name()
-        location = self.git_clone(dir)
+        location = self._git_clone(dir)
         output_name = os.path.join(location, '%s.cwl' % str(uuid.uuid4()))
         with open(output_name, 'w') as out:
             subprocess.check_call([settings.RABIX_PATH, '-r', os.path.join(location, self.entrypoint)], stdout=out)
@@ -28,16 +29,27 @@ class CWLResolver(object):
 
     def create_file(self):
         dir = self._dir_name()
-        location = self.git_clone(dir)
+        location = self._git_clone(dir)
         output_name = os.path.join(location, '%s.cwl' % str(uuid.uuid4()))
         with open(output_name, 'w') as out:
             subprocess.check_call([settings.RABIX_PATH, '-r', os.path.join(location, self.entrypoint)], stdout=out)
         return output_name
 
-    def git_clone(self, location):
+    def _git_clone(self, location):
         git.Git(location).clone(self.github, '--branch', self.version, '--recurse-submodules')
         dirname = self._extract_dirname_from_github_link()
         return os.path.join(location, dirname)
+
+    def load(self):
+        dir = self._dir_name()
+        location = self._git_clone(dir)
+        with open(os.path.join(location, self.entrypoint), 'r') as f:
+            try:
+                ret = yaml.load(f)
+            except Exception:
+                ret = json.load(f)
+        self._cleanup(location)
+        return ret
 
     def _dir_name(self):
         dirname = '/tmp/' + str(uuid.uuid4())
