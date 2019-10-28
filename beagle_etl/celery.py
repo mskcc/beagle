@@ -17,6 +17,9 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
+app.conf.task_routes = {'beagle_etl.tasks.scheduler': {'queue': 'beagle_job_scheduler'}}
+
+
 app.conf.beat_schedule = {
     "fetch_requests_from_lims": {
         "task": "beagle_etl.tasks.fetch_requests_lims",
@@ -24,6 +27,7 @@ app.conf.beat_schedule = {
     },
     "scheduler_tick": {
         "task": "beagle_etl.tasks.scheduler",
-        "schedule": 15.0
+        "schedule": 15.0,
+        "options": {"queue": "beagle_job_scheduler"}
     }
 }
