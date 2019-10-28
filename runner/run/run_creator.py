@@ -25,10 +25,28 @@ class Port(object):
         self.value = None
 
     def _schema_evaluate(self, input_type, secondary_files):
+        t = self._resolve_type(input_type)
+        return {
+            "type": t,
+            "secondaryFiles": secondary_files
+        }
+
+    def _resolve_type(self, input_type):
         if isinstance(input_type, dict):
             t = input_type.get('type')
             if t not in self.CWLTypes:
                 raise Exception("Invalid Port Type")
+            elif input_type.get('type') == 'record':
+                t = {
+                    'type': 'record',
+                    'fields': {}
+                }
+                for k, v in input_type.get('fields').items():
+                    t['fields'][k] = {
+                        'type': self._resolve_type(v)
+                    }
+            else:
+                t = input_type
         elif input_type.endswith('[]'):
             simple_type = input_type
             simple_type = simple_type.replace('[]', '')
@@ -38,10 +56,14 @@ class Port(object):
             }
         else:
             t = input_type
-        return {
-            "type": t,
-            "secondaryFiles": secondary_files
-        }
+        return t
+
+    def _check_required(self, input_type):
+        if input_type.endswith('?'):
+            simple_type = input_type
+            simple_type = simple_type.replace('?', '')
+            return simple_type, True
+        return input_type, False
 
 
 class Run(object):

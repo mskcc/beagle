@@ -20,7 +20,7 @@ class PortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('id', 'name', 'schema', 'value')
+        fields = ('id', 'name', 'schema', 'value', 'db_value')
 
 
 class UpdatePortSerializer(serializers.Serializer):
@@ -129,9 +129,9 @@ class APIRunCreateSerializer(serializers.Serializer):
         resolved_dict = cwl_resolver.resolve()
         task = runner.run.run_creator.Run(resolved_dict)
         for input in task.inputs:
-            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema, value=input.value)
+            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema, db_value=input.value)
             port.save()
         for output in task.outputs:
-            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema, value=output.value)
+            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema, db_value=output.value)
             port.save()
         return run
