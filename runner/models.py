@@ -31,7 +31,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
-    # output_directory
+    output_directory = models.CharField(max_length=300, null=True, editable=True)
 
 
 class Run(BaseModel):
@@ -47,6 +47,7 @@ class Port(BaseModel):
     name = models.CharField(max_length=100, editable=True)
     port_type = models.IntegerField(choices=[(port_type.value, port_type.name) for port_type in PortType])
     schema = JSONField()
+    db_value = JSONField(null=True)
     value = JSONField(null=True)
 
 
