@@ -42,7 +42,7 @@ class FileView(mixins.CreateModelMixin,
             for val in metadata:
                 k, v = val.split(':')
                 filter_query['filemetadata__metadata__%s__regex' % k] = v
-            queryset = queryset.filter(**filter_query)
+                queryset = queryset.filter(**filter_query)
         filename = request.query_params.getlist('filename')
         if filename:
             queryset = queryset.filter(file_name__in=filename)
