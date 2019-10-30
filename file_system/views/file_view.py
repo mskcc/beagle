@@ -41,6 +41,13 @@ class FileView(mixins.CreateModelMixin,
             filter_query = dict()
             for val in metadata:
                 k, v = val.split(':')
+                filter_query['filemetadata__metadata__%s' % k] = v
+                queryset = queryset.filter(**filter_query)
+        metadata_regex = request.query_params.getlist('metadata_regex')
+        if metadata_regex:
+            filter_query = dict()
+            for val in metadata_regex:
+                k, v = val.split(':')
                 filter_query['filemetadata__metadata__%s__regex' % k] = v
                 queryset = queryset.filter(**filter_query)
         filename = request.query_params.getlist('filename')
