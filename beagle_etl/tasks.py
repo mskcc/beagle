@@ -40,11 +40,12 @@ def scheduler():
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
         with transaction.atomic():
-            if not job.lock:
+            j = Job.objects.get(id=job.id)
+            if not j.lock:
                 logger.info("Submitting job: %s" % str(job.id))
-                job.lock = True
-                job.save()
-                job_processor.delay(job.id)
+                j.lock = True
+                j.save()
+                job_processor.delay(j.id)
             else:
                 logger.info("Job already locked: %s" % str(job.id))
 
@@ -111,3 +112,4 @@ class JobObject(object):
                 status = JobStatus.WAITING_FOR_CHILDREN
                 break
         self.job.status = status
+        # Create OperatorJob

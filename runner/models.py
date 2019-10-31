@@ -1,5 +1,6 @@
 import uuid
 from enum import IntEnum
+from file_system.models import File
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
@@ -31,7 +32,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
-    # output_directory
+    output_directory = models.CharField(max_length=300, null=True, editable=True)
 
 
 class Run(BaseModel):
@@ -46,7 +47,9 @@ class Port(BaseModel):
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, editable=True)
     port_type = models.IntegerField(choices=[(port_type.value, port_type.name) for port_type in PortType])
-    schema = JSONField()
+    schema = JSONField(null=True, blank=True)
+    secondary_files = JSONField(null=True, blank=True)
+    db_value = JSONField(null=True)
     value = JSONField(null=True)
 
 
@@ -58,3 +61,8 @@ class ExecutionEvents(BaseModel):
     err_file_path = models.CharField(max_length=200)
     outputs = JSONField(null=True)
     processed = models.BooleanField(default=False)
+
+
+class FileJobTracker(models.Model):
+    job = models.ForeignKey(Run, on_delete=models.CASCADE)
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
