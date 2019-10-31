@@ -1,8 +1,8 @@
 import datetime
 from rest_framework import serializers
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents
-import runner.run.run_creator
-from runner.pipeline.pipeline_resolver import CWLResolver
+
+
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -20,7 +20,7 @@ class PortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('id', 'name', 'schema', 'value')
+        fields = ('id', 'name', 'schema', 'secondary_files', 'value', 'db_value')
 
 
 class UpdatePortSerializer(serializers.Serializer):
@@ -31,7 +31,7 @@ class CreatePortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('run', 'name', 'port_type', 'schema', 'value')
+        fields = ('run', 'name', 'port_type', 'schema', 'secondary_files', 'value')
 
 
 class CreateRunSerializer(serializers.Serializer):
@@ -45,15 +45,6 @@ class CreateRunSerializer(serializers.Serializer):
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
         run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
         run.save()
-        cwl_resolver = CWLResolver(pipeline.github, pipeline.entrypoint, pipeline.version)
-        resolved_dict = cwl_resolver.resolve()
-        task = runner.run.run_creator.Run(resolved_dict)
-        for input in task.inputs:
-            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema, value=input.value)
-            port.save()
-        for output in task.outputs:
-            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema, value=output.value)
-            port.save()
         return run
 
 
@@ -111,3 +102,22 @@ class RunStatusUpdateSerializer(serializers.Serializer):
         instance.processed = validated_data.get('processed')
         instance.save()
 
+
+class APIRunCreateSerializer(serializers.Serializer):
+    app = serializers.UUIDField()
+    inputs = serializers.JSONField(allow_null=True, required=True)
+    outputs = serializers.JSONField(allow_null=True, required=False)
+
+    def create(self, validated_data):
+        try:
+            pipeline = Pipeline.objects.get(id=validated_data.get('app'))
+        except Pipeline.DoesNotExist:
+            raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
+        name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
+        run.save()
+        return run
+
+
+class TempoOperatorTestSerializer(serializers.Serializer):
+    request_id = serializers.CharField(max_length=30)

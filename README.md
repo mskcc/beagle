@@ -89,8 +89,9 @@ Usage:
 
 - Async
   - Celery is used for scheduling tasks related to ETL from LIMS and submission to CWL Executor
-  - celery -A file_system beat -l info (starting the periodic task)
-  - celery -A file_system worker -l info (starting the worker)
+  - celery -A beagle_etl beat -l info -f beat.log (starting the periodic task)
+  - celery -A beagle_etl worker -l info -f beagle-worker.log (starting the worker)
+  - celery -A beagle_etl worker --concurrency 1 -l info -Q beagle_job_scheduler -f scheduler-worker.log
   
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
