@@ -20,6 +20,9 @@ class CWLResolver(object):
         dir = self._dir_name()
         location = self._git_clone(dir)
         output_name = os.path.join(location, '%s.cwl' % str(uuid.uuid4()))
+        print(settings.RABIX_PATH)
+        print(location)
+        print(self.entrypoint)
         with open(output_name, 'w') as out:
             subprocess.check_call([settings.RABIX_PATH, '-r', os.path.join(location, self.entrypoint)], stdout=out)
         with open(output_name) as f:
