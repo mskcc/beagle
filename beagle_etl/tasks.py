@@ -112,3 +112,4 @@ class JobObject(object):
                 status = JobStatus.WAITING_FOR_CHILDREN
                 break
         self.job.status = status
+        # Create OperatorJob
