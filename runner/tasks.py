@@ -69,8 +69,9 @@ def submit_job(run_id):
         'inputs': inputs
     }
     logger.info("Ready for submittion")
-    response = requests.post('http://silo:5003/v0/jobs/', data=job)
-    if response.status_code == 200:
+    print(job)
+    response = requests.post('http://localhost:5003/v0/jobs/', json=job) 
+    if response.status_code == 201:
         logger.info("Successfully for submitted")
     else:
         logger.info("Failed to submit")
