@@ -13,7 +13,7 @@ class TempoOperator(Operator):
         Operator.__init__(self, request_id)
 
     def get_pipeline_id(self):
-        return "69c842e1-017a-45d8-9c1f-1c3a99fc9d3b" # Return ID of the pipeline
+        return "1060973e-66e7-45ca-a36d-2b2e26a78d83" # Return ID of the pipeline
 
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id).all()
