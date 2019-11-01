@@ -13,7 +13,7 @@ class TempoOperator(Operator):
         Operator.__init__(self, request_id)
 
     def get_pipeline_id(self):
-        return "5a51cbd3-5fb3-4ab5-a683-14700ee8e7c1" # Return ID of the pipeline
+        return "69c842e1-017a-45d8-9c1f-1c3a99fc9d3b" # Return ID of the pipeline
 
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id).all()
@@ -44,6 +44,6 @@ class TempoOperator(Operator):
         tempo_inputs = construct_tempo_jobs(samples)
 
         for job in tempo_inputs:
-            tempo_jobs.append(APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs}))
+            tempo_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs}), job))
 
         return tempo_jobs # Not returning anything for some reason for inputs; deal with later
