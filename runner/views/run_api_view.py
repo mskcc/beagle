@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
-from runner.tasks import create_run_task
+from runner.tasks import create_run_task, operator_job
 from runner.models import Run, Port, Pipeline, RunStatus
 from runner.serializers import RunSerializer, APIRunCreateSerializer, UpdateRunSerializer, RunStatusUpdateSerializer, TempoOperatorTestSerializer
 from runner.operator.tempo_operator.tempo_operator import TempoOperator
@@ -40,12 +40,12 @@ class TempoOperatorViewSet(GenericAPIView):
 
     def post(self, request):
         request_id = request.data['request_id']
-        tempo_operator = TempoOperator(request_id)
-        jobs = tempo_operator.get_jobs()
-        result = []
-        for job in jobs:
-            if job.is_valid():
-                run = job.save()
-                result.append(run)
-        response = RunSerializer(result, many=True)
-        return Response(response.data, status=status.HTTP_200_OK)
+        operator_job.delay(request_id, 'tempo')
+        # tempo_operator = TempoOperator(request_id)
+        # jobs = tempo_operator.get_jobs()
+        # result = []
+        # for job in jobs:
+        #     if job.is_valid():
+        #         run = job.save()
+        #         result.append(run)
+        return Response({"details": "Operator Job submitted %s" % request_id}, status=status.HTTP_200_OK)

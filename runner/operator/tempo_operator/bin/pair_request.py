@@ -64,7 +64,7 @@ def compile_pairs(samples):
     if len(tumors) == 0:
         print("No tumor samples found; pairing cannot be performed.")
         pprint(samples)
-        sys.exit(1)
+        raise Exception("No tumor samples found; pairing cannot be performed.")
 
     # pairing
     pairs = dict()

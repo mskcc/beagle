@@ -20,6 +20,7 @@ app.conf.task_routes = {
     'beagle_etl.tasks.scheduler': {'queue': 'beagle_job_scheduler'},
     'runner.tasks.create_run_task': {'queue': 'runner_queue'},
     'runner.tasks.submit_job': {'queue': 'runner_queue'},
+    'runner.tasks.operator_job': {'queue': 'runner_queue'}
 }
 
 app.conf.beat_schedule = {
