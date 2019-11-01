@@ -2,7 +2,7 @@ import logging
 from .models import Run, RunStatus, Port, PortType
 from celery import shared_task
 import runner.run.run_creator
-from runner.operator.operator import OperatorFactory
+from runner.operator.operator_factory import OperatorFactory
 from runner.pipeline.pipeline_resolver import CWLResolver
 
 
