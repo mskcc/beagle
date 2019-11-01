@@ -2,7 +2,6 @@ import uuid
 import git
 import os
 import json
-import yaml
 import shutil
 import subprocess
 from django.conf import settings
@@ -47,10 +46,7 @@ class CWLResolver(object):
         dir = self._dir_name()
         location = self._git_clone(dir)
         with open(os.path.join(location, self.entrypoint), 'r') as f:
-            try:
-                ret = yaml.load(f)
-            except Exception:
-                ret = json.load(f)
+            ret = json.load(f)
         self._cleanup(location)
         return ret
 
