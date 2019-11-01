@@ -42,6 +42,7 @@ def check_and_return_single_values(data):
 
 
 # TODO: if datas is not from the LIMS, these hardcoded values will need to be generalized
+# build_sample() expects data to be igoId unique, otherwise R1/R2 resolution will fail
 def build_sample(data):
     # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
     # but standardizing it here with what GATK sets bam headers to
