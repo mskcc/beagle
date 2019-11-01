@@ -1,4 +1,4 @@
-from file_system.models import File
+from file_system.models import File, FileMetadata
 
 
 class Operator(object):
@@ -7,6 +7,7 @@ class Operator(object):
         self.pipeline_id = self.get_pipeline_id()
         self.request_id = request_id
         self.files = File.objects
+        self.filemetadata = FileMetadata.objects
 
     def get_pipeline_id(self):
         '''
