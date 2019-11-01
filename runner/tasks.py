@@ -1,12 +1,25 @@
 import logging
-import datetime
 from .models import Run, RunStatus, Port, PortType
 from celery import shared_task
 import runner.run.run_creator
+from runner.operator.operator import OperatorFactory
 from runner.pipeline.pipeline_resolver import CWLResolver
 
 
 logger = logging.getLogger(__name__)
+
+
+@shared_task
+def operator_job(request_id, pipeline_type):
+    logger.info("Creating operator %s for requestId: %s" % (pipeline_type, request_id))
+    operator = OperatorFactory.factory(pipeline_type, request_id)
+    jobs = operator.get_jobs()
+    result = []
+    for job in jobs:
+        if job.is_valid():
+            run = job.save()
+            result.append(run)
+            create_run_task.delay(run.id, job['inputs'])
 
 
 @shared_task
@@ -54,7 +67,3 @@ def submit_job(run_id):
     }
     logger.info("Ready for submittion")
     print(job)
-
-
-def operator_job(request_id, pipeline_type):
-    pass
