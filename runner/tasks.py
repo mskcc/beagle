@@ -1,6 +1,7 @@
 import logging
 from .models import Run, RunStatus, Port, PortType
 from celery import shared_task
+import requests
 import runner.run.run_creator
 from runner.operator.operator import OperatorFactory
 from runner.pipeline.pipeline_resolver import CWLResolver
@@ -14,12 +15,14 @@ def operator_job(request_id, pipeline_type):
     logger.info("Creating operator %s for requestId: %s" % (pipeline_type, request_id))
     operator = OperatorFactory.factory(pipeline_type, request_id)
     jobs = operator.get_jobs()
-    result = []
+    print(jobs)
     for job in jobs:
-        if job.is_valid():
-            run = job.save()
-            result.append(run)
-            create_run_task.delay(run.id, job['inputs'])
+        if job[0].is_valid():
+            run = job[0].save()
+            logger.debug(run.id)
+            create_run_task.delay(str(run.id), job[1])
+        else:
+            logger.debug(job[0].errors)
 
 
 @shared_task
@@ -66,4 +69,8 @@ def submit_job(run_id):
         'inputs': inputs
     }
     logger.info("Ready for submittion")
-    print(job)
+    response = requests.post('http://silo:5003/v0/jobs/', data=job)
+    if response.status_code == 200:
+        logger.info("Successfully for submitted")
+    else:
+        logger.info("Failed to submit")
