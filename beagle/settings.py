@@ -28,7 +28,7 @@ SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['silo']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -269,7 +269,7 @@ LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
 
 LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
-IMPORT_FILE_GROUP = '33c115cb-bf21-488a-964d-7eb242927753'
+IMPORT_FILE_GROUP = '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a'
 
 
 LOGGING = {
