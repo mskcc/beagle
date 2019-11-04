@@ -132,6 +132,11 @@ class Port(object):
                     else:
                         new_inputs[k] = v
             return new_inputs
+        elif isinstance(inputs, list):
+            new_val = []
+            for item in inputs:
+                new_val.append(self._resolve_inputs(item))
+            return new_val
         return inputs
 
     def _resolve_uri(self, uri):
