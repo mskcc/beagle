@@ -1,5 +1,7 @@
-import logging
+import uuid
+import os
 import json
+import logging
 from .models import Run, RunStatus, Port, PortType
 from celery import shared_task
 import requests
@@ -26,7 +28,7 @@ def operator_job(request_id, pipeline_type):
 
 
 @shared_task
-def create_run_task(run_id, inputs):
+def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run")
     try:
         run = Run.objects.get(id=run_id)
@@ -45,12 +47,12 @@ def create_run_task(run_id, inputs):
         port.save()
     run.status = RunStatus.READY
     run.save()
-    submit_job.delay(run_id)
+    submit_job.delay(run_id, output_directory)
     logger.info("Run created")
 
 
 @shared_task
-def submit_job(run_id):
+def submit_job(run_id, output_directory=None):
     try:
         run = Run.objects.get(id=run_id)
     except Run.DoesNotExist:
@@ -65,9 +67,12 @@ def submit_job(run_id):
     inputs = dict()
     for port in run.port_set.filter(port_type=PortType.INPUT).all():
         inputs[port.name] = port.value
+    if not output_directory:
+        output_directory = os.path.join(run.app.output_directory, str(uuid.uuid4()))
     job = {
         'app' : app,
-        'inputs': inputs
+        'inputs': inputs,
+        'root_dir': output_directory
     }
     logger.info("Ready for submittion")
     response = requests.post('http://localhost:5003/v0/jobs/', json=job) 
