@@ -18,5 +18,5 @@ urlpatterns = [
     path('pipeline/download/<uuid:pk>', PipelineDownloadViewSet.as_view(), name='resolve-download'),
     path('run/start/<uuid:pk>', StartRunViewSet.as_view()),
     path('run/update/<uuid:pk>', UpdateJob.as_view()),
-    path('tempo/test/', TempoOperatorViewSet.as_view())
+    path('request/', TempoOperatorViewSet.as_view())
 ]
