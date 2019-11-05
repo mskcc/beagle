@@ -28,7 +28,7 @@ SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['silo']
+ALLOWED_HOSTS = ['silo', 'localhost']
 
 CORS_ORIGIN_ALLOW_ALL = True
 

@@ -44,6 +44,7 @@ def create_run_task(run_id, inputs):
                     secondary_files=output.secondary_files, db_value=output.value)
         port.save()
     run.status = RunStatus.READY
+    run.save()
     submit_job.delay(run_id)
     logger.info("Run created")
 
