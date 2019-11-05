@@ -44,8 +44,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             #     port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
             #                 secondary_files=output.secondary_files, db_value=output.value)
             #     port.save()
-            create_run_task.delay(response.id, request.data['inputs'])
-            return Response(run.data, status=status.HTTP_201_CREATED)
+            create_run_task.delay(response.data['id'], request.data['inputs'])
+            return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
