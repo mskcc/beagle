@@ -176,16 +176,16 @@ def _resolve_outputs(inputs, file_group):
         new_inputs = dict()
         for k, v in inputs.items():
             if isinstance(v, dict):
-                new_inputs[k] = _resolve_inputs(v)
+                new_inputs[k] = _resolve_outputs(v, file_group)
             elif isinstance(v, list):
                 new_val = []
                 for item in v:
-                    new_val.append(_resolve_inputs(item))
+                    new_val.append(_resolve_outputs(item, file_group))
                 new_inputs[k] = new_val
             else:
-                if k == 'path':
+                if k == 'location':
                     path, size = _create_file(v, file_group)
-                    new_inputs['path'] = path
+                    new_inputs['location'] = path
                     new_inputs['size'] = size
                 else:
                     new_inputs[k] = v
@@ -193,12 +193,13 @@ def _resolve_outputs(inputs, file_group):
     elif isinstance(inputs, list):
         new_val = []
         for item in inputs:
-            new_val.append(_resolve_inputs(item))
+            new_val.append(_resolve_outputs(item, file_group))
         return new_val
     return inputs
 
 
 def _create_file(filepath, file_group):
+    filepath = filepath.replace('file://', '')
     basename = os.path.basename(filepath)
     ext = basename.split('.')[-1]
     try:
