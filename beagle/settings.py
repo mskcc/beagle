@@ -278,3 +278,5 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
 }
+
+BEAGLE_URL = 'http://silo:5001'
