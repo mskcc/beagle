@@ -206,7 +206,10 @@ def _create_file(filepath, file_group):
         file_type = FileType.objects.get(ext=ext)
     except FileType.DoesNotExist:
         file_type = 'unknown'
-    serializer = CreateFileSerializer(data={'path': filepath, 'file_group_id': file_group, 'file_type': file_type})
+    else:
+        file_type = file_type.ext
+    serializer = CreateFileSerializer(
+        data={'path': filepath, 'file_group_id': file_group.id, 'file_type': file_type, 'metadata': {}})
     if serializer.is_valid():
         file = serializer.save()
         return 'bid://%s' % str(file.id), file.size
