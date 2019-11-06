@@ -106,7 +106,7 @@ def complete_job(run, remote_status):
     run.status = RunStatus.COMPLETED
     file_group = run.app.output_file_group
     for k, v in remote_status['outputs'].items():
-        port = run.port_set.filter(port_type=PortType.OUTPUT, name=k)
+        port = run.port_set.filter(port_type=PortType.OUTPUT, name=k).first()
         port.value = v
         port.db_value = runner.run.run_creator._resolve_outputs(v, file_group)
         port.save()
