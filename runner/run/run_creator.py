@@ -1,7 +1,7 @@
 import os
 import copy
 from runner.models import PortType
-from file_system.models import File, FileType
+from file_system.models import File, FileType, FileRunMap
 from file_system.serializers import CreateFileSerializer
 
 
@@ -20,13 +20,15 @@ class Port(object):
                 'array',
                 'record']
 
-    def __init__(self, value, type, inputs):
+    def __init__(self, run_id, value, type, inputs):
         self.id = value.get('id')
         input_type = value.get('type')
         self.secondary_files = value.get('secondaryFiles', [])
         self.schema = self._resolve_type(input_type)
         self.type = type
         self.value = _resolve_inputs(copy.deepcopy(inputs.get(self.id)))
+        self.db_value = _resolve_inputs_db(copy.deepcopy(inputs.get(self.id)), run_id)
+        self.run_id = run_id
 
     def _resolve_type(self, input_type, required=True):
         if isinstance(input_type, dict):
@@ -92,24 +94,38 @@ class Port(object):
             return t
 
 
-def _resolve_inputs_db(inputs):
+def _resolve_inputs_db(inputs, run_id):
     if inputs and isinstance(inputs, dict):
         new_inputs = dict()
         for k, v in inputs.items():
             if isinstance(v, dict):
-                new_inputs[k] = _resolve_inputs(v)
+                new_inputs[k] = _resolve_inputs_db(v, run_id)
             elif isinstance(v, list):
                 new_val = []
                 for item in v:
-                    new_val.append(_resolve_inputs(item))
+                    new_val.append(_resolve_inputs_db(item, run_id))
                 new_inputs[k] = new_val
             else:
                 if k == 'location':
-                    new_inputs['location'] = _get_file_id(v)
+                    file_id = _get_file_id(v)
+                    new_inputs['location'] = file_id
+                    _add_run_to_file(file_id, run_id)
                 else:
                     new_inputs[k] = v
         return new_inputs
     return inputs
+
+
+def _add_run_to_file(file_id, run_id):
+    try:
+        file = FileRunMap.objects.filter(file_id=file_id)
+    except FileRunMap.DoesNotExist:
+        file = FileRunMap(File.objects.get(file_id), [run_id])
+    else:
+        runs = file.run
+        runs.append(run_id)
+        file.run = runs
+    file.save()
 
 
 def _resolve_inputs(inputs):
@@ -217,7 +233,7 @@ def _create_file(filepath, file_group):
 
 class Run(object):
 
-    def __init__(self, app, inputs):
+    def __init__(self, run_id, app, inputs):
         self.app = app
-        self.inputs = [Port(inp, PortType.INPUT, inputs) for inp in app.get('inputs', [])]
-        self.outputs = [Port(out, PortType.OUTPUT, {}) for out in app.get('outputs', [])]
+        self.inputs = [Port(run_id, inp, PortType.INPUT, inputs) for inp in app.get('inputs', [])]
+        self.outputs = [Port(run_id, out, PortType.OUTPUT, {}) for out in app.get('outputs', [])]
