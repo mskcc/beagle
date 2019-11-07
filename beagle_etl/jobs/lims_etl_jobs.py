@@ -47,7 +47,7 @@ def get_or_create_request_job(request_id):
         op = Operator.objects.first()
         if op.active:
             job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                  status=JobStatus.CREATED, max_retry=1, children=[], callback='beagle_etl.jobs.lims_etl_jobs.request_callback', callback_args={'request_id': request_id, 'operator': 'tempo'})
+                  status=JobStatus.CREATED, max_retry=1, children=[], callback='beagle_etl.jobs.lims_etl_jobs.request_callback', callback_args={'request_id': request_id, 'operator': 'tempo'}) # TODO: Operator for automatic submittion should be defined here. Currently we only have tempo
             job.save()
         else:
             job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
