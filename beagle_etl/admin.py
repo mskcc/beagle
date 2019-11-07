@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Job, JobStatus
+from .models import Job, JobStatus, Operator
 
 
 def restart(modeladmin, request, queryset):
@@ -24,3 +24,4 @@ class JobAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Job, JobAdmin)
+admin.site.register(Operator)

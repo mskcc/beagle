@@ -1,6 +1,7 @@
 import uuid
 from enum import IntEnum
 from django.db import models
+from runner.models import Pipeline
 from django.contrib.postgres.fields import JSONField
 
 
@@ -26,4 +27,10 @@ class Job(BaseModel):
     retry_count = models.IntegerField(default=0)
     message = JSONField(null=True)
     max_retry = models.IntegerField(default=3)
+    callback = models.CharField(max_length=100)
+    callback_args = JSONField(null=True, blank=True)
     lock = models.BooleanField(default=False)
+
+
+class Operator(models.Model):
+    active = models.BooleanField(default=False)

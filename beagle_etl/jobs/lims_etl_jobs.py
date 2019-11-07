@@ -1,12 +1,10 @@
 import os
 import copy
-import json
 import logging
 import requests
-from time import sleep
-from random import randint
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job
+from runner.tasks import operator_job
+from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from beagle_etl.exceptions import FailedToFetchFilesException
 from file_system.exceptions import MetadataValidationException
@@ -46,10 +44,22 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
     if not job:
-        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
-        job.save()
+        op = Operator.objects.first()
+        if op.active:
+            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                  status=JobStatus.CREATED, max_retry=1, children=[], callback='beagle_etl.jobs.lims_etl_jobs.request_callback', callback_args={'request_id': request_id, 'operator': 'tempo'})
+            job.save()
+        else:
+            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                      status=JobStatus.CREATED, max_retry=1, children=[])
+            job.save()
     return job
+
+
+def request_callback(request_id, operator):
+    logger.info("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+    operator_job.delay(request_id, operator)
+    return []
 
 
 def fetch_samples(request_id):
