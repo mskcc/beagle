@@ -117,10 +117,9 @@ def _resolve_inputs_db(inputs, run_id):
 
 
 def _add_run_to_file(file_id, run_id):
-    try:
-        file = FileRunMap.objects.filter(file_id=file_id)
-    except FileRunMap.DoesNotExist:
-        file = FileRunMap(File.objects.get(file_id), [run_id])
+    file = FileRunMap.objects.filter(file_id=file_id).first()
+    if not file:
+        file = FileRunMap(file=File.objects.get(id=file_id), run=[run_id])
     else:
         runs = file.run
         runs.append(run_id)
@@ -184,7 +183,7 @@ def _get_file_id(uri):
         file_obj = File.objects.filter(path=juno_path).first()
         if not file_obj:
             raise Exception("File %s doesn't exist" % uri)
-        return file_obj.id
+        return str(file_obj.id)
 
 
 def _resolve_outputs(inputs, file_group):
