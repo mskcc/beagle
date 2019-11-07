@@ -39,7 +39,7 @@ def create_run_task(run_id, inputs, output_directory=None):
     task = runner.run.run_creator.Run(run_id, resolved_dict, inputs)
     for input in task.inputs:
         port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-                    secondary_files=input.secondary_files, db_value=inputs.db_value, value=input.value)
+                    secondary_files=input.secondary_files, db_value=input.db_value, value=input.value)
         port.save()
     for output in task.outputs:
         port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
