@@ -16,7 +16,7 @@ class TempoOperator(Operator):
         return "1060973e-66e7-45ca-a36d-2b2e26a78d83" # Return ID of the pipeline
 
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__requestId=self.request_id).all()
+        files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         tempo_jobs = list() #  [APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': inputs})]
 
         data = list()

@@ -77,3 +77,8 @@ class FileMetadata(BaseModel):
         self.version = version
         super(FileMetadata, self).save(*args, **kwargs)
 
+
+class FileRunMap(BaseModel):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    run = JSONField(default=list)
+
