@@ -32,6 +32,7 @@ Beagle API.
 
 Usage:
   beagle_cli.py files create <file_path> <file_type> <file_group_id> [--metadata-path=<metadata_path>] [--size=<size>]
+  beagle_cli.py files update <file_id> [--file-path=<file_path>] [--file-type=<file_type>] [--file-group=<file_group_id>] [--metadata-path=<metadata_path>] [--size=<size>]
   beagle_cli.py files list [--page-size=<page_size>] [--metadata=<metadata>]... [--file-group=<file_group>]... [--file-name=<file_name>]... [--filename-regex=<filename_regex>]
   beagle_cli.py storage create <storage_name>
   beagle_cli.py storage list
@@ -87,6 +88,8 @@ def files_commands(arguments, config):
         return _get_files(arguments, config)
     if arguments.get('create'):
         return _create_file(arguments, config)
+    if arguments.get('update'):
+        return _update_file(arguments, config)
 
 
 def storage_commands(arguments, config):
@@ -271,6 +274,34 @@ def _create_storage(arguments, config):
         "type": 0,
     }
     response = requests.post(urljoin(BEAGLE_ENDPOINT, API['storage']), data=body,
+                             headers={'Authorization': 'Bearer %s' % config.token})
+    response_json = json.dumps(response.json(), indent=4)
+    return response_json
+
+
+# Update
+
+
+def _update_file(arguments, config):
+    path = arguments.get('<file_path>')
+    metadata_path = arguments.get('--metadata-path')
+    size = arguments.get('--size')
+    metadata = {}
+    if metadata_path:
+        with open(metadata_path) as f:
+            metadata = json.load(f)
+            print(metadata)
+    file_type = arguments.get('<file_type>')
+    file_group_id = arguments.get('<file_group_id>')
+    body = {
+        "path": path,
+        "metadata": json.dumps(metadata),
+        "file_group_id": file_group_id,
+        "file_type": file_type,
+    }
+    if size:
+        body["size"] = size
+    response = requests.post(urljoin(BEAGLE_ENDPOINT, API['files']), data=body,
                              headers={'Authorization': 'Bearer %s' % config.token})
     response_json = json.dumps(response.json(), indent=4)
     return response_json

@@ -92,6 +92,6 @@ Usage:
   - celery -A beagle_etl beat -l info -f beat.log (starting the periodic task)
   - celery -A beagle_etl worker -l info -f beagle-worker.log (starting the worker)
   - celery -A beagle_etl worker --concurrency 1 -l info -Q beagle_job_scheduler -f scheduler-worker.log
-  
+  - celery -A beagle_etl worker -l info -Q runner_queue
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).

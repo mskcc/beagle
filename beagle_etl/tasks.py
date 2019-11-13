@@ -97,6 +97,7 @@ class JobObject(object):
 
     def _check_children(self):
         status = JobStatus.COMPLETED
+        message = []
         for child_id in self.job.children:
             try:
                 child_job = Job.objects.get(id=child_id)
@@ -106,10 +107,17 @@ class JobObject(object):
                 break
             if child_job.status == JobStatus.FAILED:
                 status = JobStatus.FAILED
-                self.job.message = {"details": "Child job %s failed" % child_id}
+                message.append(child_id)
                 break
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED):
                 status = JobStatus.WAITING_FOR_CHILDREN
                 break
         self.job.status = status
-        # Create OperatorJob
+        if message:
+            self.job.message = {"details": "Child jobs %s failed" % ', '.join(message)}
+        if self.job.status == JobStatus.COMPLETED:
+            if self.job.callback:
+                job = Job(run=self.job.callback,
+                          args=self.job.callback_args,
+                          status=JobStatus.CREATED, max_retry=1, children=[])
+                job.save()
