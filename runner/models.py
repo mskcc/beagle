@@ -1,7 +1,7 @@
 import uuid
 from enum import IntEnum
-from file_system.models import File
 from django.db import models
+from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
 
 
@@ -32,6 +32,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
+    output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
 
 

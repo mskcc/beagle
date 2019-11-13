@@ -1,12 +1,10 @@
 import os
 import copy
-import json
 import logging
 import requests
-from time import sleep
-from random import randint
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job
+from runner.tasks import operator_job
+from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from beagle_etl.exceptions import FailedToFetchFilesException
 from file_system.exceptions import MetadataValidationException
@@ -46,10 +44,22 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
     if not job:
-        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
-        job.save()
+        op = Operator.objects.first()
+        if op.active:
+            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                  status=JobStatus.CREATED, max_retry=1, children=[], callback='beagle_etl.jobs.lims_etl_jobs.request_callback', callback_args={'request_id': request_id, 'operator': 'tempo'}) # TODO: Operator for automatic submittion should be defined here. Currently we only have tempo
+            job.save()
+        else:
+            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                      status=JobStatus.CREATED, max_retry=1, children=[])
+            job.save()
     return job
+
+
+def request_callback(request_id, operator):
+    logger.info("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+    operator_job.delay(request_id, operator)
+    return []
 
 
 def fetch_samples(request_id):
@@ -79,27 +89,24 @@ def fetch_samples(request_id):
     for sample in response_body.get('samples', []):
         if not sample:
             raise FailedToFetchFilesException("Sample Id None")
-        if sample['igocomplete']:
-            job = get_or_create_sample_job(sample['igoSampleId'], request_id, request_metadata)
-            children.add(str(job.id))
-        else:
-            logger.info("Sample %s not igoComplete" % str(sample['igoSampleId']))
+        job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+        children.add(str(job.id))
     return list(children)
 
 
-def get_or_create_sample_job(sample_id, request_id, request_metadata):
+def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
         "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', args__sample_id=sample_id).first()
     if not job:
         job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata',
-                  args={'sample_id': sample_id, 'request_id': request_id, 'request_metadata': request_metadata},
+                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
 
 
-def fetch_sample_metadata(sample_id, request_id, request_metadata):
+def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     conflict = False
     missing_fastq = False
     conflict_files = []
@@ -142,7 +149,7 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run,
+                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
@@ -150,7 +157,7 @@ def fetch_sample_metadata(sample_id, request_id, request_metadata):
                     conflict_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', data, library, run,
+                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata)
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
@@ -184,13 +191,14 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_file(path, request_id, file_group_id, file_type, data, library, run, request_metadata):
+def create_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata):
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(ext=file_type).first()
         metadata = copy.deepcopy(data)
         metadata['requestId'] = request_id
+        metadata['igocomplete'] = igocomplete
         metadata['libraries'] = copy.deepcopy(library)
         metadata['libraries']['runs'] = run
         metadata['requestMetadata'] = request_metadata

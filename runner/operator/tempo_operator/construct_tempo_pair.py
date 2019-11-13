@@ -3,7 +3,6 @@ import argparse
 import json
 from pprint import pprint
 from .bin.pair_request import compile_pairs, get_by_tumor_type, create_pairing_info
-from .bin.retrieve_samples_by_query import get_samples_from_request_id
 
 
 # TODO: generalize

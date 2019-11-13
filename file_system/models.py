@@ -50,8 +50,8 @@ class FileGroupMetadata(BaseModel):
 
 
 class File(BaseModel):
-    file_name = models.CharField(max_length=100)
-    path = models.CharField(max_length=400)
+    file_name = models.CharField(max_length=500)
+    path = models.CharField(max_length=1500)
     file_type = models.ForeignKey(FileType, null=True, on_delete=models.SET_NULL)
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
@@ -76,4 +76,9 @@ class FileMetadata(BaseModel):
         version = max(versions) + 1 if versions else 0
         self.version = version
         super(FileMetadata, self).save(*args, **kwargs)
+
+
+class FileRunMap(BaseModel):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    run = JSONField(default=list)
 

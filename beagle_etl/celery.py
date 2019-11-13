@@ -16,10 +16,12 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
+
 app.conf.task_routes = {
     'beagle_etl.tasks.scheduler': {'queue': 'beagle_job_scheduler'},
     'runner.tasks.create_run_task': {'queue': 'runner_queue'},
     'runner.tasks.submit_job': {'queue': 'runner_queue'},
+    'runner.tasks.operator_job': {'queue': 'runner_queue'}
 }
 
 app.conf.beat_schedule = {
@@ -31,5 +33,10 @@ app.conf.beat_schedule = {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0,
         "options": {"queue": "beagle_job_scheduler"}
+    },
+    'check_status': {
+        "task": "runner.tasks.check_jobs_status",
+        "schedule": 30.0,
+        "options": {"queue": "runner_queue"}
     }
 }

@@ -23,6 +23,3 @@ class Operator(object):
         '''
         raise Exception("Implement this")
 
-
-class OperatorFactory(object):
-    pass
