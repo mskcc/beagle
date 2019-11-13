@@ -1,8 +1,7 @@
 import datetime
+from django.conf import settings
 from rest_framework import serializers
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents
-
-
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -63,6 +62,7 @@ class RunSerializer(serializers.ModelSerializer):
     inputs = serializers.SerializerMethodField()
     outputs = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    status_url = serializers.SerializerMethodField()
 
     def get_status(self, obj):
         return RunStatus(obj.status).name
@@ -73,9 +73,12 @@ class RunSerializer(serializers.ModelSerializer):
     def get_outputs(self, obj):
         return PortSerializer(obj.port_set.filter(port_type=PortType.OUTPUT).all(), many=True).data
 
+    def get_status_url(self, obj):
+        return settings.BEAGLE_URL + '/v0/run/api/%s' % obj.id
+
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'app', 'inputs', 'outputs', 'created_date', 'job_statuses')
+        fields = ('id', 'name', 'status', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
@@ -119,5 +122,8 @@ class APIRunCreateSerializer(serializers.Serializer):
         return run
 
 
-class TempoOperatorTestSerializer(serializers.Serializer):
-    request_id = serializers.CharField(max_length=30)
+class RequestIdOperatorSerializer(serializers.Serializer):
+    request_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30)
+    )
+    pipeline_name = serializers.CharField(max_length=100)

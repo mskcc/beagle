@@ -25,4 +25,10 @@ class Operator(object):
 
 
 class OperatorFactory(object):
-    pass
+
+    def factory(pipeline, request_id):
+        if pipeline:
+            return TempoOperator(request_id)
+        else:
+            raise Exception("Invalid job")
+    factory = staticmethod(factory)
