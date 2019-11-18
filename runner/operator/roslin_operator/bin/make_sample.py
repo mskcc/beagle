@@ -41,7 +41,8 @@ def check_and_return_single_values(data):
     return data
 
 
-# TODO: if datas is not from the LIMS, these hardcoded values will need to be generalized
+# TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
+# TODO: Add PDX/Xenografts logic (not in LIMS endpoints as of 11/18/2019; should be in 'Specimen Type')
 def build_sample(data):
     # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
     # but standardizing it here with what GATK sets bam headers to
@@ -55,6 +56,7 @@ def build_sample(data):
         libraries = meta['libraries']
         runs = libraries['runs']
         bid = v['id']
+        request_id = meta['requestId']
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
@@ -90,6 +92,7 @@ def build_sample(data):
             sample['bait_set'] = bait_set
             sample['igo_id'] = igo_id
             sample['run_date'] = run_date
+            sample['request_id'] = request_id
         else:
             sample = samples[rg_id]
 
@@ -120,6 +123,7 @@ def build_sample(data):
     result['R2'] = list()
     result['R1_bid'] = list()
     result['R2_bid'] = list()
+    result['request_id'] = list()
 
     for rg_id in samples:
         sample = samples[rg_id]
