@@ -30,6 +30,9 @@ def format_sample(data):
         sample['R1'].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['R2']:
         sample['R2'].append({'class': 'File', 'location': 'juno://' + i})
+    sample['zR1'] = list()  # TODO: Add for Xenografts
+    sample['zR2'] = list()  # TODO: Add for Xenografts
+    sample['bam'] = list()  # TODO: Remove entirely? For DMP Bams
     sample['RG_ID'] = data['ID']
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
