@@ -30,12 +30,6 @@ def format_sample(data):
         sample['R1'].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['R2']:
         sample['R2'].append({'class': 'File', 'location': 'juno://' + i})
-    sample['zR1'] = list()
-    sample['zR2'] = list()
-    for i in data['zR1']:
-        sample['zR1'].append({'class': 'File', 'location': 'juno://' + i})
-    for i in data['zR2']:
-        sample['zR2'].append({'class': 'File', 'location': 'juno://' + i})
     sample['RG_ID'] = data['ID']
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
@@ -54,8 +48,9 @@ def construct_roslin_jobs(samples):
         project_id = tumor['request_id']
         assay = tumor['bait_set']
         job = dict()
-        job['normal_sample'] = format_sample(normal)
-        job['tumor_sample'] = format_sample(tumor)
+        normal_sample = format_sample(normal)
+        tumor_sample = format_sample(tumor)
+        job['pair'] = [tumor_sample, normal_sample]
         references = convert_references(project_id, assay)
         job.update(references)
         roslin_jobs.append(job)
@@ -173,6 +168,7 @@ def convert_references(project_id, assay):
         'mouse_fasta': {'class': 'File', 'path': str(request_files['mouse_fasta'])},
         "db_files": files
     }
+    # emit_original_quals boolean could be problematic; test
     params = {
         "abra_scratch": temp_dir,
         "abra_ram_min": 84000,
