@@ -76,11 +76,11 @@ def generate_results(results):
             sample = samples[rg_id]
 
         if 'R1' in fname:
-            sample['R1'] = fpath
-            sample['R1_bid'] = str(bid)
+            sample['fastq1'] = fpath
+            sample['fastq1_bid'] = str(bid)
         else:
-            sample['R2'] = fpath
-            sample['R2_bid'] = str(bid)
+            sample['fastq2'] = fpath
+            sample['fastq2_bid'] = str(bid)
         samples[rg_id] = sample
     check_samples(samples)
 
@@ -98,10 +98,10 @@ def generate_results(results):
     result['bait_set'] = list()
     result['igo_id'] = list()
     result['run_date'] = list()
-    result['R1'] = list()
-    result['R2'] = list()
-    result['R1_bid'] = list()
-    result['R2_bid'] = list()
+    result['fastq1'] = list()
+    result['fastq2'] = list()
+    result['fastq1_bid'] = list()
+    result['fastq2_bid'] = list()
     result["collapsing_aln_output_file_name"] = list()
     result["collapsing_picard_output_file_name"] = list()
     result["output_name_collapsed_gzip_R1"] = list()
@@ -122,8 +122,8 @@ def generate_results(results):
 
 def check_samples(samples):
     for rg_id in samples:
-        r1 = samples[rg_id]['R1']
-        r2 = samples[rg_id]['R2']
+        r1 = samples[rg_id]['fastq1']
+        r2 = samples[rg_id]['fastq2']
 
         expected_r2 = 'R2'.join(r1.rsplit('R1', 1))
         if expected_r2 != r2:
