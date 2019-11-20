@@ -51,20 +51,18 @@ def generate_results(results):
             samples[rg_id] = dict()
             sample = dict()
             sample['request_id'] = meta['requestId']
-            sample['read_group_sequnecing_center'] = (CN)
-            sample['read_group_sequencing_platform'] = (PL)
-            sample['read_group_platform_unit'] = (pu)
-            sample['read_group_library'] = (lb)
-            sample['tumor_type'] = (tumor_type)
-            sample['read_group_identifier'] = (rg_id)
-            sample['read_group_sample_name'] = (cmo_sample_name)
-            sample['species'] = (species)
+            sample['read_group_sequnecing_center'] = CN
+            sample['read_group_sequencing_platform'] = PL
+            sample['read_group_platform_unit'] = pu
+            sample['read_group_library'] = 1 # TODO: Fix; previously set to `lb` but CWL is expecting int
+            sample['tumor_type'] = tumor_type
+            sample['read_group_identifier'] = rg_id
+            sample['read_group_sample_name'] = cmo_sample_name
+            sample['species'] = species
             sample['patient_id'] = cmo_patient_id
             sample['bait_set'] = bait_set
             sample['igo_id'] = igo_id
             sample['run_date'] = run_date
-
-            # TODO: Adding fields
             sample["collapsing_aln_output_file_name"] = cmo_sample_name + "_unfiltered.sam"
             sample["collapsing_picard_output_file_name"] = cmo_sample_name + "_unfiltered.bam"
             sample["output_name_collapsed_gzip_R1"] = cmo_sample_name + "_collapsed_R1.fastq.gz"
