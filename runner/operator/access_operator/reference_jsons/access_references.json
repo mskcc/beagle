@@ -21,7 +21,7 @@
         "class": "File",
         "path": "/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta",
         "secondaryFiles": [
-
+                        { "class": "File", "path": "/work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict" },
                         { "class": "File", "path": "/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.amb" },
                         { "class": "File", "path": "/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.ann" },
                         { "class": "File", "path": "/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.bwt" },
