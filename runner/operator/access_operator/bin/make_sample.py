@@ -134,7 +134,15 @@ def check_samples(samples):
 def check_and_return_single_values(data):
     single_values = ['read_group_sequnecing_center', 'read_group_library', 'read_group_sequencing_platform',
                      'read_group_sample_name', 'bait_set',
-                     'patient_id', 'species', 'tumor_type', 'igo_id']
+                     'patient_id', 'species', 'tumor_type', 'igo_id',
+                     'read_group_identifier', 'read_group_platform_unit',
+                     'collapsing_aln_output_file_name',
+                     'collapsing_picard_output_file_name',
+                     'output_name_collapsed_gzip_R1',
+                     'output_name_collapsed_gzip_R2',
+                     'sort_first_pass_output_file_name',
+                     'standard_aln_output_file_name',
+                     'standard_picard_addrg_output_filename']
 
     for key in single_values:
         value = set(data[key])
