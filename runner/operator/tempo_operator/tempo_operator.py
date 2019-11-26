@@ -24,8 +24,7 @@ class TempoOperator(Operator):
             sample['id'] = file.id
             sample['path'] = file.path
             sample['file_name'] = file.file_name
-            filemetadata_id = files.filter(id=file.id).values('filemetadata')[0]['filemetadata']
-            sample['metadata'] = self.filemetadata.get(id=filemetadata_id).metadata
+            sample['metadata'] = file.filemetadata_set.first().metadata
             data.append(sample)
 
         samples = list()
