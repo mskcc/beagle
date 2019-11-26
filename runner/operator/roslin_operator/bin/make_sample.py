@@ -28,7 +28,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'LB', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id' ]
+    single_values = [ 'CN', 'LB', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
 
     for key in single_values:
         value = set(data[key])
@@ -63,6 +63,7 @@ def build_sample(data):
         lb = libraries['libraryIgoId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
+        specimen_type = meta['specimenType']
         species = meta['species']
         cmo_sample_name = format_sample_name(meta['cmoSampleName'])
         flowcell_id = runs['flowCellId']
@@ -92,6 +93,7 @@ def build_sample(data):
             sample['bait_set'] = bait_set
             sample['igo_id'] = igo_id
             sample['run_date'] = run_date
+            sample['specimen_type'] = specimen_type
             sample['request_id'] = request_id
         else:
             sample = samples[rg_id]
@@ -119,6 +121,7 @@ def build_sample(data):
     result['bait_set'] = list() 
     result['igo_id'] = list() 
     result['run_date'] = list()
+    result['specimen_type'] = list()
     result['R1'] = list()
     result['R2'] = list()
     result['R1_bid'] = list()

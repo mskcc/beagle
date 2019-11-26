@@ -18,6 +18,7 @@ def calculate_abra_ram_size(grouping_dict):
 
 # TODO: This is ROSLIN-formatted, note the confusing IDs
 def format_sample(data):
+    specimen_type = data['specimen_type']
     sample = dict()
     sample['ID'] = data['SM'] # TODO: change someday
     sample['CN'] = data['CN']
@@ -26,10 +27,6 @@ def format_sample(data):
     sample['PU'] = data['PU']
     sample['R1'] = list()
     sample['R2'] = list()
-    for i in data['R1']:
-        sample['R1'].append({'class': 'File', 'location': 'juno://' + i})
-    for i in data['R2']:
-        sample['R2'].append({'class': 'File', 'location': 'juno://' + i})
     sample['zR1'] = list()  # TODO: Add for Xenografts
     sample['zR2'] = list()  # TODO: Add for Xenografts
     sample['bam'] = list()  # TODO: Remove entirely? For DMP Bams
@@ -37,6 +34,17 @@ def format_sample(data):
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
     sample['bwa_output'] = sample['ID'] + '.bam'
+
+    r1 = 'R1'
+    r2 = 'R2'
+    if 'pdx' in specimen_type.lower() or 'xenografts' in specimen_type.lower():
+        r1 = 'zR1'
+        r2 = 'zR2'
+
+    for i in data[r1]:
+        sample[r1].append({'class': 'File', 'location': 'juno://' + i})
+    for i in data[r2]:
+        sample[r2].append({'class': 'File', 'location': 'juno://' + i})
 
     return sample
 
