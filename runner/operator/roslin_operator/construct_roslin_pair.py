@@ -41,9 +41,9 @@ def format_sample(data):
         r1 = 'zR1'
         r2 = 'zR2'
 
-    for i in data[r1]:
+    for i in data['R1']:
         sample[r1].append({'class': 'File', 'location': 'juno://' + i})
-    for i in data[r2]:
+    for i in data['R2']:
         sample[r2].append({'class': 'File', 'location': 'juno://' + i})
 
     return sample
