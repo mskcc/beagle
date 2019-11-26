@@ -52,6 +52,7 @@ def build_sample(data):
     samples = dict()
 
     for i,v in enumerate(data):
+        print(data)
         meta = v['metadata']
         libraries = meta['libraries']
         runs = libraries['runs']
