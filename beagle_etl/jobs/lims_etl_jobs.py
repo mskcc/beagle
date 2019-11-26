@@ -56,7 +56,16 @@ def get_or_create_request_job(request_id):
     return job
 
 
-def request_callback(request_id, operator):
+def get_operator(baitset):
+    if baitset in ('something',):
+        return 'roslin'
+    elif baitset in ('something_else',):
+        return 'tempo'
+
+
+def request_callback(request_id):
+    baitSet = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('baitSet')
+    operator = get_operator(baitSet)
     logger.info("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
     operator_job.delay(request_id, operator)
     return []
