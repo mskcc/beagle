@@ -1,4 +1,5 @@
 from runner.operator.tempo_operator.tempo_operator import TempoOperator
+from runner.operator.roslin_operator.roslin_operator import RoslinOperator
 
 
 class OperatorFactory(object):
@@ -7,9 +8,7 @@ class OperatorFactory(object):
         if pipeline in ('tempo',):
             return TempoOperator(request_id)
         elif pipeline in ('roslin',):
-            # TODO: Allan uncoment return statement when you implement RoslinOperator
-            #return RoslinOperator(request_id)
-            raise Exception("Roslin operator still not implemented")
+            return RoslinOperator(request_id)
         else:
             raise Exception("Invalid pipeline")
     factory = staticmethod(factory)
