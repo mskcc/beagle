@@ -6,3 +6,7 @@ class JobNotFoundExceptions(Exception):
 
 class FailedToFetchFilesException(Exception):
     pass
+
+
+class FailedToSubmitToOperatorException(Exception):
+    pass
