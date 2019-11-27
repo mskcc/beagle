@@ -88,7 +88,7 @@ def compile_pairs(samples):
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
                 if new_normal:
                     pairs['tumor'].append(tumor)
-                    pairs['normal'].append(normal)
+                    pairs['normal'].append(new_normal)
                 else:
                     print("No normal found for %s, patient %s" % (tumor['igo_id'], patient_id))
         else:
