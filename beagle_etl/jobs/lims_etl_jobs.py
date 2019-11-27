@@ -48,7 +48,9 @@ def get_or_create_request_job(request_id):
         op = Operator.objects.first()
         if op.active:
             job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                  status=JobStatus.CREATED, max_retry=1, children=[], callback='beagle_etl.jobs.lims_etl_jobs.request_callback', callback_args={'request_id': request_id}) # TODO: Operator for automatic submittion should be defined here. Currently we only have tempo
+                      status=JobStatus.CREATED, max_retry=1, children=[],
+                      callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
+                      callback_args={'request_id': request_id})
             job.save()
         else:
             job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
@@ -69,13 +71,19 @@ def get_operator(recipe):
 
 
 def request_callback(request_id):
-    #recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
-    queryset = queryset = File.objects.prefetch_related(Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').order_by('-created_date'))).order_by('file_name')
+    # recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
+    queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
+                                                      queryset=FileMetadata.objects.select_related('file').order_by(
+                                                          '-created_date'))).order_by('file_name')
     ret_str = 'filemetadata__metadata__requestMetadata__recipe'
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
-        raise FailedToSubmitToOperatorException("Not enough metadata to choose the operator for requestId:%s" % request_id)
+        raise FailedToSubmitToOperatorException(
+            "Not enough metadata to choose the operator for requestId:%s" % request_id)
     operator = get_operator(recipes[0])
+    if not operator:
+        logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+        raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
     logger.info("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
     operator_job.delay(request_id, operator)
     return []
