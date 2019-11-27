@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from .models import Job
-from .serializers import JobSerializer, CreateJobSerialzier
+from .serializers import JobSerializer, CreateJobSerializier
 
 
 class JobViewSet(mixins.CreateModelMixin,
@@ -19,7 +19,7 @@ class JobViewSet(mixins.CreateModelMixin,
         if self.action == 'list' or self.action == 'retrieve':
             return JobSerializer
         else:
-            return CreateJobSerialzier
+            return CreateJobSerializier
 
     def create(self, request, *args, **kwargs):
         pass
