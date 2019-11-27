@@ -2,7 +2,7 @@ import argparse
 import sys, os
 from datetime import datetime as dt
 from pprint import pprint
-from .retrieve_samples_by_query import get_samples_from_request_id, get_samples_from_patient_id, get_sample_from_igo_id
+from .retrieve_samples_by_query import get_samples_from_patient_id
 
 
 def remove_with_caveats(samples):
@@ -88,12 +88,11 @@ def compile_pairs(samples):
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
                 if new_normal:
                     pairs['tumor'].append(tumor)
-                    pairs['normal'].append(normal)
+                    pairs['normal'].append(new_normal)
                 else:
                     print("No normal found for %s, patient %s" % (tumor['igo_id'], patient_id))
         else:
             print("NoPatientIdError: No patient_id found for %s; skipping." % tumor['igo_id'])
-
     return pairs
 
 
