@@ -1,11 +1,11 @@
 import uuid
 import os
-import json
 import logging
-from .models import Run, RunStatus, Port, PortType
-from celery import shared_task
 import requests
 import runner.run.run_creator
+from celery import shared_task
+from django.conf import settings
+from .models import Run, RunStatus, Port, PortType
 from runner.operator.operator_factory import OperatorFactory
 from runner.pipeline.pipeline_resolver import CWLResolver
 
@@ -20,11 +20,12 @@ def operator_job(request_id, pipeline_type):
     jobs = operator.get_jobs()
     for job in jobs:
         if job[0].is_valid():
+            logger.info("Creating Run object")
             run = job[0].save()
-            logger.debug(run.id)
-            create_run_task.delay(str(run.id), job[1])
+            logger.info("Run object created with id: %s" % str(run.id))
+            create_run_task.delay(str(run.id), job[1], job[0].output_directory)
         else:
-            logger.debug(job[0].errors)
+            logger.error("Job invalid: %s" % str(job[0].errors))
 
 
 @shared_task
@@ -70,25 +71,25 @@ def submit_job(run_id, output_directory=None):
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(uuid.uuid4()))
     job = {
-        'app' : app,
+        'app': app,
         'inputs': inputs,
         'root_dir': output_directory
     }
-    logger.info("Ready for submittion")
-    response = requests.post('http://localhost:5003/v0/jobs/', json=job) 
+    logger.info("Job %s ready for submitting" % run_id)
+    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
     if response.status_code == 201:
-        logger.info("Successfully for submitted")
         run.execution_id = response.json()['id']
         run.status = RunStatus.RUNNING
+        logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
     else:
-        logger.info("Failed to submit")
+        logger.info("Failed to submit job %s" % run_id)
         run.status = RunStatus.FAILED
         run.save()
 
 
 def check_status_on_ridgeback(job_id):
-    response = requests.get('http://silo:5003/v0/jobs/%s/' % job_id)
+    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/' % job_id)
     if response.status_code == 200:
         logger.info("Job %s in status: %s" % (job_id, response.json()['status']))
         return response.json()
@@ -121,20 +122,23 @@ def running_job(run):
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
     for run in runs:
-        logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
-        remote_status = check_status_on_ridgeback(run.execution_id)
-        if remote_status:
-            if remote_status['status'] == 'FAILED':
-                logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                fail_job(run)
-                continue
-            if remote_status['status'] == 'COMPLETED':
-                logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                complete_job(run, remote_status)
-                continue
-            if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
-                logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
-                running_job(run)
-                continue
-        logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
-
+        if run.execution_id:
+            logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
+            remote_status = check_status_on_ridgeback(run.execution_id)
+            if remote_status:
+                if remote_status['status'] == 'FAILED':
+                    logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
+                    fail_job(run)
+                    continue
+                if remote_status['status'] == 'COMPLETED':
+                    logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
+                    complete_job(run, remote_status)
+                    continue
+                if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
+                    logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
+                    running_job(run)
+                    continue
+            else:
+                logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
+        else:
+            logger.error("Job %s not submitted" % str(run.id))
