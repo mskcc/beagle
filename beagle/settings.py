@@ -269,8 +269,9 @@ LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
 
 LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
-IMPORT_FILE_GROUP = '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a'
+IMPORT_FILE_GROUP = os.environ.get('BEAGLE_IMPORT_FILE_GROUP', '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')
 
+RIDGEBACK_URL = os.environ.get('BEAGLE_RIDGEBACK_URL', 'http://localhost:5003')
 
 LOGGING = {
     "version": 1,

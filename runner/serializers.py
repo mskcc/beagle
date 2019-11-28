@@ -110,6 +110,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
+    output_directory = serializers.CharField(max_length=1000, required=False)
 
     def create(self, validated_data):
         try:
