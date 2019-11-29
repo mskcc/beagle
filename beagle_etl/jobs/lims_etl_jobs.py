@@ -64,7 +64,7 @@ def get_operator(recipe):
         return 'tempo'
     elif recipe in ("IMPACT341", "IMPACT+ (341 genes plus custom content)", "IMPACT410", "IMPACT468"):
         return 'roslin'
-    elif recipe in ("MSK-ACCESS_v1"):
+    elif recipe in ("MSK-ACCESS_v1",):
         return "access"
     else:
         return None
@@ -74,7 +74,8 @@ def request_callback(request_id):
     # recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
     queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
-                                                          '-created_date'))).order_by('file_name')
+                                                          '-created_date'))).order_by('file_name').filter(
+        filemetadata__metadata__requestId=request_id)
     ret_str = 'filemetadata__metadata__requestMetadata__recipe'
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
@@ -84,7 +85,7 @@ def request_callback(request_id):
     if not operator:
         logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
-    logger.info("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+    logger.info("Submitting request_id %s to %s operator" % (request_id, operator))
     operator_job.delay(request_id, operator)
     return []
 
