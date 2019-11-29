@@ -23,7 +23,7 @@ def operator_job(request_id, pipeline_type):
             logger.info("Creating Run object")
             run = job[0].save()
             logger.info("Run object created with id: %s" % str(run.id))
-            create_run_task.delay(str(run.id), job[1], job[0].output_directory)
+            create_run_task.delay(str(run.id), job[1], None)
         else:
             logger.error("Job invalid: %s" % str(job[0].errors))
 

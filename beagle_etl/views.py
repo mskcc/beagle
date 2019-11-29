@@ -1,10 +1,13 @@
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+import logging
+from .models import Job
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
+from beagle_etl.jobs.lims_etl_jobs import TYPES
+from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
-from .models import Job
-from .serializers import JobSerializer, CreateJobSerializier
+from beagle_etl.models import JobStatus, Job, Operator
+from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer
 
 
 class JobViewSet(mixins.CreateModelMixin,
@@ -20,9 +23,6 @@ class JobViewSet(mixins.CreateModelMixin,
             return JobSerializer
         else:
             return CreateJobSerializier
-
-    def create(self, request, *args, **kwargs):
-        pass
 
     def list(self, request, *args, **kwargs):
         queryset = Job.objects.order_by('created_date').all()
@@ -44,4 +44,28 @@ class JobViewSet(mixins.CreateModelMixin,
         if page is not None:
             serializer = JobSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
+
+
+class RequestIdLimsPullViewSet(GenericAPIView):
+    serializer_class = RequestIdLimsPullSerializer
+
+    logger = logging.getLogger(__name__)
+
+    def post(self, request):
+        request_ids = request.data['request_ids']
+        for request_id in request_ids:
+            logging.info("Submitting requestId %s to pipeline" % request_id)
+            op = Operator.objects.first()
+            if op.active:
+                job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                          status=JobStatus.CREATED, max_retry=1, children=[],
+                          callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
+                          callback_args={'request_id': request_id})
+                job.save()
+            else:
+                job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                          status=JobStatus.CREATED, max_retry=1, children=[])
+                job.save()
+        return Response({"details": "Import requests from lims jobs submitted %s"}, status=status.HTTP_201_CREATED)
+
 
