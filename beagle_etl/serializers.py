@@ -22,3 +22,9 @@ class CreateJobSerializier(serializers.Serializer):
         model = Job
         fields = ('id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message', 'max_retry')
 
+
+class RequestIdLimsPullSerializer(serializers.Serializer):
+    request_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30)
+    )
+
