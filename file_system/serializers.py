@@ -92,7 +92,8 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-    path = serializers.CharField(max_length=400, required=True)
+    path = serializers.CharField(max_length=400, required=True,
+                                 validators=[UniqueValidator(queryset=File.objects.all())])
     size = serializers.IntegerField(required=False)
     file_group_id = serializers.UUIDField(required=True)
     file_type = serializers.CharField(max_length=30, required=True)
@@ -130,7 +131,8 @@ class CreateFileSerializer(serializers.ModelSerializer):
 
 
 class UpdateFileSerializer(serializers.Serializer):
-    path = serializers.CharField(max_length=400, required=False)
+    path = serializers.CharField(max_length=400, required=False,
+                                 validators=[UniqueValidator(queryset=File.objects.all())])
     size = serializers.IntegerField(required=False)
     file_group_id = serializers.UUIDField(required=False)
     file_type = serializers.CharField(max_length=30, required=False)
