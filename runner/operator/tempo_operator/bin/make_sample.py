@@ -38,6 +38,11 @@ def check_and_return_single_values(data):
             pprint(data)
             print("Expected only one value for %s!" %key)
             print("Check import, something went wrong.")
+
+    # hack; formats LB field so that it is a string
+    lb = data['LB']
+    if lb is not None:
+        data['LB'] = '_and_'.join(lb)
     return data
 
 
@@ -58,7 +63,7 @@ def build_sample(data):
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
-        lb = '_and_'.join(libraries['libraryIgoId'])
+        lb = libraries['libraryIgoId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
