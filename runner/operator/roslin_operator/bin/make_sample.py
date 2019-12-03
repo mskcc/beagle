@@ -13,10 +13,9 @@ def format_sample_name(sample_name):
             return sample_name
         else:
             logging.error('Missing or malformed cmoSampleName', exc_info=True)
-            raise ValueError("cmoSampleNameError: cmoSampleName is malformed.")
     except TypeError as error:
-        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning None.")
-        raise
+        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning 'sampleNameMalformed'.")
+    return "sampleNameMalformed"
 
 
 def check_samples(samples):
@@ -30,7 +29,6 @@ def check_samples(samples):
             logging.error("R1: %s" % r1)
             logging.error("Expected R2: %s" % expected_r2)
             logging.error("Actual R2: %s" % r2)
-            raise ValueError("fastqsMismatchedError: R1s and R2s are improperly matched, check data.", exc_info=True)
 
 
 def check_and_return_single_values(data):
@@ -43,7 +41,6 @@ def check_and_return_single_values(data):
         else:
             logging.error("Expected only one value for %s!" %key)
             logging.error("Check import, something went wrong.")
-            raise ValueError("sampleImportError: unexpected values from sample record data", exc_info=True)
 
     # hack; formats LB field so that it is a string
     lb = data['LB']
@@ -83,7 +80,7 @@ def build_sample(data):
         run_date = runs['runDate']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
-        rg_id = '_'.join([cmo_sample_name, pu])
+            rg_id = '_'.join([cmo_sample_name, pu])
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
