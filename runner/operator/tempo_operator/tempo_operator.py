@@ -9,7 +9,7 @@ from .bin.make_sample import build_sample
 class TempoOperator(Operator):
 
     def __init__(self, request_id):
-        Operator.__init__(self, request_id)
+        Operator.__init__(self, 'tempo', request_id)
 
     def get_pipeline_id(self):
         return "ee5f19d6-f8bf-401f-8cbc-1dd81af10e67" # Return ID of the pipeline
