@@ -1,4 +1,5 @@
 import math
+from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
@@ -25,3 +26,19 @@ class BeaglePagination(PageNumberPagination):
             else:
                 pass
         return self.page_size
+
+
+def time_filter(model, query_params):
+    if query_params.get('created_date.timedelta'):
+        time_threshold = datetime.now() - timedelta(hours=int(query_params['created_date.timedelta']))
+        queryset = model.objects.filter(created_date__gt=time_threshold).order_by('-created_date')
+    elif query_params.get('created_date.gt') or query_params.get('created_date.lt'):
+        if query_params.get('created_date.gt'):
+            time_gt = datetime.fromtimestamp(int(query_params['created_date.gt']))
+            queryset = model.objects.filter(created_date__gt=time_gt).order_by('-created_date')
+        if query_params.get('created_date.lt'):
+            time_lt = datetime.fromtimestamp(int(query_params['created_date.lt']))
+            queryset = model.objects.filter(created_date__lt=time_lt).order_by('-created_date')
+    else:
+        queryset = model.objects.order_by('-created_date').all()
+    return queryset
