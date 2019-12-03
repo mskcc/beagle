@@ -28,7 +28,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'LB', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id' ]
+    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id' ]
 
     for key in single_values:
         value = set(data[key])
@@ -58,7 +58,7 @@ def build_sample(data):
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
-        lb = libraries['libraryIgoId']
+        lb = '_and_'.join(libraries['libraryIgoId'])
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
