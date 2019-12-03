@@ -12,11 +12,11 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName', exc_info=True)
-            raise ValueError("cmoSampleNameError: cmoSampleName is malformed.")
+            logging.error('Missing or malformed cmoSampleName %s' % sample_name, exc_info=True)
+            return None
     except TypeError as error:
         logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning None.")
-        raise
+        return None
 
 
 def check_samples(samples):
@@ -30,7 +30,6 @@ def check_samples(samples):
             logging.error("R1: %s" % r1)
             logging.error("Expected R2: %s" % expected_r2)
             logging.error("Actual R2: %s" % r2)
-            raise ValueError("fastqsMismatchedError: R1s and R2s are improperly matched, check data.", exc_info=True)
 
 
 def check_and_return_single_values(data):
@@ -43,7 +42,6 @@ def check_and_return_single_values(data):
         else:
             logging.error("Expected only one value for %s!" %key)
             logging.error("Check import, something went wrong.")
-            raise ValueError("sampleImportError: unexpected values from sample record data", exc_info=True)
 
     # hack; formats LB field so that it is a string
     lb = data['LB']
