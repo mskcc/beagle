@@ -2,6 +2,7 @@ import logging
 from .models import Job
 from rest_framework import mixins
 from rest_framework import status
+from beagle.pagination import time_filter
 from rest_framework.response import Response
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from rest_framework.generics import GenericAPIView
@@ -25,7 +26,7 @@ class JobViewSet(mixins.CreateModelMixin,
             return CreateJobSerializier
 
     def list(self, request, *args, **kwargs):
-        queryset = Job.objects.order_by('created_date').all()
+        queryset = time_filter(Job, request.query_params)
         job_type = request.query_params.get('type')
         if job_type:
             if not TYPES.get(job_type):
