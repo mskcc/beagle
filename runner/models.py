@@ -67,3 +67,9 @@ class ExecutionEvents(BaseModel):
 class FileJobTracker(models.Model):
     job = models.ForeignKey(Run, on_delete=models.CASCADE)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
+
+
+class OperatorErrors(BaseModel):
+    operator_name = models.CharField(max_length=100)
+    request_id = models.CharField(max_length=100)
+    error = JSONField(null=True, blank=True)
