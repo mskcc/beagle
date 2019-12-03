@@ -2,7 +2,9 @@ import os,sys
 import argparse
 import json
 from pprint import pprint
-from .bin.pair_request import compile_pairs, remove_with_caveats
+from .bin.make_sample import remove_with_caveats
+from .bin.pair_request import compile_pairs
+
 
 
 # TODO: generalize
