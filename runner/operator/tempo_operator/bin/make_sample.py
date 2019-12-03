@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 
 def format_sample_name(sample_name):
-    sample_pattern = re.compile(r'C-\d{6}-\w\d{3}-\w')
+    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
     try:
         if "s_" in sample_name[:2]:
             return sample_name
