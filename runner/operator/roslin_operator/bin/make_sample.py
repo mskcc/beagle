@@ -12,10 +12,11 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName', exc_info=True)
+            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            return 'sampleNameMalformed'
     except TypeError as error:
         logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning 'sampleNameMalformed'.")
-    return "sampleNameMalformed"
+        return "sampleNameMalformed"
 
 
 def check_samples(samples):
@@ -80,7 +81,7 @@ def build_sample(data):
         run_date = runs['runDate']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
-            rg_id = '_'.join([cmo_sample_name, pu])
+        rg_id = '_'.join([cmo_sample_name, pu])
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()

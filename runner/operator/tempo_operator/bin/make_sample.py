@@ -12,11 +12,11 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName %s' % sample_name, exc_info=True)
-            return None
+            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            return 'sampleNameMalformed'
     except TypeError as error:
         logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning None.")
-        return None
+        return 'sampleNameMalformed'
 
 
 def check_samples(samples):
