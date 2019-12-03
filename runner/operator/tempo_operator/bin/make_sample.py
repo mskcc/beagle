@@ -63,7 +63,7 @@ def build_sample(data):
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
-        lb = '_and_'.join(libraries['libraryIgoId'])
+        lb = libraries['libraryIgoId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
