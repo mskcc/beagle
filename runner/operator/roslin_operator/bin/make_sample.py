@@ -7,10 +7,13 @@ def format_sample_name(sample_name):
     try:
         if "s_" in sample_name[:2]:
             return sample_name
-        else:
+        elif sample_name is not "":
             sample_name = "s_" + sample_name.replace("-","_")
+        else: # sample_name is an empty string; fail this run by re-submitting
+            print("cmoSampleName is an empty string.")
+            format_sample_name(None)
     except TypeError:
-        print("cmoSampleName is Nonetype; returning None.")
+        print("TypeError: cmoSampleName is Nonetype; returning None.")
     return sample_name
 
 
@@ -38,6 +41,11 @@ def check_and_return_single_values(data):
             pprint(data)
             print("Expected only one value for %s!" %key)
             print("Check import, something went wrong.")
+
+    # hack; formats LB field so that it is a string
+    lb = data['LB']
+    if lb is not None:
+        data['LB'] = '_and_'.join(lb)
     return data
 
 
@@ -60,7 +68,7 @@ def build_sample(data):
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
-        lb = '_and_'.join(libraries['libraryIgoId'])
+        lb = libraries['libraryIgoId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
