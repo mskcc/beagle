@@ -43,7 +43,7 @@ class TempoOperator(Operator):
         tempo_inputs = construct_tempo_jobs(samples)
 
         for job in tempo_inputs:
-            if job['SM'] != 'sampleNameMalformed':  #TODO: Add exception handling for malformed cmoSampleNames
+            if job['ID'] != 'sampleNameMalformed':  #TODO: Add exception handling for malformed cmoSampleNames
                 tempo_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs}), job))
 
         return tempo_jobs
