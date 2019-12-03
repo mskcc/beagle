@@ -2,7 +2,7 @@ import os,sys
 import argparse
 import json
 from pprint import pprint
-from .bin.pair_request import compile_pairs, get_by_tumor_type, create_pairing_info
+from .bin.pair_request import compile_pairs, remove_with_caveats
 
 
 # TODO: generalize
@@ -50,6 +50,7 @@ def format_sample(data):
 
 
 def construct_roslin_jobs(samples):
+    samples, error_samples = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
     number_of_tumors = len(pairs['tumor'])
     roslin_jobs = list()
@@ -65,7 +66,8 @@ def construct_roslin_jobs(samples):
         references = convert_references(project_id, assay)
         job.update(references)
         roslin_jobs.append(job)
-    return roslin_jobs
+    return roslin_jobs, error_samples
+
 
 
 def get_curated_bams(assay,request_files):
