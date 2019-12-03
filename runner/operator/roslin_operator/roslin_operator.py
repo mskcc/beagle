@@ -43,6 +43,7 @@ class RoslinOperator(Operator):
         roslin_inputs = construct_roslin_jobs(samples)
 
         for job in roslin_inputs:
-            roslin_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs}), job))
+            if job['cmoSampleName'] != 'sampleNameMalformed':  #TODO: Add exception handling for malformed cmoSampleNames
+                roslin_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs}), job))
 
         return roslin_jobs
