@@ -1,5 +1,4 @@
-from .make_sample import build_sample
-from .pair_request import remove_with_caveats
+from .make_sample import build_sample, remove_with_caveats
 from file_system.models import File, FileMetadata
 from django.db.models import Prefetch
 import logging
