@@ -28,7 +28,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'LB', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
+    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
 
     for key in single_values:
         value = set(data[key])
