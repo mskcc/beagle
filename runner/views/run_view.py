@@ -2,6 +2,7 @@ import json
 import uuid
 import base64
 import requests
+from beagle.pagination import time_filter
 from django.conf import settings
 from django.db.models import Prefetch
 from rest_framework import status
@@ -29,6 +30,18 @@ class RunViewSet(mixins.ListModelMixin,
         if self.action == 'update':
             return UpdateRunSerializer
         return CreateRunSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = time_filter(Run, request.query_params)
+        status_param = request.query_params.get('status')
+        if status_param:
+            if status_param not in [s.name for s in RunStatus]:
+                return Response({'details': 'Invalid status value %s: expected values %s' % (status_param, [s.name for s in Status])}, status=status.HTTP_400_BAD_REQUEST)
+            queryset = queryset.filter(status=RunStatus[status_param].value)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = RunSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = CreateRunSerializer(data=request.data, context={'request': request})
