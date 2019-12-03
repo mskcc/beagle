@@ -1,7 +1,7 @@
 import datetime
 from django.conf import settings
 from rest_framework import serializers
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -128,3 +128,10 @@ class RequestIdOperatorSerializer(serializers.Serializer):
         child=serializers.CharField(max_length=30)
     )
     pipeline_name = serializers.CharField(max_length=100)
+
+
+class OperatorErrorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OperatorErrors
+        fields = ('operator_name', 'request_id', 'error')

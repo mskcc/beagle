@@ -10,7 +10,7 @@ from .bin.make_sample import build_sample
 class RoslinOperator(Operator):
 
     def __init__(self, request_id):
-        Operator.__init__(self, request_id)
+        Operator.__init__(self, 'roslin', request_id)
 
     def get_pipeline_id(self):
         return "cb5d793b-e650-4b7d-bfcd-882858e29cc5" # Return ID of the pipeline
