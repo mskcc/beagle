@@ -17,7 +17,7 @@ class RoslinOperator(Operator):
 
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
-        roslin_jobs = list() #  [APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': inputs})]
+        roslin_jobs = list()
 
         data = list()
         for file in files:
@@ -45,4 +45,4 @@ class RoslinOperator(Operator):
         for job in roslin_inputs:
             roslin_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs}), job))
 
-        return roslin_jobs # Not returning anything for some reason for inputs; deal with later
+        return roslin_jobs
