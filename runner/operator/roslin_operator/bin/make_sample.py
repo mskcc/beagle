@@ -3,6 +3,28 @@ import re
 logger = logging.getLogger(__name__)
 
 
+def remove_with_caveats(samples):
+    data = list()
+    error_data = list()
+    for sample in samples:
+        add = True
+        igo_id = sample['igo_id']
+        sample_name = sample['SM']
+        patient_id = sample['patient_id']
+        if sample_name == 'sampleNameMalformed':
+            add = False
+            logging.debug("Sample name is malformed for for %s; removing from set" % igo_id)
+        if patient_id[:2].lower() not in 'c-':
+            add = False
+            logging.debug("Patient ID does not start with expected 'C-' prefix for %s; removing from set" % igo_id)
+        if add:
+            data.append(sample)
+        else:
+            error_data.append(sample)
+
+    return data, error_data
+
+
 def format_sample_name(sample_name):
     sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
     try:
