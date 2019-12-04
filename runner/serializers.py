@@ -119,8 +119,10 @@ class APIRunCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        if validated_data.get('name'):
+        if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
+        else:
+            print(validated_data)
         run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
         run.save()
         return run
