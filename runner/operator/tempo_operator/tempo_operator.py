@@ -45,6 +45,6 @@ class TempoOperator(Operator):
 
         for i, job in enumerate(tempo_inputs):
             name = "FLATBUSH: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
-            tempo_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs}), job))
+            tempo_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs, 'name': name}), job))
 
         return tempo_jobs
