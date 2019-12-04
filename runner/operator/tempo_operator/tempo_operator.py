@@ -40,8 +40,10 @@ class TempoOperator(Operator):
             samples.append(build_sample(igo_id_group[igo_id]))
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
+        number_of_inputs = len(tempo_inputs)
 
-        for job in tempo_inputs:
+        for i, job in enumerate(tempo_inputs):
+            name = "FLATBUSH: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             tempo_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs}), job))
 
         return tempo_jobs
