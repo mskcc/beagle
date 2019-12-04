@@ -5,7 +5,6 @@ from runner.serializers import APIRunCreateSerializer
 from .construct_roslin_pair import construct_roslin_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
-from runner.models import Pipeline
 
 
 class RoslinOperator(Operator):
@@ -47,9 +46,7 @@ class RoslinOperator(Operator):
         for i, job in enumerate(roslin_inputs):
             tumor_sample_name = job['pair'][0]['ID']
             normal_sample_name = job['pair'][1]['ID']
-            pipeline = Pipeline.objects.get(id=self.get_pipeline_id())
-            print(pipeline)
-            name = "ROSLIN - %s:%s, %s, (%i of %i) (%s, %s)" % (pipeline.github, pipeline.version, self.request_id, i, number_of_inputs, tumor_sample_name, normal_sample_name)
+            name = "ROSLIN %s, %i of %i" % (self.request_id, i, number_of_inputs, tumor_sample_name, normal_sample_name)
             roslin_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name}), job))
 
         return roslin_jobs
