@@ -117,7 +117,10 @@ class APIRunCreateSerializer(serializers.Serializer):
             pipeline = Pipeline.objects.get(id=validated_data.get('app'))
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
-        name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+        create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        name = "Run %s: %s" % (pipeline.name, create_date)
+        if validated_data.get('name'):
+            name = validated_data.get('name') + ' (' + create_date + ')'
         run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
         run.save()
         return run
