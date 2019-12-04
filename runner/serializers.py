@@ -108,6 +108,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
+    name = serializers.CharField(allow_null=True, required=False, default=None)
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
@@ -121,8 +122,6 @@ class APIRunCreateSerializer(serializers.Serializer):
         name = "Run %s: %s" % (pipeline.name, create_date)
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        else:
-            print(validated_data)
         run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
         run.save()
         return run
