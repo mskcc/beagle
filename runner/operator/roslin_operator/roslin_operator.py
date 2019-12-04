@@ -46,7 +46,7 @@ class RoslinOperator(Operator):
         for i, job in enumerate(roslin_inputs):
             tumor_sample_name = job['pair'][0]['ID']
             normal_sample_name = job['pair'][1]['ID']
-            name = "ROSLIN %s, %i of %i" % (self.request_id, i, number_of_inputs)
+            name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             roslin_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name}), job))
 
         return roslin_jobs
