@@ -108,7 +108,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
-    name = serializers.CharField(allow_null=True, required=False, default=None)
+    name = serializers.CharField(allow_null=True, max_length=1000, required=False, default=None)
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
