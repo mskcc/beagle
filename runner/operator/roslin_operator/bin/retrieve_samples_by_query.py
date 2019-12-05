@@ -1,12 +1,8 @@
-import argparse
-import sys, os
-import json
-import requests
-from pprint import pprint
-from .make_sample import build_sample
-from .extractjson import extract_values
+from .make_sample import build_sample, remove_with_caveats
 from file_system.models import File, FileMetadata
 from django.db.models import Prefetch
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_samples_from_patient_id(patient_id):
@@ -35,4 +31,7 @@ def get_samples_from_patient_id(patient_id):
 
     for igo_id in igo_id_group:
         samples.append(build_sample(igo_id_group[igo_id]))
+    samples, bad_samples = remove_with_caveats(samples)
+    if len(bad_samples) > 0:
+        logger.warning('Some samples for patient query %s have invalid %i values' % (patient_id, len(bad_samples)))
     return samples
