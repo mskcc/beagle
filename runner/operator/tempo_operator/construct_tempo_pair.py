@@ -2,7 +2,8 @@ import os,sys
 import argparse
 import json
 from pprint import pprint
-from .bin.pair_request import compile_pairs, get_by_tumor_type, create_pairing_info
+from .bin.make_sample import remove_with_caveats
+from .bin.pair_request import compile_pairs
 
 
 # TODO: generalize
@@ -36,6 +37,7 @@ def format_sample(data):
 
 
 def construct_tempo_jobs(samples):
+    error_data = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
     number_of_tumors = len(pairs['tumor'])
     tempo_jobs = list()
@@ -48,7 +50,7 @@ def construct_tempo_jobs(samples):
         job['tumor_sample'] = format_sample(tumor)
         job.update(references)
         tempo_jobs.append(job)
-    return tempo_jobs
+    return tempo_jobs, error_data
 
 
 if __name__ == '__main__':
