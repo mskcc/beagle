@@ -12,8 +12,8 @@ class JobSerializer(serializers.ModelSerializer):
 class CreateJobSerializier(serializers.Serializer):
     type = serializers.CharField()
     args = serializers.JSONField()
-    callback = serializers.CharField()
-    callback_args = serializers.CharField()
+    callback = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    callback_args = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     def create(self, validated_data):
         pass
