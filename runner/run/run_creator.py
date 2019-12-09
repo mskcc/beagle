@@ -186,34 +186,38 @@ def _get_file_id(uri):
         return str(file_obj.id)
 
 
-def _resolve_outputs(inputs, file_group):
+def _resolve_outputs(inputs, file_group, metadata):
     if inputs and isinstance(inputs, dict):
         new_inputs = dict()
         for k, v in inputs.items():
             if isinstance(v, dict):
-                new_inputs[k] = _resolve_outputs(v, file_group)
+                new_inputs[k] = _resolve_outputs(v, file_group, metadata)
             elif isinstance(v, list):
                 new_val = []
                 for item in v:
-                    new_val.append(_resolve_outputs(item, file_group))
+                    new_val.append(_resolve_outputs(item, file_group, metadata))
                 new_inputs[k] = new_val
             else:
                 if k == 'location':
-                    path, size = _create_file(v, file_group)
-                    new_inputs['location'] = path
-                    new_inputs['size'] = size
+                    try:
+                        path, size = _create_file(v, file_group, metadata)
+                    except Exception as e:
+                        print(e)
+                    else:
+                        new_inputs['location'] = path
+                        new_inputs['size'] = size
                 else:
                     new_inputs[k] = v
         return new_inputs
     elif isinstance(inputs, list):
         new_val = []
         for item in inputs:
-            new_val.append(_resolve_outputs(item, file_group))
+            new_val.append(_resolve_outputs(item, file_group, metadata))
         return new_val
     return inputs
 
 
-def _create_file(filepath, file_group):
+def _create_file(filepath, file_group, metadata={}):
     filepath = filepath.replace('file://', '')
     basename = os.path.basename(filepath)
     ext = basename.split('.')[-1]
@@ -224,10 +228,11 @@ def _create_file(filepath, file_group):
     else:
         file_type = file_type.ext
     serializer = CreateFileSerializer(
-        data={'path': filepath, 'file_group_id': file_group.id, 'file_type': file_type, 'metadata': {}})
+        data={'path': filepath, 'file_group_id': file_group.id, 'file_type': file_type, 'metadata': metadata})
     if serializer.is_valid():
         file = serializer.save()
         return 'bid://%s' % str(file.id), file.size
+    raise Exception('Error when saving file: %s' % serializer.errors)
 
 
 class Run(object):
