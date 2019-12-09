@@ -40,8 +40,10 @@ class AccessOperator(Operator):
             samples.append(generate_results(igo_id_group[igo_id]))
 
         access_inputs = construct_access_jobs(samples)
+        number_of_inputs = len(access_inputs)
 
-        for job in access_inputs:
-            access_jobs.append((APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': access_inputs}), job))
+        for i, job in enumerate(access_inputs):
+            name = "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            access_jobs.append((APIRunCreateSerializer(data={'name': name,'app': self.get_pipeline_id(), 'inputs': access_inputs}), job))
 
         return access_jobs # Not returning anything for some reason for inputs; deal with later

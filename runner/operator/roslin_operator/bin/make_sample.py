@@ -1,17 +1,44 @@
-import sys,os
-import json
-from pprint import pprint
+import logging
+import re
+logger = logging.getLogger(__name__)
+
+
+def remove_with_caveats(samples):
+    data = list()
+    error_data = list()
+    for sample in samples:
+        add = True
+        igo_id = sample['igo_id']
+        sample_name = sample['SM']
+        patient_id = sample['patient_id']
+        if sample_name == 'sampleNameMalformed':
+            add = False
+            logging.debug("Sample name is malformed for for %s; removing from set" % igo_id)
+        if patient_id[:2].lower() not in 'c-':
+            add = False
+            logging.debug("Patient ID does not start with expected 'C-' prefix for %s; removing from set" % igo_id)
+        if add:
+            data.append(sample)
+        else:
+            error_data.append(sample)
+
+    return data, error_data
 
 
 def format_sample_name(sample_name):
+    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
     try:
         if "s_" in sample_name[:2]:
             return sample_name
+        elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+            sample_name = "s_" + sample_name.replace("-", "_")
+            return sample_name
         else:
-            sample_name = "s_" + sample_name.replace("-","_")
-    except TypeError:
-        print("cmoSampleName is Nonetype; returning None.")
-    return sample_name
+            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            return 'sampleNameMalformed'
+    except TypeError as error:
+        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning 'sampleNameMalformed'.")
+        return "sampleNameMalformed"
 
 
 def check_samples(samples):
@@ -21,28 +48,31 @@ def check_samples(samples):
 
         expected_r2 = 'R2'.join(r1.rsplit('R1', 1))
         if expected_r2 != r2:
-            print("Mismatched fastqs! Check data:")
-            print("R1: %s" % r1)
-            print("Expected R2: %s" % expected_r2)
-            print("Actual R2: %s" % r2)
+            logging.error("Mismatched fastqs! Check data:")
+            logging.error("R1: %s" % r1)
+            logging.error("Expected R2: %s" % expected_r2)
+            logging.error("Actual R2: %s" % r2)
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'LB', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
+    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
 
     for key in single_values:
         value = set(data[key])
         if len(value) == 1:
             data[key] = value.pop()
         else:
-            pprint(data)
-            print("Expected only one value for %s!" %key)
-            print("Check import, something went wrong.")
+            logging.error("Expected only one value for %s!" %key)
+            logging.error("Check import, something went wrong.")
+
+    # hack; formats LB field so that it is a string
+    lb = data['LB']
+    if lb is not None:
+        data['LB'] = '_and_'.join(lb)
     return data
 
 
 # TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
-# TODO: Add PDX/Xenografts logic (not in LIMS endpoints as of 11/18/2019; should be in 'Specimen Type')
 def build_sample(data):
     # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
     # but standardizing it here with what GATK sets bam headers to
@@ -73,11 +103,7 @@ def build_sample(data):
         run_date = runs['runDate']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
-        rg_id = pu + "_1"
-        if cmo_sample_name:
-            rg_id = '_'.join([cmo_sample_name, pu])
-        else:
-            print("cmoSampleName is None for %s; using PU as read group ID instead." % lb)
+        rg_id = '_'.join([cmo_sample_name, pu])
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()

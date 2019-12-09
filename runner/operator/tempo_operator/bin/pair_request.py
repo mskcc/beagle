@@ -1,26 +1,8 @@
-import argparse
-import sys, os
 from datetime import datetime as dt
 from pprint import pprint
 from .retrieve_samples_by_query import get_samples_from_patient_id
-
-
-def remove_with_caveats(samples):
-    data = list()
-    for sample in samples:
-        add = True
-        igo_id = sample['igo_id']
-        sample_name = sample['SM']
-        patient_id = sample['patient_id']
-        if sample_name is None:
-            add = False
-            print("Sample name is None for %s; removing from set" % igo_id)
-        if patient_id[:2].lower() not in 'c-':
-            add = False
-            print("Patient ID does not start with expected 'C-' prefix for %s; removing from set" % igo_id)
-        if add:
-            data.append(sample)
-    return data
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_by_tumor_type(data, tumor_type):
@@ -63,7 +45,7 @@ def compile_pairs(samples):
 
     if len(tumors) == 0:
         print("No tumor samples found; pairing cannot be performed.")
-        pprint(samples) 
+        pprint(samples)
 
     # pairing
     pairs = dict()
