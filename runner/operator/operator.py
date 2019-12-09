@@ -31,6 +31,14 @@ class Operator(object):
         '''
         return self._jobs
 
+
+    def get_output_metadata(self):
+        '''
+        Override this method to set proper metadata to output files
+        :return: dict
+        '''
+        return {}
+
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
             data={'operator_name': self.operator, 'request_id': self.request_id, 'error': error})
