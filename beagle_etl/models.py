@@ -25,9 +25,9 @@ class Job(BaseModel):
     status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus])
     children = JSONField(null=True, blank=True)
     retry_count = models.IntegerField(default=0)
-    message = JSONField(null=True)
+    message = JSONField(null=True, blank=True)
     max_retry = models.IntegerField(default=3)
-    callback = models.CharField(max_length=100)
+    callback = models.CharField(max_length=100, default=None, blank=True)
     callback_args = JSONField(null=True, blank=True)
     lock = models.BooleanField(default=False)
 
