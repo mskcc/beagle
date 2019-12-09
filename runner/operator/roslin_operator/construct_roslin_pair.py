@@ -2,7 +2,9 @@ import os,sys
 import argparse
 import json
 from pprint import pprint
-from .bin.pair_request import compile_pairs, get_by_tumor_type, create_pairing_info
+from .bin.make_sample import remove_with_caveats
+from .bin.pair_request import compile_pairs
+
 
 
 # TODO: generalize
@@ -50,6 +52,7 @@ def format_sample(data):
 
 
 def construct_roslin_jobs(samples):
+    samples, error_samples = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
     number_of_tumors = len(pairs['tumor'])
     roslin_jobs = list()
@@ -65,7 +68,8 @@ def construct_roslin_jobs(samples):
         references = convert_references(project_id, assay)
         job.update(references)
         roslin_jobs.append(job)
-    return roslin_jobs
+    return roslin_jobs, error_samples
+
 
 
 def get_curated_bams(assay,request_files):
@@ -78,7 +82,7 @@ def get_curated_bams(assay,request_files):
         json_curated_bams = request_files['curated_bams']['IDT_Exome_v1_FP_b37']
     array = []
     for bam in json_curated_bams:
-        array.append({'class': 'File', 'path': str(bam)})
+        array.append({'class': 'File', 'location': str(bam)})
     return array
 
 
@@ -100,10 +104,10 @@ def get_baits_and_targets(assay, roslin_resources):
         assay = "IMPACT468_08050"
 
     if assay in targets:
-        return {"bait_intervals": {"class": "File", "path": str(targets[assay]['baits_list'])},
-                "target_intervals": {"class": "File", "path": str(targets[assay]['targets_list'])},
-                "fp_intervals": {"class": "File", "path": str(targets[assay]['FP_intervals'])},
-                "fp_genotypes": {"class": "File", "path": str(targets[assay]['FP_genotypes'])}
+        return {"bait_intervals": {"class": "File", 'location': str(targets[assay]['baits_list'])},
+                "target_intervals": {"class": "File", 'location': str(targets[assay]['targets_list'])},
+                "fp_intervals": {"class": "File", 'location': str(targets[assay]['FP_intervals'])},
+                "fp_genotypes": {"class": "File", 'location': str(targets[assay]['FP_genotypes'])}
     }
     else:
         print >>sys.stderr, "ERROR: Targets for Assay not found in roslin_resources.json: %s" % assay
@@ -152,13 +156,13 @@ def convert_references(project_id, assay):
             temp_dir = os.environ['TMPDIR']
 
     files = {
-        'refseq': {'class': 'File', 'path': str(request_files['refseq'])},
+        'refseq': {'class': 'File', 'location': str(request_files['refseq'])},
         'vep_data': str(request_files['vep_data']),
         'hotspot_list': str(request_files['hotspot_list']),
-        'hotspot_list_maf': {'class': 'File', 'path': str(request_files['hotspot_list_maf'])},
-        'delly_exclude': {'class': 'File', 'path': str(roslin_resources['genomes'][genome]['delly'])},
+        'hotspot_list_maf': {'class': 'File', 'location': str(request_files['hotspot_list_maf'])},
+        'delly_exclude': {'class': 'File', 'location': str(roslin_resources['genomes'][genome]['delly'])},
         'hotspot_vcf': str(request_files['hotspot_vcf']),
-        'facets_snps': {'class': 'File', 'path': str(roslin_resources['genomes'][genome]['facets_snps'])},
+        'facets_snps': {'class': 'File', 'location': str(roslin_resources['genomes'][genome]['facets_snps'])},
         'custom_enst': str(request_files['custom_enst']),
         'vep_path': str(request_files['vep_path']),
         'conpair_markers': str(request_files['conpair_markers']),
@@ -169,14 +173,14 @@ def convert_references(project_id, assay):
 
     out_dict = {
         "curated_bams": curated_bams,
-        "hapmap": {'class': 'File', 'path': str(request_files['hapmap'])},
-        "dbsnp": {'class': 'File', 'path': str(request_files['dbsnp'])},
-        "indels_1000g": {'class': 'File', 'path': str(request_files['indels_1000g'])},
-        "snps_1000g": {'class': 'File', 'path': str(request_files['snps_1000g'])},
-        "cosmic": {'class': 'File', 'path': str(request_files['cosmic'])},
-        'exac_filter': {'class': 'File', 'path': str(request_files['exac_filter'])},
-        'ref_fasta': {'class': 'File', 'path': str(request_files['ref_fasta'])},
-        'mouse_fasta': {'class': 'File', 'path': str(request_files['mouse_fasta'])},
+        "hapmap": {'class': 'File', 'location': str(request_files['hapmap'])},
+        "dbsnp": {'class': 'File', 'location': str(request_files['dbsnp'])},
+        "indels_1000g": {'class': 'File', 'location': str(request_files['indels_1000g'])},
+        "snps_1000g": {'class': 'File', 'location': str(request_files['snps_1000g'])},
+        "cosmic": {'class': 'File', 'location': str(request_files['cosmic'])},
+        'exac_filter': {'class': 'File', 'location': str(request_files['exac_filter'])},
+        'ref_fasta': {'class': 'File', 'location': str(request_files['ref_fasta'])},
+        'mouse_fasta': {'class': 'File', 'location': str(request_files['mouse_fasta'])},
         "db_files": files
     }
     # emit_original_quals boolean could be problematic; test
