@@ -42,6 +42,7 @@ class Run(BaseModel):
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
+    output_metadata = JSONField(default=dict, blank=True, null=True)
 
 
 class Port(BaseModel):
@@ -67,3 +68,9 @@ class ExecutionEvents(BaseModel):
 class FileJobTracker(models.Model):
     job = models.ForeignKey(Run, on_delete=models.CASCADE)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
+
+
+class OperatorErrors(BaseModel):
+    operator_name = models.CharField(max_length=100)
+    request_id = models.CharField(max_length=100)
+    error = JSONField(null=True, blank=True)

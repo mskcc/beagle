@@ -8,8 +8,8 @@ from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
 from runner.tasks import create_run_task, operator_job
-from runner.models import Run, Port, Pipeline, RunStatus
-from runner.serializers import RunSerializer, APIRunCreateSerializer, UpdateRunSerializer, RunStatusUpdateSerializer, RequestIdOperatorSerializer
+from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors
+from runner.serializers import RunSerializer, APIRunCreateSerializer, RequestIdOperatorSerializer, OperatorErrorSerializer
 from runner.operator.tempo_operator.tempo_operator import TempoOperator
 from rest_framework.generics import GenericAPIView
 from runner.pipeline.pipeline_resolver import CWLResolver
@@ -67,4 +67,12 @@ class TempoOperatorViewSet(GenericAPIView):
         #     if job.is_valid():
         #         run = job.save()
         #         result.append(run)
-        return Response({"details": "Operator Job submitted %s" % request_id}, status=status.HTTP_200_OK)
+        return Response({"details": "Operator Job submitted %s" % str(request_ids)}, status=status.HTTP_200_OK)
+
+
+class OperatorErrorViewSet(mixins.ListModelMixin,
+                           mixins.CreateModelMixin,
+                           mixins.RetrieveModelMixin,
+                           GenericViewSet):
+    serializer_class = OperatorErrorSerializer
+    queryset = OperatorErrors.objects.order_by('-created_date').all()
