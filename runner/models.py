@@ -42,6 +42,7 @@ class Run(BaseModel):
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
+    output_metadata = JSONField(default=dict, blank=True, null=True)
 
 
 class Port(BaseModel):

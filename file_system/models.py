@@ -31,6 +31,7 @@ class Storage(BaseModel):
 
 class FileType(models.Model):
     ext = models.CharField(max_length=20)
+    valid_extensions = JSONField(blank=True, null=True)
 
 
 class FileGroup(BaseModel):
