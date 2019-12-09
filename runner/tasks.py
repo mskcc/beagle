@@ -37,19 +37,25 @@ def create_run_task(run_id, inputs, output_directory=None):
         raise Exception("Failed to create a run")
     cwl_resolver = CWLResolver(run.app.github, run.app.entrypoint, run.app.version)
     resolved_dict = cwl_resolver.resolve()
-    task = runner.run.run_creator.Run(run_id, resolved_dict, inputs)
-    for input in task.inputs:
-        port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-                    secondary_files=input.secondary_files, db_value=input.db_value, value=input.value)
-        port.save()
-    for output in task.outputs:
-        port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
-                    secondary_files=output.secondary_files, db_value=output.value)
-        port.save()
-    run.status = RunStatus.READY
-    run.save()
-    submit_job.delay(run_id, output_directory)
-    logger.info("Run created")
+    try:
+        task = runner.run.run_creator.Run(run_id, resolved_dict, inputs)
+        for input in task.inputs:
+            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
+                        secondary_files=input.secondary_files, db_value=input.db_value, value=input.value)
+            port.save()
+        for output in task.outputs:
+            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
+                        secondary_files=output.secondary_files, db_value=output.value)
+            port.save()
+    except Exception as e:
+        run.status = RunStatus.FAILED
+        run.job_statuses = {'error': 'Error during creation because of %s' % str(e)}
+        run.save()
+    else:
+        run.status = RunStatus.READY
+        run.save()
+        submit_job.delay(run_id, output_directory)
+        logger.info("Run created")
 
 
 @shared_task
@@ -69,7 +75,7 @@ def submit_job(run_id, output_directory=None):
     for port in run.port_set.filter(port_type=PortType.INPUT).all():
         inputs[port.name] = port.value
     if not output_directory:
-        output_directory = os.path.join(run.app.output_directory, str(uuid.uuid4()))
+        output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = {
         'app': app,
         'inputs': inputs,
@@ -108,7 +114,7 @@ def complete_job(run, remote_status):
     for k, v in remote_status['outputs'].items():
         port = run.port_set.filter(port_type=PortType.OUTPUT, name=k).first()
         port.value = v
-        port.db_value = runner.run.run_creator._resolve_outputs(v, file_group)
+        port.db_value = runner.run.run_creator._resolve_outputs(v, file_group, run.output_metadata)
         port.save()
     run.save()
 
