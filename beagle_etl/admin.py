@@ -21,6 +21,7 @@ class JobAdmin(admin.ModelAdmin):
     list_display = ('id', 'run', 'retry_count', 'args', 'children', 'status', 'message', 'created_date', 'lock')
     search_fields = ('id', 'args__sample_id')
     actions = (restart,)
+    ordering = ('-created_date',)
 
 
 admin.site.register(Job, JobAdmin)
