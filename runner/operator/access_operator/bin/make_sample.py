@@ -22,22 +22,21 @@ def generate_results(results):
 
     for i, v in enumerate(results):
         meta = v['metadata']
-        libraries = meta['libraries']
-        runs = libraries['runs']
         bid = v['id']
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta['igoId']
-        lb = libraries['libraryIgoId']
+        lb = meta['libraryIgoId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
         cmo_sample_name = meta['cmoSampleName']
-        flowcell_id = runs['flowCellId']
-        barcode_index = libraries['barcodeIndex']
+        flowcell_id = meta['flowCellId']
+        barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['cmoPatientId']
+        r_orientation = meta['R']
         pu = flowcell_id
-        run_date = runs['runDate']
+        run_date = meta['runDate']
         if barcode_index:
             pu = '_'.join([flowcell_id, barcode_index])
 
@@ -73,7 +72,7 @@ def generate_results(results):
         else:
             sample = samples[rg_id]
 
-        if 'R1' in fname:
+        if 'R1' in r_orientation:
             sample['R1'] = fpath
             sample['R1_bid'] = str(bid)
         else:
