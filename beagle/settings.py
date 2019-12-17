@@ -179,6 +179,8 @@ WSGI_APPLICATION = 'beagle.wsgi.application'
 DB_NAME = os.environ['BEAGLE_DB_NAME']
 DB_USERNAME = os.environ['BEAGLE_DB_USERNAME']
 DB_PASSWORD = os.environ['BEAGLE_DB_PASSWORD']
+DB_HOST = os.environ.get('BEAGLE_DB_URL', 'localhost')
+DB_PORT = os.environ.get('BEAGLE_DB_PORT', 5432)
 
 DATABASES = {
     'default': {
@@ -186,8 +188,8 @@ DATABASES = {
         'NAME': DB_NAME,
         'USER': DB_USERNAME,
         'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
-        'POST': 5432
+        'HOST': DB_HOST,
+        'PORT': DB_PORT
     }
 }
 
