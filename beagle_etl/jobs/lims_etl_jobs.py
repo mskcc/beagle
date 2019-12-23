@@ -178,7 +178,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
                     create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, 'R1')
+                                request_metadata, R1_or_R2(fastqs[0]))
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
@@ -186,7 +186,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if not file_search:
                     create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, 'R2')
+                                request_metadata, R1_or_R2(fastqs[1]))
                 else:
                     logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
                     conflict = True
@@ -196,6 +196,24 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
             "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
     if missing_fastq:
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+
+
+def R1_or_R2(filename):
+    reversed_filename = ''.join(reversed(filename))
+    R1_idx = reversed_filename.find('1R')
+    R2_idx = reversed_filename.find('2R')
+    if R1_idx == -1 and R2_idx == -1:
+        return "ERROR"
+    elif R1_idx > 0 and R2_idx == -1:
+        return "R1"
+    elif R2_idx > 0 and R1_idx == -1:
+        return 'R2'
+    elif R1_idx > 0 and R2_idx > 0:
+        if R1_idx < R2_idx:
+            return 'R1'
+        else:
+            return 'R2'
+    return 'ERROR'
 
 
 def convert_to_dict(runs):
