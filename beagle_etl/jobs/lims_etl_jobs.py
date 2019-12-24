@@ -152,7 +152,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
-        logger.info(data)
+        # logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
@@ -243,9 +243,18 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(ext=file_type).first()
         metadata = copy.deepcopy(data)
+        sample_name = metadata.pop('cmoSampleName', None)
+        external_sample_name = metadata.pop('sampleName', None)
+        sample_id = metadata.pop('igoId', None)
+        patient_id = metadata.pop('cmoPatientId', None)
         metadata['requestId'] = request_id
+        metadata['sampleName'] = sample_name
+        metadata['externalSampleId'] = external_sample_name
+        metadata['sampleId'] = sample_id
+        metadata['patientId'] = patient_id
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
+        metadata['libraryId'] = library.pop('libraryIgoId', None)
         for k, v in library.items():
             metadata[k] = v
         for k, v in run.items():
@@ -302,15 +311,12 @@ def update_metadata(request_id):
     for sample in response_body.get('samples', []):
         if not sample:
             raise FailedToFetchFilesException("Sample Id None")
-        if sample['igocomplete']:
-            job = update_sample_job(sample['igoSampleId'], request_id, request_metadata)
-            children.add(str(job.id))
-        else:
-            logger.info("Sample %s not igoComplete" % str(sample['igoSampleId']))
+        job = update_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+        children.add(str(job.id))
     return list(children)
 
 
-def update_sample_metadata(sample_id, request_id, request_metadata):
+def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     missing = False
     missing_fastq = False
     failed_runs = []
@@ -353,14 +359,14 @@ def update_sample_metadata(sample_id, request_id, request_metadata):
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if file_search:
-                    update_file_metadata(fastqs[0], request_id, data, library, run, request_metadata, 'R1')
+                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata, 'R1')
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
                     missing_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if file_search:
-                    update_file_metadata(fastqs[1], request_id, data, library, run, request_metadata, 'R2')
+                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata, 'R2')
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
@@ -372,9 +378,20 @@ def update_sample_metadata(sample_id, request_id, request_metadata):
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
 
 
-def update_file_metadata(path, request_id, data, library, run, request_metadata, r):
+def update_file_metadata(path, request_id, igocomplete, data, library, run, request_metadata, r):
     metadata = copy.deepcopy(data)
+    sample_name = metadata.pop('cmoSampleName', None)
+    external_sample_name = metadata.pop('sampleName', None)
+    sample_id = metadata.pop('igoId', None)
+    patient_id = metadata.pop('cmoPatientId', None)
     metadata['requestId'] = request_id
+    metadata['sampleName'] = sample_name
+    metadata['externalSampleId'] = external_sample_name
+    metadata['sampleId'] = sample_id
+    metadata['patientId'] = patient_id
+    metadata['R'] = r
+    metadata['igocomplete'] = igocomplete
+    metadata['libraryId'] = library.pop('libraryIgoId', None)
     metadata['R'] = r
     for k, v in library.items():
         metadata[k] = v
@@ -398,11 +415,11 @@ def update_file_metadata(path, request_id, data, library, run, request_metadata,
         raise FailedToFetchFilesException("Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
 
 
-def update_sample_job(sample_id, request_id, request_metadata):
+def update_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
         "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
     job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_sample_metadata',
-                  args={'sample_id': sample_id, 'request_id': request_id, 'request_metadata': request_metadata},
+                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
                   status=JobStatus.CREATED, max_retry=1, children=[])
     job.save()
     return job
