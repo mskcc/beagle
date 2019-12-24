@@ -34,10 +34,10 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return 'sampleNameMalformed'
     except TypeError as error:
-        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning 'sampleNameMalformed'.")
+        logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
         return "sampleNameMalformed"
 
 
@@ -83,24 +83,23 @@ def build_sample(data):
 
     for i,v in enumerate(data):
         meta = v['metadata']
-        libraries = meta['libraries']
-        runs = libraries['runs']
         bid = v['id']
         request_id = meta['requestId']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['igoId']
-        lb = libraries['libraryIgoId']
+        igo_id = meta['sampleId']
+        lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['cmoSampleName'])
-        flowcell_id = runs['flowCellId']
-        barcode_index = libraries['barcodeIndex']
-        cmo_patient_id = meta['cmoPatientId']
+        cmo_sample_name = format_sample_name(meta['sampleName'])
+        flowcell_id = meta['flowCellId']
+        barcode_index = meta['barcodeIndex']
+        cmo_patient_id = meta['patientId']
         pu = flowcell_id
-        run_date = runs['runDate']
+        run_date = meta['runDate']
+        r_orientation = meta['R']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
         rg_id = '_'.join([cmo_sample_name, pu])
@@ -125,7 +124,7 @@ def build_sample(data):
             sample = samples[rg_id]
 
         # fastq pairing assumes flowcell id + barcode index are unique per run
-        if 'R1' in fname:
+        if 'R1' in r_orientation:
             sample['R1'] = fpath
             sample['R1_bid'] = bid
         else:
