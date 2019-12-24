@@ -10,7 +10,7 @@ def format_sample_name(sample_name):
         else:
             sample_name = "s_" + sample_name.replace("-","_")
     except TypeError:
-        print("cmoSampleName is Nonetype; returning None.")
+        print("sampleName is Nonetype; returning None.")
     return sample_name
 
 
@@ -22,29 +22,28 @@ def generate_results(results):
 
     for i, v in enumerate(results):
         meta = v['metadata']
-        libraries = meta['libraries']
-        runs = libraries['runs']
         bid = v['id']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['igoId']
-        lb = libraries['libraryIgoId']
+        igo_id = meta['sampleId']
+        lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
-        cmo_sample_name = meta['cmoSampleName']
-        flowcell_id = runs['flowCellId']
-        barcode_index = libraries['barcodeIndex']
-        cmo_patient_id = meta['cmoPatientId']
+        cmo_sample_name = meta['sampleName']
+        flowcell_id = meta['flowCellId']
+        barcode_index = meta['barcodeIndex']
+        cmo_patient_id = meta['patientId']
+        r_orientation = meta['R']
         pu = flowcell_id
-        run_date = runs['runDate']
+        run_date = meta['runDate']
         if barcode_index:
             pu = '_'.join([flowcell_id, barcode_index])
 
         if not cmo_sample_name:
             cmo_sample_name = cmo_patient_id + "_" + pu
         else:
-            print("cmoSampleName is None for %s; using PU as read group ID instead." % lb)
+            print("sampleName is None for %s; using PU as read group ID instead." % lb)
         rg_id = cmo_sample_name
 
         if rg_id not in samples:
@@ -73,7 +72,7 @@ def generate_results(results):
         else:
             sample = samples[rg_id]
 
-        if 'R1' in fname:
+        if 'R1' in r_orientation:
             sample['R1'] = fpath
             sample['R1_bid'] = str(bid)
         else:
