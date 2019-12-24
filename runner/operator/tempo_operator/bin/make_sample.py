@@ -34,11 +34,11 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return 'sampleNameMalformed'
     except TypeError as error:
-        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning None.")
-        return 'sampleNameMalformed'
+        logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
+        return "sampleNameMalformed"
 
 
 def check_samples(samples):
@@ -55,7 +55,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id' ]
+    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
 
     for key in single_values:
         value = set(data[key])
@@ -72,7 +72,7 @@ def check_and_return_single_values(data):
     return data
 
 
-# TODO: if datas is not from the LIMS, these hardcoded values will need to be generalized
+# TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
 def build_sample(data):
     # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
     # but standardizing it here with what GATK sets bam headers to
@@ -83,22 +83,23 @@ def build_sample(data):
 
     for i,v in enumerate(data):
         meta = v['metadata']
-        libraries = meta['libraries']
-        runs = libraries['runs']
         bid = v['id']
+        request_id = meta['requestId']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['igoId']
-        lb = libraries['libraryIgoId']
+        igo_id = meta['sampleId']
+        lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
+        specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['cmoSampleName'])
-        flowcell_id = runs['flowCellId']
-        barcode_index = libraries['barcodeIndex']
-        cmo_patient_id = meta['cmoPatientId']
+        cmo_sample_name = format_sample_name(meta['sampleName'])
+        flowcell_id = meta['flowCellId']
+        barcode_index = meta['barcodeIndex']
+        cmo_patient_id = meta['patientId']
         pu = flowcell_id
-        run_date = runs['runDate']
+        run_date = meta['runDate']
+        r_orientation = meta['R']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
         rg_id = '_'.join([cmo_sample_name, pu])
@@ -117,11 +118,13 @@ def build_sample(data):
             sample['bait_set'] = bait_set
             sample['igo_id'] = igo_id
             sample['run_date'] = run_date
+            sample['specimen_type'] = specimen_type
+            sample['request_id'] = request_id
         else:
             sample = samples[rg_id]
 
         # fastq pairing assumes flowcell id + barcode index are unique per run
-        if 'R1' in fname:
+        if 'R1' in r_orientation:
             sample['R1'] = fpath
             sample['R1_bid'] = bid
         else:
@@ -143,10 +146,12 @@ def build_sample(data):
     result['bait_set'] = list() 
     result['igo_id'] = list() 
     result['run_date'] = list()
+    result['specimen_type'] = list()
     result['R1'] = list()
     result['R2'] = list()
     result['R1_bid'] = list()
     result['R2_bid'] = list()
+    result['request_id'] = list()
 
     for rg_id in samples:
         sample = samples[rg_id]
