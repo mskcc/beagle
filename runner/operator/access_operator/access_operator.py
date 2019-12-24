@@ -31,7 +31,7 @@ class AccessOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['igoId']
+            igo_id = sample['metadata']['sampleId']
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)

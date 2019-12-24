@@ -10,7 +10,7 @@ def get_samples_from_patient_id(patient_id):
         Prefetch('filemetadata_set', queryset=
         FileMetadata.objects.select_related('file').order_by('-created_date'))). \
         order_by('file_name')
-    files = file_objs.filter(filemetadata__metadata__cmoPatientId=patient_id).all()
+    files = file_objs.filter(filemetadata__metadata__patientId=patient_id).all()
     data = list()
     for file in files:
         sample = dict()
@@ -24,7 +24,7 @@ def get_samples_from_patient_id(patient_id):
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample['metadata']['igoId']
+        igo_id = sample['metadata']['sampleId']
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)

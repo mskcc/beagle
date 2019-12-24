@@ -10,7 +10,7 @@ def format_sample_name(sample_name):
         else:
             sample_name = "s_" + sample_name.replace("-","_")
     except TypeError:
-        print("cmoSampleName is Nonetype; returning None.")
+        print("sampleName is Nonetype; returning None.")
     return sample_name
 
 
@@ -25,15 +25,15 @@ def generate_results(results):
         bid = v['id']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['igoId']
-        lb = meta['libraryIgoId']
+        igo_id = meta['sampleId']
+        lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         species = meta['species']
-        cmo_sample_name = meta['cmoSampleName']
+        cmo_sample_name = meta['sampleName']
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
-        cmo_patient_id = meta['cmoPatientId']
+        cmo_patient_id = meta['patientId']
         r_orientation = meta['R']
         pu = flowcell_id
         run_date = meta['runDate']
@@ -43,7 +43,7 @@ def generate_results(results):
         if not cmo_sample_name:
             cmo_sample_name = cmo_patient_id + "_" + pu
         else:
-            print("cmoSampleName is None for %s; using PU as read group ID instead." % lb)
+            print("sampleName is None for %s; using PU as read group ID instead." % lb)
         rg_id = cmo_sample_name
 
         if rg_id not in samples:

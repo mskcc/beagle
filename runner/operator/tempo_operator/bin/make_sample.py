@@ -34,10 +34,10 @@ def format_sample_name(sample_name):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
-            logging.error('Missing or malformed cmoSampleName: %s' % sample_name, exc_info=True)
+            logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return 'sampleNameMalformed'
     except TypeError as error:
-        logger.error("cmoSampleNameError: cmoSampleName is Nonetype; returning 'sampleNameMalformed'.")
+        logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
         return "sampleNameMalformed"
 
 
@@ -87,16 +87,16 @@ def build_sample(data):
         request_id = meta['requestId']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['igoId']
-        lb = meta['libraryIgoId']
+        igo_id = meta['sampleId']
+        lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['cmoSampleName'])
+        cmo_sample_name = format_sample_name(meta['sampleName'])
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
-        cmo_patient_id = meta['cmoPatientId']
+        cmo_patient_id = meta['patientId']
         pu = flowcell_id
         run_date = meta['runDate']
         r_orientation = meta['R']
