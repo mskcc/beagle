@@ -76,7 +76,7 @@ def request_callback(request_id):
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
         filemetadata__metadata__requestId=request_id)
-    ret_str = 'filemetadata__metadata__requestMetadata__recipe'
+    ret_str = 'filemetadata__metadata__recipe'
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
         raise FailedToSubmitToOperatorException(
