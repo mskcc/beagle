@@ -258,7 +258,7 @@ CACHES = {
 
 RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
 RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')
-RABBITMQ_URL = os.environ.get('BEAGLE_RABBITMQ_URL', 'localhost')
+RABBITMQ_URL = os.environ.get('BEAGLE_RABBITMQ_URL', 'localhostq')
 
 CELERY_BROKER_URL = 'amqp://%s:%s@%s/' % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
 CELERY_ACCEPT_CONTENT = ['json']
@@ -284,3 +284,5 @@ LOGGING = {
 
 BEAGLE_URL = 'http://silo:5001'
 
+BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'runner_queue')
+BEAGLE_BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler')
