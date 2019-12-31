@@ -84,14 +84,17 @@ Usage:
   - export BEAGLE_RABBITMQ_USERNAME=<rabbitmq_username>
   - export BEAGLE_RABBITMQ_PASSWORD=<rabbitmq_password>
   - export BEAGLE_RABBITMQ_URL=<rabbitmq_url>
+  - export BEAGLE_RUNNER_QUEUE=<beagle_runner_queue>
+  - export BEAGLE_JOB_SCHEDULER_QUEUE=<beagle_job_scheduler_queue>
+  - export BEAGLE_DEFAULT_QUEUE=<beagle_default_queue>
   - python manage.py migrate
   - python manage.py runserver
 
 - Async
   - Celery is used for scheduling tasks related to ETL from LIMS and submission to CWL Executor
   - celery -A beagle_etl beat -l info -f beat.log (starting the periodic task)
-  - celery -A beagle_etl worker -l info -f beagle-worker.log (starting the worker)
-  - celery -A beagle_etl worker --concurrency 1 -l info -Q beagle_job_scheduler -f scheduler-worker.log
-  - celery -A beagle_etl worker -l info -Q runner_queue
+  - celery -A beagle_etl worker -l info -Q <beagle_default_queue> -f beagle-worker.log (starting the worker)
+  - celery -A beagle_etl worker --concurrency 1 -l info -Q <beagle_job_scheduler_queue> -f scheduler-worker.log
+  - celery -A beagle_etl worker -l info -Q <beagle_runner_queue> -f beagle-runner.log
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
