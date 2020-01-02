@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
         ('file_system', '0011_filetype_valid_extensions'),
     ]
 
-    def slugify_title(apps, schema_editor):
+    def rename_files(apps, schema_editor):
         '''
         We can't import the Post model directly as it may be a newer
         version than this migration expects. We use the historical version.
@@ -33,4 +33,5 @@ class Migration(migrations.Migration):
         file4.save()
 
     operations = [
+        migrations.RunPython(rename_files),
     ]
