@@ -1,20 +1,44 @@
-### Running the Server using Singularity
+## Beagle Server
 
-#### Download Docker Image
-
-```
-singularity pull --name mskcc-beagle-1.0.0.img docker://mskcc/beagle:1.0.0
-```
-
-##### Starting an instance
+#### Build SIF
 
 ```
-singularity instance start --bind <beagle_install_directory>:/beagle_server mskcc-beagle-1.0.0.img beagle
+sudo singularity build beagle_service.sif beagle_service.def
 ```
 
-##### Running the server at port 4001 
+#### Expected Variables
+
+The following environment variables must be set so that the instance can run properly.
+
+Note: Singularity passes environment variables to the SIF container by prepending variable names with `SINGULARITYENV_`. For example, to set `BEAGLE_PORT` in the container, you must set `SINGULARITYENV_BEAGLE_PORT`.
 
 ```
-singularity run instance://beagle python3 /beagle_server/manage.py runserver 0.0.0.0:4001
+SINGULARITY_BEAGLE_PORT
+SINGULARITYENV_BEAGLE_DB_NAME
+SINGULARITYENV_BEAGLE_DB_USERNAME
+SINGULARITYENV_BEAGLE_DB_PASSWORD
+SINGULARITYENV_BEAGLE_DB_PORT
+SINGULARITYENV_BEAGLE_AUTH_LDAP_SERVER_URI
+SINGULARITYENV_BEAGLE_RABIX_URL
+SINGULARITYENV_BEAGLE_RABBITMQ_USERNAME
+SINGULARITYENV_BEAGLE_RABBITMQ_PASSWORD
+SINGULARITYENV_BEAGLE_LIMS_USERNAME
+SINGULARITYENV_BEAGLE_LIMS_PASSWORD
+SINGULARITYENV_BEAGLE_LIMS_URL
+SINGULARITYENV_BEAGLE_RABIX_PATH
 ```
 
+#### Running an instance
+
+Running the following command will create a beagle instance named `beagle_service`
+```
+singularity instance start beagle_service.sif beagle_service
+```
+
+This is accessible through the port number set through `SINGULARITYENV_BEAGLE_PORT`
+
+For example, if `SINGULARITYENV_BEAGLE_PORT=4001` on a machine called `silo`:
+
+```
+http://silo:4001
+```
