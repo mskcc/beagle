@@ -1,14 +1,14 @@
 {
     "baits_list": {
-        "location": "juno:///juno/work/taylorlab/cmopipeline//mskcc-igenomes/grch37/baits/AgilentExon_51MB_b37_v3_baits.interval_list", 
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/baits/AgilentExon_51MB_b37_v3_baits.interval_list",
         "class": "File"
     }, 
     "target_bed": {
-        "location": "juno:///juno/work/taylorlab/cmopipeline//mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz", 
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz",
         "class": "File", 
         "secondaryFiles": [
             {
-                "location": "juno:///juno/work/taylorlab/cmopipeline//mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz.tbi", 
+                "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz.tbi",
                 "class": "File"
             }
         ]
@@ -53,7 +53,7 @@
         "max_depth": 4000
     }, 
     "targets_list": {
-        "location": "juno:///juno/work/taylorlab/cmopipeline//mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.interval_list", 
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.interval_list",
         "class": "File"
     }, 
     "delly_params": {
