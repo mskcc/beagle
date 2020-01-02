@@ -2,12 +2,11 @@ Bootstrap: docker
 From: ubuntu:19.10
 Includecmd: no
 
+%environment
+    export BEAGLE_PATH=/usr/bin/beagle
+
 %startscript
-    nohup python3 /usr/bin/beagle/manage.py runserver 0.0.0.0:$BEAGLE_PORT
-    celery -A beagle_etl beat -l info -f ${SINGULARITY_APPDATA}/logs/beagle_beat.log
-    celery -A beagle_etl worker -l info -f ${SINGULARITY_APPDATA}/logs/beagle_worker.log
-    celery -A beagle_etl worker --concurrency 1 -l info -Q beagle_job_scheduler -f ${SINGULARITY_APPDATA}/logs/beagle_scheduler.log
-    celery -A beagle_etl worker -l info -Q runner_queue -f ${SINGULARITY_APPDATA}/logs/beagle_runner.log
+    nohup python3 ${BEAGLE_PATH}/manage.py runserver 0.0.0.0:$BEAGLE_PORT
 
 %post
     export DEBIAN_FRONTEND=noninteractive \
