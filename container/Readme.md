@@ -13,7 +13,7 @@ The following environment variables must be set so that the instance can run pro
 Note: Singularity passes environment variables to the SIF container by prepending variable names with `SINGULARITYENV_`. For example, to set `BEAGLE_PORT` in the container, you must set `SINGULARITYENV_BEAGLE_PORT`.
 
 ```
-SINGULARITY_BEAGLE_PORT
+SINGULARITYENV_BEAGLE_PORT
 SINGULARITYENV_BEAGLE_DB_NAME
 SINGULARITYENV_BEAGLE_DB_USERNAME
 SINGULARITYENV_BEAGLE_DB_PASSWORD
