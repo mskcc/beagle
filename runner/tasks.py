@@ -1,4 +1,5 @@
 import logging
+import json
 from .models import Run, RunStatus, Port, PortType
 from celery import shared_task
 import requests
@@ -15,7 +16,6 @@ def operator_job(request_id, pipeline_type):
     logger.info("Creating operator %s for requestId: %s" % (pipeline_type, request_id))
     operator = OperatorFactory.factory(pipeline_type, request_id)
     jobs = operator.get_jobs()
-    print(jobs)
     for job in jobs:
         if job[0].is_valid():
             run = job[0].save()
@@ -54,7 +54,7 @@ def submit_job(run_id):
         run = Run.objects.get(id=run_id)
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
-    app ={
+    app = {
         "github": {
             "repository": run.app.github,
             "entrypoint": run.app.entrypoint,
@@ -69,9 +69,69 @@ def submit_job(run_id):
         'inputs': inputs
     }
     logger.info("Ready for submittion")
-    print(job)
     response = requests.post('http://localhost:5003/v0/jobs/', json=job) 
     if response.status_code == 201:
         logger.info("Successfully for submitted")
+        run.execution_id = response.json()['id']
+        run.status = RunStatus.RUNNING
+        run.save()
     else:
         logger.info("Failed to submit")
+        run.status = RunStatus.FAILED
+        run.save()
+
+
+def check_status_on_ridgeback(job_id):
+    response = requests.get('http://silo:5003/v0/jobs/%s/' % job_id)
+    if response.status_code == 200:
+        logger.info("Job %s in status: %s" % (job_id, response.json()['status']))
+        return response.json()
+    logger.error("Failed to fetch job status for: %s" % job_id)
+    return None
+
+
+def fail_job(run):
+    run.status = RunStatus.FAILED
+    run.save()
+
+
+def complete_job(run, remote_status):
+    run.status = RunStatus.COMPLETED
+    file_group = run.app.output_file_group
+    for k, v in remote_status['outputs'].items():
+        port = run.port_set.filter(port_type=PortType.OUTPUT, name=k)
+        port.value = v
+        port.db_value = runner.run.run_creator._resolve_outputs(v, file_group)
+        port.save()
+    run.save()
+
+
+def running_job(run):
+    run.status = RunStatus.RUNNING
+    run.save()
+
+
+@shared_task
+def check_jobs_status():
+    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+    for run in runs:
+        logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
+        remote_status = check_status_on_ridgeback(run.execution_id)
+        if remote_status:
+            if remote_status['status'] == 'FAILED':
+                logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
+                fail_job(run)
+                continue
+            if remote_status['status'] == 'COMPLETED':
+                logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
+                complete_job(run, remote_status)
+                continue
+            if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
+                logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
+                running_job(run)
+                continue
+        logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
+
+
+
+
