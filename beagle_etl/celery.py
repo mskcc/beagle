@@ -33,5 +33,10 @@ app.conf.beat_schedule = {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0,
         "options": {"queue": "beagle_job_scheduler"}
+    },
+    'check_status': {
+        "task": "runner.tasks.check_jobs_status",
+        "schedule": 30.0,
+        "options": {"queue": "runner_queue"}
     }
 }
