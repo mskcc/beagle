@@ -25,9 +25,9 @@ def format_sample(data):
     sample['R1'] = list()
     sample['R2'] = list()
     for i in data['R1']:
-        sample['R1'].append('juno://' + i)
+        sample['R1'].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['R2']:
-        sample['R2'].append('juno://' + i)
+        sample['R2'].append({'class': 'File', 'location': 'juno://' + i})
     sample['RG_ID'] = data['ID']
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG' # Don't think tempo needs these, but putting them in for now
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
