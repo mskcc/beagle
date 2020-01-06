@@ -76,7 +76,7 @@ def request_callback(request_id):
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
         filemetadata__metadata__requestId=request_id)
-    ret_str = 'filemetadata__metadata__requestMetadata__recipe'
+    ret_str = 'filemetadata__metadata__recipe'
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
         raise FailedToSubmitToOperatorException(
@@ -137,6 +137,7 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     conflict = False
     missing_fastq = False
+    invalid_number_of_fastq = False
     conflict_files = []
     failed_runs = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
@@ -174,6 +175,12 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
+            elif len(fastqs) != 2:
+                logger.error(
+                    "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
+                    sample_id, str(len(fastqs))))
+                invalid_number_of_fastq = True
+                failed_runs.append(run['runId'])
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if not file_search:
@@ -196,6 +203,10 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
             "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
     if missing_fastq:
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+    if invalid_number_of_fastq:
+        raise FailedToFetchFilesException(
+            "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
+
 
 
 def R1_or_R2(filename):
@@ -247,11 +258,13 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         external_sample_name = metadata.pop('sampleName', None)
         sample_id = metadata.pop('igoId', None)
         patient_id = metadata.pop('cmoPatientId', None)
+        sample_class = metadata.pop('cmoSampleClass', None)
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id
+        metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
         metadata['libraryId'] = library.pop('libraryIgoId', None)
@@ -384,11 +397,13 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
     external_sample_name = metadata.pop('sampleName', None)
     sample_id = metadata.pop('igoId', None)
     patient_id = metadata.pop('cmoPatientId', None)
+    sample_class = metadata.pop('cmoSampleClass', None)
     metadata['requestId'] = request_id
     metadata['sampleName'] = sample_name
     metadata['externalSampleId'] = external_sample_name
     metadata['sampleId'] = sample_id
     metadata['patientId'] = patient_id
+    metadata['sampleClass'] = sample_class
     metadata['R'] = r
     metadata['igocomplete'] = igocomplete
     metadata['libraryId'] = library.pop('libraryIgoId', None)

@@ -265,6 +265,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERYD_CONCURRENCY = 1
+CELERY_EVENT_QUEUE_PREFIX = os.environ.get('BEAGLE_CELERY_QUEUE_PREFIX', 'beagle.production')
 
 LIMS_USERNAME = os.environ.get('BEAGLE_LIMS_USERNAME')
 LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
@@ -284,3 +285,6 @@ LOGGING = {
 
 BEAGLE_URL = 'http://silo:5001'
 
+BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
+BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
+BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
