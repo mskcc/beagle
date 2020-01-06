@@ -247,11 +247,13 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         external_sample_name = metadata.pop('sampleName', None)
         sample_id = metadata.pop('igoId', None)
         patient_id = metadata.pop('cmoPatientId', None)
+        sample_class = metadata.pop('cmoSampleClass', None)
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id
+        metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
         metadata['libraryId'] = library.pop('libraryIgoId', None)
@@ -384,11 +386,13 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
     external_sample_name = metadata.pop('sampleName', None)
     sample_id = metadata.pop('igoId', None)
     patient_id = metadata.pop('cmoPatientId', None)
+    sample_class = metadata.pop('cmoSampleClass', None)
     metadata['requestId'] = request_id
     metadata['sampleName'] = sample_name
     metadata['externalSampleId'] = external_sample_name
     metadata['sampleId'] = sample_id
     metadata['patientId'] = patient_id
+    metadata['sampleClass'] = sample_class
     metadata['R'] = r
     metadata['igocomplete'] = igocomplete
     metadata['libraryId'] = library.pop('libraryIgoId', None)
