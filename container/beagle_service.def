@@ -6,6 +6,7 @@ Includecmd: no
     export BEAGLE_PATH=/usr/bin/beagle
 
 %startscript
+    nohup python3 ${BEAGLE_PATH}/manage.py migrate
     nohup python3 ${BEAGLE_PATH}/manage.py runserver 0.0.0.0:$BEAGLE_PORT
 
 %post
