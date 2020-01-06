@@ -37,7 +37,7 @@ class Pipeline(BaseModel):
 
 
 class Run(BaseModel):
-    name = models.CharField(max_length=100, editable=True)
+    name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
     execution_id = models.UUIDField(null=True, blank=True)
