@@ -284,3 +284,5 @@ LOGGING = {
 
 BEAGLE_URL = 'http://silo:5001'
 
+BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'runner_queue')
+BEAGLE_BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler')
