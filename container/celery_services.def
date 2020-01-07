@@ -16,11 +16,11 @@ Includecmd: no
     export CELERY_PID_PATH=/tmp
     fi
 
-    if [ -z "CELERY_BEAT_SCHEDULE_PATH" ]; then
+    if [ -z "$CELERY_BEAT_SCHEDULE_PATH" ]; then
     export CELERY_BEAT_SCHEDULE_PATH=/tmp
     fi
 
-    if [ -z "CELERY_EVENT_QUEUE_PREFIX" ]; then
+    if [ -z "$CELERY_EVENT_QUEUE_PREFIX" ]; then
     export CELERY_EVENT_QUEUE_PREFIX=$(date +%Y%m%dT%H%M%S)
     fi
 
