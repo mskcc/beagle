@@ -2,10 +2,16 @@ Bootstrap: docker
 From: ubuntu:19.10
 Includecmd: no
 
-%environment
-    export BEAGLE_PATH=/usr/bin/beagle
-
 %startscript
+
+    if [ -z "$BEAGLE_PATH" ]; then
+    export BEAGLE_PATH=/usr/bin/beagle
+    fi
+
+    if [ -z "$BEAGLE_PORT" ]; then
+    export BEAGLE_PORT=8000
+    fi
+
     nohup python3 ${BEAGLE_PATH}/manage.py migrate
     nohup python3 ${BEAGLE_PATH}/manage.py runserver 0.0.0.0:$BEAGLE_PORT
 
@@ -19,8 +25,12 @@ Includecmd: no
         gawk build-essential \
         git
 
+    if [ -z "$BEAGLE_BRANCH" ]; then
+    export BEAGLE_BRANCH=master
+    fi
+
     cd /usr/bin \
-    && git clone https://github.com/mskcc/beagle
+    && git clone https://github.com/mskcc/beagle --branch ${BEAGLE_BRANCH}
     cd /usr/bin/beagle \
     && python3 -m pip install python-ldap \
     && pip3 install -r requirements.txt
