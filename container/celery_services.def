@@ -9,7 +9,7 @@ Includecmd: no
     fi
 
     if [ -z "$CELERY_LOG_PATH" ]; then
-    export CELERY_LOG_PATH=/logs
+    export CELERY_LOG_PATH=/tmp
     fi
 
     if [ -z "$CELERY_PID_PATH" ]; then
