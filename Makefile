@@ -218,6 +218,8 @@ stop-services:
 export DJANGO_BEAGLE_IP:=localhost
 export DJANGO_BEAGLE_PORT:=6991
 export BEAGLE_URL:=http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
+export BEAGLE_ENDPOINT:=$(BEAGLE_URL)
+
 # address to dev Ridgeback instance:
 export DJANGO_RIDGEBACK_IP:=localhost
 export DJANGO_RIDGEBACK_PORT:=7001
@@ -236,10 +238,14 @@ django-init:
 	python manage.py makemigrations
 	python manage.py migrate
 	python manage.py createsuperuser
-	python manage.py loaddata file_system/fixtures/*
-	python manage.py loaddata runner/fixtures/*
-	python manage.py loaddata beagle_etl/fixtures/*
+	python manage.py loaddata \
+	file_system.filegroup.json \
+	file_system.filetype.json \
+	file_system.storage.json \
+	runner.pipeline.json
 
+test:
+	python manage.py test runner.operator.roslin_operator.bin.test_pair_request
 
 # start the Django development server
 runserver:
@@ -263,6 +269,7 @@ auth:
 REQID:=07264_G
 # fill this in with the token that was generated with `auth` above
 TOKEN:=IUzI1NiJ9.eyJ0
+# import files data about samples in a request from the IGO LIMS
 import:
 	curl -H "Content-Type: application/json" \
 	-X POST \
@@ -270,11 +277,22 @@ import:
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
-request:
+# get info about the files and samples in a request, from the Beagle API
+files-request:
+	python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
+# curl -H "Content-Type: application/json" \
+# -X GET \
+# -H "Authorization: Bearer $(TOKEN)" \
+# http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
+# $(REQID)/
+
+# start a Roslin run for a given request in the Beagle db
+run-request:
 	curl -H "Content-Type: application/json" \
-	-X GET \
+	-X POST \
 	-H "Authorization: Bearer $(TOKEN)" \
-	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/$(REQID)/
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # check if the ports needed for services and servers are already in use on this system
 check-port-collision:
@@ -290,5 +308,6 @@ check-port-collision:
 	) ; done
 
 PORT=
+# check if a port is already in use on the system
 port-check:
 	ss -lntup | grep ':$(PORT)'
