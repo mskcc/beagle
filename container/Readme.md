@@ -32,6 +32,16 @@ SINGULARITYENV_BEAGLE_JOB_SCHEDULER_QUEUE
 SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX
 ```
 
+The following are optional environmental variables for use with `beagle` and `celery`. It is recommended to set `SINGULARITYENV_CELERY_LOG_PATH` for debugging/logging purposes.
+
+```
+SINGULARITYENV_BEAGLE_PATH # beagle install to use if not using what's in container; default is /usr/bin/beagle
+SINGULARITYENV_CELERY_LOG_PATH # location of where to store log files for celery; default is /tmp
+SINGULARITYENV_CELERY_PID_PATH # where to store pid files for celery workers; default is /tmp
+SINGULARITY_BEAT_SCHEDULE_PATH # where to store schedule of celery beat; default is /tmp
+SINGULARITYENV_EVENT QUEUE PREFIX # prefix for event queue; default is runtime timestamp
+```
+
 #### Running an instance
 
 Running the following command will create a beagle instance named `beagle_service`
