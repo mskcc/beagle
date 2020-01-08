@@ -1,0 +1,58 @@
+[
+    {
+        "model": "runner.pipeline",
+        "pk": "6db357d9-bdac-4673-9ab6-758a62c6c34b",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "name": "Align and Sort",
+            "github": "https://github.com/mskcc/align_sort_bam",
+            "version": "0.1.0",
+            "entrypoint": "align_sort_bam.cwl",
+            "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+            "output_directory": null
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "be8af61e-46f4-43d4-9838-191b17465bac",
+        "fields": {
+            "created_date": "2019-11-19T20:02:32.985Z",
+            "modified_date": "2019-11-23T11:30:46.376Z",
+            "name": "access_m1",
+            "github": "https://github.com/msk-access/fastq_to_bam",
+            "version": "0.1.1",
+            "entrypoint": "fastq_to_bam.cwl",
+            "output_file_group": "d9015037-cd6b-4cb6-87a8-16d355482461",
+            "output_directory": "/work/pi/beagle/output/access_m1"
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
+        "fields": {
+            "created_date": "2019-11-18T17:46:45.118Z",
+            "modified_date": "2019-12-05T01:12:39.854Z",
+            "name": "roslin",
+            "github": "https://github.com/mskcc/roslin-cwl",
+            "version": "1.0.0-rc5",
+            "entrypoint": "workflows/pair-workflow-sv.cwl",
+            "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_sv"
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "ee5f19d6-f8bf-401f-8cbc-1dd81af10e67",
+        "fields": {
+            "created_date": "2019-11-07T21:50:16.747Z",
+            "modified_date": "2019-12-05T04:34:27.747Z",
+            "name": "flatbush",
+            "github": "https://github.com/mskcc-cwl/flatbush",
+            "version": "master",
+            "entrypoint": "flatbush.cwl",
+            "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+            "output_directory": "/juno/work/pi/beagle/output/flatbush"
+        }
+    }
+]
