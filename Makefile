@@ -308,9 +308,10 @@ check-port-collision:
 	port="$$(echo $$i | cut -d ':' -f2)" ; \
 	lsof -ni | grep LISTEN | tr -s ' ' | cut -d ' ' -f9 | sed -e 's|.*:\([0-9]*\)$$|\1|g' | sort -u | grep -qw "$$port" && echo ">>> $$label port has a collision; something is already running on port $$port" || : ; \
 	) ; done
-PORT=
+
 port-check:
-	lsof -i:$(PORT)
+	lsof -i:$(DJANGO_BEAGLE_PORT),$(BEAGLE_DB_PORT),$(RABBITMQ_NODE_PORT),$(DJANGO_RIDGEBACK_PORT),$(PGPORT) | \
+	grep LISTEN
 endif
 
 ifeq ($(UNAME), Linux)
