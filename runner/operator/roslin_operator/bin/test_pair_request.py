@@ -272,3 +272,73 @@ class TestPairRequest(TestCase):
             }]
         }
         self.assertTrue(pairs == expected_pairs)
+
+    def test_get_pair_from_other_request(self):
+        """
+        Test that you can get the correct Normal sample for a patient when the
+        Normal sample is part of another request
+        """
+        # Load fixtures
+        # only normals
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.file.json"),
+            verbosity=0)
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.filemetadata.json"),
+            verbosity=0)
+        # only tumors
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_3.file.json"),
+            verbosity=0)
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_3.filemetadata.json"),
+            verbosity=0)
+
+        # check the total number of db entries now
+        self.assertTrue(len(File.objects.all()) == 4)
+        self.assertTrue(len(FileMetadata.objects.all()) == 4)
+
+        samples = [
+        {
+        "bait_set": "IMPACT468_BAITS",
+        "patient_id": "C-8VK0V7",
+        "tumor_type": "Tumor",
+        "igo_id": "10075_D_3_5",
+        "request_id": "10075_D_3"
+        }
+        ]
+
+        pairs = compile_pairs(samples)
+        expected_pairs = {
+        'tumor': [
+            {
+            'bait_set': 'IMPACT468_BAITS',
+            'patient_id': 'C-8VK0V7',
+            'tumor_type': 'Tumor',
+            'igo_id': '10075_D_3_5',
+            'request_id': '10075_D_3'
+            }
+        ],
+        'normal': [
+            {
+            'CN': 'MSKCC',
+            'PL': 'Illumina',
+            'PU': ['HCYYWBBXY'],
+            'LB': '10075_D_2_3',
+            'tumor_type': 'Normal',
+            'ID': ['s_C_8VK0V7_N001_d_HCYYWBBXY'],
+            'SM': 's_C_8VK0V7_N001_d',
+            'species': 'Human',
+            'patient_id': 'C-8VK0V7',
+            'bait_set': 'IMPACT468_BAITS',
+            'igo_id': '10075_D_2_3',
+            'run_date': ['2019-12-12'],
+            'specimen_type': 'Blood',
+            'R1': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R1_001.fastq.gz'],
+            'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz'],
+            'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
+            'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
+            'request_id': ['10075_D_2']}
+            ]
+        }
+        self.assertTrue(pairs == expected_pairs)
