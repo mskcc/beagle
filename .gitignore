@@ -3,3 +3,5 @@
 logs/
 db/
 conda/
+db*
+scripts/*.json
