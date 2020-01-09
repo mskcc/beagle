@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:19.10
+Includecmd: no
+
+%startscript
+
+    if [ -z "$BEAGLE_PATH" ]; then
+    export BEAGLE_PATH=/usr/bin/beagle
+    fi
+
+    if [ -z "$BEAGLE_PORT" ]; then
+    export BEAGLE_PORT=8000
+    fi
+
+    nohup python3 ${BEAGLE_PATH}/manage.py migrate
+    nohup python3 ${BEAGLE_PATH}/manage.py runserver 0.0.0.0:$BEAGLE_PORT
+
+%post
+    export DEBIAN_FRONTEND=noninteractive \
+    && apt-get clean && apt-get update -qq \
+    && apt-get -y install \
+        python python-pip python-dev python3 python3-pip wget \
+        libldap2-dev libsasl2-dev libssl-dev \
+        postgresql postgresql-contrib libpq-dev \
+        gawk build-essential \
+        git
+
+    if [ -z "$BEAGLE_BRANCH" ]; then
+    export BEAGLE_BRANCH=master
+    fi
+
+    cd /usr/bin \
+    && git clone https://github.com/mskcc/beagle --branch ${BEAGLE_BRANCH}
+    cd /usr/bin/beagle \
+    && python3 -m pip install python-ldap \
+    && pip3 install -r requirements.txt
