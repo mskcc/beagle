@@ -295,6 +295,25 @@ run-request:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # check if the ports needed for services and servers are already in use on this system
+ifeq ($(UNAME), Darwin)
+# On macOS High Sierra, use this command: lsof -nP -i4TCP:$PORT | grep LISTEN
+check-port-collision:
+	@for i in \
+	"DJANGO_BEAGLE_PORT:$(DJANGO_BEAGLE_PORT)" \
+	"BEAGLE_DB_PORT:$(BEAGLE_DB_PORT)" \
+	"RABBITMQ_NODE_PORT:$(RABBITMQ_NODE_PORT)" \
+	"DJANGO_RIDGEBACK_PORT:$(DJANGO_RIDGEBACK_PORT)" \
+	"PGPORT:$(PGPORT)" ; do ( \
+	label="$$(echo $$i | cut -d ':' -f1)" ; \
+	port="$$(echo $$i | cut -d ':' -f2)" ; \
+	lsof -ni | grep LISTEN | tr -s ' ' | cut -d ' ' -f9 | sed -e 's|.*:\([0-9]*\)$$|\1|g' | sort -u | grep -qw "$$port" && echo ">>> $$label port has a collision; something is already running on port $$port" || : ; \
+	) ; done
+PORT=
+port-check:
+	lsof -i:$(PORT)
+endif
+
+ifeq ($(UNAME), Linux)
 check-port-collision:
 	@for i in \
 	"DJANGO_BEAGLE_PORT:$(DJANGO_BEAGLE_PORT)" \
@@ -306,8 +325,8 @@ check-port-collision:
 	port="$$(echo $$i | cut -d ':' -f2)" ; \
 	ss -lntu | tr -s ' ' | cut -d ' ' -f5 | sed -e 's|.*:\([0-9]*$$\)|\1|g' | sort -u | grep -qw "$$port" && echo ">>> $$label port has a collision; something is already running on port $$port" || : ; \
 	) ; done
-
 PORT=
 # check if a port is already in use on the system
 port-check:
 	ss -lntup | grep ':$(PORT)'
+endif
