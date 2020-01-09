@@ -1,0 +1,534 @@
+[
+    {
+        "model": "file_system.filemetadata",
+        "pk": "eb3a38fe-5eca-4c19-a80c-22c0d8524fcf",
+        "fields": {
+            "created_date": "2019-11-30T16:40:10.321Z",
+            "modified_date": "2019-11-30T16:40:10.321Z",
+            "file": "d8576140-e358-41e8-adaa-85af3a69ca1b",
+            "version": 0,
+            "metadata": {
+                "sex": "F",
+                "igoId": "05257_CB_2",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "libraries": {
+                    "runs": {
+                        "runId": "JAX_0389",
+                        "runDate": "2019-11-25",
+                        "runMode": "HiSeq High Output",
+                        "flowCellId": "HFJGCBBXY",
+                        "readLength": "101/8/8/101",
+                        "flowCellLanes": [
+                            5
+                        ]
+                    },
+                    "barcodeId": "DUAL_IDT_LIB_287",
+                    "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                    "barcodeIndex": "TCGTGGAT-GTCTAGGT",
+                    "libraryIgoId": "05257_CB_2_1_1_1",
+                    "libraryVolume": 35.0,
+                    "captureInputNg": "100.0",
+                    "captureConcentrationNm": "4.149377593360995",
+                    "libraryConcentrationNgul": 24.1
+                },
+                "requestId": "05257_CB",
+                "igocomplete": true,
+                "cmoPatientId": "C-A0D0WK",
+                "oncoTreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "specimenType": "Blood",
+                "cmoSampleName": "C-A0D0WK-N001-d",
+                "tumorOrNormal": "Normal",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "requestMetadata": {
+                    "recipe": "IMPACT468",
+                    "piEmail": "",
+                    "labHeadName": "John Smith",
+                    "labHeadEmail": "email@internet.com",
+                    "pooledNormals": [
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                    ],
+                    "dataAnalystName": "",
+                    "dataAnalystEmail": "",
+                    "investigatorName": "John Smith",
+                    "investigatorEmail": "email@internet.com",
+                    "projectManagerName": ""
+                },
+                "investigatorSampleId": "DS-puma-1708-N"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "44d60f93-241d-4c9e-b707-9b451ee5cfbe",
+        "fields": {
+            "created_date": "2019-11-30T16:40:10.344Z",
+            "modified_date": "2019-11-30T16:40:10.344Z",
+            "file": "eba0a8fc-9702-4bb2-bd70-f42d3f94b7f2",
+            "version": 0,
+            "metadata": {
+                "sex": "F",
+                "igoId": "05257_CB_2",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "libraries": {
+                    "runs": {
+                        "runId": "JAX_0389",
+                        "runDate": "2019-11-25",
+                        "runMode": "HiSeq High Output",
+                        "flowCellId": "HFJGCBBXY",
+                        "readLength": "101/8/8/101",
+                        "flowCellLanes": [
+                            5
+                        ]
+                    },
+                    "barcodeId": "DUAL_IDT_LIB_287",
+                    "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                    "barcodeIndex": "TCGTGGAT-GTCTAGGT",
+                    "libraryIgoId": "05257_CB_2_1_1_1",
+                    "libraryVolume": 35.0,
+                    "captureInputNg": "100.0",
+                    "captureConcentrationNm": "4.149377593360995",
+                    "libraryConcentrationNgul": 24.1
+                },
+                "requestId": "05257_CB",
+                "igocomplete": true,
+                "cmoPatientId": "C-A0D0WK",
+                "oncoTreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "specimenType": "Blood",
+                "cmoSampleName": "C-A0D0WK-N001-d",
+                "tumorOrNormal": "Normal",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "requestMetadata": {
+                    "recipe": "IMPACT468",
+                    "piEmail": "",
+                    "labHeadName": "John Smith",
+                    "labHeadEmail": "email@internet.com",
+                    "pooledNormals": [
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                    ],
+                    "dataAnalystName": "",
+                    "dataAnalystEmail": "",
+                    "investigatorName": "John Smith",
+                    "investigatorEmail": "email@internet.com",
+                    "projectManagerName": ""
+                },
+                "investigatorSampleId": "DS-puma-1708-N"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c616879d-2f49-47b5-b029-c67ea3c96ac0",
+        "fields": {
+            "created_date": "2019-11-30T16:40:14.002Z",
+            "modified_date": "2019-11-30T16:40:14.002Z",
+            "file": "aa0d762a-6833-4aac-a5fc-18ce71f713ca",
+            "version": 0,
+            "metadata": {
+                "sex": "F",
+                "igoId": "05257_CB_1",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "libraries": {
+                    "runs": {
+                        "runId": "JAX_0389",
+                        "runDate": "2019-11-25",
+                        "runMode": "HiSeq High Output",
+                        "flowCellId": "HFJGCBBXY",
+                        "readLength": "101/8/8/101",
+                        "flowCellLanes": [
+                            5
+                        ]
+                    },
+                    "barcodeId": "DUAL_IDT_LIB_275",
+                    "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                    "barcodeIndex": "TCCGAGTT-ACGGTCTT",
+                    "libraryIgoId": "05257_CB_1_1_1_1",
+                    "libraryVolume": 35.0,
+                    "captureInputNg": "350.0",
+                    "captureConcentrationNm": "21.21212121212121",
+                    "libraryConcentrationNgul": 16.5
+                },
+                "requestId": "05257_CB",
+                "igocomplete": true,
+                "cmoPatientId": "C-A0D0WK",
+                "oncoTreeCode": "BREAST",
+                "preservation": "FFPE",
+                "sampleOrigin": "Slides",
+                "specimenType": "Resection",
+                "cmoSampleName": "C-A0D0WK-T001-d",
+                "tumorOrNormal": "Tumor",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "requestMetadata": {
+                    "recipe": "IMPACT468",
+                    "piEmail": "",
+                    "labHeadName": "John Smith",
+                    "labHeadEmail": "email@internet.com",
+                    "pooledNormals": [
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                    ],
+                    "dataAnalystName": "",
+                    "dataAnalystEmail": "",
+                    "investigatorName": "John Smith",
+                    "investigatorEmail": "email@internet.com",
+                    "projectManagerName": ""
+                },
+                "investigatorSampleId": "DS-puma-1708-T"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "bfe80e62-a2bf-4e3d-9c77-3a8cf59195d5",
+        "fields": {
+            "created_date": "2019-11-30T16:40:14.027Z",
+            "modified_date": "2019-11-30T16:40:14.027Z",
+            "file": "1bd6eb62-f331-49f3-8ded-83d989c2c2d3",
+            "version": 0,
+            "metadata": {
+                "sex": "F",
+                "igoId": "05257_CB_1",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "libraries": {
+                    "runs": {
+                        "runId": "JAX_0389",
+                        "runDate": "2019-11-25",
+                        "runMode": "HiSeq High Output",
+                        "flowCellId": "HFJGCBBXY",
+                        "readLength": "101/8/8/101",
+                        "flowCellLanes": [
+                            5
+                        ]
+                    },
+                    "barcodeId": "DUAL_IDT_LIB_275",
+                    "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                    "barcodeIndex": "TCCGAGTT-ACGGTCTT",
+                    "libraryIgoId": "05257_CB_1_1_1_1",
+                    "libraryVolume": 35.0,
+                    "captureInputNg": "350.0",
+                    "captureConcentrationNm": "21.21212121212121",
+                    "libraryConcentrationNgul": 16.5
+                },
+                "requestId": "05257_CB",
+                "igocomplete": true,
+                "cmoPatientId": "C-A0D0WK",
+                "oncoTreeCode": "BREAST",
+                "preservation": "FFPE",
+                "sampleOrigin": "Slides",
+                "specimenType": "Resection",
+                "cmoSampleName": "C-A0D0WK-T001-d",
+                "tumorOrNormal": "Tumor",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "requestMetadata": {
+                    "recipe": "IMPACT468",
+                    "piEmail": "",
+                    "labHeadName": "John Smith",
+                    "labHeadEmail": "email@internet.com",
+                    "pooledNormals": [
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                    ],
+                    "dataAnalystName": "",
+                    "dataAnalystEmail": "",
+                    "investigatorName": "John Smith",
+                    "investigatorEmail": "email@internet.com",
+                    "projectManagerName": ""
+                },
+                "investigatorSampleId": "DS-puma-1708-T"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "39f455f4-e01d-41b6-b0c3-865ff82a4a20",
+        "fields": {
+            "created_date": "2020-01-09T16:49:14.298Z",
+            "modified_date": "2020-01-09T16:49:14.298Z",
+            "file": "aa0d762a-6833-4aac-a5fc-18ce71f713ca",
+            "version": 1,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "runId": "JAX_0389",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "",
+                "runDate": "2019-11-25",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "sampleId": "05257_CB_1",
+                "barcodeId": "DUAL_IDT_LIB_275",
+                "libraryId": "05257_CB_1_1_1_1",
+                "patientId": "C-A0D0WK",
+                "requestId": "05257_CB",
+                "flowCellId": "HFJGCBBXY",
+                "readLength": "101/8/8/101",
+                "sampleName": "C-A0D0WK-T001-d",
+                "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                "igocomplete": true,
+                "labHeadName": "John Smith",
+                "barcodeIndex": "TCCGAGTT-ACGGTCTT",
+                "labHeadEmail": "email@internet.com",
+                "oncoTreeCode": "BREAST",
+                "preservation": "FFPE",
+                "sampleOrigin": "Slides",
+                "specimenType": "Resection",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "pooledNormals": [
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                ],
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "350.0",
+                "cmoSampleClass": "Unknown Tumor",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAnalystEmail": "",
+                "externalSampleId": "DS-puma-1708-T",
+                "investigatorName": "John Smith",
+                "investigatorEmail": "email@internet.com",
+                "projectManagerName": "",
+                "investigatorSampleId": "DS-puma-1708-T",
+                "captureConcentrationNm": "21.21212121212121",
+                "libraryConcentrationNgul": 16.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "ae244e09-e319-41af-b4e1-d4e68b65559e",
+        "fields": {
+            "created_date": "2020-01-09T16:49:14.300Z",
+            "modified_date": "2020-01-09T16:49:14.301Z",
+            "file": "d8576140-e358-41e8-adaa-85af3a69ca1b",
+            "version": 1,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "runId": "JAX_0389",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "",
+                "runDate": "2019-11-25",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "sampleId": "05257_CB_2",
+                "barcodeId": "DUAL_IDT_LIB_287",
+                "libraryId": "05257_CB_2_1_1_1",
+                "patientId": "C-A0D0WK",
+                "requestId": "05257_CB",
+                "flowCellId": "HFJGCBBXY",
+                "readLength": "101/8/8/101",
+                "sampleName": "C-A0D0WK-N001-d",
+                "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                "igocomplete": true,
+                "labHeadName": "John Smith",
+                "barcodeIndex": "TCGTGGAT-GTCTAGGT",
+                "labHeadEmail": "email@internet.com",
+                "oncoTreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "specimenType": "Blood",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "pooledNormals": [
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                ],
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "100.0",
+                "cmoSampleClass": "Normal",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAnalystEmail": "",
+                "externalSampleId": "DS-puma-1708-N",
+                "investigatorName": "John Smith",
+                "investigatorEmail": "email@internet.com",
+                "projectManagerName": "",
+                "investigatorSampleId": "DS-puma-1708-N",
+                "captureConcentrationNm": "4.149377593360995",
+                "libraryConcentrationNgul": 24.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c32ac7e6-c8b6-4abe-8731-f135d8951a1d",
+        "fields": {
+            "created_date": "2020-01-09T16:49:14.325Z",
+            "modified_date": "2020-01-09T16:49:14.325Z",
+            "file": "1bd6eb62-f331-49f3-8ded-83d989c2c2d3",
+            "version": 1,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "runId": "JAX_0389",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "",
+                "runDate": "2019-11-25",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "sampleId": "05257_CB_1",
+                "barcodeId": "DUAL_IDT_LIB_275",
+                "libraryId": null,
+                "patientId": "C-A0D0WK",
+                "requestId": "05257_CB",
+                "flowCellId": "HFJGCBBXY",
+                "readLength": "101/8/8/101",
+                "sampleName": "C-A0D0WK-T001-d",
+                "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                "igocomplete": true,
+                "labHeadName": "John Smith",
+                "barcodeIndex": "TCCGAGTT-ACGGTCTT",
+                "labHeadEmail": "email@internet.com",
+                "oncoTreeCode": "BREAST",
+                "preservation": "FFPE",
+                "sampleOrigin": "Slides",
+                "specimenType": "Resection",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "pooledNormals": [
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                ],
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "350.0",
+                "cmoSampleClass": "Unknown Tumor",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAnalystEmail": "",
+                "externalSampleId": "DS-puma-1708-T",
+                "investigatorName": "John Smith",
+                "investigatorEmail": "email@internet.com",
+                "projectManagerName": "",
+                "investigatorSampleId": "DS-puma-1708-T",
+                "captureConcentrationNm": "21.21212121212121",
+                "libraryConcentrationNgul": 16.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "351612ea-27fe-42b0-871a-deb4e024e479",
+        "fields": {
+            "created_date": "2020-01-09T16:49:14.329Z",
+            "modified_date": "2020-01-09T16:49:14.329Z",
+            "file": "eba0a8fc-9702-4bb2-bd70-f42d3f94b7f2",
+            "version": 1,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "runId": "JAX_0389",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "",
+                "runDate": "2019-11-25",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "sampleId": "05257_CB_2",
+                "barcodeId": "DUAL_IDT_LIB_287",
+                "libraryId": null,
+                "patientId": "C-A0D0WK",
+                "requestId": "05257_CB",
+                "flowCellId": "HFJGCBBXY",
+                "readLength": "101/8/8/101",
+                "sampleName": "C-A0D0WK-N001-d",
+                "captureName": "Pool-05257_CB-05604_V-10396-Tube1_1",
+                "igocomplete": true,
+                "labHeadName": "John Smith",
+                "barcodeIndex": "TCGTGGAT-GTCTAGGT",
+                "labHeadEmail": "email@internet.com",
+                "oncoTreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "specimenType": "Blood",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "pooledNormals": [
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S18_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA/FROZENPOOLEDNORMAL_IGO_IMPACT468_GTTACGCA_S19_R2_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R1_001.fastq.gz",
+                    "/ifs/archive/GCL/hiseq/FASTQ/JAX_0389_AHFJGCBBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC/MOUSEPOOLEDNORMAL_IGO_M-IMPACT_v1_TGCGTACC_S33_R2_001.fastq.gz"
+                ],
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "100.0",
+                "cmoSampleClass": "Normal",
+                "collectionYear": "",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAnalystEmail": "",
+                "externalSampleId": "DS-puma-1708-N",
+                "investigatorName": "John Smith",
+                "investigatorEmail": "email@internet.com",
+                "projectManagerName": "",
+                "investigatorSampleId": "DS-puma-1708-N",
+                "captureConcentrationNm": "4.149377593360995",
+                "libraryConcentrationNgul": 24.1
+            },
+            "user": null
+        }
+    }
+]
