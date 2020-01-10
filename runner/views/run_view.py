@@ -8,7 +8,7 @@ from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
 from runner.models import Run, Port, Pipeline, RunStatus
-from runner.serializers import RunSerializer, CreateRunSerializer, UpdateRunSerializer, RunStatusUpdateSerializer
+from runner.serializers import RunSerializerFull, CreateRunSerializer, UpdateRunSerializer, RunStatusUpdateSerializer
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import GenericAPIView
@@ -26,7 +26,7 @@ class RunViewSet(mixins.ListModelMixin,
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
-            return RunSerializer
+            return RunSerializerFull
         if self.action == 'update':
             return UpdateRunSerializer
         return CreateRunSerializer
@@ -40,14 +40,14 @@ class RunViewSet(mixins.ListModelMixin,
             queryset = queryset.filter(status=RunStatus[status_param].value)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = RunSerializer(page, many=True)
+            serializer = RunSerializerFull(page, many=True)
             return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = CreateRunSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             run = serializer.save()
-            response = RunSerializer(run)
+            response = RunSerializerFull(run)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,7 +64,7 @@ class StartRunViewSet(GenericAPIView):
         except Exception as e:
             return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         app = "data:text/plain;base64,%s" % base64.b64encode(json.dumps(resolved_dict).encode("utf-8")).decode('utf-8')
-        run_serializer = RunSerializer(run)
+        run_serializer = RunSerializerFull(run)
         inputs = {}
         for inp in run_serializer.data['inputs']:
             if inp['value']:
@@ -84,7 +84,7 @@ class StartRunViewSet(GenericAPIView):
         run.execution_id = uuid.UUID(execution_id)
         run.status = RunStatus.RUNNING
         run.save()
-        response = RunSerializer(run)
+        response = RunSerializerFull(run)
         return Response(response.data, status=status.HTTP_200_OK)
 
 
