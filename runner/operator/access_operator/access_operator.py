@@ -44,6 +44,8 @@ class AccessOperator(Operator):
 
         for i, job in enumerate(access_inputs):
             name = "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
-            access_jobs.append((APIRunCreateSerializer(data={'name': name,'app': self.get_pipeline_id(), 'inputs': access_inputs}), job))
+            access_jobs.append((APIRunCreateSerializer(
+                data={'name': name, 'app': self.get_pipeline_id(), 'inputs': access_inputs,
+                      'tags': {'requestId': self.request_id}}), job))
 
         return access_jobs # Not returning anything for some reason for inputs; deal with later

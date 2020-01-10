@@ -35,6 +35,7 @@ class CreatePortSerializer(serializers.ModelSerializer):
 
 class CreateRunSerializer(serializers.Serializer):
     pipeline_id = serializers.UUIDField()
+    request_id = serializers.CharField()
 
     def create(self, validated_data):
         try:
@@ -42,7 +43,8 @@ class CreateRunSerializer(serializers.Serializer):
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
+        run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
+                  status=RunStatus.CREATING, job_statuses=dict())
         run.save()
         return run
 
@@ -58,7 +60,22 @@ class UpdateRunSerializer(serializers.Serializer):
         return instance
 
 
-class RunSerializer(serializers.ModelSerializer):
+class RunSerializerPartial(serializers.ModelSerializer):
+    request_id = serializers.SerializerMethodField()
+    status_url = serializers.SerializerMethodField()
+
+    def get_request_id(self, obj):
+        return obj.tags.get('requestId')
+
+    def get_status_url(self, obj):
+        return settings.BEAGLE_URL + '/v0/run/api/%s' % obj.id
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'status', 'request_id', 'app', 'status_url', 'created_date')
+
+
+class RunSerializerFull(serializers.ModelSerializer):
     inputs = serializers.SerializerMethodField()
     outputs = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
@@ -78,7 +95,8 @@ class RunSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
+        fields = (
+        'id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
@@ -111,6 +129,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
+    tags = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
 
     def create(self, validated_data):
@@ -120,9 +139,10 @@ class APIRunCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
+        tags = validated_data.get('tags')
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict())
+        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), tag=tags)
         run.save()
         return run
 
