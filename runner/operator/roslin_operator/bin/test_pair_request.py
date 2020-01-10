@@ -342,3 +342,71 @@ class TestPairRequest(TestCase):
             ]
         }
         self.assertTrue(pairs == expected_pairs)
+
+    def test_get_most_recent_normal1(self):
+        """
+        Test that when retreiving a normal from other requests, the most recent Normal is returned
+        in the event that a patient has several normals
+        Return the Normal with the most recent run_date
+        """
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.file.json"),
+            verbosity=0)
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.filemetadata.json"),
+            verbosity=0)
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_4.file.json"),
+            verbosity=0)
+        call_command('loaddata',
+            os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_4.filemetadata.json"),
+            verbosity=0)
+
+        # check the total number of db entries now
+        self.assertTrue(len(File.objects.all()) == 4)
+        self.assertTrue(len(FileMetadata.objects.all()) == 4)
+
+        samples = [
+        {
+        "bait_set": "IMPACT468_BAITS",
+        "patient_id": "C-8VK0V7",
+        "tumor_type": "Tumor",
+        "igo_id": "10075_D_3_5",
+        "request_id": "10075_D_3"
+        }
+        ]
+
+        pairs = compile_pairs(samples)
+        expected_pairs = {
+        'tumor': [
+            {
+            'bait_set': 'IMPACT468_BAITS',
+            'patient_id': 'C-8VK0V7',
+            'tumor_type': 'Tumor',
+            'igo_id': '10075_D_3_5',
+            'request_id': '10075_D_3'
+            }
+        ],
+        'normal': [
+            {
+            'CN': 'MSKCC',
+            'PL': 'Illumina',
+            'PU': ['HCYYWBBXY'],
+            'LB': '10075_D_4_3',
+            'tumor_type': 'Normal',
+            'ID': ['s_C_8VK0V7_N001_d_HCYYWBBXY'],
+            'SM': 's_C_8VK0V7_N001_d',
+            'species': 'Human',
+            'patient_id': 'C-8VK0V7',
+            'bait_set': 'IMPACT468_BAITS',
+            'igo_id': '10075_D_4_3',
+            'run_date': ['2019-12-13'],
+            'specimen_type': 'Blood',
+            'R1': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R1_001.fastq.gz'],
+            'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz'],
+            'R1_bid': [UUID('08072445-84ff-4b43-855d-d8d2dc87e2d5')],
+            'R2_bid': [UUID('f0d9a1e1-9414-42df-a749-08776732ee04')],
+            'request_id': ['10075_D_4']}
+            ]
+        }
+        self.assertTrue(pairs == expected_pairs)
