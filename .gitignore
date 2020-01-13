@@ -5,3 +5,4 @@ db/
 conda/
 db*
 scripts/*.json
+conda*
