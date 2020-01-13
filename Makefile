@@ -3,14 +3,44 @@ UNAME:=$(shell uname)
 CURDIR_BASE:=$(shell basename "$(CURDIR)")
 export LOG_DIR_ABS:=$(shell python -c 'import os; print(os.path.realpath("logs"))')
 
-# help message for instructions on how to use this Makefile
+
+define help
+This is the Makefile for setting up Beagle development instance
+
+Basic dev instance setup instructions:
+
+1. install dependencies in the current directory with:
+make install
+
+2. initialize the database with:
+make db-init
+
+3. initialize the Django database entries with:
+make django-init
+
+4. to run Beagle, first start Postgres, RabbitMQ, and Celery with:
+make start-services
+
+5. start the main Django development server with:
+make runserver
+
+
+Remember to export these environment variables for IGO LIMS access by Beagle:
+
+export BEAGLE_LIMS_USERNAME=some_username
+export BEAGLE_LIMS_PASSWORD=some_password
+export BEAGLE_LIMS_URL=beagle_lims_url_goes_here
+export BEAGLE_AUTH_LDAP_SERVER_URI=ldap_url_goes_here
+
+
+Consult the contents of this Makefile for other Beagle management recipes.
+
+endef
+export help
 help:
-	@echo "This is the Makefile for setting up Beagle" ; \
-	echo "1. install dependencies in the current directory with: 'make install'" ; \
-	echo "2. initialize the database with: 'make db-init'" ; \
-	echo "3. initialize the Django database entries with: 'make django-init'" ; \
-	echo "4. to run Beagle, first start Postgres, RabbitMQ, and Celery with: 'make start-services'" ; \
-	echo "5. start the main Django development server with: 'make runserver' "
+	@printf "$$help"
+
+.PHONY : help
 
 # ~~~~~ Setup Conda ~~~~~ #
 PATH:=$(CURDIR)/conda/bin:$(PATH)
@@ -235,7 +265,7 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 # initialize the Django app in the database
 # do this after setting up the db above
 django-init:
-	python manage.py makemigrations
+	python manage.py makemigrations --merge
 	python manage.py migrate
 	python manage.py createsuperuser
 	python manage.py loaddata \
