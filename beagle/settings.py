@@ -94,7 +94,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_LDAP_SERVER_URI = os.environ['BEAGLE_AUTH_LDAP_SERVER_URI']
+AUTH_LDAP_SERVER_URI = os.environ.get('BEAGLE_AUTH_LDAP_SERVER_URI', "url_goes_here")
 
 AUTH_LDAP_AUTHORIZE_ALL_USERS = True
 
