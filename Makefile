@@ -311,8 +311,9 @@ django-init:
 	runner.pipeline.json
 
 test:
-	python manage.py test runner.tests.operator.roslin_operator.test_pair_request
-	# python manage.py test 
+	python manage.py test runner.tests.operator.roslin_operator.test_get_output
+	# python manage.py test runner.tests.operator.roslin_operator.test_pair_request
+	# python manage.py test
 
 # start the Django development server
 runserver: check-env
@@ -360,6 +361,13 @@ run-request:
 	-H "Authorization: Bearer $(TOKEN)" \
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
+
+run-request-api:
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $(TOKEN)" \
+	--data @fixtures/tests/run_roslin.json \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
