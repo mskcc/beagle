@@ -1,10 +1,10 @@
-# beagle
+# Beagle
 
-Beagle is backend service for managing files, pipelines and runs.
+Beagle is a backend service for managing files, pipelines and runs.
 
 ![alt text](docs/pics/voyager.png "Diagram of Voyager project")
 
-## beagle responsibilities 
+## Beagle Responsibilities
 
 - Users
   - Authentication using MSKCC LDAP
@@ -30,48 +30,48 @@ Beagle is backend service for managing files, pipelines and runs.
   - Try to pair fails, and create runs
   - Notify if there are some errors with files or file metadata
 
-## beagle_cli.py
+## `beagle_cli.py`
 
 - Command line utility which helps handles authentication and accessing beagle endpoints.
 
-#### setup
+#### Setup
 - Requirements
   - python 3
-  
+
 - Instructions
   - pip install -r requirements-cli.txt
-  
+
 - Run  
   - python beagle_cli.py
-  
+
 
 Usage:
 
   `beagle_cli.py files create <file_path> <file_type> <file_group_id> [--metadata-path=<metadata_path>] [--size=<size>]`
-  
+
   `beagle_cli.py files list [--page-size=<page_size>] [--metadata=<metadata>]... [--file-group=<file_group>]... [--file-name=<file_name>]... [--filename-regex=<filename_regex>]`
-  
+
   `beagle_cli.py storage create <storage_name>`
-  
+
   `beagle_cli.py storage list`
-  
+
   `beagle_cli.py file-types create <file_type>`
-  
+
   `beagle_cli.py file-types list`
-  
+
   `beagle_cli.py --version`
-  
+
  Examples:
 - List files by the igoId
   `python beagle_cli.py files list --metadata igoId:07973_BO_6`
 
-## setup
+## Setup
 
 - Requirements
   - PostgreSQL==11
   - RabbitMQ
   - python 3
-  
+
 - Instructions
   - virtualenv beagle
   - pip install -r requirements.txt
@@ -98,3 +98,61 @@ Usage:
   - celery -A beagle_etl worker -l info -Q <beagle_runner_queue> -f beagle-runner.log
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
+
+# Development Instance
+
+A development instance can be easily set up using `conda` with the following commands:
+
+- Clone this repo:
+
+```
+git clone https://github.com/mskcc/beagle.git
+cd beagle
+```
+
+- Install dependencies in the current directory with `conda`:
+
+```
+make install
+```
+
+- Initialize the PostgreSQL database:
+
+```
+make db-init
+```
+
+- Initialize the Django database and set an admin ('superuser') account:
+
+```
+make django-init
+```
+
+- Start Postgres, RabbitMQ, and Celery servers:
+
+```
+make start-services
+```
+
+- Start the main Django development server:
+
+```
+make runserver
+```
+
+The included Makefile will pre-populate most required environment variables needed for Beagle to run, using default settings. These settings can be changed when you invoke `make` on the command line by including them as keyword args, for example:
+
+```
+make db-init BEAGLE_DB_NAME=db-dev
+```
+
+Some environment variables needed for full functionality are not included; you should save these separately and `source` them before running the Makefile. These variables are:
+
+```
+BEAGLE_LIMS_USERNAME
+BEAGLE_LIMS_PASSWORD
+BEAGLE_LIMS_URL
+BEAGLE_AUTH_LDAP_SERVER_URI
+```
+
+Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication. 
