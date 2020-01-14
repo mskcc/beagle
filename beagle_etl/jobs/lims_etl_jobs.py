@@ -372,14 +372,16 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if file_search:
-                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata, 'R1')
+                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata,
+                                         R1_or_R2(fastqs[0]))
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
                     missing_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if file_search:
-                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata, 'R2')
+                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata,
+                                         R1_or_R2(fastqs[1]))
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
