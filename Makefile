@@ -311,7 +311,8 @@ django-init:
 	runner.pipeline.json
 
 test:
-	python manage.py test runner.operator.roslin_operator.bin.test_pair_request
+	python manage.py test runner.tests.operator.roslin_operator.test_pair_request
+	# python manage.py test 
 
 # start the Django development server
 runserver: check-env
