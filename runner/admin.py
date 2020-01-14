@@ -7,7 +7,7 @@ class PipelineAdmin(admin.ModelAdmin):
 
 
 class RunAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'app', 'status', 'execution_id', 'created_date')
+    list_display = ('id', 'name', 'app', 'tags', 'status', 'execution_id', 'created_date')
     ordering = ('-created_date',)
 
 
