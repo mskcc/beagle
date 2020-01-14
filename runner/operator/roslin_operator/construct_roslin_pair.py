@@ -90,7 +90,7 @@ def get_baits_and_targets(assay, roslin_resources):
     # probably need similar rules for whatever "Exome" string is in rquest
     targets = roslin_resources['targets']
 
-    target_assay = ""
+    target_assay = assay
 
     if assay.find("IMPACT410") > -1:
         target_assay = "IMPACT410_b37"
