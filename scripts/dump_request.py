@@ -26,6 +26,7 @@ Output
 import os
 import sys
 import json
+import argparse
 import django
 from django.db.models import Prefetch
 from django.core import serializers
@@ -36,20 +37,64 @@ sys.path.insert(0, parentdir)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 django.setup()
 from file_system.models import File, FileMetadata, FileGroup, FileType
+from runner.models import Run, RunStatus, Port, PortType
 sys.path.pop(0)
 
-requestID = sys.argv[1]
-output_file_file = "{}.file.json".format(requestID)
-output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
-# get FileMetadata entries that match the request ID
-file_instances = FileMetadata.objects.filter(metadata__requestId = requestID)
-print(json.dumps(json.loads(serializers.serialize('json', file_instances)), indent=4), file = open(output_filemetadata_file, "w"))
+def dump_request(**kwargs):
+    """
+    """
+    requestID = kwargs.pop('requestID')
+    output_file_file = "{}.file.json".format(requestID)
+    output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
-# get the File entries that corresponds to the request ID
-queryset = File.objects.prefetch_related(
-    Prefetch('filemetadata_set', queryset=
-    FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-    order_by('file_name').all()
-queryset = queryset.filter(filemetadata__metadata__requestId = requestID)
-print(json.dumps(json.loads(serializers.serialize('json', queryset)), indent=4), file = open(output_file_file, "w"))
+    # get FileMetadata entries that match the request ID
+    file_instances = FileMetadata.objects.filter(metadata__requestId = requestID)
+    print(json.dumps(json.loads(serializers.serialize('json', file_instances)), indent=4), file = open(output_filemetadata_file, "w"))
+
+    # get the File entries that corresponds to the request ID
+    queryset = File.objects.prefetch_related(
+        Prefetch('filemetadata_set', queryset=
+        FileMetadata.objects.select_related('file').order_by('-created_date'))).\
+        order_by('file_name').all()
+    queryset = queryset.filter(filemetadata__metadata__requestId = requestID)
+    print(json.dumps(json.loads(serializers.serialize('json', queryset)), indent=4), file = open(output_file_file, "w"))
+
+def dump_run(**kwargs):
+    """
+    """
+    runID = kwargs.pop('runID')
+    output_run_file = "{}.run.json".format(runID)
+    output_port_input_file = "{}.port.input.json".format(runID)
+    output_port_output_file = "{}.port.output.json".format(runID)
+
+    run_instance = Run.objects.get(id = runID)
+    print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
+
+    input_queryset = run_instance.port_set.filter(port_type=PortType.INPUT).all()
+    print(json.dumps(json.loads(serializers.serialize('json', input_queryset)), indent=4), file = open(output_port_input_file, "w"))
+
+    output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT).all()
+    print(json.dumps(json.loads(serializers.serialize('json', output_queryset)), indent=4), file = open(output_port_output_file, "w"))
+
+def parse():
+    """
+    Parses script args
+    """
+    parser = argparse.ArgumentParser(description = 'Dump items from Beagle database into a fixture-ready format')
+    subparsers = parser.add_subparsers(help ='Sub-commands available')
+
+    # subparser for dumping requests
+    request = subparsers.add_parser('request', help = 'Dump File and FileMetadata based on a requestId')
+    request.add_argument('requestID', help = 'requestID to dump items for')
+    request.set_defaults(func = dump_request)
+
+    run = subparsers.add_parser('run', help = 'Dump output data for pipeline run')
+    run.add_argument('runID', help = 'Run ID to dump items for')
+    run.set_defaults(func = dump_run)
+
+    args = parser.parse_args()
+    args.func(**vars(args))
+
+if __name__ == '__main__':
+    parse()
