@@ -51,13 +51,3 @@ class Operator(object):
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append((APIRunCreateSerializer(data={'app': pipeline, 'inputs': tempo_inputs}), job))
-
-
-class OperatorFactory(object):
-
-    def factory(pipeline, request_id):
-        if pipeline:
-            return TempoOperator(request_id)
-        else:
-            raise Exception("Invalid job")
-    factory = staticmethod(factory)
