@@ -1,0 +1,1973 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "3abd6a10-21d2-49be-bc83-31dd207759ec",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.971Z",
+            "modified_date": "2019-12-14T12:08:14.375Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "annotate_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 65612975,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
+                "checksum": "sha1$0201d57f5fd370615df7ce8b78f49ae512692e0e",
+                "location": "bid://b835c33c-d241-42fc-beb2-e1ce1c41a77d",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants"
+            },
+            "value": {
+                "size": 65612975,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
+                "checksum": "sha1$0201d57f5fd370615df7ce8b78f49ae512692e0e",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d83323d6-f422-4656-a232-d552e780d170",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.030Z",
+            "modified_date": "2019-12-14T12:08:13.556Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "maf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 181310718,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
+                "checksum": "sha1$15db27138a1586bf4f017b572154875c5ff129db",
+                "location": "bid://f9f55509-fcae-45f7-bdd2-72aebb59178e",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts"
+            },
+            "value": {
+                "size": 181310718,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
+                "checksum": "sha1$15db27138a1586bf4f017b572154875c5ff129db",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "aad31466-a189-447d-a73e-3f582662b52b",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.873Z",
+            "modified_date": "2019-12-14T12:08:13.641Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "bams",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": [
+                {
+                    "size": 22899967017,
+                    "class": "File",
+                    "nameext": ".bam",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
+                    "checksum": "sha1$d67cf2c24cacfeaa222893c5d4303aed55556457",
+                    "location": "bid://e528ce76-0c6f-4088-8e22-38ece693bcdd",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads",
+                    "secondaryFiles": [
+                        {
+                            "size": 6252264,
+                            "class": "File",
+                            "nameext": ".bai",
+                            "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
+                            "checksum": "sha1$776fc843bcdbd215452e611f03d7d9b42ad05a09",
+                            "location": "bid://a0184edc-0a1c-40e7-9d41-69dda2e1e23e",
+                            "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads"
+                        }
+                    ]
+                },
+                {
+                    "size": 14961505727,
+                    "class": "File",
+                    "nameext": ".bam",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
+                    "checksum": "sha1$45f52cc5db96a9d90784ddcee324cedbe1ac5618",
+                    "location": "bid://f6d0fd8d-cae6-469d-ab57-f22ab55178c9",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads",
+                    "secondaryFiles": [
+                        {
+                            "size": 6010352,
+                            "class": "File",
+                            "nameext": ".bai",
+                            "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
+                            "checksum": "sha1$67a9aff1f1cd7be0240b7fefe740f7852dee4933",
+                            "location": "bid://12ffa7a4-b853-452d-8076-fde5bac09aec",
+                            "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "size": 22899967017,
+                    "class": "File",
+                    "nameext": ".bam",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
+                    "checksum": "sha1$d67cf2c24cacfeaa222893c5d4303aed55556457",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads",
+                    "secondaryFiles": [
+                        {
+                            "size": 6252264,
+                            "class": "File",
+                            "nameext": ".bai",
+                            "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
+                            "checksum": "sha1$776fc843bcdbd215452e611f03d7d9b42ad05a09",
+                            "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
+                            "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads"
+                        }
+                    ]
+                },
+                {
+                    "size": 14961505727,
+                    "class": "File",
+                    "nameext": ".bam",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
+                    "checksum": "sha1$45f52cc5db96a9d90784ddcee324cedbe1ac5618",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads",
+                    "secondaryFiles": [
+                        {
+                            "size": 6010352,
+                            "class": "File",
+                            "nameext": ".bai",
+                            "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
+                            "checksum": "sha1$67a9aff1f1cd7be0240b7fefe740f7852dee4933",
+                            "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
+                            "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0be0ceba-0959-4173-a65c-0e6f13604211",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.876Z",
+            "modified_date": "2019-12-14T12:08:13.738Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "clstats1",
+            "port_type": 1,
+            "schema": {
+                "type": "array",
+                "items": "array"
+            },
+            "secondary_files": [],
+            "db_value": [
+                [
+                    {
+                        "size": 2641,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$c3c14c67c47c1a9502a528685d8f24f1eda9dccd",
+                        "location": "bid://0f1e06cb-c77b-4988-994f-797eab18cbea",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2611,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
+                        "checksum": "sha1$15260c3f7d8a521e7d2021f2581f8ffd96ff9519",
+                        "location": "bid://48dd6384-7034-4cc7-9027-7df71496eb27",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl"
+                    },
+                    {
+                        "size": 2576,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
+                        "checksum": "sha1$ef853b586f31afefcabe8be9ba28bcddd5e47919",
+                        "location": "bid://2c2b195f-514c-4107-af3a-8488cf6547ea",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 2764,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$581103c999b49f012af12d4dd579a48ab7573991",
+                        "location": "bid://2af79d18-4ba7-4aef-8505-bd775d47b00d",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2714,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
+                        "checksum": "sha1$fe2dd352e11bc48feefc6f7e1035ea0b5c8265dc",
+                        "location": "bid://2a1736ce-50fd-4721-92da-474f67318c8d",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl"
+                    }
+                ]
+            ],
+            "value": [
+                [
+                    {
+                        "size": 2641,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$c3c14c67c47c1a9502a528685d8f24f1eda9dccd",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2611,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
+                        "checksum": "sha1$15260c3f7d8a521e7d2021f2581f8ffd96ff9519",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl"
+                    },
+                    {
+                        "size": 2576,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
+                        "checksum": "sha1$ef853b586f31afefcabe8be9ba28bcddd5e47919",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 2764,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$581103c999b49f012af12d4dd579a48ab7573991",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2714,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
+                        "checksum": "sha1$fe2dd352e11bc48feefc6f7e1035ea0b5c8265dc",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl"
+                    }
+                ]
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ba34a02a-0a12-4e50-a233-f962b644ac5e",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.879Z",
+            "modified_date": "2019-12-14T12:08:13.843Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "clstats2",
+            "port_type": 1,
+            "schema": {
+                "type": "array",
+                "items": "array"
+            },
+            "secondary_files": [],
+            "db_value": [
+                [
+                    {
+                        "size": 2818,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$883cf9ba173211144550938349dfdbeefb6f38ee",
+                        "location": "bid://e6d2247d-c056-467b-8ddb-6cf6e0387f26",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2815,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
+                        "checksum": "sha1$78e3a8aab3b20c83dee40acea967e25893ec2065",
+                        "location": "bid://aecc788a-ebd8-4e3d-bb25-6bc6a373f5fa",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl"
+                    },
+                    {
+                        "size": 2775,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
+                        "checksum": "sha1$83cee0ca80ff374fd6049f9cbf475fb81a380d91",
+                        "location": "bid://e0ad9888-930b-4c87-9797-a5a88894cb2a",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 2873,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$2f9093a15e3a538e80653637690e0410779df620",
+                        "location": "bid://75f8f49a-ffe7-4cf4-8956-0adacfe9f6f6",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2826,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
+                        "checksum": "sha1$e583971745676ccfbbb0b09474f74ecef10ea922",
+                        "location": "bid://2a41fde8-172a-439c-8a9e-9681069c87fa",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl"
+                    }
+                ]
+            ],
+            "value": [
+                [
+                    {
+                        "size": 2818,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$883cf9ba173211144550938349dfdbeefb6f38ee",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2815,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
+                        "checksum": "sha1$78e3a8aab3b20c83dee40acea967e25893ec2065",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl"
+                    },
+                    {
+                        "size": 2775,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
+                        "checksum": "sha1$83cee0ca80ff374fd6049f9cbf475fb81a380d91",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
+                        "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 2873,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$2f9093a15e3a538e80653637690e0410779df620",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl"
+                    },
+                    {
+                        "size": 2826,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
+                        "checksum": "sha1$e583971745676ccfbbb0b09474f74ecef10ea922",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
+                        "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl"
+                    }
+                ]
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "47ed87d7-ac01-4a86-96b5-3b3c795b375a",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.020Z",
+            "modified_date": "2019-12-14T12:08:13.865Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "maf_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 59073,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
+                "checksum": "sha1$bc1d7f73cc72eecf3b13f88402d6952c92d933de",
+                "location": "bid://463c0311-e32f-40ae-a1a2-d831431997b7",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep"
+            },
+            "value": {
+                "size": 59073,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
+                "checksum": "sha1$bc1d7f73cc72eecf3b13f88402d6952c92d933de",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "13610edb-6b99-41dd-8117-6b9df9f895dc",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.932Z",
+            "modified_date": "2019-12-14T12:08:13.902Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "qual_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 8189,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$9ff5ad812b693a79512b12506f59d5d67df87c05",
+                    "location": "bid://0fdc6110-b18f-4ef0-9c50-9905bf4a22a9",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                },
+                {
+                    "size": 8219,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$716fb1c1bcd8040ecc6e4452cbbae25a20435c52",
+                    "location": "bid://9290ce2b-2dbd-4253-a4dd-9edf7fe79114",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                }
+            ],
+            "value": [
+                {
+                    "size": 8189,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$9ff5ad812b693a79512b12506f59d5d67df87c05",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                },
+                {
+                    "size": 8219,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$716fb1c1bcd8040ecc6e4452cbbae25a20435c52",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "4f9ab52a-7061-4bde-bdf7-26a1f2d88bf1",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.892Z",
+            "modified_date": "2019-12-14T12:08:13.954Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "as_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 2171,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.asmetrics",
+                    "checksum": "sha1$7e891f9f68deedb83626c728109097d9c562f7a1",
+                    "location": "bid://b9cd207a-f8d5-4c41-8506-f8bb6b0f61af",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 2134,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.asmetrics",
+                    "checksum": "sha1$65ab3f206ead19b7ae3aa0eb4a9d1c5e7dff9843",
+                    "location": "bid://22a814db-f3ad-4fb2-ae81-c56b41f01f13",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 2171,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.asmetrics",
+                    "checksum": "sha1$7e891f9f68deedb83626c728109097d9c562f7a1",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.asmetrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 2134,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.asmetrics",
+                    "checksum": "sha1$65ab3f206ead19b7ae3aa0eb4a9d1c5e7dff9843",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.asmetrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a5dd52ef-36be-42d0-a338-030be7e21fa3",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.997Z",
+            "modified_date": "2019-12-14T12:08:13.993Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_out",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 603,
+                    "class": "File",
+                    "nameext": ".out",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
+                    "checksum": "sha1$adf1df0bad06a20de898606152b4562d13de5fba",
+                    "location": "bid://48a16d33-0fd4-41df-9bca-fe87c15c119e",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 602,
+                    "class": "File",
+                    "nameext": ".out",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
+                    "checksum": "sha1$f376bc7c0c427199a8319cbe95fc368abc914535",
+                    "location": "bid://734731f7-a505-4aaa-957e-ce706342f555",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ],
+            "value": [
+                {
+                    "size": 603,
+                    "class": "File",
+                    "nameext": ".out",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
+                    "checksum": "sha1$adf1df0bad06a20de898606152b4562d13de5fba",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 602,
+                    "class": "File",
+                    "nameext": ".out",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
+                    "checksum": "sha1$f376bc7c0c427199a8319cbe95fc368abc914535",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e110e9fc-3bef-42b7-a0ba-a4b8856ca8b9",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.986Z",
+            "modified_date": "2019-12-14T12:08:14.034Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_png",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 124853,
+                    "class": "File",
+                    "nameext": ".png",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
+                    "checksum": "sha1$aa3cfccae19203ef9fa352574ecdbf8db6b42d5a",
+                    "location": "bid://a813b899-7525-480b-9a8d-fe844abf06cf",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF"
+                },
+                {
+                    "size": 111084,
+                    "class": "File",
+                    "nameext": ".png",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
+                    "checksum": "sha1$dd13091946cb9b1ae3c002c0b86f8c1ca8f7bdea",
+                    "location": "bid://9cbfedb0-dac4-4151-ac25-2553fc46fad6",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF"
+                }
+            ],
+            "value": [
+                {
+                    "size": 124853,
+                    "class": "File",
+                    "nameext": ".png",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
+                    "checksum": "sha1$aa3cfccae19203ef9fa352574ecdbf8db6b42d5a",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF"
+                },
+                {
+                    "size": 111084,
+                    "class": "File",
+                    "nameext": ".png",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
+                    "checksum": "sha1$dd13091946cb9b1ae3c002c0b86f8c1ca8f7bdea",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "917e9d14-e93c-41ce-b46c-5e03774b2f59",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.005Z",
+            "modified_date": "2019-12-14T12:08:14.076Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_seg",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 4777,
+                    "class": "File",
+                    "nameext": ".seg",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
+                    "checksum": "sha1$31d0a6687ac647922e9d67a0d2d6a28a7e16ec7a",
+                    "location": "bid://1e25988d-2f5d-45bf-ab60-a3e8bf3b0811",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 3222,
+                    "class": "File",
+                    "nameext": ".seg",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
+                    "checksum": "sha1$d15b1f7136fb9d107297f35abffd2ee9c9a229ac",
+                    "location": "bid://97923d95-86f5-4f95-ab20-3cb7882b79cc",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ],
+            "value": [
+                {
+                    "size": 4777,
+                    "class": "File",
+                    "nameext": ".seg",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
+                    "checksum": "sha1$31d0a6687ac647922e9d67a0d2d6a28a7e16ec7a",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 3222,
+                    "class": "File",
+                    "nameext": ".seg",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
+                    "checksum": "sha1$d15b1f7136fb9d107297f35abffd2ee9c9a229ac",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d3022dfb-3571-44b2-85ba-a3f6366a99ff",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.939Z",
+            "modified_date": "2019-12-14T12:08:14.115Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "gcbias_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 6784,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$4d1ed6c4bda99d26a031b9e9651f2f4abe8cfdd2",
+                    "location": "bid://ad08e7ac-2877-41da-a16a-f468f3130158",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 6794,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$010c3e9323875594fa4d4469c13b91db5a46e8cc",
+                    "location": "bid://7694cc12-25c1-4585-93ce-fa5c540b5f17",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
+                }
+            ],
+            "value": [
+                {
+                    "size": 6784,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$4d1ed6c4bda99d26a031b9e9651f2f4abe8cfdd2",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.pdf",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 6794,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$010c3e9323875594fa4d4469c13b91db5a46e8cc",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.pdf",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "acdf5eba-b287-4ecf-9db4-b9602d2854db",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.897Z",
+            "modified_date": "2019-12-14T12:08:14.154Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "hs_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 5016,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.hsmetrics",
+                    "checksum": "sha1$d6ba79849a45f9fa69092453ada9f5992e7c0abb",
+                    "location": "bid://4d8d1cf0-fc62-4ed6-a0bd-0dfbef86b277",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 5029,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.hsmetrics",
+                    "checksum": "sha1$2b08239d16dc6787ab37a7403313d46264877c7e",
+                    "location": "bid://e4475a18-ce54-40c1-82cf-dd9323157658",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 5016,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.hsmetrics",
+                    "checksum": "sha1$d6ba79849a45f9fa69092453ada9f5992e7c0abb",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hsmetrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 5029,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.hsmetrics",
+                    "checksum": "sha1$2b08239d16dc6787ab37a7403313d46264877c7e",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hsmetrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "032f1e1c-25d0-447b-bbf1-d1df336c8c1a",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.920Z",
+            "modified_date": "2019-12-14T12:08:14.189Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "insert_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 13994,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$aa4d306c3b2327fe6e84ebf6b371ca79644ec649",
+                    "location": "bid://ff35af28-dbe9-47e6-b55b-2d7d01c4cc63",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.ismetrics"
+                },
+                {
+                    "size": 12712,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$5a57d43594e74ac8615409802377346f212e1cf7",
+                    "location": "bid://8954096e-64c4-4393-9721-95c5b880b18b",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.ismetrics"
+                }
+            ],
+            "value": [
+                {
+                    "size": 13994,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$aa4d306c3b2327fe6e84ebf6b371ca79644ec649",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.ismetrics"
+                },
+                {
+                    "size": 12712,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$5a57d43594e74ac8615409802377346f212e1cf7",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.ismetrics"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6b0f48b8-432f-41cd-a148-04889e63b5c0",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.884Z",
+            "modified_date": "2019-12-14T12:08:14.226Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "md_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 2900,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md_metrics",
+                    "checksum": "sha1$379ec0abb55e3b1ff9adb8ff82ed31689aa8062b",
+                    "location": "bid://bdc504e0-bf83-4093-b14f-a6ce0ef94acc",
+                    "nameroot": "s_C_K2902H_P001_d.rg"
+                },
+                {
+                    "size": 2866,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md_metrics",
+                    "checksum": "sha1$d2005e5e85d9e581671522c74548c8623d2c1979",
+                    "location": "bid://11a1da3d-5dad-493f-83a5-c5d5fe14d39e",
+                    "nameroot": "s_C_K2902H_N001_d.rg"
+                }
+            ],
+            "value": [
+                {
+                    "size": 2900,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md_metrics",
+                    "checksum": "sha1$379ec0abb55e3b1ff9adb8ff82ed31689aa8062b",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_metrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg"
+                },
+                {
+                    "size": 2866,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md_metrics",
+                    "checksum": "sha1$d2005e5e85d9e581671522c74548c8623d2c1979",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_metrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "789915c8-14da-49ac-9249-b1e99ce1f5d3",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.956Z",
+            "modified_date": "2019-12-14T12:08:14.249Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "mutect_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 24213327,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
+                "checksum": "sha1$dc5d1aeb90cee217d736222d2dada308973832d6",
+                "location": "bid://dd8d50f9-389f-49e4-ae3a-17510322684c",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
+            },
+            "value": {
+                "size": 24213327,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
+                "checksum": "sha1$dc5d1aeb90cee217d736222d2dada308973832d6",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c4a65c71-128e-417b-a020-4edf6f2cfbe9",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.968Z",
+            "modified_date": "2019-12-14T12:08:14.287Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "combine_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 13440159,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
+                "checksum": "sha1$11cb5a6370052fdfb1d83da53a7161cf3592e8f5",
+                "location": "bid://5d58f2d4-46dc-49f3-8e39-5c1e43a3d55b",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 430453,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
+                        "checksum": "sha1$dd9315feeb320ec777dac7297b3a9bfc7a5d6c33",
+                        "location": "bid://ae7708c1-6e92-480b-a550-5c847056e0ca",
+                        "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz"
+                    }
+                ]
+            },
+            "value": {
+                "size": 13440159,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
+                "checksum": "sha1$11cb5a6370052fdfb1d83da53a7161cf3592e8f5",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 430453,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
+                        "checksum": "sha1$dd9315feeb320ec777dac7297b3a9bfc7a5d6c33",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
+                        "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d112b0b3-24e1-47d4-b57f-0969412bd679",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.014Z",
+            "modified_date": "2019-12-14T12:08:14.309Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "merged_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 19739,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
+                "checksum": "sha1$c016b28102cd0e828dda14b1dfca985f822849ed",
+                "location": "bid://d72930a5-6916-4d32-b9de-55c9e27a92df",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass"
+            },
+            "value": {
+                "size": 19739,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
+                "checksum": "sha1$c016b28102cd0e828dda14b1dfca985f822849ed",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a5354486-b417-4b9a-9912-f8a297050b4b",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.026Z",
+            "modified_date": "2019-12-14T12:08:14.331Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "portal_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 5795,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
+                "checksum": "sha1$14d8ca3da33d4d318fa5f5e2cdf77f8687a62148",
+                "location": "bid://2e0d7c0a-be9c-4969-a65e-0139e95ebdc1",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal"
+            },
+            "value": {
+                "size": 5795,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
+                "checksum": "sha1$14d8ca3da33d4d318fa5f5e2cdf77f8687a62148",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "bc60b89d-8146-4f31-8c62-65ccf93576d8",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.965Z",
+            "modified_date": "2019-12-14T12:08:14.353Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "vardict_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 403491742,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
+                "checksum": "sha1$cbcd1bd27821f1c527434bfe9abace8d3320819e",
+                "location": "bid://2167517e-4230-4660-a3e2-f1f53d492e60",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict"
+            },
+            "value": {
+                "size": 403491742,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
+                "checksum": "sha1$cbcd1bd27821f1c527434bfe9abace8d3320819e",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "17a83add-f932-435f-aa7e-1898312cbd3a",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.003Z",
+            "modified_date": "2019-12-14T12:08:14.413Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_rdata",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 8622126,
+                    "class": "File",
+                    "nameext": ".Rdata",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
+                    "checksum": "sha1$1e47fce47992626a03fe84ebcb3e95a0fecea4f1",
+                    "location": "bid://587840dc-bcb6-48e6-9000-ae912c415d7c",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 8618530,
+                    "class": "File",
+                    "nameext": ".Rdata",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
+                    "checksum": "sha1$b990bfe8c0471672e76056a0f291b5d4ee81d4d9",
+                    "location": "bid://c1b4ba39-e14b-4535-88f1-53de2f5809c9",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ],
+            "value": [
+                {
+                    "size": 8622126,
+                    "class": "File",
+                    "nameext": ".Rdata",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
+                    "checksum": "sha1$1e47fce47992626a03fe84ebcb3e95a0fecea4f1",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
+                },
+                {
+                    "size": 8618530,
+                    "class": "File",
+                    "nameext": ".Rdata",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
+                    "checksum": "sha1$b990bfe8c0471672e76056a0f291b5d4ee81d4d9",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "88c2cfc2-1379-436b-ae7e-381e9fa8d41d",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.928Z",
+            "modified_date": "2019-12-14T12:08:14.451Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "qual_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 5494,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$dad5640a5406c875b7fdaf4103b6edc2f763be56",
+                    "location": "bid://df4b1eb1-640f-486c-846f-6df01c5896ac",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics"
+                },
+                {
+                    "size": 5508,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$e804183b1e07cfa754330005de8ff5c864130a41",
+                    "location": "bid://5ed9c450-1af5-422c-8c74-f60219ad3d26",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics"
+                }
+            ],
+            "value": [
+                {
+                    "size": 5494,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$dad5640a5406c875b7fdaf4103b6edc2f763be56",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics"
+                },
+                {
+                    "size": 5508,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$e804183b1e07cfa754330005de8ff5c864130a41",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "07d8bc0d-2425-43b8-8a4f-281e6802f706",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.008Z",
+            "modified_date": "2019-12-14T12:08:14.472Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_counts",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 32693698,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
+                "checksum": "sha1$a6f95a5e09c9e581321079f1f5fedd003ae5c221",
+                "location": "bid://262c3d19-2d59-403d-bd2b-66e0fe404413",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat"
+            },
+            "value": {
+                "size": 32693698,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
+                "checksum": "sha1$a6f95a5e09c9e581321079f1f5fedd003ae5c221",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "70e4ee3c-e265-4c83-80db-d1719aada8f7",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.935Z",
+            "modified_date": "2019-12-14T12:08:14.511Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "doc_basecounts",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 13779990,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$f2677685cda917f388dd395b7715d07ae1090ff4",
+                    "location": "bid://dfc3e0f6-be3c-4a1c-a2b7-fc8fb8791b1d",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md_FP_base_counts"
+                },
+                {
+                    "size": 13586169,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$a218a74b136aac74f9227e6cea7720c14fb0abce",
+                    "location": "bid://4c1e5a08-70c1-4dcf-9d4b-b4d0d67ba3a7",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md_FP_base_counts"
+                }
+            ],
+            "value": [
+                {
+                    "size": 13779990,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$f2677685cda917f388dd395b7715d07ae1090ff4",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md_FP_base_counts"
+                },
+                {
+                    "size": 13586169,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$a218a74b136aac74f9227e6cea7720c14fb0abce",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md_FP_base_counts"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ef869104-5820-4313-9d8d-59d0cb8278a0",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.942Z",
+            "modified_date": "2019-12-14T12:08:14.550Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "gcbias_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 6648,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$bb7469356a97449579bdd25e0ab600d2a8fa426d",
+                    "location": "bid://23fdfe62-3e90-4db4-b533-acadf2f4e1b2",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 6632,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$01cbb4e6bca86f1d857ccb6446b7188d6892d71a",
+                    "location": "bid://b950c7ff-84c1-4476-99e1-6f0b16626f76",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 6648,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$bb7469356a97449579bdd25e0ab600d2a8fa426d",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 6632,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$01cbb4e6bca86f1d857ccb6446b7188d6892d71a",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "fdbb93c3-2287-4491-bcaa-826a189b98be",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.946Z",
+            "modified_date": "2019-12-14T12:08:14.600Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "gcbias_summary",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 1201,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$c6ca330351060e014b450e87b8fdd43731be79f6",
+                    "location": "bid://3cab6e36-70f5-46df-aa00-a4473cb8ed50",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 1199,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$1932d9f758e45392212f1cf3c08a07ba988bde8c",
+                    "location": "bid://44f519d5-a59c-4baa-bf08-2792460c78bc",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
+                }
+            ],
+            "value": [
+                {
+                    "size": 1201,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_K2902H_P001_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$c6ca330351060e014b450e87b8fdd43731be79f6",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.summary",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 1199,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_K2902H_N001_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$1932d9f758e45392212f1cf3c08a07ba988bde8c",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.summary",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c2bf6266-d610-42b5-a474-8e17f94ac159",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.908Z",
+            "modified_date": "2019-12-14T12:08:14.642Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "insert_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 7754,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.ismetrics",
+                    "checksum": "sha1$db6602f7efaf6fcce248ac81838e52c3e252fd24",
+                    "location": "bid://c211d274-6cf8-4f37-a201-1441b3f3c716",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 7041,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.ismetrics",
+                    "checksum": "sha1$ea3bd53219598f06bbae0868dcf4ebbcc38a4a5e",
+                    "location": "bid://8265b3ed-0c3c-496c-ab97-ea312cf878db",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 7754,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.ismetrics",
+                    "checksum": "sha1$db6602f7efaf6fcce248ac81838e52c3e252fd24",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 7041,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.ismetrics",
+                    "checksum": "sha1$ea3bd53219598f06bbae0868dcf4ebbcc38a4a5e",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1b99610f-fb5e-44e3-ae0d-06935ec428f3",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.952Z",
+            "modified_date": "2019-12-14T12:08:14.681Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "conpair_pileups",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 55203868,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_K2902H_P001_d.rg.md.pileup",
+                    "checksum": "sha1$611ccefbf82e2cc1414acd833fcf7252483d1241",
+                    "location": "bid://8b2f58fc-ff9a-4d00-a3e2-c62228b99993",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 33915095,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_K2902H_N001_d.rg.md.pileup",
+                    "checksum": "sha1$3dacd4c14bd6a19468145e911e58e7a258199d4b",
+                    "location": "bid://995ae979-5156-4107-a9e6-20ce77f59ecb",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 55203868,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_K2902H_P001_d.rg.md.pileup",
+                    "checksum": "sha1$611ccefbf82e2cc1414acd833fcf7252483d1241",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.pileup",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 33915095,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_K2902H_N001_d.rg.md.pileup",
+                    "checksum": "sha1$3dacd4c14bd6a19468145e911e58e7a258199d4b",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.pileup",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5dfbdb99-c066-4367-88fb-61b4a36ec862",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.982Z",
+            "modified_date": "2019-12-14T12:08:14.721Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "mutect_norm_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 129554,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$a8f6c855b471bcf37a456ad441f72c8cf1b43be9",
+                "location": "bid://7ba48896-0c1a-443e-8258-0a35914dfd3e",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 32515,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$e4a5c3663691f31da1bba6352dc16e35f3a8a197",
+                        "location": "bid://18c3cd81-baa9-4e25-8616-743956972e25",
+                        "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            },
+            "value": {
+                "size": 129554,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$a8f6c855b471bcf37a456ad441f72c8cf1b43be9",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 32515,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$e4a5c3663691f31da1bba6352dc16e35f3a8a197",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5a4cdbde-d41d-4028-9f11-803a998dd8dd",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.959Z",
+            "modified_date": "2019-12-14T12:08:14.745Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "mutect_callstats",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 172715192,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
+                "checksum": "sha1$7920889c2817038fb047c01d40187a083d928180",
+                "location": "bid://86a62cf2-398d-4876-b195-e2780ba594bd",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
+            },
+            "value": {
+                "size": 172715192,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
+                "checksum": "sha1$7920889c2817038fb047c01d40187a083d928180",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a9207ba2-c6a9-43de-ad25-14079ec6f993",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.975Z",
+            "modified_date": "2019-12-14T12:08:14.785Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "vardict_norm_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 13247144,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$d377fe9dea989c10fc9bff2a02f215ac75aec897",
+                "location": "bid://92c9dd48-f4de-4788-b7a3-fe9ff7d17d7b",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 429036,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$e47841e84cd7b1c1ec384fa152d6ef4218b97704",
+                        "location": "bid://9d092d5d-8b05-4a1b-bbc7-1238fb7b8eeb",
+                        "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            },
+            "value": {
+                "size": 13247144,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$d377fe9dea989c10fc9bff2a02f215ac75aec897",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 429036,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$e47841e84cd7b1c1ec384fa152d6ef4218b97704",
+                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "16797b9c-6441-40af-bc6f-a422e6ee1d6b",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.990Z",
+            "modified_date": "2019-12-14T12:08:14.807Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_txt_hisens",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 11388,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
+                "checksum": "sha1$e7474ae2f7a0479c54d379f089ac0b823ac06c2a",
+                "location": "bid://b16cea6f-7590-4a4f-9be2-38e045bf60cf",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf"
+            },
+            "value": {
+                "size": 11388,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
+                "checksum": "sha1$e7474ae2f7a0479c54d379f089ac0b823ac06c2a",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "08b3287d-5e5f-4517-a3de-3d12bee361d0",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.993Z",
+            "modified_date": "2019-12-14T12:08:14.829Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "facets_txt_purity",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 7525,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
+                "checksum": "sha1$0b46c330b744e3ef85d1f9c5ed585ee348cd6480",
+                "location": "bid://3a95e8f1-aa34-4f81-b77a-ab59307c1d5f",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf"
+            },
+            "value": {
+                "size": 7525,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
+                "checksum": "sha1$0b46c330b744e3ef85d1f9c5ed585ee348cd6480",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
+                "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf"
+            }
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6526dc8e-00fb-467b-9dcd-c608673b03f9",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.925Z",
+            "modified_date": "2019-12-14T12:08:14.867Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "per_target_coverage",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 19302184,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.hstmetrics",
+                    "checksum": "sha1$b8a270c8a6c15845afd2f0b87c4f6d4318b0ded2",
+                    "location": "bid://3f92509f-90a9-4de8-ad81-1d021607918b",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 19114455,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.hstmetrics",
+                    "checksum": "sha1$63c8d87423a1c41b71e4347cf19ab6cb63285d94",
+                    "location": "bid://afe65a89-6272-4276-bb34-d401f41a480a",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ],
+            "value": [
+                {
+                    "size": 19302184,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_K2902H_P001_d.rg.md.hstmetrics",
+                    "checksum": "sha1$b8a270c8a6c15845afd2f0b87c4f6d4318b0ded2",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hstmetrics",
+                    "nameroot": "s_C_K2902H_P001_d.rg.md"
+                },
+                {
+                    "size": 19114455,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_K2902H_N001_d.rg.md.hstmetrics",
+                    "checksum": "sha1$63c8d87423a1c41b71e4347cf19ab6cb63285d94",
+                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hstmetrics",
+                    "nameroot": "s_C_K2902H_N001_d.rg.md"
+                }
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "51a1c390-195d-419b-8a6e-84a7879857a1",
+        "fields": {
+            "created_date": "2019-12-11T22:53:18.011Z",
+            "modified_date": "2019-12-14T12:08:14.889Z",
+            "run": "ca18b090-03ad-4bef-acd3-52600f8e62eb",
+            "name": "merged_file_unfiltered",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": {
+                "size": 2741838,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
+                "checksum": "sha1$12f83bbc5e86c8dce79eeb145535f0c91e6ac6fb",
+                "location": "bid://daef2d43-6a6f-4c3c-9e80-076e3e8288cb",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs"
+            },
+            "value": {
+                "size": 2741838,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
+                "checksum": "sha1$12f83bbc5e86c8dce79eeb145535f0c91e6ac6fb",
+                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
+                "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs"
+            }
+        }
+    }
+]
