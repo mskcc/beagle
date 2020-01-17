@@ -1,0 +1,9 @@
+[
+{
+    "model": "beagle_etl.operator",
+    "pk": 1,
+    "fields": {
+        "active": true
+    }
+}
+]

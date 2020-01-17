@@ -1,0 +1,132 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "40a07e9a-2198-40b7-9f7f-7696c9d6429e",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.581Z",
+            "modified_date": "2020-01-06T19:59:50.584Z",
+            "file_name": "31-N_IGO_10075_D_2_S14_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "bb7ff922-b741-4df7-ba2a-4f3b8549e8b5",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.597Z",
+            "file_name": "31-N_IGO_10075_D_2_S14_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.582Z",
+            "modified_date": "2020-01-06T19:59:50.585Z",
+            "file_name": "JW_MEL_007_NORM_IGO_10075_D_3_S15_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_JW_MEL_007_NORM_IGO_10075_D_3/JW_MEL_007_NORM_IGO_10075_D_3_S15_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "c71c259a-ebc0-4490-9af1-bc99387a70d7",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.597Z",
+            "modified_date": "2020-01-06T19:59:50.598Z",
+            "file_name": "JW_MEL_007_NORM_IGO_10075_D_3_S15_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_JW_MEL_007_NORM_IGO_10075_D_3/JW_MEL_007_NORM_IGO_10075_D_3_S15_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "bba1e6ac-bc65-412d-86bd-43b076d669d5",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.593Z",
+            "file_name": "SK-MEL-919_IGO_10075_D_1_S78_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK-MEL-919_IGO_10075_D_1/SK-MEL-919_IGO_10075_D_1_S78_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ef9c3fd6-cd90-4c66-811b-3dc8de1afede",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.605Z",
+            "modified_date": "2020-01-06T19:59:50.606Z",
+            "file_name": "SK-MEL-919_IGO_10075_D_1_S78_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK-MEL-919_IGO_10075_D_1/SK-MEL-919_IGO_10075_D_1_S78_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d2d8ed36-d8f4-4e93-b038-d38328fad021",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.576Z",
+            "modified_date": "2020-01-06T19:59:50.579Z",
+            "file_name": "SK_MEL_1091A_T_IGO_10075_D_5_S80_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_1091A_T_IGO_10075_D_5/SK_MEL_1091A_T_IGO_10075_D_5_S80_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac89",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "SK_MEL_1091A_T_IGO_10075_D_5_S80_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_1091A_T_IGO_10075_D_5/SK_MEL_1091A_T_IGO_10075_D_5_S80_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "36921f8a-d6d9-41eb-a082-7f8219dfbd1e",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.576Z",
+            "modified_date": "2020-01-06T19:59:50.579Z",
+            "file_name": "SK_MEL_919B_T_IGO_10075_D_4_S79_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_919B_T_IGO_10075_D_4/SK_MEL_919B_T_IGO_10075_D_4_S79_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "6dbb89eb-2876-42b4-8746-957f286e01ac",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.593Z",
+            "file_name": "SK_MEL_919B_T_IGO_10075_D_4_S79_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_919B_T_IGO_10075_D_4/SK_MEL_919B_T_IGO_10075_D_4_S79_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
