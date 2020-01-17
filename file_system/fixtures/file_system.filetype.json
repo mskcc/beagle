@@ -1,0 +1,210 @@
+[
+{
+    "model": "file_system.filetype",
+    "pk": 1,
+    "fields": {
+        "ext": "fastq",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 2,
+    "fields": {
+        "ext": "fasta",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 3,
+    "fields": {
+        "ext": "bam",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 4,
+    "fields": {
+        "ext": "bed",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 5,
+    "fields": {
+        "ext": "bedtools_genome",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 6,
+    "fields": {
+        "ext": "ilist",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 7,
+    "fields": {
+        "ext": "interval_list",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 8,
+    "fields": {
+        "ext": "intervals",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 9,
+    "fields": {
+        "ext": "tsv",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 10,
+    "fields": {
+        "ext": "txt",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 11,
+    "fields": {
+        "ext": "vcf",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 12,
+    "fields": {
+        "ext": "amb",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 13,
+    "fields": {
+        "ext": "ann",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 15,
+    "fields": {
+        "ext": "bwt",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 16,
+    "fields": {
+        "ext": "dict",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 17,
+    "fields": {
+        "ext": "fai",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 18,
+    "fields": {
+        "ext": "pac",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 19,
+    "fields": {
+        "ext": "sa",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 20,
+    "fields": {
+        "ext": "tbi",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 21,
+    "fields": {
+        "ext": "unknown",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 22,
+    "fields": {
+        "ext": "sh",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 23,
+    "fields": {
+        "ext": "idx",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 24,
+    "fields": {
+        "ext": "maf",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 25,
+    "fields": {
+        "ext": "rbwt",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 26,
+    "fields": {
+        "ext": "rpac",
+        "valid_extensions": null
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 27,
+    "fields": {
+        "ext": "rsa",
+        "valid_extensions": null
+    }
+}
+]

@@ -94,7 +94,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_LDAP_SERVER_URI = os.environ['BEAGLE_AUTH_LDAP_SERVER_URI']
+AUTH_LDAP_SERVER_URI = os.environ.get('BEAGLE_AUTH_LDAP_SERVER_URI', "url_goes_here")
 
 AUTH_LDAP_AUTHORIZE_ALL_USERS = True
 
@@ -288,3 +288,7 @@ BEAGLE_URL = 'http://silo:5001'
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
+
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(PROJECT_DIR)
+TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
