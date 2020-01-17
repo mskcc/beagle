@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 TYPES = {
     "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
     "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata"
+    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
+    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal"
 }
 
 
@@ -111,8 +112,11 @@ def fetch_samples(request_id):
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
-        "pooledNormals": response_body["pooledNormals"]
     }
+    pooled_normals = response_body["pooledNormals"]
+    for f in pooled_normals:
+        job = get_or_create_pooled_normal_job(f)
+        children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
     for sample in response_body.get('samples', []):
         if not sample:
@@ -120,6 +124,18 @@ def fetch_samples(request_id):
         job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
         children.add(str(job.id))
     return list(children)
+
+
+def get_or_create_pooled_normal_job(filepath):
+    logger.info(
+        "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
+    job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args_filepath=filepath).first()
+    if not job:
+        job = Job(run=TYPES['POOLED_NORMAL'],
+                  args={'filepath': filepath, 'file_group_id': str(settings.IMPORT_FILE_GROUP)},
+                  status=JobStatus.CREATED, max_retry=1, children=[])
+        job.save()
+    return job
 
 
 def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
@@ -132,6 +148,46 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
+
+
+def create_pooled_normal(filepath, file_group_id):
+    if File.objects.filter(path=filepath):
+        logger.info("Pooled normal already created filepath")
+    file_group_obj = FileGroup.objects.get(id=file_group_id)
+    file_type_obj = FileType.objects.filter(ext='fastq').first()
+    run_id = None
+    preservation_type = None
+    recipe = None
+    try:
+        parts = filepath.split('/')
+        run_id = parts[6]
+        preservation_type = parts[8]
+        preservation_type = preservation_type.split('Sample_')[1]
+        preservation_type = preservation_type.split('POOLEDNORMAL')[0]
+        recipe = parts[8]
+        recipe = recipe.split('IGO_')[1]
+        recipe = recipe.split('_')[0]
+    except Exception as e:
+        raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
+    if preservation_type not in ('FFPE', 'FROZEN'):
+        raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
+    if None in [run_id, preservation_type, recipe]:
+        raise FailedToFetchFilesException(
+            "Invalid metadata runId:%s preservationType:%s recipe:%s" % (run_id, preservation_type, recipe))
+    metadata = {
+        "runId": run_id,
+        "preservationType": preservation_type,
+        "recipe": recipe
+    }
+    try:
+        f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
+                                file_type=file_type_obj)
+        f.save()
+        fm = FileMetadata(file=f, metadata=metadata)
+        fm.save()
+    except Exception as e:
+        logger.error("Failed to create file %s. Error %s" % (filepath, str(e)))
+        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (filepath, str(e)))
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
@@ -206,7 +262,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
             "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
-
 
 
 def R1_or_R2(filename):
