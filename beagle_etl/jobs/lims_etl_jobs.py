@@ -72,7 +72,6 @@ def get_operator(recipe):
 
 
 def request_callback(request_id):
-    # recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
     queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
@@ -91,7 +90,7 @@ def request_callback(request_id):
     return []
 
 
-def fetch_samples(request_id):
+def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     children = set()
     sampleIds = requests.get('%s/LimsRest/api/getRequestSamples' % settings.LIMS_URL,
@@ -114,22 +113,24 @@ def fetch_samples(request_id):
         "piEmail": response_body["piEmail"],
     }
     pooled_normals = response_body["pooledNormals"]
-    for f in pooled_normals:
-        job = get_or_create_pooled_normal_job(f)
-        children.add(str(job.id))
+    if import_pooled_normals:
+        for f in pooled_normals:
+            job = get_or_create_pooled_normal_job(f)
+            children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
-    for sample in response_body.get('samples', []):
-        if not sample:
-            raise FailedToFetchFilesException("Sample Id None")
-        job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
-        children.add(str(job.id))
+    if import_samples:
+        for sample in response_body.get('samples', []):
+            if not sample:
+                raise FailedToFetchFilesException("Sample Id None")
+            job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+            children.add(str(job.id))
     return list(children)
 
 
 def get_or_create_pooled_normal_job(filepath):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
-    job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args_filepath=filepath).first()
+    job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
     if not job:
         job = Job(run=TYPES['POOLED_NORMAL'],
                   args={'filepath': filepath, 'file_group_id': str(settings.IMPORT_FILE_GROUP)},
@@ -169,7 +170,7 @@ def create_pooled_normal(filepath, file_group_id):
         recipe = recipe.split('_')[0]
     except Exception as e:
         raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
-    if preservation_type not in ('FFPE', 'FROZEN'):
+    if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
         raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchFilesException(
