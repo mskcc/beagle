@@ -142,7 +142,7 @@ class APIRunCreateSerializer(serializers.Serializer):
         tags = validated_data.get('tags')
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), tag=tags)
+        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), tags=tags)
         run.save()
         return run
 
