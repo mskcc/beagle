@@ -310,9 +310,13 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
+migrate:
+	python manage.py makemigrations
+	python manage.py migrate
+
 test:
 	python manage.py test runner.tests.operator.roslin_operator.test_pair_request
-	# python manage.py test 
+	# python manage.py test
 
 # start the Django development server
 runserver: check-env
