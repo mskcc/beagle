@@ -70,7 +70,15 @@ class TestFetchSamples(TestCase):
         files_metadata = FileMetadata.objects.all()
         self.assertTrue(len(files) == 22)
         self.assertTrue(len(files_metadata) == 22)
-        # TODO: need to validate that the correct number of pooled normal, normal, and tumor samples were imported
+
+        import_files = File.objects.filter(file_group = settings.IMPORT_FILE_GROUP)
+        import_files_metadata = FileMetadata.objects.filter(file__in = [ i.id for i in import_files ])
+        pooled_normal_files = File.objects.filter(file_group = settings.POOLED_NORMAL_FILE_GROUP)
+        pooled_normal_files_metadata = FileMetadata.objects.filter(file__in = [ i.id for i in pooled_normal_files ])
+        self.assertTrue(len(import_files) == 10)
+        self.assertTrue(len(import_files_metadata) == 10)
+        self.assertTrue(len(pooled_normal_files) == 12)
+        self.assertTrue(len(pooled_normal_files_metadata) == 12)
 
 class TestCreatePooledNormal(TestCase):
     # load fixtures for the test case temp db
@@ -94,7 +102,7 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(len(files_metadata) == 0)
 
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
-        file_group_id = str(settings.IMPORT_FILE_GROUP)
+        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
 
         create_pooled_normal(filepath, file_group_id)
 
@@ -109,14 +117,14 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FFPE')
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
         self.assertTrue(imported_file_metadata.metadata['runId'] == 'JAX_0397')
-        # TODO: update 'runId' field, add more metadata fields
+        # TODO: add more metadata fields?
 
     def test_create_pooled_normal2(self):
         """
         Test the creation of a pooled normal entry in the database
         """
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
-        file_group_id = str(settings.IMPORT_FILE_GROUP)
+        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
         create_pooled_normal(filepath, file_group_id)
         imported_file = File.objects.get(path = filepath)
         imported_file_metadata = FileMetadata.objects.get(file = imported_file)
