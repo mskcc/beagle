@@ -314,9 +314,10 @@ migrate:
 	python manage.py makemigrations
 	python manage.py migrate
 
-test:
-	python manage.py test runner.tests.operator.roslin_operator.test_get_output
-	# python manage.py test runner.tests.operator.roslin_operator.test_pair_request
+test: check-env
+	python manage.py test \
+	runner.tests.operator.roslin_operator.test_pair_request \
+	beagle_etl.tests.jobs.test_lims_etl_jobs
 	# python manage.py test
 
 # start the Django development server
