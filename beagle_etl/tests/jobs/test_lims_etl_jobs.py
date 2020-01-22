@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.jobs.lims_etl_jobs import fetch_samples
 from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal
+from beagle_etl.jobs.lims_etl_jobs import get_run_id_from_string
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from beagle_etl.models import JobStatus, Job, Operator
 from beagle_etl.tasks import scheduler
@@ -105,9 +106,9 @@ class TestCreatePooledNormal(TestCase):
 
         imported_file = File.objects.get(path = filepath)
         imported_file_metadata = FileMetadata.objects.get(file = imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservationType'] == 'FFPE')
+        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FFPE')
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'JAX_0397_BHCYYWBBXY')
+        self.assertTrue(imported_file_metadata.metadata['runId'] == 'JAX_0397')
         # TODO: update 'runId' field, add more metadata fields
 
     def test_create_pooled_normal2(self):
@@ -119,6 +120,25 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, file_group_id)
         imported_file = File.objects.get(path = filepath)
         imported_file_metadata = FileMetadata.objects.get(file = imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservationType'] == 'FROZEN')
+        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FROZEN')
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439_BHFTCNBBXY')
+        self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439')
+
+class TestGetRunID(TestCase):
+    def test_true(self):
+        self.assertTrue(True)
+
+    def test_get_run_id_from_string1(self):
+        string = "PITT_0439_BHFTCNBBXY"
+        runID = get_run_id_from_string(string)
+        self.assertTrue(runID == 'PITT_0439')
+
+    def test_get_run_id_from_string2(self):
+        string = "foo_BHFTCNBBXY"
+        runID = get_run_id_from_string(string)
+        self.assertTrue(runID == 'foo')
+
+    def test_get_run_id_from_string2(self):
+        string = "BHFTCNBBXY"
+        runID = get_run_id_from_string(string)
+        self.assertTrue(runID == 'BHFTCNBBXY')
