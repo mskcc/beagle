@@ -133,7 +133,7 @@ def get_or_create_pooled_normal_job(filepath):
     job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
     if not job:
         job = Job(run=TYPES['POOLED_NORMAL'],
-                  args={'filepath': filepath, 'file_group_id': str(settings.IMPORT_FILE_GROUP)},
+                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
@@ -186,6 +186,13 @@ def create_pooled_normal(filepath, file_group_id):
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
         file_group_id = settings.IMPORT_FILE_GROUP
         create_pooled_normal(filepath, file_group_id)
+
+    Notes
+    -----
+    For filepath string such as "JAX_0397_BHCYYWBBXY";
+    - runId = JAX_0397
+    - flowCellId = HCYYWBBXY
+    - [A|B] might be the flowcell bay the flowcell is placed into
     """
     if File.objects.filter(path=filepath):
         logger.info("Pooled normal already created filepath")
