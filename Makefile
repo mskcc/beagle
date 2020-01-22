@@ -310,12 +310,16 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-test:
-	python manage.py test runner.tests.test_utils
-	python manage.py test runner.tests.test_port
-	# python manage.py test runner.tests.operator.roslin_operator.test_output_to_qc_input
-	# python manage.py test runner.tests.operator.roslin_operator.test_pair_request
-	# python manage.py test
+migrate:
+	python manage.py makemigrations
+	python manage.py migrate
+
+test: check-env
+	python manage.py test \
+	runner.tests.operator.roslin_operator.test_pair_request \
+	beagle_etl.tests.jobs.test_lims_etl_jobs \
+	runner.tests.test_utils \
+	runner.tests.test_port
 
 # start the Django development server
 runserver: check-env
