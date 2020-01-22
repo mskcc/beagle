@@ -66,9 +66,11 @@ def check_and_return_single_values(data):
             logging.error("Check import, something went wrong.")
 
     # hack; formats LB field so that it is a string
-    lb = data['LB']
-    if lb is not None:
+    lb = [i for i in data['LB'] if i ]
+    if len(lb) > 0:
         data['LB'] = '_and_'.join(lb)
+    else:
+        data['LB'] = ""
     return data
 
 
