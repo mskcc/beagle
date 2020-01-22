@@ -54,6 +54,7 @@ class Port(BaseModel):
     secondary_files = JSONField(null=True, blank=True)
     db_value = JSONField(null=True)
     value = JSONField(null=True)
+    files = models.ManyToManyField(File)
 
 
 class ExecutionEvents(BaseModel):
