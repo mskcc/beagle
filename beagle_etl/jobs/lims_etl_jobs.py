@@ -151,7 +151,42 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
     return job
 
 
+def get_run_id_from_string(string):
+    """
+    Parse the runID from a character string
+    Split on the final '_' in the string
+
+    Examples
+    --------
+        get_run_id_from_string("JAX_0397_BHCYYWBBXY")
+        >>> JAX_0397
+    """
+    parts = string.split('_')
+    if len(parts) > 1:
+        parts.pop(-1)
+        output = '_'.join(parts)
+        return(output)
+    else:
+        return(string)
+
 def create_pooled_normal(filepath, file_group_id):
+    """
+    Parse the file path provided for a Pooled Normal sample into the metadata fields needed to
+    create the File and FileMetadata entries in the database
+
+    Parameters:
+    -----------
+    filepath: str
+        path to file for the sample
+    file_group_id: UUID
+        primary key for FileGroup to use for imported File entry
+
+    Examples
+    --------
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
+        file_group_id = settings.IMPORT_FILE_GROUP
+        create_pooled_normal(filepath, file_group_id)
+    """
     if File.objects.filter(path=filepath):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
@@ -161,7 +196,7 @@ def create_pooled_normal(filepath, file_group_id):
     recipe = None
     try:
         parts = filepath.split('/')
-        run_id = parts[6]
+        run_id = get_run_id_from_string(parts[6])
         preservation_type = parts[8]
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
@@ -174,10 +209,10 @@ def create_pooled_normal(filepath, file_group_id):
         raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchFilesException(
-            "Invalid metadata runId:%s preservationType:%s recipe:%s" % (run_id, preservation_type, recipe))
+            "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
     metadata = {
         "runId": run_id,
-        "preservationType": preservation_type,
+        "preservation": preservation_type,
         "recipe": recipe
     }
     try:
