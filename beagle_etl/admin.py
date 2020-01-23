@@ -23,6 +23,9 @@ class JobAdmin(admin.ModelAdmin):
     actions = (restart,)
     ordering = ('-created_date',)
 
+class OperatorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'class_name', 'recipes', 'active')
+
 
 admin.site.register(Job, JobAdmin)
-admin.site.register(Operator)
+admin.site.register(Operator, OperatorAdmin)

@@ -45,29 +45,12 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
     if not job:
-        op = Operator.objects.first()
-        if op.active:
-            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                      status=JobStatus.CREATED, max_retry=1, children=[],
-                      callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
-                      callback_args={'request_id': request_id})
-            job.save()
-        else:
-            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                      status=JobStatus.CREATED, max_retry=1, children=[])
-            job.save()
+        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+                  status=JobStatus.CREATED, max_retry=1, children=[],
+                  callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
+                  callback_args={'request_id': request_id})
+        job.save()
     return job
-
-
-def get_operator(recipe):
-    if recipe in ("Agilent_51MB", "HumanWholeGenome", "ShallowWGS", "WholeExomeSequencing"):
-        return 'tempo'
-    elif recipe in ("IMPACT341", "IMPACT+ (341 genes plus custom content)", "IMPACT410", "IMPACT468"):
-        return 'roslin'
-    elif recipe in ("MSK-ACCESS_v1",):
-        return "access"
-    else:
-        return None
 
 
 def request_callback(request_id):
@@ -80,13 +63,17 @@ def request_callback(request_id):
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
         raise FailedToSubmitToOperatorException(
-            "Not enough metadata to choose the operator for requestId:%s" % request_id)
-    operator = get_operator(recipes[0])
+           "Not enough metadata to choose the operator for requestId:%s" % request_id)
+
+    operator = Operator.objects.get(
+        active=True,
+        recipes__contains=[recipes[0]]
+    )
     if not operator:
         logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
-    logger.info("Submitting request_id %s to %s operator" % (request_id, operator))
-    operator_job.delay(request_id, operator)
+    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.id))
+    create_jobs_from_request.delay(request_id, operator.id)
     return []
 
 
