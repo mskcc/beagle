@@ -6,6 +6,8 @@ from .access_operator import AccessOperator
 class OperatorFactory(object):
 
     operators = [TempoOperator, RoslinOperator, AccessOperator]
+
+    @classmethod
     def get_by_class_name(class_name):
         if class_name not in OperatorFactory.operators:
             raise Exception("Invalid pipeline")
