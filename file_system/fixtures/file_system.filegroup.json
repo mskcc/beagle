@@ -23,6 +23,17 @@
 },
 {
     "model": "file_system.filegroup",
+    "pk": "1552617b-3b06-46de-921a-a000a9129385",
+    "fields": {
+        "created_date": "2020-01-22T19:19:05.790Z",
+        "modified_date": "2020-01-22T19:19:05.790Z",
+        "name": "Pooled Normal",
+        "slug": "pooled-normal",
+        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+    }
+},
+{
+    "model": "file_system.filegroup",
     "pk": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
     "fields": {
         "created_date": "2019-10-01T20:52:31.890Z",
