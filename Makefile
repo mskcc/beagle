@@ -382,9 +382,9 @@ run-request-api:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
 
 demo-run:
-	python manage.py loaddata fixtures/tests/juno_roslin_demo1.file.json
-	python manage.py loaddata fixtures/tests/juno_roslin_demo1.filemetadata.json
-	$(MAKE) run-request REQID=juno_roslin_demo1
+	python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
+	python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
+	$(MAKE) run-request REQID=DemoRequest1
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
