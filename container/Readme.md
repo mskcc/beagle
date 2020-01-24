@@ -3,7 +3,7 @@
 #### Build SIF
 
 ```
-sudo singularity build beagle_service.sif beagle_service.def
+sudo -E singularity build beagle_service.sif beagle_service.def
 ```
 
 #### Expected Variables
