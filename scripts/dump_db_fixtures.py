@@ -42,8 +42,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 django.setup()
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from runner.models import Run, RunStatus, Port, PortType, Pipeline
-# from runner.operator.roslin_operator.bin.output_to_qc_input import get_Files_from_Port_queryset
-# runner/operator/roslin_operator/bin/output_to_qc_input.py
 sys.path.pop(0)
 
 
@@ -79,19 +77,12 @@ def dump_run(**kwargs):
     print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
 
     # get the Run input and output Port instances
-    input_queryset = run_instance.port_set.filter(port_type=PortType.INPUT).all()
-    print(json.dumps(json.loads(serializers.serialize('json', input_queryset)), indent=4), file = open(output_port_input_file, "w"))
+    input_queryset = run_instance.port_set.filter(port_type=PortType.INPUT)
+    print(json.dumps(json.loads(serializers.serialize('json', input_queryset.all())), indent=4), file = open(output_port_input_file, "w"))
 
-    output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT).all()
-    print(json.dumps(json.loads(serializers.serialize('json', output_queryset)), indent=4), file = open(output_port_output_file, "w"))
+    output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT)
+    print(json.dumps(json.loads(serializers.serialize('json', output_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
 
-    # get the input and output File instances
-    # output_File_queryset = get_Files_from_Port_queryset(
-    #     run_instance.port_set.filter(port_type=PortType.OUTPUT))
-    # input_File_queryset = get_Files_from_Port_queryset(
-    #     run_instance.port_set.filter(port_type=PortType.INPUT))
-    # pprint.pprint(output_File_queryset)
-    # pprint.pprint(input_File_queryset)
 
 def dump_pipeline(**kwargs):
     """

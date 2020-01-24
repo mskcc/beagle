@@ -318,7 +318,6 @@ test: check-env
 	python manage.py test \
 	runner.tests.operator.roslin_operator.test_pair_request \
 	beagle_etl.tests.jobs.test_lims_etl_jobs \
-	runner.tests.test_utils \
 	runner.tests.test_port
 
 # start the Django development server
