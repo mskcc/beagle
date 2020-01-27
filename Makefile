@@ -93,6 +93,7 @@ install: conda
 	bioconda::rabix-bunny=1.0.4
 	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
+	pip install git+https://github.com/mskcc/beagle_cli.git@develop
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
@@ -358,14 +359,30 @@ import:
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
+# create a dev instance of the
+register-dev-pipeline:
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $(TOKEN)" \
+	-d '{ "name": "roslin-dev", "github": "https://github.com/mskcc/roslin-cwl", "version": "1.0.0-rc5", "entrypoint": "workflows/pair-workflow-sv.cwl"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/
+
 # get info about the files and samples in a request, from the Beagle API
 files-request:
-	python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
-# curl -H "Content-Type: application/json" \
-# -X GET \
-# -H "Authorization: Bearer $(TOKEN)" \
-# http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
-# $(REQID)/
+	curl -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $(TOKEN)" \
+	--data '{"request_ids":["$(REQID)"]}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
+# python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
+
+# get info on a single file
+REQFILE:=b37.fasta
+file-get:
+	curl -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $(TOKEN)" \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
 run-request:
@@ -375,17 +392,19 @@ run-request:
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
+REQJSON:=fixtures/tests/run_roslin.json
 run-request-api:
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $(TOKEN)" \
-	--data @fixtures/tests/run_roslin.json \
+	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
 
 demo-run:
 	python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
 	python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
-	$(MAKE) run-request REQID=DemoRequest1
+	python manage.py loaddata fixtures/tests/roslin_reference_files.json
+	$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=fixtures/tests/juno_roslin_demo2.pipeline_input.json
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
