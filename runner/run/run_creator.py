@@ -108,12 +108,82 @@ def _resolve_inputs_db(inputs, run_id):
             else:
                 if k == 'location':
                     file_id = _get_file_id(v)
-                    new_inputs['location'] = file_id
-                    _add_run_to_file(file_id, run_id)
+                    new_inputs['location'] = "bid://%s" % file_id
+                    _add_run_to_file(file_id, run_id)  # this can be replaced with new File Port ManyToMany table
                 else:
                     new_inputs[k] = v
         return new_inputs
     return inputs
+
+
+def _resolve_inputs_db(inputs, run_id, new_inputs):
+    if inputs and isinstance(inputs, dict):
+        for k, v in inputs.items():
+            if isinstance(v, dict):
+                value = _resolve_inputs_db(new_inputs, v, run_id)
+                print(value)
+                new_inputs[k] = value
+            elif isinstance(v, list):
+                new_val = []
+                for item in v:
+                    new_val.append(_resolve_inputs_db(new_inputs, item, run_id))
+                new_inputs[k] = new_val
+            else:
+                if k == 'location':
+                    file_id = _get_file_id(v)
+                    new_inputs['location'] = "bid://%s" % file_id
+                    # _add_run_to_file(file_id, run_id)
+                else:
+                    new_inputs[k] = v
+        return new_inputs
+    elif isinstance(inputs, list):
+        new_val = []
+        for item in inputs:
+            new_val.append(_resolve_inputs_db(new_inputs, item, run_id))
+        return new_val
+
+
+def process_files(port_value):
+    if isinstance(port_value, list):
+        res = []
+    elif isinstance(port_value, dict):
+        res = {}
+    else:
+        return port_value
+    return resolve_object(port_value, res)
+
+
+def resolve_object(value, result):
+    if isinstance(value, dict):
+        if is_file(value):
+            result = update_location(value)
+            return result
+        else:
+            for k, v in value.items():
+                result[k] = process_files(v)
+            return result
+    elif isinstance(value, list):
+        for item in value:
+            result.append(process_files(item))
+        return result
+    else:
+        return value
+
+
+def is_file(val):
+    return True if val.get('class') and val.get('class') == 'File' else False
+
+
+def process_file(file_obj):
+    pass
+
+
+def update_location(val):
+    file_obj = copy.deepcopy(val)
+    location = val.get('location')
+    bid = _get_file_id(location)
+    file_obj['location'] = 'bid://%s' % bid
+    return file_obj
 
 
 def _add_run_to_file(file_id, run_id):
@@ -141,6 +211,7 @@ def _resolve_inputs(inputs):
             else:
                 if k == 'location':
                     path, size = _resolve_uri(v)
+                    # new_inputs['location'] = location
                     new_inputs['path'] = path
                     new_inputs['size'] = size
                 else:
@@ -155,19 +226,21 @@ def _resolve_inputs(inputs):
 
 
 def _resolve_uri(uri):
+    print(uri)
     if uri.startswith('bid://'):
         beagle_id = uri.replace('bid://', '')
         try:
             file_obj = File.objects.get(id=beagle_id)
         except File.DoesNotExist as e:
             raise Exception("File %s doesn't exist" % uri)
-        return file_obj.path
+        return file_obj.path, file_obj.size
     elif uri.startswith('juno://'):
         juno_path = uri.replace('juno://', '')
         file_obj = File.objects.filter(path=juno_path).first()
         if not file_obj:
             raise Exception("File %s doesn't exist" % uri)
         return file_obj.path, file_obj.size
+        # return file_obj.path, 'bid://%s' % file_obj.id, file_obj.size
 
 
 def _get_file_id(uri):
@@ -177,7 +250,7 @@ def _get_file_id(uri):
             file_obj = File.objects.get(id=beagle_id)
         except File.DoesNotExist as e:
             raise Exception("File %s doesn't exist" % uri)
-        return file_obj.path
+        return str(file_obj.id)
     elif uri.startswith('juno://'):
         juno_path = uri.replace('juno://', '')
         file_obj = File.objects.filter(path=juno_path).first()
@@ -222,7 +295,7 @@ def _create_file(filepath, file_group, metadata={}):
     basename = os.path.basename(filepath)
     ext = basename.split('.')[-1]
     try:
-        file_type = FileType.objects.get(ext=ext)
+        file_type = FileType.objects.get(name=ext)
     except FileType.DoesNotExist:
         file_type = 'unknown'
     else:

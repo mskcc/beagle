@@ -2,7 +2,7 @@ import os
 import uuid
 from enum import IntEnum
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
@@ -30,8 +30,12 @@ class Storage(BaseModel):
 
 
 class FileType(models.Model):
-    ext = models.CharField(max_length=20)
-    valid_extensions = JSONField(blank=True, null=True)
+    name = models.CharField(max_length=20)
+
+
+class FileExtension(models.Model):
+    extension = models.CharField(max_length=30, unique=True)
+    file_type = models.ForeignKey(FileType, on_delete=models.CASCADE)
 
 
 class FileGroup(BaseModel):
@@ -61,7 +65,7 @@ class File(BaseModel):
         if not self.size:
             try:
                 self.size = os.path.getsize(self.path)
-            except Exception:
+            except Exception as e:
                 self.size = 0
         super(File, self).save(*args, **kwargs)
 

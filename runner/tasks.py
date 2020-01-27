@@ -1,7 +1,8 @@
-import uuid
 import os
+import uuid
 import logging
 import requests
+import traceback
 import runner.run.run_creator
 from celery import shared_task
 from django.conf import settings
@@ -48,6 +49,7 @@ def create_run_task(run_id, inputs, output_directory=None):
                         secondary_files=output.secondary_files, db_value=output.value)
             port.save()
     except Exception as e:
+        traceback.print_exc()
         run.status = RunStatus.FAILED
         run.job_statuses = {'error': 'Error during creation because of %s' % str(e)}
         run.save()
