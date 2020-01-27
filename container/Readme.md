@@ -3,8 +3,9 @@
 #### Build SIF
 
 ```
-sudo -E singularity build beagle_service.sif beagle_service.def
+sudo singularity build beagle_service.sif beagle_service.def
 ```
+By default the container uses the master branch of beagle. To specify a custom github branch, you need to set it in the `SINGULARITYENV_BEAGLE_BRANCH` environment variable. Make sure to use `sudo -E` instead to allow the `SINGULARITYENV_BEAGLE_BRANCH` environment to propagate. 
 
 #### Expected Variables
 
