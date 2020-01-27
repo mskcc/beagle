@@ -2,5 +2,5 @@ class PortProcessorException(Exception):
     pass
 
 
-class UriParserException(Exception):
+class FileHelperException(Exception):
     pass

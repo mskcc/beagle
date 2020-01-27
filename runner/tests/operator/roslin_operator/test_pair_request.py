@@ -45,8 +45,8 @@ class TestPairRequest(TestCase):
         """
         # loaded from static repo fixtures
         file_group_id = UUID('1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')
-        file_group_instance = FileGroup.objects.get(id = file_group_id)
-        filetype_instance = FileType.objects.get(id = 1, ext = "fastq")
+        file_group_instance = FileGroup.objects.get(id=file_group_id)
+        filetype_instance = FileType.objects.get(id=1, name="fastq")
 
         # make demo file entry
         file_instance = File.objects.create(
