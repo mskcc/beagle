@@ -2,16 +2,18 @@
 
 #### Build SIF
 
+By default the container uses the `master` branch of beagle. To specify a custom github branch, set it in the `SINGULARITYENV_BEAGLE_BRANCH` environment variable.
+
 ```
-sudo singularity build beagle_service.sif beagle_service.def
+export SINGULARITYENV_BEAGLE_BRANCH=master # branch on github to use on build; can set to any existing branch in repo
+sudo -E singularity build beagle_service.sif beagle_service.def
 ```
 
-#### Expected Variables
+#### Expected Instance Run Variables
 
-The following environment variables must be set so that the instance can run properly.
+The following prepended singularity environment variables must be set so that the instance can run properly.
 
 Note: Singularity passes environment variables to the SIF container by prepending variable names with `SINGULARITYENV_`. For example, to set `BEAGLE_PORT` in the container, you must set `SINGULARITYENV_BEAGLE_PORT`.
-
 ```
 SINGULARITYENV_BEAGLE_PORT
 SINGULARITYENV_BEAGLE_RIDGEBACK_URL
@@ -39,7 +41,7 @@ The following are optional environmental variables for use with `beagle` and `ce
 SINGULARITYENV_BEAGLE_PATH # beagle install to use if not using what's in container; default is /usr/bin/beagle
 SINGULARITYENV_CELERY_LOG_PATH # location of where to store log files for celery; default is /tmp
 SINGULARITYENV_CELERY_PID_PATH # where to store pid files for celery workers; default is /tmp
-SINGULARITY_BEAT_SCHEDULE_PATH # where to store schedule of celery beat; default is /tmp
+SINGULARITYENV_BEAT_SCHEDULE_PATH # where to store schedule of celery beat; default is /tmp
 SINGULARITYENV_EVENT QUEUE PREFIX # prefix for event queue; default is runtime timestamp
 ```
 
