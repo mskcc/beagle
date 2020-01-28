@@ -47,6 +47,7 @@ sys.path.pop(0)
 
 def dump_request(**kwargs):
     """
+    Dump re-loadable fixtures for File and FileMetadata items from a given request
     """
     requestID = kwargs.pop('requestID')
     output_file_file = "{}.file.json".format(requestID)
@@ -66,6 +67,7 @@ def dump_request(**kwargs):
 
 def dump_run(**kwargs):
     """
+    Dump re-loadable Django database fixtures for a Run entry and its associated input and output Port entries
     """
     runID = kwargs.pop('runID')
     output_run_file = "{}.run.json".format(runID)
@@ -86,6 +88,7 @@ def dump_run(**kwargs):
 
 def dump_pipeline(**kwargs):
     """
+    Dump re-loadable Django database fixtures for Pipeline entries and related table fixtures
     """
     pipelineName = kwargs.pop('pipelineName')
     output_pipeline_file = "{}.pipeline.json".format(pipelineName)
@@ -95,6 +98,57 @@ def dump_pipeline(**kwargs):
     print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
 
     print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+
+def get_files(value, type):
+    """
+    Get a file from the database by its Beagle ID or filename
+    """
+    instances = []
+    if type == "bid":
+        instances.append(File.objects.get(id = value))
+    if type == "filename":
+        for item in File.objects.filter(file_name = value):
+            instances.append(item)
+    for instance in instances:
+        yield(instance)
+
+def dump_file(**kwargs):
+    """
+    Dump re-loadable Django database fixtures for File and FileMetadata items
+    """
+    bids = kwargs.pop('bids')
+    onefile = kwargs.pop('onefile')
+    filenames = kwargs.pop('filenames')
+    get_key = "bid"
+    if filenames == True:
+        get_key = "filename"
+
+    all_data = []
+    for bid in bids:
+        output_file_file = "{}.file.json".format(bid)
+        output_filemetadata_file = "{}.filemetadata.json".format(bid)
+
+        # get File entries that match the request ID
+        for file_instance in get_files(value = bid, type = get_key):
+            file_data = json.loads(serializers.serialize('json', [ file_instance ] ))
+            if onefile == False:
+                print(json.dumps(file_data, indent=4), file = open(output_filemetadata_file, "w"))
+
+            # get the FileMetadata entries that corresponds to the File
+            filemetadata_instance = FileMetadata.objects.get(file = file_instance)
+            filemetadata_data = json.loads(serializers.serialize('json', [ filemetadata_instance ]))
+            if onefile == False:
+                print(json.dumps(filemetadata_data, indent=4), file = open(output_file_file, "w"))
+
+            if onefile == True:
+                for item in file_data:
+                    all_data.append(item)
+                for item in filemetadata_data:
+                    all_data.append(item)
+    if onefile == True:
+        output_file = "all.file_filemetadata.json"
+        print(json.dumps(all_data, indent=4), file = open(output_file, "w"))
+
 
 def parse():
     """
@@ -115,6 +169,12 @@ def parse():
     pipeline = subparsers.add_parser('pipeline', help = 'Dump pipeline fixture')
     pipeline.add_argument('pipelineName', help = 'Name of the pipeline to dump')
     pipeline.set_defaults(func = dump_pipeline)
+
+    file = subparsers.add_parser('file', help = 'Dump file fixture')
+    file.add_argument('bids', nargs = "*", help = "Beagle db id's of the file to dump")
+    file.add_argument('--onefile', action = "store_true", help = 'Put all the outputs into a single file ')
+    file.add_argument('--filenames', action = "store_true", help = 'Items passed are file basenames instead of Beagle db IDs ')
+    file.set_defaults(func = dump_file)
 
     args = parser.parse_args()
     args.func(**vars(args))

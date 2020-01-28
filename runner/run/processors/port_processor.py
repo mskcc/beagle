@@ -86,6 +86,9 @@ class PortProcessor(object):
         location = val.get('location')
         if not location:
             location = val.get('path')
+        if not location:
+            print("Couldn't fix value: %s. File doesn't exist" % file_obj)
+            return file_obj
         if location.startswith('/'):
             location = 'juno://%s' % location
         elif PortProcessor.is_uuid(location):
