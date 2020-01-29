@@ -15,6 +15,8 @@ example:
 
 $ dump_db_fixtures.py request 07951_AP
 
+$ dump_db_fixtures.py port_files fd41534c-71eb-4b1b-b3af-e3b1ec3aecde
+
 Output
 ------
 
@@ -34,6 +36,7 @@ import argparse
 import django
 from django.db.models import Prefetch
 from django.core import serializers
+from pprint import pprint
 
 # import django app from parent dir
 parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -84,7 +87,26 @@ def dump_run(**kwargs):
 
     output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT)
     print(json.dumps(json.loads(serializers.serialize('json', output_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
+    for item in output_queryset:
+        pprint((item, item.files.all()))
 
+
+def dump_port_files(**kwargs):
+    """
+    """
+    portID = kwargs.pop('portID')
+    output_port_file = "{}.port.json".format(portID)
+    output_port_file_file = "{}.port.file.json".format(portID)
+    output_port_filemetadat_file = "{}.port.filemetadat.json".format(portID)
+
+    port_instance = Port.objects.get(id = portID)
+    print(json.dumps(json.loads(serializers.serialize('json', [port_instance])), indent=4), file = open(output_port_file, "w"))
+
+    files_queryset = port_instance.files.all()
+    print(json.dumps(json.loads(serializers.serialize('json', files_queryset.all())), indent=4), file = open(output_port_file_file, "w"))
+
+    filemetadata_queryset = FileMetadata.objects.filter(file__in = [i for i in files_queryset])
+    print(json.dumps(json.loads(serializers.serialize('json', filemetadata_queryset.all())), indent=4), file = open(output_port_filemetadat_file, "w"))
 
 def dump_pipeline(**kwargs):
     """
@@ -175,6 +197,10 @@ def parse():
     file.add_argument('--onefile', action = "store_true", help = 'Put all the outputs into a single file ')
     file.add_argument('--filenames', action = "store_true", help = 'Items passed are file basenames instead of Beagle db IDs ')
     file.set_defaults(func = dump_file)
+
+    port_files = subparsers.add_parser('port_files', help = 'Dump port.files fixture')
+    port_files.add_argument('portID', help = 'Port ID to dump files for')
+    port_files.set_defaults(func = dump_port_files)
 
     args = parser.parse_args()
     args.func(**vars(args))
