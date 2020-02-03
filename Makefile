@@ -319,7 +319,6 @@ test: check-env
 	unset TMPDIR ; \
 	python manage.py test \
 	runner.tests.operator.roslin_operator.test_pair_request \
-	runner.tests.test_port \
 	runner.tests.operator.roslin_operator.test_make_sample \
 	runner.tests.operator.roslin_operator.test_construct_roslin_pair
 
