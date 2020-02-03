@@ -11,7 +11,14 @@ class RunAdmin(admin.ModelAdmin):
     ordering = ('-created_date',)
 
 
+class PortAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'run', 'db_value')
+    raw_id_fields = ("run",)
+    ordering = ('run',)
+    search_fields = ('run__id',)
+
+
 admin.site.register(Run, RunAdmin)
-admin.site.register(Port)
+admin.site.register(Port, PortAdmin)
 admin.site.register(Pipeline, PipelineAdmin)
 admin.site.register(ExecutionEvents)
