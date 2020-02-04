@@ -1,13 +1,12 @@
-import uuid
 import json
 from mock import patch
 from rest_framework.test import APITestCase
-from dictdiffer import diff
+from runner.models import Port
 from runner.tasks import complete_job, fail_job
 from runner.run.objects.run_object import RunObject
 from runner.models import Run, RunStatus, Pipeline
 from runner.run.processors.file_processor import FileProcessor
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, FileExtension
+from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 
 class RunObjectTest(APITestCase):
@@ -211,7 +210,7 @@ class RunObjectTest(APITestCase):
                     "nameext": ".bam",
                     "basename": "test_1.printreads.bam",
                     "checksum": "sha1$e4c05e8b3e7c1d682640e690f71536e22cb63802",
-                    "location": "file:///outputs/test_1.printreads.bam",
+                    "location": "file:///output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam",
                     "nameroot": "test_1.printreads.bam",
                     "secondaryFiles": [
                         {
@@ -295,10 +294,21 @@ class RunObjectTest(APITestCase):
         complete_job(run.run_id, self.outputs)
         run_obj = RunObject.from_db(run.run_id)
         file_obj = File.objects.filter(path=self.outputs['maf']['location'].replace('file://', '')).first()
+        run_obj.to_db()
         for out in run_obj.outputs:
             if out.name == 'maf':
                 self.assertEqual(out.value['location'], self.outputs['maf']['location'])
                 self.assertEqual(FileProcessor.get_bid_from_file(file_obj), out.db_value['location'])
+        port = Port.objects.filter(run_id=run_obj.run_id, name='bams').first()
+        self.assertEqual(len(port.files.all()), 4)
+        self.assertEqual(port.files.all()[0].path,
+                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam')
+        self.assertEqual(port.files.all()[1].path,
+                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai')
+        self.assertEqual(port.files.all()[2].path,
+                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam')
+        self.assertEqual(port.files.all()[3].path,
+                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai')
 
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
     def test_run_fail_job(self, mock_get_pipeline):
