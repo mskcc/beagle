@@ -1,15 +1,14 @@
-import uuid
 import os
+import uuid
 import logging
 import requests
-import runner.run.run_creator
-import importlib
 from celery import shared_task
 from django.conf import settings
+from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, Port, PortType
 from runner.operator import OperatorFactory
-from runner.pipeline.pipeline_resolver import CWLResolver
 from beagle_etl.models import Operator
+from runner.exceptions import RunCreateException
 
 
 logger = logging.getLogger(__name__)
@@ -55,30 +54,17 @@ def operator_job(request_id, pipeline_type):
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run")
     try:
-        run = Run.objects.get(id=run_id)
-    except Run.DoesNotExist:
-        raise Exception("Failed to create a run")
-    cwl_resolver = CWLResolver(run.app.github, run.app.entrypoint, run.app.version)
-    resolved_dict = cwl_resolver.resolve()
-    try:
-        task = runner.run.run_creator.Run(run_id, resolved_dict, inputs)
-        for input in task.inputs:
-            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-                        secondary_files=input.secondary_files, db_value=input.db_value, value=input.value)
-            port.save()
-        for output in task.outputs:
-            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
-                        secondary_files=output.secondary_files, db_value=output.value)
-            port.save()
-    except Exception as e:
-        run.status = RunStatus.FAILED
-        run.job_statuses = {'error': 'Error during creation because of %s' % str(e)}
-        run.save()
+        run = RunObject.from_cwl_definition(run_id, inputs)
+        run.ready()
+    except RunCreateException as e:
+        run = RunObject.from_db(run_id)
+        run.fail(e)
+        RunObject.to_db(run)
+        logger.info("Run %s Failed" % run_id)
     else:
-        run.status = RunStatus.READY
-        run.save()
+        RunObject.to_db(run)
         submit_job.delay(run_id, output_directory)
-        logger.info("Run created")
+        logger.info("Run %s Ready" % run_id)
 
 
 @shared_task
@@ -126,20 +112,16 @@ def check_status_on_ridgeback(job_id):
     return None
 
 
-def fail_job(run):
-    run.status = RunStatus.FAILED
-    run.save()
+def fail_job(run_id, error_message):
+    run = RunObject.from_db(run_id)
+    run.fail(error_message)
+    run.to_db()
 
 
-def complete_job(run, remote_status):
-    run.status = RunStatus.COMPLETED
-    file_group = run.app.output_file_group
-    for k, v in remote_status['outputs'].items():
-        port = run.port_set.filter(port_type=PortType.OUTPUT, name=k).first()
-        port.value = v
-        port.db_value = runner.run.run_creator._resolve_outputs(v, file_group, run.output_metadata)
-        port.save()
-    run.save()
+def complete_job(run_id, outputs):
+    run = RunObject.from_db(run_id)
+    run.complete(outputs)
+    run.to_db()
 
 
 def running_job(run):
@@ -157,11 +139,14 @@ def check_jobs_status():
             if remote_status:
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    fail_job(run)
+                    # TODO: Fetch error message from Executor here
+                    fail_job(run,
+                             'Job failed. You can find logs in /work/pi/beagle/work/%s' %
+                             str(run.execution_id))
                     continue
                 if remote_status['status'] == 'COMPLETED':
                     logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                    complete_job(run, remote_status)
+                    complete_job(str(run.id), remote_status['outputs'])
                     continue
                 if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))

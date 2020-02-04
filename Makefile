@@ -93,12 +93,13 @@ install: conda
 	bioconda::rabix-bunny=1.0.4
 	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
 export BEAGLE_DB_USERNAME=$(shell whoami)
 export BEAGLE_DB_PASSWORD=admin
-export BEAGLE_DB_PORT:=65528
+export BEAGLE_DB_PORT:=65527
 export BEAGLE_DB_URL:=localhost
 
 export PGDATA=$(BEAGLE_DB_NAME)
@@ -177,7 +178,7 @@ export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
 export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)
 export RABBITMQ_NODE_IP_ADDRESS:=127.0.0.1
-export RABBITMQ_NODE_PORT:=5670
+export RABBITMQ_NODE_PORT:=5679
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
 export RABBITMQ_PID_FILE:=$(RABBITMQ_LOG_BASE)/rabbitmq.pid
@@ -310,16 +311,24 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-
 migrate:
 	python manage.py makemigrations
 	python manage.py migrate
 
+# unexport the tmp dir variable to keep consistency for testing
 test: check-env
+	unset TMPDIR ; \
 	python manage.py test \
 	runner.tests.operator.roslin_operator.test_pair_request \
+	runner.tests.operator.roslin_operator.test_make_sample \
+	runner.tests.operator.roslin_operator.test_construct_roslin_pair \
+	runner.tests.run.test_processors \
+	runner.tests.run.test_run
+
+# this one needs external LIMS access currently and takes a while to run so dont include it by default
+test-lims: check-env
+	python manage.py test \
 	beagle_etl.tests.jobs.test_lims_etl_jobs
-	# python manage.py test
 
 # start the Django development server
 runserver: check-env
@@ -373,6 +382,18 @@ run-request:
 	-H "Authorization: Bearer $(TOKEN)" \
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
+
+run-request-api:
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $(TOKEN)" \
+	--data @fixtures/tests/run_roslin.json \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
+
+demo-run:
+	python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
+	python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
+	$(MAKE) run-request REQID=DemoRequest1
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
