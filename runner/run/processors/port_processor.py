@@ -2,8 +2,8 @@ import uuid
 import copy
 import logging
 from enum import Enum
-from runner.run.processors.file_helper import FileHelper
-from runner.exceptions import PortProcessorException, FileHelperException
+from runner.run.processors.file_processor import FileProcessor
+from runner.exceptions import PortProcessorException, FileConflictException, FileHelperException
 
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 class PortAction(Enum):
     CONVERT_TO_BID = 0
     CONVERT_TO_PATH = 1
+    REGISTER_OUTPUT_FILES = 2
     FIX_DB_VALUES = 99 # Temporary for fixing values in DB
 
 
@@ -65,7 +66,11 @@ class PortProcessor(object):
         if action == PortAction.CONVERT_TO_PATH:
             return PortProcessor._convert_to_path(file_obj)
         if action == PortAction.REGISTER_OUTPUT_FILES:
-            return PortProcessor._register_file(file_obj, kwargs.get('file_list'), )
+            return PortProcessor._register_file(file_obj,
+                                                kwargs.get('size'),
+                                                kwargs.get('group_id'),
+                                                kwargs.get('metadata'),
+                                                kwargs.get('file_list'))
         else:
             raise PortProcessorException('Unknown PortProcessor action: %s' % action)
 
@@ -73,7 +78,7 @@ class PortProcessor(object):
     def _update_location_to_bid(val, file_list):
         file_obj = copy.deepcopy(val)
         location = val.get('location')
-        bid = FileHelper.get_file_id(location)
+        bid = FileProcessor.get_file_id(location)
         file_obj['location'] = 'bid://%s' % bid
         if file_obj.get('path'):
             file_obj.pop('path')
@@ -85,7 +90,10 @@ class PortProcessor(object):
     def _convert_to_path(val):
         file_obj = copy.deepcopy(val)
         location = file_obj.pop('location')
-        path = FileHelper.get_file_path(location)
+        try:
+            path = FileProcessor.get_file_path(location)
+        except FileHelperException as e:
+            raise PortProcessorException('File %s not found' % location)
         file_obj['path'] = path
         return file_obj
 
@@ -101,6 +109,9 @@ class PortProcessor(object):
         location = val.get('location')
         if not location:
             location = val.get('path')
+        if not location:
+            print("Couldn't fix value: %s" % file_obj)
+            return file_obj
         if location.startswith('/'):
             location = 'juno://%s' % location
         elif PortProcessor.is_uuid(location):
@@ -109,7 +120,7 @@ class PortProcessor(object):
             print("Couldn't fix value: %s" % file_obj)
             return file_obj
         try:
-            bid = FileHelper.get_file_id(location)
+            bid = FileProcessor.get_file_id(location)
         except FileHelperException as e:
             print("Couldn't fix value: %s. File doesn't exist" % file_obj)
             return file_obj
@@ -129,24 +140,13 @@ class PortProcessor(object):
         file_obj.pop("nameext", None)
         uri = file_obj.pop('location', None)
         try:
-            file_obj_db = FileHelper.create_file_obj(uri, size, group_id, metadata)
-        except FileHelperException as e:
-            raise PortProcessorException(e)
-        file_obj['location'] = FileHelper.get_bid_from_file(file_obj_db)
-        if file_list is not None:
-            file_list.append('bid://%s' % FileHelper.get_bid_from_file(file_obj_db))
+            file_obj_db = FileProcessor.create_file_obj(uri, size, group_id, metadata)
+        except FileConflictException as e:
+            logger.warning(str(e))
+            # TODO: Check what to do in case file already exist in DB. Note: This should never happen
+            # raise PortProcessorException(e)
+        else:
+            file_obj['location'] = FileProcessor.get_bid_from_file(file_obj_db)
+            if file_list is not None:
+                file_list.append('bid://%s' % FileProcessor.get_bid_from_file(file_obj_db))
         return file_obj
-
-    @staticmethod
-    def _collect_files(val):
-        pass
-
-
-# def list_files(inp):
-#     result_map = {}
-#     for port in inp:
-#         name = port['fields']['name']
-#         file_values = []
-#         PortProcessor.process_files(port['fields']['db_value'], PortAction.CONVERT_TO_BID, file_values)
-#         result_map[name] = file_values
-#     return result_map
