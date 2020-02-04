@@ -301,14 +301,15 @@ class RunObjectTest(APITestCase):
                 self.assertEqual(FileProcessor.get_bid_from_file(file_obj), out.db_value['location'])
         port = Port.objects.filter(run_id=run_obj.run_id, name='bams').first()
         self.assertEqual(len(port.files.all()), 4)
-        self.assertEqual(port.files.all()[0].path,
-                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam')
-        self.assertEqual(port.files.all()[1].path,
-                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai')
-        self.assertEqual(port.files.all()[2].path,
-                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam')
-        self.assertEqual(port.files.all()[3].path,
-                         '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai')
+        expected_result = (
+        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam',
+        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai',
+        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam',
+        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai')
+        self.assertTrue(port.files.all()[0].path in expected_result)
+        self.assertTrue(port.files.all()[1].path in expected_result)
+        self.assertTrue(port.files.all()[2].path in expected_result)
+        self.assertTrue(port.files.all()[3].path in expected_result)
 
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
     def test_run_fail_job(self, mock_get_pipeline):

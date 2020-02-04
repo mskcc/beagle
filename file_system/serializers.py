@@ -164,7 +164,6 @@ class UpdateFileSerializer(serializers.Serializer):
         instance.file_type = validated_data.get('file_type', instance.file_type)
         ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.first().metadata, ignore_order=True)
         if ddiff:
-            print("METADATA SAVE")
             metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
             metadata.save()
         instance.save()
