@@ -197,7 +197,7 @@ def create_pooled_normal(filepath, file_group_id):
     if File.objects.filter(path=filepath):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
-    file_type_obj = FileType.objects.filter(ext='fastq').first()
+    file_type_obj = FileType.objects.filter(name='fastq').first()
     run_id = None
     preservation_type = None
     recipe = None
@@ -350,7 +350,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
-        file_type_obj = FileType.objects.filter(ext=file_type).first()
+        file_type_obj = FileType.objects.filter(name=file_type).first()
         metadata = copy.deepcopy(data)
         sample_name = metadata.pop('cmoSampleName', None)
         external_sample_name = metadata.pop('sampleName', None)

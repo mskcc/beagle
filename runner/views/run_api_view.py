@@ -16,7 +16,6 @@ from rest_framework.generics import GenericAPIView
 from runner.pipeline.pipeline_resolver import CWLResolver
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-import runner.run.run_creator
 
 
 class RunApiViewSet(mixins.ListModelMixin,
