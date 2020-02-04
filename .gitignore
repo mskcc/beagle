@@ -6,3 +6,4 @@ conda/
 db*
 scripts/*.json
 conda*
+*.swp

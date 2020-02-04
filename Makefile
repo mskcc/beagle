@@ -332,8 +332,14 @@ test-lims: check-env
 
 # start the Django development server
 runserver: check-env
-	python manage.py runserver "$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)"
+	python manage.py runserver $(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
 
+MIGRATION_ARGS?=
+migrate: check-env
+	python manage.py migrate $(MIGRATION_ARGS)
+
+makemigrations: check-env
+	python manage.py makemigrations 
 # start interactive bash with environment configured
 bash:
 	bash
