@@ -5,10 +5,13 @@ from .access_operator import AccessOperator
 
 class OperatorFactory(object):
 
-    operators = [TempoOperator, RoslinOperator, AccessOperator]
+    operators = {
+        "TempoOperator": TempoOperator,
+        "RoslinOperator": RoslinOperator,
+        "AccessOperator": AccessOperator,
+    }
 
-    @classmethod
-    def get_by_class_name(class_name):
+    def get_by_class_name(class_name, request_id):
         if class_name not in OperatorFactory.operators:
             raise Exception("Invalid pipeline")
 
@@ -24,3 +27,4 @@ class OperatorFactory(object):
         else:
             raise Exception("Invalid pipeline")
     factory = staticmethod(factory)
+    get_by_class_name = staticmethod(get_by_class_name)

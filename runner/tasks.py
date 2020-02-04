@@ -15,13 +15,15 @@ from beagle_etl.models import Operator
 logger = logging.getLogger(__name__)
 
 
+
 @shared_task
 def create_jobs_from_request(request_id, operator_id):
-    logger.info("Creating operator id %s for requestId: %s" % (pipeline_type, operator_id))
+    logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
     operator_info = Operator.objects.get(id=operator_id)
     operator = OperatorFactory.get_by_class_name(operator_info.class_name, request_id)
 
     jobs = operator.get_jobs()
+
     for job in jobs:
         if job[0].is_valid():
             logger.info("Creating Run object")

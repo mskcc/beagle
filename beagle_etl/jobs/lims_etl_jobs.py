@@ -11,6 +11,7 @@ from file_system.exceptions import MetadataValidationException
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
+from runner.tasks import create_jobs_from_request
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,9 @@ def get_or_create_request_job(request_id):
     logger.info(
         "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
     job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
+
     if not job:
+
         job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
                   status=JobStatus.CREATED, max_retry=1, children=[],
                   callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
@@ -72,7 +75,7 @@ def request_callback(request_id):
     if not operator:
         logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
-    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.id))
+    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id)
     return []
 
