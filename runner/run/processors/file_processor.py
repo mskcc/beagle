@@ -1,27 +1,28 @@
 import os
+from django.db import IntegrityError
 from file_system.models import File, FileType, FileGroup, FileMetadata
-from runner.exceptions import FileHelperException
+from runner.exceptions import FileHelperException, FileConflictException
 
 
-class FileHelper(object):
+class FileProcessor(object):
 
     @staticmethod
     def get_file_id(uri):
-        file_obj = FileHelper.get_file_obj(uri)
+        file_obj = FileProcessor.get_file_obj(uri)
         return str(file_obj.id)
 
     @staticmethod
     def get_file_path(uri):
-        file_obj = FileHelper.get_file_obj(uri)
+        file_obj = FileProcessor.get_file_obj(uri)
         return file_obj.path
 
     @staticmethod
     def get_juno_uri_from_file(file):
-        return 'juno://' % file.path
+        return 'juno://%s' % file.path
 
     @staticmethod
     def get_bid_from_file(file):
-        return 'bid://' % str(file.id)
+        return 'bid://%s' % str(file.id)
 
     @staticmethod
     def parse_path_from_uri(uri):
@@ -64,16 +65,22 @@ class FileHelper(object):
 
     @staticmethod
     def create_file_obj(uri, size, group_id, metadata):
-        file_path = FileHelper.parse_path_from_uri(uri)
+        file_path = FileProcessor.parse_path_from_uri(uri)
         basename = os.path.basename(file_path)
-        file_type = FileHelper.get_file_ext(basename)
-        group_id_obj = FileGroup.objects.get(id=group_id)
+        file_type = FileProcessor.get_file_ext(basename)
+        try:
+            group_id_obj = FileGroup.objects.get(id=group_id)
+        except FileGroup.DoesNotExist as e:
+            raise FileHelperException('Invalid FileGroup id: %s' % group_id)
         file_object = File(path=file_path,
                            file_name=os.path.basename(file_path),
                            file_type=file_type,
                            file_group=group_id_obj,
                            size=size)
-        file_object.save()
+        try:
+            file_object.save()
+        except IntegrityError as e:
+            raise FileConflictException("File with path %s already exist" % file_path)
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()
         return file_object

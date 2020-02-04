@@ -1,9 +1,10 @@
 import uuid
 from rest_framework import status
 from dictdiffer import diff
-from runner.run.processors.file_helper import FileHelper
+from runner.run.processors.file_processor import FileProcessor
 from runner.run.processors.port_processor import PortProcessor, PortAction
 from rest_framework.test import APITestCase
+from runner.exceptions import FileHelperException
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, FileExtension
 
 
@@ -264,7 +265,7 @@ class ProcessorTest(APITestCase):
         self.assertEqual(difference[3][2][1], 'bid://%s' % self.file10.id)
 
     def test_create_file_setting_proper_file_type_based_on_extension(self):
-        file_obj = FileHelper.create_file_obj(
+        file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.fastq.gz',
             123345,
             str(self.file_group.id),
@@ -272,9 +273,17 @@ class ProcessorTest(APITestCase):
         self.assertEqual(file_obj.file_type, self.file_type_fastq)
 
     def test_create_file_type_unknown(self):
-        file_obj = FileHelper.create_file_obj(
+        file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.unknown_data_type',
             123345,
             str(self.file_group.id),
             {})
         self.assertEqual(file_obj.file_type, self.file_type_unknown)
+
+    def test_create_file_obj_bad_file_group(self):
+        file_obj = FileProcessor.create_file_obj(
+            'file:///path/to/file.unknown_data_type',
+            123345,
+            str(uuid.uuid4()),
+            {})
+        self.assertRaises(FileHelperException, FileProcessor.create_file_obj, )
