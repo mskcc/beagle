@@ -1,1 +1,1 @@
-from .roslin_operator import RoslinOperator
+from runner.operator.roslin_operator import RoslinOperator
