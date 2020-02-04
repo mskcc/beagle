@@ -312,4 +312,3 @@ class RunObjectTest(APITestCase):
         fail_job(run.run_id, 'Error has happened')
         run_obj = RunObject.from_db(run.run_id)
         self.assertEqual(run_obj.job_statuses['error'], 'Error has happened')
-        self.assertEqual(run_obj.job_statuses['error'], 'Error has happened')
