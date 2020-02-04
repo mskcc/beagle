@@ -311,11 +311,6 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-migrate:
-	python manage.py makemigrations
-	python manage.py migrate
-
-# unexport the tmp dir variable to keep consistency for testing
 test: check-env
 	python manage.py test
 
@@ -333,7 +328,8 @@ migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
 
 makemigrations: check-env
-	python manage.py makemigrations 
+	python manage.py makemigrations
+
 # start interactive bash with environment configured
 bash:
 	bash
