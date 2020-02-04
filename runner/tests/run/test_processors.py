@@ -281,9 +281,11 @@ class ProcessorTest(APITestCase):
         self.assertEqual(file_obj.file_type, self.file_type_unknown)
 
     def test_create_file_obj_bad_file_group(self):
-        file_obj = FileProcessor.create_file_obj(
-            'file:///path/to/file.unknown_data_type',
-            123345,
-            str(uuid.uuid4()),
-            {})
-        self.assertRaises(FileHelperException, FileProcessor.create_file_obj, )
+        file_group_id = str(uuid.uuid4())
+        with self.assertRaises(Exception) as context:
+            file_obj = FileProcessor.create_file_obj(
+                'file:///path/to/file.unknown_data_type',
+                123345,
+                file_group_id,
+                {})
+            self.assertTrue('Invalid FileGroup id: %s' % file_group_id in context.exception)
