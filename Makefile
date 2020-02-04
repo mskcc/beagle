@@ -93,6 +93,7 @@ install: conda
 	bioconda::rabix-bunny=1.0.4
 	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
@@ -320,7 +321,9 @@ test: check-env
 	python manage.py test \
 	runner.tests.operator.roslin_operator.test_pair_request \
 	runner.tests.operator.roslin_operator.test_make_sample \
-	runner.tests.operator.roslin_operator.test_construct_roslin_pair
+	runner.tests.operator.roslin_operator.test_construct_roslin_pair \
+	runner.tests.run.test_processors \
+	runner.tests.run.test_run
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
