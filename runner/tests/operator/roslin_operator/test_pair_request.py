@@ -410,3 +410,51 @@ class TestPairRequest(TestCase):
             ]
         }
         self.assertTrue(pairs == expected_pairs)
+
+    def test_compile_pairs_custom1(self):
+        """
+        Test the ability to compile pairs with a custom sample set
+        """
+        samples = [{'CN': 'MSKCC',
+        'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
+        'LB': 'juno_roslin_demo1_3',
+        'PL': 'Illumina',
+        'PU': ['HCYYWBBXY'],
+        'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+        'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
+        'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+        'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
+        'SM': 's_juno_roslin_demo1_3',
+        'bait_set': 'IMPACT468_BAITS',
+        'igo_id': 's_juno_roslin_demo1_3',
+        'patient_id': 'DU874145',
+        'request_id': ['juno_roslin_demo1'],
+        'run_date': ['2019-12-12'],
+        'species': 'Human',
+        'specimen_type': 'Blood',
+        'tumor_type': 'Normal'},
+        {'CN': 'MSKCC',
+        'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+        'LB': 'juno_roslin_demo1_5_1_1_1',
+        'PL': 'Illumina',
+        'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+        'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+        'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')],
+        'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+        'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')],
+        'SM': 's_juno_roslin_demo1_5',
+        'bait_set': 'IMPACT468_BAITS',
+        'igo_id': 's_juno_roslin_demo1_5',
+        'patient_id': 'DU874145',
+        'request_id': ['juno_roslin_demo1'],
+        'run_date': ['2019-12-17'],
+        'species': 'Human',
+        'specimen_type': 'Resection',
+        'tumor_type': 'Tumor'}]
+        pairs = compile_pairs(samples)
+
+        expected_pairs = {
+        'tumor': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'LB': 'juno_roslin_demo1_5_1_1_1', 'PL': 'Illumina', 'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')], 'SM': 's_juno_roslin_demo1_5', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_5', 'patient_id': 'DU874145', 'request_id': ['juno_roslin_demo1'], 'run_date': ['2019-12-17'], 'species': 'Human', 'specimen_type': 'Resection', 'tumor_type': 'Tumor'}],
+        'normal': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'], 'LB': 'juno_roslin_demo1_3', 'PL': 'Illumina', 'PU': ['HCYYWBBXY'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')], 'SM': 's_juno_roslin_demo1_3', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_3', 'patient_id': 'DU874145', 'request_id': ['juno_roslin_demo1'], 'run_date': ['2019-12-12'], 'species': 'Human', 'specimen_type': 'Blood', 'tumor_type': 'Normal'}]}
+
+        self.assertTrue(pairs == expected_pairs)

@@ -110,7 +110,7 @@ class PortProcessor(object):
         if not location:
             location = val.get('path')
         if not location:
-            print("Couldn't fix value: %s" % file_obj)
+            print("Couldn't fix value: %s. File doesn't exist" % file_obj)
             return file_obj
         if location.startswith('/'):
             location = 'juno://%s' % location
