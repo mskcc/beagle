@@ -96,6 +96,11 @@ class ProcessorTest(APITestCase):
             path="/path/to/file/FP_tiling_intervals.intervals",
             file_type=self.file_type_maf, size=359228, file_group=self.file_group)
         self.file13.save()
+        self.file14 = File(
+            file_name="refGene_b37.sorted.txt.sec",
+            path="/path/to/file/refGene_b37.sorted.txt.sec",
+            file_type=self.file_type_maf, size=359228, file_group=self.file_group)
+        self.file14.save()
 
     def test_convert_list_to_bid(self):
         port_value_list = [
@@ -205,7 +210,13 @@ class ProcessorTest(APITestCase):
 
             "refseq": {
                 "location": "juno:///path/to/file/refGene_b37.sorted.txt",
-                "class": "File"
+                "class": "File",
+                "secondaryFiles": [
+                    {
+                        "class": "File",
+                        "location": "juno:///path/to/file/refGene_b37.sorted.txt.sec"
+                    }
+                ]
             },
             "double_list_test": [[{
                 "location": "juno:///path/to/file/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
@@ -227,7 +238,8 @@ class ProcessorTest(APITestCase):
                 ]
             }]
         }
-        result = PortProcessor.process_files(port_value_dict, PortAction.CONVERT_TO_BID)
+        file_list = []
+        result = PortProcessor.process_files(port_value_dict, PortAction.CONVERT_TO_BID, file_list=file_list)
         difference = diff(port_value_dict, result)
         difference = list(difference)
 
@@ -237,32 +249,42 @@ class ProcessorTest(APITestCase):
         self.assertEqual(difference[0][2][1], 'bid://%s' % str(self.file5.id))
 
         self.assertEqual(difference[1][0], 'change')
-        self.assertEqual(difference[1][1][0], 'double_list_test')
-        self.assertEqual(difference[1][1][1], 0)
+        self.assertEqual(difference[1][1][0], 'refseq')
+        self.assertEqual(difference[1][1][1], 'secondaryFiles')
         self.assertEqual(difference[1][1][2], 0)
         self.assertEqual(difference[1][1][3], 'location')
-        self.assertEqual(difference[1][2][0], 'juno://%s' % self.file6.path)
-        self.assertEqual(difference[1][2][1], 'bid://%s' % str(self.file6.id))
+        self.assertEqual(difference[1][2][0], 'juno://%s' % self.file14.path)
+        self.assertEqual(difference[1][2][1], 'bid://%s' % str(self.file14.id))
 
         self.assertEqual(difference[2][0], 'change')
-        self.assertEqual(difference[2][1][0], 'double_nested_port_list')
+        self.assertEqual(difference[2][1][0], 'double_list_test')
         self.assertEqual(difference[2][1][1], 0)
-        self.assertEqual(difference[2][1][2], 'nested_port_list_1')
-        self.assertEqual(difference[2][1][3], 0)
-        self.assertEqual(difference[2][1][4], 'bait_intervals_1')
-        self.assertEqual(difference[2][1][5], 'location')
-        self.assertEqual(difference[2][2][0], 'juno://%s' % self.file10.path)
-        self.assertEqual(difference[2][2][1], 'bid://%s' % self.file10.id)
+        self.assertEqual(difference[2][1][2], 0)
+        self.assertEqual(difference[2][1][3], 'location')
+        self.assertEqual(difference[2][2][0], 'juno://%s' % self.file6.path)
+        self.assertEqual(difference[2][2][1], 'bid://%s' % str(self.file6.id))
 
         self.assertEqual(difference[3][0], 'change')
         self.assertEqual(difference[3][1][0], 'double_nested_port_list')
         self.assertEqual(difference[3][1][1], 0)
         self.assertEqual(difference[3][1][2], 'nested_port_list_1')
         self.assertEqual(difference[3][1][3], 0)
-        self.assertEqual(difference[3][1][4], 'bait_intervals_2')
+        self.assertEqual(difference[3][1][4], 'bait_intervals_1')
         self.assertEqual(difference[3][1][5], 'location')
         self.assertEqual(difference[3][2][0], 'juno://%s' % self.file10.path)
         self.assertEqual(difference[3][2][1], 'bid://%s' % self.file10.id)
+
+        self.assertEqual(difference[4][0], 'change')
+        self.assertEqual(difference[4][1][0], 'double_nested_port_list')
+        self.assertEqual(difference[4][1][1], 0)
+        self.assertEqual(difference[4][1][2], 'nested_port_list_1')
+        self.assertEqual(difference[4][1][3], 0)
+        self.assertEqual(difference[4][1][4], 'bait_intervals_2')
+        self.assertEqual(difference[4][1][5], 'location')
+        self.assertEqual(difference[4][2][0], 'juno://%s' % self.file10.path)
+        self.assertEqual(difference[4][2][1], 'bid://%s' % self.file10.id)
+
+        self.assertEqual(len(file_list), 5)
 
     def test_create_file_setting_proper_file_type_based_on_extension(self):
         file_obj = FileProcessor.create_file_obj(
