@@ -274,6 +274,8 @@ LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
 IMPORT_FILE_GROUP = os.environ.get('BEAGLE_IMPORT_FILE_GROUP', '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')
 
+POOLED_NORMAL_FILE_GROUP = os.environ.get('BEAGLE_POOLED_NORMAL_FILE_GROUP', '1552617b-3b06-46de-921a-a000a9129385')
+
 RIDGEBACK_URL = os.environ.get('BEAGLE_RIDGEBACK_URL', 'http://localhost:5003')
 
 LOGGING = {

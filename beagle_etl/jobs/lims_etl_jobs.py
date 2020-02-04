@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 TYPES = {
     "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
     "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata"
+    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
+    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal"
 }
 
 
@@ -54,7 +55,6 @@ def get_or_create_request_job(request_id):
 
 
 def request_callback(request_id):
-    # recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
     queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
@@ -77,7 +77,7 @@ def request_callback(request_id):
     return []
 
 
-def fetch_samples(request_id):
+def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     children = set()
     sampleIds = requests.get('%s/LimsRest/api/getRequestSamples' % settings.LIMS_URL,
@@ -98,15 +98,32 @@ def fetch_samples(request_id):
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
-        "pooledNormals": response_body["pooledNormals"]
     }
+    pooled_normals = response_body["pooledNormals"]
+    if import_pooled_normals:
+        for f in pooled_normals:
+            job = get_or_create_pooled_normal_job(f)
+            children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
-    for sample in response_body.get('samples', []):
-        if not sample:
-            raise FailedToFetchFilesException("Sample Id None")
-        job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
-        children.add(str(job.id))
+    if import_samples:
+        for sample in response_body.get('samples', []):
+            if not sample:
+                raise FailedToFetchFilesException("Sample Id None")
+            job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+            children.add(str(job.id))
     return list(children)
+
+
+def get_or_create_pooled_normal_job(filepath):
+    logger.info(
+        "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
+    job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
+    if not job:
+        job = Job(run=TYPES['POOLED_NORMAL'],
+                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
+                  status=JobStatus.CREATED, max_retry=1, children=[])
+        job.save()
+    return job
 
 
 def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
@@ -119,6 +136,88 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
+
+
+def get_run_id_from_string(string):
+    """
+    Parse the runID from a character string
+    Split on the final '_' in the string
+
+    Examples
+    --------
+        get_run_id_from_string("JAX_0397_BHCYYWBBXY")
+        >>> JAX_0397
+    """
+    parts = string.split('_')
+    if len(parts) > 1:
+        parts.pop(-1)
+        output = '_'.join(parts)
+        return(output)
+    else:
+        return(string)
+
+def create_pooled_normal(filepath, file_group_id):
+    """
+    Parse the file path provided for a Pooled Normal sample into the metadata fields needed to
+    create the File and FileMetadata entries in the database
+
+    Parameters:
+    -----------
+    filepath: str
+        path to file for the sample
+    file_group_id: UUID
+        primary key for FileGroup to use for imported File entry
+
+    Examples
+    --------
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
+        file_group_id = settings.IMPORT_FILE_GROUP
+        create_pooled_normal(filepath, file_group_id)
+
+    Notes
+    -----
+    For filepath string such as "JAX_0397_BHCYYWBBXY";
+    - runId = JAX_0397
+    - flowCellId = HCYYWBBXY
+    - [A|B] might be the flowcell bay the flowcell is placed into
+    """
+    if File.objects.filter(path=filepath):
+        logger.info("Pooled normal already created filepath")
+    file_group_obj = FileGroup.objects.get(id=file_group_id)
+    file_type_obj = FileType.objects.filter(ext='fastq').first()
+    run_id = None
+    preservation_type = None
+    recipe = None
+    try:
+        parts = filepath.split('/')
+        run_id = get_run_id_from_string(parts[6])
+        preservation_type = parts[8]
+        preservation_type = preservation_type.split('Sample_')[1]
+        preservation_type = preservation_type.split('POOLEDNORMAL')[0]
+        recipe = parts[8]
+        recipe = recipe.split('IGO_')[1]
+        recipe = recipe.split('_')[0]
+    except Exception as e:
+        raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
+    if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
+        raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
+    if None in [run_id, preservation_type, recipe]:
+        raise FailedToFetchFilesException(
+            "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+    metadata = {
+        "runId": run_id,
+        "preservation": preservation_type,
+        "recipe": recipe
+    }
+    try:
+        f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
+                                file_type=file_type_obj)
+        f.save()
+        fm = FileMetadata(file=f, metadata=metadata)
+        fm.save()
+    except Exception as e:
+        logger.error("Failed to create file %s. Error %s" % (filepath, str(e)))
+        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (filepath, str(e)))
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
@@ -193,7 +292,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
             "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
-
 
 
 def R1_or_R2(filename):
@@ -359,14 +457,16 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
             else:
                 file_search = File.objects.filter(path=fastqs[0]).first()
                 if file_search:
-                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata, 'R1')
+                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata,
+                                         R1_or_R2(fastqs[0]))
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
                     missing_files.append((file_search.path, str(file_search.id)))
                 file_search = File.objects.filter(path=fastqs[1]).first()
                 if file_search:
-                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata, 'R2')
+                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata,
+                                         R1_or_R2(fastqs[1]))
                 else:
                     logger.error("File %s missing" % file_search.path)
                     missing = True
