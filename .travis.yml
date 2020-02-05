@@ -1,4 +1,6 @@
 language: python
+services:
+  - postgresql
 addons:
   postgresql: "11"
   apt:
