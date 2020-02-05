@@ -20,8 +20,8 @@ class TestConstructPair(TestCase):
     "file_system.storage.json"
     ]
 
-    def test_true(self):
-        self.assertTrue(True)
+    def setUp(self):
+        os.environ['TMPDIR'] = ''
 
     def test_construct_roslin_jobs1(self):
         """

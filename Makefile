@@ -311,19 +311,8 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-migrate:
-	python manage.py makemigrations
-	python manage.py migrate
-
-# unexport the tmp dir variable to keep consistency for testing
 test: check-env
-	unset TMPDIR ; \
-	python manage.py test \
-	runner.tests.operator.roslin_operator.test_pair_request \
-	runner.tests.operator.roslin_operator.test_make_sample \
-	runner.tests.operator.roslin_operator.test_construct_roslin_pair \
-	runner.tests.run.test_processors \
-	runner.tests.run.test_run
+	python manage.py test
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
@@ -339,7 +328,8 @@ migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
 
 makemigrations: check-env
-	python manage.py makemigrations 
+	python manage.py makemigrations
+
 # start interactive bash with environment configured
 bash:
 	bash
