@@ -1,4 +1,7 @@
 language: python
+sudo: required
+os:
+  - linux
 services:
   - postgresql
 addons:
@@ -10,9 +13,10 @@ addons:
 python:
   - "3.7.3"
 install:
-  - pip install -r requirements-dev.txt
-  - sleep 10
+  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+  - sudo service postgresql restart 11
   - psql -p 5433 -c 'create database travis_ci_test;' -U postgres
+  - pip install -r requirements-dev.txt
   - source travis_env.sh
   - python manage.py migrate
 script:
