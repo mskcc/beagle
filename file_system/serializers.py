@@ -47,7 +47,7 @@ class FileTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileType
-        fields = ('id', 'ext')
+        fields = ('id', 'name')
 
 
 class CreateMetadata(serializers.ModelSerializer):
@@ -72,7 +72,7 @@ class FileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_file_type(self, obj):
-        return obj.file_type.ext
+        return obj.file_type.name
 
     def get_metadata(self, obj):
         return Metadata(obj.filemetadata_set.first()).data.get('metadata', {})
@@ -95,13 +95,13 @@ class CreateFileSerializer(serializers.ModelSerializer):
     path = serializers.CharField(max_length=400, required=True,
                                  validators=[UniqueValidator(queryset=File.objects.all())])
     size = serializers.IntegerField(required=False)
-    file_group_id = serializers.UUIDField(required=True)
+    # file_group_id = serializers.UUIDField(required=True)
     file_type = serializers.CharField(max_length=30, required=True)
     metadata = serializers.JSONField(allow_null=True)
 
     def validate_file_type(self, file_type):
         try:
-            file_type = FileType.objects.get(ext=file_type)
+            file_type = FileType.objects.get(name=file_type)
         except FileType.DoesNotExist:
             raise serializers.ValidationError("Unknown file_type: %s" % file_type)
         return file_type
@@ -127,7 +127,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ('path', 'file_type', 'size', 'file_group_id', 'metadata')
+        fields = ('path', 'file_type', 'size', 'file_group', 'metadata')
 
 
 class UpdateFileSerializer(serializers.Serializer):
@@ -149,7 +149,7 @@ class UpdateFileSerializer(serializers.Serializer):
 
     def validate_file_type(self, file_type):
         try:
-            file_type = FileType.objects.get(ext=file_type)
+            file_type = FileType.objects.get(name=file_type)
         except FileType.DoesNotExist:
             raise serializers.ValidationError("Unknown file_type: %s" % file_type)
         return file_type
@@ -164,7 +164,6 @@ class UpdateFileSerializer(serializers.Serializer):
         instance.file_type = validated_data.get('file_type', instance.file_type)
         ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.first().metadata, ignore_order=True)
         if ddiff:
-            print("METADATA SAVE")
             metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
             metadata.save()
         instance.save()

@@ -196,10 +196,12 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
+PAGINATION_DEFAULT_PAGE_SIZE = 10
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'beagle.pagination.BeaglePagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': PAGINATION_DEFAULT_PAGE_SIZE,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
