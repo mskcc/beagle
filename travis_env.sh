@@ -1,3 +1,3 @@
-export BEAGLE_DB_NAME=beagle_db
+export BEAGLE_DB_NAME=travis_ci_test
 export BEAGLE_DB_USERNAME=postgres
 export BEAGLE_DB_PASSWORD=
