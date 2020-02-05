@@ -131,6 +131,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     outputs = serializers.JSONField(allow_null=True, required=False)
     tags = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
+    output_metadata = serializers.JSONField(required=False, default=dict)
 
     def create(self, validated_data):
         try:
@@ -142,7 +143,7 @@ class APIRunCreateSerializer(serializers.Serializer):
         tags = validated_data.get('tags')
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), tags=tags)
+        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), output_metadata=validated_data.get('output_metadata', {}), tags=tags)
         run.save()
         return run
 
