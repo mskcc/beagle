@@ -5,7 +5,7 @@ export LOG_DIR_ABS:=$(shell python -c 'import os; print(os.path.realpath("logs")
 
 
 define help
-This is the Makefile for setting up Beagle development instance
+This is the Makefile for setting up Beagle development instance. It contains pre-configured environment variables and scripted recipes to help you get Beagle up and running easily.
 
 Basic dev instance setup instructions:
 -------------------------------------
@@ -47,11 +47,23 @@ make import REQID=07264_G TOKEN=<token from auth command>
 Extras
 ------
 
-Shutdown all services:
+- run the test suite:
+make test
+
+- Shutdown all services:
 make stop-services
 
-Check if pre-configured ports are already occupied on your system:
+- Check if pre-configured ports are already occupied on your system:
 make check-port-collision
+make port-check PORT=<some_port>
+
+- enter an interactive bash session with the environment variables pre-populated from this Makefile
+make bash
+
+- check if Postgres, Celery, and RabbitMQ are running:
+make db-check
+make celery-check
+make rabbitmq-check
 
 Consult the contents of this Makefile for other Beagle management recipes.
 
