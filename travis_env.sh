@@ -1,0 +1,2 @@
+export BEAGLE_DB_USERNAME=postgres
+export BEAGLE_DB_PASSWORD=
