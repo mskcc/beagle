@@ -11,6 +11,7 @@ python:
   - "3.7.3"
 install:
   - pip install -r requirements-dev.txt
+  - sleep 10
   - psql -c 'create database travis_ci_test;' -U postgres
   - source travis_env.sh
   - python manage.py migrate
