@@ -1,17 +1,18 @@
 """
 Tests for LIMS ETL jobs
 """
-from pprint import pprint
+import os
+import beagle_etl.celery
+from unittest import skipIf
 from uuid import UUID
 from django.test import TestCase
 from django.conf import settings
+from beagle_etl.tasks import scheduler
+from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import fetch_samples
 from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal
 from beagle_etl.jobs.lims_etl_jobs import get_run_id_from_string
-from file_system.models import File, FileGroup, FileMetadata, FileType
-from beagle_etl.models import JobStatus, Job, Operator
-from beagle_etl.tasks import scheduler
-import beagle_etl.celery
+from file_system.models import File, FileMetadata
 
 # use local execution for Celery tasks
 if beagle_etl.celery.app.conf['task_always_eager'] == False:
@@ -25,13 +26,13 @@ class TestFetchSamples(TestCase):
     "file_system.storage.json"
     ]
 
-    def test_true(self):
-        self.assertTrue(True)
-
+    @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
+            'Skip if username or password for LIMS are not provided')
     def test_fetch_samples1(self):
         """
         Test fetching samples for a request from IGO LIMS
         Should import Pooled Normal samples automatically
+        TODO: Mock LIMS API for this test and then remove skip
         """
         # sanity check that starting db is empty
         files = File.objects.all()

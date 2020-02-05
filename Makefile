@@ -93,6 +93,7 @@ install: conda
 	bioconda::rabix-bunny=1.0.4
 	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
@@ -310,21 +311,8 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-migrate:
-	python manage.py makemigrations
-	python manage.py migrate
-
-# unexport the tmp dir variable to keep consistency for testing
 test: check-env
-	unset TMPDIR ; \
-	python manage.py test \
-	runner.tests.operator.test_operator \
-	runner.tests.operator.test_operator_factory \
-	runner.tests.operator.roslin_qc_operator.test_roslin_qc_operator \
-	runner.tests.operator.roslin_qc_operator.test_input \
-	runner.tests.operator.roslin_operator.test_pair_request \
-	runner.tests.operator.roslin_operator.test_make_sample \
-	runner.tests.operator.roslin_operator.test_construct_roslin_pair
+	python manage.py test
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
@@ -333,7 +321,14 @@ test-lims: check-env
 
 # start the Django development server
 runserver: check-env
-	python manage.py runserver "$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)"
+	python manage.py runserver $(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
+
+MIGRATION_ARGS?=
+migrate: check-env
+	python manage.py migrate $(MIGRATION_ARGS)
+
+makemigrations: check-env
+	python manage.py makemigrations
 
 # start interactive bash with environment configured
 bash:
