@@ -1,8 +1,11 @@
 language: python
+services:
+  - postgresql
 python:
   - "3.7.3"
 install:
   - pip install -r requirements-dev.txt
   - python manage.py migrate
 script:
+  - source travis_env.sh 
   - python manage.py test
