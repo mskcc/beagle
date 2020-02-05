@@ -95,5 +95,3 @@ class TestOperatorFactory(TestCase):
         self.assertTrue( operator.request_id == "bar")
         self.assertTrue( operator._jobs == [])
         self.assertTrue( len(operator.files) == 5)
-
-    
