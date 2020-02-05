@@ -343,10 +343,13 @@ export USERNAME:=
 export PASSWORD:=
 export AUTH_FILE:=$(shell echo $$HOME)/.$(CURDIR_BASE).json
 auth:
-	[ -z "$(USERNAME)" ] && echo ">>> USERNAME must be supplied; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
-	[ -z "$(PASSWORD)" ] && echo ">>> PASSWORD must be suppled; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
-	token=$$(curl --silent -X POST --header "Content-Type: application/json" --data '{"username":"$(USERNAME)","password":"$(PASSWORD)"}' http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/api-token-auth/ | jq --exit-status -r '.access' ) ; \
-	jq -n --arg token "$$token" '{"token":$$token}' > "$(AUTH_FILE)"
+	@[ -z "$(USERNAME)" ] && echo ">>> ERROR: USERNAME must be supplied; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
+	@[ -z "$(PASSWORD)" ] && echo ">>> ERROR: PASSWORD must be suppled; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
+	@token=$$(curl --silent -X POST --header "Content-Type: application/json" --data '{"username":"$(USERNAME)","password":"$(PASSWORD)"}' http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/api-token-auth/ | jq --exit-status -r '.access' ) ; \
+	[ -z "$${token}" ] && echo ">>> ERROR: 'token' returned by server is zero length; did you provide the correct credentials?" && exit 1 || : ; \
+	[ "$${token}" == "null" ] && echo ">>> ERROR: 'token' returned by the server is 'null'; did you provide the correct crendentials?" && exit 1 || : ; \
+	jq -n --arg token "$$token" '{"token":$$token}' > "$(AUTH_FILE)" && \
+	echo ">>> authentication token stored in file: $(AUTH_FILE)"
 
 # generate the
 $(AUTH_FILE):
