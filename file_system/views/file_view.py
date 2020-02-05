@@ -58,7 +58,7 @@ class FileView(mixins.CreateModelMixin,
             queryset = queryset.filter(file_name__regex=filename_regex)
         file_type = request.query_params.getlist('file_type')
         if file_type:
-            queryset = queryset.filter(file_type__ext__in=file_type)
+            queryset = queryset.filter(file_type__name__in=file_type)
         ret = request.query_params.get('return')
         if ret:
             ret_str = 'filemetadata__metadata__%s' % ret

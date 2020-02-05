@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         Port = apps.get_model('runner', 'Port')
         for port in Port.objects.all():
             file_list = []
-            new_db_value = PortProcessor.process_files(port.db_value, PortAction.FIX_DB_VALUES, file_list)
+            new_db_value = PortProcessor.process_files(port.db_value, PortAction.FIX_DB_VALUES, file_list=file_list)
             port.db_value = new_db_value
             for file_id in file_list:
                 file_obj = File.objects.get(id=file_id.replace('bid://', ''))
