@@ -1,0 +1,211 @@
+{
+  "mouse_fasta": {
+    "class": "File",
+    "location": "juno:///resources/genomes/GRCm38/GRCm38.fasta"
+  },
+  "project_prefix": "collab_bt_b5_inputs/Proj_Collab_BT_B5_request.txt",
+  "ref_fasta": {
+    "class": "File",
+    "location": "juno:///resources/genomes/GRCh37/fasta/b37.fasta"
+  },
+  "hapmap": {
+    "class": "File",
+    "location": "juno:///resources/request_files/hapmap/hapmap_3.3.b37.vcf"
+  },
+  "db_files": {
+    "vep_data": "/var/cache",
+    "facets_snps": {
+      "class": "File",
+      "location": "juno:///resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz"
+    },
+    "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed",
+    "vep_path": "/usr/bin/vep",
+    "delly_exclude": {
+      "class": "File",
+      "location": "juno:///resources/genomes/GRCh37/delly/human.hg19.excl.tsv"
+    },
+    "hotspot_list_maf": {
+      "class": "File",
+      "location": "juno:///resources/roslin-qc/hotspot-list-union-v1-v2.maf"
+    },
+    "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
+    "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
+    "fp_intervals": {
+      "class": "File",
+      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals"
+    },
+    "fp_genotypes": {
+      "class": "File",
+      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
+    },
+    "bait_intervals": {
+      "class": "File",
+      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist"
+    },
+    "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
+    "target_intervals": {
+      "class": "File",
+      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
+    },
+    "refseq": {
+      "class": "File",
+      "location": "juno:///resources/request_files/refseq/refGene_b37.sorted.txt"
+    },
+    "custom_enst": "/usr/bin/vcf2maf/data/isoform_overrides_at_mskcc"
+  },
+  "exac_filter": {
+    "class": "File",
+    "location": "juno:///resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz"
+  },
+  "cosmic": {
+    "class": "File",
+    "location": "juno:///resources/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf"
+  },
+  "runparams": {
+    "num_threads": 10,
+    "opt_dup_pix_dist": "2500",
+    "tmp_dir": "/scratch",
+    "abra_scratch": "/scratch",
+    "scripts_bin": "/usr/bin",
+    "gatk_jar_path": "/usr/bin/gatk.jar",
+    "emit_original_quals": true,
+    "abra_ram_min": 84000,
+    "covariates": [
+      "CycleCovariate",
+      "ContextCovariate",
+      "ReadGroupCovariate",
+      "QualityScoreCovariate"
+    ],
+    "intervals": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "X",
+      "Y",
+      "MT"
+    ],
+    "complex_nn": 0.1,
+    "complex_tn": 0.2,
+    "num_cpu_threads_per_data_thread": 6,
+    "genome": "GRCh37",
+    "facets_pcval": 500,
+    "project_prefix": [
+      "09670_D"
+    ],
+    "facets_cval": 100,
+    "mutect_dcov": 50000,
+    "delly_type": [
+      "DUP",
+      "DEL",
+      "INV",
+      "INS",
+      "BND"
+    ],
+    "mutect_rf": [
+      "BadCigar"
+    ]
+  },
+  "pair": [
+    {
+      "zR1": [],
+      "LB": "FASTQ_1",
+      "R1": [
+        {
+          "class": "File",
+          "location": "juno:///FASTQ/FASTQ_L002_R1_001.fastq.gz"
+        }
+      ],
+      "R2": [
+        {
+          "class": "File",
+          "location": "juno:///FASTQ/FASTQ_L002_R2_001.fastq.gz"
+        }
+      ],
+      "PU": [
+        "FASTQ_1_38MBPE"
+      ],
+      "zR2": [],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "output.bam",
+      "bam": [],
+      "RG_ID": [
+        "FASTQ_1_38MBPE"
+      ],
+      "ID": "FASTQ_1_T",
+      "PL": "Illumina",
+      "CN": "MSKCC"
+    },
+    {
+      "zR1": [],
+      "LB": "FASTQ_2",
+      "R1": [
+        {
+          "class": "File",
+          "location": "juno:///FASTQ/FASTQ_L006_R1_001.fastq.gz"
+        }
+      ],
+      "R2": [
+        {
+          "class": "File",
+          "location": "juno:///FASTQ/FASTQ_L006_R2_001.fastq.gz"
+        }
+      ],
+      "PU": [
+        "FASTQ_2_38MBPE"
+      ],
+      "zR2": [],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "AR_A958_N.bam",
+      "bam": [],
+      "RG_ID": [
+        "FASTQ_2_38MBPE"
+      ],
+      "ID": "FASTQ_2_N",
+      "PL": "Illumina",
+      "CN": "MSKCC"
+    }
+  ],
+  "curated_bams": [
+    {
+      "class": "File",
+      "location": "juno:///resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006284_N002_d.Group3.rg.md.abra.printreads.bam"
+    },
+    {
+      "class": "File",
+      "location": "juno:///resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006537_N001_d.Group0.rg.md.abra.printreads.bam"
+    }
+  ],
+  "indels_1000g": {
+    "class": "File",
+    "location": "juno:///resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  },
+  "dbsnp": {
+    "class": "File",
+    "location": "juno:///resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf"
+  },
+  "snps_1000g": {
+    "class": "File",
+    "location": "juno:///resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf"
+  }
+}
