@@ -3,6 +3,8 @@ from enum import IntEnum
 from django.db import models
 from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
+from beagle_etl.models import Operator
+from django.db.models import F
 
 
 class RunStatus(IntEnum):
@@ -16,6 +18,16 @@ class RunStatus(IntEnum):
 class PortType(IntEnum):
     INPUT = 0
     OUTPUT = 1
+
+
+class ChainType(IntEnum):
+    ONE_TO_ONE = 0
+    MANY_TO_ONE = 1
+
+
+class TriggerConditionType(IntEnum):
+    NINTY_PERCENT_COMPLETE = 0
+    ALL_RUNS_COMPLETE = 1
 
 
 class BaseModel(models.Model):
@@ -34,6 +46,44 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return u"{}".format(self.name)
+
+
+class OperatorTrigger(BaseModel):
+    from_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="from_triggers")
+    to_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="to_triggers")
+    condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerConditionType])
+
+
+class OperatorRun(BaseModel):
+    trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
+    num_total_runs = models.IntegerField(null=False)
+    num_completed_runs = models.IntegerField(null=False, default=0)
+    num_failed_runs = models.IntegerField(null=False, default=0)
+
+    def complete(self):
+        self.status = RunStatus.COMPLETED
+        self.save()
+
+    def fail(self):
+        self.status = RunStatus.FAILED
+        self.save()
+
+    def increment_failed_run(self):
+        self.num_failed_runs = F('num_failed_runs') + 1
+        self.save()
+
+    def increment_completed_run(self):
+        self.num_completed_runs = F('num_completed_runs') + 1
+        self.save()
+
+    @property
+    def percent_complete(self):
+        return float(self.num_failed_runs + self.num_completed_runs) / self.num_total_runs
 
 
 class Run(BaseModel):
@@ -44,6 +94,25 @@ class Run(BaseModel):
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
+    operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Run, self).__init__(*args, **kwargs)
+        # TODO change state can be handled with a mixin
+        self.original = {
+            "status": self.status
+        }
+
+    def save(self, **kwargs):
+        if self.operator_run and self.original["status"] != self.status:
+            if self.status == RunStatus.COMPLETED:
+                self.operator_run.increment_completed_run()
+                self.original["status"] = RunStatus.COMPLETED
+            elif self.status == RunStatus.FAILED:
+                self.operator_run.increment_failed_run()
+                self.original["status"] = RunStatus.FAILED
+
+        super(Run, self).save(*args, **kwargs)
 
 
 class Port(BaseModel):

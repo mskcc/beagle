@@ -341,6 +341,9 @@ MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
 
+dumpdata: check-env
+	python manage.py dumpdata
+
 makemigrations: check-env
 	python manage.py makemigrations
 
@@ -510,3 +513,5 @@ PORT=
 port-check:
 	ss -lntup | grep ':$(PORT)'
 endif
+
+
