@@ -1,10 +1,9 @@
 from django.contrib import admin
 from .models import Pipeline, Run, Port, ExecutionEvents
-
+from lib.admin import link_relation
 
 class PipelineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'github', 'version', 'output_directory')
-
+    list_display = ('id', 'name', 'github', 'version', 'output_directory', link_relation("operator"))
 
 class RunAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'app', 'tags', 'status', 'execution_id', 'created_date')

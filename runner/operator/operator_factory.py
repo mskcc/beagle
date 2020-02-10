@@ -11,11 +11,11 @@ class OperatorFactory(object):
         "AccessOperator": AccessOperator,
     }
 
-    def get_by_class_name(class_name, request_id):
+    def get_by_model(model, request_id):
         if class_name not in OperatorFactory.operators:
             raise Exception("Invalid pipeline")
 
-        return OperatorFactory.operators[class_name](request_id)
+        return OperatorFactory.operators[model.class_name](model, request_id)
 
     def factory(pipeline, request_id):
         if pipeline in ('tempo',):
@@ -27,4 +27,4 @@ class OperatorFactory(object):
         else:
             raise Exception("Invalid pipeline")
     factory = staticmethod(factory)
-    get_by_class_name = staticmethod(get_by_class_name)
+    get_by_model = staticmethod(get_by_model)

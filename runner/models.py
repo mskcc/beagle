@@ -3,6 +3,7 @@ from enum import IntEnum
 from django.db import models
 from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
+from beagle_etl.models import Operator
 
 
 class RunStatus(IntEnum):
@@ -34,6 +35,7 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
 
 
 class Run(BaseModel):
