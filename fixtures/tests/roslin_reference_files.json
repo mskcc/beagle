@@ -24,7 +24,7 @@
                 "genome": "GRCh37",
                 "data_type": "snps_1000g"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -49,7 +49,7 @@
             "file": "6f644f7f-a7b7-4573-a40a-6c5838f58b75",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -77,7 +77,7 @@
                 "assay": "AgilentExon_v2",
                 "data_type": "baits_list"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -105,7 +105,7 @@
                 "assay": "AgilentExon_v2",
                 "data_type": "targets_list"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -133,7 +133,7 @@
                 "assay": "AgilentExon_v2",
                 "data_type": "FP_genotypes"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -161,7 +161,7 @@
                 "genome": "GRCh37",
                 "data_type": "fasta"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -188,7 +188,7 @@
             "metadata": {
                 "data_type": "reference_sequence"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -213,7 +213,7 @@
             "file": "100204c9-c560-43d9-ab4d-8c03bc207f4e",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -242,7 +242,7 @@
                 "version": "67",
                 "data_type": "cosmic"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -269,7 +269,7 @@
             "metadata": {
                 "data_type": "facets_vcf_index"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -297,7 +297,7 @@
                 "genome": "GRCh37",
                 "data_type": "facets_snps"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -322,7 +322,7 @@
             "file": "914dce04-bc41-427e-9b6c-3084bfa61250",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -351,7 +351,7 @@
                 "version": "129",
                 "data_type": "dbsnp"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -379,7 +379,7 @@
                 "genome": "GRCh37",
                 "data_type": "exac"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -404,7 +404,7 @@
             "file": "5c1dfb8e-d831-43f1-892b-f3c0bf043ca2",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -432,7 +432,7 @@
                 "genome": "GRCh38",
                 "data_type": "fasta"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -460,7 +460,7 @@
                 "genome": "GRCh37",
                 "data_type": "hapmap"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -485,7 +485,7 @@
             "file": "87b6a57c-f15b-49eb-9d22-d3893d2e00ef",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -510,7 +510,7 @@
             "file": "92bff766-15fd-4316-8977-77afcef97dae",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -537,7 +537,7 @@
             "metadata": {
                 "data_type": "delly_tsv"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -565,7 +565,7 @@
                 "genome": "GRCh37",
                 "data_type": "delly"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -593,7 +593,7 @@
                 "genome": "GRCh37",
                 "data_type": "indels_1000g"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -618,7 +618,7 @@
             "file": "c868b6e9-92bd-4855-9726-7945e4471973",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -643,7 +643,7 @@
             "file": "cb8da468-6305-4bab-91e3-939f3f840130",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -668,7 +668,7 @@
             "file": "94cf0801-7608-405b-9a64-c4849f18171c",
             "version": 0,
             "metadata": {},
-            "user": 1
+            "user": null
         }
     },
     {
@@ -696,7 +696,7 @@
                 "genome": "GRCh37",
                 "data_type": "refseq"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -724,7 +724,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -752,7 +752,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -780,7 +780,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -808,7 +808,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -836,7 +836,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -864,7 +864,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -892,7 +892,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -920,7 +920,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -948,7 +948,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -976,7 +976,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1004,7 +1004,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1032,7 +1032,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1060,7 +1060,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1088,7 +1088,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1116,7 +1116,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1144,7 +1144,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1172,7 +1172,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1200,7 +1200,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1228,7 +1228,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1256,7 +1256,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1284,7 +1284,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1312,7 +1312,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1340,7 +1340,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1368,7 +1368,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1396,7 +1396,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1424,7 +1424,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1452,7 +1452,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1480,7 +1480,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1508,7 +1508,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1536,7 +1536,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1564,7 +1564,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1592,7 +1592,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1620,7 +1620,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1648,7 +1648,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1676,7 +1676,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1704,7 +1704,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1732,7 +1732,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1760,7 +1760,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1788,7 +1788,7 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
         }
     },
     {
@@ -1816,7 +1816,1603 @@
                 "assay": "IDT_Exome_v1_FP_b37",
                 "data_type": "curated_bam"
             },
-            "user": 1
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "67fb3553-906a-4dbe-8702-58c8748a723c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.865Z",
+            "modified_date": "2019-10-24T00:23:29.865Z",
+            "file_name": "picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_baits.interval_list",
+            "file_type": 7,
+            "size": 342055,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "72fead91-36af-4348-9486-cc4fe7fc2f06",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.875Z",
+            "modified_date": "2019-10-24T00:23:29.875Z",
+            "file": "67fb3553-906a-4dbe-8702-58c8748a723c",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37_mm10",
+                "data_type": "baits_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "05313201-3be2-4fdf-ad3f-65bc4ce331c6",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.575Z",
+            "modified_date": "2019-10-24T00:23:28.575Z",
+            "file": "14b45ffc-8797-40dd-b456-669bf79c22bb",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "baits_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "14b45ffc-8797-40dd-b456-669bf79c22bb",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.565Z",
+            "modified_date": "2019-10-24T00:23:28.565Z",
+            "file_name": "picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+            "file_type": 7,
+            "size": 332599,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "1f970cb5-ed03-4387-aa82-c2c411af9f7f",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.319Z",
+            "modified_date": "2019-10-24T00:23:26.319Z",
+            "file": "a83c16cd-1ef0-4556-bb4f-f71e862803f8",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT341_b37",
+                "data_type": "baits_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a83c16cd-1ef0-4556-bb4f-f71e862803f8",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.309Z",
+            "modified_date": "2019-10-24T00:23:26.309Z",
+            "file_name": "picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_baits.interval_list",
+            "file_type": 7,
+            "size": 294464,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c50f60c5-4958-4c5c-97cf-eeb30c5af62b",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.448Z",
+            "modified_date": "2019-10-24T00:23:27.448Z",
+            "file": "58ae7d6f-27f5-4b2b-91f0-d95be3be403e",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT410_b37",
+                "data_type": "baits_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "58ae7d6f-27f5-4b2b-91f0-d95be3be403e",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.437Z",
+            "modified_date": "2019-10-24T00:23:27.437Z",
+            "file_name": "picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_baits.interval_list",
+            "file_type": 7,
+            "size": 278804,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fc9b2fd9-bfb1-4c6f-83d1-bc499b5ed528",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.600Z",
+            "modified_date": "2019-10-24T00:23:26.600Z",
+            "file_name": "picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_targets.interval_list",
+            "file_type": 7,
+            "size": 157824,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "b27d59cb-52bd-4270-a18b-c32ec6e80db2",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.611Z",
+            "modified_date": "2019-10-24T00:23:26.611Z",
+            "file": "fc9b2fd9-bfb1-4c6f-83d1-bc499b5ed528",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT341_b37",
+                "data_type": "targets_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f2d5347e-0664-43b2-b4d4-d51608450418",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.688Z",
+            "modified_date": "2019-10-24T00:23:27.688Z",
+            "file_name": "picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_targets.interval_list",
+            "file_type": 7,
+            "size": 175270,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "05cdc773-95c4-4da5-88c3-3f16442e514a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.698Z",
+            "modified_date": "2019-10-24T00:23:27.698Z",
+            "file": "f2d5347e-0664-43b2-b4d4-d51608450418",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT410_b37",
+                "data_type": "targets_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "dce51627-5764-429b-ba52-f9cab17d967d",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.892Z",
+            "modified_date": "2019-10-24T00:23:28.892Z",
+            "file_name": "picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+            "file_type": 7,
+            "size": 198736,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "bdbfb99d-dcda-4983-b6bc-64580913e7aa",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.902Z",
+            "modified_date": "2019-10-24T00:23:28.902Z",
+            "file": "dce51627-5764-429b-ba52-f9cab17d967d",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "targets_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "90f7b79b-f743-4a75-aa1f-b8d86972140d",
+        "fields": {
+            "created_date": "2019-10-24T00:23:30.163Z",
+            "modified_date": "2019-10-24T00:23:30.163Z",
+            "file_name": "picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_targets.interval_list",
+            "file_type": 7,
+            "size": 208617,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "0e126f50-89bc-45b0-89bb-62dc62d4a179",
+        "fields": {
+            "created_date": "2019-10-24T00:23:30.173Z",
+            "modified_date": "2019-10-24T00:23:30.173Z",
+            "file": "90f7b79b-f743-4a75-aa1f-b8d86972140d",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37_mm10",
+                "data_type": "targets_list"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9d02131b-1309-47f9-a93a-e0bfbd39bdee",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.017Z",
+            "modified_date": "2019-10-24T00:23:26.017Z",
+            "file_name": "FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
+            "file_type": 7,
+            "size": 21700,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "583da4d3-4af3-4d5f-a74f-ab144c40567e",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.028Z",
+            "modified_date": "2019-10-24T00:23:26.028Z",
+            "file": "9d02131b-1309-47f9-a93a-e0bfbd39bdee",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT341_b37",
+                "data_type": "FP_intervals"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "095cc770-5bc5-4c25-8056-d1831e60562a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.113Z",
+            "modified_date": "2019-10-24T00:23:27.113Z",
+            "file_name": "FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
+            "file_type": 7,
+            "size": 21700,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "56a8430c-7ad3-4e00-845f-d7f0def3aa8a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.123Z",
+            "modified_date": "2019-10-24T00:23:27.123Z",
+            "file": "095cc770-5bc5-4c25-8056-d1831e60562a",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT410_b37",
+                "data_type": "FP_intervals"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d058dd8e-6097-4556-b7e7-7c2184789036",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.279Z",
+            "modified_date": "2019-10-24T00:23:28.279Z",
+            "file_name": "FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+            "file_type": 7,
+            "size": 21700,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "b3534d26-d612-4fdc-bf12-ee0eba236db8",
+        "fields": {
+            "created_date": "2019-10-24T00:23:28.289Z",
+            "modified_date": "2019-10-24T00:23:28.289Z",
+            "file": "d058dd8e-6097-4556-b7e7-7c2184789036",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "FP_intervals"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "643fd2e7-feed-495c-86a2-37b3ad1db8ef",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.524Z",
+            "modified_date": "2019-10-24T00:23:29.524Z",
+            "file_name": "FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/FP_tiling_intervals.list",
+            "file_type": 7,
+            "size": 21700,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "7e898107-a2c1-4d98-ae09-6a4b327add0a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.534Z",
+            "modified_date": "2019-10-24T00:23:29.535Z",
+            "file": "643fd2e7-feed-495c-86a2-37b3ad1db8ef",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37_mm10",
+                "data_type": "FP_intervals"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1edc9e89-8014-406f-92ee-74084eb981cd",
+        "fields": {
+            "created_date": "2019-10-24T00:23:22.167Z",
+            "modified_date": "2019-10-24T00:23:22.167Z",
+            "file_name": "FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+            "file_type": 10,
+            "size": 38179,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "0d21e695-1518-430b-833a-4287bd8b4823",
+        "fields": {
+            "created_date": "2019-10-24T00:23:22.177Z",
+            "modified_date": "2019-10-24T00:23:22.177Z",
+            "file": "1edc9e89-8014-406f-92ee-74084eb981cd",
+            "version": 0,
+            "metadata": {
+                "assay": "IDT_Exome_v1_FP_b37",
+                "data_type": "FP_genotypes"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1c04ef8d-f1eb-4865-84b7-34bcdcde6309",
+        "fields": {
+            "created_date": "2019-10-24T00:23:25.702Z",
+            "modified_date": "2019-10-24T00:23:25.702Z",
+            "file_name": "FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
+            "file_type": 10,
+            "size": 16088,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "d90e6f78-746f-4175-9006-343092a5625c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:25.714Z",
+            "modified_date": "2019-10-24T00:23:25.714Z",
+            "file": "1c04ef8d-f1eb-4865-84b7-34bcdcde6309",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT341_b37",
+                "data_type": "FP_genotypes"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a4b69556-2935-4f94-ba10-0db1afed730a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.865Z",
+            "modified_date": "2019-10-24T00:23:26.865Z",
+            "file_name": "FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
+            "file_type": 10,
+            "size": 16088,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "5e9a4337-d725-4b8f-bb95-c5cb4f4e0565",
+        "fields": {
+            "created_date": "2019-10-24T00:23:26.876Z",
+            "modified_date": "2019-10-24T00:23:26.876Z",
+            "file": "a4b69556-2935-4f94-ba10-0db1afed730a",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT410_b37",
+                "data_type": "FP_genotypes"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "3f2fcb1e-cdf4-4d71-8369-04197b5ef7ff",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.976Z",
+            "modified_date": "2019-10-24T00:23:27.976Z",
+            "file_name": "FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+            "file_type": 10,
+            "size": 16088,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "505c7e2e-20b1-4eef-8ed2-759d0247cd77",
+        "fields": {
+            "created_date": "2019-10-24T00:23:27.986Z",
+            "modified_date": "2019-10-24T00:23:27.987Z",
+            "file": "3f2fcb1e-cdf4-4d71-8369-04197b5ef7ff",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "FP_genotypes"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1de6cad0-9030-4a5c-9e06-a932452c7ac8",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.243Z",
+            "modified_date": "2019-10-24T00:23:29.243Z",
+            "file_name": "FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/FP_tiling_genotypes.txt",
+            "file_type": 10,
+            "size": 16088,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "0e5fc94e-58c4-4804-aceb-5212192d440b",
+        "fields": {
+            "created_date": "2019-10-24T00:23:29.253Z",
+            "modified_date": "2019-10-24T00:23:29.253Z",
+            "file": "1de6cad0-9030-4a5c-9e06-a932452c7ac8",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37_mm10",
+                "data_type": "FP_genotypes"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "7c918d29-514c-447b-81ee-8c7c36ee098c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.904Z",
+            "modified_date": "2019-10-24T00:23:44.904Z",
+            "file_name": "s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2298166927,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "aa492cac-94aa-477d-92fd-c6e55e5a5978",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.913Z",
+            "modified_date": "2019-10-24T00:23:44.913Z",
+            "file": "7c918d29-514c-447b-81ee-8c7c36ee098c",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "312220bd-8bb6-41bd-817f-59217c364fdf",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.151Z",
+            "modified_date": "2019-10-24T00:23:45.151Z",
+            "file_name": "s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1281116533,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "9cd76ae1-3556-4c80-8f76-7b1a6e6a18c0",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.161Z",
+            "modified_date": "2019-10-24T00:23:45.161Z",
+            "file": "312220bd-8bb6-41bd-817f-59217c364fdf",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "be0ed0ea-33f6-4331-9af9-6439f7b149d0",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.392Z",
+            "modified_date": "2019-10-24T00:23:45.392Z",
+            "file_name": "s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1872524914,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "5d118f3c-f527-4ea4-983f-9811a1d422ab",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.402Z",
+            "modified_date": "2019-10-24T00:23:45.403Z",
+            "file": "be0ed0ea-33f6-4331-9af9-6439f7b149d0",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d959d541-f891-441d-9951-a6d1df49fb91",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.638Z",
+            "modified_date": "2019-10-24T00:23:45.638Z",
+            "file_name": "s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2587901961,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "4545c294-f6c2-4925-8765-11c4041ba4d5",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.649Z",
+            "modified_date": "2019-10-24T00:23:45.649Z",
+            "file": "d959d541-f891-441d-9951-a6d1df49fb91",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "b75b9ba0-022c-4ec1-87f3-8c81d8b5d88b",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.879Z",
+            "modified_date": "2019-10-24T00:23:45.879Z",
+            "file_name": "s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2054678576,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "6705f6c0-2cb0-409d-b317-d9d5d9f60212",
+        "fields": {
+            "created_date": "2019-10-24T00:23:45.887Z",
+            "modified_date": "2019-10-24T00:23:45.888Z",
+            "file": "b75b9ba0-022c-4ec1-87f3-8c81d8b5d88b",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "acccd858-813d-46c3-85da-d7063f051f89",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.115Z",
+            "modified_date": "2019-10-24T00:23:46.115Z",
+            "file_name": "s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1507048799,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "1ee14694-7d33-4a5e-a93e-aadf622994b9",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.124Z",
+            "modified_date": "2019-10-24T00:23:46.124Z",
+            "file": "acccd858-813d-46c3-85da-d7063f051f89",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "7a71c994-7c88-4523-8abd-ae50d792ba19",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.359Z",
+            "modified_date": "2019-10-24T00:23:46.359Z",
+            "file_name": "s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1702329989,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "4bd127e5-f269-42fb-bd5f-e7b4f0b90c69",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.369Z",
+            "modified_date": "2019-10-24T00:23:46.369Z",
+            "file": "7a71c994-7c88-4523-8abd-ae50d792ba19",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "63fcfa9f-b2b1-446b-b1e5-0f58803fb2f4",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.665Z",
+            "modified_date": "2019-10-24T00:23:46.665Z",
+            "file_name": "s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1837781380,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "d9928da5-fba6-467a-a0c5-6287fbcb3168",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.675Z",
+            "modified_date": "2019-10-24T00:23:46.675Z",
+            "file": "63fcfa9f-b2b1-446b-b1e5-0f58803fb2f4",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "54b4aef7-46f3-417b-949c-7d44d94b69df",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.903Z",
+            "modified_date": "2019-10-24T00:23:46.903Z",
+            "file_name": "s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2972235408,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "d0677e55-144e-4338-b65d-4e11aeb88ecf",
+        "fields": {
+            "created_date": "2019-10-24T00:23:46.913Z",
+            "modified_date": "2019-10-24T00:23:46.913Z",
+            "file": "54b4aef7-46f3-417b-949c-7d44d94b69df",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d78b21a5-d156-4d96-b532-d7788872f292",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.142Z",
+            "modified_date": "2019-10-24T00:23:47.142Z",
+            "file_name": "s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2093758629,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "4e7e10a9-2776-4b42-a724-44a1b8c342a4",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.152Z",
+            "modified_date": "2019-10-24T00:23:47.152Z",
+            "file": "d78b21a5-d156-4d96-b532-d7788872f292",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8d2afc5f-7fc2-4584-a169-bd978314ae43",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.452Z",
+            "modified_date": "2019-10-24T00:23:47.452Z",
+            "file_name": "s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1906184759,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "8a5b3c7a-940a-47fe-91ae-f9efd6216c37",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.462Z",
+            "modified_date": "2019-10-24T00:23:47.462Z",
+            "file": "8d2afc5f-7fc2-4584-a169-bd978314ae43",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "b4f708ff-8bea-47fc-8a4e-3ced60b817b1",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.702Z",
+            "modified_date": "2019-10-24T00:23:47.702Z",
+            "file_name": "s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2049846455,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "949cb199-3543-4bf8-b137-eea46f4accbc",
+        "fields": {
+            "created_date": "2019-10-24T00:23:47.712Z",
+            "modified_date": "2019-10-24T00:23:47.712Z",
+            "file": "b4f708ff-8bea-47fc-8a4e-3ced60b817b1",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fd08b546-720f-4622-b79d-693936d2b608",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.002Z",
+            "modified_date": "2019-10-24T00:23:48.002Z",
+            "file_name": "s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1438785234,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "a27bedd5-e3fd-4916-884b-437f88e20514",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.012Z",
+            "modified_date": "2019-10-24T00:23:48.012Z",
+            "file": "fd08b546-720f-4622-b79d-693936d2b608",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "84c1c4a4-8ad9-4df8-a30d-fd5d9ec58cc7",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.265Z",
+            "modified_date": "2019-10-24T00:23:48.265Z",
+            "file_name": "s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2337197309,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "39382ef1-cff2-42b2-9b6c-0b2208971ec1",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.275Z",
+            "modified_date": "2019-10-24T00:23:48.275Z",
+            "file": "84c1c4a4-8ad9-4df8-a30d-fd5d9ec58cc7",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "938e0e74-bd4a-4d3f-b9e3-c327acad3f44",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.506Z",
+            "modified_date": "2019-10-24T00:23:48.506Z",
+            "file_name": "s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1179733581,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c6b33d9e-a7b0-4a17-a22d-438ea21b9ba9",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.516Z",
+            "modified_date": "2019-10-24T00:23:48.516Z",
+            "file": "938e0e74-bd4a-4d3f-b9e3-c327acad3f44",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8e9b5b36-da56-4dc8-a895-0ff14a5457bc",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.746Z",
+            "modified_date": "2019-10-24T00:23:48.746Z",
+            "file_name": "s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1504713508,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "868e69fb-7927-4a1f-82e9-e1753a9a4fa2",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.756Z",
+            "modified_date": "2019-10-24T00:23:48.756Z",
+            "file": "8e9b5b36-da56-4dc8-a895-0ff14a5457bc",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "c0298d8e-2dcf-487b-a1c5-888522a55abc",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.989Z",
+            "modified_date": "2019-10-24T00:23:48.989Z",
+            "file_name": "s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2324784125,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "b51db15d-06da-464e-8ede-9465965e8f18",
+        "fields": {
+            "created_date": "2019-10-24T00:23:48.998Z",
+            "modified_date": "2019-10-24T00:23:48.998Z",
+            "file": "c0298d8e-2dcf-487b-a1c5-888522a55abc",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8a8dd9e3-1970-41d9-abfe-8d5f62745cbf",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.232Z",
+            "modified_date": "2019-10-24T00:23:49.232Z",
+            "file_name": "s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2332122557,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "fbf33358-7170-4c48-8e0a-0d63042dc389",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.242Z",
+            "modified_date": "2019-10-24T00:23:49.242Z",
+            "file": "8a8dd9e3-1970-41d9-abfe-8d5f62745cbf",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "768c19d8-a4e6-4c14-86d9-8ac6fcd51798",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.472Z",
+            "modified_date": "2019-10-24T00:23:49.472Z",
+            "file_name": "s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2999188032,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "47620ea3-3b4b-4c50-82d6-723d5d5a16d8",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.482Z",
+            "modified_date": "2019-10-24T00:23:49.482Z",
+            "file": "768c19d8-a4e6-4c14-86d9-8ac6fcd51798",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "87663bfc-8a6f-4c30-9528-85c4c9859abe",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.716Z",
+            "modified_date": "2019-10-24T00:23:49.716Z",
+            "file_name": "s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2013280397,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "3c637c19-9874-46b4-adc0-973a7f88a47d",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.726Z",
+            "modified_date": "2019-10-24T00:23:49.726Z",
+            "file": "87663bfc-8a6f-4c30-9528-85c4c9859abe",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "e339ee8d-4e73-4ca5-907a-eb8296c1cd18",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.956Z",
+            "modified_date": "2019-10-24T00:23:49.956Z",
+            "file_name": "s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2143139421,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "253f37c6-304e-463b-9676-bb6defb7f0d4",
+        "fields": {
+            "created_date": "2019-10-24T00:23:49.965Z",
+            "modified_date": "2019-10-24T00:23:49.965Z",
+            "file": "e339ee8d-4e73-4ca5-907a-eb8296c1cd18",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ebbb6238-0bdb-4e28-9040-9e257ffb3407",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.196Z",
+            "modified_date": "2019-10-24T00:23:50.196Z",
+            "file_name": "s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2613987166,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "728b8284-c0d4-4fd9-b7a4-609435ec2979",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.226Z",
+            "modified_date": "2019-10-24T00:23:50.226Z",
+            "file": "ebbb6238-0bdb-4e28-9040-9e257ffb3407",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "0d184175-1f65-4af0-b67d-c93c7d50988a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.456Z",
+            "modified_date": "2019-10-24T00:23:50.456Z",
+            "file_name": "s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3185868859,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "48056c0c-6027-4c08-9f56-38fbc7e35836",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.466Z",
+            "modified_date": "2019-10-24T00:23:50.466Z",
+            "file": "0d184175-1f65-4af0-b67d-c93c7d50988a",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "29f16470-1721-4957-9fa4-c42a685e65e9",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.696Z",
+            "modified_date": "2019-10-24T00:23:50.696Z",
+            "file_name": "s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1893685916,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "1c7eb061-a230-437d-a859-9aac1c328b1e",
+        "fields": {
+            "created_date": "2019-10-24T00:23:50.707Z",
+            "modified_date": "2019-10-24T00:23:50.707Z",
+            "file": "29f16470-1721-4957-9fa4-c42a685e65e9",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f70c128b-3466-4399-99d9-4bf33a5a53fe",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.016Z",
+            "modified_date": "2019-10-24T00:23:51.016Z",
+            "file_name": "s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2943821584,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "21cc598c-f11b-4306-8246-17333ffa7f7e",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.026Z",
+            "modified_date": "2019-10-24T00:23:51.026Z",
+            "file": "f70c128b-3466-4399-99d9-4bf33a5a53fe",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "62366951-1c94-4b75-82c6-384d5359cebe",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.267Z",
+            "modified_date": "2019-10-24T00:23:51.267Z",
+            "file_name": "s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2450372054,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "4812ac7f-f576-4e53-a90b-4c28f1b08f01",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.276Z",
+            "modified_date": "2019-10-24T00:23:51.276Z",
+            "file": "62366951-1c94-4b75-82c6-384d5359cebe",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "c033a8df-2197-4e99-95ba-b47e5659621c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.511Z",
+            "modified_date": "2019-10-24T00:23:51.511Z",
+            "file_name": "s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2842957613,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "5bbc4dcc-09a8-4d82-b2c2-a795c8cf0eed",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.521Z",
+            "modified_date": "2019-10-24T00:23:51.521Z",
+            "file": "c033a8df-2197-4e99-95ba-b47e5659621c",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "baa2b1ea-6954-4d48-87f6-017a1786b4eb",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.753Z",
+            "modified_date": "2019-10-24T00:23:51.753Z",
+            "file_name": "s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1841725480,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "6865dfc6-0171-4325-934d-b3431d5b3f67",
+        "fields": {
+            "created_date": "2019-10-24T00:23:51.764Z",
+            "modified_date": "2019-10-24T00:23:51.764Z",
+            "file": "baa2b1ea-6954-4d48-87f6-017a1786b4eb",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fee5555e-ca62-4213-ae2f-a86e45f1ab02",
+        "fields": {
+            "created_date": "2019-10-24T00:23:52.057Z",
+            "modified_date": "2019-10-24T00:23:52.057Z",
+            "file_name": "s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1677939673,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "d8b7c067-8a1b-488b-b914-01d277aa564c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:52.067Z",
+            "modified_date": "2019-10-24T00:23:52.067Z",
+            "file": "fee5555e-ca62-4213-ae2f-a86e45f1ab02",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "31f3fa2b-face-431d-ac31-5e4aa5c1f534",
+        "fields": {
+            "created_date": "2019-10-24T00:23:52.309Z",
+            "modified_date": "2019-10-24T00:23:52.309Z",
+            "file_name": "s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 2076693674,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "19015e03-e615-4d26-9d34-7aa48d1d3359",
+        "fields": {
+            "created_date": "2019-10-24T00:23:52.320Z",
+            "modified_date": "2019-10-24T00:23:52.320Z",
+            "file": "31f3fa2b-face-431d-ac31-5e4aa5c1f534",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "4af32904-03d2-4646-822d-8e520239421f",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.302Z",
+            "modified_date": "2019-10-24T00:23:42.302Z",
+            "file_name": "s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3727525387,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "8c38eeeb-4eee-4a7e-aa37-ec6a402f1f4f",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.312Z",
+            "modified_date": "2019-10-24T00:23:42.312Z",
+            "file": "4af32904-03d2-4646-822d-8e520239421f",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "eaec3382-528f-4b6b-acff-b718c84a8980",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.542Z",
+            "modified_date": "2019-10-24T00:23:42.542Z",
+            "file_name": "s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3506739569,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "89ff106b-a614-4ac3-9f6a-b01cc62d9cea",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.551Z",
+            "modified_date": "2019-10-24T00:23:42.551Z",
+            "file": "eaec3382-528f-4b6b-acff-b718c84a8980",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "e800d375-bd52-4829-9d37-18194d0e8824",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.781Z",
+            "modified_date": "2019-10-24T00:23:42.781Z",
+            "file_name": "s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3554787689,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "298594e8-f70c-4f92-a515-1dc7f5d62f20",
+        "fields": {
+            "created_date": "2019-10-24T00:23:42.791Z",
+            "modified_date": "2019-10-24T00:23:42.791Z",
+            "file": "e800d375-bd52-4829-9d37-18194d0e8824",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f085a161-0f9e-4e7d-bef4-dce17f3cf311",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.018Z",
+            "modified_date": "2019-10-24T00:23:43.018Z",
+            "file_name": "s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 4384120977,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "11eb6f11-cc5d-4056-897f-0979376d3de4",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.028Z",
+            "modified_date": "2019-10-24T00:23:43.028Z",
+            "file": "f085a161-0f9e-4e7d-bef4-dce17f3cf311",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9956c92d-395c-49bd-8806-93e94d66f91c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.368Z",
+            "modified_date": "2019-10-24T00:23:43.368Z",
+            "file_name": "s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 357147001,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "6ee738a8-7a7d-4b25-853a-c37dfa1de00c",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.379Z",
+            "modified_date": "2019-10-24T00:23:43.379Z",
+            "file": "9956c92d-395c-49bd-8806-93e94d66f91c",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a4e02e9e-833e-4dfc-a8d8-caece136a2af",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.629Z",
+            "modified_date": "2019-10-24T00:23:43.629Z",
+            "file_name": "s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1685774338,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "cf52f0cd-20de-4d20-9d29-6cc033c05c51",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.639Z",
+            "modified_date": "2019-10-24T00:23:43.639Z",
+            "file": "a4e02e9e-833e-4dfc-a8d8-caece136a2af",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "b6ae85ba-fd31-475a-b0fe-2a32789a4692",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.866Z",
+            "modified_date": "2019-10-24T00:23:43.866Z",
+            "file_name": "s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3817576500,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "a6596e2b-e457-40fd-9889-a8633882d577",
+        "fields": {
+            "created_date": "2019-10-24T00:23:43.880Z",
+            "modified_date": "2019-10-24T00:23:43.880Z",
+            "file": "b6ae85ba-fd31-475a-b0fe-2a32789a4692",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f4aeecab-b064-4935-a2af-014e633d5ef2",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.108Z",
+            "modified_date": "2019-10-24T00:23:44.108Z",
+            "file_name": "s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 3542807384,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "422186c3-692b-4ca7-a61b-681d6d5a6101",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.118Z",
+            "modified_date": "2019-10-24T00:23:44.118Z",
+            "file": "f4aeecab-b064-4935-a2af-014e633d5ef2",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "13b6946e-c047-49b8-bac3-34efddb0847d",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.400Z",
+            "modified_date": "2019-10-24T00:23:44.400Z",
+            "file_name": "s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 1873938178,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "1d803949-9024-469b-a7b6-808058cca955",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.409Z",
+            "modified_date": "2019-10-24T00:23:44.410Z",
+            "file": "13b6946e-c047-49b8-bac3-34efddb0847d",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "7e7c92fd-1653-4de5-b0ad-fb1b35eafd95",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.656Z",
+            "modified_date": "2019-10-24T00:23:44.656Z",
+            "file_name": "s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+            "file_type": 3,
+            "size": 4023855606,
+            "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "0f0f34b1-f88a-4a9a-91a6-3c59ea82a80a",
+        "fields": {
+            "created_date": "2019-10-24T00:23:44.666Z",
+            "modified_date": "2019-10-24T00:23:44.666Z",
+            "file": "7e7c92fd-1653-4de5-b0ad-fb1b35eafd95",
+            "version": 0,
+            "metadata": {
+                "assay": "IMPACT468_b37",
+                "data_type": "curated_bam"
+            },
+            "user": null
         }
     }
 ]
