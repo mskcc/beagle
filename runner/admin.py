@@ -6,9 +6,8 @@ class PipelineAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'github', 'version', 'output_directory', link_relation("operator"))
 
 class RunAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'app', 'tags', 'status', 'execution_id', 'created_date')
+    list_display = ('id', 'name', link_relation("app"), 'tags', 'status', 'execution_id', 'created_date')
     ordering = ('-created_date',)
-
 
 class PortAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'run', 'db_value')
