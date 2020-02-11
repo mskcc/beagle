@@ -4,7 +4,6 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
-from runner.tasks import operator_job
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
