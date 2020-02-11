@@ -5,7 +5,8 @@ from pprint import pprint
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
 
-
+class InvalidAssay(Exception):
+    pass
 
 # TODO: generalize
 def load_references():
@@ -50,7 +51,6 @@ def format_sample(data):
 
     return sample
 
-
 def construct_roslin_jobs(samples):
     samples, error_samples = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
@@ -67,7 +67,18 @@ def construct_roslin_jobs(samples):
         job['pair'] = [tumor_sample, normal_sample]
         references = convert_references(project_id, assay)
         job.update(references)
-        roslin_jobs.append(job)
+
+        job_metadata = {}
+        job_metadata['assay'] = assay
+        job_metadata['request_id'] = project_id
+        job_metadata['tumor'] = {}
+        job_metadata['tumor']['igo_id'] = tumor['igo_id']
+        job_metadata['tumor']['patient_id'] = tumor['patient_id']
+        job_metadata['normal'] = {}
+        job_metadata['normal']['igo_id'] = normal['igo_id']
+        job_metadata['normal']['patient_id'] = normal['patient_id']
+
+        roslin_jobs.append((job, job_metadata))
     return roslin_jobs, error_samples
 
 
@@ -85,13 +96,11 @@ def get_curated_bams(assay,request_files):
         array.append({'class': 'File', 'location': str(bam)})
     return array
 
-
-def get_baits_and_targets(assay, roslin_resources):
-    # probably need similar rules for whatever "Exome" string is in rquest
-    targets = roslin_resources['targets']
-
-    target_assay = assay
-
+def get_target_assay(assay):
+    """
+    Return a target assay label for a provided assay; the provided assay may not exactly match the desired target assay so resolve it here to the desired output value
+    """
+    target_assay = None
     if assay.find("IMPACT410") > -1:
         target_assay = "IMPACT410_b37"
     if assay.find("IMPACT468") > -1:
@@ -104,6 +113,15 @@ def get_baits_and_targets(assay, roslin_resources):
         target_assay = "IMPACT468_08390"
     if assay.find("IMPACT468+Poirier_RB1_intron_V2") > -1:
         target_assay = "IMPACT468_08050"
+    if target_assay == None:
+        raise InvalidAssay(assay)
+    return(target_assay)
+
+def get_baits_and_targets(assay, roslin_resources):
+    # probably need similar rules for whatever "Exome" string is in rquest
+    targets = roslin_resources['targets']
+
+    target_assay = get_target_assay(assay)
 
     if target_assay in targets:
         return {"bait_intervals": {"class": "File", 'location': str(targets[target_assay]['baits_list'])},
