@@ -12,8 +12,8 @@ class OperatorFactory(object):
     }
 
     def get_by_model(model, request_id):
-        if class_name not in OperatorFactory.operators:
-            raise Exception("Invalid pipeline")
+        if model.class_name not in OperatorFactory.operators:
+            raise Exception("No operator matching {}" % model.class_name)
 
         return OperatorFactory.operators[model.class_name](model, request_id)
 

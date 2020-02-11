@@ -2,12 +2,16 @@ import logging
 from file_system.models import File, FileMetadata
 from runner.serializers import OperatorErrorSerializer, APIRunCreateSerializer
 from django.db.models import Prefetch
+from beagle_etl.models import Operator as OperatorModel
 
 
 class Operator(object):
     logger = logging.getLogger(__name__)
 
     def __init__(self, model, request_id):
+        if not isinstance(model, OperatorModel):
+            raise Exception("Must pass an instance of beagle_etl.models.Operator")
+
         self.model = model
         self.request_id = request_id
         self.files = File.objects.prefetch_related(
@@ -19,7 +23,7 @@ class Operator(object):
     def get_pipeline_id(self):
         # TODO(aef) need some better heuristic when returning pipeline id. Probably best for this method
         # to return an array of ids for one-to-many generation
-        return self.model.pipelines.last().id
+        return str(self.model.pipeline_set.last().pk)
 
     def get_jobs(self):
         '''
