@@ -7,11 +7,6 @@ from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from pprint import pprint
 
-import beagle_etl.celery
-beagle_etl.celery.app.conf['task_always_eager'] = True
-
-pprint("roslin_operator module loaded...", stream = open("debug.log", "a"))
-
 class RoslinOperator(Operator):
 
     def __init__(self, request_id):
