@@ -202,14 +202,21 @@ def dump_file(**kwargs):
     bids = kwargs.pop('bids')
     onefile = kwargs.pop('onefile')
     filenames = kwargs.pop('filenames')
+    filepaths = kwargs.pop('filepaths')
     get_key = "bid"
     if filenames == True:
         get_key = "filename"
+    if filepaths == True:
+        get_key = "path"
 
     all_data = []
     for bid in bids:
-        output_file_file = "{}.file.json".format(bid)
-        output_filemetadata_file = "{}.filemetadata.json".format(bid)
+        output_label = bid
+        if '/' in output_label:
+            output_label = output_label.replace('/', '.')
+
+        output_file_file = "{}.file.json".format(output_label)
+        output_filemetadata_file = "{}.filemetadata.json".format(output_label)
 
         # get File entries that match the request ID
         for file_instance in get_files(value = bid, type = get_key):
@@ -258,6 +265,7 @@ def parse():
     file.add_argument('bids', nargs = "*", help = "Beagle db id's of the file to dump")
     file.add_argument('--onefile', action = "store_true", help = 'Put all the outputs into a single file ')
     file.add_argument('--filenames', action = "store_true", help = 'Items passed are file basenames instead of Beagle db IDs ')
+    file.add_argument('--filepaths', action = "store_true", help = 'Items passed are file paths instead of Beagle db IDs ')
     file.set_defaults(func = dump_file)
 
     port_files = subparsers.add_parser('port_files', help = 'Dump port.files fixture')
