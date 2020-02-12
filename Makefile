@@ -426,6 +426,7 @@ files-request:
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
 # python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
+# http://localhost:6991/v0/fs/files/?metadata=requestId:DemoRequest1
 
 # get info on a single file
 REQFILE:=b37.fasta
@@ -436,22 +437,27 @@ file-get:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
-run-request:
+run-request: $(AUTH_FILE)
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
-	-H "Authorization: Bearer $(TOKEN)" \
+	-H "Authorization: Bearer $$token" \
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # send a pipeline input to the API to start running
 REQJSON:=fixtures/tests/run_roslin.json
 run-request-api: $(AUTH_FILE)
-	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $$token" \
 	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
+# http://localhost:6991/v0/run/api/?metadata=requestId:10277_C
+# http://localhost:6991/v0/run/api/?requestId%3D10277_C/
 
 # make a demo Roslin input.json file from the template fixture;
 # need to update the fixture with the app ID of the demo pipeline that was loaded in the database
@@ -472,6 +478,15 @@ demo-run: register-dev-pipeline $(DEMO_INPUT)
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
 	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
+
+# run the update-request endpoint for a request ID in order to update the metadata about a request
+update-request:
+	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $$token" \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/update-requests/
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
