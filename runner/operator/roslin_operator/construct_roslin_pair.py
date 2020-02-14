@@ -61,10 +61,15 @@ def construct_roslin_jobs(samples):
         normal = pairs['normal'][i]
         project_id = tumor['request_id']
         assay = tumor['bait_set']
+        pi = tumor['pi']
+        pi_email = tumor['pi_email']
         job = dict()
         normal_sample = format_sample(normal)
         tumor_sample = format_sample(tumor)
         job['pair'] = [tumor_sample, normal_sample]
+        job['assay'] = assay
+        job['pi'] = pi
+        job['pi_email'] = pi
         references = convert_references(project_id, assay)
         job.update(references)
         roslin_jobs.append(job)
@@ -197,6 +202,7 @@ def convert_references(project_id, assay):
         "covariates": covariates,
         "emit_original_quals": True,
         "num_threads": 10,
+        "assay": assay,
         "tmp_dir": temp_dir,
         "project_prefix": project_id,
         "opt_dup_pix_dist": "2500",
