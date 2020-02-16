@@ -13,7 +13,7 @@ runparams:
     scripts_bin: runparams['value']['scripts_bin']
     assay: ---MISSING---
     pi: ---MISSING---
-    pi-email: ---MISSING---
+    pi_email: ---MISSING---
 ref_fasta: ref_fasta
 clstats1: [clstats1]
 clstats2: [clstats2]
@@ -28,9 +28,9 @@ pairs: [pair]
 """
 import json
 import urllib
-from file_system.models import FileMetadata
+from file_system.models import FileMetadata, File
 from runner.models import Port
-from pprint import pprint
+import urllib.parse
 
 def build_sample(filemetadata_instance, company_name = "MSKCC", platform = "Illumina"):
     """
@@ -136,6 +136,25 @@ def parse_pairs_from_ports(ports_queryset):
         pairs.append(pair_set)
     return(pairs)
 
+def parse_bams_from_ports(ports_queryset):
+    """
+    Search a set of Ports for the 'bams' entries and format them into a list of tumor normal pair entries
+    """
+    bam_ports = ports_queryset.filter(name = "bams")
+    bams = []
+    for bam in bam_ports:
+        # get the Beagle database id for each bam file out of the `db_value` field`
+        # TODO: need to refactor this to get it from the Port.files association; right now that association lacks the tumor/normal information needed to know which bam is which
+        files_data = bam.db_value
+        tumor_bam_data = files_data[0]
+        tumor_bam_bid = urllib.parse.urlsplit(tumor_bam_data['location']).netloc
+        tumor_bam_file_instance = File.objects.get(id = tumor_bam_bid)
+        normal_bam_data = files_data[1]
+        normal_bam_bid = urllib.parse.urlsplit(normal_bam_data['location']).netloc
+        normal_bam_file_instance = File.objects.get(id = normal_bam_bid)
+        bams.append([tumor_bam_file_instance, normal_bam_file_instance])
+    return(bams)
+
 def pair_to_cwl(pair):
     """
     Convert a single tumor normal pair dict to CWL format datastructure
@@ -168,6 +187,21 @@ def pair_to_cwl(pair):
     output = (tumor, normal)
     return(output)
 
+def bams_to_cwl(bams):
+    """
+    Convert the items in the bams list to CWL format
+
+    bams = [ [File.objects.get(file_name = 's_C_K2902H_P001_d.rg.md.abra.printreads.bam'), File.objects.get(file_name = 's_C_K2902H_N001_d.rg.md.abra.printreads.bam')], ... ]
+    """
+    bam_cwls = []
+    for item in bams:
+        tumor_bam = item[0]
+        normal_bam = item[1]
+        tumor_bam_cwl = file_to_cwl(tumor_bam)
+        normal_bam_cwl = file_to_cwl(normal_bam)
+        bam_cwls.append([tumor_bam_cwl, normal_bam_cwl])
+    return(bam_cwls)
+
 def parse_runparams_from_ports(ports_queryset):
     """
     Get the runparams from a Port queryset
@@ -175,13 +209,13 @@ def parse_runparams_from_ports(ports_queryset):
     # TODO: how to ensure the correct number of Port items? Should be 1
     param_port = ports_queryset.filter(name = "runparams").first()
     runparams = {}
-    runparams['project_prefix'] = param_port.value['project_prefix']
+    runparams['project_prefix'] = param_port.value['project_prefix'][0] # NOTE: comes in as array but need single string
     runparams['genome'] = param_port.value['genome']
     runparams['scripts_bin'] = param_port.value['scripts_bin']
 
     # TODO: find a way to handle
     runparams['pi'] = "NA"
-    runparams['pi-email'] = "NA"
+    runparams['pi_email'] = "NA"
     return(runparams)
 
 def get_db_files(assay, references_json = "runner/operator/roslin_operator/reference_jsons/roslin_resources.json"):
@@ -271,12 +305,21 @@ def build_inputs_from_runs(run_queryset, _assay = None):
     db_files = get_db_files(assay)
     ref_fasta = db_files.pop('ref_fasta')
 
+    # get the .bam files needed for QC input
+    bams = parse_bams_from_ports(ports)
+
+    # convert to CWL output format
+    bams_cwl = bams_to_cwl(bams)
+
     # build the final data dict for QC input
     qc_input = {}
     qc_input['db_files'] = db_files
     qc_input['runparams'] = runparams
     qc_input['pairs'] = pairs_cwl
     qc_input['ref_fasta'] = ref_fasta
+    qc_input['bams'] = bams_cwl
+    qc_input['directories'] = []
+    qc_input['files'] = []
     qc_input = {**qc_input, **input_files}
 
     return(qc_input)

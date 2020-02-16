@@ -18,12 +18,14 @@ Notes
 -----
 The input .json file must have been produced with 'indent = 4' or have equivalent indenting, or this script will probably not work
 """
+import os
 import sys
 import json
 import uuid
 import copy
 import re
 import time
+import argparse
 
 def get_unique_id():
     """
@@ -35,7 +37,7 @@ def get_unique_id():
     """
     return(uuid.uuid1())
 
-def replace_primary_keys(input_file):
+def replace_primary_keys(input_file, no_change_files):
     """
     Replaces all primary keys in the file with new values
     """
@@ -43,7 +45,14 @@ def replace_primary_keys(input_file):
     all_pk = []
     with open(input_file) as f:
         for item in json.load(f):
-            all_pk.append(item['pk'])
+            # do not change the pk's on 'File' objects because that causes unique constraint issues on file path
+            if item['model'] != 'file_system.file':
+                all_pk.append(item['pk'])
+            elif item['model'] == 'file_system.file':
+                if no_change_files == True:
+                    pass
+                elif no_change_files == False:
+                    all_pk.append(item['pk'])
 
     # sort unique based on descending length
     # this makes sure we replace the longer pattern first in the next steps
@@ -124,25 +133,48 @@ def replace_field_value(input_lines, field_name, old_value, new_value):
                 output_lines[i] = new_line
     return(output_lines)
 
-def main(input_file):
+def main(**kwargs):
     """
     Main function for editing a fixtures file to replace all old primary keys with new keys
     So that both old and new fixtures sets can be loaded into the database at the same time
     """
-    output_file_name = "{}.duplicated.json".format(input_file)
+    input_file = kwargs.pop('input_file')
+    output_file = kwargs.pop('output_file', None)
+    no_change_files = kwargs.pop('output_file', False)
+
+    if output_file == None:
+        output_file_name = "{}.duplicated.json".format(input_file)
+    else:
+        output_file_name = output_file
 
     # generate a timestamp string to use for new unique identifiers
     timestamp_str = str(int(time.time()))
 
     # replace all the primary keys with new values; need special handling for pk's because they do not always have a field label in the file
-    output_lines = replace_primary_keys(input_file)
+    output_lines = replace_primary_keys(input_file, no_change_files)
 
     # replace the values for all of these other desired fields; these fields are always clearly labeled in the file so they are easy to find
-    for field_name in ['runId', 'requestId', 'sampleId', 'patientId', 'sampleName', 'externalSampleId', 'investigatorSampleId']:
+    fields_to_change = [
+    'runId',
+    'requestId',
+    'sampleId',
+    'patientId',
+    'sampleName',
+    'externalSampleId',
+    'investigatorSampleId',
+    'file_name',
+    'path'
+    ]
+    for field_name in fields_to_change:
         all_values = get_field_values(input_lines = output_lines, field_name = field_name)
         for old_value in all_values:
             # make a new value by appending the timestamp
-            new_value = old_value + '_' + timestamp_str
+            if field_name in ['file_name', 'path']:
+                # special handling for adding timestamp to file paths
+                name, ext = os.path.splitext(old_value)
+                new_value = name + '.' + timestamp_str + ext
+            else:
+                new_value = old_value + '_' + timestamp_str
             output_lines = replace_field_value(input_lines = output_lines, field_name = field_name, old_value = old_value, new_value = new_value)
 
     # save the output files
@@ -154,8 +186,13 @@ def parse():
     Parses script args
     Script arg parsing will go here as this script grows
     """
-    input_file = sys.argv[1]
-    main(input_file)
+    parser = argparse.ArgumentParser(description = 'Duplicate database fixtures that were previously dumped in json format with indentation')
+    parser.add_argument('input_file', help = "Input file containing fixtures")
+    parser.add_argument('--output-file', dest = "output_file", default = None, help = "Name of output file to write to")
+    parser.add_argument('--no-change-files', dest = "no_change_files", action = 'store_true', help = "Dont change the File items' primary keys and paths")
+
+    args = parser.parse_args()
+    main(**vars(args))
 
 if __name__ == '__main__':
     parse()
