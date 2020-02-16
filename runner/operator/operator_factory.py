@@ -1,9 +1,21 @@
-from runner.operator.tempo_operator.tempo_operator import TempoOperator
-from runner.operator.roslin_operator.roslin_operator import RoslinOperator
-from runner.operator.access_operator.access_operator import AccessOperator
+from .tempo_operator import TempoOperator
+from .roslin_operator import RoslinOperator
+from .access_operator import AccessOperator
 
 
 class OperatorFactory(object):
+
+    operators = {
+        "TempoOperator": TempoOperator,
+        "RoslinOperator": RoslinOperator,
+        "AccessOperator": AccessOperator,
+    }
+
+    def get_by_class_name(class_name, request_id):
+        if class_name not in OperatorFactory.operators:
+            raise Exception("Invalid pipeline")
+
+        return OperatorFactory.operators[class_name](request_id)
 
     def factory(pipeline, request_id):
         if pipeline in ('tempo',):
@@ -15,3 +27,4 @@ class OperatorFactory(object):
         else:
             raise Exception("Invalid pipeline")
     factory = staticmethod(factory)
+    get_by_class_name = staticmethod(get_by_class_name)
