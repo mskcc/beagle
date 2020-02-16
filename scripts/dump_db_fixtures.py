@@ -239,6 +239,14 @@ def dump_file(**kwargs):
         output_file = "all.file_filemetadata.json"
         print(json.dumps(all_data, indent=4), file = open(output_file, "w"))
 
+def dump_file_group(**kwargs):
+    """
+    Dump the FileGroup fixtures
+    """
+    fileGroupId = kwargs.pop('fileGroupID')
+    output_file_group_file = "{}.file_group.json".format(fileGroupId)
+    filegroup_instance = FileGroup.objects.get(id = fileGroupId)
+    print(json.dumps(json.loads(serializers.serialize('json', [filegroup_instance])), indent=4), file = open(output_file_group_file, "w"))
 
 def parse():
     """
@@ -271,6 +279,10 @@ def parse():
     port_files = subparsers.add_parser('port_files', help = 'Dump port.files fixture')
     port_files.add_argument('portID', help = 'Port ID to dump files for')
     port_files.set_defaults(func = dump_port_files)
+
+    file_group = subparsers.add_parser('filegroup', help = 'Dump filegroup fixture')
+    file_group.add_argument('fileGroupID', help = 'FileGroup ID ID to dump items for')
+    file_group.set_defaults(func = dump_file_group)
 
     args = parser.parse_args()
     args.func(**vars(args))

@@ -19,6 +19,7 @@ from runner.operator.roslin_qc_operator.bin.input import file_to_cwl
 from runner.operator.roslin_qc_operator.bin.input import path_to_cwl
 from runner.operator.roslin_qc_operator.bin.input import build_sample
 from runner.operator.roslin_qc_operator.bin.input import pair_to_cwl
+from runner.operator.roslin_qc_operator.bin.input import parse_bams_from_ports
 from pprint import pprint
 
 class TestInput(TestCase):
@@ -141,6 +142,21 @@ class TestInput(TestCase):
         }]
         self.assertEqual(pairs, expected_pairs)
 
+    def test_parse_bams_from_ports1(self):
+        """
+        Test that the 'bams' entries are constructed correctly from the Port objects
+        """
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        call_command('loaddata', test_files_fixture, verbosity=0)
+        run_instance = Run.objects.first()
+        ports = run_instance.port_set.all()
+        bams = parse_bams_from_ports(ports)
+        expected_bams = [[
+        File.objects.get(file_name = 's_C_K2902H_P001_d.rg.md.abra.printreads.bam'),
+        File.objects.get(file_name = 's_C_K2902H_N001_d.rg.md.abra.printreads.bam')
+        ]]
+        self.assertEqual(bams, expected_bams) # TODO: need to figure out how this will be handled; need the sample metadata associated with .bam files
+
     def test_pair_to_cwl1(self):
         """
         Test conversion of single pair to base CWL datastructure format
@@ -209,8 +225,8 @@ class TestInput(TestCase):
         runparams = parse_runparams_from_ports(ports)
         expected_runparams = {'genome': 'GRCh37',
             'pi': 'NA',
-            'pi-email': 'NA',
-            'project_prefix': ['09670_D'],
+            'pi_email': 'NA',
+            'project_prefix': '09670_D',
             'scripts_bin': '/usr/bin'}
         self.assertEqual(runparams, expected_runparams)
 
@@ -265,9 +281,37 @@ class TestInput(TestCase):
         # load test pipeline Run output fixtures
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "daa13d24-50ea-11ea-b9c7-ac1f6b453620.run.full.json")
+        call_command('loaddata', test_files_fixture, verbosity=0)
 
         run_queryset = Run.objects.all()
 
         qc_input = build_inputs_from_runs(run_queryset)
+        print(">>> printing qc_input to file")
+        print(json.dumps(qc_input, indent = 4), file = open("qc_input.json", 'w'))
+        self.assertTrue(False) # TODO: finish work here
 
-        # print(json.dumps(qc_input, indent = 4))
+    def test_load_extra_fixtures(self):
+        """
+        Sanity test to ensure that our fixtures have not changed
+        """
+        self.assertEqual(len(Run.objects.all()),  0)
+        self.assertEqual(len(Port.objects.all()),  0)
+        self.assertEqual(len(File.objects.all()),  0)
+        self.assertEqual(len(FileMetadata.objects.all()),  0)
+
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        call_command('loaddata', test_files_fixture, verbosity=0)
+
+        self.assertEqual(len(Run.objects.all()),  1)
+        self.assertEqual(len(Port.objects.all()),  47)
+        self.assertEqual(len(File.objects.all()),  121)
+        self.assertEqual(len(FileMetadata.objects.all()),  121)
+
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "daa13d24-50ea-11ea-b9c7-ac1f6b453620.run.full.json")
+        call_command('loaddata', test_files_fixture, verbosity=0)
+
+        self.assertEqual(len(Run.objects.all()),  2)
+        self.assertEqual(len(Port.objects.all()),  94)
+        self.assertEqual(len(File.objects.all()),  242)
+        self.assertEqual(len(FileMetadata.objects.all()),  242)
