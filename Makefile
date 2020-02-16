@@ -5,7 +5,7 @@ export LOG_DIR_ABS:=$(shell python -c 'import os; print(os.path.realpath("logs")
 
 
 define help
-This is the Makefile for setting up Beagle development instance
+This is the Makefile for setting up Beagle development instance. It contains pre-configured environment variables and scripted recipes to help you get Beagle up and running easily.
 
 Basic dev instance setup instructions:
 -------------------------------------
@@ -47,11 +47,23 @@ make import REQID=07264_G TOKEN=<token from auth command>
 Extras
 ------
 
-Shutdown all services:
+- run the test suite:
+make test
+
+- Shutdown all services:
 make stop-services
 
-Check if pre-configured ports are already occupied on your system:
+- Check if pre-configured ports are already occupied on your system:
 make check-port-collision
+make port-check PORT=<some_port>
+
+- enter an interactive bash session with the environment variables pre-populated from this Makefile
+make bash
+
+- check if Postgres, Celery, and RabbitMQ are running:
+make db-check
+make celery-check
+make rabbitmq-check
 
 Consult the contents of this Makefile for other Beagle management recipes.
 
@@ -90,15 +102,18 @@ install: conda
 	rabbitmq-server=3.7.16 \
 	anaconda::postgresql=11.2 \
 	conda-forge::python-ldap=3.2.0 \
-	bioconda::rabix-bunny=1.0.4
+	bioconda::rabix-bunny=1.0.4 \
+	conda-forge::jq
 	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
+	# pip install git+https://github.com/mskcc/beagle_cli.git@develop
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
 export BEAGLE_DB_USERNAME=$(shell whoami)
 export BEAGLE_DB_PASSWORD=admin
-export BEAGLE_DB_PORT:=65528
+export BEAGLE_DB_PORT:=65527
 export BEAGLE_DB_URL:=localhost
 
 export PGDATA=$(BEAGLE_DB_NAME)
@@ -177,7 +192,7 @@ export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
 export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)
 export RABBITMQ_NODE_IP_ADDRESS:=127.0.0.1
-export RABBITMQ_NODE_PORT:=5670
+export RABBITMQ_NODE_PORT:=5679
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
 export RABBITMQ_PID_FILE:=$(RABBITMQ_LOG_BASE)/rabbitmq.pid
@@ -310,19 +325,24 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
-migrate:
-	python manage.py makemigrations
-	python manage.py migrate
-
 test: check-env
+	python manage.py test
+
+# this one needs external LIMS access currently and takes a while to run so dont include it by default
+test-lims: check-env
 	python manage.py test \
-	runner.tests.operator.roslin_operator.test_pair_request \
 	beagle_etl.tests.jobs.test_lims_etl_jobs
-	# python manage.py test
 
 # start the Django development server
 runserver: check-env
-	python manage.py runserver "$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)"
+	python manage.py runserver $(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
+
+MIGRATION_ARGS?=
+migrate: check-env
+	python manage.py migrate $(MIGRATION_ARGS)
+
+makemigrations: check-env
+	python manage.py makemigrations
 
 # start interactive bash with environment configured
 bash:
@@ -330,13 +350,22 @@ bash:
 
 # use the Django server superuser credentials to generate an authentication token
 # fill this in with whatever values you used for a Django superuser account (above)
-export USERNAME:=django_admin123
-export PASSWORD:=1234
+# save the credentials into a file
+export USERNAME:=
+export PASSWORD:=
+export AUTH_FILE:=$(shell echo $$HOME)/.$(CURDIR_BASE).json
 auth:
-	curl -X POST \
-	--header "Content-Type: application/json" \
-	--data '{"username":"$(USERNAME)","password":"$(PASSWORD)"}' \
-	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/api-token-auth/
+	@[ -z "$(USERNAME)" ] && echo ">>> ERROR: USERNAME must be supplied; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
+	@[ -z "$(PASSWORD)" ] && echo ">>> ERROR: PASSWORD must be suppled; make auth USERNAME=foo PASSWORD=bar" && exit 1 || :
+	@token=$$(curl --silent -X POST --header "Content-Type: application/json" --data '{"username":"$(USERNAME)","password":"$(PASSWORD)"}' http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/api-token-auth/ | jq --exit-status -r '.access' ) ; \
+	[ -z "$${token}" ] && echo ">>> ERROR: 'token' returned by server is zero length; did you provide the correct credentials?" && exit 1 || : ; \
+	[ "$${token}" == "null" ] && echo ">>> ERROR: 'token' returned by the server is 'null'; did you provide the correct crendentials?" && exit 1 || : ; \
+	jq -n --arg token "$$token" '{"token":$$token}' > "$(AUTH_FILE)" && \
+	echo ">>> authentication token stored in file: $(AUTH_FILE)"
+
+# generate the
+$(AUTH_FILE):
+	$(MAKE) auth
 
 # example request ID to use for testing LIMS request import
 REQID:=07264_G
@@ -350,14 +379,61 @@ import:
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
+
+# create a dev instance of the Roslin pipeline
+DEVNAME:=roslin-dev
+DEVURL:=https://github.com/mskcc/roslin-cwl
+DEVVER:=1.0.0-rc5
+DEVENTRY:=workflows/pair-workflow-sv.cwl
+DEVOUTPUT:=$(CURDIR)/output/roslin-dev
+DEVGROUP:=1a1b29cf-3bc2-4f6c-b376-d4c5d701166a
+
+$(DEVOUTPUT):
+	mkdir -p "$(DEVOUTPUT)"
+
+get-pipelines:
+	curl --silent -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $(TOKEN)" \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ | jq
+
+check-dev-pipeline-registered: $(AUTH_FILE)
+	@echo ">>> checking if the dev pipeline is already registered in the Beagle database..." ; \
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	curl --silent -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $$token" \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ | \
+	jq --exit-status '.results | .[] | select(.name | contains("$(DEVNAME)"))' > /dev/null
+
+register-dev-pipeline: $(DEVOUTPUT) $(AUTH_FILE)
+	@echo ">>> trying to register the dev pipeline in the Beagle database..." ; \
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	$(MAKE) check-dev-pipeline-registered && \
+	echo ">>> dev pipeline $(DEVNAME) already exists in the Beagle database" || \
+	{ echo ">>> registering dev pipeline $(DEVNAME) in Beagle database" ; \
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $$token" \
+	-d '{ "name": "$(DEVNAME)", "github": "$(DEVURL)", "version": "$(DEVVER)", "entrypoint": "$(DEVENTRY)", "output_file_group": "$(DEVGROUP)", "output_directory": "$(DEVOUTPUT)"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ ; }
+
 # get info about the files and samples in a request, from the Beagle API
 files-request:
-	python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
-# curl -H "Content-Type: application/json" \
-# -X GET \
-# -H "Authorization: Bearer $(TOKEN)" \
-# http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
-# $(REQID)/
+	curl -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $(TOKEN)" \
+	--data '{"request_ids":["$(REQID)"]}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
+# python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
+
+# get info on a single file
+REQFILE:=b37.fasta
+file-get:
+	curl -H "Content-Type: application/json" \
+	-X GET \
+	-H "Authorization: Bearer $(TOKEN)" \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
 run-request:
@@ -367,12 +443,35 @@ run-request:
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
-run-request-api:
+# send a pipeline input to the API to start running
+REQJSON:=fixtures/tests/run_roslin.json
+run-request-api: $(AUTH_FILE)
+	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
-	-H "Authorization: Bearer $(TOKEN)" \
-	--data @fixtures/tests/run_roslin.json \
+	-H "Authorization: Bearer $$token" \
+	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
+
+# make a demo Roslin input.json file from the template fixture;
+# need to update the fixture with the app ID of the demo pipeline that was loaded in the database
+INPUT_TEMPLATE:=fixtures/tests/juno_roslin_demo2.pipeline_input.json
+DEMO_INPUT:=input.json
+$(DEMO_INPUT): $(INPUT_TEMPLATE) $(AUTH_FILE)
+	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	$(MAKE) check-dev-pipeline-registered && \
+	{ \
+	appid=$$(curl --silent -H "Content-Type: application/json" -X GET -H "Authorization: Bearer $$token" http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ | jq -r --exit-status '.results | .[] | select(.name | contains("$(DEVNAME)")) | .id' ) && \
+	jq --arg appid "$$appid" '.app = $$appid' fixtures/tests/juno_roslin_demo2.pipeline_input.json > $(DEMO_INPUT) ; \
+	} || { echo ">>> input didnt work" ; exit 1; }
+.PHONY: $(DEMO_INPUT)
+
+# submit a demo Roslin run using the dev Roslin pipeline entry in the database
+demo-run: register-dev-pipeline $(DEMO_INPUT)
+	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
+	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
+	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
+	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)

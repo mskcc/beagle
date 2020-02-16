@@ -5,6 +5,7 @@ from celery import shared_task
 from django.db import transaction
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
+import traceback
 
 
 logger = logging.getLogger(__name__)
@@ -73,7 +74,8 @@ class JobObject(object):
             except Exception as e:
                 if self.job.retry_count == self.job.max_retry:
                     self.job.status = JobStatus.FAILED
-                    self.job.message = {"details": "Error: %s" % e}
+                    self.job.message = {"details": "Error: %s" % traceback.format_tb(e.__traceback__)}
+                    traceback.print_tb(e.__traceback__)
 
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
