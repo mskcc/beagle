@@ -24,6 +24,7 @@ import uuid
 import copy
 import re
 import time
+import argparse
 
 def get_unique_id():
     """
@@ -43,7 +44,9 @@ def replace_primary_keys(input_file):
     all_pk = []
     with open(input_file) as f:
         for item in json.load(f):
-            all_pk.append(item['pk'])
+            # do not change the pk's on 'File' objects because that causes unique constraint issues on file path
+            if item['model'] != 'file_system.file':
+                all_pk.append(item['pk'])
 
     # sort unique based on descending length
     # this makes sure we replace the longer pattern first in the next steps
@@ -124,12 +127,18 @@ def replace_field_value(input_lines, field_name, old_value, new_value):
                 output_lines[i] = new_line
     return(output_lines)
 
-def main(input_file):
+def main(**kwargs):
     """
     Main function for editing a fixtures file to replace all old primary keys with new keys
     So that both old and new fixtures sets can be loaded into the database at the same time
     """
-    output_file_name = "{}.duplicated.json".format(input_file)
+    input_file = kwargs.pop('input_file')
+    output_file = kwargs.pop('output_file', None)
+
+    if output_file == None:
+        output_file_name = "{}.duplicated.json".format(input_file)
+    else:
+        output_file_name = output_file
 
     # generate a timestamp string to use for new unique identifiers
     timestamp_str = str(int(time.time()))
@@ -154,8 +163,12 @@ def parse():
     Parses script args
     Script arg parsing will go here as this script grows
     """
-    input_file = sys.argv[1]
-    main(input_file)
+    parser = argparse.ArgumentParser(description = 'Duplicate database fixtures that were previously dumped in json format with indentation')
+    parser.add_argument('input_file', help = "Input file containing fixtures")
+    parser.add_argument('--output-file', dest = "output_file", default = None, help = "Name of output file to write to")
+
+    args = parser.parse_args()
+    main(**vars(args))
 
 if __name__ == '__main__':
     parse()
