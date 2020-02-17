@@ -20,7 +20,9 @@ TYPES = {
     "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
     "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
     "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
-    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal"
+    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal",
+    "REQUEST_CALLBACK": "beagle_etl.jobs.lims_etl_jobs.request_callback",
+    "UPDATE_SAMPLE_METADATA": "beagle_etl.jobs.lims_etl_jobs.update_sample_metadata"
 }
 
 
@@ -44,14 +46,13 @@ def fetch_new_requests_lims(timestamp):
 
 def get_or_create_request_job(request_id):
     logger.info(
-        "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
-    job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
+        "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
+    job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
 
     if not job:
-
-        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
+        job = Job(run=TYPES['REQUEST'], args={'request_id': request_id},
                   status=JobStatus.CREATED, max_retry=1, children=[],
-                  callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
+                  callback=TYPES['REQUEST_CALLBACK'],
                   callback_args={'request_id': request_id})
         job.save()
     return job
@@ -131,11 +132,12 @@ def get_or_create_pooled_normal_job(filepath):
 
 def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
-        "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
-    job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', args__sample_id=sample_id).first()
+        "Searching for job: %s for sample_id: %s" % (TYPES['SAMPLE'], sample_id))
+    job = Job.objects.filter(run=TYPES['SAMPLE'], args__sample_id=sample_id).first()
     if not job:
-        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata',
-                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
+        job = Job(run=TYPES['SAMPLE'],
+                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
+                        'request_metadata': request_metadata},
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
@@ -158,6 +160,7 @@ def get_run_id_from_string(string):
         return(output)
     else:
         return(string)
+
 
 def create_pooled_normal(filepath, file_group_id):
     """
@@ -523,8 +526,9 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
 def update_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
         "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
-    job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_sample_metadata',
-                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
+    job = Job(run=TYPES["UPDATE_SAMPLE_METADATA"],
+              args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
+                    'request_metadata': request_metadata},
+              status=JobStatus.CREATED, max_retry=1, children=[])
     job.save()
     return job
