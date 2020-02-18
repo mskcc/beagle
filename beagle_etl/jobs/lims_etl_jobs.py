@@ -103,7 +103,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
-    pooled_normals = response_body["pooledNormals"]
+    pooled_normals = response_body.get("pooledNormals", [])
     if import_pooled_normals:
         for f in pooled_normals:
             job = get_or_create_pooled_normal_job(f)
@@ -525,7 +525,7 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
 
 def update_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
-        "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
+        "Searching for job: %s for sample_id: %s" % (TYPES["UPDATE_SAMPLE_METADATA"], sample_id))
     job = Job(run=TYPES["UPDATE_SAMPLE_METADATA"],
               args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
                     'request_metadata': request_metadata},
