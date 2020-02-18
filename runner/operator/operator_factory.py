@@ -9,6 +9,7 @@ class OperatorFactory(object):
         "TempoOperator": TempoOperator,
         "RoslinOperator": RoslinOperator,
         "AccessOperator": AccessOperator,
+        "RoslinQcOperator": RoslinQcOperator
     }
 
     def get_by_class_name(class_name, request_id):
