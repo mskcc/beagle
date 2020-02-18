@@ -30,15 +30,15 @@ class TempoMPGenOperator(Operator):
 
         samples = list()
         # group by igoId
-        igo_id_group = dict()
+        sample_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
-            if igo_id not in igo_id_group:
-                igo_id_group[igo_id] = list()
-            igo_id_group[igo_id].append(sample)
+            sample_id = sample['metadata']['sampleId']
+            if sample_id not in sample_id_group:
+                sample_id_group[sample_id] = list()
+            sample_id_group[sample_id].append(sample)
 
-        for igo_id in igo_id_group:
-            samples.append(build_sample(igo_id_group[igo_id]))
+        for sample_id in sample_id_group:
+            samples.append(build_sample(sample_id_group[sample_id]))
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
         number_of_inputs = len(tempo_inputs)
