@@ -59,7 +59,7 @@ def check_and_return_single_values(data):
                     'bait_set', 'patient_id', 'species', 'tumor_type',
                     'sample_id', 'specimen_type', 'external_sample_id', 
                     'investigator_sample_id', 'investigator_name', 'investigator_email',
-                    'preservation', 'sample_class', 'recipe' ]
+                    'preservation', 'sample_class', 'recipe', 'request_id' ]
 
     for key in single_values:
         value = set(data[key])
