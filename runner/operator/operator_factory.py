@@ -1,6 +1,7 @@
 from .tempo_operator import TempoOperator
 from .roslin_operator import RoslinOperator
 from .access_operator import AccessOperator
+from .tempo_mpgen_operator import TempoMPGenOperator
 
 
 class OperatorFactory(object):
@@ -9,6 +10,7 @@ class OperatorFactory(object):
         "TempoOperator": TempoOperator,
         "RoslinOperator": RoslinOperator,
         "AccessOperator": AccessOperator,
+        "TempoMPGenOperator": TempoMPGenOperator,
     }
 
     def get_by_class_name(class_name, request_id):
@@ -24,6 +26,8 @@ class OperatorFactory(object):
             return RoslinOperator(request_id)
         elif pipeline in ('access',):
             return AccessOperator(request_id)
+        elif pipeline in ('tempo_mpgen_operator',):
+            return TempoMPGenOperator(request_id)
         else:
             raise Exception("Invalid pipeline")
     factory = staticmethod(factory)
