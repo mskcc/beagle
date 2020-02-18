@@ -4,6 +4,7 @@ from django.db import models
 from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
 from beagle_etl.models import Operator
+from django.db.models import F
 
 
 class RunStatus(IntEnum):
@@ -17,6 +18,16 @@ class RunStatus(IntEnum):
 class PortType(IntEnum):
     INPUT = 0
     OUTPUT = 1
+
+
+class ChainType(IntEnum):
+    ONE_TO_ONE = 0
+    MANY_TO_ONE = 1
+
+
+class TriggerConditionType(IntEnum):
+    ONE_RUN_COMPLETE = 0
+    ALL_RUNS_COMPLETE = 1
 
 
 class BaseModel(models.Model):
@@ -40,14 +51,38 @@ class Pipeline(BaseModel):
         return u"{}".format(self.name)
 
 
+class OperatorTrigger(BaseModel):
+    type = models.IntegerField(choices=[(t.value, t.name) for t in ChainType])
+    from_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="from_triggers")
+    to_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="to_triggers")
+    condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerConditionType])
+    group_id = models.UUIDField(null=True, blank=True)
+
+
+class OperatorRun(BaseModel):
+    trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
+    num_total_runs = models.IntegerField(required=True, default=0)
+    num_completed_runs = models.IntegerField(required=True, default=0)
+    num_failed_runs = models.IntegerField(required=True, default=0)
+
+    def increment_fail_run():
+        self.num_failed_runs = F('num_failed_runs') + 1
+
+    def increment_completed_run():
+        self.num_completed_runs = F('num_completed_runs') + 1
+
+
+
 class Run(BaseModel):
     name = models.CharField(max_length=400, editable=True)
-    app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
+    operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True)
 
 
 class Port(BaseModel):

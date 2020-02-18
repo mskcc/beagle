@@ -19,7 +19,27 @@ logger = logging.getLogger(__name__)
 def create_jobs_from_request(request_id, operator_id):
     logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
     operator_model = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, request_id)
+    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+    jobs = operator.get_jobs()
+
+    operator_run = OperatorRun.objects.create(operator=operator)
+    Run.objects.bulk_update(jobs, operator_run_id=operator_run.id)
+
+    for job in jobs:
+        if job[0].is_valid():
+            logger.info("Creating Run object")
+            run = job[0].save()
+            logger.info("Run object created with id: %s" % str(run.id))
+            create_run_task.delay(str(run.id), job[1], None)
+        else:
+            logger.error("Job invalid: %s" % str(job[0].errors))
+
+
+@shared_task
+def create_jobs_from_chaining(operator_id, run_ids=[]):
+    logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
+    operator_model = Operator.objects.get(id=operator_id)
+    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
 
     jobs = operator.get_jobs()
 
@@ -31,6 +51,29 @@ def create_jobs_from_request(request_id, operator_id):
             create_run_task.delay(str(run.id), job[1], None)
         else:
             logger.error("Job invalid: %s" % str(job[0].errors))
+
+
+@shared_task
+def process_triggers():
+    operator_runs = OperatorRun.objects.prefetch_related(
+        'trigger', 'trigger__to_operator', 'runs'
+    ).filter(status__in=[RunStatus.COMPLETED])
+
+    for operator_run in operator_runs:
+        try:
+            if operator_run.trigger.group_id:
+                OperatorRun.objects.filter(
+                    status__in=[RunStatus.READY, RunStatus.RUNNING],
+                    group_id__not=operator_run.trigger.group_id
+                )
+
+            condition = operator_run.trigger.condition
+            runs = operator_run.runs
+
+        except RunCreateException as e:
+            logger.info("Trigger %s Fail" % run_id)
+
+
 
 @shared_task
 def create_run_task(run_id, inputs, output_directory=None):
@@ -120,6 +163,7 @@ def check_jobs_status():
             remote_status = check_status_on_ridgeback(run.execution_id)
             if remote_status:
                 if remote_status['status'] == 'FAILED':
+                    run.run_operator.update(num_failed_runs)
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
                     # TODO: Fetch error message from Executor here
                     fail_job(run,
