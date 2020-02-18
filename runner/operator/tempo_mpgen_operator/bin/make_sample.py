@@ -55,7 +55,11 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'sequencing_center', 'platform', 'sample_name', 'bait_set', 'patient_id', 'species', 'tumor_type', 'sample_id', 'specimen_type', 'external_sample_id', 'investigator_name', 'investigator_email', 'preservation', 'sample_class', 'recipe' ]
+    single_values = [ 'sequencing_center', 'platform', 'sample_name',
+                    'bait_set', 'patient_id', 'species', 'tumor_type',
+                    'sample_id', 'specimen_type', 'external_sample_id', 
+                    'investigator_sample_id', 'investigator_name', 'investigator_email',
+                    'preservation', 'sample_class', 'recipe' ]
 
     for key in single_values:
         value = set(data[key])
@@ -111,6 +115,7 @@ def build_sample(data):
         external_sample_id = meta['externalSampleId']
         investigator_name = meta['investigatorName']
         investigator_email = meta['investigatorEmail']
+        investigator_sample_id = meta['investigatorSampleId']
         preservation = meta['preservation']
         sample_class = meta['sampleClass']
         recipe = meta['recipe']
@@ -137,6 +142,7 @@ def build_sample(data):
             sample['pi'] = pi
             sample['pi_email'] = pi_email
             sample['external_sample_id'] = external_sample_id
+            sample['investigator_sample_id'] = investigator_sample_id
             sample['investigator_name'] = investigator_name
             sample['investigator_email'] = investigator_email
             sample['preservation'] = preservation
@@ -177,6 +183,7 @@ def build_sample(data):
     result['pi'] = list()
     result['pi_email'] = list()
     result['external_sample_id'] = list()
+    result['investigator_sample_id'] = list()
     result['investigator_name'] = list()
     result['investigator_email'] = list()
     result['preservation'] = list()

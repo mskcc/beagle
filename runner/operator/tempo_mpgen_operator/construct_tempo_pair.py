@@ -32,6 +32,7 @@ def format_sample(data):
     sample['request_id'] = data['request_id']
     sample['sample_name'] = data['sample_name']
     sample['external_sample_id'] = data['external_sample_id']
+    sample['investigator_sample_id'] = data['investigator_sample_id']
     sample['investigator_name'] = data['investigator_name']
     sample['investigator_email'] = data['investigator_email']
     sample['pi'] = data['pi']
@@ -43,7 +44,6 @@ def format_sample(data):
         sample['R1'].append({'class': 'File', 'location': i})
     for i in data['R2']:
         sample['R2'].append({'class': 'File', 'location': i})
-
     return sample
 
 
