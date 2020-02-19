@@ -316,9 +316,12 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 # initialize the Django app in the database
 # do this after setting up the db above
 django-init:
-	python manage.py makemigrations --merge
+	python manage.py makemigrations # --merge
 	python manage.py migrate
+	$(MAKE) djano-load-fixtures
 	python manage.py createsuperuser
+
+djano-load-fixtures:
 	python manage.py loaddata \
 	file_system.filegroup.json \
 	file_system.filetype.json \
