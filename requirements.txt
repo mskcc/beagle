@@ -14,4 +14,6 @@ deepdiff==4.0.7
 celery==4.3.0
 djangorestframework-simplejwt==4.3.0
 docopt==0.6.2
+pygments==2.5.2
 psycopg2-binary
+
