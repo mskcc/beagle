@@ -437,13 +437,14 @@ file-get:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
+PIPELINE:=roslin
 run-request: $(AUTH_FILE)
 	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $$token" \
-	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "$(PIPELINE)"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # send a pipeline input to the API to start running
