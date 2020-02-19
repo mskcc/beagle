@@ -51,7 +51,7 @@ def pretty_json(field_name):
         style = "<style>" + formatter.get_style_defs() + ".highlight{width: 500px; overflow: scroll; border: 1px solid gray;}</style>"
         return mark_safe(style + response)
 
-    _pretty_json.short_description = 'data prettified'
+    _pretty_json.short_description = field_name
     return _pretty_json
 
 def pretty_python_exception(field_name):
@@ -70,5 +70,5 @@ def pretty_python_exception(field_name):
         else:
             return message
 
-    _pretty_python_exception.short_description = 'Exception'
+    _pretty_python_exception.short_description = field_name
     return _pretty_python_exception
