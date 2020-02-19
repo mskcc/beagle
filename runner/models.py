@@ -20,11 +20,6 @@ class PortType(IntEnum):
     OUTPUT = 1
 
 
-class ChainType(IntEnum):
-    ONE_TO_ONE = 0
-    MANY_TO_ONE = 1
-
-
 class TriggerConditionType(IntEnum):
     NINTY_PERCENT_COMPLETE = 0
     ALL_RUNS_COMPLETE = 1
