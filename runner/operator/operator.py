@@ -14,7 +14,7 @@ class Operator(object):
 
         self.model = model
         self.request_id = request_id
-        self.run_ids = []
+        self.run_ids = run_ids
         self.files = File.objects.prefetch_related(
             Prefetch('filemetadata_set', queryset=
             FileMetadata.objects.select_related('file').order_by('-created_date'))).\
