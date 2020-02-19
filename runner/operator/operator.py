@@ -2,14 +2,17 @@ import logging
 from file_system.models import File, FileMetadata
 from runner.serializers import OperatorErrorSerializer, APIRunCreateSerializer
 from django.db.models import Prefetch
+from beagle_etl.models import Operator as OperatorModel
 
 
 class Operator(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, operator_name, request_id):
-        self.pipeline_id = self.get_pipeline_id()
-        self.operator = operator_name
+    def __init__(self, model, request_id):
+        if not isinstance(model, OperatorModel):
+            raise Exception("Must pass an instance of beagle_etl.models.Operator")
+
+        self.model = model
         self.request_id = request_id
         self.files = File.objects.prefetch_related(
             Prefetch('filemetadata_set', queryset=
@@ -18,11 +21,9 @@ class Operator(object):
         self._jobs = []
 
     def get_pipeline_id(self):
-        '''
-
-        :return: PipelineId
-        '''
-        raise Exception("Implement this")
+        # TODO(aef) need some better heuristic when returning pipeline id. Probably best for this method
+        # to return an array of ids for one-to-many generation
+        return str(self.model.pipeline_set.last().pk)
 
     def get_jobs(self):
         '''
@@ -41,13 +42,13 @@ class Operator(object):
 
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
-            data={'operator_name': self.operator, 'request_id': self.request_id, 'error': error})
+            data={'operator_name': self.model.slug, 'request_id': self.request_id, 'error': error})
         if operator_error.is_valid():
             operator_error.save()
             self.logger.info('Operator: %s failed to create a job for request_id: %s with error: %s' % (
-                self.operator, self.request_id, str(error)))
+                self.model.slug, self.request_id, str(error)))
         else:
-            self.logger.error('Invalid Operator: %s error' % self.operator)
+            self.logger.error('Invalid Operator: %s error' % self.model.slug)
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append((APIRunCreateSerializer(data={'app': pipeline, 'inputs': tempo_inputs}), job))

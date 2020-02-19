@@ -4,11 +4,12 @@ import base64
 import requests
 import logging
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
-from runner.tasks import create_run_task, operator_job
+from runner.tasks import create_run_task
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, RequestIdOperatorSerializer, OperatorErrorSerializer
 from runner.operator.tempo_operator.tempo_operator import TempoOperator
@@ -16,6 +17,7 @@ from rest_framework.generics import GenericAPIView
 from runner.pipeline.pipeline_resolver import CWLResolver
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from runner.tasks import create_jobs_from_request
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -92,9 +94,11 @@ class OperatorViewSet(GenericAPIView):
     def post(self, request):
         request_ids = request.data['request_ids']
         pipeline_name = request.data['pipeline_name']
+        pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+
         for request_id in request_ids:
             logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
-            operator_job.delay(request_id, pipeline_name)
+            create_jobs_from_request.delay(request_id, pipeline.operator_id)
         # tempo_operator = TempoOperator(request_id)
         # jobs = tempo_operator.get_jobs()
         # result = []
