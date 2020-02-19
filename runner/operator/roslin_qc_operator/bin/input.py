@@ -91,7 +91,8 @@ def create_files_data_from_ports_with_names(ports):
     # TODO: use a Django query instead of iteration
     files = []
     for port in ports:
-        for file in port.files.all():
+        # arbitrary ordering to force a test-able output
+        for file in port.files.all().order_by('path'):
             file_cwl = file_to_cwl(file)
             d = { 'name': port.name, 'file': file_cwl }
             files.append(d)
@@ -275,7 +276,7 @@ def build_inputs_from_runs(run_queryset, _assay = None):
     Build the Roslin QC pipeline inputs data structure from a set of Roslin Voyager pipeline Run instances
     """
     # get the input and output Ports of the run
-    ports = Port.objects.filter(run__in = run_queryset)
+    ports = Port.objects.filter(run__in = run_queryset).order_by('created_date') # arbitrary ordering to force a test-able output
 
     # get the list of tumor normal pairs out of the Ports
     pairs = parse_pairs_from_ports(ports)
