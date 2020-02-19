@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger
-from lib.admin import link_relation
+from lib.admin import link_relation, progress_bar
 
 class PipelineAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'github', 'version', 'output_directory', link_relation("operator"))
@@ -10,7 +10,7 @@ class RunAdmin(admin.ModelAdmin):
     ordering = ('-created_date',)
 
 class OperatorRunAdmin(admin.ModelAdmin):
-    list_display = ('id', link_relation("app"), link_relation("trigger"), 'status')
+    list_display = ('id', link_relation("trigger"), 'status', progress_bar('percent_complete'))
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
     list_display = ('id', link_relation("from_operator"), link_relation("to_operator"), 'condition')

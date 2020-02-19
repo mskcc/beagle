@@ -56,6 +56,8 @@ class OperatorTrigger(BaseModel):
     to_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="to_triggers")
     condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerConditionType])
 
+    def __str__(self):
+        return u"{} -> {} when {}".format(self.from_operator, self.to_operator, TriggerConditionType(self.condition).name.title())
 
 class OperatorRun(BaseModel):
     trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
@@ -83,7 +85,7 @@ class OperatorRun(BaseModel):
 
     @property
     def percent_complete(self):
-        return float(self.num_failed_runs + self.num_completed_runs) / self.num_total_runs
+        return float("{0:.2f}".format(self.num_failed_runs + self.num_completed_runs / self.num_total_runs * 100.0))
 
 
 class Run(BaseModel):

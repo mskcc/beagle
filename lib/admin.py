@@ -9,7 +9,6 @@ def link_relation(field_name):
     Link will be admin url for the admin url for obj.parent.id:change
     """
     def _link_relation(obj):
-        print(field_name)
         linked_obj = getattr(obj, field_name)
         if linked_obj:
             model_name = linked_obj._meta.model_name
@@ -22,3 +21,17 @@ def link_relation(field_name):
 
     _link_relation.short_description = field_name # Sets column name
     return _link_relation
+
+def progress_bar(field_name):
+    def _progress_bar(obj):
+        percentage = getattr(obj, field_name)
+        return format_html(
+            '''
+            <progress value="{0}" max="100"></progress>
+            <span style="font-weight:bold">{0}%</span>
+            ''',
+            percentage
+        )
+
+    _progress_bar.short_description = field_name # Sets column name
+    return _progress_bar

@@ -13,10 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='run',
-            name='app',
-        ),
         migrations.CreateModel(
             name='OperatorTrigger',
             fields=[
