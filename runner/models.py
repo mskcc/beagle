@@ -27,11 +27,17 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class PipelineType(IntEnum):
+    CWL = 0
+
+
 class Pipeline(BaseModel):
-    name = models.CharField(max_length=100, editable=True)
+    name = models.CharField(max_length=100, editable=True, unique=True)
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
+    pipeline_type = models.IntegerField(
+        choices=[(pipeline_type.value, pipeline_type.name) for pipeline_type in PipelineType])
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
 

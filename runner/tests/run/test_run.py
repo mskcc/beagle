@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
 from runner.run.objects.run_object import RunObject
-from runner.models import Run, RunStatus, Pipeline
+from runner.models import Run, RunStatus, Pipeline, PipelineType
 from runner.run.processors.file_processor import FileProcessor
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
@@ -19,6 +19,7 @@ class RunObjectTest(APITestCase):
         self.pipeline = Pipeline(name="pipeline_name",
                                  github="http://pipeline.github.com",
                                  version='v1.0',
+                                 pipeline_type=PipelineType.CWL,
                                  entrypoint='pipeline.cwl',
                                  output_file_group=self.file_group,
                                  output_directory="/path/to/outputs")

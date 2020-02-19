@@ -15,6 +15,8 @@ from django.http import HttpResponse
 class PipelineViewSet(mixins.ListModelMixin,
                       mixins.CreateModelMixin,
                       mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.DestroyModelMixin,
                       GenericViewSet):
     queryset = Pipeline.objects.order_by('id').all()
     serializer_class = PipelineSerializer

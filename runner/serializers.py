@@ -12,7 +12,8 @@ class PipelineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pipeline
-        fields = ('id', 'name', 'github', 'version', 'entrypoint', 'output_file_group', 'output_directory')
+        fields = (
+        'id', 'name', 'github', 'version', 'pipeline_type', 'entrypoint', 'output_file_group', 'output_directory')
 
 
 class PortSerializer(serializers.ModelSerializer):
