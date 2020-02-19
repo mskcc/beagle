@@ -27,6 +27,7 @@ def link_relation(field_name):
     _link_relation.short_description = field_name # Sets column name
     return _link_relation
 
+
 def progress_bar(field_name):
     def _progress_bar(obj):
         percentage = getattr(obj, field_name)
@@ -41,6 +42,7 @@ def progress_bar(field_name):
     _progress_bar.short_description = field_name # Sets column name
     return _progress_bar
 
+
 def pretty_json(field_name):
     def _pretty_json(obj):
         json_str = getattr(obj, field_name)
@@ -53,6 +55,7 @@ def pretty_json(field_name):
 
     _pretty_json.short_description = field_name
     return _pretty_json
+
 
 def pretty_python_exception(field_name):
     def _pretty_python_exception(obj):
