@@ -5,7 +5,7 @@ import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType, OperatorRun
+from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerConditionType
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
@@ -42,7 +42,7 @@ def create_jobs_from_request(request_id, operator_id):
 
 @shared_task
 def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
-    logger.info("Creating operator id %s from chaining: %s" % (operator_id, from_operator_id))
+    logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
     operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
     create_jobs_from_operator(operator)
@@ -51,34 +51,37 @@ def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
 @shared_task
 def process_triggers():
     operator_runs = OperatorRun.objects.prefetch_related(
-        'trigger', 'trigger__to_operator', 'runs'
-    ).filter(status__not__in=[RunStatus.COMPLETED, RunStatus.FAILED])
+        'trigger', 'runs'
+    ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
         try:
             condition = operator_run.trigger.condition
-            if condition == TriggerConditionType.ALL_RUNS_COMPLETE:
-                if operator_run.status == RunStatus.COMPLETED:
+            if condition == TriggerConditionType.ALL_RUNS_SUCCEEDED:
+                if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
                     create_jobs_from_chaining.delay(
                         operator_run.trigger.to_operator_id,
-                        operator_run.id,
-                        operator_run.runs.values_list('id', flat=True)
+                        operator_run.trigger.from_operator_id,
+                        list(operator_run.runs.values_list('id', flat=True))
                     )
-            elif condition == TriggerConditionType.NINTY_PERCENT_COMPLETE:
-                if operator_run.percent_complete > 0.9:
+                    return
+            elif condition == TriggerConditionType.NINTY_PERCENT_SUCCEEDED:
+                if operator_run.percent_runs_succeeded >= 90.0:
                     operator_run.complete()
                     create_jobs_from_chaining.delay(
-                        operator_run.trigger.to_operator,
-                        operator_run.id,
-                        operator_run.runs.values_list('id', flat=True)
+                        operator_run.trigger.to_operator_id,
+                        operator_run.trigger.from_operator_id,
+                        list(operator_run.runs.values_list('id', flat=True))
                     )
-            elif operator_run.percent_complete == 1.0:
+                    return
+
+            if operator_run.percent_runs_finished == 100.0:
                 logger.info("Condition never met for operator run %s" % operator_run.id)
                 operator_run.fail()
 
         except Exception as e:
-            logger.info("Trigger %s Fail" % run_id)
+            logger.info("Trigger %s Fail" % operator_run.id)
             operator_run.fail()
 
 

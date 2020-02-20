@@ -21,8 +21,8 @@ class PortType(IntEnum):
 
 
 class TriggerConditionType(IntEnum):
-    NINTY_PERCENT_COMPLETE = 0
-    ALL_RUNS_COMPLETE = 1
+    NINTY_PERCENT_SUCCEEDED = 0
+    ALL_RUNS_SUCCEEDED = 1
 
 
 class BaseModel(models.Model):
@@ -79,8 +79,12 @@ class OperatorRun(BaseModel):
         self.save()
 
     @property
-    def percent_complete(self):
-        return float("{0:.2f}".format(self.num_failed_runs + self.num_completed_runs / self.num_total_runs * 100.0))
+    def percent_runs_succeeded(self):
+        return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
+
+    @property
+    def percent_runs_finished(self):
+        return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
 
 
 class Run(BaseModel):
@@ -91,7 +95,7 @@ class Run(BaseModel):
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
-    operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True)
+    operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -101,6 +105,8 @@ class Run(BaseModel):
         }
 
     def save(self, *args, **kwargs):
+        # TODO do we want to decrement if a job goes from completed/failed to open or failed to complete?
+        # We can also a prevent a job from going to open once it's in a closed state
         if self.operator_run and self.original["status"] != self.status:
             if self.status == RunStatus.COMPLETED:
                 self.operator_run.increment_completed_run()

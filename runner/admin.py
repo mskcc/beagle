@@ -10,7 +10,7 @@ class RunAdmin(admin.ModelAdmin):
     ordering = ('-created_date',)
 
 class OperatorRunAdmin(admin.ModelAdmin):
-    list_display = ('id', link_relation("trigger"), 'status', progress_bar('percent_complete'))
+    list_display = ('id', link_relation("trigger"), 'status', progress_bar('percent_runs_succeeded'), progress_bar('percent_runs_finished'))
     read_only = ('message')
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
