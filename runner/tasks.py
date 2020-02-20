@@ -129,7 +129,6 @@ def submit_job(run_id, output_directory=None):
     response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
-        run.ready()
         run.status = RunStatus.RUNNING
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
@@ -174,7 +173,6 @@ def check_jobs_status():
             remote_status = check_status_on_ridgeback(run.execution_id)
             if remote_status:
                 if remote_status['status'] == 'FAILED':
-                    run.run_operator.update(num_failed_runs)
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
                     # TODO: Fetch error message from Executor here
                     fail_job(run,
