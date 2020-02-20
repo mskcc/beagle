@@ -93,8 +93,8 @@ def create_files_data_from_ports_with_names(ports):
     for port in ports:
         # arbitrary ordering to force a test-able output
         for file in port.files.all().order_by('path'):
-            file_cwl = file_to_cwl(file)
-            d = { 'name': port.name, 'file': file_cwl }
+            # file_cwl = file_to_cwl(file)
+            d = { 'name': port.name, 'file': file }
             files.append(d)
     return(files)
 
