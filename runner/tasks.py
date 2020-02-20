@@ -27,7 +27,7 @@ def create_jobs_from_operator(operator):
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id)
         logger.info("Run object created with id: %s" % str(run.id))
-        create_run_task(str(run.id), job[1], None)
+        create_run_task.delay(str(run.id), job[1], None)
 
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
