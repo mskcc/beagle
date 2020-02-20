@@ -5,7 +5,7 @@ import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType
+from .models import Run, RunStatus, Port, PortType, OperatorRun
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
@@ -21,14 +21,13 @@ def create_jobs_from_operator(operator):
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
-    operator_run = OperatorRun.objects.create(operator=operator, total_num_runs=len(valid_jobs))
-    Run.objects.bulk_update(valid_jobs, operator_run_id=operator_run.id)
+    operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
 
     for job in valid_jobs:
         logger.info("Creating Run object")
-        run = job[0].save()
+        run = job[0].save(operator_run_id=operator_run.id)
         logger.info("Run object created with id: %s" % str(run.id))
-        create_run_task.delay(str(run.id), job[1], None)
+        create_run_task(str(run.id), job[1], None)
 
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))

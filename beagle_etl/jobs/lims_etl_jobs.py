@@ -76,7 +76,7 @@ def request_callback(request_id):
         logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-    create_jobs_from_request.delay(request_id, operator.id)
+    create_jobs_from_request(request_id, operator.id)
     return []
 
 

@@ -100,7 +100,7 @@ class Run(BaseModel):
             "status": self.status
         }
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         if self.operator_run and self.original["status"] != self.status:
             if self.status == RunStatus.COMPLETED:
                 self.operator_run.increment_completed_run()
