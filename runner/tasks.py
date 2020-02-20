@@ -129,7 +129,7 @@ def submit_job(run_id, output_directory=None):
     response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
-        iun.ready()
+        run.ready()
         run.status = RunStatus.RUNNING
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
