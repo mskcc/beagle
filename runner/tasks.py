@@ -90,6 +90,7 @@ def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run")
     try:
         run = RunObject.from_cwl_definition(run_id, inputs)
+        run.ready()
     except RunCreateException as e:
         run = RunObject.from_db(run_id)
         run.fail(e)
@@ -97,7 +98,6 @@ def create_run_task(run_id, inputs, output_directory=None):
         logger.info("Run %s Failed" % run_id)
     else:
         RunObject.to_db(run)
-        run.ready()
         submit_job.delay(run_id, output_directory)
         logger.info("Run %s Ready" % run_id)
 
@@ -129,6 +129,7 @@ def submit_job(run_id, output_directory=None):
     response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
+        iun.ready()
         run.status = RunStatus.RUNNING
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
