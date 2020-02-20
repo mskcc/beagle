@@ -231,12 +231,12 @@ def get_db_files(assay, references_json = "runner/operator/roslin_operator/refer
     db_files['ref_fasta'] = references["request_files"]['ref_fasta']
 
     # check for URI ref_fasta; 'juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta'
-    for key, value in db_files.items():
-        if value.startswith('juno:///'):
-            parts = urllib.parse.urlsplit(value)
-            db_files[key] = path_to_cwl(parts.path)
-        elif value.startswith('/'):
-            db_files[key] = path_to_cwl(value)
+    # for key, value in db_files.items():
+    #     if value.startswith('juno:///'):
+    #         parts = urllib.parse.urlsplit(value)
+    #         db_files[key] = path_to_cwl(parts.path)
+    #     elif value.startswith('/'):
+    #         db_files[key] = path_to_cwl(value)
         # TODO: what to do if its not either of these cases?
 
     return(db_files)
