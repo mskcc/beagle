@@ -27,7 +27,7 @@ class TestRoslinOperator(TestCase):
 
         request_id = "bar"
         operator_model = Operator.objects.get(id=1)
-        operator = OperatorFactory.get_by_model(operator_model, request_id)
+        operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "cb5d793b-e650-4b7d-bfcd-882858e29cc5")
         self.assertEqual(str(operator.model), "roslin")
         self.assertEqual(operator.request_id, "bar")
@@ -48,7 +48,7 @@ class TestRoslinOperator(TestCase):
 
         request_id = "bar"
         operator_model = Operator.objects.get(id=1)
-        operator = OperatorFactory.get_by_model(operator_model, request_id)
+        operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "cb5d793b-e650-4b7d-bfcd-882858e29cc5")
         self.assertEqual(str(operator.model), "roslin")
         self.assertEqual(operator.request_id, "bar")
@@ -83,7 +83,7 @@ class TestRoslinOperator(TestCase):
         request_id = "bar"
 
         operator_model = Operator.objects.get(id=1)
-        operator = OperatorFactory.get_by_model(operator_model, request_id)
+        operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "cb5d793b-e650-4b7d-bfcd-882858e29cc5")
         self.assertEqual(str(operator.model), "roslin")
         self.assertEqual(operator.request_id, "bar")
