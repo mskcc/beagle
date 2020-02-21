@@ -132,6 +132,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     tags = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
     output_metadata = serializers.JSONField(required=False, default=dict)
+    operator_run_id = serializers.IntegerField(required=False)
 
     def create(self, validated_data):
         try:
