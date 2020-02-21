@@ -325,8 +325,9 @@ django-init:
 	file_system.storage.json \
 	runner.pipeline.json
 
+TEST_ARGS?=
 test: check-env
-	python manage.py test
+	python manage.py test $(TEST_ARGS)
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
@@ -340,6 +341,9 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+
+dumpdata: check-env
+	python manage.py dumpdata
 
 makemigrations: check-env
 	python manage.py makemigrations
@@ -510,3 +514,5 @@ PORT=
 port-check:
 	ss -lntup | grep ':$(PORT)'
 endif
+
+
