@@ -217,7 +217,7 @@ check-env:
 	BEAGLE_AUTH_LDAP_SERVER_URI \
 	BEAGLE_LIMS_PASSWORD \
 	BEAGLE_LIMS_USERNAME; do \
-	[ -z "$$(printenv BEAGLE_LIMS_USERNAME)" ] && echo ">>> env variable $$i is not set; some features may not work" || : ; done
+	[ -z "$$(printenv $$i)" ] && echo ">>> env variable $$i is not set; some features may not work" || : ; done
 
 # start the RabbitMQ server in the background
 rabbitmq-start: $(LOG_DIR_ABS)
@@ -440,10 +440,11 @@ file-get:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
-run-request:
+run-request: $(AUTH_FILE)
+	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
-	-H "Authorization: Bearer $(TOKEN)" \
+	-H "Authorization: Bearer $$token" \
 	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
@@ -471,11 +472,19 @@ $(DEMO_INPUT): $(INPUT_TEMPLATE) $(AUTH_FILE)
 .PHONY: $(DEMO_INPUT)
 
 # submit a demo Roslin run using the dev Roslin pipeline entry in the database
-demo-run: register-dev-pipeline $(DEMO_INPUT)
+# submit using the API endpoint; bypasses the Operator
+demo-run-api: register-dev-pipeline $(DEMO_INPUT)
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
 	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
+
+# submit using standard request; uses the Operator
+demo-run: register-dev-pipeline $(DEMO_INPUT)
+	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
+	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
+	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
+	$(MAKE) run-request REQID=DemoRequest1
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)
