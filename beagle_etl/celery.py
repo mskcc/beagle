@@ -17,7 +17,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-app.conf.task_always_eager = settings.DEBUG
+# app.conf.task_always_eager = settings.DEBUG
 
 app.conf.task_routes = {
     'beagle_etl.tasks.scheduler': {'queue': settings.BEAGLE_JOB_SCHEDULER_QUEUE},
