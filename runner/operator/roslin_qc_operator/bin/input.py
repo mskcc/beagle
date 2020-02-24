@@ -66,6 +66,20 @@ def file_to_cwl(file_instance):
     }
     return(d)
 
+def file_to_job_data(file_instance):
+    """
+    Convert a Beagle File instance into a dict that will be  used in the Job submitted to Beagle
+    NOTE: this is not the same as the CWL output format
+
+    example:
+    {'class': 'File', 'location': 'juno://path/to/foo.txt'}
+    """
+    d = {
+    'class': 'File',
+    'location': 'juno://%s' % file_instance.path
+    }
+    return(d)
+
 def path_to_cwl(filepath):
     """
     Convert a filepath string into a CWL File format dict
@@ -73,6 +87,17 @@ def path_to_cwl(filepath):
     d = {
     'class': 'File',
     'path': filepath
+    }
+    return(d)
+
+def path_to_job_data(filepath):
+    """
+    Convert a filepath to a string representation for Job submission data`
+    NOTE: not the same format as CWL representation
+    """
+    d = {
+    'class': 'File',
+    'location':  'juno://%s' % filepath
     }
     return(d)
 
@@ -93,8 +118,8 @@ def create_files_data_from_ports_with_names(ports):
     for port in ports:
         # arbitrary ordering to force a test-able output
         for file in port.files.all().order_by('path'):
-            # file_cwl = file_to_cwl(file)
-            d = { 'name': port.name, 'file': file }
+            file_cwl = file_to_job_data(file)
+            d = { 'name': port.name, 'file': file_cwl }
             files.append(d)
     return(files)
 
@@ -188,6 +213,39 @@ def pair_to_cwl(pair):
     output = (tumor, normal)
     return(output)
 
+def pair_to_job_data(pair):
+    """
+    Convert a single tumor normal pair dict to Job submission data format
+    NOTE: not the same as CWL format
+
+    pair = {
+        'normal': {
+            'R1': FileMetadata,
+            'R2': FileMetadata
+        },
+        'tumor': {
+            'R1': FileMetadata,
+            'R2': FileMetadata
+        }
+    """
+    # get the base datastructure dict for each R1 and R2
+    normal_r1 = build_sample(pair['normal']['R1'])
+    normal_r2 = build_sample(pair['normal']['R2'])
+    tumor_r1 = build_sample(pair['tumor']['R1'])
+    tumor_r2 = build_sample(pair['tumor']['R2'])
+
+    # merge the dict's; the second dict will overwrite args from the first
+    normal = {**normal_r1, **normal_r2}
+    normal['R1'] = file_to_job_data(pair['normal']['R1'].file)
+    normal['R2'] = file_to_job_data(pair['normal']['R2'].file)
+
+    tumor = {**tumor_r1, **tumor_r2}
+    tumor['R1'] = file_to_job_data(pair['tumor']['R1'].file)
+    tumor['R2'] = file_to_job_data(pair['tumor']['R2'].file)
+
+    output = (tumor, normal)
+    return(output)
+
 def bams_to_cwl(bams):
     """
     Convert the items in the bams list to CWL format
@@ -198,8 +256,8 @@ def bams_to_cwl(bams):
     for item in bams:
         tumor_bam = item[0]
         normal_bam = item[1]
-        tumor_bam_cwl = file_to_cwl(tumor_bam)
-        normal_bam_cwl = file_to_cwl(normal_bam)
+        tumor_bam_cwl = file_to_job_data(tumor_bam)
+        normal_bam_cwl = file_to_job_data(normal_bam)
         bam_cwls.append([tumor_bam_cwl, normal_bam_cwl])
     return(bam_cwls)
 
@@ -230,13 +288,24 @@ def get_db_files(assay, references_json = "runner/operator/roslin_operator/refer
     db_files['conpair_markers'] = references["request_files"]['conpair_markers']
     db_files['ref_fasta'] = references["request_files"]['ref_fasta']
 
+    # need to resolve some items to URI's
+    for key in ['fp_genotypes', 'hotspot_list_maf', 'ref_fasta']:
+        value = db_files[key]
+        if value.startswith('juno:///'):
+            parts = urllib.parse.urlsplit(value)
+            db_files[key] = path_to_job_data(parts.path)
+        elif value.startswith('/'):
+            db_files[key] = path_to_job_data(db_files[key])
+    # TODO: do these need to be changed??
+
     # check for URI ref_fasta; 'juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta'
     # for key, value in db_files.items():
     #     if value.startswith('juno:///'):
-    #         parts = urllib.parse.urlsplit(value)
-    #         db_files[key] = path_to_cwl(parts.path)
+    #         pass
+    #         # parts = urllib.parse.urlsplit(value)
+    #         # db_files[key] = path_to_cwl(parts.path)
     #     elif value.startswith('/'):
-    #         db_files[key] = path_to_cwl(value)
+    #         db_files[key] = path_to_job_data(value)
         # TODO: what to do if its not either of these cases?
 
     return(db_files)
@@ -262,13 +331,13 @@ def parse_outputs_files_data(files_data):
 
     for item in files_data:
         item_type = item['name']
-        file_cwl = item['file']
+        file_data = item['file']
 
         # append values for known keys
         # TODO: do we need to enforce unique-ness here? Do we need to enfore unique on file basename as well?
         if item_type in qc_input:
-            if file_cwl not in qc_input[item_type]:
-                qc_input[item_type].append(file_cwl)
+            if file_data not in qc_input[item_type]:
+                qc_input[item_type].append(file_data)
     return(qc_input)
 
 def build_inputs_from_runs(run_queryset, _assay = None):
