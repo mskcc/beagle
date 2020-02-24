@@ -280,11 +280,31 @@ POOLED_NORMAL_FILE_GROUP = os.environ.get('BEAGLE_POOLED_NORMAL_FILE_GROUP', '15
 
 RIDGEBACK_URL = os.environ.get('BEAGLE_RIDGEBACK_URL', 'http://localhost:5003')
 
+LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOG_PATH,
+            "maxBytes": 209715200,
+            "backupCount": 10
+        }
+    },
+    "loggers": {
+        "django_auth_ldap": {
+            "level": "DEBUG", "handlers": ["console"]
+        },
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
 }
 
 BEAGLE_URL = 'http://silo:5001'
