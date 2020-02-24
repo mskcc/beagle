@@ -1,0 +1,24 @@
+[
+    {
+        "model": "runner.OperatorTrigger",
+        "pk": "8729c0e3-39f4-4401-9a22-31d8da38d053",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "from_operator": 1,
+            "to_operator": 2,
+            "condition": 0
+        }
+    },
+    {
+        "model": "runner.OperatorTrigger",
+        "pk": "87700fcb-f317-4431-ace8-0cfcc61a761b",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "from_operator": 1,
+            "to_operator": 2,
+            "condition": 1
+        }
+    }
+]

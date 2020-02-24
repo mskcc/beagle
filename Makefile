@@ -318,18 +318,20 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 django-init:
 	python manage.py makemigrations # --merge
 	python manage.py migrate
-	$(MAKE) djano-load-fixtures
+	$(MAKE) django-load-fixtures
 	python manage.py createsuperuser
 
-djano-load-fixtures:
+django-load-fixtures:
 	python manage.py loaddata \
+	beagle_etl.operator.json \
 	file_system.filegroup.json \
 	file_system.filetype.json \
 	file_system.storage.json \
 	runner.pipeline.json
 
+TEST_ARGS?=
 test: check-env
-	python manage.py test
+	python manage.py test $(TEST_ARGS)
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
@@ -343,6 +345,9 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+
+dumpdata: check-env
+	python manage.py dumpdata
 
 makemigrations: check-env
 	python manage.py makemigrations

@@ -12,13 +12,4 @@ class TestOperatorFactory(TestCase):
         """
         pipeline_type = "foo"
         request_id = "bar"
-        self.assertRaises(Exception, OperatorFactory.factory, pipeline_type, request_id)
-
-    def test_no_requestID(self):
-        """
-        Test that an operator can be returned without a requestID
-        """
-        pipeline_type = "roslin"
-        request_id = None
-        operator = OperatorFactory.factory(pipeline_type, request_id)
-        self.assertEqual(operator.request_id, request_id)
+        self.assertRaises(Exception, OperatorFactory.get_by_model, pipeline_type, request_id = request_id)

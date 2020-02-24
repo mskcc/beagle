@@ -4,12 +4,17 @@ from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
 from runner.run.objects.run_object import RunObject
-from runner.models import Run, RunStatus, Pipeline
+from runner.models import Run, RunStatus, Pipeline, OperatorRun
 from runner.run.processors.file_processor import FileProcessor
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 
 class RunObjectTest(APITestCase):
+    fixtures = [
+        "beagle_etl.operator.json",
+        "runner.operator_run.json",
+        "runner.operator_trigger.json",
+    ]
 
     def setUp(self):
         self.storage = Storage(name="test", type=StorageType.LOCAL)
@@ -291,7 +296,12 @@ class RunObjectTest(APITestCase):
         mock_get_pipeline.return_value = app
         run = RunObject.from_cwl_definition(str(self.run.id), inputs)
         run.to_db()
+        operator_run = OperatorRun.objects.first()
+        operator_run.runs.add(run.run_obj)
+        num_completed_runs = operator_run.num_completed_runs
         complete_job(run.run_id, self.outputs)
+        operator_run.refresh_from_db()
+        self.assertEqual(operator_run.num_completed_runs, num_completed_runs + 1)
         run_obj = RunObject.from_db(run.run_id)
         file_obj = File.objects.filter(path=self.outputs['maf']['location'].replace('file://', '')).first()
         run_obj.to_db()
@@ -320,6 +330,33 @@ class RunObjectTest(APITestCase):
         mock_get_pipeline.return_value = app
         run = RunObject.from_cwl_definition(str(self.run.id), inputs)
         run.to_db()
+
+        operator_run = OperatorRun.objects.first()
+        operator_run.runs.add(run.run_obj)
+        num_failed_runs = operator_run.num_failed_runs
         fail_job(run.run_id, 'Error has happened')
+        operator_run.refresh_from_db()
+        self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
+
         run_obj = RunObject.from_db(run.run_id)
         self.assertEqual(run_obj.job_statuses['error'], 'Error has happened')
+
+    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
+    def test_multiple_failed_on_same_job(self, mock_get_pipeline):
+        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
+            app = json.load(f)
+        with open('runner/tests/run/inputs.json', 'r') as f:
+            inputs = json.load(f)
+
+        mock_get_pipeline.return_value = app
+        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run.to_db()
+
+        operator_run = OperatorRun.objects.first()
+        operator_run.runs.add(run.run_obj)
+        num_failed_runs = operator_run.num_failed_runs
+        fail_job(run.run_id, 'Error has happened')
+        fail_job(run.run_id, 'Error has happened')
+        fail_job(run.run_id, 'Error has happened')
+        operator_run.refresh_from_db()
+        self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
