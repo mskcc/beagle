@@ -128,7 +128,14 @@ class TestMakeSample(TestCase):
                            'specimen_type': 'Blood',
                            'tumor_type': 'Normal'}
 
-        print(json.dumps(sample))
-        print(json.dumps(expected_sample))
+        print(json.dumps(sample, cls=UUIEncoder))
+        print(json.dumps(expected_sample, cls=UUIDEncoder))
 
         self.assertTrue(sample == expected_sample)
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
