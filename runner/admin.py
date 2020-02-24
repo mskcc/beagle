@@ -14,7 +14,7 @@ class OperatorRunAdmin(admin.ModelAdmin):
     read_only = ('message')
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
-    list_display = ('id', link_relation("from_operator"), link_relation("to_operator"), 'condition')
+    list_display = ('id', link_relation("from_operator"), link_relation("to_operator"), 'aggregate_condition')
 
 class PortAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'run', 'db_value')

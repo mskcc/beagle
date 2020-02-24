@@ -40,5 +40,47 @@
             "status": 0,
             "execution_id": null
         }
+    },
+    {
+        "model": "runner.run",
+        "pk": "b6f4bc72-0b11-42ea-9a4b-c774fb2c6622",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "name": "INDIVIDUAL ROSLIN JOB 1",
+            "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
+            "operator_run": 2,
+            "tags": {},
+            "status": 0,
+            "execution_id": null
+        }
+    },
+    {
+        "model": "runner.run",
+        "pk": "c6f4bc72-0b11-42ea-9a4b-c774fb2c6622",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "name": "INDIVIDUAL ROSLIN JOB 2",
+            "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
+            "operator_run": 2,
+            "tags": {},
+            "status": 0,
+            "execution_id": null
+        }
+    },
+    {
+        "model": "runner.run",
+        "pk": "f6f4bc72-0b11-42ea-9a4b-c774fb2c6622",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "name": "INDIVIDUAL ROSLIN JOB 3",
+            "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
+            "operator_run": 2,
+            "tags": {},
+            "status": 0,
+            "execution_id": null
+        }
     }
 ]
