@@ -4,6 +4,7 @@ Test for constructing Roslin samples
 from uuid import UUID
 from django.test import TestCase
 from runner.operator.roslin_operator.bin.make_sample import build_sample
+import json
 
 
 class TestMakeSample(TestCase):
@@ -126,5 +127,8 @@ class TestMakeSample(TestCase):
                            'species': 'Human',
                            'specimen_type': 'Blood',
                            'tumor_type': 'Normal'}
+
+        print(json.dumps(sample))
+        print(json.dumps(expected_sample))
 
         self.assertTrue(sample == expected_sample)
