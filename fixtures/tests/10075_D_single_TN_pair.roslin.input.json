@@ -29,7 +29,10 @@
                 ],
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-                "bwa_output": "s_C_8VK0V7_R001_d.bam"
+                "bwa_output": "s_C_8VK0V7_R001_d.bam",
+                "assay": "IMPACT468_b37",
+                "pi": "John Smith",
+                "pi_email": "email@internet.com"
             },
             {
                 "ID": "s_C_8VK0V7_N001_d",
@@ -59,7 +62,10 @@
                 ],
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-                "bwa_output": "s_C_8VK0V7_N001_d.bam"
+                "bwa_output": "s_C_8VK0V7_N001_d.bam",
+                "assay": "IMPACT468_b37",
+                "pi": "John Smith",
+                "pi_email": "email@internet.com"
             }
         ],
         "curated_bams": [
@@ -341,6 +347,7 @@
             ],
             "emit_original_quals": true,
             "num_threads": 10,
+            "assay": "IMPACT468_b37",
             "tmp_dir": "/scratch",
             "project_prefix": [
                 "10075_D"
