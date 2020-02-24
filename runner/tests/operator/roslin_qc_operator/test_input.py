@@ -365,9 +365,14 @@ class TestInput(TestCase):
         run_queryset = Run.objects.all()
 
         qc_input = build_inputs_from_runs(run_queryset)
-        print(">>> printing qc_input to file")
-        print(json.dumps(qc_input, indent = 4), file = open("qc_input.json", 'w'))
-        self.assertTrue(False) # TODO: finish work here
+        # print(">>> printing qc_input to file")
+        # print(json.dumps(qc_input, indent = 4), file = open("qc_input.json", 'w'))
+        # self.assertTrue(False)
+        # TODO: how to output format?
+        self.assertEqual(len(qc_input['pairs']), 2)
+        self.assertEqual(len(qc_input['pairs'][0]), 2)
+        self.assertEqual(len(qc_input['bams']), 2)
+        self.assertEqual(len(qc_input['bams'][0]), 2)
 
     def test_load_extra_fixtures(self):
         """
