@@ -7,6 +7,7 @@ from mock import patch
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.roslin_qc_operator.roslin_qc_operator import RoslinQcOperator
+from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
 from runner.models import Pipeline, Run
@@ -18,31 +19,19 @@ class TestRoslinQcOperator(TestCase):
     "file_system.filegroup.json",
     "file_system.filetype.json",
     "file_system.storage.json",
-    "runner.pipeline.json"
+    "runner.pipeline.json",
+    "beagle_etl.operator.json"
     ]
 
-    def test_operator_factory_roslin_qc1(self):
+    def test_create_operator1(self):
         """
-        Test that a Roslin QC operator instance can be created with Operator.factory
+        Test that a Roslin QC operator instance can be created
         """
         pipeline_type = "roslin-qc"
         request_id = "foo"
-        operator = OperatorFactory.factory(pipeline_type, request_id)
+        roslin_qc_model = Operator.objects.get(slug="roslin-qc")
+        operator = RoslinQcOperator(roslin_qc_model, request_id = request_id)
         self.assertTrue(isinstance(operator, RoslinQcOperator))
-        self.assertTrue( operator.pipeline_id == "9b7f2ac8-03a5-4c44-ae87-1d9f6500d19a")
-        self.assertTrue( operator.operator == "roslin-qc")
-        self.assertTrue( operator.request_id == "foo")
-        self.assertTrue( operator._jobs == [])
-        self.assertTrue( len(operator.files) == 0)
-
-    def test_operator_factory_get_by_class_name(self):
-        """
-        Test that you can get the RoslinQC operator by Operator.get_by_class_name
-        """
-        operator = OperatorFactory.get_by_class_name("RoslinQcOperator", "foo")
-        self.assertTrue(isinstance(operator, RoslinQcOperator))
-        self.assertTrue( operator.pipeline_id == "9b7f2ac8-03a5-4c44-ae87-1d9f6500d19a")
-        self.assertTrue( operator.operator == "roslin-qc")
         self.assertTrue( operator.request_id == "foo")
         self.assertTrue( operator._jobs == [])
         self.assertTrue( len(operator.files) == 0)
@@ -60,7 +49,8 @@ class TestRoslinQcOperator(TestCase):
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         # create the operator instance
-        operator = RoslinQcOperator(request_id = None, run_ids = ['ca18b090-03ad-4bef-acd3-52600f8e62eb'])
+        roslin_qc_model = Operator.objects.get(slug="roslin-qc")
+        operator = RoslinQcOperator(roslin_qc_model, run_ids = ['ca18b090-03ad-4bef-acd3-52600f8e62eb'])
 
         # check its attributes
         self.assertEqual(operator.run_ids, ['ca18b090-03ad-4bef-acd3-52600f8e62eb'])

@@ -12,7 +12,7 @@ class RoslinQcOperator(Operator):
     Operator for Roslin QC pipeline
     """
 
-    def __init__(self, request_id = None, run_ids = None):
+    def __init__(self, model, request_id = None, run_ids = None):
         self.run_ids = run_ids
         self.runs = None
         if self.run_ids != None:
@@ -20,7 +20,7 @@ class RoslinQcOperator(Operator):
         # TODO: add support for things like FileMetadata's
         # TODO: add support for multiple request ids
 
-        Operator.__init__(self, 'roslin-qc', request_id)
+        Operator.__init__(self, model, request_id = request_id, run_ids = run_ids)
 
     def get_pipeline_id(self):
         return "9b7f2ac8-03a5-4c44-ae87-1d9f6500d19a"

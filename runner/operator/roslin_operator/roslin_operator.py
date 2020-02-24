@@ -7,13 +7,6 @@ from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 
 class RoslinOperator(Operator):
-
-    def __init__(self, request_id):
-        Operator.__init__(self, 'roslin', request_id)
-
-    def get_pipeline_id(self):
-        return "cb5d793b-e650-4b7d-bfcd-882858e29cc5" # Return ID of the pipeline
-
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         roslin_jobs = list()

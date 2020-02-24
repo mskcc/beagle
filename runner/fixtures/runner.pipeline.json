@@ -38,7 +38,8 @@
             "version": "1.0.0-rc5",
             "entrypoint": "workflows/pair-workflow-sv.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_sv"
+            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_sv",
+            "operator": 1
         }
     },
     {
