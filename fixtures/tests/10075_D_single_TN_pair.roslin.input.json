@@ -1,5 +1,8 @@
 [
     {
+        "assay": "IMPACT468_BAITS",
+        "pi": "John Smith",
+        "pi_email": "email@internet.com",
         "pair": [
             {
                 "ID": "s_C_8VK0V7_R001_d",
@@ -29,10 +32,7 @@
                 ],
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-                "bwa_output": "s_C_8VK0V7_R001_d.bam",
-                "assay": "IMPACT468_BAITS",
-                "pi": "John Smith",
-                "pi_email": "email@internet.com"
+                "bwa_output": "s_C_8VK0V7_R001_d.bam"
             },
             {
                 "ID": "s_C_8VK0V7_N001_d",
@@ -62,10 +62,7 @@
                 ],
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-                "bwa_output": "s_C_8VK0V7_N001_d.bam",
-                "assay": "IMPACT468_BAITS",
-                "pi": "John Smith",
-                "pi_email": "email@internet.com"
+                "bwa_output": "s_C_8VK0V7_N001_d.bam"
             }
         ],
         "curated_bams": [
