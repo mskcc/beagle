@@ -7,13 +7,6 @@ from .bin.make_sample import generate_results
 
 
 class AccessOperator(Operator):
-
-    def __init__(self, request_id):
-        Operator.__init__(self, 'access', request_id)
-
-    def get_pipeline_id(self):
-        return "be8af61e-46f4-43d4-9838-191b17465bac" # Return ID of the pipeline
-
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         access_jobs = list() #  [APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': inputs})]

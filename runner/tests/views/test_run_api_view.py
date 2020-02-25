@@ -27,6 +27,7 @@ class TestRunAPIView(TestCase):
     "file_system.filegroup.json",
     "file_system.filetype.json",
     "file_system.storage.json",
+    "beagle_etl.operator.json",
     "runner.pipeline.json"
     ]
 

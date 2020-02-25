@@ -1,9 +1,7 @@
 import uuid
 from enum import IntEnum
 from django.db import models
-from runner.models import Pipeline
 from django.contrib.postgres.fields import JSONField, ArrayField
-
 
 class JobStatus(IntEnum):
     CREATED = 0
@@ -37,3 +35,6 @@ class Operator(models.Model):
     class_name = models.CharField(max_length=100)
     active = models.BooleanField(default=False)
     recipes = ArrayField(models.CharField(max_length=50, default=False))
+
+    def __str__(self):
+        return u"{}".format(self.slug)

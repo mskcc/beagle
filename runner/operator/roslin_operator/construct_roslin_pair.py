@@ -69,7 +69,7 @@ def construct_roslin_jobs(samples):
         job['pair'] = [tumor_sample, normal_sample]
         job['assay'] = assay
         job['pi'] = pi
-        job['pi_email'] = pi
+        job['pi_email'] = pi_email
         references = convert_references(project_id, assay)
         job.update(references)
         roslin_jobs.append(job)
