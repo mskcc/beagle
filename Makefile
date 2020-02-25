@@ -381,9 +381,10 @@ REQID:=07264_G
 TOKEN:=IUzI1NiJ9.eyJ0
 # import files data about samples in a request from the IGO LIMS
 import:
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
-	-H "Authorization: Bearer $(TOKEN)" \
+	-H "Authorization: Bearer $$token" \
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
