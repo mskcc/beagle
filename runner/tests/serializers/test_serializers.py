@@ -11,7 +11,8 @@ class TestSerializers(TestCase):
     "file_system.filegroup.json",
     "file_system.filetype.json",
     "file_system.storage.json",
-    "runner.pipeline.json"
+    "runner.pipeline.json",
+    "beagle_etl.operator.json"
     ]
 
     def test_create_run_serializer1(self):
