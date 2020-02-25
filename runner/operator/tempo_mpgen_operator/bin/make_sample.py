@@ -26,12 +26,14 @@ def format_sample_name(sample_name):
         elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
+        elif not sample_name:
+            return "emptySampleName"
         else:
             logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return sample_name
     except TypeError as error:
         logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
-        return "noSampleName"
+        return "nullSampleName"
 
 
 def check_samples(samples):
