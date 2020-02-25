@@ -200,7 +200,8 @@ class TestPairRequest(TestCase):
             'run_date': ['2019-12-12'],
             'species': 'Human',
             'specimen_type': 'Blood',
-            'tumor_type': 'Normal'
+            'tumor_type': 'Normal',
+            'pi': 'John Smith', 'pi_email': 'email@internet.com'
             }],
         'tumor': [{
             'bait_set': 'IMPACT468_BAITS',
@@ -266,7 +267,8 @@ class TestPairRequest(TestCase):
             'run_date': ['2019-12-12'],
             'species': 'Human',
             'specimen_type': 'Blood',
-            'tumor_type': 'Normal'
+            'tumor_type': 'Normal',
+            'pi': 'John Smith', 'pi_email': 'email@internet.com'
             }],
         'tumor': [{
             'bait_set': 'IMPACT468_BAITS',
@@ -345,7 +347,9 @@ class TestPairRequest(TestCase):
             'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz'],
             'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
             'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
-            'request_id': ['10075_D_2']}
+            'request_id': ['10075_D_2'],
+            'pi': 'John Smith',
+            'pi_email': 'email@internet.com' }
             ]
         }
 
@@ -416,7 +420,8 @@ class TestPairRequest(TestCase):
             'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz'],
             'R1_bid': [UUID('08072445-84ff-4b43-855d-d8d2dc87e2d5')],
             'R2_bid': [UUID('f0d9a1e1-9414-42df-a749-08776732ee04')],
-            'request_id': ['10075_D_4']}
+            'request_id': ['10075_D_4'],
+            'pi': 'John Smith', 'pi_email': 'email@internet.com'}
             ]
         }
 

@@ -126,7 +126,9 @@ class TestMakeSample(TestCase):
                            'run_date': ['2019-12-12'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
-                           'tumor_type': 'Normal'}
+                           'tumor_type': 'Normal',
+                           'pi': 'John Smith',
+                           'pi_email': 'email@internet.com'}
 
         print(json.dumps(sample, cls=UUIEncoder))
         print(json.dumps(expected_sample, cls=UUIDEncoder))
