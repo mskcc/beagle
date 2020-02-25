@@ -311,7 +311,7 @@ export DJANGO_RIDGEBACK_IP:=localhost
 export DJANGO_RIDGEBACK_PORT:=7001
 export BEAGLE_RIDGEBACK_URL=http://$(DJANGO_RIDGEBACK_IP):$(DJANGO_RIDGEBACK_PORT)
 export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
-
+export BEAGLE_LOG_PATH:=$(LOG_DIR_ABS)/beagle-server.log
 
 # initialize the Django app in the database
 # do this after setting up the db above
