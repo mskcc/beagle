@@ -103,8 +103,10 @@ class PortProcessor(object):
         except FileHelperException as e:
             raise PortProcessorException('File %s not found' % location)
         secondary_files = file_obj.pop('secondaryFiles', [])
-        file_obj['secondaryFiles'] = PortProcessor.process_files(secondary_files,
+        secondary_files_value = PortProcessor.process_files(secondary_files,
                                                                  PortAction.CONVERT_TO_PATH)
+        if secondary_files_value:
+            file_obj['secondaryFiles'] = secondary_files_value
         file_obj['path'] = path
         return file_obj
 

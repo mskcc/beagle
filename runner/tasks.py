@@ -32,6 +32,7 @@ def create_jobs_from_operator(operator):
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
 
+
 @shared_task
 def create_jobs_from_request(request_id, operator_id):
     logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
@@ -174,6 +175,7 @@ def complete_job(run_id, outputs):
             [run_id]
         )
 
+
 def running_job(run):
     run.status = RunStatus.RUNNING
     run.save()
@@ -190,7 +192,7 @@ def check_jobs_status():
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
                     # TODO: Fetch error message from Executor here
-                    fail_job(run,
+                    fail_job(str(run.id),
                              'Job failed. You can find logs in /work/pi/beagle/work/%s' %
                              str(run.execution_id))
                     continue
