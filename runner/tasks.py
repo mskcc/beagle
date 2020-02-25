@@ -5,7 +5,7 @@ import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerConditionType
+from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
@@ -56,29 +56,36 @@ def process_triggers():
 
     for operator_run in operator_runs:
         try:
-            condition = operator_run.trigger.condition
-            if condition == TriggerConditionType.ALL_RUNS_SUCCEEDED:
-                if operator_run.percent_runs_succeeded == 100.0:
-                    operator_run.complete()
-                    create_jobs_from_chaining.delay(
-                        operator_run.trigger.to_operator_id,
-                        operator_run.trigger.from_operator_id,
-                        list(operator_run.runs.values_list('id', flat=True))
-                    )
-                    return
-            elif condition == TriggerConditionType.NINTY_PERCENT_SUCCEEDED:
-                if operator_run.percent_runs_succeeded >= 90.0:
-                    operator_run.complete()
-                    create_jobs_from_chaining.delay(
-                        operator_run.trigger.to_operator_id,
-                        operator_run.trigger.from_operator_id,
-                        list(operator_run.runs.values_list('id', flat=True))
-                    )
-                    return
+            trigger_type = operator_run.trigger.run_type
 
-            if operator_run.percent_runs_finished == 100.0:
-                logger.info("Condition never met for operator run %s" % operator_run.id)
-                operator_run.fail()
+            if trigger_type == TriggerRunType.AGGREGATE:
+                condition = operator_run.trigger.aggregate_condition
+                if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded == 100.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+                elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded >= 90.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+
+                if operator_run.percent_runs_finished == 100.0:
+                    logger.info("Condition never met for operator run %s" % operator_run.id)
+                    operator_run.fail()
+
+            elif trigger_type == TriggerRunType.INDIVIDUAL:
+                if operator_run.percent_runs_finished == 100.0:
+                    operator_run.complete()
 
         except Exception as e:
             logger.info("Trigger %s Fail" % operator_run.id)
@@ -158,6 +165,14 @@ def complete_job(run_id, outputs):
     run.complete(outputs)
     run.to_db()
 
+    trigger = run.run_obj.operator_run.trigger
+
+    if trigger.run_type == TriggerRunType.INDIVIDUAL:
+        create_jobs_from_chaining.delay(
+            trigger.to_operator_id,
+            trigger.from_operator_id,
+            [run_id]
+        )
 
 def running_job(run):
     run.status = RunStatus.RUNNING

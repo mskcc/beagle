@@ -39,11 +39,20 @@ class RoslinOperator(Operator):
             tumor_sample_name = job['pair'][0]['ID']
             normal_sample_name = job['pair'][1]['ID']
             name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            assay = job['assay']
+            pi = job['pi']
+            pi_email = job['pi_email']
             data = {
                 'app': self.get_pipeline_id(),
                 'inputs': roslin_inputs,
                 'name': name,
-                'tags': {'requestId': self.request_id}
+                'tags': {
+                    'requestId': self.request_id,
+                    'sampleNameTumor': tumor_sample_name,
+                    'sampleNameNormal': normal_sample_name,
+                    'labHeadName': pi,
+                    'labHeadEmail': pi_email
+                    }
                 }
             run = APIRunCreateSerializer(data = data)
             roslin_jobs.append((run, job))

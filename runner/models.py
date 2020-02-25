@@ -20,7 +20,14 @@ class PortType(IntEnum):
     OUTPUT = 1
 
 
-class TriggerConditionType(IntEnum):
+# Triggers on an aggregate (some amount of run threshold must be met) or on
+# an individual run
+class TriggerRunType(IntEnum):
+    AGGREGATE = 0
+    INDIVIDUAL = 1
+
+
+class TriggerAggregateConditionType(IntEnum):
     NINTY_PERCENT_SUCCEEDED = 0
     ALL_RUNS_SUCCEEDED = 1
 
@@ -49,10 +56,16 @@ class Pipeline(BaseModel):
 class OperatorTrigger(BaseModel):
     from_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="from_triggers")
     to_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="to_triggers")
-    condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerConditionType])
+    aggregate_condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerAggregateConditionType], null=True)
+    run_type = models.IntegerField(choices=[(t.value, t.name) for t in TriggerRunType])
 
     def __str__(self):
-        return u"{} -> {} when {}".format(self.from_operator, self.to_operator, TriggerConditionType(self.condition).name.title())
+        if self.run_type == TriggerRunType.AGGREGATE:
+            return u"{} -> {} when {}".format(self.from_operator, self.to_operator, TriggerAggregateConditionType(self.aggregate_condition).name.title())
+        elif self.run_type == TriggerRunType.INDIVIDUAL:
+            return u"{} -> {} on each run".format(self.from_operator, self.to_operator)
+        else:
+            return u"{} -> {}".format(self.from_operator, self.to_operator)
 
 class OperatorRun(BaseModel):
     trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
