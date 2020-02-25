@@ -5,9 +5,6 @@ from django.test import TestCase
 from runner.operator.operator import Operator
 
 class TestOperator(TestCase):
-    def test_true(self):
-        self.assertTrue(True)
-
     def test_operator_instance(self):
         """
         Test that an Operator instance can be created and it has the correct attributes

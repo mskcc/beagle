@@ -3,7 +3,6 @@ Tests for Run API View
 """
 import os
 from mock import patch
-from unittest.mock import Mock
 from django.test import TestCase
 from runner.views.run_api_view import OperatorViewSet
 from runner.models import Run
@@ -27,6 +26,7 @@ class TestRunAPIView(TestCase):
     "file_system.filegroup.json",
     "file_system.filetype.json",
     "file_system.storage.json",
+    "beagle_etl.operator.json",
     "runner.pipeline.json"
     ]
 

@@ -7,13 +7,6 @@ from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 
 class TempoOperator(Operator):
-
-    def __init__(self, request_id):
-        Operator.__init__(self, 'tempo', request_id)
-
-    def get_pipeline_id(self):
-        return "ee5f19d6-f8bf-401f-8cbc-1dd81af10e67" # Return ID of the pipeline
-
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         tempo_jobs = list()
