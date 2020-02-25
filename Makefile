@@ -217,7 +217,7 @@ check-env:
 	BEAGLE_AUTH_LDAP_SERVER_URI \
 	BEAGLE_LIMS_PASSWORD \
 	BEAGLE_LIMS_USERNAME; do \
-	[ -z "$$(printenv BEAGLE_LIMS_USERNAME)" ] && echo ">>> env variable $$i is not set; some features may not work" || : ; done
+	[ -z "$$(printenv $$i)" ] && echo ">>> env variable $$i is not set; some features may not work" || : ; done
 
 # start the RabbitMQ server in the background
 rabbitmq-start: $(LOG_DIR_ABS)
@@ -316,17 +316,22 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 # initialize the Django app in the database
 # do this after setting up the db above
 django-init:
-	python manage.py makemigrations --merge
+	python manage.py makemigrations # --merge
 	python manage.py migrate
+	$(MAKE) django-load-fixtures
 	python manage.py createsuperuser
+
+django-load-fixtures:
 	python manage.py loaddata \
+	beagle_etl.operator.json \
 	file_system.filegroup.json \
 	file_system.filetype.json \
 	file_system.storage.json \
 	runner.pipeline.json
 
+TEST_ARGS?=
 test: check-env
-	python manage.py test
+	python manage.py test $(TEST_ARGS)
 
 # this one needs external LIMS access currently and takes a while to run so dont include it by default
 test-lims: check-env
@@ -340,6 +345,9 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+
+dumpdata: check-env
+	python manage.py dumpdata
 
 makemigrations: check-env
 	python manage.py makemigrations
@@ -426,6 +434,7 @@ files-request:
 	--data '{"request_ids":["$(REQID)"]}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/
 # python ./beagle_cli.py files list --metadata='requestId:$(REQID)'
+# http://localhost:6991/v0/fs/files/?metadata=requestId:DemoRequest1
 
 # get info on a single file
 REQFILE:=b37.fasta
@@ -436,22 +445,28 @@ file-get:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
 # start a Roslin run for a given request in the Beagle db
-run-request:
+PIPELINE:=roslin
+run-request: $(AUTH_FILE)
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
-	-H "Authorization: Bearer $(TOKEN)" \
-	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	-H "Authorization: Bearer $$token" \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "$(PIPELINE)"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # send a pipeline input to the API to start running
 REQJSON:=fixtures/tests/run_roslin.json
 run-request-api: $(AUTH_FILE)
-	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $$token" \
 	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
+# http://localhost:6991/v0/run/api/?metadata=requestId:10277_C
+# http://localhost:6991/v0/run/api/?requestId%3D10277_C/
 
 # make a demo Roslin input.json file from the template fixture;
 # need to update the fixture with the app ID of the demo pipeline that was loaded in the database
@@ -467,11 +482,21 @@ $(DEMO_INPUT): $(INPUT_TEMPLATE) $(AUTH_FILE)
 .PHONY: $(DEMO_INPUT)
 
 # submit a demo Roslin run using the dev Roslin pipeline entry in the database
-demo-run: register-dev-pipeline $(DEMO_INPUT)
+# submit using the API endpoint; bypasses the Operator
+demo-run-api: register-dev-pipeline $(DEMO_INPUT)
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
 	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
+
+# run the update-request endpoint for a request ID in order to update the metadata about a request
+update-request:
+	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $$token" \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/update-requests/
 
 # check if the ports needed for services and servers are already in use on this system
 ifeq ($(UNAME), Darwin)

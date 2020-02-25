@@ -5,7 +5,7 @@ import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType
+from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
@@ -14,40 +14,82 @@ from runner.exceptions import RunCreateException
 logger = logging.getLogger(__name__)
 
 
+def create_jobs_from_operator(operator):
+    jobs = operator.get_jobs()
+
+    valid_jobs, invalid_jobs = [], []
+    for job in jobs:
+        valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
+
+    operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
+
+    for job in valid_jobs:
+        logger.info("Creating Run object")
+        run = job[0].save(operator_run_id=operator_run.id)
+        logger.info("Run object created with id: %s" % str(run.id))
+        create_run_task.delay(str(run.id), job[1], None)
+
+    for job in invalid_jobs:
+        logger.error("Job invalid: %s" % str(job[0].errors))
 
 @shared_task
 def create_jobs_from_request(request_id, operator_id):
     logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
-    operator_info = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_class_name(operator_info.class_name, request_id)
-
-    jobs = operator.get_jobs()
-
-    for job in jobs:
-        if job[0].is_valid():
-            logger.info("Creating Run object")
-            run = job[0].save()
-            logger.info("Run object created with id: %s" % str(run.id))
-            create_run_task.delay(str(run.id), job[1], None)
-        else:
-            logger.error("Job invalid: %s" % str(job[0].errors))
+    operator_model = Operator.objects.get(id=operator_id)
+    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+    create_jobs_from_operator(operator)
 
 
-# TODO remove this when the Celery backlog is flushed and OperatorViewSet is updated
 @shared_task
-def operator_job(request_id, pipeline_type):
-    # warnings.warn("operator_job to be deprecated for create_jobs_from_request", DeprecationWarning, stacklevel=2)
-    logger.info("Creating operator %s for requestId: %s" % (pipeline_type, request_id))
-    operator = OperatorFactory.factory(pipeline_type, request_id)
-    jobs = operator.get_jobs()
-    for job in jobs:
-        if job[0].is_valid():
-            logger.info("Creating Run object")
-            run = job[0].save()
-            logger.info("Run object created with id: %s" % str(run.id))
-            create_run_task.delay(str(run.id), job[1], None)
-        else:
-            logger.error("Job invalid: %s" % str(job[0].errors))
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
+    logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
+    operator_model = Operator.objects.get(id=to_operator_id)
+    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
+    create_jobs_from_operator(operator)
+
+
+@shared_task
+def process_triggers():
+    operator_runs = OperatorRun.objects.prefetch_related(
+        'trigger', 'runs'
+    ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
+
+    for operator_run in operator_runs:
+        try:
+            trigger_type = operator_run.trigger.run_type
+
+            if trigger_type == TriggerRunType.AGGREGATE:
+                condition = operator_run.trigger.aggregate_condition
+                if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded == 100.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+                elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded >= 90.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+
+                if operator_run.percent_runs_finished == 100.0:
+                    logger.info("Condition never met for operator run %s" % operator_run.id)
+                    operator_run.fail()
+
+            elif trigger_type == TriggerRunType.INDIVIDUAL:
+                if operator_run.percent_runs_finished == 100.0:
+                    operator_run.complete()
+
+        except Exception as e:
+            logger.info("Trigger %s Fail" % operator_run.id)
+            operator_run.fail()
 
 
 @shared_task
@@ -123,6 +165,14 @@ def complete_job(run_id, outputs):
     run.complete(outputs)
     run.to_db()
 
+    trigger = run.run_obj.operator_run.trigger
+
+    if trigger.run_type == TriggerRunType.INDIVIDUAL:
+        create_jobs_from_chaining.delay(
+            trigger.to_operator_id,
+            trigger.from_operator_id,
+            [run_id]
+        )
 
 def running_job(run):
     run.status = RunStatus.RUNNING

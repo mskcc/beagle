@@ -1,5 +1,8 @@
 [
     {
+        "assay": "IMPACT468_BAITS",
+        "pi": "John Smith",
+        "pi_email": "email@internet.com",
         "pair": [
             {
                 "ID": "s_C_8VK0V7_R001_d",
@@ -341,6 +344,7 @@
             ],
             "emit_original_quals": true,
             "num_threads": 10,
+            "assay": "IMPACT468_BAITS",
             "tmp_dir": "/scratch",
             "project_prefix": [
                 "10075_D"
