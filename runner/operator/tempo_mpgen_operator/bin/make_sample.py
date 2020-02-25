@@ -11,17 +11,10 @@ def remove_with_caveats(samples):
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
         patient_id = sample['patient_id']
-        if sample_name == 'sampleNameMalformed':
-            add = False
-            logging.debug("Sample name is malformed for for %s; removing from set" % igo_id)
-        if patient_id[:2].lower() not in 'c-':
-            add = False
-            logging.debug("Patient ID does not start with expected 'C-' prefix for %s; removing from set" % igo_id)
         if add:
             data.append(sample)
         else:
             error_data.append(sample)
-
     return data, error_data
 
 
@@ -35,10 +28,10 @@ def format_sample_name(sample_name):
             return sample_name
         else:
             logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
-            return 'sampleNameMalformed'
+            return sample_name
     except TypeError as error:
         logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
-        return "sampleNameMalformed"
+        return "noSampleName"
 
 
 def check_samples(samples):
@@ -55,7 +48,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'sequencing_center', 'platform', 'sample_name',
+    single_values = [ 'sequencing_center', 'platform', 'platform_unit', 'sample_name',
                     'bait_set', 'patient_id', 'species', 'tumor_type',
                     'sample_id', 'specimen_type', 'external_sample_id', 
                     'investigator_sample_id', 'investigator_name', 'investigator_email',
