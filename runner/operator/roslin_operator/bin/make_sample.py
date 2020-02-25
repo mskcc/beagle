@@ -65,6 +65,10 @@ def check_and_return_single_values(data):
             logging.error("Expected only one value for %s!" %key)
             logging.error("Check import, something went wrong.")
 
+    # concatenating pi and pi_email
+    data['pi'] = '; '.join(set(data['pi']))
+    data['pi_email'] = '; '.join(set(data['pi_email']))
+
     # hack; formats LB field so that it is a string
     lb = [i for i in data['LB'] if i ]
     if len(lb) > 0:
@@ -102,6 +106,8 @@ def build_sample(data):
         pu = flowcell_id
         run_date = meta['runDate']
         r_orientation = meta['R']
+        pi = meta['labHeadName']
+        pi_email = meta['labHeadEmail']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
         rg_id = '_'.join([cmo_sample_name, pu])
@@ -122,6 +128,8 @@ def build_sample(data):
             sample['run_date'] = run_date
             sample['specimen_type'] = specimen_type
             sample['request_id'] = request_id
+            sample['pi'] = pi
+            sample['pi_email'] = pi_email
         else:
             sample = samples[rg_id]
 
@@ -154,6 +162,8 @@ def build_sample(data):
     result['R1_bid'] = list()
     result['R2_bid'] = list()
     result['request_id'] = list()
+    result['pi'] = list()
+    result['pi_email'] = list()
 
     for rg_id in samples:
         sample = samples[rg_id]
