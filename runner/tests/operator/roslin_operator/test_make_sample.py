@@ -4,6 +4,7 @@ Test for constructing Roslin samples
 from uuid import UUID
 from django.test import TestCase
 from runner.operator.roslin_operator.bin.make_sample import build_sample
+import json
 
 
 class TestMakeSample(TestCase):
@@ -125,6 +126,18 @@ class TestMakeSample(TestCase):
                            'run_date': ['2019-12-12'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
-                           'tumor_type': 'Normal'}
+                           'tumor_type': 'Normal',
+                           'pi': 'John Smith',
+                           'pi_email': 'email@internet.com'}
+
+        print(json.dumps(sample, cls=UUIDEncoder))
+        print(json.dumps(expected_sample, cls=UUIDEncoder))
 
         self.assertTrue(sample == expected_sample)
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
