@@ -18,7 +18,8 @@ from runner.pipeline.pipeline_resolver import CWLResolver
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request
-
+from beagle_etl.models import Operator
+from runner.operator.roslin_qc_operator.roslin_qc_operator import RoslinQcOperator
 
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
@@ -92,13 +93,25 @@ class OperatorViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
 
     def post(self, request):
-        request_ids = request.data['request_ids']
+        request_ids = request.data.get('request_ids', None)
+        run_ids = request.data.get('run_ids', None)
         pipeline_name = request.data['pipeline_name']
         pipeline = get_object_or_404(Pipeline, name=pipeline_name)
 
-        for request_id in request_ids:
-            logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
-            create_jobs_from_request.delay(request_id, pipeline.operator_id)
+        if pipeline_name == "roslin-qc":
+            logging.info("Got roslin-qc pipeline for: request_ids: {request_ids}, run_ids: {run_ids}".format(request_ids = request_ids, run_ids = run_ids))
+            # create the operator instance
+            roslin_qc_model = Operator.objects.get(slug="roslin-qc")
+            operator = RoslinQcOperator(roslin_qc_model, request_id = None, run_ids = run_ids) # TODO: need to handle all request_ids
+            jobs = operator.get_jobs()
+            for job in jobs:
+                if job[0].is_valid():
+                    run = job[0].save()
+                    create_run_task.delay(str(run.id), job[1], None)
+        else:
+            for request_id in request_ids:
+                logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
+                create_jobs_from_request.delay(request_id, pipeline.operator_id)
         # tempo_operator = TempoOperator(request_id)
         # jobs = tempo_operator.get_jobs()
         # result = []
