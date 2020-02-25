@@ -63,8 +63,8 @@ def pretty_python_exception(field_name):
         if not json_obj:
             return "-"
         message = json_obj["details"]
-        if message[0:5] == "Error":
-            error = ast.literal_eval(json_obj["details"][7:])
+        if message[0:5] == "Error" and message[7:]:
+            error = ast.literal_eval(message[7:])
             error = " ".join(error)
             formatter = HtmlFormatter(style='colorful')
             response = highlight(error, PythonLexer(), formatter)

@@ -56,4 +56,7 @@ class TestConstructPair(TestCase):
 
         roslin_inputs, error_samples = construct_roslin_jobs(samples)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.roslin.input.json")))
+
+        print(json.dumps(roslin_inputs))
+        print(json.dumps(expected_inputs))
         self.assertTrue(roslin_inputs == expected_inputs)
