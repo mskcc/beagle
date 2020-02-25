@@ -48,7 +48,8 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
-    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return u"{}".format(self.name)
 
