@@ -130,7 +130,7 @@ class TestMakeSample(TestCase):
                            'pi': 'John Smith',
                            'pi_email': 'email@internet.com'}
 
-        print(json.dumps(sample, cls=UUIEncoder))
+        print(json.dumps(sample, cls=UUIDEncoder))
         print(json.dumps(expected_sample, cls=UUIDEncoder))
 
         self.assertTrue(sample == expected_sample)
