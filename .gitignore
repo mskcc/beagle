@@ -7,4 +7,5 @@ db*
 scripts/*.json
 conda*
 input.json
+scripts/*.json*
 *.swp

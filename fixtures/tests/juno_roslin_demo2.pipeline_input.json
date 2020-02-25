@@ -310,10 +310,16 @@
         "PU": [
         ],
         "R1": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            {
+              "class": "File",
+              "location": "juno:///juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            }
         ],
         "R2": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            {
+              "class": "File",
+              "location": "juno:///juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            }
         ],
         "bam": [],
         "zR1": [],
@@ -332,10 +338,16 @@
         "PU": [
         ],
         "R1": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            {
+              "class": "File",
+              "location": "juno:///juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            }
         ],
         "R2": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            {
+              "class": "File",
+              "location": "juno:///juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            }
         ],
         "bam": [],
         "zR1": [],
