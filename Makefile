@@ -449,7 +449,6 @@ file-get:
 PIPELINE:=roslin
 run-request: $(AUTH_FILE)
 	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
-	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $$token" \
@@ -460,7 +459,6 @@ run-request: $(AUTH_FILE)
 REQJSON:=fixtures/tests/run_roslin.json
 run-request-api: $(AUTH_FILE)
 	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
-	echo ">>> token: $$token" && \
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $$token" \
@@ -489,6 +487,16 @@ demo-run-api: register-dev-pipeline $(DEMO_INPUT)
 	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
 	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
+
+demo-roslin-qc:
+	python manage.py loaddata fixtures/tests/ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json && \
+	token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
+	curl -H "Content-Type: application/json" \
+	-X POST \
+	-H "Authorization: Bearer $$token" \
+	--data '{"request_ids":[], "run_ids":["ca18b090-03ad-4bef-acd3-52600f8e62eb"], "pipeline_name": "roslin-qc"}' \
+	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
+# python manage.py loaddata fixtures/tests/8f44d2f8-15c0-4d97-a966-6ad0b916bb41.run.ALN-REQ-ID.json && \
 
 # run the update-request endpoint for a request ID in order to update the metadata about a request
 update-request:
