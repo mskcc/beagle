@@ -1,0 +1,184 @@
+[
+{
+    "model": "file_system.filetype",
+    "pk": 1,
+    "fields": {
+        "name": "fastq"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 2,
+    "fields": {
+        "name": "fasta"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 3,
+    "fields": {
+        "name": "bam"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 4,
+    "fields": {
+        "name": "bed"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 5,
+    "fields": {
+        "name": "bedtools_genome"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 6,
+    "fields": {
+        "name": "ilist"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 7,
+    "fields": {
+        "name": "interval_list"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 8,
+    "fields": {
+        "name": "intervals"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 9,
+    "fields": {
+        "name": "tsv"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 10,
+    "fields": {
+        "name": "txt"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 11,
+    "fields": {
+        "name": "vcf"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 12,
+    "fields": {
+        "name": "amb"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 13,
+    "fields": {
+        "name": "ann"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 15,
+    "fields": {
+        "name": "bwt"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 16,
+    "fields": {
+        "name": "dict"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 17,
+    "fields": {
+        "name": "fai"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 18,
+    "fields": {
+        "name": "pac"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 19,
+    "fields": {
+        "name": "sa"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 20,
+    "fields": {
+        "name": "tbi"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 21,
+    "fields": {
+        "name": "unknown"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 22,
+    "fields": {
+        "name": "sh"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 23,
+    "fields": {
+        "name": "idx"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 24,
+    "fields": {
+        "name": "maf"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 25,
+    "fields": {
+        "name": "rbwt"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 26,
+    "fields": {
+        "name": "rpac"
+    }
+},
+{
+    "model": "file_system.filetype",
+    "pk": 27,
+    "fields": {
+        "name": "rsa"
+    }
+}
+]

@@ -1,61 +1,113 @@
-import uuid
 import os
+import uuid
 import logging
 import requests
-import runner.run.run_creator
 from celery import shared_task
 from django.conf import settings
-from .models import Run, RunStatus, Port, PortType
-from runner.operator.operator_factory import OperatorFactory
-from runner.pipeline.pipeline_resolver import CWLResolver
+from runner.run.objects.run_object import RunObject
+from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType
+from runner.operator import OperatorFactory
+from beagle_etl.models import Operator
+from runner.exceptions import RunCreateException
 
 
 logger = logging.getLogger(__name__)
 
 
-@shared_task
-def operator_job(request_id, pipeline_type):
-    logger.info("Creating operator %s for requestId: %s" % (pipeline_type, request_id))
-    operator = OperatorFactory.factory(pipeline_type, request_id)
+def create_jobs_from_operator(operator):
     jobs = operator.get_jobs()
+
+    valid_jobs, invalid_jobs = [], []
     for job in jobs:
-        if job[0].is_valid():
-            logger.info("Creating Run object")
-            run = job[0].save()
-            logger.info("Run object created with id: %s" % str(run.id))
-            create_run_task.delay(str(run.id), job[1], None)
-        else:
-            logger.error("Job invalid: %s" % str(job[0].errors))
+        valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
+
+    operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
+
+    for job in valid_jobs:
+        logger.info("Creating Run object")
+        run = job[0].save(operator_run_id=operator_run.id)
+        logger.info("Run object created with id: %s" % str(run.id))
+        create_run_task.delay(str(run.id), job[1], None)
+
+    for job in invalid_jobs:
+        logger.error("Job invalid: %s" % str(job[0].errors))
+
+
+@shared_task
+def create_jobs_from_request(request_id, operator_id):
+    logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
+    operator_model = Operator.objects.get(id=operator_id)
+    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+    create_jobs_from_operator(operator)
+
+
+@shared_task
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
+    logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
+    operator_model = Operator.objects.get(id=to_operator_id)
+    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
+    create_jobs_from_operator(operator)
+
+
+@shared_task
+def process_triggers():
+    operator_runs = OperatorRun.objects.prefetch_related(
+        'trigger', 'runs'
+    ).exclude(trigger__isnull=True, status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
+
+    for operator_run in operator_runs:
+        try:
+            trigger_type = operator_run.trigger.run_type
+
+            if trigger_type == TriggerRunType.AGGREGATE:
+                condition = operator_run.trigger.aggregate_condition
+                if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded == 100.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+                elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
+                    if operator_run.percent_runs_succeeded >= 90.0:
+                        operator_run.complete()
+                        create_jobs_from_chaining.delay(
+                            operator_run.trigger.to_operator_id,
+                            operator_run.trigger.from_operator_id,
+                            list(operator_run.runs.values_list('id', flat=True))
+                        )
+                        continue
+
+                if operator_run.percent_runs_finished == 100.0:
+                    logger.info("Condition never met for operator run %s" % operator_run.id)
+                    operator_run.fail()
+
+            elif trigger_type == TriggerRunType.INDIVIDUAL:
+                if operator_run.percent_runs_finished == 100.0:
+                    operator_run.complete()
+
+        except Exception as e:
+            logger.info("Trigger %s Fail" % operator_run.id)
+            operator_run.fail()
 
 
 @shared_task
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run")
     try:
-        run = Run.objects.get(id=run_id)
-    except Run.DoesNotExist:
-        raise Exception("Failed to create a run")
-    cwl_resolver = CWLResolver(run.app.github, run.app.entrypoint, run.app.version)
-    resolved_dict = cwl_resolver.resolve()
-    try:
-        task = runner.run.run_creator.Run(run_id, resolved_dict, inputs)
-        for input in task.inputs:
-            port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-                        secondary_files=input.secondary_files, db_value=input.db_value, value=input.value)
-            port.save()
-        for output in task.outputs:
-            port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
-                        secondary_files=output.secondary_files, db_value=output.value)
-            port.save()
-    except Exception as e:
-        run.status = RunStatus.FAILED
-        run.job_statuses = {'error': 'Error during creation because of %s' % str(e)}
-        run.save()
+        run = RunObject.from_cwl_definition(run_id, inputs)
+        run.ready()
+    except RunCreateException as e:
+        run = RunObject.from_db(run_id)
+        run.fail(e)
+        RunObject.to_db(run)
+        logger.info("Run %s Failed" % run_id)
     else:
-        run.status = RunStatus.READY
-        run.save()
+        RunObject.to_db(run)
         submit_job.delay(run_id, output_directory)
-        logger.info("Run created")
+        logger.info("Run %s Ready" % run_id)
 
 
 @shared_task
@@ -103,20 +155,25 @@ def check_status_on_ridgeback(job_id):
     return None
 
 
-def fail_job(run):
-    run.status = RunStatus.FAILED
-    run.save()
+def fail_job(run_id, error_message):
+    run = RunObject.from_db(run_id)
+    run.fail(error_message)
+    run.to_db()
 
 
-def complete_job(run, remote_status):
-    run.status = RunStatus.COMPLETED
-    file_group = run.app.output_file_group
-    for k, v in remote_status['outputs'].items():
-        port = run.port_set.filter(port_type=PortType.OUTPUT, name=k).first()
-        port.value = v
-        port.db_value = runner.run.run_creator._resolve_outputs(v, file_group, run.output_metadata)
-        port.save()
-    run.save()
+def complete_job(run_id, outputs):
+    run = RunObject.from_db(run_id)
+    run.complete(outputs)
+    run.to_db()
+
+    trigger = run.run_obj.operator_run.trigger
+
+    if trigger.run_type == TriggerRunType.INDIVIDUAL:
+        create_jobs_from_chaining.delay(
+            trigger.to_operator_id,
+            trigger.from_operator_id,
+            [run_id]
+        )
 
 
 def running_job(run):
@@ -134,11 +191,14 @@ def check_jobs_status():
             if remote_status:
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    fail_job(run)
+                    # TODO: Fetch error message from Executor here
+                    fail_job(str(run.id),
+                             'Job failed. You can find logs in /work/pi/beagle/work/%s' %
+                             str(run.execution_id))
                     continue
                 if remote_status['status'] == 'COMPLETED':
                     logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                    complete_job(run, remote_status)
+                    complete_job(str(run.id), remote_status['outputs'])
                     continue
                 if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
