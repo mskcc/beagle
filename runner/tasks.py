@@ -53,7 +53,7 @@ def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
 def process_triggers():
     operator_runs = OperatorRun.objects.prefetch_related(
         'trigger', 'runs'
-    ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
+    ).exclude(trigger__isnull=True, status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
         try:
