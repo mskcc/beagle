@@ -36,6 +36,9 @@ class FileView(mixins.CreateModelMixin,
         file_groups = request.query_params.getlist('file_group')
         if file_groups:
             queryset = queryset.filter(file_group_id__in=file_groups)
+        path = request.query_params.getlist('path')
+        if path:
+            queryset = queryset.filter(path__in=path)
         metadata = request.query_params.getlist('metadata')
         if metadata:
             filter_query = dict()
