@@ -1,7 +1,7 @@
 from .tempo_operator import TempoOperator
 from .roslin_operator import RoslinOperator
 from .access_operator import AccessOperator
-
+from .roslin_qc_operator import RoslinQcOperator
 
 class OperatorFactory(object):
 
@@ -9,6 +9,7 @@ class OperatorFactory(object):
         "TempoOperator": TempoOperator,
         "RoslinOperator": RoslinOperator,
         "AccessOperator": AccessOperator,
+        "RoslinQcOperator": RoslinQcOperator
     }
 
     def get_by_model(model, **kwargs):

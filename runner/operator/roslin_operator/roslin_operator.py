@@ -6,7 +6,6 @@ from .construct_roslin_pair import construct_roslin_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 
-
 class RoslinOperator(Operator):
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
@@ -43,11 +42,18 @@ class RoslinOperator(Operator):
             assay = job['assay']
             pi = job['pi']
             pi_email = job['pi_email']
-            roslin_jobs.append((APIRunCreateSerializer(
-                data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id,
-                          'sampleNameTumor': tumor_sample_name,
-                          'sampleNameNormal': normal_sample_name,
-                          'labHeadName': pi,
-                          'labHeadEmail': pi_email}}), job))
+            data = {
+                'app': self.get_pipeline_id(),
+                'inputs': roslin_inputs,
+                'name': name,
+                'tags': {
+                    'requestId': self.request_id,
+                    'sampleNameTumor': tumor_sample_name,
+                    'sampleNameNormal': normal_sample_name,
+                    'labHeadName': pi,
+                    'labHeadEmail': pi_email
+                    }
+                }
+            run = APIRunCreateSerializer(data = data)
+            roslin_jobs.append((run, job))
         return roslin_jobs

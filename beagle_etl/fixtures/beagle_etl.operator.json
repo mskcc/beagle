@@ -18,5 +18,15 @@
             "class_name": "AccessOperator",
             "slug": "access"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 3,
+        "fields": {
+            "active": true,
+            "recipes": "[]",
+            "class_name": "RoslinQcOperator",
+            "slug": "roslin-qc"
+        }
     }
 ]
