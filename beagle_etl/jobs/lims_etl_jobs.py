@@ -4,13 +4,13 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
-from runner.tasks import operator_job
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
+from runner.tasks import create_jobs_from_request
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,10 @@ logger = logging.getLogger(__name__)
 TYPES = {
     "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
     "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata"
+    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
+    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal",
+    "REQUEST_CALLBACK": "beagle_etl.jobs.lims_etl_jobs.request_callback",
+    "UPDATE_SAMPLE_METADATA": "beagle_etl.jobs.lims_etl_jobs.update_sample_metadata"
 }
 
 
@@ -42,36 +45,19 @@ def fetch_new_requests_lims(timestamp):
 
 def get_or_create_request_job(request_id):
     logger.info(
-        "Searching for job: %s for request_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_samples', request_id))
-    job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args__request_id=request_id).first()
+        "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
+    job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
+
     if not job:
-        op = Operator.objects.first()
-        if op.active:
-            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                      status=JobStatus.CREATED, max_retry=1, children=[],
-                      callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
-                      callback_args={'request_id': request_id})
-            job.save()
-        else:
-            job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                      status=JobStatus.CREATED, max_retry=1, children=[])
-            job.save()
+        job = Job(run=TYPES['REQUEST'], args={'request_id': request_id},
+                  status=JobStatus.CREATED, max_retry=1, children=[],
+                  callback=TYPES['REQUEST_CALLBACK'],
+                  callback_args={'request_id': request_id})
+        job.save()
     return job
 
 
-def get_operator(recipe):
-    if recipe in ("Agilent_51MB", "HumanWholeGenome", "ShallowWGS", "WholeExomeSequencing"):
-        return 'tempo'
-    elif recipe in ("IMPACT341", "IMPACT+ (341 genes plus custom content)", "IMPACT410", "IMPACT468"):
-        return 'roslin'
-    elif recipe in ("MSK-ACCESS_v1",):
-        return "access"
-    else:
-        return None
-
-
 def request_callback(request_id):
-    # recipe = File.objects.filter(filemetadata__metadata__requestId=request_id).first().filemetadata_set.first().metadata.get('requestMetadata', {}).get('recipe', None)
     queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
@@ -80,17 +66,21 @@ def request_callback(request_id):
     recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
         raise FailedToSubmitToOperatorException(
-            "Not enough metadata to choose the operator for requestId:%s" % request_id)
-    operator = get_operator(recipes[0])
+           "Not enough metadata to choose the operator for requestId:%s" % request_id)
+
+    operator = Operator.objects.get(
+        active=True,
+        recipes__contains=[recipes[0]]
+    )
     if not operator:
         logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
-    logger.info("Submitting request_id %s to %s operator" % (request_id, operator))
-    operator_job.delay(request_id, operator)
+    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+    create_jobs_from_request.delay(request_id, operator.id)
     return []
 
 
-def fetch_samples(request_id):
+def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     children = set()
     sampleIds = requests.get('%s/LimsRest/api/getRequestSamples' % settings.LIMS_URL,
@@ -111,27 +101,128 @@ def fetch_samples(request_id):
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
-        "pooledNormals": response_body["pooledNormals"]
     }
+    pooled_normals = response_body.get("pooledNormals", [])
+    if import_pooled_normals:
+        for f in pooled_normals:
+            job = get_or_create_pooled_normal_job(f)
+            children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
-    for sample in response_body.get('samples', []):
-        if not sample:
-            raise FailedToFetchFilesException("Sample Id None")
-        job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
-        children.add(str(job.id))
+    if import_samples:
+        for sample in response_body.get('samples', []):
+            if not sample:
+                raise FailedToFetchFilesException("Sample Id None")
+            job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+            children.add(str(job.id))
     return list(children)
+
+
+def get_or_create_pooled_normal_job(filepath):
+    logger.info(
+        "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
+    job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
+    if not job:
+        job = Job(run=TYPES['POOLED_NORMAL'],
+                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
+                  status=JobStatus.CREATED, max_retry=1, children=[])
+        job.save()
+    return job
 
 
 def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
-        "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
-    job = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', args__sample_id=sample_id).first()
+        "Searching for job: %s for sample_id: %s" % (TYPES['SAMPLE'], sample_id))
+    job = Job.objects.filter(run=TYPES['SAMPLE'], args__sample_id=sample_id).first()
     if not job:
-        job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata',
-                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
+        job = Job(run=TYPES['SAMPLE'],
+                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
+                        'request_metadata': request_metadata},
                   status=JobStatus.CREATED, max_retry=1, children=[])
         job.save()
     return job
+
+
+def get_run_id_from_string(string):
+    """
+    Parse the runID from a character string
+    Split on the final '_' in the string
+
+    Examples
+    --------
+        get_run_id_from_string("JAX_0397_BHCYYWBBXY")
+        >>> JAX_0397
+    """
+    parts = string.split('_')
+    if len(parts) > 1:
+        parts.pop(-1)
+        output = '_'.join(parts)
+        return(output)
+    else:
+        return(string)
+
+
+def create_pooled_normal(filepath, file_group_id):
+    """
+    Parse the file path provided for a Pooled Normal sample into the metadata fields needed to
+    create the File and FileMetadata entries in the database
+
+    Parameters:
+    -----------
+    filepath: str
+        path to file for the sample
+    file_group_id: UUID
+        primary key for FileGroup to use for imported File entry
+
+    Examples
+    --------
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
+        file_group_id = settings.IMPORT_FILE_GROUP
+        create_pooled_normal(filepath, file_group_id)
+
+    Notes
+    -----
+    For filepath string such as "JAX_0397_BHCYYWBBXY";
+    - runId = JAX_0397
+    - flowCellId = HCYYWBBXY
+    - [A|B] might be the flowcell bay the flowcell is placed into
+    """
+    if File.objects.filter(path=filepath):
+        logger.info("Pooled normal already created filepath")
+    file_group_obj = FileGroup.objects.get(id=file_group_id)
+    file_type_obj = FileType.objects.filter(name='fastq').first()
+    run_id = None
+    preservation_type = None
+    recipe = None
+    try:
+        parts = filepath.split('/')
+        run_id = get_run_id_from_string(parts[6])
+        preservation_type = parts[8]
+        preservation_type = preservation_type.split('Sample_')[1]
+        preservation_type = preservation_type.split('POOLEDNORMAL')[0]
+        recipe = parts[8]
+        recipe = recipe.split('IGO_')[1]
+        recipe = recipe.split('_')[0]
+    except Exception as e:
+        raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
+    if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
+        raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
+    if None in [run_id, preservation_type, recipe]:
+        raise FailedToFetchFilesException(
+            "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+    metadata = {
+        "runId": run_id,
+        "preservation": preservation_type,
+        "recipe": recipe
+    }
+    try:
+        f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
+                                file_type=file_type_obj)
+        f.save()
+        fm = FileMetadata(file=f, metadata=metadata)
+        fm.save()
+    except Exception as e:
+        logger.error("Failed to create file %s. Error %s" % (filepath, str(e)))
+        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (filepath, str(e)))
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
@@ -208,7 +299,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
             "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
 
 
-
 def R1_or_R2(filename):
     reversed_filename = ''.join(reversed(filename))
     R1_idx = reversed_filename.find('1R')
@@ -252,7 +342,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
-        file_type_obj = FileType.objects.filter(ext=file_type).first()
+        file_type_obj = FileType.objects.filter(name=file_type).first()
         metadata = copy.deepcopy(data)
         sample_name = metadata.pop('cmoSampleName', None)
         external_sample_name = metadata.pop('sampleName', None)
@@ -434,9 +524,10 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
 
 def update_sample_job(sample_id, igocomplete, request_id, request_metadata):
     logger.info(
-        "Searching for job: %s for sample_id: %s" % ('beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata', sample_id))
-    job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_sample_metadata',
-                  args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id, 'request_metadata': request_metadata},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
+        "Searching for job: %s for sample_id: %s" % (TYPES["UPDATE_SAMPLE_METADATA"], sample_id))
+    job = Job(run=TYPES["UPDATE_SAMPLE_METADATA"],
+              args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
+                    'request_metadata': request_metadata},
+              status=JobStatus.CREATED, max_retry=1, children=[])
     job.save()
     return job
