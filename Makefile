@@ -273,7 +273,7 @@ celery-start:
 
 # check that the Celery processes are running
 celery-check:
-	-ps auxww | grep 'celery' | grep -v 'grep' | grep -v 'make' | grep '$(CURDIR)'
+	ps auxww | grep 'celery' | grep -v 'grep' | grep -v 'make' | grep '$(CURDIR)'
 
 # kill all the Celery processes started from this dir
 celery-stop:
@@ -291,11 +291,14 @@ start-services: check-env
 	$(MAKE) celery-start
 
 stop-services:
-	$(MAKE) celery-stop
-	$(MAKE) rabbitmq-stop
-	$(MAKE) db-stop
+	-$(MAKE) celery-stop
+	-$(MAKE) rabbitmq-stop
+	-$(MAKE) db-stop
 
-
+check-services:
+	$(MAKE) celery-check
+	$(MAKE) db-check
+	$(MAKE) rabbitmq-check
 
 # ~~~~~ Set Up Django ~~~~~ #
 export DJANGO_BEAGLE_IP:=localhost
@@ -340,6 +343,7 @@ test-lims: check-env
 
 # start the Django development server
 runserver: check-env
+	if $(MAKE) check-services ; then : ; else echo ">>> ERROR: some services are not started"; exit 1 ; fi
 	python manage.py runserver $(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
 
 MIGRATION_ARGS?=
