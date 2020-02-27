@@ -50,11 +50,12 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'sequencing_center', 'platform', 'platform_unit', 'sample_name',
+    single_values = [ 'sequencing_center', 'platform', 'sample_name',
                     'bait_set', 'patient_id', 'species', 'tumor_type',
                     'sample_id', 'specimen_type', 'external_sample_id', 
                     'investigator_sample_id', 'investigator_name', 'investigator_email',
-                    'preservation', 'sample_class', 'recipe', 'request_id' ]
+                    'preservation', 'sample_class', 'recipe', 'request_id',
+                    'data_analyst', 'data_analyst_email' ]
 
     for key in single_values:
         value = set(data[key])
@@ -67,6 +68,8 @@ def check_and_return_single_values(data):
     # concatenating pi and pi_email
     data['pi'] = '; '.join(set(data['pi']))
     data['pi_email'] = '; '.join(set(data['pi_email']))
+
+    data['platform_unit'] = '_'.join(set(data['platform_unit']))
 
     # hack; formats LB field so that it is a string
     lb = [i for i in data['library'] if i ]
@@ -114,6 +117,8 @@ def build_sample(data):
         preservation = meta['preservation']
         sample_class = meta['sampleClass']
         recipe = meta['recipe']
+        data_analyst = meta['dataAnalystName']
+        data_analyst_email = meta['dataAnalystEmail']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
         rg_id = '_'.join([cmo_sample_name, pu])
@@ -143,6 +148,8 @@ def build_sample(data):
             sample['preservation'] = preservation
             sample['sample_class'] = sample_class
             sample['recipe'] = recipe
+            sample['data_analyst'] = data_analyst
+            sample['data_analyst_email'] = data_analyst_email
         else:
             sample = samples[rg_id]
 
@@ -184,6 +191,8 @@ def build_sample(data):
     result['preservation'] = list()
     result['sample_class'] = list()
     result['recipe'] = list()
+    result['data_analyst'] = list()
+    result['data_analyst_email'] = list()
 
     for rg_id in samples:
         sample = samples[rg_id]

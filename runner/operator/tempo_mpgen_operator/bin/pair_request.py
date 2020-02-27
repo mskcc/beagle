@@ -42,6 +42,7 @@ def get_viable_normal(normals, patient_id, bait_set):
 def compile_pairs(samples):
     tumors = get_by_tumor_type(samples, "Tumor")
     normals = get_by_tumor_type(samples, "Normal")
+    empty_normal = make_empty_normal_sample()
 
     if len(tumors) == 0:
         print("No tumor samples found; pairing cannot be performed.")
@@ -61,7 +62,7 @@ def compile_pairs(samples):
                 pairs['tumor'].append(tumor)
                 pairs['normal'].append(normal)
             else:
-                print("missing normal for sample %s; querying patient %s" % (tumor['igo_id'], patient_id))
+                print("missing normal for sample %s; querying patient %s" % (tumor['sample_id'], patient_id))
                 patient_samples = get_samples_from_patient_id(patient_id)
                 new_normals = get_by_tumor_type(patient_samples, "Normal")
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
@@ -69,9 +70,13 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    print("No normal found for %s, patient %s" % (tumor['igo_id'], patient_id))
+                    pairs['tumor'].append(tumor)
+                    pairs['normal'].append(empty_normal)
+                    print("No normal found for %s, patient %s - adding empty normal." % (tumor['sample_id'], patient_id))
         else:
-            print("NoPatientIdError: No patient_id found for %s; skipping." % tumor['igo_id'])
+            pairs['tumor'].append(tumor)
+            pairs['normal'].append(empty_normal)
+            print("NoPatientIdError: No patient_id found for %s - adding empty normal." % tumor['sample_id'])
     return pairs
 
 
@@ -84,3 +89,34 @@ def create_pairing_info(pairs):
         normal_name = pairs['normal'][i]['SM']
         output_string += "\t".join([normal_name,tumor_name]) +"\n"
     return output_string
+
+def make_empty_normal_sample():
+    result = dict()
+    result['sequencing_center'] = ""
+    result['platform'] = ""
+    result['platform_unit'] = ""
+    result['library'] = ""
+    result['tumor_type'] = ""
+    result['read_group_id'] = ""
+    result['sample_name'] = "noNormalFound"
+    result['species'] = ""
+    result['patient_id'] = ""
+    result['bait_set'] = "" 
+    result['sample_id'] = "noNormalFound" 
+    result['run_date'] = ""
+    result['specimen_type'] = ""
+    result['R1'] = list()
+    result['R2'] = list()
+    result['R1_bid'] = list()
+    result['R2_bid'] = list()
+    result['request_id'] = ""
+    result['pi'] = ""
+    result['pi_email'] = ""
+    result['external_sample_id'] = ""
+    result['investigator_sample_id'] = ""
+    result['investigator_name'] = ""
+    result['investigator_email'] = ""
+    result['preservation'] = ""
+    result['sample_class'] = ""
+    result['recipe'] = ""
+    return result
