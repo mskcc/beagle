@@ -9,6 +9,14 @@ export SINGULARITYENV_BEAGLE_BRANCH=master # branch on github to use on build; c
 sudo -E singularity build beagle_service.sif beagle_service.def
 ```
 
+Building SIF inside the docker image
+
+If you do not have a singularity installed locally but you have docker you can use docker image to build singularity SIF.
+
+`docker run --privileged -it -v /path/to/beagle:/beagle:rw  --entrypoint "/bin/bash" singularityware/singularity:v3.3.0`
+
+``
+
 #### Expected Instance Run Variables
 
 The following prepended singularity environment variables must be set so that the instance can run properly.

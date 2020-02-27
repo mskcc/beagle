@@ -48,7 +48,8 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
-    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
+    operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return u"{}".format(self.name)
 
@@ -93,11 +94,17 @@ class OperatorRun(BaseModel):
 
     @property
     def percent_runs_succeeded(self):
-        return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
+        if self.num_total_runs > 0:
+            return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
+        else:
+            return float(0)
 
     @property
     def percent_runs_finished(self):
-        return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+        if self.num_total_runs > 0:
+            return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+        else:
+            return 0
 
 
 class Run(BaseModel):
