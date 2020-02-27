@@ -25,20 +25,24 @@ def remove_with_caveats(samples):
     return data, error_data
 
 
-def format_sample_name(sample_name):
+def format_sample_name(sample_name, ignore_sample_formatting=False):
     sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
-    try:
-        if "s_" in sample_name[:2]:
-            return sample_name
-        elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
-            sample_name = "s_" + sample_name.replace("-", "_")
-            return sample_name
-        else:
-            logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
-            return 'sampleNameMalformed'
-    except TypeError as error:
-        logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
-        return "sampleNameMalformed"
+
+    if not ignore_sample_formatting:
+        try:
+            if "s_" in sample_name[:2]:
+                return sample_name
+            elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+                sample_name = "s_" + sample_name.replace("-", "_")
+                return sample_name
+            else:
+                logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
+                return 'sampleNameMalformed'
+        except TypeError as error:
+            logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
+            return "sampleNameMalformed"
+    else:
+        return sample_name
 
 
 def check_samples(samples):
@@ -79,7 +83,7 @@ def check_and_return_single_values(data):
 
 
 # TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
-def build_sample(data):
+def build_sample(data, ignore_sample_formatting=False):
     # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
     # but standardizing it here with what GATK sets bam headers to
 
@@ -99,7 +103,7 @@ def build_sample(data):
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['sampleName'])
+        cmo_sample_name = format_sample_name(meta['sampleName'], ignore_sample_formatting)
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['patientId']
