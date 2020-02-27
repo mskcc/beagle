@@ -40,6 +40,8 @@ def format_sample(data):
     sample['patient_id'] = data['patient_id']
     sample['sample_class'] = data['sample_class']
     sample['preservation'] = data['preservation']
+    sample['data_analyst'] = data['data_analyst']
+    sample['data_analyst_email'] = data['data_analyst_email']
     for i in data['R1']:
         sample['R1'].append({'class': 'File', 'location': i})
     for i in data['R2']:
