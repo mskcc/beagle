@@ -138,7 +138,7 @@ def parse_pairs_from_ports(ports_queryset):
         files = port.files.all()
         for file in files:
             # get the highest 'version' number FileMetadata instance for the File
-            filemetata_instance = FileMetadata.objects.filter(file = file).order_by('-version').first()
+            filemetata_instance = file.filemetadata_set.first()
             R1_or_R2 = filemetata_instance.metadata['R']
             tumor_or_normal = filemetata_instance.metadata['tumorOrNormal']
             pair_items.append( {'filemetadata': filemetata_instance, 'R1_or_R2': R1_or_R2, 'tumor_or_normal': tumor_or_normal  } )
@@ -160,7 +160,7 @@ def parse_pairs_from_ports(ports_queryset):
             elif item['tumor_or_normal'] == 'Normal' and item['R1_or_R2'] == 'R2':
                 pair_set['normal']['R2'] = item['filemetadata']
         pairs.append(pair_set)
-    return(pairs)
+    return pairs
 
 def parse_bams_from_ports(ports_queryset):
     """
