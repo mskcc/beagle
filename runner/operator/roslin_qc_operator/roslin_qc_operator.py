@@ -4,9 +4,6 @@ from runner.serializers import APIRunCreateSerializer
 from .bin import input
 import datetime
 
-class InvalidPipelineError(Exception):
-    pass
-
 class RoslinQcOperator(Operator):
     """
     Operator for Roslin QC pipeline
