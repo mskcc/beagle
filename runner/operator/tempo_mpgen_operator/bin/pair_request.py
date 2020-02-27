@@ -119,4 +119,6 @@ def make_empty_normal_sample():
     result['preservation'] = ""
     result['sample_class'] = ""
     result['recipe'] = ""
+    result['data_analyst'] = ""
+    result['data_analyst_email'] = ""
     return result

@@ -8,13 +8,6 @@ from .bin.make_sample import build_sample
 import json
 
 class TempoMPGenOperator(Operator):
-
-    def __init__(self, request_id):
-        Operator.__init__(self, 'tempo_mpgen_operator', request_id)
-
-    def get_pipeline_id(self):
-        return "a2f24cb7-bd38-4c9b-b617-b458e3767da0" # Return ID of the pipeline
-
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         tempo_jobs = list()
