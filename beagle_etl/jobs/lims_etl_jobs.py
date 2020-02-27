@@ -103,7 +103,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
         "piEmail": response_body["piEmail"],
     }
     pooled_normals = response_body.get("pooledNormals", [])
-    if import_pooled_normals:
+    if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
             job = get_or_create_pooled_normal_job(f)
             children.add(str(job.id))
