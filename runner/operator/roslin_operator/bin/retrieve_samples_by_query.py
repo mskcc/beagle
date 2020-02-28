@@ -1,6 +1,6 @@
 from .make_sample import build_sample, remove_with_caveats
 from file_system.models import File, FileMetadata
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.conf import settings
 import logging
 import os
@@ -49,15 +49,41 @@ def get_descriptor(bait_set, pooled_normals):
     return None
 
 
-def get_pooled_normals(run_id, preservation_type, bait_set):
+def build_run_id_query(data):
+    data_query_set = [Q(filemetadata__metadata__runId=value) for value in set(data)]
+    query = data_query_set.pop()
+    for item in data_query_set:
+        query |= item
+    return query
+
+
+def build_preservation_query(data):
+    data_query_set = [Q(filemetadata__metadata__preservation=value) for value in set(data)]
+    query = data_query_set.pop()
+    for item in data_query_set:
+        query |= item
+    return query
+
+
+def get_pooled_normals(run_ids, preservation_types, bait_set):
     file_objs = File.objects.prefetch_related(Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').order_by('-created_date'))) 
-    pooled_normals = file_objs.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP, filemetadata__metadata__runId=run_id, filemetadata__metadata__preservation=preservation_type).order_by('file_name')
+    query = Q(file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    run_id_query = Q()
+    preservation_query = Q()
+
+    run_id_query = build_run_id_query(run_ids)
+    preservation_query = build_preservation_query(preservation_types)
+    pooled_normals = file_objs.filter(query & run_id_query & preservation_query).order_by('file_name')
     descriptor = get_descriptor(bait_set, pooled_normals)
+
     if not descriptor: # i.e., no pooled normal
         return None
     pooled_normals = pooled_normals.filter(filemetadata__metadata__recipe=descriptor)
     sample_files = list()
-    sample_name = "pooled_normal_%s_%s_%s" % (descriptor, run_id, preservation_type)
+
+    # arbitrarily named
+    sample_name = "pooled_normal_%s_%s_%s" % (descriptor, "_".join(run_ids), "_".join(preservation_types))
+
     if len(pooled_normals) > 0:
         for i,f in enumerate(pooled_normals):
             sample = dict()
@@ -71,8 +97,8 @@ def get_pooled_normals(run_id, preservation_type, bait_set):
             metadata['requestId'] = sample_name
             metadata['baitSet'] = descriptor
             metadata['recipe'] = descriptor
-            metadata['run_id'] = run_id
-            metadata['preservation'] = preservation_type
+            metadata['run_id'] = run_ids
+            metadata['preservation'] = preservation_types
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
             # build_sample in runner.operator.roslin_operator.bin
@@ -83,7 +109,6 @@ def get_pooled_normals(run_id, preservation_type, bait_set):
             metadata['patientId'] = 'PN_PATIENT_ID'
             sample['metadata'] = metadata
             sample_files.append(sample) 
-        print("Number of samples: %i" % len(sample_files))
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
         return pooled_normal
     return None

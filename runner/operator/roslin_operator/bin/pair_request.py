@@ -58,8 +58,8 @@ def compile_pairs(samples):
         patient_id = tumor['patient_id']
         if patient_id:
             bait_set = tumor['bait_set']
-            run_id = tumor['run_id']
-            preservation_type = tumor['preservation_type']
+            run_ids = tumor['run_id']
+            preservation_types = tumor['preservation_type']
             normal = get_viable_normal(normals, patient_id, bait_set)
             if normal:
                 pairs['tumor'].append(tumor)
@@ -73,7 +73,7 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    pooled_normal = get_pooled_normals(run_id, preservation_type, bait_set)
+                    pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
                     print("Checking for Pooled Normal")
                     if pooled_normal:
                         pairs['tumor'].append(tumor)
