@@ -2,6 +2,7 @@ import os
 import uuid
 import logging
 import requests
+import json
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
@@ -96,6 +97,9 @@ def process_triggers():
 @shared_task
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run")
+    if settings.DUMP_JSON:
+        output_file_name = "{}.job.inputs.json".format(run_id)
+        print(json.dumps(inputs, indent = 4), file = open(output_file_name, "w"))
     try:
         run = RunObject.from_cwl_definition(run_id, inputs)
         run.ready()
@@ -126,6 +130,11 @@ def submit_job(run_id, output_directory=None):
     inputs = dict()
     for port in run.port_set.filter(port_type=PortType.INPUT).all():
         inputs[port.name] = port.value
+
+    if settings.DUMP_JSON:
+        output_file_name = "{}.job.inputs-cwl.json".format(run_id)
+        print(json.dumps(inputs, indent = 4), file = open(output_file_name, "w"))
+
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = {
@@ -133,6 +142,11 @@ def submit_job(run_id, output_directory=None):
         'inputs': inputs,
         'root_dir': output_directory
     }
+
+    if settings.DUMP_JSON:
+        output_file_name = "{}.job.json".format(run_id)
+        print(json.dumps(job, indent = 4), file = open(output_file_name, "w"))
+
     logger.info("Job %s ready for submitting" % run_id)
     response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
     if response.status_code == 201:
