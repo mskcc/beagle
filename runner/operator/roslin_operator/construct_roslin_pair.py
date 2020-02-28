@@ -70,7 +70,7 @@ def construct_roslin_jobs(samples):
         job['assay'] = assay
         job['pi'] = pi
         job['pi_email'] = pi_email
-        references = convert_references(project_id, assay)
+        references = convert_references(project_id, assay, pi, pi_email)
         job.update(references)
         roslin_jobs.append(job)
     return roslin_jobs, error_samples
@@ -144,7 +144,7 @@ def get_complex_tn(assay):
     return 0.2
 
 
-def convert_references(project_id, assay):
+def convert_references(project_id, assay, pi, pi_emails):
     roslin_resources = load_references()
     request_files = roslin_resources["request_files"]
     intervals = get_baits_and_targets(assay, roslin_resources)
@@ -212,7 +212,9 @@ def convert_references(project_id, assay):
         "complex_nn": complex_nn,
         "complex_tn": complex_tn,
         "scripts_bin": "/usr/bin",
-        "gatk_jar_path": "/usr/bin/gatk.jar"
+        "gatk_jar_path": "/usr/bin/gatk.jar",
+        "pi": pi,
+        "pi_email": pi_email
     }
     out_dict.update({"runparams": params})
     return out_dict
