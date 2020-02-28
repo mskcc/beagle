@@ -362,7 +362,9 @@
             "complex_nn": 0.2,
             "complex_tn": 0.5,
             "scripts_bin": "/usr/bin",
-            "gatk_jar_path": "/usr/bin/gatk.jar"
+            "gatk_jar_path": "/usr/bin/gatk.jar",
+            "pi": "John Smith",
+            "pi_email": "email@internet.com"
         }
     }
 ]
