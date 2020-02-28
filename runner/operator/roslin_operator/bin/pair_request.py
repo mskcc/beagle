@@ -65,7 +65,7 @@ def compile_pairs(samples):
                 pairs['tumor'].append(tumor)
                 pairs['normal'].append(normal)
             else:
-                print("missing normal for sample %s; querying patient %s" % (tumor['igo_id'], patient_id))
+                print("Missing normal for sample %s; querying patient %s" % (tumor['igo_id'], patient_id))
                 patient_samples = get_samples_from_patient_id(patient_id)
                 new_normals = get_by_tumor_type(patient_samples, "Normal")
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
@@ -73,7 +73,8 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    pooled_normal = find_pool_normal(run_id, preservation_type, bait_set)
+                    pooled_normal = get_pooled_normals(run_id, preservation_type, bait_set)
+                    print("Checking for Pooled Normal")
                     if pooled_normal:
                         pairs['tumor'].append(tumor)
                         pairs['normal'].append(pooled_normal)
