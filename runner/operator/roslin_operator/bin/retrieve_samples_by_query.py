@@ -40,9 +40,22 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_pooled_normals(run_id, descriptor, preservation_type):
+# Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
+def get_descriptor(bait_set, pooled_normals):
+    for f in pooled_normals:
+        descriptor = f.filemetadata_set.first().metadata['recipe']
+        if descriptor.lower() in bait_set.lower():
+            return descriptor
+    return None
+
+
+def get_pooled_normals(run_id, preservation_type, bait_set):
     file_objs = File.objects.prefetch_related(Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').order_by('-created_date'))) 
-    pooled_normals = file_objs.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP, filemetadata__metadata__recipe=descriptor, filemetadata__metadata__runId=run_id, filemetadata__metadata__preservation=preservation_type).order_by('file_name')
+    pooled_normals = file_objs.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP, filemetadata__metadata__runId=run_id, filemetadata__metadata__preservation=preservation_type).order_by('file_name')
+    descriptor = get_descriptor(bait_set, pooled_normals)
+    if not descriptor: # i.e., no pooled normal
+        return None
+    pooled_normals = pooled_normals.filter(filemetadata__metadata__recipe=descriptor)
     sample_files = list()
     sample_name = "pooled_normal_%s_%s_%s" % (descriptor, run_id, preservation_type)
     if len(pooled_normals) > 0:
@@ -58,6 +71,8 @@ def get_pooled_normals(run_id, descriptor, preservation_type):
             metadata['requestId'] = sample_name
             metadata['baitSet'] = descriptor
             metadata['recipe'] = descriptor
+            metadata['run_id'] = run_id
+            metadata['preservation'] = preservation_type
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
             # build_sample in runner.operator.roslin_operator.bin
@@ -115,4 +130,6 @@ def construct_fake_sample_fastq_metadata():
         metadata['R'] = ""
         metadata['labHeadName'] = ""
         metadata['labHeadEmail'] = ""
+        metadata['runId'] = ""
+        metadata['preservation'] = ""
         return metadata

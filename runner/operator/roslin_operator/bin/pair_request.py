@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 from pprint import pprint
-from .retrieve_samples_by_query import get_samples_from_patient_id
+from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals
 import logging
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,8 @@ def compare_dates(normal, viable_normal, date_string):
 
 
 # From a set of normals, return the ones that have matching patient_id, bait_set, and the most recent
+#
+# Does not check for Pooled Normals; taht's done separately
 def get_viable_normal(normals, patient_id, bait_set):
     viable_normal = dict()
     for normal in normals:
@@ -56,6 +58,8 @@ def compile_pairs(samples):
         patient_id = tumor['patient_id']
         if patient_id:
             bait_set = tumor['bait_set']
+            run_id = tumor['run_id']
+            preservation_type = tumor['preservation_type']
             normal = get_viable_normal(normals, patient_id, bait_set)
             if normal:
                 pairs['tumor'].append(tumor)
@@ -69,7 +73,13 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    print("No normal found for %s, patient %s" % (tumor['igo_id'], patient_id))
+                    pooled_normal = find_pool_normal(run_id, preservation_type, bait_set)
+                    if pooled_normal:
+                        pairs['tumor'].append(tumor)
+                        pairs['normal'].append(pooled_normal)
+                        print("Found pooled normal!")
+                    else:
+                        print("No normal found for %s, patient %s" % (tumor['igo_id'], patient_id))
         else:
             print("NoPatientIdError: No patient_id found for %s; skipping." % tumor['igo_id'])
     return pairs

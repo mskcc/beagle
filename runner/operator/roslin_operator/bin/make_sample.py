@@ -59,7 +59,7 @@ def check_samples(samples):
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type' ]
+    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type', 'run_id', 'preservation_type' ]
 
     for key in single_values:
         value = set(data[key])
@@ -112,6 +112,8 @@ def build_sample(data, ignore_sample_formatting=False):
         r_orientation = meta['R']
         pi = meta['labHeadName']
         pi_email = meta['labHeadEmail']
+        run_id = meta['runId']
+        preservation_type = meta['preservation']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
         rg_id = '_'.join([cmo_sample_name, pu])
@@ -134,6 +136,8 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['request_id'] = request_id
             sample['pi'] = pi
             sample['pi_email'] = pi_email
+            sample['run_id'] = run_id
+            sample['preservation_type'] = preservation_type
         else:
             sample = samples[rg_id]
 
@@ -168,6 +172,8 @@ def build_sample(data, ignore_sample_formatting=False):
     result['request_id'] = list()
     result['pi'] = list()
     result['pi_email'] = list()
+    result['run_id'] = list()
+    result['preservation_type'] = list()
 
     for rg_id in samples:
         sample = samples[rg_id]
