@@ -144,7 +144,7 @@ def get_complex_tn(assay):
     return 0.2
 
 
-def convert_references(project_id, assay, pi, pi_emails):
+def convert_references(project_id, assay, pi, pi_email):
     roslin_resources = load_references()
     request_files = roslin_resources["request_files"]
     intervals = get_baits_and_targets(assay, roslin_resources)
