@@ -66,7 +66,7 @@ class RunObject(object):
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
         outputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
-        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, output_metadata=run.output_metadata, tags=run.tags)
+        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id)
 
     def to_db(self):
         [PortObject.to_db(p) for p in self.inputs]
