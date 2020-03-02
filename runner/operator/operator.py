@@ -33,7 +33,6 @@ class Operator(object):
         '''
         return self._jobs
 
-
     def get_output_metadata(self):
         '''
         Override this method to set proper metadata to output files
