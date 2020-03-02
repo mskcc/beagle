@@ -56,13 +56,12 @@ def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
 @shared_task
 def process_triggers():
     operator_runs = OperatorRun.objects.prefetch_related(
-        'trigger', 'runs'
+        'trigger', 'runs', 'operator__from_triggers'
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
         try:
-            triggers = OperatorTrigger.objects.filter(from_operator=operator_run.operator).all()
-            for trigger in triggers:
+            for trigger in operator_run.operator.from_triggers.all():
                 trigger_type = trigger.run_type
 
                 if trigger_type == TriggerRunType.AGGREGATE:
@@ -172,9 +171,7 @@ def complete_job(run_id, outputs):
     run.complete(outputs)
     run.to_db()
 
-    triggers = OperatorTrigger.objects.filter(from_operator=run.run_obj.operator_run.operator, run_type=TriggerRunType.INDIVIDUAL).all()
-
-    for trigger in triggers:
+    for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
         create_jobs_from_chaining.delay(
             trigger.to_operator_id,
             trigger.from_operator_id,
