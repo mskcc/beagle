@@ -24,9 +24,29 @@
         "pk": 3,
         "fields": {
             "active": true,
+            "recipes": "[\"400FAKESOMETHING\"]",
+            "class_name": "AccessOperator",
+            "slug": "access"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 4,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "CopyOutputsOperator",
+            "slug": "copyOutputs"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 5,
+        "fields": {
+            "active": true,
             "recipes": "[]",
             "class_name": "RoslinQcOperator",
             "slug": "roslin-qc"
         }
-    }
+    },
 ]

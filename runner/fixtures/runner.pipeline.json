@@ -68,6 +68,20 @@
             "entrypoint": "modules/project/generate-qc.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/juno/work/pi/beagle/output/roslin-qc"
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "65419097-a2b8-4d57-a8ab-c4c4cddcbea8",
+        "fields": {
+            "created_date": "2019-11-18T17:46:45.118Z",
+            "modified_date": "2019-12-05T01:12:39.854Z",
+            "name": "copy_outputs",
+            "github": "https://github.com/mskcc/roslin-cwl",
+            "version": "1.0.0",
+            "entrypoint": "workflows/copy_outputs.cwl",
+            "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+            "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
+            "operator": 4
         }
     }
 ]

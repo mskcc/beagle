@@ -346,9 +346,7 @@
             "num_threads": 10,
             "assay": "IMPACT468_BAITS",
             "tmp_dir": "/scratch",
-            "project_prefix": [
-                "10075_D"
-            ],
+            "project_prefix": "10075_D",
             "opt_dup_pix_dist": "2500",
             "delly_type": [
                 "DUP",
@@ -362,7 +360,9 @@
             "complex_nn": 0.2,
             "complex_tn": 0.5,
             "scripts_bin": "/usr/bin",
-            "gatk_jar_path": "/usr/bin/gatk.jar"
+            "gatk_jar_path": "/usr/bin/gatk.jar",
+            "pi": "John Smith",
+            "pi_email": "email@internet.com"
         }
     }
 ]
