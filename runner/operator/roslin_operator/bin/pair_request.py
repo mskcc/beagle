@@ -70,15 +70,15 @@ def compile_pairs(samples):
     tumors = get_by_tumor_type(samples, "Tumor")
     normals = get_by_tumor_type(samples, "Normal")
 
-    num_tumors = len(tumors)
-    if num_tumors == 0:
-        print("No tumor samples found; pairing cannot be performed.")
-        return None
-
     # pairing
     pairs = dict()
     pairs['tumor'] = list()
     pairs['normal'] = list()
+
+    num_tumors = len(tumors)
+    if num_tumors == 0:
+        print("No tumor samples found; pairing will not be performed.")
+        print("Returning an empty list of pairs.")
 
     for tumor in tumors:
         patient_id = tumor['patient_id']
