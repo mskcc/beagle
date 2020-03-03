@@ -1,7 +1,7 @@
 import datetime
 from django.conf import settings
 from rest_framework import serializers
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -132,7 +132,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     tags = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
     output_metadata = serializers.JSONField(required=False, default=dict)
-    operator_run_id = serializers.IntegerField(required=False)
+    operator_run_id = serializers.UUIDField(required=False)
 
     def create(self, validated_data):
         try:
@@ -145,6 +145,10 @@ class APIRunCreateSerializer(serializers.Serializer):
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
         run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), output_metadata=validated_data.get('output_metadata', {}), tags=tags)
+        try:
+            run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
+        except OperatorRun.DoesNotExist:
+            pass
         run.save()
         return run
 
