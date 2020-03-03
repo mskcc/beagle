@@ -90,3 +90,4 @@ class TestOperatorTriggers(TestCase):
         process_triggers()
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
+

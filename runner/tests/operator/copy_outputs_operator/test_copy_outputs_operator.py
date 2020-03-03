@@ -69,7 +69,7 @@ class TestCopyOutputs(TestCase):
         # Load fixtures
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
-        operator_model = Operator.objects.get(id=3)
+        operator_model = Operator.objects.get(id=4)
         operator = OperatorFactory.get_by_model(operator_model,  run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"])
         input_json_valid = False
         if operator.get_jobs()[0].is_valid():

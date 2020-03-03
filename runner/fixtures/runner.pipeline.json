@@ -68,7 +68,7 @@
             "entrypoint": "workflows/copy_outputs.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
-            "operator": 3
+            "operator": 4
         }
     }
 ]
