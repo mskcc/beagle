@@ -426,7 +426,7 @@ class TestPairRequest(TestCase):
             'R1_bid': [UUID('08072445-84ff-4b43-855d-d8d2dc87e2d5')],
             'R2_bid': [UUID('f0d9a1e1-9414-42df-a749-08776732ee04')],
             'request_id': '10075_D_4',
-            'run_id': ['JAX_0397']
+            'run_id': ['JAX_0397'],
             'pi': 'John Smith', 'pi_email': 'email@internet.com'}
             ]
         }
