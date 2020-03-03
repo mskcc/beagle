@@ -420,7 +420,7 @@ class TestPairRequest(TestCase):
         "igo_id": "10075_D_3_5",
         "request_id": "10075_D_3",
         'run_id': ['JAX_0397'],
-        "preservation_type": ["EDTA-Streck"],
+        "preservation_type": ["EDTA-Streck"]
         }
         ]
 
@@ -433,7 +433,7 @@ class TestPairRequest(TestCase):
             'tumor_type': 'Tumor',
             'igo_id': '10075_D_3_5',
             'request_id': '10075_D_3',
-            'run_id': ['JAX_0397']
+            'run_id': ['JAX_0397'],
             "preservation_type": ["EDTA-Streck"]
             }
         ],
