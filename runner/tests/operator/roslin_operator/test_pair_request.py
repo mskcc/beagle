@@ -344,7 +344,7 @@ class TestPairRequest(TestCase):
         "patient_id": "C-8VK0V7",
         "tumor_type": "Tumor",
         'run_id': ['JAX_0397'],
-        "preservation_type": ["Frozen"],
+        "preservation_type": ["EDTA-Streck"],
         "igo_id": "10075_D_3_5",
         "request_id": "10075_D_3"
         }
@@ -357,7 +357,7 @@ class TestPairRequest(TestCase):
             'bait_set': 'IMPACT468_BAITS',
             'patient_id': 'C-8VK0V7',
             'run_id': ['JAX_0397'],
-            "preservation_type": ["Frozen"],
+            "preservation_type": ["EDTA-Streck"],
             'tumor_type': 'Tumor',
             'igo_id': '10075_D_3_5',
             'request_id': '10075_D_3'
@@ -384,7 +384,7 @@ class TestPairRequest(TestCase):
             'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
             'request_id': '10075_D_2',
             'run_id': ['JAX_0397'],
-            "preservation_type": ["Frozen"],
+            "preservation_type": ["EDTA-Streck"],
             'pi': 'John Smith',
             'pi_email': 'email@internet.com' }
             ]
