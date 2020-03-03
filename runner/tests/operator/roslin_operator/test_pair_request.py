@@ -390,6 +390,7 @@ class TestPairRequest(TestCase):
             ]
         }
 
+        print("Running get_pair_from_other_request ---")
         print(json.dumps(pairs, cls=UUIDEncoder))
         print(json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertTrue(pairs == expected_pairs)
@@ -468,6 +469,7 @@ class TestPairRequest(TestCase):
             ]
         }
 
+        print("Running get_most_recent_normal1 ---")
         print(json.dumps(pairs, cls=UUIDEncoder))
         print(json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertTrue(pairs == expected_pairs)
@@ -491,6 +493,7 @@ class TestPairRequest(TestCase):
         'patient_id': 'DU874145',
         'request_id': 'juno_roslin_demo1',
         'run_id': ['JAX_0397'],
+        "preservation_type": ["Frozen"],
         'run_date': ['2019-12-12'],
         'species': 'Human',
         'specimen_type': 'Blood',
