@@ -132,6 +132,7 @@ class TestMakeSample(TestCase):
                            'pi': 'John Smith',
                            'pi_email': 'email@internet.com'}
 
+        print("Testing build_sample ---")
         print(json.dumps(sample, cls=UUIDEncoder))
         print(json.dumps(expected_sample, cls=UUIDEncoder))
 
