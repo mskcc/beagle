@@ -224,4 +224,4 @@ if __name__ == '__main__':
     request_id = sys.argv[1]
 
     roslin_jobs = construct_roslin_jobs(request_id)
-    pprint(roslin_jobs)
+    pfailedoprint(roslin_jobs)
