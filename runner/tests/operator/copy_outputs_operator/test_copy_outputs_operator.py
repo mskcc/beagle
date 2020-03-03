@@ -64,7 +64,7 @@ class TestCopyOutputs(TestCase):
 
     def test_create_copy_output_jobs(self):
         """
-        Test that Roslin jobs are correctly created
+        Test that copy output jobs are correctly created
         """
         # Load fixtures
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
