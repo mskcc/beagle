@@ -1,22 +1,33 @@
+"""
+This constructs a sample dictionary from the metadata in the Voyager/Beagle database
+"""
 import logging
 import re
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def remove_with_caveats(samples):
+    """
+    Removes samples from a list of samples if they either
+    don't contain a properly formatted patient ID or is
+    'sampleNameMalformed', which happens when function
+    format_sample_name returns it
+    """
     data = list()
     error_data = list()
     for sample in samples:
         add = True
-        igo_id = sample['igo_id']
+        sample_id = sample['sample_id']
         sample_name = sample['SM']
         patient_id = sample['patient_id']
         if sample_name == 'sampleNameMalformed':
             add = False
-            logging.debug("Sample name is malformed for for %s; removing from set" % igo_id)
+            logging.debug("Sample name is malformed for for %s; removing from set", sample_id)
         if patient_id[:2].lower() not in 'c-':
             add = False
-            logging.debug("Patient ID does not start with expected 'C-' prefix for %s; removing from set" % igo_id)
+            logging.debug(
+                "Patient ID does not start with expected 'C-' prefix for %s; removing from set",
+                sample_id)
         if add:
             data.append(sample)
         else:
@@ -26,6 +37,18 @@ def remove_with_caveats(samples):
 
 
 def format_sample_name(sample_name, ignore_sample_formatting=False):
+    """
+    Formats a given sample_name to legacy ROSLIN naming conventions, provided that
+    it is in valid CMO Sample Name format (see sample_pattern regex value, below)
+
+    Current format is to prepend sample name with "s_" and convert all hyphens to
+    underscores
+
+    If it does not meet sample_pattern requirements, return 'sampleMalFormed'
+
+    ignore_sample_formatting is applied if we want to return a sample name regardless of
+    formatting
+    """
     sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
 
     if not ignore_sample_formatting:
@@ -35,38 +58,55 @@ def format_sample_name(sample_name, ignore_sample_formatting=False):
             elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
-            else:
-                logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
-                return 'sampleNameMalformed'
-        except TypeError as error:
-            logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
+            logging.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
+            return 'sampleNameMalformed'
+        except TypeError:
+            LOGGER.error(
+                "sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'."
+                )
             return "sampleNameMalformed"
     else:
         return sample_name
 
 
 def check_samples(samples):
-    for rg_id in samples:
-        r1 = samples[rg_id]['R1']
-        r2 = samples[rg_id]['R2']
+    """
+    Makes sure the R1 and R2 pairing matches
 
-        expected_r2 = 'R2'.join(r1.rsplit('R1', 1))
-        if expected_r2 != r2:
+    We are assuming the fastq data from the LIMS only differs in the 'R1'/'R2' string
+    """
+    for rg_id in samples:
+        fastq_r1 = samples[rg_id]['R1']
+        fastq_r2 = samples[rg_id]['R2']
+
+        expected_fastq_r2 = 'R2'.join(fastq_r1.rsplit('R1', 1))
+        if expected_fastq_r2 != fastq_r2:
             logging.error("Mismatched fastqs! Check data:")
-            logging.error("R1: %s" % r1)
-            logging.error("Expected R2: %s" % expected_r2)
-            logging.error("Actual R2: %s" % r2)
+            logging.error("R1: %s", fastq_r1)
+            logging.error("Expected R2: %s", expected_fastq_r2)
+            logging.error("Actual R2: %s", fastq_r2)
 
 
 def check_and_return_single_values(data):
-    single_values = [ 'CN', 'PL', 'SM', 'bait_set', 'patient_id', 'species', 'tumor_type', 'igo_id', 'specimen_type', 'request_id' ]
+    """
+    data is a dictionary; each key contains a list of values.
+
+    single_values are the expected keys that should contain only one value
+
+    Concatenating pi and pi_email AND formatting the LB field are workarounds
+    because some samples would have multiple values for these but the sample dict
+    it returns must have one value only in order for the pipeline to execute
+    """
+    single_values = ['CN', 'PL', 'SM', 'bait_set', 'patient_id',
+                     'species', 'tumor_type', 'sample_id', 'specimen_type',
+                     'request_id']
 
     for key in single_values:
         value = set(data[key])
         if len(value) == 1:
             data[key] = value.pop()
         else:
-            logging.error("Expected only one value for %s!" %key)
+            logging.error("Expected only one value for %s!", key)
             logging.error("Check import, something went wrong.")
 
     # concatenating pi and pi_email
@@ -74,31 +114,36 @@ def check_and_return_single_values(data):
     data['pi_email'] = '; '.join(set(data['pi_email']))
 
     # hack; formats LB field so that it is a string
-    lb = [i for i in data['LB'] if i ]
-    if len(lb) > 0:
-        data['LB'] = '_and_'.join(lb)
+    library_id = [i for i in data['LB'] if i]
+    number_of_library_ids = len(library_id)
+    if number_of_library_ids > 0:
+        data['LB'] = '_and_'.join(library_id)
     else:
         data['LB'] = ""
     return data
 
 
-# TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
 def build_sample(data, ignore_sample_formatting=False):
-    # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
-    # but standardizing it here with what GATK sets bam headers to
+    """
+    Given some data - which is a list of samples originally from the LIMS, split up into one file
+    per index - the data is then compiled into one sample dictionary consisting of one or more
+    pairs of fastqs
 
-    CN = "MSKCC"
-    PL = "Illumina"
+    Note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
+    but standardizing it here with what GATK sets bam headers to
+    """
+
+    sequencing_center = "MSKCC"
+    platform = "Illumina"
     samples = dict()
 
-    for i,v in enumerate(data):
-        meta = v['metadata']
-        bid = v['id']
+    for value in data:
+        meta = value['metadata']
+        bid = value['id']
         request_id = meta['requestId']
-        fpath = v['path']
-        fname = v['file_name']
-        igo_id = meta['sampleId']
-        lb = meta['libraryId']
+        fpath = value['path']
+        sample_id = meta['sampleId']
+        library_id = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
@@ -107,34 +152,34 @@ def build_sample(data, ignore_sample_formatting=False):
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['patientId']
-        pu = flowcell_id
+        platform_unit = flowcell_id
         run_date = meta['runDate']
         r_orientation = meta['R']
-        pi = meta['labHeadName']
+        pi_name = meta['labHeadName']
         pi_email = meta['labHeadEmail']
         run_id = meta['runId']
         preservation_type = meta['preservation']
         if barcode_index:
-            pu = '_'.join([flowcell_id,  barcode_index])
-        rg_id = '_'.join([cmo_sample_name, pu])
+            platform_unit = '_'.join([flowcell_id, barcode_index])
+        rg_id = '_'.join([cmo_sample_name, platform_unit])
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
-            sample['CN'] = (CN)
-            sample['PL'] = (PL)
-            sample['PU'] = (pu)
-            sample['LB'] = (lb)
+            sample['CN'] = (sequencing_center)
+            sample['PL'] = (platform)
+            sample['PU'] = (platform_unit)
+            sample['LB'] = (library_id)
             sample['tumor_type'] = (tumor_type)
             sample['ID'] = (rg_id)
             sample['SM'] = (cmo_sample_name)
             sample['species'] = (species)
             sample['patient_id'] = cmo_patient_id
             sample['bait_set'] = bait_set
-            sample['igo_id'] = igo_id
+            sample['sample_id'] = sample_id
             sample['run_date'] = run_date
             sample['specimen_type'] = specimen_type
             sample['request_id'] = request_id
-            sample['pi'] = pi
+            sample['pi'] = pi_name
             sample['pi_email'] = pi_email
             sample['run_id'] = run_id
             sample['preservation_type'] = preservation_type
@@ -161,8 +206,8 @@ def build_sample(data, ignore_sample_formatting=False):
     result['SM'] = list()
     result['species'] = list()
     result['patient_id'] = list()
-    result['bait_set'] = list() 
-    result['igo_id'] = list() 
+    result['bait_set'] = list()
+    result['sample_id'] = list()
     result['run_date'] = list()
     result['specimen_type'] = list()
     result['R1'] = list()
