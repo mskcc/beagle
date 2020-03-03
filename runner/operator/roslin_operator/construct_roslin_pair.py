@@ -204,7 +204,7 @@ def convert_references(project_id, assay, pi, pi_email):
         "num_threads": 10,
         "assay": assay,
         "tmp_dir": temp_dir,
-        "project_prefix": project_id,
+        "project_prefix": project_id[0],
         "opt_dup_pix_dist": "2500",
         "delly_type": delly_type,
         "facets_cval": facets_cval,
