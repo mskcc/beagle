@@ -122,7 +122,7 @@ class TestMakeSample(TestCase):
                            'bait_set': 'IMPACT468_BAITS',
                            'igo_id': '10075_D_2_3',
                            'patient_id': 'C-8VK0V7',
-                           'request_id': ['10075_D_2'],
+                           'request_id': '10075_D_2',
                            'run_date': ['2019-12-12'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
