@@ -125,7 +125,7 @@ class TestMakeSample(TestCase):
                            'request_id': '10075_D_2',
                            'run_date': ['2019-12-12'],
                            'run_id': ['JAX_0397'],
-                           'preservation': ['EDTA-Streck'],
+                           'preservation_type': ['EDTA-Streck'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
                            'tumor_type': 'Normal',
