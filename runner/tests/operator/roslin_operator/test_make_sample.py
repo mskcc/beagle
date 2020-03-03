@@ -124,6 +124,7 @@ class TestMakeSample(TestCase):
                            'patient_id': 'C-8VK0V7',
                            'request_id': '10075_D_2',
                            'run_date': ['2019-12-12'],
+                           'runId': ['JAX_0397'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
                            'tumor_type': 'Normal',
