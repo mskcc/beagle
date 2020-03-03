@@ -196,7 +196,7 @@ class TestPairRequest(TestCase):
             'bait_set': 'IMPACT468_BAITS',
             'igo_id': '10075_D_2',
             'patient_id': 'C-DRKHP7',
-            'request_id': ['10075_D'],
+            'request_id': '10075_D',
             'run_date': ['2019-12-12'],
             'species': 'Human',
             'specimen_type': 'Blood',
@@ -263,7 +263,7 @@ class TestPairRequest(TestCase):
             'bait_set': 'IMPACT468_BAITS',
             'igo_id': '10075_D_2',
             'patient_id': 'C-DRKHP7',
-            'request_id': ['10075_D'],
+            'request_id': '10075_D',
             'run_date': ['2019-12-12'],
             'species': 'Human',
             'specimen_type': 'Blood',
@@ -347,7 +347,7 @@ class TestPairRequest(TestCase):
             'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz'],
             'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
             'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
-            'request_id': ['10075_D_2'],
+            'request_id': '10075_D_2',
             'pi': 'John Smith',
             'pi_email': 'email@internet.com' }
             ]
@@ -420,7 +420,7 @@ class TestPairRequest(TestCase):
             'R2': ['/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz'],
             'R1_bid': [UUID('08072445-84ff-4b43-855d-d8d2dc87e2d5')],
             'R2_bid': [UUID('f0d9a1e1-9414-42df-a749-08776732ee04')],
-            'request_id': ['10075_D_4'],
+            'request_id': '10075_D_4',
             'pi': 'John Smith', 'pi_email': 'email@internet.com'}
             ]
         }
@@ -446,7 +446,7 @@ class TestPairRequest(TestCase):
         'bait_set': 'IMPACT468_BAITS',
         'igo_id': 's_juno_roslin_demo1_3',
         'patient_id': 'DU874145',
-        'request_id': ['juno_roslin_demo1'],
+        'request_id': 'juno_roslin_demo1',
         'run_date': ['2019-12-12'],
         'species': 'Human',
         'specimen_type': 'Blood',
@@ -464,7 +464,7 @@ class TestPairRequest(TestCase):
         'bait_set': 'IMPACT468_BAITS',
         'igo_id': 's_juno_roslin_demo1_5',
         'patient_id': 'DU874145',
-        'request_id': ['juno_roslin_demo1'],
+        'request_id': 'juno_roslin_demo1',
         'run_date': ['2019-12-17'],
         'species': 'Human',
         'specimen_type': 'Resection',
@@ -472,8 +472,8 @@ class TestPairRequest(TestCase):
         pairs = compile_pairs(samples)
 
         expected_pairs = {
-        'tumor': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'LB': 'juno_roslin_demo1_5_1_1_1', 'PL': 'Illumina', 'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')], 'SM': 's_juno_roslin_demo1_5', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_5', 'patient_id': 'DU874145', 'request_id': ['juno_roslin_demo1'], 'run_date': ['2019-12-17'], 'species': 'Human', 'specimen_type': 'Resection', 'tumor_type': 'Tumor'}],
-        'normal': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'], 'LB': 'juno_roslin_demo1_3', 'PL': 'Illumina', 'PU': ['HCYYWBBXY'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')], 'SM': 's_juno_roslin_demo1_3', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_3', 'patient_id': 'DU874145', 'request_id': ['juno_roslin_demo1'], 'run_date': ['2019-12-12'], 'species': 'Human', 'specimen_type': 'Blood', 'tumor_type': 'Normal'}]}
+        'tumor': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'LB': 'juno_roslin_demo1_5_1_1_1', 'PL': 'Illumina', 'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')], 'SM': 's_juno_roslin_demo1_5', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_5', 'patient_id': 'DU874145', 'request_id': 'juno_roslin_demo1', 'run_date': ['2019-12-17'], 'species': 'Human', 'specimen_type': 'Resection', 'tumor_type': 'Tumor'}],
+        'normal': [{'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'], 'LB': 'juno_roslin_demo1_3', 'PL': 'Illumina', 'PU': ['HCYYWBBXY'], 'R1': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'], 'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')], 'R2': ['/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'], 'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')], 'SM': 's_juno_roslin_demo1_3', 'bait_set': 'IMPACT468_BAITS', 'igo_id': 's_juno_roslin_demo1_3', 'patient_id': 'DU874145', 'request_id': 'juno_roslin_demo1', 'run_date': ['2019-12-12'], 'species': 'Human', 'specimen_type': 'Blood', 'tumor_type': 'Normal'}]}
 
         print(json.dumps(pairs, cls=UUIDEncoder))
         print(json.dumps(expected_pairs, cls=UUIDEncoder))

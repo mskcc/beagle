@@ -204,7 +204,7 @@ def convert_references(project_id, assay, pi, pi_email):
         "num_threads": 10,
         "assay": assay,
         "tmp_dir": temp_dir,
-        "project_prefix": project_id[0],
+        "project_prefix": project_id,
         "opt_dup_pix_dist": "2500",
         "delly_type": delly_type,
         "facets_cval": facets_cval,
@@ -224,4 +224,4 @@ if __name__ == '__main__':
     request_id = sys.argv[1]
 
     roslin_jobs = construct_roslin_jobs(request_id)
-    pprint(roslin_jobs)
+    pfailedoprint(roslin_jobs)
