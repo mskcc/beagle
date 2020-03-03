@@ -174,13 +174,23 @@ def dump_pipeline(**kwargs):
     Dump re-loadable Django database fixtures for Pipeline entries and related table fixtures
     """
     pipelineName = kwargs.pop('pipelineName')
-    output_pipeline_file = "{}.pipeline.json".format(pipelineName)
-    output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(pipelineName)
+    if pipelineName == "all":
+        output_pipeline_file = "all_pipeline.json".format(pipelineName)
+        output_pipeline_filegroup_file = "all_pipeline.output_file_group.json".format(pipelineName)
 
-    pipeline_instance = Pipeline.objects.get(name = pipelineName)
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
+        pipelines = Pipeline.objects.all()
+        print(json.dumps(json.loads(serializers.serialize('json', pipelines)), indent=4), file = open(output_pipeline_file, "w"))
 
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+        file_groups = FileGroup.objects.all()
+        print(json.dumps(json.loads(serializers.serialize('json', file_groups)), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+    else:
+        output_pipeline_file = "{}.pipeline.json".format(pipelineName)
+        output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(pipelineName)
+
+        pipeline_instance = Pipeline.objects.get(name = pipelineName)
+        print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
+
+        print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
 
 def get_files(value, type):
     """
