@@ -101,10 +101,12 @@ class OperatorViewSet(GenericAPIView):
             for request_id in request_ids:
                 logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
                 create_jobs_from_request.delay(request_id, pipeline.operator_id)
+            body = {"details": "Operator Job submitted %s" % str(request_ids)}
         else:
             operator_model = Operator.objects.get(id=pipeline.operator_id)
             operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
             create_jobs_from_operator(operator)
+            body = {"details": "Operator Job submitted to pipeline %s with runs %s" % (pipeline_name, str(run_ids))}
         # tempo_operator = TempoOperator(request_id)
         # jobs = tempo_operator.get_jobs()
         # result = []
@@ -112,7 +114,7 @@ class OperatorViewSet(GenericAPIView):
         #     if job.is_valid():
         #         run = job.save()
         #         result.append(run)
-        return Response({"details": "Operator Job submitted to %s" % str(pipeline_name)}, status=status.HTTP_200_OK)
+        return Response(body, status=status.HTTP_200_OK)
 
 
 class OperatorErrorViewSet(mixins.ListModelMixin,
