@@ -161,12 +161,20 @@ def get_r_orientation(fastq_filename):
     """
     Retrieve R orientation of fastq filename
     """
-    reversed_str = ''.join(reversed(fastq_filename))
-    if '1R' in reversed_str:
-        return 'R1'
-    if '2R' in reversed_str:
+    reversed_filename = ''.join(reversed(fastq_filename))
+    r1_idx = reversed_filename.find('1R')
+    r2_idx = reversed_filename.find('2R')
+    if r1_idx == -1 and r2_idx == -1:
+        return "ERROR"
+    elif r1_idx > 0 and r2_idx == -1:
+        return "R1"
+    elif r2_idx > 0 and r1_idx == -1:
         return 'R2'
-    return None
+    elif r1_idx > 0 and r2_idx > 0:
+        if r1_idx < r2_idx:
+            return 'R1'
+        return 'R2'
+    return 'ERROR'
 
 
 def spoof_barcode(sample_file_name, r_orientation):
