@@ -9,11 +9,12 @@ from beagle.pagination import time_filter
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
-from runner.tasks import create_run_task
-from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors
+from runner.tasks import create_run_task, create_jobs_from_operator
+from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, RequestIdOperatorSerializer, OperatorErrorSerializer
 from runner.operator.tempo_operator.tempo_operator import TempoOperator
 from rest_framework.generics import GenericAPIView
+from runner.operator.operator_factory import OperatorFactory
 from runner.pipeline.pipeline_resolver import CWLResolver
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -64,7 +65,6 @@ class RunApiViewSet(mixins.ListModelMixin,
             return self.get_paginated_response(serializer.data)
         return Response([], status=status.HTTP_200_OK)
 
-
     def create(self, request, *args, **kwargs):
         serializer = APIRunCreateSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -92,13 +92,18 @@ class OperatorViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
 
     def post(self, request):
-        request_ids = request.data['request_ids']
+        request_ids = request.data.get('request_ids', [])
+        run_ids = request.data.get('run_ids', [])
         pipeline_name = request.data['pipeline_name']
         pipeline = get_object_or_404(Pipeline, name=pipeline_name)
 
         for request_id in request_ids:
             logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
             create_jobs_from_request.delay(request_id, pipeline.operator_id)
+
+        operator_model = Operator.objects.get(id=pipeline.operator_id)
+        operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
+        create_jobs_from_operator(operator)
         # tempo_operator = TempoOperator(request_id)
         # jobs = tempo_operator.get_jobs()
         # result = []
