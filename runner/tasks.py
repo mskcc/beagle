@@ -92,6 +92,12 @@ def process_triggers():
                     if operator_run.percent_runs_finished == 100.0:
                         operator_run.complete()
 
+            if operator_run.percent_runs_finished == 100.0:
+                if operator_run.percent_runs_succeeded == 100.0:
+                    operator_run.complete()
+                else:
+                    operator_run.fail()
+
         except Exception as e:
             logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
             operator_run.fail()
