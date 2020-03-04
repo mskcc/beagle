@@ -7,7 +7,8 @@ from runner.models import Port
 
 
 def get_roslin_output_description():
-    output_description = {'bams': 'bam',
+    output_description = {'normal_bam': 'bam',
+                          'tumor_bam': 'bam',
                           'clstats1': 'qc',
                           'clstats2': 'qc',
                           'md_metrics': 'qc',
@@ -83,7 +84,6 @@ def list_file_paths(file_obj_list):
         list_of_files = list_of_files + single_file_obj['files']
         list_of_files = list_of_files + single_file_obj['secondary_files']
     return list_of_files
-
 
 
 def construct_copy_outputs_input(run_id_list):
