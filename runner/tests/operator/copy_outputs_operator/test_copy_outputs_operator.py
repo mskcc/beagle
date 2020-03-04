@@ -27,8 +27,8 @@ class TestCopyOutputs(TestCase):
         os.environ['TMPDIR'] = ''
 
     def check_if_file_obj_valid(self, file_obj):
-        if 'class' in file_obj and 'path' in file_obj:
-            if file_obj['class'] == 'File' and type(file_obj['path']) == str:
+        if 'class' in file_obj and 'location' in file_obj:
+            if file_obj['class'] == 'File' and type(file_obj['location']) == str:
                 return True
         return False
 
@@ -71,7 +71,7 @@ class TestCopyOutputs(TestCase):
         operator = OperatorFactory.get_by_model(
             operator_model,  run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"])
         input_json_valid = False
-        if operator.get_jobs()[0].is_valid():
-            input_json = operator.get_jobs()[0].initial_data['inputs']
+        if operator.get_jobs()[0][0].is_valid():
+            input_json = operator.get_jobs()[0][0].initial_data['inputs']
             input_json_valid = self.validate_copy_outputs_input(input_json)
         self.assertEqual(input_json_valid, True)
