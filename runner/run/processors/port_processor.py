@@ -156,21 +156,20 @@ class PortProcessor(object):
             file_obj_db = FileProcessor.create_file_obj(uri, size, group_id, metadata)
         except FileConflictException as e:
             logger.warning(str(e))
+            file_obj_db = FileProcessor.get_file_obj(uri)
             # TODO: Check what to do in case file already exist in DB. Note: This should never happen
             # raise PortProcessorException(e)
-        else:
-            secondary_files = file_obj.pop('secondaryFiles', [])
-            secondary_file_list = []
-            secondary_files_obj = PortProcessor.process_files(secondary_files,
-                                                              PortAction.REGISTER_OUTPUT_FILES,
-                                                              group_id=group_id,
-                                                              metadata=metadata,
-                                                              file_list=secondary_file_list)
-            if secondary_files_obj:
-                file_obj['secondaryFiles'] = secondary_files_obj
-            file_obj['location'] = FileProcessor.get_bid_from_file(file_obj_db)
-            if file_list is not None:
-                file_list.append('bid://%s' % FileProcessor.get_bid_from_file(file_obj_db))
-                file_list.extend([f['location'] for f in secondary_files_obj])
-                return file_obj
+        secondary_files = file_obj.pop('secondaryFiles', [])
+        secondary_file_list = []
+        secondary_files_obj = PortProcessor.process_files(secondary_files,
+                                                          PortAction.REGISTER_OUTPUT_FILES,
+                                                          group_id=group_id,
+                                                          metadata=metadata,
+                                                          file_list=secondary_file_list)
+        if secondary_files_obj:
+            file_obj['secondaryFiles'] = secondary_files_obj
+        file_obj['location'] = FileProcessor.get_bid_from_file(file_obj_db)
+        if file_list is not None:
+            file_list.append('bid://%s' % FileProcessor.get_bid_from_file(file_obj_db))
+            file_list.extend([f['location'] for f in secondary_files_obj])
         return file_obj
