@@ -7,7 +7,8 @@ from runner.models import Port
 
 
 def get_roslin_output_description():
-    output_description = {'bams': 'bam',
+    output_description = {'normal_bam': 'bam',
+                          'tumor_bam': 'bam',
                           'clstats1': 'qc',
                           'clstats2': 'qc',
                           'md_metrics': 'qc',
@@ -46,7 +47,7 @@ def get_roslin_output_description():
 
 
 def create_cwl_file_obj(file_path):
-    cwl_file_obj = {'class': 'File', 'path': file_path}
+    cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
     return cwl_file_obj
 
 
@@ -75,14 +76,6 @@ def get_files_from_port(port_obj):
     elif isinstance(port_obj, dict):
         file_list.append(get_file_obj(port_obj))
     return file_list
-
-
-def list_file_paths(file_obj_list):
-    list_of_files = []
-    for single_file_obj in file_obj_list:
-        list_of_files = list_of_files + single_file_obj['files']
-        list_of_files = list_of_files + single_file_obj['secondary_files']
-    return list_of_files
 
 
 def list_file_paths(file_obj_list):
