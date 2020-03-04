@@ -46,7 +46,7 @@ def get_roslin_output_description():
 
 
 def create_cwl_file_obj(file_path):
-    cwl_file_obj = {'class': 'File', 'path': file_path}
+    cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
     return cwl_file_obj
 
 
@@ -84,13 +84,6 @@ def list_file_paths(file_obj_list):
         list_of_files = list_of_files + single_file_obj['secondary_files']
     return list_of_files
 
-
-def list_file_paths(file_obj_list):
-    list_of_files = []
-    for single_file_obj in file_obj_list:
-        list_of_files = list_of_files + single_file_obj['files']
-        list_of_files = list_of_files + single_file_obj['secondary_files']
-    return list_of_files
 
 
 def construct_copy_outputs_input(run_id_list):
