@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 def create_jobs_from_operator(operator):
     jobs = operator.get_jobs()
-    # trigger = OperatorTrigger.objects.filter(from_operator=operator).first()
 
     valid_jobs, invalid_jobs = [], []
     for job in jobs:
