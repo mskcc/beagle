@@ -69,8 +69,8 @@ def process_triggers():
                         if operator_run.percent_runs_succeeded == 100.0:
                             operator_run.complete()
                             create_jobs_from_chaining.delay(
-                                operator_run.trigger.to_operator_id,
-                                operator_run.trigger.from_operator_id,
+                                trigger.to_operator_id,
+                                trigger.from_operator_id,
                                 list(operator_run.runs.values_list('id', flat=True))
                             )
                             continue
@@ -78,8 +78,8 @@ def process_triggers():
                         if operator_run.percent_runs_succeeded >= 90.0:
                             operator_run.complete()
                             create_jobs_from_chaining.delay(
-                                operator_run.trigger.to_operator_id,
-                                operator_run.trigger.from_operator_id,
+                                trigger.to_operator_id,
+                                trigger.from_operator_id,
                                 list(operator_run.runs.values_list('id', flat=True))
                             )
                             continue
