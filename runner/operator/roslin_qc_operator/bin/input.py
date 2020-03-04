@@ -26,6 +26,7 @@ doc_basecounts: [doc_basecounts]
 conpair_pileups: [conpair_pileups]
 pairs: [pair]
 """
+import os
 import json
 import urllib
 from file_system.models import FileMetadata, File
@@ -101,13 +102,6 @@ def path_to_job_data(filepath):
     }
     return(d)
 
-def get_assay_from_run(run_instance):
-    """
-    Return the assay from a Run instance
-    This is a hold-over method until Run instance db model gets updated; update this later
-    """
-    return(run_instance.output_metadata['assay'])
-
 def create_files_data_from_ports_with_names(ports):
     """
     Retrieve the File entries for each Port entry, while keeping the associated Port.name attribute
@@ -165,21 +159,36 @@ def parse_pairs_from_ports(ports_queryset):
 def parse_bams_from_ports(ports_queryset):
     """
     Search a set of Ports for the 'bams' entries and format them into a list of tumor normal pair entries
+
+    TODO: what to do if there are multiple 'normal_bam' and 'tumor_bam'?
     """
-    bam_ports = ports_queryset.filter(name = "bams")
-    bams = []
-    for bam in bam_ports:
-        # get the Beagle database id for each bam file out of the `db_value` field`
-        # TODO: need to refactor this to get it from the Port.files association; right now that association lacks the tumor/normal information needed to know which bam is which
-        files_data = bam.db_value
-        tumor_bam_data = files_data[0]
-        tumor_bam_bid = urllib.parse.urlsplit(tumor_bam_data['location']).netloc
-        tumor_bam_file_instance = File.objects.get(id = tumor_bam_bid)
-        normal_bam_data = files_data[1]
-        normal_bam_bid = urllib.parse.urlsplit(normal_bam_data['location']).netloc
-        normal_bam_file_instance = File.objects.get(id = normal_bam_bid)
-        bams.append([tumor_bam_file_instance, normal_bam_file_instance])
-    return(bams)
+    normal_bam_port = ports_queryset.filter(name = "normal_bam").first()
+    tumor_bam_port = ports_queryset.filter(name = "tumor_bam").first()
+
+    # each Port has two files; the .bam and .bai
+    # based on just the foreign key in Port.files, you cannot tell which is the .bam and which is the .bai
+    # so we need to check the file extension and sort them out
+    normal_items = {}
+    tumor_items = {}
+    for file_instance in normal_bam_port.files.all():
+        # file_name might end up being a URI
+        filepath = urllib.parse.urlsplit(file_instance.file_name).path
+        filename, file_extension = os.path.splitext(filepath)
+        normal_items[file_extension] = file_instance
+    for file_instance in tumor_bam_port.files.all():
+        filepath = urllib.parse.urlsplit(file_instance.file_name).path
+        filename, file_extension = os.path.splitext(filepath)
+        tumor_items[file_extension] = file_instance
+
+    # now make a sensible output mapping to the files
+    output_items = {
+    'normal_bam' : normal_items['.bam'],
+    'normal_bai' : normal_items['.bai'],
+    'tumor_bam' : tumor_items['.bam'],
+    'tumor_bai' : tumor_items['.bai']
+    }
+
+    return(output_items)
 
 def pair_to_cwl(pair):
     """
@@ -246,44 +255,70 @@ def pair_to_job_data(pair):
     output = (tumor, normal)
     return(output)
 
-def bams_to_cwl(bams):
+def bams_to_job_data(bams):
     """
-    Convert the items in the bams list to CWL format
+    Convert the set of bam files into the datastructure needed for the Job JSON
 
-    bams = [ [File.objects.get(file_name = 's_C_K2902H_P001_d.rg.md.abra.printreads.bam'), File.objects.get(file_name = 's_C_K2902H_N001_d.rg.md.abra.printreads.bam')], ... ]
+    bams = {
+    'normal_bam' : File.objects.get(...),
+    'normal_bai' : File.objects.get(...),
+    'tumor_bam' : File.objects.get(...),
+    'tumor_bai' : File.objects.get(...)
+    }
     """
-    bam_cwls = []
-    for item in bams:
-        tumor_bam = item[0]
-        normal_bam = item[1]
-        tumor_bam_cwl = file_to_job_data(tumor_bam)
-        normal_bam_cwl = file_to_job_data(normal_bam)
-        bam_cwls.append([tumor_bam_cwl, normal_bam_cwl])
-    return(bam_cwls)
+    job_data = []
+    job_data.append(file_to_job_data(bams['tumor_bam']))
+    job_data.append(file_to_job_data(bams['normal_bam']))
+    return(job_data)
 
 def parse_runparams_from_ports(ports_queryset):
     """
     Get the runparams from a Port queryset
     """
     # TODO: how to ensure the correct number of Port items? Should be 1
+    # TODO: how to handle multiple sets of runparams in the ports queryset????
     param_port = ports_queryset.filter(name = "runparams").first()
     runparams = {}
-    runparams['project_prefix'] = param_port.value['project_prefix'][0] # NOTE: comes in as array but need single string
+    runparams['project_prefix'] = param_port.value['project_prefix']
     runparams['genome'] = param_port.value['genome']
     runparams['scripts_bin'] = param_port.value['scripts_bin']
+    runparams['assay'] = param_port.value['assay']
 
-    # TODO: find a way to handle
-    runparams['pi'] = "NA"
-    runparams['pi_email'] = "NA"
+    # at the time of writing these, 'pi' and 'pi_email' were not output by Roslin pipeline but were needed by Roslin QC pipeline
+    if 'pi' not in runparams:
+        runparams['pi'] = "NA"
+    if 'pi_email' not in runparams:
+        runparams['pi_email'] = "NA"
     return(runparams)
+
+def get_baits_and_targets(assay):
+    """
+    get a assay label that matches the known keys in roslin_resources.json
+
+    copy paste'd from Roslin QC Operator; https://github.com/mskcc/beagle/blob/032b7aeb5abedfdae6e6b434c4f231f5645a2df8/runner/operator/roslin_operator/construct_roslin_pair.py#L94
+    """
+    if assay.find("IMPACT410") > -1:
+        return("IMPACT410_b37")
+    if assay.find("IMPACT468") > -1:
+        return("IMPACT468_b37")
+    if assay.find("IMPACT341") > -1:
+        return("IMPACT341_b37")
+    if assay.find("IDT_Exome_v1_FP") > -1:
+        return("IDT_Exome_v1_FP_b37")
+    if assay.find("IMPACT468+08390") > -1:
+        return("IMPACT468_08390")
+    if assay.find("IMPACT468+Poirier_RB1_intron_V2") > -1:
+        return("IMPACT468_08050")
 
 def get_db_files(assay, references_json = "runner/operator/roslin_operator/reference_jsons/roslin_resources.json"):
     """
     Return a dict with the required reference file paths
     """
+    # assay does not actually always match the key needed to figure out the reference files
+    better_assay = get_baits_and_targets(assay)
     references = json.load(open(references_json))
     db_files = {}
-    db_files['fp_genotypes'] = references["targets"][assay]['FP_genotypes']
+    db_files['fp_genotypes'] = references["targets"][better_assay]['FP_genotypes']
     db_files['hotspot_list_maf'] = references["request_files"]['hotspot_list_maf']
     db_files['conpair_markers'] = references["request_files"]['conpair_markers']
     db_files['ref_fasta'] = references["request_files"]['ref_fasta']
@@ -296,18 +331,6 @@ def get_db_files(assay, references_json = "runner/operator/roslin_operator/refer
             db_files[key] = path_to_job_data(parts.path)
         elif value.startswith('/'):
             db_files[key] = path_to_job_data(db_files[key])
-    # TODO: do these need to be changed??
-
-    # check for URI ref_fasta; 'juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta'
-    # for key, value in db_files.items():
-    #     if value.startswith('juno:///'):
-    #         pass
-    #         # parts = urllib.parse.urlsplit(value)
-    #         # db_files[key] = path_to_cwl(parts.path)
-    #     elif value.startswith('/'):
-    #         db_files[key] = path_to_job_data(value)
-        # TODO: what to do if its not either of these cases?
-
     return(db_files)
 
 def parse_outputs_files_data(files_data):
@@ -340,7 +363,7 @@ def parse_outputs_files_data(files_data):
                 qc_input[item_type].append(file_data)
     return(qc_input)
 
-def build_inputs_from_runs(run_queryset, _assay = None):
+def build_inputs_from_runs(run_queryset):
     """
     Build the Roslin QC pipeline inputs data structure from a set of Roslin Voyager pipeline Run instances
     """
@@ -351,43 +374,35 @@ def build_inputs_from_runs(run_queryset, _assay = None):
     pairs = parse_pairs_from_ports(ports)
 
     # convert the pairs to CWL format datastructure
-    pairs_cwl = []
+    pairs_job_data = []
     for pair_set in pairs:
-        pair_cwl = pair_to_cwl(pair_set)
-        pairs_cwl.append(pair_cwl)
+        job_data = pair_to_job_data(pair_set)
+        pairs_job_data.append(job_data)
 
     # get the File entries while keeping Port.name; needed for later parsing
     files_data = create_files_data_from_ports_with_names(ports)
     input_files = parse_outputs_files_data(files_data)
 
-    # need to get the assay type so that we can get the correct reference files later
-    # TODO: how to handle multiple runs? just use the first one for now...
-    if _assay == None:
-        assay = get_assay_from_run(run_queryset.first())
-    else:
-        assay = str(_assay)
-
     # find the Port with 'runparams' needed for QC input
     runparams = parse_runparams_from_ports(ports)
-    runparams['assay'] = assay
 
     # get the correct reference files based on assay type
-    db_files = get_db_files(assay)
+    db_files = get_db_files(runparams['assay'])
     ref_fasta = db_files.pop('ref_fasta')
 
     # get the .bam files needed for QC input
     bams = parse_bams_from_ports(ports)
 
     # convert to CWL output format
-    bams_cwl = bams_to_cwl(bams)
+    bams_job_data = bams_to_job_data(bams)
 
     # build the final data dict for QC input
     qc_input = {}
     qc_input['db_files'] = db_files
     qc_input['runparams'] = runparams
-    qc_input['pairs'] = pairs_cwl
+    qc_input['pairs'] = pairs_job_data
     qc_input['ref_fasta'] = ref_fasta
-    qc_input['bams'] = bams_cwl
+    qc_input['bams'] = bams_job_data
     qc_input['directories'] = []
     qc_input['files'] = []
     qc_input = {**qc_input, **input_files}

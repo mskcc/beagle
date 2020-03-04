@@ -13,7 +13,7 @@ from runner.operator.roslin_qc_operator.bin.input import parse_outputs_files_dat
 from runner.operator.roslin_qc_operator.bin.input import parse_pairs_from_ports
 from runner.operator.roslin_qc_operator.bin.input import parse_runparams_from_ports
 from runner.operator.roslin_qc_operator.bin.input import get_db_files
-from runner.operator.roslin_qc_operator.bin.input import get_assay_from_run
+from runner.operator.roslin_qc_operator.bin.input import get_baits_and_targets
 from runner.operator.roslin_qc_operator.bin.input import build_inputs_from_runs
 from runner.operator.roslin_qc_operator.bin.input import file_to_cwl
 from runner.operator.roslin_qc_operator.bin.input import path_to_cwl
@@ -32,35 +32,6 @@ class TestInput(TestCase):
     "runner.pipeline.json",
     "beagle_etl.operator.json"
     ]
-
-    def test_true(self):
-        self.assertTrue(True)
-
-    def test_validate_fixtures1(self):
-        """
-        Check the validity of the fixtures for use with testing for this module to make sure it matches expected criteria
-        Using saved Roslin pipeline output dataset
-        """
-        # start with empty db
-        self.assertTrue(len(Run.objects.all()) == 0)
-        self.assertTrue(len(Port.objects.all()) == 0)
-        self.assertTrue(len(File.objects.all()) == 0)
-        self.assertTrue(len(FileMetadata.objects.all()) == 0)
-
-        # load test pipeline Run output fixtures
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
-
-        # make sure fixtures match expected criteria
-        self.assertTrue(len(Run.objects.all()) == 1)
-        self.assertTrue(len(Port.objects.all()) == 47)
-        self.assertTrue(len(File.objects.all()) == 121)
-        self.assertTrue(len(FileMetadata.objects.all()) == 121)
-
-        # make sure expected number of inputs and outputs exist
-        run_instance = Run.objects.first()
-        self.assertEqual(len(run_instance.port_set.filter(port_type=PortType.INPUT)), 12)
-        self.assertEqual(len(run_instance.port_set.filter(port_type=PortType.OUTPUT)), 35)
 
     def test_file_to_cwl1(self):
         """
@@ -90,57 +61,45 @@ class TestInput(TestCase):
         expected_job_data = {'class': 'File', 'location': 'juno:///path/to/foo.txt'}
         self.assertEqual(job_data, expected_job_data)
 
-    def test_get_assay_from_run1(self):
-        """
-        Test that correct assay is returned from fixture
-        This behavior is likely to change in the future
-        """
-        # load test pipeline Run output fixtures
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
-        run_instance = Run.objects.first()
-        assay = get_assay_from_run(run_instance)
-        self.assertEqual(assay, 'IDT_Exome_v1_FP_b37')
-
     def test_build_sample1(self):
         """
         Test building of the base dict datastructure to be used later in Roslin CWL output
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
-        file_instance = File.objects.get(file_name = 'P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz')
+        file_instance = File.objects.get(file_name = 'DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz')
         filemetadata_instance = FileMetadata.objects.filter(file = file_instance).order_by('-version').first()
         sample = build_sample(filemetadata_instance = filemetadata_instance)
         expected_sample = {'CN': 'MSKCC',
-            'ID': 'C-K2902H-N001-d_H7FKJBBXY',
-            'LB': '09670_D_46_1',
-            'PL': 'Illumina',
-            'PU': 'H7FKJBBXY',
-            'SM': 'C-K2902H-N001-d',
-            'bait_set': 'IDT_Exome_v1_FP_BAITS',
-            'igo_id': '09670_D_46',
-            'patient_id': 'C-K2902H',
-            'request_id': '09670_D',
-            'run_date': '2019-08-19',
-            'species': 'Human',
-            'specimen_type': 'Blood',
-            'tumor_type': 'Normal'}
+        'PL': 'Illumina',
+        'PU': 'MyFlowCellId',
+        'LB': 'MyLibraryId',
+        'tumor_type': 'Tumor',
+        'ID': 'C-ALLANT-T001-d_MyFlowCellId',
+        'SM': 'C-ALLANT-T001-d',
+        'species': 'Human',
+        'patient_id': 'C-ALLANT',
+        'bait_set': 'IMPACT468_BAITS',
+        'igo_id': 'ALN-TEST-01',
+        'run_date': None,
+        'specimen_type': 'Blood',
+        'request_id': 'ALN-REQ-ID'}
         self.assertEqual(sample, expected_sample)
 
     def test_parse_pairs_from_ports1(self):
         """
         Test that pairs are properly constructed from Port objects
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         run_instance = Run.objects.first()
         ports = run_instance.port_set.all()
         pairs = parse_pairs_from_ports(ports)
 
-        tumor_R2 = FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R2_001.fastq.gz"))
-        turmor_R1 = FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R1_001.fastq.gz"))
-        normal_R2 = FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz"))
-        normal_R1 = FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R1_001.fastq.gz"))
+        tumor_R2 = FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"))
+        turmor_R1 = FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"))
+        normal_R2 = FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"))
+        normal_R1 = FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"))
 
         expected_pairs = [{
             'normal': {
@@ -158,129 +117,85 @@ class TestInput(TestCase):
         """
         Test that the 'bams' entries are constructed correctly from the Port objects
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         run_instance = Run.objects.first()
         ports = run_instance.port_set.all()
         bams = parse_bams_from_ports(ports)
-        expected_bams = [[
-        File.objects.get(file_name = 's_C_K2902H_P001_d.rg.md.abra.printreads.bam'),
-        File.objects.get(file_name = 's_C_K2902H_N001_d.rg.md.abra.printreads.bam')
-        ]]
-        self.assertEqual(bams, expected_bams) # TODO: need to figure out how this will be handled; need the sample metadata associated with .bam files
-
-    def test_pair_to_cwl1(self):
-        """
-        Test conversion of single pair to base CWL datastructure format
-        """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
-        pair = {
-            'normal': {
-                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R1_001.fastq.gz")),
-                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz"))
-            },
-            'tumor': {
-                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R1_001.fastq.gz")),
-                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R2_001.fastq.gz"))
-            }
+        expected_bams = {
+        'normal_bam' : File.objects.get(file_name = 's_C_ALLANT_N002_d.rg.md.abra.printreads.bam'),
+        'normal_bai' : File.objects.get(file_name = 's_C_ALLANT_N002_d.rg.md.abra.printreads.bai'),
+        'tumor_bam' : File.objects.get(file_name = 's_C_ALLANT_T001_d.rg.md.abra.printreads.bam'),
+        'tumor_bai' : File.objects.get(file_name = 's_C_ALLANT_T001_d.rg.md.abra.printreads.bai')
         }
-
-        pair_cwl = pair_to_cwl(pair)
-
-        expected_pair_cwl = ({'CN': 'MSKCC',
-            'ID': 'C-K2902H-P001-d_H7HCTBBXY',
-            'LB': '09670_D_1_1_1_1_1',
-            'PL': 'Illumina',
-            'PU': 'H7HCTBBXY',
-            'R1': {'class': 'File',
-                'path': '/ifs/archive/GCL/hiseq/FASTQ/PITT_0390_BH7HCTBBXY/Project_09670_D/Sample_S16-68609_IGO_09670_D_1/S16-68609_IGO_09670_D_1_S11_R1_001.fastq.gz'},
-            'R2': {'class': 'File',
-                'path': '/ifs/archive/GCL/hiseq/FASTQ/PITT_0390_BH7HCTBBXY/Project_09670_D/Sample_S16-68609_IGO_09670_D_1/S16-68609_IGO_09670_D_1_S11_R2_001.fastq.gz'},
-            'SM': 'C-K2902H-P001-d',
-            'bait_set': 'IDT_Exome_v1_FP_BAITS',
-            'igo_id': '09670_D_1',
-            'patient_id': 'C-K2902H',
-            'request_id': '09670_D',
-            'run_date': '2019-08-15',
-            'species': 'Human',
-            'specimen_type': 'Biopsy',
-            'tumor_type': 'Tumor'},
-            {'CN': 'MSKCC',
-            'ID': 'C-K2902H-N001-d_H7FKJBBXY',
-            'LB': '09670_D_46_1',
-            'PL': 'Illumina',
-            'PU': 'H7FKJBBXY',
-            'R1': {'class': 'File',
-                'path': '/ifs/archive/GCL/hiseq/FASTQ/PITT_0391_AH7FKJBBXY/Project_09670_D/Sample_P-0017035-N01-WES_IGO_09670_D_46/P-0017035-N01-WES_IGO_09670_D_46_S12_R1_001.fastq.gz'},
-            'R2': {'class': 'File',
-                'path': '/ifs/archive/GCL/hiseq/FASTQ/PITT_0391_AH7FKJBBXY/Project_09670_D/Sample_P-0017035-N01-WES_IGO_09670_D_46/P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz'},
-            'SM': 'C-K2902H-N001-d',
-            'bait_set': 'IDT_Exome_v1_FP_BAITS',
-            'igo_id': '09670_D_46',
-            'patient_id': 'C-K2902H',
-            'request_id': '09670_D',
-            'run_date': '2019-08-19',
-            'species': 'Human',
-            'specimen_type': 'Blood',
-            'tumor_type': 'Normal'})
-        self.assertEqual(pair_cwl, expected_pair_cwl)
+        self.assertEqual(bams, expected_bams) # TODO: need to figure out how this will be handled; need the sample metadata associated with .bam files
 
     def test_pair_to_job_data(self):
         """
         Test that a pair dict is correctly converted to Job data for submission
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         pair = {
             'normal': {
-                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R1_001.fastq.gz")),
-                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz"))
+                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz")),
+                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"))
             },
             'tumor': {
-                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R1_001.fastq.gz")),
-                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "S16-68609_IGO_09670_D_1_S11_R2_001.fastq.gz"))
+                'R1': FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz")),
+                'R2': FileMetadata.objects.get(file = File.objects.get(file_name = "DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"))
             }
         }
 
         job_data = pair_to_job_data(pair)
-
-        expected_job_data = ({'CN': 'MSKCC',
-            'ID': 'C-K2902H-P001-d_H7HCTBBXY',
-            'LB': '09670_D_1_1_1_1_1',
-            'PL': 'Illumina',
-            'PU': 'H7HCTBBXY',
-            'R1': {'class': 'File',
-                'location': 'juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0390_BH7HCTBBXY/Project_09670_D/Sample_S16-68609_IGO_09670_D_1/S16-68609_IGO_09670_D_1_S11_R1_001.fastq.gz'},
-            'R2': {'class': 'File',
-                'location': 'juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0390_BH7HCTBBXY/Project_09670_D/Sample_S16-68609_IGO_09670_D_1/S16-68609_IGO_09670_D_1_S11_R2_001.fastq.gz'},
-            'SM': 'C-K2902H-P001-d',
-            'bait_set': 'IDT_Exome_v1_FP_BAITS',
-            'igo_id': '09670_D_1',
-            'patient_id': 'C-K2902H',
-            'request_id': '09670_D',
-            'run_date': '2019-08-15',
-            'species': 'Human',
-            'specimen_type': 'Biopsy',
-            'tumor_type': 'Tumor'},
-            {'CN': 'MSKCC',
-            'ID': 'C-K2902H-N001-d_H7FKJBBXY',
-            'LB': '09670_D_46_1',
-            'PL': 'Illumina',
-            'PU': 'H7FKJBBXY',
-            'R1': {'class': 'File',
-                'location': 'juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0391_AH7FKJBBXY/Project_09670_D/Sample_P-0017035-N01-WES_IGO_09670_D_46/P-0017035-N01-WES_IGO_09670_D_46_S12_R1_001.fastq.gz'},
-            'R2': {'class': 'File',
-                'location': 'juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0391_AH7FKJBBXY/Project_09670_D/Sample_P-0017035-N01-WES_IGO_09670_D_46/P-0017035-N01-WES_IGO_09670_D_46_S12_R2_001.fastq.gz'},
-            'SM': 'C-K2902H-N001-d',
-            'bait_set': 'IDT_Exome_v1_FP_BAITS',
-            'igo_id': '09670_D_46',
-            'patient_id': 'C-K2902H',
-            'request_id': '09670_D',
-            'run_date': '2019-08-19',
-            'species': 'Human',
-            'specimen_type': 'Blood',
-            'tumor_type': 'Normal'})
+        expected_job_data = ({
+            "CN": "MSKCC",
+            "PL": "Illumina",
+            "PU": "MyFlowCellId",
+            "LB": "MyLibraryId",
+            "tumor_type": "Tumor",
+            "ID": "C-ALLANT-T001-d_MyFlowCellId",
+            "SM": "C-ALLANT-T001-d",
+            "species": "Human",
+            "patient_id": "C-ALLANT",
+            "bait_set": "IMPACT468_BAITS",
+            "igo_id": "ALN-TEST-01",
+            "run_date": None,
+            "specimen_type": "Blood",
+            "request_id": "ALN-REQ-ID",
+            "R1": {
+                "class": "File",
+                "location": "juno:///juno/work/pi/prototypes/register_fastqs/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            },
+            "R2": {
+                "class": "File",
+                "location": "juno:///juno/work/pi/prototypes/register_fastqs/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            }
+        },
+        {
+            "CN": "MSKCC",
+            "PL": "Illumina",
+            "PU": "MyFlowCellId",
+            "LB": "MyLibraryId",
+            "tumor_type": "Normal",
+            "ID": "C-ALLANT-N002-d_MyFlowCellId",
+            "SM": "C-ALLANT-N002-d",
+            "species": "Human",
+            "patient_id": "C-ALLANT",
+            "bait_set": "IMPACT468_BAITS",
+            "igo_id": "ALN-TEST-02",
+            "run_date": None,
+            "specimen_type": "Blood",
+            "request_id": "ALN-REQ-ID",
+            "R1": {
+                "class": "File",
+                "location": "juno:///juno/work/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            },
+            "R2": {
+                "class": "File",
+                "location": "juno:///juno/work/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            }
+        })
 
         self.assertEqual(job_data, expected_job_data)
 
@@ -288,7 +203,7 @@ class TestInput(TestCase):
         """
         Test that runparams are correctly parsed from Port queryset
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         run_instance = Run.objects.first()
         ports = run_instance.port_set.all()
@@ -296,9 +211,16 @@ class TestInput(TestCase):
         expected_runparams = {'genome': 'GRCh37',
             'pi': 'NA',
             'pi_email': 'NA',
-            'project_prefix': '09670_D',
-            'scripts_bin': '/usr/bin'}
+            'project_prefix': 'ALN-REQ-ID',
+            'scripts_bin': '/usr/bin',
+            'assay': 'IMPACT468_BAITS'}
         self.assertEqual(runparams, expected_runparams)
+
+    def test_get_baits_and_targets1(self):
+        """
+        Test that give a certain assay label, the correct one is returned
+        """
+        self.assertEqual(get_baits_and_targets("IMPACT468_BAITS"), "IMPACT468_b37")
 
     def test_get_db_files(self):
         """
@@ -358,9 +280,9 @@ class TestInput(TestCase):
         Test generation of Roslin QC input from Roslin pipeline output Run and Port instances
         """
         # load test pipeline Run output fixtures
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "daa13d24-50ea-11ea-b9c7-ac1f6b453620.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "dfefc47b-3ee4-4867-890f-9bab87c7f53f.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         run_queryset = Run.objects.all()
@@ -368,8 +290,8 @@ class TestInput(TestCase):
         qc_input = build_inputs_from_runs(run_queryset)
         # print(">>> printing qc_input to file")
         # print(json.dumps(qc_input, indent = 4), file = open("qc_input.json", 'w'))
-        # self.assertTrue(False)
-        # TODO: how to output format?
+
+        # TODO: how to test output format?
         self.assertEqual(len(qc_input['pairs']), 2)
         self.assertEqual(len(qc_input['pairs'][0]), 2)
         self.assertEqual(len(qc_input['bams']), 2)
@@ -384,18 +306,18 @@ class TestInput(TestCase):
         self.assertEqual(len(File.objects.all()),  0)
         self.assertEqual(len(FileMetadata.objects.all()),  0)
 
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         self.assertEqual(len(Run.objects.all()),  1)
-        self.assertEqual(len(Port.objects.all()),  47)
-        self.assertEqual(len(File.objects.all()),  121)
-        self.assertEqual(len(FileMetadata.objects.all()),  121)
+        self.assertEqual(len(Port.objects.all()),  51)
+        self.assertEqual(len(File.objects.all()),  114)
+        self.assertEqual(len(FileMetadata.objects.all()),  114)
 
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "daa13d24-50ea-11ea-b9c7-ac1f6b453620.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "dfefc47b-3ee4-4867-890f-9bab87c7f53f.run.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         self.assertEqual(len(Run.objects.all()),  2)
-        self.assertEqual(len(Port.objects.all()),  94)
-        self.assertEqual(len(File.objects.all()),  242)
-        self.assertEqual(len(FileMetadata.objects.all()),  242)
+        self.assertEqual(len(Port.objects.all()),  102)
+        self.assertEqual(len(File.objects.all()),  168)
+        self.assertEqual(len(FileMetadata.objects.all()),  168)

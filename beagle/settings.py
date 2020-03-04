@@ -316,4 +316,5 @@ BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagl
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
 TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
+FIXTURES_DIR = os.path.join(ROOT_DIR, "fixtures")
 DUMP_JSON = os.environ.get('DUMP_JSON') == 'True'

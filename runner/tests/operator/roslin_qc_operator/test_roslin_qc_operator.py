@@ -43,17 +43,18 @@ class TestRoslinQcOperator(TestCase):
         Test direct Operator instantiation without Operator Factory and try to create valid jobs
         """
         # self.maxDiff = None
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
+        test_files_fixture = os.path.join(settings.FIXTURES_DIR, "runs", "aa0694f1-0109-4205-a6b2-63e3e1d7c0a2.run.json")
+        # test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "roslin_reference_files.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         # create the operator instance
         roslin_qc_model = Operator.objects.get(slug="roslin-qc")
-        operator = RoslinQcOperator(roslin_qc_model, run_ids = ['ca18b090-03ad-4bef-acd3-52600f8e62eb'])
+        operator = RoslinQcOperator(roslin_qc_model, run_ids = ['aa0694f1-0109-4205-a6b2-63e3e1d7c0a2'])
 
         # check its attributes
-        self.assertEqual(operator.run_ids, ['ca18b090-03ad-4bef-acd3-52600f8e62eb'])
+        self.assertEqual(operator.run_ids, ['aa0694f1-0109-4205-a6b2-63e3e1d7c0a2'])
         self.assertEqual(operator.get_pipeline_id(), "9b7f2ac8-03a5-4c44-ae87-1d9f6500d19a")
 
         # create the data for the operator run
@@ -75,7 +76,7 @@ class TestRoslinQcOperator(TestCase):
             'app': "9b7f2ac8-03a5-4c44-ae87-1d9f6500d19a",
             'inputs': input_data,
             'name': "foo name",
-            'tags': {'run_ids':['ca18b090-03ad-4bef-acd3-52600f8e62eb']},
+            'tags': {'run_ids':['aa0694f1-0109-4205-a6b2-63e3e1d7c0a2']},
             'output_metadata': output_metadata
             }
         self.assertEqual(serializer_data, expected_serializer_data)

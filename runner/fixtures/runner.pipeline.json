@@ -10,7 +10,8 @@
             "version": "0.1.0",
             "entrypoint": "align_sort_bam.cwl",
             "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-            "output_directory": null
+            "output_directory": null,
+            "operator": null
         }
     },
     {
@@ -24,22 +25,8 @@
             "version": "0.1.1",
             "entrypoint": "fastq_to_bam.cwl",
             "output_file_group": "d9015037-cd6b-4cb6-87a8-16d355482461",
-            "output_directory": "/work/pi/beagle/output/access_m1"
-        }
-    },
-    {
-        "model": "runner.pipeline",
-        "pk": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
-        "fields": {
-            "created_date": "2019-11-18T17:46:45.118Z",
-            "modified_date": "2019-12-05T01:12:39.854Z",
-            "name": "roslin",
-            "github": "https://github.com/mskcc/roslin-cwl",
-            "version": "1.0.0-rc5",
-            "entrypoint": "workflows/pair-workflow-sv.cwl",
-            "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_sv",
-            "operator": 1
+            "output_directory": "/work/pi/beagle/output/access_m1",
+            "operator": null
         }
     },
     {
@@ -53,7 +40,8 @@
             "version": "master",
             "entrypoint": "flatbush.cwl",
             "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-            "output_directory": "/juno/work/pi/beagle/output/flatbush"
+            "output_directory": "/juno/work/pi/beagle/output/flatbush",
+            "operator": null
         }
     },
     {
@@ -67,21 +55,53 @@
             "version": "1.0.0-rc5",
             "entrypoint": "modules/project/generate-qc.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/roslin-qc"
+            "output_directory": "/juno/work/pi/beagle/output/roslin-qc",
+            "operator": null
+        }
     },
     {
         "model": "runner.pipeline",
-        "pk": "65419097-a2b8-4d57-a8ab-c4c4cddcbea8",
+        "pk": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
         "fields": {
             "created_date": "2019-11-18T17:46:45.118Z",
-            "modified_date": "2019-12-05T01:12:39.854Z",
-            "name": "copy_outputs",
+            "modified_date": "2020-02-26T22:22:30.099Z",
+            "name": "roslin",
             "github": "https://github.com/mskcc/roslin-cwl",
-            "version": "1.0.0",
-            "entrypoint": "workflows/copy_outputs.cwl",
+            "version": "feature/3.0.0_release",
+            "entrypoint": "workflows/pair-workflow-sv.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
-            "operator": 4
+            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_sv",
+            "operator": 1
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "06792b3f-f9dc-4ad1-80a7-2a7af300f000",
+        "fields": {
+            "created_date": "2020-02-25T17:04:46.410Z",
+            "modified_date": "2020-03-03T15:12:51.891Z",
+            "name": "roslin-dev",
+            "github": "https://github.com/mskcc/roslin-cwl",
+            "version": "3.0.0",
+            "entrypoint": "workflows/pair-workflow-sv.cwl",
+            "output_file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+            "output_directory": "/juno/work/ci/kellys5/projects/beagle-dev/beagle-dev4/output/roslin-dev",
+            "operator": 5
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "c7849f2b-9a4f-4352-acde-1d993af379d8",
+        "fields": {
+            "created_date": "2020-01-22T18:15:20.875Z",
+            "modified_date": "2020-03-02T17:43:21.328Z",
+            "name": "roslin-pair-workflow",
+            "github": "https://github.com/mskcc/roslin-cwl",
+            "version": "feature/3.0.0_release",
+            "entrypoint": "workflows/pair-workflow.cwl",
+            "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+            "output_directory": "/juno/work/pi/beagle/output/roslin_pair_workflow",
+            "operator": 3
         }
     }
 ]

@@ -1,90 +1,90 @@
 [
-{
-    "model": "file_system.filegroup",
-    "pk": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
-    "fields": {
-        "created_date": "2019-12-06T19:20:43.437Z",
-        "modified_date": "2019-12-06T19:20:43.437Z",
-        "name": "Origin Unknown",
-        "slug": "origin-unknown",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+    {
+        "model": "file_system.filegroup",
+        "pk": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+        "fields": {
+            "created_date": "2019-12-06T19:20:43.437Z",
+            "modified_date": "2019-12-06T19:20:43.437Z",
+            "name": "Origin Unknown",
+            "slug": "origin-unknown",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "0abb8733-dd3e-46d1-b147-def516f125f4",
+        "fields": {
+            "created_date": "2019-12-02T22:11:05.490Z",
+            "modified_date": "2019-12-02T22:11:05.490Z",
+            "name": "junk",
+            "slug": "junk",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "1552617b-3b06-46de-921a-a000a9129385",
+        "fields": {
+            "created_date": "2020-01-22T19:19:05.790Z",
+            "modified_date": "2020-01-22T19:19:05.790Z",
+            "name": "Pooled Normal",
+            "slug": "pooled-normal",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+        "fields": {
+            "created_date": "2019-10-01T20:52:31.890Z",
+            "modified_date": "2019-10-01T20:52:31.890Z",
+            "name": "LIMS",
+            "slug": "lims",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "4616ef88-103c-4cf4-baab-f3a247bc2172",
+        "fields": {
+            "created_date": "2019-10-23T19:44:01.317Z",
+            "modified_date": "2019-10-23T19:44:01.317Z",
+            "name": "reference_files",
+            "slug": "reference_files",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+        "fields": {
+            "created_date": "2019-11-05T20:13:29.923Z",
+            "modified_date": "2019-11-05T20:13:29.923Z",
+            "name": "outputs",
+            "slug": "outputs",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "a975f490-1b02-4575-abae-a4f8e3667733",
+        "fields": {
+            "created_date": "2019-11-18T17:44:56.345Z",
+            "modified_date": "2019-11-18T17:44:56.345Z",
+            "name": "roslin_pair_sv_outputs",
+            "slug": "roslin_pair_sv_outputs",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
+    },
+    {
+        "model": "file_system.filegroup",
+        "pk": "d9015037-cd6b-4cb6-87a8-16d355482461",
+        "fields": {
+            "created_date": "2019-11-19T20:02:12.221Z",
+            "modified_date": "2019-11-19T20:02:12.221Z",
+            "name": "access_m1_output",
+            "slug": "access_m1_output",
+            "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+        }
     }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "0abb8733-dd3e-46d1-b147-def516f125f4",
-    "fields": {
-        "created_date": "2019-12-02T22:11:05.490Z",
-        "modified_date": "2019-12-02T22:11:05.490Z",
-        "name": "junk",
-        "slug": "junk",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "1552617b-3b06-46de-921a-a000a9129385",
-    "fields": {
-        "created_date": "2020-01-22T19:19:05.790Z",
-        "modified_date": "2020-01-22T19:19:05.790Z",
-        "name": "Pooled Normal",
-        "slug": "pooled-normal",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
-    "fields": {
-        "created_date": "2019-10-01T20:52:31.890Z",
-        "modified_date": "2019-10-01T20:52:31.890Z",
-        "name": "LIMS",
-        "slug": "lims",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "4616ef88-103c-4cf4-baab-f3a247bc2172",
-    "fields": {
-        "created_date": "2019-10-23T19:44:01.317Z",
-        "modified_date": "2019-10-23T19:44:01.317Z",
-        "name": "reference_files",
-        "slug": "reference_files",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-    "fields": {
-        "created_date": "2019-11-05T20:13:29.923Z",
-        "modified_date": "2019-11-05T20:13:29.923Z",
-        "name": "outputs",
-        "slug": "outputs",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "a975f490-1b02-4575-abae-a4f8e3667733",
-    "fields": {
-        "created_date": "2019-11-18T17:44:56.345Z",
-        "modified_date": "2019-11-18T17:44:56.345Z",
-        "name": "roslin_pair_sv_outputs",
-        "slug": "roslin_pair_sv_outputs",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-},
-{
-    "model": "file_system.filegroup",
-    "pk": "d9015037-cd6b-4cb6-87a8-16d355482461",
-    "fields": {
-        "created_date": "2019-11-19T20:02:12.221Z",
-        "modified_date": "2019-11-19T20:02:12.221Z",
-        "name": "access_m1_output",
-        "slug": "access_m1_output",
-        "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
-    }
-}
 ]

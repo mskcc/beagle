@@ -46,7 +46,7 @@ sys.path.insert(0, parentdir)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 django.setup()
 from file_system.models import File, FileMetadata, FileGroup, FileType
-from runner.models import Run, RunStatus, Port, PortType, Pipeline
+from runner.models import Run, RunStatus, Port, PortType, Pipeline, OperatorRun
 sys.path.pop(0)
 
 def get_file_filemetadata_from_port(port_instance):
@@ -94,6 +94,7 @@ def dump_run(**kwargs):
     output_port_filemetadata_input_file = "{}.run.port_filemetadata.input.json".format(runID)
     output_port_file_output_file = "{}.run.port_file.output.json".format(runID)
     output_port_filemetadata_output_file = "{}.run.port_filemetadata.output.json".format(runID)
+    output_operator_run_file = "{}.run.operator_run.json".format(runID)
 
     all_data = []
     input_files = []
@@ -103,6 +104,8 @@ def dump_run(**kwargs):
 
     # get the parent Run instance
     run_instance = Run.objects.get(id = runID)
+
+    operator_run_instance = run_instance.operator_run
 
     # get the Run input and output Port instances
     input_port_queryset = run_instance.port_set.filter(port_type=PortType.INPUT)
@@ -125,6 +128,7 @@ def dump_run(**kwargs):
     # save each set of items to individual files by default
     if onefile == False:
         print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', [operator_run_instance])), indent=4), file = open(output_operator_run_file, "w"))
         print(json.dumps(json.loads(serializers.serialize('json', input_port_queryset.all())), indent=4), file = open(output_port_input_file, "w"))
         print(json.dumps(json.loads(serializers.serialize('json', output_port_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
 
@@ -137,6 +141,7 @@ def dump_run(**kwargs):
     # save all items to a single file
     if onefile == True:
         all_data.append(run_instance)
+        all_data.append(operator_run_instance)
         for item in input_port_queryset:
             all_data.append(item)
         for item in output_port_queryset:
