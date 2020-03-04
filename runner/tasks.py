@@ -67,7 +67,6 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
-                            operator_run.complete()
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -76,7 +75,6 @@ def process_triggers():
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
                         if operator_run.percent_runs_succeeded >= 90.0:
-                            operator_run.complete()
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -86,11 +84,16 @@ def process_triggers():
 
                     if operator_run.percent_runs_finished == 100.0:
                         logger.info("Condition never met for operator run %s" % operator_run.id)
-                        operator_run.fail()
 
                 elif trigger_type == TriggerRunType.INDIVIDUAL:
                     if operator_run.percent_runs_finished == 100.0:
                         operator_run.complete()
+
+            if operator_run.percent_runs_finished == 100.0:
+                if operator_run.percent_runs_succeeded == 100.0:
+                    operator_run.complete()
+                else:
+                    operator_run.fail()
 
         except Exception as e:
             logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
