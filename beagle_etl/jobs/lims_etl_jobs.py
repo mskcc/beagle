@@ -221,8 +221,7 @@ def create_pooled_normal(filepath, file_group_id):
         fm = FileMetadata(file=f, metadata=metadata)
         fm.save()
     except Exception as e:
-        logger.error("Failed to create file %s. Error %s" % (filepath, str(e)))
-        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (filepath, str(e)))
+        logger.info("File already exist %s." % (filepath))
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
