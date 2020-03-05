@@ -69,7 +69,6 @@ def request_callback(request_id):
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
     try:
         operator = Operator.objects.get(
-            active=True,
             recipes__contains=[recipes[0]]
         )
     except Operator.DoesNotExist:
