@@ -67,14 +67,17 @@ def request_callback(request_id):
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
-
-    operator = Operator.objects.get(
-        active=True,
-        recipes__contains=[recipes[0]]
-    )
-    if not operator:
-        logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+    try:
+        operator = Operator.objects.get(
+            active=True,
+            recipes__contains=[recipes[0]]
+        )
+    except Operator.DoesNotExist:
+        logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
+    if not operator.active:
+        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+        raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id)
     return []
