@@ -22,10 +22,10 @@ def remove_with_caveats(samples):
         patient_id = sample['patient_id']
         if sample_name == 'sampleNameMalformed':
             add = False
-            logging.debug("Sample name is malformed for for %s; removing from set", sample_id)
+            LOGGER.debug("Sample name is malformed for for %s; removing from set", sample_id)
         if patient_id[:2].lower() not in 'c-':
             add = False
-            logging.debug(
+            LOGGER.debug(
                 "Patient ID does not start with expected 'C-' prefix for %s; removing from set",
                 sample_id)
         if add:
@@ -58,7 +58,7 @@ def format_sample_name(sample_name, ignore_sample_formatting=False):
             elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
-            logging.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
+            LOGGER.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
             return 'sampleNameMalformed'
         except TypeError:
             LOGGER.error(
@@ -81,10 +81,10 @@ def check_samples(samples):
 
         expected_fastq_r2 = 'R2'.join(fastq_r1.rsplit('R1', 1))
         if expected_fastq_r2 != fastq_r2:
-            logging.error("Mismatched fastqs! Check data:")
-            logging.error("R1: %s", fastq_r1)
-            logging.error("Expected R2: %s", expected_fastq_r2)
-            logging.error("Actual R2: %s", fastq_r2)
+            LOGGER.error("Mismatched fastqs! Check data:")
+            LOGGER.error("R1: %s", fastq_r1)
+            LOGGER.error("Expected R2: %s", expected_fastq_r2)
+            LOGGER.error("Actual R2: %s", fastq_r2)
 
 
 def check_and_return_single_values(data):
@@ -106,8 +106,8 @@ def check_and_return_single_values(data):
         if len(value) == 1:
             data[key] = value.pop()
         else:
-            logging.error("Expected only one value for %s!", key)
-            logging.error("Check import, something went wrong.")
+            LOGGER.error("Expected only one value for %s!", key)
+            LOGGER.error("Check import, something went wrong.")
 
     # concatenating pi and pi_email
     data['pi'] = '; '.join(set(data['pi']))

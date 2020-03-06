@@ -56,7 +56,7 @@ def get_viable_normal(normals, patient_id, bait_set):
                 try:
                     viable_normal = compare_dates(normal, viable_normal, '%y-%m-%d')
                 except ValueError:
-                    print("Trying different date parser")
+                    LOGGER.debug("Trying different date parser")
                     viable_normal = compare_dates(normal, viable_normal, '%Y-%m-%d')
             else:
                 viable_normal = normal
@@ -77,8 +77,8 @@ def compile_pairs(samples):
 
     num_tumors = len(tumors)
     if num_tumors == 0:
-        print("No tumor samples found; pairing will not be performed.")
-        print("Returning an empty list of pairs.")
+        LOGGER.error("No tumor samples found; pairing will not be performed.")
+        LOGGER.error("Returning an empty list of pairs.")
 
     for tumor in tumors:
         patient_id = tumor['patient_id']
@@ -91,7 +91,7 @@ def compile_pairs(samples):
                 pairs['tumor'].append(tumor)
                 pairs['normal'].append(normal)
             else:
-                print("Missing normal for sample %s; querying patient %s",
+                LOGGER.debug("Missing normal for sample %s; querying patient %s",
                       (tumor['sample_id'], patient_id))
                 patient_samples = get_samples_from_patient_id(patient_id)
                 new_normals = get_by_tumor_type(patient_samples, "Normal")
@@ -101,16 +101,15 @@ def compile_pairs(samples):
                     pairs['normal'].append(new_normal)
                 else:
                     pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
-                    print("Checking for Pooled Normal")
+                    LOGGER.debug("Checking for Pooled Normal")
                     if pooled_normal:
                         pairs['tumor'].append(tumor)
                         pairs['normal'].append(pooled_normal)
-                        print("Found pooled normal!")
                     else:
-                        print("No normal found for %s, patient %s",
+                        LOGGER.error("No normal found for %s, patient %s",
                               (tumor['sample_id'], patient_id))
         else:
-            print("NoPatientIdError: No patient_id found for %s; skipping.", tumor['sample_id'])
+            LOGGER.error("NoPatientIdError: No patient_id found for %s; skipping.", tumor['sample_id'])
     return pairs
 
 
