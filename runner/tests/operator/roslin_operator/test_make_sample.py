@@ -120,16 +120,19 @@ class TestMakeSample(TestCase):
                            'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
                            'SM': 's_C_8VK0V7_N001_d',
                            'bait_set': 'IMPACT468_BAITS',
-                           'igo_id': '10075_D_2_3',
+                           'sample_id': '10075_D_2_3',
                            'patient_id': 'C-8VK0V7',
                            'request_id': '10075_D_2',
                            'run_date': ['2019-12-12'],
+                           'run_id': ['JAX_0397'],
+                           'preservation_type': ['EDTA-Streck'],
                            'species': 'Human',
                            'specimen_type': 'Blood',
                            'tumor_type': 'Normal',
                            'pi': 'John Smith',
                            'pi_email': 'email@internet.com'}
 
+        print("Testing build_sample ---")
         print(json.dumps(sample, cls=UUIDEncoder))
         print(json.dumps(expected_sample, cls=UUIDEncoder))
 
