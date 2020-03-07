@@ -91,8 +91,7 @@ def compile_pairs(samples):
                 pairs['tumor'].append(tumor)
                 pairs['normal'].append(normal)
             else:
-                LOGGER.debug("Missing normal for sample %s; querying patient %s",
-                      (tumor['sample_id'], patient_id))
+                LOGGER.debug("Missing normal for sample %s; querying patient %s", tumor['sample_id'], patient_id)
                 patient_samples = get_samples_from_patient_id(patient_id)
                 new_normals = get_by_tumor_type(patient_samples, "Normal")
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
@@ -106,8 +105,7 @@ def compile_pairs(samples):
                         pairs['tumor'].append(tumor)
                         pairs['normal'].append(pooled_normal)
                     else:
-                        LOGGER.error("No normal found for %s, patient %s",
-                              (tumor['sample_id'], patient_id))
+                        LOGGER.error("No normal found for %s, patient %s", tumor['sample_id'], patient_id)
         else:
             LOGGER.error("NoPatientIdError: No patient_id found for %s; skipping.", tumor['sample_id'])
     return pairs
