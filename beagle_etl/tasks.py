@@ -3,8 +3,14 @@ import importlib
 import datetime
 from celery import shared_task
 from django.db import transaction
+from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
+from file_system.models import File, FileMetadata
 from beagle_etl.jobs.lims_etl_jobs import TYPES
+from notifier.tasks import send_notification
+from notifier.events import ETLImportEvent
+from django.core.serializers import serialize, deserialize
+from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 import traceback
 
 
@@ -60,6 +66,7 @@ class JobObject(object):
     logger = logging.getLogger(__name__)
 
     def __init__(self, job_id):
+        self.notifier = JiraEventHandler()
         self.job = Job.objects.get(id=job_id)
 
     def process(self):
@@ -97,6 +104,36 @@ class JobObject(object):
         children = func(**self.job.args)
         self.job.children = children or []
 
+    def _job_successful(self):
+        if self.job.run == TYPES['REQUEST']:
+            successful_files = []
+            successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
+                                            status=JobStatus.COMPLETED)
+            for job in successful:
+                print(job)
+                queryset = File.objects.prefetch_related(
+                    Prefetch('filemetadata_set', queryset=
+                    FileMetadata.objects.select_related('file').order_by('-created_date'))). \
+                    order_by('file_name').filter(filemetadata__metadata__requestId=self.job.args['request_id'],
+                                                 filemetadata__metadata__sampleId=job.args['sample_id']).all()
+                print(queryset)
+                for file in queryset:
+                    successful_files.append((job.args['sample_id'], file.path))
+            pooled_normals_files = []
+            pooled_normals = Job.objects.filter(args__requestId=self.job.args['request_id'], run=TYPES['POOLED_NORMAL'],
+                                                status=JobStatus.COMPLETED)
+            for job in pooled_normals:
+                pooled_normals_files.append(job.args['filepath'])
+
+            event = ETLImportEvent(self.job.args['request_id'], successful_files, pooled_normals_files)
+            print("Sending ETLImportEvent")
+            e = event.to_dict()
+            print(e)
+            send_notification.delay(e)
+
+            if Job.objects.filter(args__requestId=self.job.args['request_id'], status=JobStatus.FAILED):
+                self.notifier.request_finished(self.job.args['request_id'], "Hold")
+
     def _check_children(self):
         status = JobStatus.COMPLETED
         message = []
@@ -118,6 +155,7 @@ class JobObject(object):
         if message:
             self.job.message = {"details": "Child jobs %s failed" % ', '.join(message)}
         if self.job.status == JobStatus.COMPLETED:
+            self._job_successful()
             if self.job.callback:
                 job = Job(run=self.job.callback,
                           args=self.job.callback_args,
