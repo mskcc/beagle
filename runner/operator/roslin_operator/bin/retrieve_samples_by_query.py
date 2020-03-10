@@ -142,6 +142,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['recipe'] = descriptor
             metadata['run_id'] = run_ids
             metadata['preservation'] = preservation_types
+            metadata['libraryId'] = sample_name + "_1"
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
             # build_sample in runner.operator.roslin_operator.bin
