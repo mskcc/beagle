@@ -6,12 +6,18 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, OperatorTrigger
+from notifier.events.operator_run_event import OperatorRunEvent
+from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
+from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 
 logger = logging.getLogger(__name__)
+
+
+notifier = JiraEventHandler()
 
 
 def create_jobs_from_operator(operator):
@@ -23,12 +29,18 @@ def create_jobs_from_operator(operator):
 
     operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
 
+    run_ids = []
     for job in valid_jobs:
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id)
         logger.info("Run object created with id: %s" % str(run.id))
+        run_ids.append(str(run.id))
         create_run_task.delay(str(run.id), job[1], None)
 
+    event = OperatorRunEvent(operator.request_id, run_ids, [])
+    send_notification.delay(event.to_dict())
+
+   # notifier.runs_created(operator.request_id, run_ids, [])
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
 

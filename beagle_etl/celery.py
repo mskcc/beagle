@@ -27,6 +27,7 @@ app.conf.task_routes = {
     'runner.tasks.create_jobs_from_request': {'queue': settings.BEAGLE_RUNNER_QUEUE},
     'runner.tasks.create_jobs_from_chaining': {'queue': settings.BEAGLE_RUNNER_QUEUE},
     'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
+    'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE}
 }
 
