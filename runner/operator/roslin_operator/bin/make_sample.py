@@ -119,7 +119,7 @@ def check_and_return_single_values(data):
     if number_of_library_ids > 0:
         data['LB'] = '_and_'.join(library_id)
     else:
-        data['LB'] = ""
+        data['LB'] = data['SM'] + "_1"
     return data
 
 
