@@ -148,7 +148,8 @@ def convert_references(assay):
     references['fp_genotypes'] = fp_genotypes
     references['ref_fasta'] = {'class': 'File', 'location': roslin_qc_resources['ref_fasta']}
     references['conpair_markers'] = roslin_qc_resources['conpair_markers']
-    references['hotspot_list_maf'] = roslin_qc_resources['hotspot_list_maf']
+    references['hotspot_list_maf'] = {'class': 'File',
+            'location': roslin_qc_resources['hotspot_list_maf']}
     return references
 
 
