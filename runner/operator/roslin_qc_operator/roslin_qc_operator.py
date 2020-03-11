@@ -19,9 +19,11 @@ class RoslinQcOperator(Operator):
                 "normal_sample_names": input_json['normal_sample_names'],
                 "project_prefix": input_json['project_prefix'],
                 "number_of_runs": number_of_runs}
-        input_json["tags"] = tags
         roslin_qc_outputs_job_data = {
-            'app': self.get_pipeline_id(), 'inputs': input_json, 'name': name}
+                'app': self.get_pipeline_id(),
+                'inputs': input_json,
+                'name': name,
+                'tags': tags}
         roslin_qc_outputs_job = [(APIRunCreateSerializer(
             data=roslin_qc_outputs_job_data), input_json)]
         return roslin_qc_outputs_job
