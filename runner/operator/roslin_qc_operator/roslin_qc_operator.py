@@ -15,11 +15,11 @@ class RoslinQcOperator(Operator):
         number_of_runs = len(run_ids)
         name = "ROSLIN QC OUTPUTS %s runs [%s,..] " % (
             number_of_runs, run_ids[0])
-        tags = { "tags": {
-                        "number_of_runs_in_qc": number_of_runs
-                        }
-                }
-        print(json.dumps(input_json))
+        tags = {"tumor_sample_names": input_json['tumor_sample_names'],
+                "normal_sample_names": input_json['normal_sample_names'],
+                "project_prefix": input_json['project_prefix'],
+                "number_of_runs": number_of_runs}
+        input_json["tags"] = tags
         roslin_qc_outputs_job_data = {
             'app': self.get_pipeline_id(), 'inputs': input_json, 'name': name}
         roslin_qc_outputs_job = [(APIRunCreateSerializer(
