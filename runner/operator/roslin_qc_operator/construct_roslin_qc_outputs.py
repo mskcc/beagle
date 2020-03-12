@@ -1,19 +1,27 @@
+"""
+Main module that builds the JSON that needs to be submitted
+to the pipeline executor
+"""
+
 import os
 import sys
-import argparse
 import json
-from pprint import pprint
 from runner.models import Port
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def load_references():
-    d = json.load(open(os.path.join(WORKDIR, 'reference_jsons/roslin_qc_resources.json'), 'rb'))
-    return d
+    """
+    Loads QC reference data from the resources JSON
+    """
+    data = json.load(open(os.path.join(WORKDIR, 'reference_jsons/roslin_qc_resources.json'), 'rb'))
+    return data
 
 
 def get_baits_and_targets(assay, roslin_qc_resources):
-    # probably need similar rules for whatever "Exome" string is in rquest
+    """
+    From value in assay, retrieve target files (mainly fp_genotypes) from roslin_qc_resources
+    """
     targets = roslin_qc_resources['targets']
 
     target_assay = assay
@@ -32,17 +40,26 @@ def get_baits_and_targets(assay, roslin_qc_resources):
         target_assay = "IMPACT468_08050"
 
     if target_assay in targets:
-        return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])} 
+        return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])}
     else:
-        print >>sys.stderr, "ERROR: Targets for Assay not found in roslin_qc_resources.json: %s" % assay
+        error_msg = "ERROR: Targets for Assay not found in roslin_qc_resources.json: %s" % assay
+        print >>sys.stderr, error_msg
 
 
 def create_cwl_file_obj(file_path):
+    """
+    Given a filepath, return a dictionary with class File and JUNO-specific URI
+    """
     cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
     return cwl_file_obj
 
 
 def get_file_obj(file_obj):
+    """
+    Given file_obj, construct a dictionary of class File, that file's
+    JUNO-specific URI file path, and a list of secondary files with
+    JUNO-specific URI file paths
+    """
     secondary_file_list = []
     file_location = file_obj['location'].replace('file://', '')
     if 'secondaryFiles' in file_obj:
@@ -59,6 +76,9 @@ def get_file_obj(file_obj):
 
 
 def get_files_from_port(port_obj):
+    """
+    From port object, retrieve a list of files
+    """
     file_list = []
     if isinstance(port_obj, list):
         for single_file in port_obj:
@@ -68,15 +88,11 @@ def get_files_from_port(port_obj):
     return file_list
 
 
-def list_file_paths(file_obj_list):
-    list_of_files = []
-    for single_file_obj in file_obj_list:
-        list_of_files = list_of_files + single_file_obj['files']
-        list_of_files = list_of_files + single_file_obj['secondary_files']
-    return list_of_files
-
-
 def list_keys_for_qc():
+    """
+    Returns a list of keys expected in the JSON to be submitted to the pipeline; these
+    keys will have a list of values in the JSON
+    """
     keys = ['tumor_bams', 'normal_bams', 'tumor_sample_names', 'normal_sample_names',
             'hotspot_list_maf', 'conpair_markers', 'md_metrics', 'hs_metrics',
             'insert_metrics', 'per_target_coverage', 'qual_metrics', 'doc_basecounts',
@@ -85,12 +101,19 @@ def list_keys_for_qc():
 
 
 def single_keys_for_qc():
-    keys = ["project_prefix", "genome", "assay", "pi", "pi_email", "fp_genotypes",
-            "hotspot_list_maf","conpair_markers", "ref_fasta"]
+    """
+    Returns a list of keys expected in the JSON to be submitted to the pipeline; these
+    keys will have one value in the JSON
+    """
+    keys = ["project_prefix", "genome", "assay", "pi", "pi_email"]
     return keys
 
 
 def construct_roslin_qc_input(run_id_list):
+    """
+    Main function. From a list of run IDs, build a JSON that combines
+    the runs data into one JSON expected by the Roslin QC pipeline
+    """
     input_json = {}
     list_keys = list_keys_for_qc()
     single_keys = single_keys_for_qc()
@@ -101,7 +124,7 @@ def construct_roslin_qc_input(run_id_list):
     for key in single_keys:
         input_json[key] = ""
 
-    for index,single_run_id in enumerate(run_id_list):
+    for single_run_id in run_id_list:
         port_list = Port.objects.filter(run=single_run_id)
         for single_port in port_list:
             name = single_port.name
@@ -137,11 +160,15 @@ def construct_roslin_qc_input(run_id_list):
 
     references = convert_references(input_json['assay'])
     input_json.update(references)
-        
     return input_json
 
 
 def convert_references(assay):
+    """
+    Return a dictionary of references based on "assay" for fp_genotypes; other keys
+    are expected to be static but are still in the roslin_qc_resources reference file
+    in case it varies in the future
+    """
     roslin_qc_resources = load_references()
     references = dict()
     fp_genotypes = get_baits_and_targets(assay, roslin_qc_resources)
@@ -149,12 +176,12 @@ def convert_references(assay):
     references['ref_fasta'] = {'class': 'File', 'location': roslin_qc_resources['ref_fasta']}
     references['conpair_markers'] = roslin_qc_resources['conpair_markers']
     references['hotspot_list_maf'] = {'class': 'File',
-            'location': roslin_qc_resources['hotspot_list_maf']}
+                                      'location': roslin_qc_resources['hotspot_list_maf']}
     return references
 
 
 if __name__ == '__main__':
-    run_id_list = []
+    RUN_ID_LIST = []
     for single_arg in sys.argv[1:]:
-        run_id_list.append(single_arg)
-    input_json = construct_roslin_qc_input(run_id_list)
+        RUN_ID_LIST.append(single_arg)
+    INPUT_JSON = construct_roslin_qc_input(RUN_ID_LIST)
