@@ -5,7 +5,6 @@ Constructs input JSON for the roslin QC pipeline and then
 submits them as runs
 """
 import logging
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from .construct_roslin_qc_outputs import construct_roslin_qc_input
