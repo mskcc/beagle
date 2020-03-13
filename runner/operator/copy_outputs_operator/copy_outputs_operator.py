@@ -28,8 +28,7 @@ class CopyOutputsOperator(Operator):
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
                 "normal_sample_names": input_json['normal_sample_names'],
                 "project_prefix": input_json['project_prefix'],
-                "number_of_runs": number_of_runs,
-                "run_ids": run_ids}
+                "number_of_runs": number_of_runs}
         copy_outputs_job_data = {
             'app': self.get_pipeline_id(),
             'inputs': input_json,
