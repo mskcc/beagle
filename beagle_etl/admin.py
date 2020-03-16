@@ -8,9 +8,10 @@ def restart(modeladmin, request, queryset):
     for job in queryset:
         for child in job.children:
             child_job = Job.objects.get(id=child)
-            child_job.status = JobStatus.CREATED
-            child_job.retry_count = 0
-            child_job.save()
+            if child_job.status == JobStatus.FAILED:
+                child_job.status = JobStatus.CREATED
+                child_job.retry_count = 0
+                child_job.save()
         job.status = JobStatus.CREATED
         job.retry_count = 0
         job.save()

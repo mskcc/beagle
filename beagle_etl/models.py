@@ -1,5 +1,6 @@
 import uuid
 from enum import IntEnum
+from notifier.models import JobGroup
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 
@@ -27,6 +28,7 @@ class Job(BaseModel):
     max_retry = models.IntegerField(default=3)
     callback = models.CharField(max_length=100, default=None, blank=True, null=True)
     callback_args = JSONField(null=True, blank=True)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
 

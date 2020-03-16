@@ -66,7 +66,6 @@ class JobObject(object):
     logger = logging.getLogger(__name__)
 
     def __init__(self, job_id):
-        self.notifier = JiraEventHandler()
         self.job = Job.objects.get(id=job_id)
 
     def process(self):
@@ -110,13 +109,11 @@ class JobObject(object):
             successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
                                             status=JobStatus.COMPLETED)
             for job in successful:
-                print(job)
                 queryset = File.objects.prefetch_related(
                     Prefetch('filemetadata_set', queryset=
                     FileMetadata.objects.select_related('file').order_by('-created_date'))). \
                     order_by('file_name').filter(filemetadata__metadata__requestId=self.job.args['request_id'],
                                                  filemetadata__metadata__sampleId=job.args['sample_id']).all()
-                print(queryset)
                 for file in queryset:
                     successful_files.append((job.args['sample_id'], file.path))
             pooled_normals_files = []
@@ -126,13 +123,12 @@ class JobObject(object):
                 pooled_normals_files.append(job.args['filepath'])
 
             event = ETLImportEvent(self.job.args['request_id'], successful_files, pooled_normals_files)
-            print("Sending ETLImportEvent")
             e = event.to_dict()
-            print(e)
             send_notification.delay(e)
 
             if Job.objects.filter(args__requestId=self.job.args['request_id'], status=JobStatus.FAILED):
-                self.notifier.request_finished(self.job.args['request_id'], "Hold")
+                # self.notifier.request_finished(self.job.args['request_id'], "Hold")
+                pass
 
     def _check_children(self):
         status = JobStatus.COMPLETED
@@ -159,5 +155,8 @@ class JobObject(object):
             if self.job.callback:
                 job = Job(run=self.job.callback,
                           args=self.job.callback_args,
-                          status=JobStatus.CREATED, max_retry=1, children=[])
+                          status=JobStatus.CREATED,
+                          max_retry=1,
+                          children=[],
+                          job_group=self.job.job_group)
                 job.save()

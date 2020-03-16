@@ -1,6 +1,7 @@
 import datetime
 from django.conf import settings
 from rest_framework import serializers
+from notifier.models import JobGroup
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
 
@@ -133,6 +134,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
+    job_group_id = serializers.UUIDField(required=False)
 
     def create(self, validated_data):
         try:
@@ -149,6 +151,10 @@ class APIRunCreateSerializer(serializers.Serializer):
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:
             pass
+        try:
+            run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
+        except JobGroup.DoesNotExist:
+            print("[JobGroup] %s" % run.job_group)
         run.save()
         return run
 

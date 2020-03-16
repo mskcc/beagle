@@ -13,14 +13,14 @@ class EventHandler(object):
                 self.events[obj.get_type()] = obj.get_method()
 
     def process(self, event):
-        print("Event received")
+        self.logger.debug("Event received")
         e = Event.from_dict(event)
-        print(event)
-        print(e)
         try:
+            self.logger.info("[%s]: %s", e.get_type(), str(e))
             return getattr(self, self.events[e.get_type()])(e)
-        except Exception as e:
-            self.logger.debug("Method not implemented")
+        except Exception as ex:
+            self.logger.info("Failed to process event: %s with error %s", str(e), str(ex))
+        self.logger.debug("Event processed")
 
     def runs_created(self, request_id, valid_runs, invalid_runs):
         """

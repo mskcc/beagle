@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
     'file_system.apps.FileSystemConfig',
+    'notifier.apps.NotifierConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
