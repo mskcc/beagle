@@ -18,7 +18,7 @@ class JiraClient(object):
         self.url = url
         self.project = project
 
-    def get_ticket(self, project_id):
+    def get_tickets(self, project_id):
         """
         :param project_id:
         :return: {
@@ -71,6 +71,11 @@ class JiraClient(object):
         comment_url = self.JiraEndpoints.COMMENT.value % ticket_id
         body = {"body": comment}
         response = self._post(comment_url, body)
+        return response
+
+    def get_comments(self, ticket_id):
+        comment_url = self.JiraEndpoints.COMMENT.value % ticket_id
+        response = self._get(comment_url)
         return response
 
     def set_label(self, ticket_id, label):

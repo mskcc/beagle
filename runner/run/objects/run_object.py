@@ -8,7 +8,7 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class RunObject(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, output_metadata={}, execution_id=None, tags={}):
+    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, output_metadata={}, execution_id=None, tags={}, job_group=None):
         self.run_id = run_id
         self.run_obj = run_obj
         self.output_file_group = run_obj.app.output_file_group
@@ -18,6 +18,7 @@ class RunObject(object):
         self.job_statuses = job_statuses
         self.output_metadata = output_metadata
         self.execution_id = execution_id
+        self.job_group = job_group
         self.tags = tags
 
     @classmethod
@@ -51,7 +52,8 @@ class RunObject(object):
                    run.status,
                    job_statuses=run.job_statuses,
                    output_metadata=run.output_metadata,
-                   tags=run.tags)
+                   tags=run.tags,
+                   job_group=run.job_group)
 
     def ready(self):
         [PortObject.ready(p) for p in self.inputs]
@@ -66,7 +68,9 @@ class RunObject(object):
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
         outputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
-        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id)
+        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses,
+                   output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
+                   job_group=run.job_group)
 
     def to_db(self):
         [PortObject.to_db(p) for p in self.inputs]
@@ -76,6 +80,7 @@ class RunObject(object):
         self.run_obj.output_metadata = self.output_metadata
         self.run_obj.execution_id = self.execution_id
         self.run_obj.tags = self.tags
+        self.run_obj.job_group = self.job_group
         self.run_obj.save()
 
     def fail(self, error_message):

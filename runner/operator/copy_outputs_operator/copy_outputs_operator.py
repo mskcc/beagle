@@ -13,7 +13,11 @@ class CopyOutputsOperator(Operator):
         name = "ROSLIN COPY OUTPUTS %s runs [%s,..] " % (
             number_of_runs, run_ids[0])
         copy_outputs_job_data = {
-            'app': self.get_pipeline_id(), 'inputs': input_json, 'name': name}
+            'app': self.get_pipeline_id(),
+            'inputs': input_json,
+            'name': name,
+            'tags': {'requestId': self.request_id}
+        }
         copy_outputs_job = [(APIRunCreateSerializer(
             data=copy_outputs_job_data), input_json)]
         return copy_outputs_job
