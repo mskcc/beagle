@@ -1,15 +1,18 @@
 import os,sys
 import argparse
 import json
+import logging
 from pprint import pprint
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
+LOGGER = logging.getLogger(__name__)
 
 
 
 # TODO: generalize
 def load_references():
-    d = json.load(open("runner/operator/roslin_operator/reference_jsons/roslin_resources.json", 'rb'))
+    d = json.load(open(os.path.join(WORKDIR, "reference_jsons/roslin_resources.json"), 'rb'))
     return d
 
 
@@ -117,7 +120,9 @@ def get_baits_and_targets(assay, roslin_resources):
                 "fp_genotypes": {"class": "File", 'location': str(targets[target_assay]['FP_genotypes'])}
     }
     else:
-        print >>sys.stderr, "ERROR: Targets for Assay not found in roslin_resources.json: %s" % assay
+        LOGGER.error(
+            "ERROR: Targets for Assay not found in roslin_resources.json: %s", assay
+            )
 
 
 def get_facets_cval(assay):
