@@ -6,29 +6,48 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, OperatorTrigger
+from notifier.events import RunCompletedEvent, OperatorRunEvent
+from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
+from notifier.models import JobGroup
+from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 
 logger = logging.getLogger(__name__)
 
 
-def create_jobs_from_operator(operator):
-    jobs = operator.get_jobs()
+notifier = JiraEventHandler()
 
+
+def create_jobs_from_operator(operator, job_group_id):
+    jobs = operator.get_jobs()
+    jg = None
+    try:
+        jg = JobGroup.objects.get(id=job_group_id)
+        logger.info("JobGroup id: %s", job_group_id)
+    except JobGroup.DoesNotExist:
+        logger.info("JobGroup not set")
     valid_jobs, invalid_jobs = [], []
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
-    operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
-
+    operator_run = OperatorRun.objects.create(operator=operator.model,
+                                              num_total_runs=len(valid_jobs),
+                                              job_group=jg)
+    run_ids = []
     for job in valid_jobs:
         logger.info("Creating Run object")
-        run = job[0].save(operator_run_id=operator_run.id)
+        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
+        run_ids.append(str(run.id))
         create_run_task.delay(str(run.id), job[1], None)
 
+    event = OperatorRunEvent(operator.request_id, run_ids, [])
+    send_notification.delay(event.to_dict())
+
+    # notifier.runs_created(operator.request_id, run_ids, [])
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
 
@@ -37,19 +56,19 @@ def create_jobs_from_operator(operator):
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id):
-    logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
+def create_jobs_from_request(request_id, operator_id, job_group_id=None):
+    logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
     operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-    create_jobs_from_operator(operator)
+    create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
     operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
-    create_jobs_from_operator(operator)
+    create_jobs_from_operator(operator, job_group)
 
 
 @shared_task
@@ -59,6 +78,8 @@ def process_triggers():
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
+        job_group = operator_run.job_group
+        job_group_id = str(job_group.id) if job_group else None
         try:
             for trigger in operator_run.operator.from_triggers.all():
                 trigger_type = trigger.run_type
@@ -70,7 +91,8 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True))
+                                list(operator_run.runs.values_list('id', flat=True)),
+                                job_group=job_group_id
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -78,7 +100,8 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True))
+                                list(operator_run.runs.values_list('id', flat=True)),
+                                job_group=job_group_id
                             )
                             continue
 
@@ -173,11 +196,20 @@ def complete_job(run_id, outputs):
     run.complete(outputs)
     run.to_db()
 
+    job_group = run.job_group
+    job_group_id = str(job_group.id) if job_group else None
+
+    event = RunCompletedEvent(run.tags.get('requestId', 'UNKNOWN REQUEST'), run.run_id, RunStatus(run.status).value)
+    e = event.to_dict()
+
+    send_notification.delay(e)
+
     for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
         create_jobs_from_chaining.delay(
             trigger.to_operator_id,
             trigger.from_operator_id,
-            [run_id]
+            [run_id],
+            job_group=job_group_id
         )
 
 

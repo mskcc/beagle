@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
     'file_system.apps.FileSystemConfig',
+    'notifier.apps.NotifierConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -306,6 +307,12 @@ LOGGING = {
         },
     },
 }
+
+NOTIFIER = "JIRA"
+JIRA_URL = os.environ.get("JIRA_URL", "")
+JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
+JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
+JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
 
 BEAGLE_URL = 'http://silo:5001'
 
