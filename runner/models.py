@@ -3,7 +3,7 @@ from enum import IntEnum
 from django.db import models
 from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
-from beagle_etl.models import Operator
+from beagle_etl.models import Operator, JobGroup
 from django.db.models import F
 
 
@@ -76,6 +76,7 @@ class OperatorRun(BaseModel):
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     def complete(self):
         self.status = RunStatus.COMPLETED
@@ -117,6 +118,7 @@ class Run(BaseModel):
     output_metadata = JSONField(default=dict, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
