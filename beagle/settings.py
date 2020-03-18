@@ -308,7 +308,12 @@ LOGGING = {
     },
 }
 
-NOTIFIER = "JIRA"
+NOTIFIERS = ('JIRA', 'NONE')
+
+NOTIFIER = os.environ.get("BEAGLE_NOTIFIER", "NONE")
+if NOTIFIER not in NOTIFIERS:
+    raise Exception("Invalid Notifier type")
+
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
