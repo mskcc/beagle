@@ -1,5 +1,5 @@
 import logging
-from .models import Job
+from notifier.models import JobGroup
 from rest_framework import mixins
 from rest_framework import status
 from beagle.pagination import time_filter
@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
-from beagle_etl.models import JobStatus, Job, Operator
+from beagle_etl.models import JobStatus, Job
+from .jobs.lims_etl_jobs import get_or_create_request_job
 from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer
 
 
@@ -54,19 +55,10 @@ class RequestIdLimsPullViewSet(GenericAPIView):
 
     def post(self, request):
         request_ids = request.data['request_ids']
+        created_jobs = []
         for request_id in request_ids:
-            logging.info("Submitting requestId %s to pipeline" % request_id)
-            op = Operator.objects.first()
-            if op.active:
-                job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                          status=JobStatus.CREATED, max_retry=1, children=[],
-                          callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
-                          callback_args={'request_id': request_id})
-                job.save()
-            else:
-                job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_samples', args={'request_id': request_id},
-                          status=JobStatus.CREATED, max_retry=1, children=[])
-                job.save()
+            job = get_or_create_request_job(request_id)
+            created_jobs.append(job)
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)
 
@@ -80,16 +72,11 @@ class RequestIdLimsUpdateViewSet(GenericAPIView):
         request_ids = request.data['request_ids']
         for request_id in request_ids:
             logging.info("Submitting requestId %s to pipeline" % request_id)
-            op = Operator.objects.first()
-            if op.active:
-                job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_metadata', args={'request_id': request_id},
-                          status=JobStatus.CREATED, max_retry=1, children=[],
-                          callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
-                          callback_args={'request_id': request_id})
-                job.save()
-            else:
-                job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_metadata', args={'request_id': request_id},
-                          status=JobStatus.CREATED, max_retry=1, children=[])
-                job.save()
+            job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_metadata', args={'request_id': request_id},
+                      status=JobStatus.CREATED, max_retry=1, children=[],
+                      callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
+                      callback_args={'request_id': request_id})
+
+            job.save()
         return Response({"details": "Update requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)

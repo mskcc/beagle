@@ -8,13 +8,6 @@ from .bin.make_sample import build_sample
 
 
 class RoslinOperator(Operator):
-
-    def __init__(self, request_id):
-        Operator.__init__(self, 'roslin', request_id)
-
-    def get_pipeline_id(self):
-        return "cb5d793b-e650-4b7d-bfcd-882858e29cc5" # Return ID of the pipeline
-
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         roslin_jobs = list()
@@ -47,7 +40,14 @@ class RoslinOperator(Operator):
             tumor_sample_name = job['pair'][0]['ID']
             normal_sample_name = job['pair'][1]['ID']
             name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            assay = job['assay']
+            pi = job['pi']
+            pi_email = job['pi_email']
             roslin_jobs.append((APIRunCreateSerializer(
                 data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id}}), job))
+                      'tags': {'requestId': self.request_id,
+                          'sampleNameTumor': tumor_sample_name,
+                          'sampleNameNormal': normal_sample_name,
+                          'labHeadName': pi,
+                          'labHeadEmail': pi_email}}), job))
         return roslin_jobs

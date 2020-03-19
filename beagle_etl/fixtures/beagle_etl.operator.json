@@ -1,0 +1,42 @@
+[
+    {
+        "model": "beagle_etl.operator",
+        "pk": 1,
+        "fields": {
+            "active": true,
+            "recipes": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
+            "class_name": "RoslinOperator",
+            "slug": "roslin"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 2,
+        "fields": {
+            "active": true,
+            "recipes": "[\"IMPACT410\", \"IMPACT468\"]",
+            "class_name": "AccessOperator",
+            "slug": "access"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 3,
+        "fields": {
+            "active": true,
+            "recipes": "[\"400FAKESOMETHING\"]",
+            "class_name": "AccessOperator",
+            "slug": "access"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 4,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "CopyOutputsOperator",
+            "slug": "copyOutputs"
+        }
+    }
+]

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
     'file_system.apps.FileSystemConfig',
+    'notifier.apps.NotifierConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,7 +95,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_LDAP_SERVER_URI = os.environ['BEAGLE_AUTH_LDAP_SERVER_URI']
+AUTH_LDAP_SERVER_URI = os.environ.get('BEAGLE_AUTH_LDAP_SERVER_URI', "url_goes_here")
 
 AUTH_LDAP_AUTHORIZE_ALL_USERS = True
 
@@ -196,10 +197,12 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
+PAGINATION_DEFAULT_PAGE_SIZE = 10
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'beagle.pagination.BeaglePagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': PAGINATION_DEFAULT_PAGE_SIZE,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -274,17 +277,54 @@ LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
 IMPORT_FILE_GROUP = os.environ.get('BEAGLE_IMPORT_FILE_GROUP', '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')
 
+POOLED_NORMAL_FILE_GROUP = os.environ.get('BEAGLE_POOLED_NORMAL_FILE_GROUP', '1552617b-3b06-46de-921a-a000a9129385')
+
 RIDGEBACK_URL = os.environ.get('BEAGLE_RIDGEBACK_URL', 'http://localhost:5003')
+
+LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOG_PATH,
+            "maxBytes": 209715200,
+            "backupCount": 10
+        }
+    },
+    "loggers": {
+        "django_auth_ldap": {
+            "level": "DEBUG", "handlers": ["console"]
+        },
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
 }
+
+NOTIFIERS = ('JIRA', 'NONE')
+
+NOTIFIER = os.environ.get("BEAGLE_NOTIFIER", "NONE")
+if NOTIFIER not in NOTIFIERS:
+    raise Exception("Invalid Notifier type")
+
+JIRA_URL = os.environ.get("JIRA_URL", "")
+JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
+JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
+JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
 
 BEAGLE_URL = 'http://silo:5001'
 
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
+
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(PROJECT_DIR)
+TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")

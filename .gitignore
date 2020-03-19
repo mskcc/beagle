@@ -1,2 +1,10 @@
 *.pyc
 .idea/
+logs/
+db/
+conda/
+db*
+scripts/*.json
+conda*
+input.json
+*.swp
