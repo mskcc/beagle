@@ -1,15 +1,18 @@
 import os,sys
 import argparse
 import json
+import logging
 from pprint import pprint
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
+LOGGER = logging.getLogger(__name__)
 
 
 
 # TODO: generalize
 def load_references():
-    d = json.load(open("runner/operator/roslin_operator/reference_jsons/roslin_resources.json", 'rb'))
+    d = json.load(open(os.path.join(WORKDIR, "reference_jsons/roslin_resources.json"), 'rb'))
     return d
 
 
@@ -61,11 +64,16 @@ def construct_roslin_jobs(samples):
         normal = pairs['normal'][i]
         project_id = tumor['request_id']
         assay = tumor['bait_set']
+        pi = tumor['pi']
+        pi_email = tumor['pi_email']
         job = dict()
         normal_sample = format_sample(normal)
         tumor_sample = format_sample(tumor)
         job['pair'] = [tumor_sample, normal_sample]
-        references = convert_references(project_id, assay)
+        job['assay'] = assay
+        job['pi'] = pi
+        job['pi_email'] = pi_email
+        references = convert_references(project_id, assay, pi, pi_email)
         job.update(references)
         roslin_jobs.append(job)
     return roslin_jobs, error_samples
@@ -112,7 +120,9 @@ def get_baits_and_targets(assay, roslin_resources):
                 "fp_genotypes": {"class": "File", 'location': str(targets[target_assay]['FP_genotypes'])}
     }
     else:
-        print >>sys.stderr, "ERROR: Targets for Assay not found in roslin_resources.json: %s" % assay
+        LOGGER.error(
+            "ERROR: Targets for Assay not found in roslin_resources.json: %s", assay
+            )
 
 
 def get_facets_cval(assay):
@@ -139,7 +149,7 @@ def get_complex_tn(assay):
     return 0.2
 
 
-def convert_references(project_id, assay):
+def convert_references(project_id, assay, pi, pi_email):
     roslin_resources = load_references()
     request_files = roslin_resources["request_files"]
     intervals = get_baits_and_targets(assay, roslin_resources)
@@ -197,6 +207,7 @@ def convert_references(project_id, assay):
         "covariates": covariates,
         "emit_original_quals": True,
         "num_threads": 10,
+        "assay": assay,
         "tmp_dir": temp_dir,
         "project_prefix": project_id,
         "opt_dup_pix_dist": "2500",
@@ -206,7 +217,9 @@ def convert_references(project_id, assay):
         "complex_nn": complex_nn,
         "complex_tn": complex_tn,
         "scripts_bin": "/usr/bin",
-        "gatk_jar_path": "/usr/bin/gatk.jar"
+        "gatk_jar_path": "/usr/bin/gatk.jar",
+        "pi": pi,
+        "pi_email": pi_email
     }
     out_dict.update({"runparams": params})
     return out_dict
@@ -216,4 +229,4 @@ if __name__ == '__main__':
     request_id = sys.argv[1]
 
     roslin_jobs = construct_roslin_jobs(request_id)
-    pprint(roslin_jobs)
+    pfailedoprint(roslin_jobs)

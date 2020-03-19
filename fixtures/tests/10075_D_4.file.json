@@ -1,0 +1,28 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "08072445-84ff-4b43-855d-d8d2dc87e2d5",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.582Z",
+            "modified_date": "2020-01-07T19:59:50.585Z",
+            "file_name": "JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f0d9a1e1-9414-42df-a749-08776732ee04",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.597Z",
+            "modified_date": "2020-01-07T19:59:50.598Z",
+            "file_name": "JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
