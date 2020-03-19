@@ -20,7 +20,13 @@ restart.short_description = "Restart"
 
 
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('id', 'run', 'retry_count', pretty_json('args'), 'children', 'status', 'created_date', 'lock', pretty_python_exception('message'))
+    list_display = ('id', 'run', 'retry_count',
+                    pretty_json('args'),
+                    'children',
+                    'status',
+                    'created_date',
+                    'lock',
+                    pretty_json('message'))
     search_fields = ('id', 'args__sample_id')
     readonly_fields = ('message',)
     actions = (restart,)
