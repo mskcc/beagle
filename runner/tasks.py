@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 notifier = JiraEventHandler()
 
 
-def create_jobs_from_operator(operator, job_group_id):
+def create_jobs_from_operator(operator, job_group_id=None):
     jobs = operator.get_jobs()
     jg = None
     try:
