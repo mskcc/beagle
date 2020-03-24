@@ -319,7 +319,7 @@ JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
 
-BEAGLE_URL = 'http://silo:5001'
+BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
