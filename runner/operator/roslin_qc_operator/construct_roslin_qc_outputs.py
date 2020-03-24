@@ -2,12 +2,13 @@
 Main module that builds the JSON that needs to be submitted
 to the pipeline executor
 """
-
+import logging
 import os
 import sys
 import json
 from runner.models import Port
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
+LOGGER = logging.getLogger(__name__)
 
 
 def load_references():
@@ -43,7 +44,7 @@ def get_baits_and_targets(assay, roslin_qc_resources):
         return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])}
     else:
         error_msg = "ERROR: Targets for Assay not found in roslin_qc_resources.json: %s" % assay
-        print >>sys.stderr, error_msg
+        LOGGER.error(error_msg)
 
 
 def create_cwl_file_obj(file_path):
