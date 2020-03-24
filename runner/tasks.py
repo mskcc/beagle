@@ -1,11 +1,10 @@
 import os
-import uuid
 import logging
 import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, OperatorTrigger
+from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunCompletedEvent, OperatorRunEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 notifier = JiraEventHandler()
 
 
-def create_jobs_from_operator(operator, job_group_id):
+def create_jobs_from_operator(operator, job_group_id=None):
     jobs = operator.get_jobs()
     jg = None
     try:
@@ -41,13 +40,19 @@ def create_jobs_from_operator(operator, job_group_id):
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
-        run_ids.append(str(run.id))
+        run_ids.append({"run_id": str(run.id), "sample_name_tumor": run.tags.get('sampleNameTumor', ""),
+                        'sample_name_normal': run.tags.get('sampleNameNormal', "")})
         create_run_task.delay(str(run.id), job[1], None)
 
-    event = OperatorRunEvent(operator.request_id, run_ids, [])
+    try:
+        p = Pipeline.objects.get(id=operator.get_pipeline_id())
+        pipeline_name = p.name
+    except Pipeline.DoesNotExist:
+        pipeline_name = ""
+
+    event = OperatorRunEvent(str(operator_run.job_group.id), operator.request_id, pipeline_name, run_ids)
     send_notification.delay(event.to_dict())
 
-    # notifier.runs_created(operator.request_id, run_ids, [])
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
 
@@ -199,9 +204,10 @@ def complete_job(run_id, outputs):
     job_group = run.job_group
     job_group_id = str(job_group.id) if job_group else None
 
-    event = RunCompletedEvent(run.tags.get('requestId', 'UNKNOWN REQUEST'), run.run_id, RunStatus(run.status).value)
-    e = event.to_dict()
+    pipeline_name = run.run_obj.app.name
 
+    event = RunCompletedEvent(job_group_id, run.tags.get('requestId', 'UNKNOWN REQUEST'), pipeline_name, run.run_id, RunStatus(run.status).name, run.tags.get('sampleNameTumor', ''), run.tags.get('sampleNameNormal'))
+    e = event.to_dict()
     send_notification.delay(e)
 
     for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):

@@ -4,6 +4,7 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
+from notifier.tasks import event_handler
 from notifier.models import JobGroup
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
@@ -49,8 +50,13 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
+        # TODO: Refactor this to support multiple notification handlers
         job_group = JobGroup()
+        eh = event_handler()
+        ticket_id = eh.start(request_id)
+        job_group.jira_id = ticket_id
         job_group.save()
+        # ------------------------------------------------------
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
@@ -240,6 +246,7 @@ def create_pooled_normal(filepath, file_group_id):
     except Exception as e:
         raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
+        # TODO: Don't import and set to COMPLETED
         raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchFilesException(

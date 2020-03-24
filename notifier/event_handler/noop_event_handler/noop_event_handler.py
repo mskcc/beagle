@@ -6,6 +6,9 @@ class NoOpEventHandler(EventHandler):
     def __init__(self):
         super().__init__()
 
+    def start(self, request_id):
+        pass
+
     def process_import_event(self, event):
         pass
 

@@ -1,17 +1,13 @@
 import logging
 import importlib
 import datetime
+import traceback
 from celery import shared_task
 from django.db import transaction
-from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
-from file_system.models import File, FileMetadata
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent
-from django.core.serializers import serialize, deserialize
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
-import traceback
 
 
 logger = logging.getLogger(__name__)
@@ -105,24 +101,66 @@ class JobObject(object):
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
-            successful_files = []
-            successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
-                                            status=JobStatus.COMPLETED)
-            for job in successful:
-                queryset = File.objects.prefetch_related(
-                    Prefetch('filemetadata_set', queryset=
-                    FileMetadata.objects.select_related('file').order_by('-created_date'))). \
-                    order_by('file_name').filter(filemetadata__metadata__requestId=self.job.args['request_id'],
-                                                 filemetadata__metadata__sampleId=job.args['sample_id']).all()
-                for file in queryset:
-                    successful_files.append((job.args['sample_id'], file.path))
-            pooled_normals_files = []
-            pooled_normals = Job.objects.filter(args__requestId=self.job.args['request_id'], run=TYPES['POOLED_NORMAL'],
-                                                status=JobStatus.COMPLETED)
-            for job in pooled_normals:
-                pooled_normals_files.append(job.args['filepath'])
 
-            event = ETLImportEvent(self.job.args['request_id'], successful_files, pooled_normals_files)
+            samples_completed = set()
+            samples_failed = set()
+
+            successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
+                                            status=JobStatus.COMPLETED).all()
+            failed = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
+                                        status=JobStatus.FAILED).all()
+
+            request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
+
+            data_analyst_email = ""
+            data_analyst_name = ""
+            investigator_email = ""
+            investigator_name = ""
+            lab_head_email = ""
+            lab_head_name = ""
+            pi_email = ""
+            project_manager_name = ""
+            recipe = ""
+
+            if request_metadata:
+                metadata = request_metadata.args.get('request_metadata', {})
+                recipe = metadata['recipe']
+                data_analyst_email = metadata['dataAnalystEmail']
+                data_analyst_name = metadata['dataAnalystName']
+                investigator_email = metadata['investigatorEmail']
+                investigator_name = metadata['investigatorName']
+                lab_head_email = metadata['labHeadEmail']
+                lab_head_name = metadata['labHeadName']
+                pi_email = metadata['piEmail']
+                project_manager_name = metadata['projectManagerName']
+
+            for job in successful:
+                samples_completed.add(job.args['sample_id'])
+
+            for job in failed:
+                samples_failed.add(job.args['sample_id'])
+
+            jobs = Job.objects.filter(args__request_id=self.job.args['request_id']).order_by('-created_date').all()
+            all_jobs = []
+
+            for j in jobs:
+                all_jobs.append(str(j.id))
+
+            event = ETLImportEvent(str(self.job.job_group.id),
+                                   self.job.args['request_id'],
+                                   list(samples_completed),
+                                   list(samples_failed),
+                                   all_jobs,
+                                   recipe,
+                                   data_analyst_email,
+                                   data_analyst_name,
+                                   investigator_email,
+                                   investigator_name,
+                                   lab_head_email,
+                                   lab_head_name,
+                                   pi_email,
+                                   project_manager_name
+                                   )
             e = event.to_dict()
             send_notification.delay(e)
 
