@@ -22,10 +22,10 @@ def remove_with_caveats(samples):
         patient_id = sample['patient_id']
         if sample_name == 'sampleNameMalformed':
             add = False
-            LOGGER.debug("Sample name is malformed for for %s; removing from set", sample_id)
+            LOGGER.info("Sample name is malformed for for %s; removing from set", sample_id)
         if patient_id[:2].lower() not in 'c-':
             add = False
-            LOGGER.debug(
+            LOGGER.info(
                 "Patient ID does not start with expected 'C-' prefix for %s; removing from set",
                 sample_id)
         if add:
@@ -167,9 +167,9 @@ def build_sample(data, ignore_sample_formatting=False):
         try:
             rg_id = '_'.join([cmo_sample_name, platform_unit])
         except:
-            LOGGER.error("RG ID couldn't be set.")
-            LOGGER.error("Sample ID %s; patient ID %s", sample_id, cmo_patient_id)
-            LOGGER.error("SampleName %s; platform unit %s", cmo_sample_name, platform_unit)
+            LOGGER.info("RG ID couldn't be set.")
+            LOGGER.info("Sample ID %s; patient ID %s", sample_id, cmo_patient_id)
+            LOGGER.info("SampleName %s; platform unit %s", cmo_sample_name, platform_unit)
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
