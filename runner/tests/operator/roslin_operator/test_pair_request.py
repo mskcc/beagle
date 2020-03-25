@@ -158,7 +158,7 @@ class TestPairRequest(TestCase):
         pairs = compile_pairs(samples)
         expected_pairs = {
         'tumor': [
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id3"}
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id3"},
         {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-8VK0V7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id4"},
         {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id5"}
         ],
