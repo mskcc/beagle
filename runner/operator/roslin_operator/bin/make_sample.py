@@ -149,6 +149,8 @@ def build_sample(data, ignore_sample_formatting=False):
         specimen_type = meta['specimenType']
         species = meta['species']
         cmo_sample_name = format_sample_name(meta['sampleName'], ignore_sample_formatting)
+        if cmo_sample_name == "sampleNameMalformed":
+            LOGGER.error("sampleName for %s is malformed", sample_id)
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['patientId']
@@ -159,9 +161,15 @@ def build_sample(data, ignore_sample_formatting=False):
         pi_email = meta['labHeadEmail']
         run_id = meta['runId']
         preservation_type = meta['preservation']
+        rg_id = cmo_sample_name + "_1"
         if barcode_index:
             platform_unit = '_'.join([flowcell_id, barcode_index])
-        rg_id = '_'.join([cmo_sample_name, platform_unit])
+        try:
+            rg_id = '_'.join([cmo_sample_name, platform_unit])
+        except:
+            LOGGER.error("RG ID couldn't be set.")
+            LOGGER.error("Sample ID %s; patient ID %s", sample_id, cmo_patient_id)
+            LOGGER.error("SampleName %s; platform unit %s", cmo_sample_name, platform_unit)
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
