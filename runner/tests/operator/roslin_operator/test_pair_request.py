@@ -104,7 +104,7 @@ class TestPairRequest(TestCase):
         {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1"}
         ],
         'normal': [
-        {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"]", sample_id": "my_sample_id2" }
+        {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id2" }
         ]
         }
         self.assertTrue(pairs == expected_pairs)
