@@ -81,6 +81,7 @@ def compile_pairs(samples):
         LOGGER.error("Returning an empty list of pairs.")
 
     for tumor in tumors:
+        LOGGER.info("Pairing tumor sample %s", tumor['sample_id'])
         patient_id = tumor['patient_id']
         if patient_id:
             bait_set = tumor['bait_set']
@@ -88,20 +89,23 @@ def compile_pairs(samples):
             preservation_types = tumor['preservation_type']
             normal = get_viable_normal(normals, patient_id, bait_set)
             if normal:
+                LOGGER.info("Pairing %s with %s", tumor['sample_id'], normal['sample_id'])
                 pairs['tumor'].append(tumor)
                 pairs['normal'].append(normal)
             else:
-                LOGGER.debug("Missing normal for sample %s; querying patient %s", tumor['sample_id'], patient_id)
+                LOGGER.info("Missing normal for sample %s; querying patient %s", tumor['sample_id'], patient_id)
                 patient_samples = get_samples_from_patient_id(patient_id)
                 new_normals = get_by_tumor_type(patient_samples, "Normal")
                 new_normal = get_viable_normal(new_normals, patient_id, bait_set)
                 if new_normal:
+                    LOGGER.info("Pairing %s with %s", tumor['sample_id'], new_normal['sample_id'])
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
                     pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
-                    LOGGER.debug("Checking for Pooled Normal")
+                    LOGGER.info("No normal found for patient %s; checking for Pooled Normal", patient_id)
                     if pooled_normal:
+                        LOGGER.info("Pairing %s with %s", tumor['sample_id'], pooled_normal['sample_id'])
                         pairs['tumor'].append(tumor)
                         pairs['normal'].append(pooled_normal)
                     else:
