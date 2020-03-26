@@ -440,6 +440,7 @@ def update_metadata(request_id):
         "investigatorName": response_body['investigatorName'],
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
+        "otherContactEmails": response_body['otherContactEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
