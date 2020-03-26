@@ -289,7 +289,7 @@ class TestPairRequest(TestCase):
         "tumor_type": "Tumor",
         'run_id': ['JAX_0397'],
         "preservation_type": ["Frozen"],
-        "SM": "10075_D_1"
+        "SM": "10075_D_1",
         "sample_id": "10075_D_1"
         }
         ]
