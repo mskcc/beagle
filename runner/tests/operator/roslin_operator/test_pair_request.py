@@ -87,8 +87,8 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Normal",
-        "sample_id": "my_sample_id1",
-        "SM": "my_sample_id1"
+        "sample_id": "my_sample_id2",
+        "SM": "my_sample_id2"
         },
         {
         "patient_id": "C-W86LMR",
@@ -96,8 +96,8 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
-        "SM": "my_sample_id2",
-        "sample_id": "my_sample_id2"
+        "SM": "my_sample_id1",
+        "sample_id": "my_sample_id1"
         }
         ]
         pairs = compile_pairs(samples)
