@@ -175,6 +175,12 @@ class TestPairRequest(TestCase):
         {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1", "SM": "my_sample_id1"}
         ]
         }
+
+
+        print("Running test_compile_pairs2 ---")
+        print(json.dumps(pairs, cls=UUIDEncoder))
+        print(json.dumps(expected_pairs, cls=UUIDEncoder))
+
         self.assertTrue(pairs == expected_pairs)
 
     def test_compile_pairs3(self):
@@ -246,6 +252,7 @@ class TestPairRequest(TestCase):
         'tumor': [{
             'bait_set': 'IMPACT468_BAITS',
             'sample_id': '10075_D_1',
+            'SM': '10075_D_1',
             'patient_id': 'C-DRKHP7',
             "run_id": ["JAX_0397"],
             "preservation_type": ["Frozen"],
