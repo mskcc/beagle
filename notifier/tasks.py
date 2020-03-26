@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 def event_handler():
     if settings.NOTIFIER == "JIRA":
+        logger.info("Notifier type JIRA created")
         return JiraEventHandler()
     else:
         return NoOpEventHandler()

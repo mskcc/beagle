@@ -104,9 +104,30 @@ class OperatorRun(BaseModel):
     @property
     def percent_runs_finished(self):
         if self.num_total_runs > 0:
-            return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+            return float(
+                "{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
         else:
             return 0
+
+    @property
+    def total_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs
+
+    @property
+    def completed_runs(self):
+        self.refresh_from_db()
+        return self.num_completed_runs
+
+    @property
+    def failed_runs(self):
+        self.refresh_from_db()
+        return self.num_failed_runs
+
+    @property
+    def running_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs - (self.num_completed_runs + self.num_failed_runs)
 
 
 class Run(BaseModel):
