@@ -83,19 +83,15 @@ def build_run_id_query(data):
 
 def build_preservation_query(data):
     """
-    Build complex Q object preservation type query from given data
+    Build simple query for either FROZEN or FFPE pooled normal
 
-    Only does OR queries, as seen in line
-
-       query |= item
-
-    Very similar to build_run_id_query, but "filemetadata__metadata__preservation"
-    can't be sent as a value, so had to make a semi-redundant function
+    Main logic: if FFPE in data, return FFPE query; else, return FROZEN query
     """
-    data_query_set = [Q(filemetadata__metadata__preservation=value) for value in set(data)]
-    query = data_query_set.pop()
-    for item in data_query_set:
-        query |= item
+    preservations_lower_case = set([x.lower() for x in data])
+    value = "FROZEN"
+    if "ffpe" in preservations_lower_case:
+        value = "FFPE"
+    query = Q(filemetadata__metadata__preservation=value)
     return query
 
 
@@ -125,7 +121,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     # arbitrarily named
     sample_name = "pooled_normal_%s_%s_%s" % (descriptor,
                                               "_".join(run_ids),
-                                              "_".join(preservation_types))
+                                              "_".join(set(preservation_types)))
 
     num_of_pooled_normals = len(pooled_normals)
     if num_of_pooled_normals > 0:
