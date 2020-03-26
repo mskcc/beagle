@@ -4,14 +4,18 @@ from notifier.event_handler.event import Event
 
 class RunCompletedEvent(Event):
 
-    def __init__(self, job_group, request_id, run_id, pipeline, run_status, sample_name_tumor, sample_name_normal):
+    def __init__(self, job_group, request_id, run_id, pipeline, run_status, tags, running, completed, failed, total, operator_run_id):
         self.job_group = job_group
         self.request_id = request_id
         self.pipeline = pipeline
         self.run_id = run_id
         self.run_status = run_status
-        self.sample_name_tumor = sample_name_tumor
-        self.sample_name_normal = sample_name_normal
+        self.tags = tags
+        self.running = running
+        self.completed = completed
+        self.failed = failed
+        self.total = total
+        self.operator_run_id = operator_run_id
 
     @classmethod
     def get_type(cls):
@@ -26,15 +30,33 @@ class RunCompletedEvent(Event):
 
         Run Id: {run_id}
         Pipeline: {pipeline_name}
-        Sample Name Tumor: {sample_name_tumor}
-        Sample Name Normal: {sample_name_normal}
+        {tags}
         Status: {status}
         Link: {link}
+        
+        _____________________________________________
+        
+        OperatorRun {operator_run} status
+        
+        Running: {running}
+        Completed: {completed}
+        Failed: {failed}
+        
+        TOTAL: {total}
 
         """
         link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', self.run_id)
+        tags = ""
+        for k, v in self.tags.items():
+            tags += "%s: %s\n" % (k, str(v))
         return RUN_TEMPLATE.format(run_id=self.run_id,
                                    pipeline_name=self.pipeline,
-                                   sample_name_tumor=self.sample_name_tumor,
-                                   sample_name_normal=self.sample_name_normal,
-                                   status=self.run_status, link=link)
+                                   status=self.run_status,
+                                   link=link,
+                                   running=str(self.running),
+                                   completed=str(self.completed),
+                                   failed=str(self.failed),
+                                   total=str(self.total),
+                                   tags=tags,
+                                   operator_run=self.operator_run_id
+                                   )

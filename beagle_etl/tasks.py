@@ -7,7 +7,7 @@ from django.db import transaction
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent
 
 
 logger = logging.getLogger(__name__)
@@ -101,14 +101,23 @@ class JobObject(object):
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
+            # TODO: Hack remove this ASAP
+            import time
+            time.sleep(5)
 
             samples_completed = set()
             samples_failed = set()
+            all_jobs = []
 
-            successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
-                                            status=JobStatus.COMPLETED).all()
-            failed = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
-                                        status=JobStatus.FAILED).all()
+            jobs = Job.objects.filter(job_group=self.job.job_group.id).all()
+
+            for job in jobs:
+                if job.run == TYPES['SAMPLE']:
+                    if job.status == JobStatus.COMPLETED:
+                        samples_completed.add(job.args['sample_id'])
+                    elif job.status == JobStatus.FAILED:
+                        samples_failed.add(job.args['sample_id'])
+                all_jobs.append(str(job.id))
 
             request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
 
@@ -134,23 +143,10 @@ class JobObject(object):
                 pi_email = metadata['piEmail']
                 project_manager_name = metadata['projectManagerName']
 
-            for job in successful:
-                samples_completed.add(job.args['sample_id'])
-
-            for job in failed:
-                samples_failed.add(job.args['sample_id'])
-
-            jobs = Job.objects.filter(args__request_id=self.job.args['request_id']).order_by('-created_date').all()
-            all_jobs = []
-
-            for j in jobs:
-                all_jobs.append(str(j.id))
-
             event = ETLImportEvent(str(self.job.job_group.id),
                                    self.job.args['request_id'],
                                    list(samples_completed),
                                    list(samples_failed),
-                                   all_jobs,
                                    recipe,
                                    data_analyst_email,
                                    data_analyst_name,
@@ -163,6 +159,11 @@ class JobObject(object):
                                    )
             e = event.to_dict()
             send_notification.delay(e)
+            etl_event = ETLJobsLinksEvent(str(self.job.job_group.id),
+                                          self.job.args['request_id'],
+                                          all_jobs)
+            etl_e = etl_event.to_dict()
+            send_notification.delay(etl_e)
 
             if Job.objects.filter(args__requestId=self.job.args['request_id'], status=JobStatus.FAILED):
                 # self.notifier.request_finished(self.job.args['request_id'], "Hold")

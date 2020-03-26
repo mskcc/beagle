@@ -4,14 +4,13 @@ from notifier.event_handler.event import Event
 
 class ETLImportEvent(Event):
 
-    def __init__(self, job_group, request_id, sample_list_completed, sample_list_fail, etl_jobs, recipe,
+    def __init__(self, job_group, request_id, sample_list_completed, sample_list_fail, recipe,
                  data_analyst_email, data_analyst_name, investigator_email, investigator_name, lab_head_email,
                  lab_head_name, pi_email, project_manager_name):
         self.job_group = job_group
         self.request_id = request_id
         self.sample_list_completed = sample_list_completed
         self.sample_list_fail = sample_list_fail
-        self.etl_jobs = etl_jobs
         self.recipe = recipe
         self.data_analyst_email = data_analyst_email
         self.data_analyst_name = data_analyst_name
@@ -49,19 +48,13 @@ class ETLImportEvent(Event):
         
         {cnt_samples_fail} samples failed:
         {sample_list_fail}
-        
-        ETLJobs:
-        {etl_jobs}
         """
         sample_list_completed = ""
         sample_list_fail = ""
-        etl_jobs = ""
         for s in self.sample_list_completed:
             sample_list_completed += "%s\n" % s
         for s in self.sample_list_fail:
             sample_list_fail += "%s\n" % s
-        for j in self.etl_jobs:
-            etl_jobs += "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/etl/jobs/', j)
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,
                                                   cnt_samples=len(self.sample_list_completed) + len(self.sample_list_fail),
@@ -69,7 +62,6 @@ class ETLImportEvent(Event):
                                                   sample_list_completed=sample_list_completed,
                                                   cnt_samples_fail=len(self.sample_list_fail),
                                                   sample_list_fail=sample_list_fail,
-                                                  etl_jobs=etl_jobs,
                                                   recipe=self.recipe,
                                                   data_analyst_name=self.data_analyst_name,
                                                   data_analyst_email=self.data_analyst_email,

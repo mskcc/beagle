@@ -4,11 +4,12 @@ from notifier.event_handler.event import Event
 
 class OperatorRunEvent(Event):
 
-    def __init__(self, job_group, request_id, pipeline, valid_runs):
+    def __init__(self, job_group, request_id, pipeline, valid_runs, operator_run_id):
         self.job_group = job_group
         self.request_id = request_id
         self.pipeline = pipeline
         self.valid_runs = valid_runs
+        self.operator_run_id = operator_run_id
 
     @classmethod
     def get_type(cls):
@@ -23,17 +24,22 @@ class OperatorRunEvent(Event):
         
         Run Id: {run_id}
         Pipeline: {pipeline_name}
-        Sample Name Tumor: {sample_name_tumor}
-        Sample Name Normal: {sample_name_normal}
+        {tags}
         Link: {link}
         
         """
-        comment = "Runs submitted:\n"
+        comment = """
+        OperatorRun {operator_run}
+        
+        Runs submitted:
+        """.format(operator_run=self.operator_run_id)
         for r in self.valid_runs:
             link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', r['run_id'])
+            tags = ""
+            for k, v in r['tags'].items():
+                tags += "%s: %s\n" % (k, str(v))
             comment += RUN_TEMPLATE.format(run_id=r['run_id'],
                                            pipeline_name=self.pipeline,
-                                           sample_name_tumor=r['sample_name_tumor'],
-                                           sample_name_normal=r['sample_name_normal'],
+                                           tags=tags,
                                            link=link)
         return comment

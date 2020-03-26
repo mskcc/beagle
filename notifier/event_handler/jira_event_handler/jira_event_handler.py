@@ -21,24 +21,25 @@ class JiraEventHandler(EventHandler):
         self.client.update_ticket_summary(job_group.jira_id, event.request_id)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
+    def process_etl_jobs_links_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.comment(job_group.jira_id, str(event))
+
+    def process_etl_set_recipe_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.update_labels(job_group.jira_id, [str(event)])
+
     def process_operator_run_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        # tickets = self.client.search_tickets(event.request_id).json()
-        # ticket_id = sorted(tickets['issues'], key=lambda i: i['id'], reverse=True)[0]['key']
         self.client.comment(job_group.jira_id, str(event))
 
     def process_run_completed(self, event):
-        """
-        :return: Update each completed run
-        """
-        tickets = self.client.search_tickets(event.request_id).json()
-        for ticket in tickets.get('issues', []):
-            comments = self.client.get_comments(ticket['key']).json()
-            for comment in comments.get('comments', []):
-                if event.run_id in comment['body']:
-                    ticket_id = ticket['key']
-                    break
-        self.client.comment(ticket_id, str(event))
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.comment(job_group.jira_id, str(event))
+
+    def process_operator_error_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.comment(job_group.jira_id, str(event))
 
     def request_finished(self, request_id, status):
         """
