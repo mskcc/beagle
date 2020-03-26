@@ -4,8 +4,9 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
-from notifier.tasks import event_handler
 from notifier.models import JobGroup
+from notifier.events import ETLSetRecipeEvent
+from notifier.tasks import event_handler, send_notification
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -129,6 +130,9 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
+    print("Set label")
+    set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
+    send_notification.delay(set_recipe_event)
     pooled_normals = response_body.get("pooledNormals", [])
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:

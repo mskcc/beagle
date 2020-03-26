@@ -40,8 +40,7 @@ def create_jobs_from_operator(operator, job_group_id=None):
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
-        run_ids.append({"run_id": str(run.id), "sample_name_tumor": run.tags.get('sampleNameTumor', ""),
-                        'sample_name_normal': run.tags.get('sampleNameNormal', "")})
+        run_ids.append({"run_id": str(run.id), 'tags': run.tags})
         create_run_task.delay(str(run.id), job[1], None)
 
     try:
@@ -50,7 +49,7 @@ def create_jobs_from_operator(operator, job_group_id=None):
     except Pipeline.DoesNotExist:
         pipeline_name = ""
 
-    event = OperatorRunEvent(str(operator_run.job_group.id), operator.request_id, pipeline_name, run_ids)
+    event = OperatorRunEvent(str(operator_run.job_group.id), operator.request_id, pipeline_name, run_ids, str(operator_run.id))
     send_notification.delay(event.to_dict())
 
     for job in invalid_jobs:
@@ -206,7 +205,17 @@ def complete_job(run_id, outputs):
 
     pipeline_name = run.run_obj.app.name
 
-    event = RunCompletedEvent(job_group_id, run.tags.get('requestId', 'UNKNOWN REQUEST'), pipeline_name, run.run_id, RunStatus(run.status).name, run.tags.get('sampleNameTumor', ''), run.tags.get('sampleNameNormal'))
+    total_runs = run.run_obj.operator_run.total_runs
+    completed_runs = run.run_obj.operator_run.completed_runs
+    failed_runs = run.run_obj.operator_run.failed_runs
+    running_runs = run.run_obj.operator_run.running_runs
+
+    event = RunCompletedEvent(job_group_id, run.tags.get('requestId', 'UNKNOWN REQUEST'), str(run.run_id),
+                              pipeline_name,
+                              RunStatus(run.status).name, run.tags, running_runs, completed_runs, failed_runs,
+                              total_runs,
+                              str(run.run_obj.operator_run.id)
+                              )
     e = event.to_dict()
     send_notification.delay(e)
 
