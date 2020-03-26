@@ -31,8 +31,10 @@ class OperatorRunEvent(Event):
         comment = """
         OperatorRun {operator_run}
         
+        Total runs: {total_runs}
+        
         Runs submitted:
-        """.format(operator_run=self.operator_run_id)
+        """.format(operator_run=self.operator_run_id, total_runs=len(self.valid_runs))
         for r in self.valid_runs:
             link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', r['run_id'])
             tags = ""
