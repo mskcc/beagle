@@ -357,6 +357,7 @@ class TestPairRequest(TestCase):
         'run_id': ['JAX_0397'],
         "preservation_type": ["EDTA-Streck"],
         "sample_id": "10075_D_3_5",
+        "SM": "10075_D_3_5",
         "request_id": "10075_D_3"
         }
         ]
@@ -371,6 +372,7 @@ class TestPairRequest(TestCase):
             "preservation_type": ["EDTA-Streck"],
             'tumor_type': 'Tumor',
             'sample_id': '10075_D_3_5',
+            "SM": "10075_D_3_5",
             'request_id': '10075_D_3'
             }
         ],
@@ -435,6 +437,7 @@ class TestPairRequest(TestCase):
         "patient_id": "C-8VK0V7",
         "tumor_type": "Tumor",
         "sample_id": "10075_D_3_5",
+        "SM": "10075_D_3_5",
         "request_id": "10075_D_3",
         'run_id': ['JAX_0397'],
         "preservation_type": ["EDTA-Streck"]
@@ -449,6 +452,7 @@ class TestPairRequest(TestCase):
             'patient_id': 'C-8VK0V7',
             'tumor_type': 'Tumor',
             'sample_id': '10075_D_3_5',
+            "SM": "10075_D_3_5",
             'request_id': '10075_D_3',
             'run_id': ['JAX_0397'],
             "preservation_type": ["EDTA-Streck"]
