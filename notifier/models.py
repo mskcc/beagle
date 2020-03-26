@@ -10,4 +10,3 @@ class BaseModel(models.Model):
 
 class JobGroup(BaseModel):
     jira_id = models.CharField(max_length=20, blank=True, null=True)
-

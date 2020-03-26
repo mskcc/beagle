@@ -4,6 +4,7 @@ from .access_operator import AccessOperator
 from .roslin_qc_operator import RoslinQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
 
+
 class OperatorFactory(object):
 
     operators = {

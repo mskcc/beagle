@@ -1,17 +1,13 @@
 import logging
 import importlib
 import datetime
+import traceback
 from celery import shared_task
 from django.db import transaction
-from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
-from file_system.models import File, FileMetadata
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent
-from django.core.serializers import serialize, deserialize
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
-import traceback
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent
 
 
 logger = logging.getLogger(__name__)
@@ -105,26 +101,69 @@ class JobObject(object):
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
-            successful_files = []
-            successful = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE'],
-                                            status=JobStatus.COMPLETED)
-            for job in successful:
-                queryset = File.objects.prefetch_related(
-                    Prefetch('filemetadata_set', queryset=
-                    FileMetadata.objects.select_related('file').order_by('-created_date'))). \
-                    order_by('file_name').filter(filemetadata__metadata__requestId=self.job.args['request_id'],
-                                                 filemetadata__metadata__sampleId=job.args['sample_id']).all()
-                for file in queryset:
-                    successful_files.append((job.args['sample_id'], file.path))
-            pooled_normals_files = []
-            pooled_normals = Job.objects.filter(args__requestId=self.job.args['request_id'], run=TYPES['POOLED_NORMAL'],
-                                                status=JobStatus.COMPLETED)
-            for job in pooled_normals:
-                pooled_normals_files.append(job.args['filepath'])
+            # TODO: Hack remove this ASAP
+            import time
+            time.sleep(5)
 
-            event = ETLImportEvent(self.job.args['request_id'], successful_files, pooled_normals_files)
+            samples_completed = set()
+            samples_failed = set()
+            all_jobs = []
+
+            jobs = Job.objects.filter(job_group=self.job.job_group.id).all()
+
+            for job in jobs:
+                if job.run == TYPES['SAMPLE']:
+                    if job.status == JobStatus.COMPLETED:
+                        samples_completed.add(job.args['sample_id'])
+                    elif job.status == JobStatus.FAILED:
+                        samples_failed.add(job.args['sample_id'])
+                all_jobs.append(str(job.id))
+
+            request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
+
+            data_analyst_email = ""
+            data_analyst_name = ""
+            investigator_email = ""
+            investigator_name = ""
+            lab_head_email = ""
+            lab_head_name = ""
+            pi_email = ""
+            project_manager_name = ""
+            recipe = ""
+
+            if request_metadata:
+                metadata = request_metadata.args.get('request_metadata', {})
+                recipe = metadata['recipe']
+                data_analyst_email = metadata['dataAnalystEmail']
+                data_analyst_name = metadata['dataAnalystName']
+                investigator_email = metadata['investigatorEmail']
+                investigator_name = metadata['investigatorName']
+                lab_head_email = metadata['labHeadEmail']
+                lab_head_name = metadata['labHeadName']
+                pi_email = metadata['piEmail']
+                project_manager_name = metadata['projectManagerName']
+
+            event = ETLImportEvent(str(self.job.job_group.id),
+                                   self.job.args['request_id'],
+                                   list(samples_completed),
+                                   list(samples_failed),
+                                   recipe,
+                                   data_analyst_email,
+                                   data_analyst_name,
+                                   investigator_email,
+                                   investigator_name,
+                                   lab_head_email,
+                                   lab_head_name,
+                                   pi_email,
+                                   project_manager_name
+                                   )
             e = event.to_dict()
             send_notification.delay(e)
+            etl_event = ETLJobsLinksEvent(str(self.job.job_group.id),
+                                          self.job.args['request_id'],
+                                          all_jobs)
+            etl_e = etl_event.to_dict()
+            send_notification.delay(etl_e)
 
             if Job.objects.filter(args__requestId=self.job.args['request_id'], status=JobStatus.FAILED):
                 # self.notifier.request_finished(self.job.args['request_id'], "Hold")
