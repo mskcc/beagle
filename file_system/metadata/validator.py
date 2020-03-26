@@ -55,6 +55,9 @@ METADATA_SCHEMA = {
                 "labHeadName": {
                     "type": "string"
                 },
+                "otherContactEmails": {
+                    "type": "string"
+                },
                 "projectManagerName": {
                     "type": "string"
                 }
