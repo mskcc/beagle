@@ -87,7 +87,8 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Normal",
-        "sample_id": "my_sample_id1"
+        "sample_id": "my_sample_id1",
+        "SM": "my_sample_id1"
         },
         {
         "patient_id": "C-W86LMR",
@@ -95,16 +96,17 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
+        "SM": "my_sample_id2",
         "sample_id": "my_sample_id2"
         }
         ]
         pairs = compile_pairs(samples)
         expected_pairs = {
         'tumor': [
-        {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1"}
+            {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1", "SM": "my_sample_id1"}
         ],
         'normal': [
-        {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id2" }
+            {'patient_id': 'C-W86LMR', 'bait_set': 'IMPACT468_BAITS', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id2", "SM": "my_sample_id2" }
         ]
         }
         self.assertTrue(pairs == expected_pairs)
@@ -120,6 +122,7 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Normal",
+        "SM": "my_sample_id1",
         "sample_id": "my_sample_id1"
         },
         {
@@ -128,6 +131,7 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Normal",
+        "SM": "my_sample_id2",
         "sample_id": "my_sample_id2"
         },
         {
@@ -136,6 +140,7 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
+        "SM": "my_sample_id3",
         "sample_id": "my_sample_id3"
         },
         {
@@ -144,6 +149,7 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
+        "SM": "my_sample_id4",
         "sample_id": "my_sample_id4"
         },
         {
@@ -152,20 +158,21 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
+        "SM": "my_sample_id5",
         "sample_id": "my_sample_id5"
         }
         ]
         pairs = compile_pairs(samples)
         expected_pairs = {
         'tumor': [
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id3"},
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-8VK0V7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id4"},
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id5"}
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id3", "SM": "my_sample_id3"},
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-8VK0V7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id4", "SM": "my_sample_id4"},
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Tumor', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id5", "SM": "my_sample_id5"}
         ],
         'normal': [
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1"},
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-8VK0V7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id2"},
-        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1"}
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1", "SM": "my_sample_id1"},
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-8VK0V7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id2", "SM": "my_sample_id2"},
+        {'bait_set': 'IMPACT468_BAITS', 'patient_id': 'C-DRKHP7', 'tumor_type': 'Normal', "run_id": ["JAX_0397"], "preservation_type": ["Frozen"], "sample_id": "my_sample_id1", "SM": "my_sample_id1"}
         ]
         }
         self.assertTrue(pairs == expected_pairs)
@@ -207,6 +214,7 @@ class TestPairRequest(TestCase):
         "run_id": ["JAX_0397"],
         "preservation_type": ["Frozen"],
         "tumor_type": "Tumor",
+        "SM": "10075_D_1",
         "sample_id": "10075_D_1"
         }
         ]
@@ -281,6 +289,7 @@ class TestPairRequest(TestCase):
         "tumor_type": "Tumor",
         'run_id': ['JAX_0397'],
         "preservation_type": ["Frozen"],
+        "SM": "10075_D_1"
         "sample_id": "10075_D_1"
         }
         ]
@@ -312,6 +321,7 @@ class TestPairRequest(TestCase):
         'tumor': [{
             'bait_set': 'IMPACT468_BAITS',
             'sample_id': '10075_D_1',
+            'SM': '10075_D_1',
             'patient_id': 'C-DRKHP7',
             'run_id': ['JAX_0397'],
             "preservation_type": ["Frozen"],
