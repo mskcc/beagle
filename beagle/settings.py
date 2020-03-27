@@ -110,6 +110,8 @@ AUTH_LDAP_USER_DN_TEMPLATE = '%(user)s@mskcc.org'
 
 AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
+AUTH_LDAP_NO_NEW_USERS = True
+
 # AUTH_LDAP_GROUP_TYPE = MemberDNGroupType()
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearchUnion(
 #     LDAPSearch('DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"),
