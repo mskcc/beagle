@@ -5,7 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunCompletedEvent, OperatorRunEvent
+from notifier.events import RunCompletedEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
@@ -82,6 +82,7 @@ def process_triggers():
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
+        created_chained_job = False
         job_group = operator_run.job_group
         job_group_id = str(job_group.id) if job_group else None
         try:
@@ -92,6 +93,7 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
+                            created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -101,6 +103,7 @@ def process_triggers():
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
                         if operator_run.percent_runs_succeeded >= 90.0:
+                            created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -119,8 +122,13 @@ def process_triggers():
             if operator_run.percent_runs_finished == 100.0:
                 if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
+                    if not created_chained_job:
+                        completed_event = SetPipelineCompletedEvent(str(operator_run.job_group.id)).to_dict()
+                        send_notification.delay(completed_event)
                 else:
                     operator_run.fail()
+                    ci_review_event = SetCIReviewEvent(str(operator_run.job_group.id)).to_dict()
+                    send_notification.delay(ci_review_event)
 
         except Exception as e:
             logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
@@ -218,6 +226,10 @@ def complete_job(run_id, outputs):
                               )
     e = event.to_dict()
     send_notification.delay(e)
+
+    if run.status == RunStatus.FAILED:
+        ci_review = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review)
 
     for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
         create_jobs_from_chaining.delay(

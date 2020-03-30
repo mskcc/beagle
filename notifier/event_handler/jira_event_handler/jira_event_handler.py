@@ -41,16 +41,19 @@ class JiraEventHandler(EventHandler):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.comment(job_group.jira_id, str(event))
 
-    def request_finished(self, request_id, status):
-        """
-        :return: Request COMPLETED or FAILED (for JIRA this should be change of status and add number of successful/failed runs)
-        """
-        ticket_id = self.client.search_tickets(request_id).json()['issues'][0]['key']
-        transitions = self.client.get_status_transitions(ticket_id)
-        transition_id = None
-        if transitions.status_code == 200:
-            for i in transitions.json()['transitions']:
-                if i['name'] == status:
-                    transition_id = i['id']
-        if transition_id:
-            self.client.update_status(request_id, transition_id)
+    def process_set_label_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        ticket = self.client.get_ticket(job_group.jira_id)
+        if ticket.status_code != 200:
+            raise Exception('')
+        labels = ticket.json()['fields'].get('labels', [])
+        labels.append(str(event))
+        self.client.update_labels(job_group.jira_id, labels)
+
+    def process_transition_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        response = self.client.get_status_transitions(job_group.jira_id)
+        for transition in response.json().get('transitions', []):
+            if transition.get('name') == str(event):
+                self.client.update_status(job_group.jira_id, transition['id'])
+                break
