@@ -32,3 +32,6 @@ class NoOpEventHandler(EventHandler):
 
     def process_transition_event(self, event):
         pass
+
+    def process_upload_attachment_event(self, event):
+        pass
