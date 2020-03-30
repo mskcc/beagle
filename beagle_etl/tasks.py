@@ -7,7 +7,7 @@ from django.db import transaction
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent
 
 
 logger = logging.getLogger(__name__)
@@ -165,9 +165,9 @@ class JobObject(object):
             etl_e = etl_event.to_dict()
             send_notification.delay(etl_e)
 
-            if Job.objects.filter(args__requestId=self.job.args['request_id'], status=JobStatus.FAILED):
-                # self.notifier.request_finished(self.job.args['request_id'], "Hold")
-                pass
+            if len(Job.objects.filter(job_group=self.job.job_group.id, status=JobStatus.FAILED).all()) > 0:
+                ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
+                send_notification.delay(ci_review)
 
     def _check_children(self):
         status = JobStatus.COMPLETED

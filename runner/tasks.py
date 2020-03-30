@@ -5,7 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunCompletedEvent, OperatorRunEvent
+from notifier.events import RunCompletedEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
@@ -63,16 +63,16 @@ def create_jobs_from_operator(operator, job_group_id=None):
 def create_jobs_from_request(request_id, operator_id, job_group_id=None):
     logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, request_id=request_id)
     create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group=None):
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
-    create_jobs_from_operator(operator, job_group)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, run_ids=run_ids)
+    create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
@@ -82,6 +82,7 @@ def process_triggers():
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
+        created_chained_job = False
         job_group = operator_run.job_group
         job_group_id = str(job_group.id) if job_group else None
         try:
@@ -92,6 +93,7 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
+                            created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -101,6 +103,7 @@ def process_triggers():
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
                         if operator_run.percent_runs_succeeded >= 90.0:
+                            created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
@@ -119,8 +122,14 @@ def process_triggers():
             if operator_run.percent_runs_finished == 100.0:
                 if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
+                    if not created_chained_job and job_group_id:
+                        completed_event = SetPipelineCompletedEvent(job_group_id).to_dict()
+                        send_notification.delay(completed_event)
                 else:
                     operator_run.fail()
+                    if job_group_id:
+                        ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
+                        send_notification.delay(ci_review_event)
 
         except Exception as e:
             logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
@@ -218,6 +227,10 @@ def complete_job(run_id, outputs):
                               )
     e = event.to_dict()
     send_notification.delay(e)
+
+    if run.status == RunStatus.FAILED:
+        ci_review = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review)
 
     for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
         create_jobs_from_chaining.delay(

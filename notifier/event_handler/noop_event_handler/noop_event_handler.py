@@ -21,8 +21,17 @@ class NoOpEventHandler(EventHandler):
     def process_operator_run_event(self, event):
         pass
 
+    def process_set_label_event(self, event):
+        pass
+
     def process_run_completed(self, event):
         pass
 
-    def request_finished(self, request_id, status):
+    def process_operator_error_event(self, event):
+        pass
+
+    def process_transition_event(self, event):
+        pass
+
+    def process_upload_attachment_event(self, event):
         pass
