@@ -122,13 +122,14 @@ def process_triggers():
             if operator_run.percent_runs_finished == 100.0:
                 if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
-                    if not created_chained_job:
-                        completed_event = SetPipelineCompletedEvent(str(operator_run.job_group.id)).to_dict()
+                    if not created_chained_job and job_group_id:
+                        completed_event = SetPipelineCompletedEvent(job_group_id).to_dict()
                         send_notification.delay(completed_event)
                 else:
                     operator_run.fail()
-                    ci_review_event = SetCIReviewEvent(str(operator_run.job_group.id)).to_dict()
-                    send_notification.delay(ci_review_event)
+                    if job_group_id:
+                        ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
+                        send_notification.delay(ci_review_event)
 
         except Exception as e:
             logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
