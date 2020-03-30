@@ -57,3 +57,7 @@ class JiraEventHandler(EventHandler):
             if transition.get('name') == str(event):
                 self.client.update_status(job_group.jira_id, transition['id'])
                 break
+
+    def process_upload_attachment_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.add_attachment(job_group.jira_id, event.file_name, str(event))

@@ -1,3 +1,4 @@
+import io
 import json
 import enum
 import requests
@@ -13,6 +14,7 @@ class JiraClient(object):
         UPDATE = "/rest/api/2/issue/%s/"
         COMMENT = "/rest/api/2/issue/%s/comment"
         TRANSITION = "/rest/api/2/issue/%s/transitions"
+        ATTACHMENT = "/rest/api/2/issue/%s/attachments"
 
     def __init__(self, url, username, password, project):
         self.username = username
@@ -101,6 +103,14 @@ class JiraClient(object):
         response = self._get(comment_url)
         return response
 
+    def add_attachment(self, ticket_id, file_name, content):
+        attachment_url = self.JiraEndpoints.ATTACHMENT.value % ticket_id
+        files = {'file': (file_name, content)}
+        headers = {"X-Atlassian-Token": "nocheck"}
+        response = self._post(attachment_url, {}, files=files, headers=headers)
+        return response
+
+
     @staticmethod
     def parse_ticket_id(ticket_body):
         return ticket_body['key']
@@ -114,15 +124,23 @@ class JiraClient(object):
                                 headers=headers)
         return response
 
-    def _post(self, url, body, params={}, headers={}):
-        default_headers = {'content-type': 'application/json'}
-        headers.update(default_headers)
-        response = requests.post(urljoin(self.url, url),
-                                 auth=HTTPBasicAuth(self.username, self.password),
-                                 data=json.dumps(body),
-                                 params=params,
-                                 headers=headers)
-        return response
+    def _post(self, url, body, params={}, headers={}, files={}):
+        if files:
+            response = requests.post(urljoin(self.url, url),
+                                     auth=HTTPBasicAuth(self.username, self.password),
+                                     params=params,
+                                     headers=headers,
+                                     files=files)
+            return response
+        else:
+            default_headers = {'content-type': 'application/json'}
+            headers.update(default_headers)
+            response = requests.post(urljoin(self.url, url),
+                                     auth=HTTPBasicAuth(self.username, self.password),
+                                     data=json.dumps(body),
+                                     params=params,
+                                     headers=headers)
+            return response
 
     def _put(self, url, body, params={}, headers={}):
         default_headers = {'content-type': 'application/json'}

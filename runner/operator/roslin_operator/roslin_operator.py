@@ -5,6 +5,8 @@ from runner.serializers import APIRunCreateSerializer
 from .construct_roslin_pair import construct_roslin_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
+from notifier.events import UploadAttachmentEvent
+from notifier.tasks import send_notification
 
 
 class RoslinOperator(Operator):
@@ -35,6 +37,15 @@ class RoslinOperator(Operator):
 
         roslin_inputs, error_samples = construct_roslin_jobs(samples)
         number_of_inputs = len(roslin_inputs)
+
+        summary = """
+Summary:
+
+Here we need to populate operator run summary.
+        """
+
+        operator_run_summary = UploadAttachmentEvent(self.job_group_id, 'summary.txt', summary).to_dict()
+        send_notification.delay(operator_run_summary)
 
         for i, job in enumerate(roslin_inputs):
             tumor_sample_name = job['pair'][0]['ID']

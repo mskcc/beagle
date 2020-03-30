@@ -63,16 +63,16 @@ def create_jobs_from_operator(operator, job_group_id=None):
 def create_jobs_from_request(request_id, operator_id, job_group_id=None):
     logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, request_id=request_id)
     create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group=None):
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
-    create_jobs_from_operator(operator, job_group)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, run_ids=run_ids)
+    create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
