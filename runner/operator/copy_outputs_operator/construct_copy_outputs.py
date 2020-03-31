@@ -92,10 +92,13 @@ def construct_copy_outputs_input(run_id_list):
     facets_list = []
     pair_number = 0
     output_description = get_roslin_output_description()
+    project_prefix = set()
 
     for single_run_id in run_id_list:
         port_list = Port.objects.filter(run=single_run_id)
         for single_port in port_list:
+            if single_port.name == "project_prefix":
+                project_prefix.add(single_port.value)
             if single_port.name == 'pair':
                 port_pair = single_port.value
                 facets_dict = {
@@ -119,6 +122,7 @@ def construct_copy_outputs_input(run_id_list):
                                 list_file_paths([single_facets_file])
         input_json['facets'] = facets_list
         pair_number = pair_number + 1
+    input_json["project_prefix"] = "_".join(project_prefix)
     return input_json
 
 
