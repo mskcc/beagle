@@ -49,8 +49,10 @@ def create_jobs_from_operator(operator, job_group_id=None):
     except Pipeline.DoesNotExist:
         pipeline_name = ""
 
-    event = OperatorRunEvent(str(operator_run.job_group.id), operator.request_id, pipeline_name, run_ids, str(operator_run.id))
-    send_notification.delay(event.to_dict())
+
+    if job_group_id:
+        event = OperatorRunEvent(job_group_id, operator.request_id, pipeline_name, run_ids, str(operator_run.id))
+        send_notification.delay(event.to_dict())
 
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
