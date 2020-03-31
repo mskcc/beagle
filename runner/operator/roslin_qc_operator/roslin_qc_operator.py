@@ -4,6 +4,7 @@ RoslinQcOperator
 Constructs input JSON for the roslin QC pipeline and then
 submits them as runs
 """
+import os
 import logging
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
@@ -29,13 +30,26 @@ class RoslinQcOperator(Operator):
             number_of_runs, run_ids[0])
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
                 "normal_sample_names": input_json['normal_sample_names'],
-                "project_prefix": input_json['project_prefix'],
-                "number_of_runs": number_of_runs}
+                "project_prefix": input_json['project_prefix']}
         roslin_qc_outputs_job_data = {
             'app': self.get_pipeline_id(),
             'inputs': input_json,
             'name': name,
             'tags': tags}
+
+        if self.request_id:
+            tags["request_id"] = self.request_id
+            output_directory = os.path.join(pipeline_output_directory,
+                    "roslin",
+                    self.request_id,
+                    pipeline_version)
+        if self.job_group_id:
+            output_directory = os.path.join(output_directory, job_group_id)
+
+        if output_directory:
+            roslin_qc_outputs_job_data['output_directory'] = output_directory
+
         roslin_qc_outputs_job = [(APIRunCreateSerializer(
             data=roslin_qc_outputs_job_data), input_json)]
+
         return roslin_qc_outputs_job
