@@ -28,11 +28,20 @@ class RoslinQcOperator(Operator):
         number_of_runs = len(run_ids)
         name = "ROSLIN QC OUTPUTS %s runs [%s,..] " % (
             number_of_runs, run_ids[0])
+
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_github = pipeline.github
+        pipeline_entrypoint = pipeline.entrypoint
+        pipeline_version = pipeline.version
+        pipeline_output_directory = pipeline.output_directory
+
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
                 "normal_sample_names": input_json['normal_sample_names'],
                 "project_prefix": input_json['project_prefix']}
+
         roslin_qc_outputs_job_data = {
-            'app': self.get_pipeline_id(),
+            'app': app,
             'inputs': input_json,
             'name': name,
             'tags': tags}
@@ -43,6 +52,7 @@ class RoslinQcOperator(Operator):
                     "roslin",
                     self.request_id,
                     pipeline_version)
+
         if self.job_group_id:
             output_directory = os.path.join(output_directory, job_group_id)
 
