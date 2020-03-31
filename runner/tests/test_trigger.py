@@ -38,7 +38,7 @@ class TestOperatorTriggers(TestCase):
 
         create_jobs_from_chaining.delay.assert_called_once_with(operator_run.trigger.to_operator.pk,
                                      operator_run.trigger.from_operator.pk,
-                                     run_ids, job_group=None)
+                                     run_ids, job_group_id=None)
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
 
 
@@ -74,15 +74,15 @@ class TestOperatorTriggers(TestCase):
         calls = [
             call(operator_run.trigger.to_operator.pk,
                  operator_run.trigger.from_operator.pk,
-                 [run_ids[0]], job_group=None
+                 [run_ids[0]], job_group_id=None
                  ),
             call(operator_run.trigger.to_operator.pk,
                  operator_run.trigger.from_operator.pk,
-                 [run_ids[1]], job_group=None
+                 [run_ids[1]], job_group_id=None
                  ),
             call(operator_run.trigger.to_operator.pk,
                  operator_run.trigger.from_operator.pk,
-                 [run_ids[2]], job_group=None
+                 [run_ids[2]], job_group_id=None
                  )
         ]
 
