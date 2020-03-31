@@ -141,12 +141,21 @@ class APIRunCreateSerializer(serializers.Serializer):
             pipeline = Pipeline.objects.get(id=validated_data.get('app'))
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
+        tags = validated_data.get('tags')
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        tags = validated_data.get('tags')
+        output_directory = pipeline.output_directory
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), output_metadata=validated_data.get('output_metadata', {}), tags=tags)
+        if validated_data.get('output_directory') is not None:
+            output_directory = validated_data.get('output_directory')
+        run = Run(name=name,
+                app=pipeline,
+                status=RunStatus.CREATING,
+                job_statuses=dict(),
+                output_metadata=validated_data.get('output_metadata', {}),
+                tags=tags,
+                output_directory = output_directory)
         try:
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:
