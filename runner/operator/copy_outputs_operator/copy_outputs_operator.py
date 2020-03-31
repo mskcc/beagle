@@ -31,7 +31,7 @@ class CopyOutputsOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        pipeline_output_directory = pipeline.output_directory
+        output_directory = pipeline.output_directory
 
         tags = {"run_ids": run_ids}
 
@@ -44,7 +44,7 @@ class CopyOutputsOperator(Operator):
 
         if self.request_id:
             tags["request_id"] = self.request_id
-            output_directory = os.path.join(pipeline_output_directory,
+            output_directory = os.path.join(output_directory,
                                             "roslin",
                                             self.request_id,
                                             pipeline_version)
