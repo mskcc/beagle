@@ -8,6 +8,7 @@ import os
 import logging
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
+from runner.models import Pipeline
 from .construct_roslin_qc_outputs import construct_roslin_qc_input
 LOGGER = logging.getLogger(__name__)
 
@@ -31,8 +32,6 @@ class RoslinQcOperator(Operator):
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        pipeline_github = pipeline.github
-        pipeline_entrypoint = pipeline.entrypoint
         pipeline_version = pipeline.version
         pipeline_output_directory = pipeline.output_directory
 
@@ -49,12 +48,12 @@ class RoslinQcOperator(Operator):
         if self.request_id:
             tags["request_id"] = self.request_id
             output_directory = os.path.join(pipeline_output_directory,
-                    "roslin",
-                    self.request_id,
-                    pipeline_version)
+                                            "roslin",
+                                            self.request_id,
+                                            pipeline_version)
 
         if self.job_group_id:
-            output_directory = os.path.join(output_directory, job_group_id)
+            output_directory = os.path.join(output_directory, self.job_group_id)
 
         if output_directory:
             roslin_qc_outputs_job_data['output_directory'] = output_directory
