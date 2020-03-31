@@ -137,6 +137,7 @@ class Run(BaseModel):
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
+    output_directory = models.CharField(max_length=1000, editable=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
