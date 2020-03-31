@@ -34,10 +34,11 @@ class RoslinQcOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         output_directory = pipeline.output_directory
+        project_prefix = input_json['project_prefix']
 
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
                 "normal_sample_names": input_json['normal_sample_names'],
-                "project_prefix": input_json['project_prefix']}
+                "project_prefix": project_prefix}
 
         roslin_qc_outputs_job_data = {
             'app': app,
@@ -45,20 +46,17 @@ class RoslinQcOperator(Operator):
             'name': name,
             'tags': tags}
 
-        if self.request_id:
+        if project_prefix:
             tags["request_id"] = self.request_id
             output_directory = os.path.join(output_directory,
                                             "roslin",
-                                            self.request_id,
+                                            project_prefix,
                                             pipeline_version)
 
         if self.job_group_id:
             output_directory = os.path.join(output_directory, self.job_group_id)
 
         roslin_qc_outputs_job_data['output_directory'] = output_directory
-
-        import json
-        print(json.dumps(roslin_qc_outputs_job_data))
 
         roslin_qc_outputs_job = [(APIRunCreateSerializer(
             data=roslin_qc_outputs_job_data), input_json)]
