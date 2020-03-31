@@ -98,7 +98,7 @@ def process_triggers():
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
                                 list(operator_run.runs.values_list('id', flat=True)),
-                                job_group=job_group_id
+                                job_group_id=job_group_id
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -108,7 +108,7 @@ def process_triggers():
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
                                 list(operator_run.runs.values_list('id', flat=True)),
-                                job_group=job_group_id
+                                job_group_id=job_group_id
                             )
                             continue
 
@@ -237,7 +237,7 @@ def complete_job(run_id, outputs):
             trigger.to_operator_id,
             trigger.from_operator_id,
             [run_id],
-            job_group=job_group_id
+            job_group_id=job_group_id
         )
 
 
