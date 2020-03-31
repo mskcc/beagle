@@ -37,8 +37,7 @@ class RoslinQcOperator(Operator):
         project_prefix = input_json['project_prefix']
 
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
-                "normal_sample_names": input_json['normal_sample_names'],
-                "project_prefix": project_prefix}
+                "normal_sample_names": input_json['normal_sample_names']}
 
         roslin_qc_outputs_job_data = {
             'app': app,
@@ -47,7 +46,7 @@ class RoslinQcOperator(Operator):
             'tags': tags}
 
         if project_prefix:
-            tags["request_id"] = self.request_id
+            tags["project_prefix"] = project_prefix 
             output_directory = os.path.join(output_directory,
                                             "roslin",
                                             project_prefix,
