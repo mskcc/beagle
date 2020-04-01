@@ -63,6 +63,7 @@ class TestCopyOutputs(TestCase):
         """
         Test that copy output jobs are correctly created
         """
+        print("Running test_create_copy_output_jobs ----")
         # Load fixtures
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
@@ -74,4 +75,12 @@ class TestCopyOutputs(TestCase):
         if operator.get_jobs()[0][0].is_valid():
             input_json = operator.get_jobs()[0][0].initial_data['inputs']
             input_json_valid = self.validate_copy_outputs_input(input_json)
+            print(json.dumps(input_json, cls=UUIDEncoder))
         self.assertEqual(input_json_valid, True)
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
