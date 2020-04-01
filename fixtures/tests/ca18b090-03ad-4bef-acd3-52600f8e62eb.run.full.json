@@ -1067,7 +1067,13 @@
                         ],
                         "items": "string"
                     },
-                    "project_prefix": "string",
+                    "project_prefix": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
                     "opt_dup_pix_dist": {
                         "type": [
                             "null",
@@ -1148,7 +1154,9 @@
                 "abra_scratch": "/scratch",
                 "facets_pcval": 500,
                 "gatk_jar_path": "/usr/bin/gatk.jar",
-                "project_prefix": "",
+                "project_prefix": [
+                    "09670_D"
+                ],
                 "opt_dup_pix_dist": "2500",
                 "emit_original_quals": true,
                 "num_cpu_threads_per_data_thread": 6
@@ -1209,7 +1217,9 @@
                 "abra_scratch": "/scratch",
                 "facets_pcval": 500,
                 "gatk_jar_path": "/usr/bin/gatk.jar",
-                "project_prefix": "",
+                "project_prefix": [
+                    "09670_D"
+                ],
                 "opt_dup_pix_dist": "2500",
                 "emit_original_quals": true,
                 "num_cpu_threads_per_data_thread": 6

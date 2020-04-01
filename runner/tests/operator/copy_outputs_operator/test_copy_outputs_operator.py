@@ -53,9 +53,11 @@ class TestCopyOutputs(TestCase):
         for single_field in input_json:
             if single_field != 'facets':
                 if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_file_obj_valid):
+                    print("Error at %s", single_field)
                     return False
             else:
                 if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_pair_record_is_valid):
+                    print("Error at %s", single_field)
                     return False
         return True
 
