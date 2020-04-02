@@ -228,11 +228,11 @@ class JobObject(object):
             else:
                 self.job.status = JobStatus.COMPLETED
                 self._job_successful()
-                if self.job.callback:
-                    job = Job(run=self.job.callback,
-                              args=self.job.callback_args,
-                              status=JobStatus.CREATED,
-                              max_retry=1,
-                              children=[],
-                              job_group=self.job.job_group)
-                    job.save()
+            if self.job.callback:
+                job = Job(run=self.job.callback,
+                          args=self.job.callback_args,
+                          status=JobStatus.CREATED,
+                          max_retry=1,
+                          children=[],
+                          job_group=self.job.job_group)
+                job.save()
