@@ -56,6 +56,7 @@ class JiraEventHandler(EventHandler):
         for transition in response.json().get('transitions', []):
             if transition.get('name') == str(event):
                 self.client.update_status(job_group.jira_id, transition['id'])
+                self.logger.debug("Transition to state %s", transition.get('name'))
                 break
 
     def process_upload_attachment_event(self, event):
