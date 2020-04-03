@@ -41,7 +41,8 @@ def create_jobs_from_operator(operator, job_group_id=None):
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
         run_ids.append({"run_id": str(run.id), 'tags': run.tags})
-        create_run_task.delay(str(run.id), job[1], None)
+        output_directory = run.output_directory
+        create_run_task.delay(str(run.id), job[1], output_directory)
 
     try:
         p = Pipeline.objects.get(id=operator.get_pipeline_id())
@@ -49,8 +50,10 @@ def create_jobs_from_operator(operator, job_group_id=None):
     except Pipeline.DoesNotExist:
         pipeline_name = ""
 
-    event = OperatorRunEvent(str(operator_run.job_group.id), operator.request_id, pipeline_name, run_ids, str(operator_run.id))
-    send_notification.delay(event.to_dict())
+
+    if job_group_id:
+        event = OperatorRunEvent(job_group_id, operator.request_id, pipeline_name, run_ids, str(operator_run.id))
+        send_notification.delay(event.to_dict())
 
     for job in invalid_jobs:
         logger.error("Job invalid: %s" % str(job[0].errors))
