@@ -91,7 +91,7 @@ def build_preservation_query(data):
     value = "FROZEN"
     if "ffpe" in preservations_lower_case:
         value = "FFPE"
-    query = Q(filemetadata__metadata__preservation=value)
+    query = Q(filemetadata__metadata__preservation__iexact=value)
     return query
 
 
