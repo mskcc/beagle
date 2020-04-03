@@ -22,22 +22,25 @@ class JiraEventHandler(EventHandler):
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_etl_jobs_links_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+        self._add_comment_event(event)
 
     def process_etl_set_recipe_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.update_labels(job_group.jira_id, [str(event)])
 
     def process_operator_run_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+        self._add_comment_event(event)
 
     def process_run_completed(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+        self._add_comment_event(event)
+
+    def process_operator_request_event(self, event):
+        self._add_comment_event(event)
 
     def process_operator_error_event(self, event):
+        self._add_comment_event(event)
+
+    def _add_comment_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.comment(job_group.jira_id, str(event))
 
