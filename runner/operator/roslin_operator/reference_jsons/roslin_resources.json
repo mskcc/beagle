@@ -134,13 +134,13 @@
             "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.bed",
             "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.ilist"
         },
-        "HemePACT_v3": {
+        "HemePACT_v3_BAIT": {
             "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_genotypes.txt",
             "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_intervals.intervals",
             "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_baits.ilist",
             "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_targets.ilist"
         },
-        "HemePACT_v4": {
+        "HemePACT_v4_BAITS": {
             "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_genotypes.txt",
             "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_intervals.intervals",
             "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_baits.ilist",
