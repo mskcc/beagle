@@ -40,22 +40,29 @@ def create_jobs_from_operator(operator, job_group_id=None):
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
-        run_ids.append({"run_id": str(run.id), 'tags': run.tags})
+        run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory
         create_run_task.delay(str(run.id), job[1], output_directory)
 
     try:
         p = Pipeline.objects.get(id=operator.get_pipeline_id())
         pipeline_name = p.name
+        pipeline_link = p.pipeline_link
     except Pipeline.DoesNotExist:
         pipeline_name = ""
-
+        pipeline_link = ""
 
     if job_group_id:
-        event = OperatorRunEvent(job_group_id, operator.request_id, pipeline_name, run_ids, str(operator_run.id))
+        event = OperatorRunEvent(job_group_id,
+                                 operator.request_id,
+                                 pipeline_name,
+                                 pipeline_link,
+                                 run_ids,
+                                 str(operator_run.id))
         send_notification.delay(event.to_dict())
 
     for job in invalid_jobs:
+        # TODO: Report this to JIRA ticket also
         logger.error("Job invalid: %s" % str(job[0].errors))
 
     operator_run.status = RunStatus.RUNNING
@@ -216,15 +223,24 @@ def complete_job(run_id, outputs):
     job_group_id = str(job_group.id) if job_group else None
 
     pipeline_name = run.run_obj.app.name
+    pipeline_link = run.run_obj.app.pipeline_link
 
     total_runs = run.run_obj.operator_run.total_runs
     completed_runs = run.run_obj.operator_run.completed_runs
     failed_runs = run.run_obj.operator_run.failed_runs
     running_runs = run.run_obj.operator_run.running_runs
 
-    event = RunCompletedEvent(job_group_id, run.tags.get('requestId', 'UNKNOWN REQUEST'), str(run.run_id),
+    event = RunCompletedEvent(job_group_id,
+                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
+                              str(run.run_id),
                               pipeline_name,
-                              RunStatus(run.status).name, run.tags, running_runs, completed_runs, failed_runs,
+                              pipeline_link,
+                              run.run_obj.output_directory,
+                              RunStatus(run.status).name,
+                              run.tags,
+                              running_runs,
+                              completed_runs,
+                              failed_runs,
                               total_runs,
                               str(run.run_obj.operator_run.id)
                               )

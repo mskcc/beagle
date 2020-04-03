@@ -4,10 +4,11 @@ from notifier.event_handler.event import Event
 
 class OperatorRunEvent(Event):
 
-    def __init__(self, job_group, request_id, pipeline, valid_runs, operator_run_id):
+    def __init__(self, job_group, request_id, pipeline, pipeline_link, valid_runs, operator_run_id):
         self.job_group = job_group
         self.request_id = request_id
         self.pipeline = pipeline
+        self.pipeline_link = pipeline_link
         self.valid_runs = valid_runs
         self.operator_run_id = operator_run_id
 
@@ -24,6 +25,8 @@ class OperatorRunEvent(Event):
         
         Run Id: {run_id}
         Pipeline: {pipeline_name}
+        Pipeline Link: {pipeline_link}
+        Output Directory: {output_directory}
         {tags}
         Link: {link}
         
@@ -42,6 +45,8 @@ class OperatorRunEvent(Event):
                 tags += "%s: %s\n" % (k, str(v))
             comment += RUN_TEMPLATE.format(run_id=r['run_id'],
                                            pipeline_name=self.pipeline,
+                                           pipeline_link=self.pipeline_link,
+                                           output_directory=r['output_directory'],
                                            tags=tags,
                                            link=link)
         return comment

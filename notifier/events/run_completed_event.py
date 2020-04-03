@@ -4,10 +4,12 @@ from notifier.event_handler.event import Event
 
 class RunCompletedEvent(Event):
 
-    def __init__(self, job_group, request_id, run_id, pipeline, run_status, tags, running, completed, failed, total, operator_run_id):
+    def __init__(self, job_group, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags, running, completed, failed, total, operator_run_id):
         self.job_group = job_group
         self.request_id = request_id
         self.pipeline = pipeline
+        self.pipeline_link = pipeline_link
+        self.output_directory = output_directory
         self.run_id = run_id
         self.run_status = run_status
         self.tags = tags
@@ -30,6 +32,8 @@ class RunCompletedEvent(Event):
 
         Run Id: {run_id}
         Pipeline: {pipeline_name}
+        Pipeline Link: {pipeline_link}
+        Output Directory: {output_directory}
         {tags}
         Status: {status}
         Link: {link}
@@ -51,6 +55,7 @@ class RunCompletedEvent(Event):
             tags += "%s: %s\n" % (k, str(v))
         return RUN_TEMPLATE.format(run_id=self.run_id,
                                    pipeline_name=self.pipeline,
+                                   pipeline_link=self.pipeline_link,
                                    status=self.run_status,
                                    link=link,
                                    running=str(self.running),
