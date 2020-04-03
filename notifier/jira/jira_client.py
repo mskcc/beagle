@@ -105,11 +105,12 @@ class JiraClient(object):
 
     def add_attachment(self, ticket_id, file_name, content):
         attachment_url = self.JiraEndpoints.ATTACHMENT.value % ticket_id
-        files = {'file': (file_name, content)}
-        headers = {"X-Atlassian-Token": "nocheck"}
+        files = {'file': (file_name, content, 'text/plain')}
+        headers = {
+            "X-Atlassian-Token": "nocheck"
+        }
         response = self._post(attachment_url, {}, files=files, headers=headers)
         return response
-
 
     @staticmethod
     def parse_ticket_id(ticket_body):
