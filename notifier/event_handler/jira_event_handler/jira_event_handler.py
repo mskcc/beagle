@@ -45,7 +45,7 @@ class JiraEventHandler(EventHandler):
         job_group = JobGroup.objects.get(id=event.job_group)
         ticket = self.client.get_ticket(job_group.jira_id)
         if ticket.status_code != 200:
-            raise Exception('')
+            return
         labels = ticket.json()['fields'].get('labels', [])
         labels.append(str(event))
         self.client.update_labels(job_group.jira_id, labels)

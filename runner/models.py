@@ -50,6 +50,12 @@ class Pipeline(BaseModel):
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
 
+    @property
+    def pipeline_link(self):
+        return '{github}/blob/{version}/{entrypoint}'.format(github=self.github,
+                                                             version=self.version,
+                                                             entrypoint=self.entrypoint)
+
     def __str__(self):
         return u"{}".format(self.name)
 
