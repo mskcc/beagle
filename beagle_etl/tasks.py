@@ -79,6 +79,7 @@ class JobObject(object):
                 if self.job.retry_count == self.job.max_retry:
                     self.job.status = JobStatus.FAILED
                     self.job.message = {"details": "Error: %s" % traceback.format_tb(e.__traceback__)}
+                    self._job_failed()
                     traceback.print_tb(e.__traceback__)
 
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:

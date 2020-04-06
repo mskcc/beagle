@@ -18,6 +18,9 @@ class NoOpEventHandler(EventHandler):
     def process_etl_set_recipe_event(self, event):
         pass
 
+    def process_operator_request_event(self, event):
+        pass
+
     def process_operator_run_event(self, event):
         pass
 
