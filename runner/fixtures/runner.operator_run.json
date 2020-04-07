@@ -10,7 +10,8 @@
             "num_total_runs": 10,
             "num_completed_runs": 7,
             "num_failed_runs": 0,
-            "status": 0
+            "status": 0,
+            "job_group": null
         }
     },
     {
@@ -20,11 +21,27 @@
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
             "trigger": "57700fcb-f317-4431-ace8-0cfcc61a761b",
-            "operator": 1,
+            "operator": 2,
             "num_total_runs": 3,
             "num_completed_runs": 0,
             "num_failed_runs": 0,
-            "status": 0
+            "status": 0,
+            "job_group": null
+        }
+    },
+    {
+        "model": "runner.OperatorRun",
+        "pk": 3,
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "trigger": "67900fcb-f317-4431-ace8-0cfcc61a761b",
+            "operator": 3,
+            "num_total_runs": 3,
+            "num_completed_runs": 0,
+            "num_failed_runs": 0,
+            "status": 0,
+            "job_group": null
         }
     }
 ]

@@ -1,95 +1,148 @@
 import os
-import uuid
 import logging
 import requests
 from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, Port, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType
+from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from notifier.events import RunCompletedEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
+from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
 from runner.exceptions import RunCreateException
+from notifier.models import JobGroup
+from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 
 logger = logging.getLogger(__name__)
 
 
-def create_jobs_from_operator(operator):
-    jobs = operator.get_jobs()
+notifier = JiraEventHandler()
 
+
+def create_jobs_from_operator(operator, job_group_id=None):
+    jobs = operator.get_jobs()
+    jg = None
+    try:
+        jg = JobGroup.objects.get(id=job_group_id)
+        logger.info("JobGroup id: %s", job_group_id)
+    except JobGroup.DoesNotExist:
+        logger.info("JobGroup not set")
     valid_jobs, invalid_jobs = [], []
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
-    operator_run = OperatorRun.objects.create(operator=operator.model, num_total_runs=len(valid_jobs))
-
+    operator_run = OperatorRun.objects.create(operator=operator.model,
+                                              num_total_runs=len(valid_jobs),
+                                              job_group=jg)
+    run_ids = []
     for job in valid_jobs:
         logger.info("Creating Run object")
-        run = job[0].save(operator_run_id=operator_run.id)
+        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
-        create_run_task.delay(str(run.id), job[1], None)
+        run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
+        output_directory = run.output_directory
+        create_run_task.delay(str(run.id), job[1], output_directory)
+
+    try:
+        p = Pipeline.objects.get(id=operator.get_pipeline_id())
+        pipeline_name = p.name
+        pipeline_link = p.pipeline_link
+    except Pipeline.DoesNotExist:
+        pipeline_name = ""
+        pipeline_link = ""
+
+    if job_group_id:
+        event = OperatorRunEvent(job_group_id,
+                                 operator.request_id,
+                                 pipeline_name,
+                                 pipeline_link,
+                                 run_ids,
+                                 str(operator_run.id))
+        send_notification.delay(event.to_dict())
 
     for job in invalid_jobs:
+        # TODO: Report this to JIRA ticket also
         logger.error("Job invalid: %s" % str(job[0].errors))
 
+    operator_run.status = RunStatus.RUNNING
+    operator_run.save()
+
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id):
-    logger.info("Creating operator id %s for requestId: %s" % (operator_id, request_id))
+def create_jobs_from_request(request_id, operator_id, job_group_id=None):
+    logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-    create_jobs_from_operator(operator)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, request_id=request_id)
+    create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[]):
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
-    create_jobs_from_operator(operator)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, run_ids=run_ids)
+    create_jobs_from_operator(operator, job_group_id)
 
 
 @shared_task
 def process_triggers():
     operator_runs = OperatorRun.objects.prefetch_related(
-        'trigger', 'runs'
+        'trigger', 'runs', 'operator__from_triggers'
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:
+        created_chained_job = False
+        job_group = operator_run.job_group
+        job_group_id = str(job_group.id) if job_group else None
         try:
-            trigger_type = operator_run.trigger.run_type
+            for trigger in operator_run.operator.from_triggers.all():
+                trigger_type = trigger.run_type
 
-            if trigger_type == TriggerRunType.AGGREGATE:
-                condition = operator_run.trigger.aggregate_condition
-                if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
-                    if operator_run.percent_runs_succeeded == 100.0:
+                if trigger_type == TriggerRunType.AGGREGATE:
+                    condition = trigger.aggregate_condition
+                    if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
+                        if operator_run.percent_runs_succeeded == 100.0:
+                            created_chained_job = True
+                            create_jobs_from_chaining.delay(
+                                trigger.to_operator_id,
+                                trigger.from_operator_id,
+                                list(operator_run.runs.values_list('id', flat=True)),
+                                job_group_id=job_group_id
+                            )
+                            continue
+                    elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
+                        if operator_run.percent_runs_succeeded >= 90.0:
+                            created_chained_job = True
+                            create_jobs_from_chaining.delay(
+                                trigger.to_operator_id,
+                                trigger.from_operator_id,
+                                list(operator_run.runs.values_list('id', flat=True)),
+                                job_group_id=job_group_id
+                            )
+                            continue
+
+                    if operator_run.percent_runs_finished == 100.0:
+                        logger.info("Condition never met for operator run %s" % operator_run.id)
+
+                elif trigger_type == TriggerRunType.INDIVIDUAL:
+                    if operator_run.percent_runs_finished == 100.0:
                         operator_run.complete()
-                        create_jobs_from_chaining.delay(
-                            operator_run.trigger.to_operator_id,
-                            operator_run.trigger.from_operator_id,
-                            list(operator_run.runs.values_list('id', flat=True))
-                        )
-                        continue
-                elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
-                    if operator_run.percent_runs_succeeded >= 90.0:
-                        operator_run.complete()
-                        create_jobs_from_chaining.delay(
-                            operator_run.trigger.to_operator_id,
-                            operator_run.trigger.from_operator_id,
-                            list(operator_run.runs.values_list('id', flat=True))
-                        )
-                        continue
 
-                if operator_run.percent_runs_finished == 100.0:
-                    logger.info("Condition never met for operator run %s" % operator_run.id)
-                    operator_run.fail()
-
-            elif trigger_type == TriggerRunType.INDIVIDUAL:
-                if operator_run.percent_runs_finished == 100.0:
+            if operator_run.percent_runs_finished == 100.0:
+                if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
+                    if not created_chained_job and job_group_id:
+                        completed_event = SetPipelineCompletedEvent(job_group_id).to_dict()
+                        send_notification.delay(completed_event)
+                else:
+                    operator_run.fail()
+                    if job_group_id:
+                        ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
+                        send_notification.delay(ci_review_event)
 
         except Exception as e:
-            logger.info("Trigger %s Fail" % operator_run.id)
+            logger.info("Trigger %s Fail. Error %s" % (operator_run.id, str(e)))
             operator_run.fail()
 
 
@@ -166,13 +219,44 @@ def complete_job(run_id, outputs):
     run.complete(outputs)
     run.to_db()
 
-    trigger = run.run_obj.operator_run.trigger
+    job_group = run.job_group
+    job_group_id = str(job_group.id) if job_group else None
 
-    if trigger.run_type == TriggerRunType.INDIVIDUAL:
+    pipeline_name = run.run_obj.app.name
+    pipeline_link = run.run_obj.app.pipeline_link
+
+    total_runs = run.run_obj.operator_run.total_runs
+    completed_runs = run.run_obj.operator_run.completed_runs
+    failed_runs = run.run_obj.operator_run.failed_runs
+    running_runs = run.run_obj.operator_run.running_runs
+
+    event = RunCompletedEvent(job_group_id,
+                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
+                              str(run.run_id),
+                              pipeline_name,
+                              pipeline_link,
+                              run.run_obj.output_directory,
+                              RunStatus(run.status).name,
+                              run.tags,
+                              running_runs,
+                              completed_runs,
+                              failed_runs,
+                              total_runs,
+                              str(run.run_obj.operator_run.id)
+                              )
+    e = event.to_dict()
+    send_notification.delay(e)
+
+    if run.status == RunStatus.FAILED:
+        ci_review = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review)
+
+    for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
         create_jobs_from_chaining.delay(
             trigger.to_operator_id,
             trigger.from_operator_id,
-            [run_id]
+            [run_id],
+            job_group_id=job_group_id
         )
 
 
