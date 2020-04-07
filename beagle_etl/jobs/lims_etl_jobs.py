@@ -4,6 +4,9 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
+from notifier.models import JobGroup
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
+from notifier.tasks import event_handler, send_notification
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -29,8 +32,8 @@ def fetch_new_requests_lims(timestamp):
     logger.info("Fetching requestIds")
     children = set()
     requestIds = requests.get('%s/LimsRest/api/getDeliveries' % settings.LIMS_URL,
-                             params={"timestamp": timestamp},
-                             auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
+                              params={"timestamp": timestamp},
+                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if requestIds.status_code != 200:
         raise FailedToFetchFilesException("Failed to fetch new requests")
     if not requestIds.json():
@@ -47,17 +50,34 @@ def get_or_create_request_job(request_id):
     logger.info(
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
-
     if not job:
-        job = Job(run=TYPES['REQUEST'], args={'request_id': request_id},
-                  status=JobStatus.CREATED, max_retry=1, children=[],
+        # TODO: Refactor this to support multiple notification handlers
+        job_group = JobGroup()
+        eh = event_handler()
+        ticket_id = eh.start(request_id)
+        job_group.jira_id = ticket_id
+        job_group.save()
+        # ------------------------------------------------------
+        job = Job(run=TYPES['REQUEST'],
+                  args={'request_id': request_id, 'job_group': str(job_group.id)},
+                  status=JobStatus.CREATED,
+                  max_retry=1,
+                  children=[],
                   callback=TYPES['REQUEST_CALLBACK'],
-                  callback_args={'request_id': request_id})
+                  callback_args={'request_id': request_id, 'job_group': str(job_group.id)},
+                  job_group=job_group)
         job.save()
     return job
 
 
-def request_callback(request_id):
+def request_callback(request_id, job_group=None):
+    jg = None
+    try:
+        jg = JobGroup.objects.get(id=job_group)
+        logger.debug("[RequestCallback] JobGroup id: %s", job_group)
+    except JobGroup.DoesNotExist:
+        logger.debug("[RequestCallback] JobGroup not set")
+    job_group_id = str(jg.id) if jg else None
     queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                       queryset=FileMetadata.objects.select_related('file').order_by(
                                                           '-created_date'))).order_by('file_name').filter(
@@ -67,21 +87,37 @@ def request_callback(request_id):
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
-
-    operator = Operator.objects.get(
-        active=True,
-        recipes__contains=[recipes[0]]
-    )
-    if not operator:
-        logger.error("Submitting request_is: %s to  for requestId: %s to operator" % (request_id, operator))
+    try:
+        operator = Operator.objects.get(
+            recipes__contains=[recipes[0]]
+        )
+    except Operator.DoesNotExist:
+        logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
+        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        send_notification.delay(e)
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
+    if not operator.active:
+        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        send_notification.delay(e)
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
+        raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-    create_jobs_from_request.delay(request_id, operator.id)
+    create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
 
 
-def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
+def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
+    jg = None
+    try:
+        jg = JobGroup.objects.get(id=job_group)
+        logger.debug("JobGroup found")
+    except JobGroup.DoesNotExist:
+        logger.debug("No JobGroup Found")
     children = set()
     sampleIds = requests.get('%s/LimsRest/api/getRequestSamples' % settings.LIMS_URL,
                              params={"request": request_id},
@@ -98,46 +134,64 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True):
         "investigatorName": response_body['investigatorName'],
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
+        "otherContactEmails": response_body['otherContactEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
+    print("Set label")
+    set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
+    send_notification.delay(set_recipe_event)
     pooled_normals = response_body.get("pooledNormals", [])
-    if import_pooled_normals:
+    if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
-            job = get_or_create_pooled_normal_job(f)
+            job = get_or_create_pooled_normal_job(f, jg)
             children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
     if import_samples:
         for sample in response_body.get('samples', []):
             if not sample:
                 raise FailedToFetchFilesException("Sample Id None")
-            job = get_or_create_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
+            job = get_or_create_sample_job(sample['igoSampleId'],
+                                           sample['igocomplete'],
+                                           request_id,
+                                           request_metadata,
+                                           jg)
             children.add(str(job.id))
     return list(children)
 
 
-def get_or_create_pooled_normal_job(filepath):
+def get_or_create_pooled_normal_job(filepath, job_group=None):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
+
     job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
+
     if not job:
         job = Job(run=TYPES['POOLED_NORMAL'],
                   args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
+                  status=JobStatus.CREATED,
+                  max_retry=1,
+                  children=[],
+                  job_group=job_group)
         job.save()
     return job
 
 
-def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata):
+def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata, job_group=None):
     logger.info(
         "Searching for job: %s for sample_id: %s" % (TYPES['SAMPLE'], sample_id))
+
+    # job_group_id = str(job_group.id) if job_group else None
+
     job = Job.objects.filter(run=TYPES['SAMPLE'], args__sample_id=sample_id).first()
     if not job:
         job = Job(run=TYPES['SAMPLE'],
                   args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
                         'request_metadata': request_metadata},
-                  status=JobStatus.CREATED, max_retry=1, children=[])
+                  status=JobStatus.CREATED,
+                  max_retry=1, children=[],
+                  job_group=job_group)
         job.save()
     return job
 
@@ -156,9 +210,9 @@ def get_run_id_from_string(string):
     if len(parts) > 1:
         parts.pop(-1)
         output = '_'.join(parts)
-        return(output)
+        return output
     else:
-        return(string)
+        return string
 
 
 def create_pooled_normal(filepath, file_group_id):
@@ -205,6 +259,7 @@ def create_pooled_normal(filepath, file_group_id):
     except Exception as e:
         raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
+        # TODO: Don't import and set to COMPLETED
         raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchFilesException(
@@ -221,8 +276,7 @@ def create_pooled_normal(filepath, file_group_id):
         fm = FileMetadata(file=f, metadata=metadata)
         fm.save()
     except Exception as e:
-        logger.error("Failed to create file %s. Error %s" % (filepath, str(e)))
-        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (filepath, str(e)))
+        logger.info("File already exist %s." % (filepath))
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
@@ -405,6 +459,7 @@ def update_metadata(request_id):
         "investigatorName": response_body['investigatorName'],
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
+        "otherContactEmails": response_body['otherContactEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],

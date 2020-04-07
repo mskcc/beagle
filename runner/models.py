@@ -3,7 +3,7 @@ from enum import IntEnum
 from django.db import models
 from file_system.models import File, FileGroup
 from django.contrib.postgres.fields import JSONField
-from beagle_etl.models import Operator
+from beagle_etl.models import Operator, JobGroup
 from django.db.models import F
 
 
@@ -50,6 +50,12 @@ class Pipeline(BaseModel):
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
 
+    @property
+    def pipeline_link(self):
+        return '{github}/blob/{version}/{entrypoint}'.format(github=self.github,
+                                                             version=self.version,
+                                                             entrypoint=self.entrypoint)
+
     def __str__(self):
         return u"{}".format(self.name)
 
@@ -68,6 +74,7 @@ class OperatorTrigger(BaseModel):
         else:
             return u"{} -> {}".format(self.from_operator, self.to_operator)
 
+
 class OperatorRun(BaseModel):
     trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
@@ -75,6 +82,7 @@ class OperatorRun(BaseModel):
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     def complete(self):
         self.status = RunStatus.COMPLETED
@@ -94,11 +102,38 @@ class OperatorRun(BaseModel):
 
     @property
     def percent_runs_succeeded(self):
-        return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
+        if self.num_total_runs > 0:
+            return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
+        else:
+            return float(0)
 
     @property
     def percent_runs_finished(self):
-        return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+        if self.num_total_runs > 0:
+            return float(
+                "{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+        else:
+            return 0
+
+    @property
+    def total_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs
+
+    @property
+    def completed_runs(self):
+        self.refresh_from_db()
+        return self.num_completed_runs
+
+    @property
+    def failed_runs(self):
+        self.refresh_from_db()
+        return self.num_failed_runs
+
+    @property
+    def running_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs - (self.num_completed_runs + self.num_failed_runs)
 
 
 class Run(BaseModel):
@@ -108,8 +143,10 @@ class Run(BaseModel):
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
+    output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)

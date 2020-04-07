@@ -5,6 +5,8 @@ from runner.serializers import APIRunCreateSerializer
 from .construct_roslin_pair import construct_roslin_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
+from notifier.events import UploadAttachmentEvent
+from notifier.tasks import send_notification
 
 
 class RoslinOperator(Operator):
@@ -36,6 +38,8 @@ class RoslinOperator(Operator):
         roslin_inputs, error_samples = construct_roslin_jobs(samples)
         number_of_inputs = len(roslin_inputs)
 
+        sample_pairing = ""
+
         for i, job in enumerate(roslin_inputs):
             tumor_sample_name = job['pair'][0]['ID']
             normal_sample_name = job['pair'][1]['ID']
@@ -43,6 +47,9 @@ class RoslinOperator(Operator):
             assay = job['assay']
             pi = job['pi']
             pi_email = job['pi_email']
+
+            sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
+
             roslin_jobs.append((APIRunCreateSerializer(
                 data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name,
                       'tags': {'requestId': self.request_id,
@@ -50,4 +57,8 @@ class RoslinOperator(Operator):
                           'sampleNameNormal': normal_sample_name,
                           'labHeadName': pi,
                           'labHeadEmail': pi_email}}), job))
+
+        operator_run_summary = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        send_notification.delay(operator_run_summary)
+
         return roslin_jobs

@@ -18,5 +18,25 @@
             "class_name": "AccessOperator",
             "slug": "access"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 3,
+        "fields": {
+            "active": true,
+            "recipes": "[\"400FAKESOMETHING\"]",
+            "class_name": "AccessOperator",
+            "slug": "access"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 4,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "CopyOutputsOperator",
+            "slug": "copyOutputs"
+        }
     }
 ]

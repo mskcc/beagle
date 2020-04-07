@@ -1,7 +1,8 @@
 import datetime
 from django.conf import settings
 from rest_framework import serializers
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors
+from notifier.models import JobGroup
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -132,26 +133,47 @@ class APIRunCreateSerializer(serializers.Serializer):
     tags = serializers.JSONField(allow_null=True, required=False)
     output_directory = serializers.CharField(max_length=1000, required=False, default=None)
     output_metadata = serializers.JSONField(required=False, default=dict)
-    operator_run_id = serializers.IntegerField(required=False)
+    operator_run_id = serializers.UUIDField(required=False)
+    job_group_id = serializers.UUIDField(required=False)
 
     def create(self, validated_data):
         try:
             pipeline = Pipeline.objects.get(id=validated_data.get('app'))
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
+        tags = validated_data.get('tags')
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        tags = validated_data.get('tags')
+        output_directory = pipeline.output_directory
         if validated_data.get('name') is not None:
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name, app=pipeline, status=RunStatus.CREATING, job_statuses=dict(), output_metadata=validated_data.get('output_metadata', {}), tags=tags)
+        if validated_data.get('output_directory') is not None:
+            output_directory = validated_data.get('output_directory')
+        run = Run(name=name,
+                app=pipeline,
+                status=RunStatus.CREATING,
+                job_statuses=dict(),
+                output_metadata=validated_data.get('output_metadata', {}),
+                tags=tags,
+                output_directory = output_directory)
+        try:
+            run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
+        except OperatorRun.DoesNotExist:
+            pass
+        try:
+            run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
+        except JobGroup.DoesNotExist:
+            print("[JobGroup] %s" % run.job_group)
         run.save()
         return run
 
 
 class RequestIdOperatorSerializer(serializers.Serializer):
     request_ids = serializers.ListField(
-        child=serializers.CharField(max_length=30)
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    run_ids = serializers.ListField(
+        child=serializers.UUIDField(), allow_empty=True
     )
     pipeline_name = serializers.CharField(max_length=100)
 
