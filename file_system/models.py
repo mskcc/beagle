@@ -29,6 +29,10 @@ class Storage(BaseModel):
         return "ID: %s NAME: %s TYPE: %s" % (self.id, self.name, StorageType(self.type))
 
 
+    def __str__(self):
+        return u"{}".format(self.name)
+
+
 class FileType(models.Model):
     name = models.CharField(max_length=20)
 
@@ -39,6 +43,9 @@ class FileType(models.Model):
 class FileExtension(models.Model):
     extension = models.CharField(max_length=30, unique=True)
     file_type = models.ForeignKey(FileType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return u"{}".format(self.extension)
 
 
 class FileGroup(BaseModel):
