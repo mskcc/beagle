@@ -63,5 +63,6 @@ class RunCompletedEvent(Event):
                                    failed=str(self.failed),
                                    total=str(self.total),
                                    tags=tags,
-                                   operator_run=self.operator_run_id
+                                   operator_run=self.operator_run_id,
+                                   output_directory=self.output_directory
                                    )
