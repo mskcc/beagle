@@ -139,7 +139,6 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
-    print("Set label")
     set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
     send_notification.delay(set_recipe_event)
     pooled_normals = response_body.get("pooledNormals", [])
