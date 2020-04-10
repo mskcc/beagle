@@ -33,5 +33,5 @@ def get_samples_from_patient_id(patient_id):
         samples.append(build_sample(igo_id_group[igo_id]))
     samples, bad_samples = remove_with_caveats(samples)
     if len(bad_samples) > 0:
-        logger.warning('Some samples for patient query %s have invalid %i values' % (patient_id, len(bad_samples)))
+        logger.warning('BadPatientQuery: %i samples for patient query %s have invalid values' % (len(bad_samples), patient_id))
     return samples

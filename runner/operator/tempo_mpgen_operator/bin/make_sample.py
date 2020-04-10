@@ -11,6 +11,10 @@ def remove_with_caveats(samples):
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
         patient_id = sample['patient_id']
+        if sample_name == "emptySampleName":
+            add = False
+        if sample_name == "nullSampleName":
+            add = False
         if add:
             data.append(sample)
         else:
@@ -106,6 +110,8 @@ def build_sample(data):
         barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['patientId']
         pu = flowcell_id
+        if not pu:
+            pu = "FAKEFLOWCELL"
         run_date = meta['runDate']
         r_orientation = meta['R']
         pi = meta['labHeadName']
@@ -121,7 +127,9 @@ def build_sample(data):
         data_analyst_email = meta['dataAnalystEmail']
         if barcode_index:
             pu = '_'.join([flowcell_id,  barcode_index])
-        rg_id = '_'.join([cmo_sample_name, pu])
+        rg_id = cmo_patient_id + "_RGID_1"
+        if cmo_sample_name and pu:
+            rg_id = '_'.join([cmo_sample_name, pu])
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
