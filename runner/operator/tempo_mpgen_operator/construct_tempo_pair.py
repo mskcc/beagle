@@ -50,7 +50,7 @@ def format_sample(data):
 
 
 def construct_tempo_jobs(samples):
-    error_data = remove_with_caveats(samples)
+    samples, error_data = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
     number_of_tumors = len(pairs['tumor'])
     tempo_jobs = list()
