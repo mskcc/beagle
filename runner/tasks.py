@@ -292,3 +292,45 @@ def check_jobs_status():
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
             logger.error("Job %s not submitted" % str(run.id))
+
+
+def run_routine_operator_job(operator, job_group_id=None):
+    job = operator.get_jobs()
+    jg = None
+    try:
+        jg = JobGroup.objects.get(id=job_group_id)
+        logger.info("JobGroup id: %s", job_group_id)
+    except JobGroup.DoesNotExist:
+        logger.info("JobGroup not set")
+
+    operator_run = OperatorRun.objects.create(operator=operator.model,
+                                              num_total_runs=1,
+                                              job_group=jg)
+    api_serializer = job[0]
+    inputs_json = job[1]
+    logger.info("Creating Run object")
+    run = api_serializer.save(operator_run_id=operator_run.id, job_group_id=job_group_id)
+    logger.info("Run object created with id: %s" % str(run.id))
+    run_id = {"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory}
+    output_directory = run.output_directory
+    create_run_task.delay(str(run.id), inputs_json, output_directory)
+
+    try:
+        p = Pipeline.objects.get(id=operator.get_pipeline_id())
+        pipeline_name = p.name
+        pipeline_link = p.pipeline_link
+    except Pipeline.DoesNotExist:
+        pipeline_name = ""
+        pipeline_link = ""
+
+    if job_group_id:
+        event = OperatorRunEvent(job_group_id,
+                                 operator.request_id,
+                                 pipeline_name,
+                                 pipeline_link,
+                                 [run_id],
+                                 str(operator_run.id))
+        send_notification.delay(event.to_dict())
+
+    operator_run.status = RunStatus.RUNNING
+    operator_run.save()
