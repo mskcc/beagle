@@ -3,14 +3,17 @@ from django.urls import path, include
 from rest_framework import routers
 from runner.views.run_view import RunViewSet, StartRunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
+from runner.views.operator_run_view import OperatorRunViews
 from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet
 from runner.views.pipeline_view import PipelineViewSet, PipelineResolveViewSet, PipelineDownloadViewSet
+
 
 router = routers.DefaultRouter()
 router.register('pipelines', PipelineViewSet)
 router.register('runs', RunViewSet)
 router.register('port', PortViewSet)
 router.register('api', RunApiViewSet)
+router.register('operator-run', OperatorRunViews)
 router.register('operator-errors', OperatorErrorViewSet)
 
 urlpatterns = [

@@ -16,11 +16,13 @@ import beagle_etl.celery
 if beagle_etl.celery.app.conf['task_always_eager'] == False:
     beagle_etl.celery.app.conf['task_always_eager'] = True
 
+
 class MockRequest(object):
     """
     empty object to simulate a 'request' object
     """
     pass
+
 
 class TestRunAPIView(TestCase):
     fixtures = [

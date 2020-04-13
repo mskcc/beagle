@@ -16,4 +16,4 @@ class SetLabelEvent(Event):
         return "process_set_label_event"
 
     def __str__(self):
-        return "label"
+        return self.label
