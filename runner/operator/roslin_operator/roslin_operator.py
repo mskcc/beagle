@@ -7,6 +7,7 @@ from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent
 from notifier.tasks import send_notification
+from runner.run.processors.file_processor import FileProcessor
 
 
 class RoslinOperator(Operator):
@@ -39,10 +40,37 @@ class RoslinOperator(Operator):
         number_of_inputs = len(roslin_inputs)
 
         sample_pairing = ""
+        sample_mapping = ""
 
         for i, job in enumerate(roslin_inputs):
             tumor_sample_name = job['pair'][0]['ID']
+            for p in job['pair'][0]['R1']:
+                sample_mapping += "\t".join(
+                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][0]['R2']:
+                sample_mapping += "\t".join(
+                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][0]['zR1']:
+                sample_mapping += "\t".join(
+                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][0]['zR2']:
+                sample_mapping += "\t".join(
+                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+
             normal_sample_name = job['pair'][1]['ID']
+            for p in job['pair'][1]['R1']:
+                sample_mapping += "\t".join(
+                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][1]['R2']:
+                sample_mapping += "\t".join(
+                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][1]['zR1']:
+                sample_mapping += "\t".join(
+                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+            for p in job['pair'][1]['zR2']:
+                sample_mapping += "\t".join(
+                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+
             name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job['assay']
             pi = job['pi']
@@ -60,5 +88,8 @@ class RoslinOperator(Operator):
 
         operator_run_summary = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)
+
+        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
+        send_notification.delay(mapping_file_event)
 
         return roslin_jobs
