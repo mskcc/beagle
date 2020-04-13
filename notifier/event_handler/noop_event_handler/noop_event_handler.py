@@ -6,6 +6,10 @@ class NoOpEventHandler(EventHandler):
     def __init__(self):
         super().__init__()
 
+    @property
+    def db_name(self):
+        return None
+
     def start(self, request_id):
         pass
 
