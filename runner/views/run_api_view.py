@@ -92,6 +92,8 @@ class OperatorViewSet(GenericAPIView):
         pipeline_name = request.data['pipeline_name']
         pipeline = get_object_or_404(Pipeline, name=pipeline_name)
 
+
+
         if request_ids:
             for request_id in request_ids:
                 logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
