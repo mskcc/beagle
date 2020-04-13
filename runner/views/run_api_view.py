@@ -1,9 +1,5 @@
-import json
 import uuid
-import base64
-import requests
 import logging
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
 from django.db.models import Prefetch
@@ -11,11 +7,10 @@ from rest_framework import status
 from rest_framework import mixins
 from runner.tasks import create_run_task, create_jobs_from_operator
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
-from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, RequestIdOperatorSerializer, OperatorErrorSerializer
-from runner.operator.tempo_operator.tempo_operator import TempoOperator
+from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
+    RequestIdOperatorSerializer, OperatorErrorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
-from runner.pipeline.pipeline_resolver import CWLResolver
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request
@@ -32,10 +27,10 @@ class RunApiViewSet(mixins.ListModelMixin,
     serializer_class = RunSerializerFull
 
     def list(self, request, *args, **kwargs):
-
-        queryset = Run.objects.prefetch_related(
-            Prefetch('port_set', queryset=Port.objects.select_related('run'))).order_by('-created_date').all()
         queryset = time_filter(Run, request.query_params)
+        job_group = request.query_params.getlist('job_group')
+        if job_group:
+            queryset = queryset.filter(job_group__in=job_group).all()
         status_param = request.query_params.get('status')
         if status_param:
             if status_param not in [s.name for s in RunStatus]:
@@ -107,13 +102,6 @@ class OperatorViewSet(GenericAPIView):
             operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
             create_jobs_from_operator(operator)
             body = {"details": "Operator Job submitted to pipeline %s with runs %s" % (pipeline_name, str(run_ids))}
-        # tempo_operator = TempoOperator(request_id)
-        # jobs = tempo_operator.get_jobs()
-        # result = []
-        # for job in jobs:
-        #     if job.is_valid():
-        #         run = job.save()
-        #         result.append(run)
         return Response(body, status=status.HTTP_200_OK)
 
 

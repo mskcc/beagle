@@ -15,8 +15,9 @@ from beagle_etl.jobs.lims_etl_jobs import get_run_id_from_string
 from file_system.models import File, FileMetadata
 
 # use local execution for Celery tasks
-if beagle_etl.celery.app.conf['task_always_eager'] == False:
-    beagle_etl.celery.app.conf['task_always_eager'] = True
+# if beagle_etl.celery.app.conf['task_always_eager'] == False:
+#     beagle_etl.celery.app.conf['task_always_eager'] = True
+
 
 class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
@@ -43,7 +44,7 @@ class TestFetchSamples(TestCase):
         self.assertTrue(len(jobs) == 0)
 
         request_id = "10075_D"
-        child_jobs = fetch_samples(request_id = request_id)
+        child_jobs = fetch_samples(request_id=request_id)
 
         # check that jobs were created successfully
         jobs = Job.objects.all()
