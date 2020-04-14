@@ -43,25 +43,15 @@ class ETLImportEvent(Event):
         PI e-email: {pi_email}
         Project Manager Name: {project_manager_name}
         
-        {cnt_samples_completed} samples imported:
-        {sample_list_completed}
+        {cnt_samples_completed} samples successfully imported
         
-        {cnt_samples_fail} samples failed:
-        {sample_list_fail}
+        {cnt_samples_fail} samples failed
         """
-        sample_list_completed = ""
-        sample_list_fail = ""
-        for s in self.sample_list_completed:
-            sample_list_completed += "%s\n" % s
-        for s in self.sample_list_fail:
-            sample_list_fail += "%s\n" % s
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,
                                                   cnt_samples=len(self.sample_list_completed) + len(self.sample_list_fail),
                                                   cnt_samples_completed=len(self.sample_list_completed),
-                                                  sample_list_completed=sample_list_completed,
                                                   cnt_samples_fail=len(self.sample_list_fail),
-                                                  sample_list_fail=sample_list_fail,
                                                   recipe=self.recipe,
                                                   data_analyst_name=self.data_analyst_name,
                                                   data_analyst_email=self.data_analyst_email,

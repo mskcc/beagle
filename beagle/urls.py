@@ -35,6 +35,7 @@ urlpatterns = [
     path('v0/fs/', include('file_system.urls')),
     path('v0/run/', include('runner.urls')),
     path('v0/etl/', include('beagle_etl.urls')),
+    path('v0/notifier/', include('notifier.urls')),
     path('admin/', admin.site.urls),
     path('api-token-auth/', BeagleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api-token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),

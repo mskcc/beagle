@@ -1,3 +1,4 @@
+import os
 import datetime
 from django.conf import settings
 from rest_framework import serializers
@@ -64,6 +65,10 @@ class UpdateRunSerializer(serializers.Serializer):
 class RunSerializerPartial(serializers.ModelSerializer):
     request_id = serializers.SerializerMethodField()
     status_url = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return RunStatus(obj.status).name
 
     def get_request_id(self, obj):
         return obj.tags.get('requestId')
@@ -144,18 +149,19 @@ class APIRunCreateSerializer(serializers.Serializer):
         tags = validated_data.get('tags')
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        output_directory = pipeline.output_directory
-        if validated_data.get('name') is not None:
+        output_directory = validated_data.get('output_directory')
+        if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        if validated_data.get('output_directory') is not None:
-            output_directory = validated_data.get('output_directory')
+        if validated_data.get('output_directory'):
+            output_directory = validated_data.get('output_directory',
+                                                  os.path.join(pipeline.output_directory, str(self.id)))
         run = Run(name=name,
-                app=pipeline,
-                status=RunStatus.CREATING,
-                job_statuses=dict(),
-                output_metadata=validated_data.get('output_metadata', {}),
-                tags=tags,
-                output_directory = output_directory)
+                  app=pipeline,
+                  status=RunStatus.CREATING,
+                  job_statuses=dict(),
+                  output_metadata=validated_data.get('output_metadata', {}),
+                  tags=tags,
+                  output_directory=output_directory)
         try:
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:
@@ -183,3 +189,18 @@ class OperatorErrorSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperatorErrors
         fields = ('operator_name', 'request_id', 'error')
+
+
+class OperatorRunSerializer(serializers.ModelSerializer):
+    operator_class = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    def get_operator_class(self, obj):
+        return obj.operator.class_name
+
+    def get_status(self, obj):
+        return RunStatus(obj.status).name
+
+    class Meta:
+        model = OperatorRun
+        fields = ('id', 'operator', 'operator_class', 'status', 'num_total_runs', 'num_completed_runs', 'num_failed_runs', 'job_group')

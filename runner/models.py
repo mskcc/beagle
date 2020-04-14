@@ -76,7 +76,6 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
@@ -191,6 +190,9 @@ class ExecutionEvents(BaseModel):
 
 
 class FileJobTracker(models.Model):
+    """
+    TODO: FileJobTracker Deprecated. Remove model in the future
+    """
     job = models.ForeignKey(Run, on_delete=models.CASCADE)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
 

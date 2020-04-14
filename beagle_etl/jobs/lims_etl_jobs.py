@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
-from notifier.tasks import event_handler, send_notification
+from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -14,6 +14,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
+from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 
@@ -51,13 +52,8 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
-        # TODO: Refactor this to support multiple notification handlers
         job_group = JobGroup()
-        eh = event_handler()
-        ticket_id = eh.start(request_id)
-        job_group.jira_id = ticket_id
-        job_group.save()
-        # ------------------------------------------------------
+        notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
@@ -139,7 +135,6 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
-    print("Set label")
     set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
     send_notification.delay(set_recipe_event)
     pooled_normals = response_body.get("pooledNormals", [])
@@ -405,6 +400,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         sample_class = metadata.pop('cmoSampleClass', None)
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
+        metadata['cmoSampleName'] = format_sample_name(sample_name)
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id
