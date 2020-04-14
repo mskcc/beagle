@@ -15,6 +15,8 @@ def remove_with_caveats(samples):
             add = False
         if sample_name == "nullSampleName":
             add = False
+        if "noNormalFound" in sample_name:
+            add = False
         if add:
             data.append(sample)
         else:
@@ -36,7 +38,7 @@ def format_sample_name(sample_name):
             logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return sample_name
     except TypeError as error:
-        logger.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
+        logger.error("sampleNameError: sampleName is Nonetype; returning 'nullSampleName'.")
         return "nullSampleName"
 
 
