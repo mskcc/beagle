@@ -69,12 +69,12 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    empty_normal = make_empty_normal_sample("noNormalFound_%s" % tumor['sample_id'])
+                    empty_normal = make_empty_normal_sample("noNormalFound")
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(empty_normal)
                     print("No normal found for %s, patient %s - adding empty normal." % (tumor['sample_id'], patient_id))
         else:
-            empty_normal = make_empty_normal_sample("noNormalFoundDueToMissingPatientID_%s" % tumor['sample_id'])
+            empty_normal = make_empty_normal_sample("noNormalFoundDueToMissingPatientID")
             pairs['tumor'].append(tumor)
             pairs['normal'].append(empty_normal)
             print("NoPatientIdError: No patient_id found for %s - adding empty normal." % tumor['sample_id'])
