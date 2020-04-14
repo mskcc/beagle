@@ -10,6 +10,8 @@ from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.models import File, FileMetadata
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+# TODO: Consider moving `format_sample_name` to some other place
+from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 
 logger = logging.getLogger(__name__)
@@ -174,16 +176,17 @@ class JobObject(object):
         for sample in samples:
             metadata = sample.filemetadata_set.first().metadata
             print(metadata)
-            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(metadata['sampleId'],
-                                                                        metadata['patientId'],
-                                                                        metadata['investigatorSampleId'],
-                                                                        metadata['sampleClass'],
-                                                                        metadata['recipe'],
-                                                                        metadata['oncoTreeCode'],
-                                                                        metadata['specimenType'],
-                                                                        metadata['preservation'],
-                                                                        metadata['sex'],
-                                                                        metadata['tissueLocation'])
+            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'])),
+                metadata['patientId'],
+                metadata['investigatorSampleId'],
+                metadata['sampleClass'],
+                metadata['recipe'],
+                metadata['oncoTreeCode'],
+                metadata['specimenType'],
+                metadata['preservation'],
+                metadata['sex'],
+                metadata['tissueLocation'])
         e = UploadAttachmentEvent(str(self.job.job_group.id),
                                   '%s_sample_data_clinical.txt' % self.job.args['request_id'],
                                   result).to_dict()

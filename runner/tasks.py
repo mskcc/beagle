@@ -88,7 +88,7 @@ def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_
 @shared_task
 def process_triggers():
     operator_runs = OperatorRun.objects.prefetch_related(
-        'trigger', 'runs', 'operator__from_triggers'
+        'runs', 'operator__from_triggers'
     ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
 
     for operator_run in operator_runs:

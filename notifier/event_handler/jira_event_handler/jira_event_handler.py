@@ -10,6 +10,10 @@ class JiraEventHandler(EventHandler):
         super().__init__()
         self.client = JiraClient(settings.JIRA_URL, settings.JIRA_USERNAME, settings.JIRA_PASSWORD, settings.JIRA_PROJECT)
 
+    @property
+    def db_name(self):
+        return 'jira_id'
+
     def start(self, request_id):
         jira_id = JiraClient.parse_ticket_id(
             self.client.create_ticket("[TEMPLATE] {request_id}".format(request_id=request_id), None, "").json())
