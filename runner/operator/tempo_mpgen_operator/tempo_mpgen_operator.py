@@ -2,12 +2,14 @@ import uuid
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from notifier.events import TempoMPGenEvent
+from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
+from .bin.create_tempo_files import create_mapping, create_pairing, create_tempo_tracker_example
+from notifier.events import UploadAttachmentEvent
 import json
 
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
@@ -16,9 +18,8 @@ notifier = JiraEventHandler()
 
 class TempoMPGenOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
-        tempo_jobs = list()
-        operator_run_id = "TMPPB_Run_Fake"
+        request_id = "09687_N"
+        files = self.files.filter(filemetadata__metadata__requestId=request_id, filemetadata__metadata__igocomplete=True).all()
 
         data = list()
         for file in files:
@@ -57,18 +58,29 @@ class TempoMPGenOperator(Operator):
         Error samples: {error_sample_names}
         """
 
-        msg = msg.format(request_id=self.request_id,
+        msg = msg.format(request_id=request_id,
                 num_samples=str(len(samples)),
                 number_valid_inputs=str(number_of_inputs),
                 number_of_errors=str(len(error_samples)),
                 error_sample_names=', '.join(s))
 
-        event = TempoMPGenEvent(self.job_group_id, msg)
+        event = OperatorRequestEvent(self.job_group_id, msg)
 
         e = event.to_dict()
         send_notification.delay(e)
 
-        f = open("/home/bolipatc/ops/test_tempo/%s.json" % (self.request_id), 'w')
-        json.dump(tempo_inputs, f)
+#        f = open("/home/bolipatc/ops/test_tempo/%s.json" % (request_id), 'w')
+#        sample_mapping = json.dump(tempo_inputs, f)
+        sample_mapping = create_mapping(tempo_inputs)
+        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
+        send_notification.delay(mapping_file_event)
 
-        return tempo_jobs
+        sample_pairing = create_pairing(tempo_inputs)
+        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        send_notification.delay(pairing_file_event)
+
+        sample_tracker = create_tempo_tracker_example(tempo_inputs)
+        tracker_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', sample_tracker).to_dict()
+        send_notification.delay(tracker_file_event)
+
+        return [], []
