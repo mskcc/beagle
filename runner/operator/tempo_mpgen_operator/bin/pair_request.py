@@ -42,7 +42,6 @@ def get_viable_normal(normals, patient_id, bait_set):
 def compile_pairs(samples):
     tumors = get_by_tumor_type(samples, "Tumor")
     normals = get_by_tumor_type(samples, "Normal")
-    empty_normal = make_empty_normal_sample()
 
     if len(tumors) == 0:
         print("No tumor samples found; pairing cannot be performed.")
@@ -70,10 +69,12 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
+                    empty_normal = make_empty_normal_sample("noNormalFound_%s" % tumor['sample_id'])
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(empty_normal)
                     print("No normal found for %s, patient %s - adding empty normal." % (tumor['sample_id'], patient_id))
         else:
+            empty_normal = make_empty_normal_sample("noNormalFoundDueToMissingPatientID_%s" % tumor['sample_id'])
             pairs['tumor'].append(tumor)
             pairs['normal'].append(empty_normal)
             print("NoPatientIdError: No patient_id found for %s - adding empty normal." % tumor['sample_id'])
@@ -90,7 +91,7 @@ def create_pairing_info(pairs):
         output_string += "\t".join([normal_name,tumor_name]) +"\n"
     return output_string
 
-def make_empty_normal_sample():
+def make_empty_normal_sample(sample_name="noNormalFound"):
     result = dict()
     result['sequencing_center'] = ""
     result['platform'] = ""
@@ -98,11 +99,11 @@ def make_empty_normal_sample():
     result['library'] = ""
     result['tumor_type'] = ""
     result['read_group_id'] = ""
-    result['sample_name'] = "noNormalFound"
+    result['sample_name'] = sample_name
     result['species'] = ""
     result['patient_id'] = ""
     result['bait_set'] = "" 
-    result['sample_id'] = "noNormalFound" 
+    result['sample_id'] = sample_name
     result['run_date'] = ""
     result['specimen_type'] = ""
     result['R1'] = list()
