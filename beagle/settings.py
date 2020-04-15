@@ -110,6 +110,8 @@ AUTH_LDAP_USER_DN_TEMPLATE = '%(user)s@mskcc.org'
 
 AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
+AUTH_LDAP_NO_NEW_USERS = True
+
 # AUTH_LDAP_GROUP_TYPE = MemberDNGroupType()
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearchUnion(
 #     LDAPSearch('DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"),
@@ -308,18 +310,19 @@ LOGGING = {
     },
 }
 
-NOTIFIERS = ('JIRA', 'NONE')
+SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
 
-NOTIFIER = os.environ.get("BEAGLE_NOTIFIER", "NONE")
-if NOTIFIER not in NOTIFIERS:
-    raise Exception("Invalid Notifier type")
+NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "NONE").split(',')
+for n in NOTIFIERS:
+    if n not in SUPPORTED_NOTIFIERS:
+        raise Exception("Invalid Notifier type")
 
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
 
-BEAGLE_URL = 'http://silo:5001'
+BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')

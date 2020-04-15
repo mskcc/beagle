@@ -5,6 +5,8 @@ import requests
 from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
+from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -12,6 +14,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
+from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ def get_or_create_request_job(request_id):
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
         job_group = JobGroup()
-        job_group.save()
+        notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
@@ -86,9 +89,17 @@ def request_callback(request_id, job_group=None):
         )
     except Operator.DoesNotExist:
         logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
+        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        send_notification.delay(e)
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
     if not operator.active:
         logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        send_notification.delay(e)
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id, job_group_id)
@@ -119,10 +130,13 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "investigatorName": response_body['investigatorName'],
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
+        "otherContactEmails": response_body['otherContactEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
     }
+    set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
+    send_notification.delay(set_recipe_event)
     pooled_normals = response_body.get("pooledNormals", [])
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
@@ -240,6 +254,7 @@ def create_pooled_normal(filepath, file_group_id):
     except Exception as e:
         raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
+        # TODO: Don't import and set to COMPLETED
         raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchFilesException(
@@ -385,6 +400,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         sample_class = metadata.pop('cmoSampleClass', None)
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
+        metadata['cmoSampleName'] = format_sample_name(sample_name)
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id
@@ -439,6 +455,7 @@ def update_metadata(request_id):
         "investigatorName": response_body['investigatorName'],
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
+        "otherContactEmails": response_body['otherContactEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],

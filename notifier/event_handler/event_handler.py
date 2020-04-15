@@ -21,19 +21,3 @@ class EventHandler(object):
         except Exception as ex:
             self.logger.info("Failed to process event: %s with error %s", str(e), str(ex))
         self.logger.debug("Event processed")
-
-    def runs_created(self, request_id, valid_runs, invalid_runs):
-        """
-        :return: Update information about runs submitted to the pipeline
-        """
-        pass
-
-    def run_finished(self, run):
-        """
-        :return: Update each completed run
-        """
-
-    def request_finished(self, request, status):
-        """
-        :return: Request COMPLETED or FAILED (for JIRA this should be change of status and add number of successful/failed runs)
-        """

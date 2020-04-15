@@ -8,12 +8,13 @@ from beagle_etl.models import Operator as OperatorModel
 class Operator(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, model, request_id=None, run_ids=[]):
+    def __init__(self, model, job_group_id=None, request_id=None, run_ids=[]):
         if not isinstance(model, OperatorModel):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
 
         self.model = model
         self.request_id = request_id
+        self.job_group_id = job_group_id
         self.run_ids = run_ids
         self.files = File.objects.prefetch_related(
             Prefetch('filemetadata_set', queryset=

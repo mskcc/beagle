@@ -26,8 +26,20 @@ class JobViewSet(mixins.CreateModelMixin,
         else:
             return CreateJobSerializier
 
+    def create(self, request, *args, **kwargs):
+        job_data = request.data
+        serializer = CreateJobSerializier(data=job_data)
+        if serializer.is_valid():
+            job = serializer.save()
+            response = JobSerializer(job)
+            return Response(response.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def list(self, request, *args, **kwargs):
         queryset = time_filter(Job, request.query_params)
+        job_group = request.query_params.getlist('job_group')
+        if job_group:
+            queryset = queryset.filter(job_group__in=job_group).all()
         job_type = request.query_params.get('type')
         if job_type:
             if not TYPES.get(job_type):
