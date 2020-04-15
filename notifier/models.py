@@ -11,3 +11,6 @@ class BaseModel(models.Model):
 class JobGroup(BaseModel):
     jira_id = models.CharField(max_length=20, blank=True, null=True)
 
+    @property
+    def timestamp(self):
+        return self.created_date.strftime('%Y%m%d_%H%M')

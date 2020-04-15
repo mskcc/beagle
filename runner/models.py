@@ -50,6 +50,12 @@ class Pipeline(BaseModel):
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
 
+    @property
+    def pipeline_link(self):
+        return '{github}/blob/{version}/{entrypoint}'.format(github=self.github,
+                                                             version=self.version,
+                                                             entrypoint=self.entrypoint)
+
     def __str__(self):
         return u"{}".format(self.name)
 
@@ -70,7 +76,6 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    trigger = models.ForeignKey(OperatorTrigger, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
@@ -104,9 +109,30 @@ class OperatorRun(BaseModel):
     @property
     def percent_runs_finished(self):
         if self.num_total_runs > 0:
-            return float("{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+            return float(
+                "{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
         else:
             return 0
+
+    @property
+    def total_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs
+
+    @property
+    def completed_runs(self):
+        self.refresh_from_db()
+        return self.num_completed_runs
+
+    @property
+    def failed_runs(self):
+        self.refresh_from_db()
+        return self.num_failed_runs
+
+    @property
+    def running_runs(self):
+        self.refresh_from_db()
+        return self.num_total_runs - (self.num_completed_runs + self.num_failed_runs)
 
 
 class Run(BaseModel):
@@ -116,6 +142,7 @@ class Run(BaseModel):
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
+    output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
@@ -163,6 +190,9 @@ class ExecutionEvents(BaseModel):
 
 
 class FileJobTracker(models.Model):
+    """
+    TODO: FileJobTracker Deprecated. Remove model in the future
+    """
     job = models.ForeignKey(Run, on_delete=models.CASCADE)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
 
