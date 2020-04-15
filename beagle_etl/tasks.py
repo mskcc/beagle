@@ -167,7 +167,7 @@ class JobObject(object):
         send_notification.delay(etl_e)
 
     def _generate_sample_data_file(self):
-        result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\n"
+        result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
         ret_str = 'filemetadata__metadata__sampleId'
         samples = File.objects.prefetch_related(Prefetch('filemetadata_set',
                                                          queryset=FileMetadata.objects.select_related('file').order_by(
@@ -176,7 +176,7 @@ class JobObject(object):
         for sample in samples:
             metadata = sample.filemetadata_set.first().metadata
             print(metadata)
-            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
                 metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'])),
                 metadata['patientId'],
                 metadata['investigatorSampleId'],
@@ -186,7 +186,9 @@ class JobObject(object):
                 metadata['specimenType'],
                 metadata['preservation'],
                 metadata['sex'],
-                metadata['tissueLocation'])
+                metadata['tissueLocation'],
+                metadata['sampleId']
+            )
         e = UploadAttachmentEvent(str(self.job.job_group.id),
                                   '%s_sample_data_clinical.txt' % self.job.args['request_id'],
                                   result).to_dict()
