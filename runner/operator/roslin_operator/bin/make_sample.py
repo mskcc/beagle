@@ -76,15 +76,16 @@ def check_samples(samples):
     We are assuming the fastq data from the LIMS only differs in the 'R1'/'R2' string
     """
     for rg_id in samples:
-        fastq_r1 = samples[rg_id]['R1']
-        fastq_r2 = samples[rg_id]['R2']
-
-        expected_fastq_r2 = 'R2'.join(fastq_r1.rsplit('R1', 1))
-        if expected_fastq_r2 != fastq_r2:
-            LOGGER.error("Mismatched fastqs! Check data:")
-            LOGGER.error("R1: %s", fastq_r1)
-            LOGGER.error("Expected R2: %s", expected_fastq_r2)
-            LOGGER.error("Actual R2: %s", fastq_r2)
+        if 'R1' in samples[rg_id]:
+            fastq_r1 = samples[rg_id]['R1']
+            fastq_r2 = samples[rg_id]['R2']
+    
+            expected_fastq_r2 = 'R2'.join(fastq_r1.rsplit('R1', 1))
+            if expected_fastq_r2 != fastq_r2:
+                LOGGER.error("Mismatched fastqs! Check data:")
+                LOGGER.error("R1: %s", fastq_r1)
+                LOGGER.error("Expected R2: %s", expected_fastq_r2)
+                LOGGER.error("Actual R2: %s", fastq_r2)
 
 
 def check_and_return_single_values(data):
@@ -198,7 +199,7 @@ def build_sample(data, ignore_sample_formatting=False):
         if 'R1' in r_orientation:
             sample['R1'] = fpath
             sample['R1_bid'] = bid
-        else:
+        elif 'R2' in r_orientation:
             sample['R2'] = fpath
             sample['R2_bid'] = bid
         samples[rg_id] = sample

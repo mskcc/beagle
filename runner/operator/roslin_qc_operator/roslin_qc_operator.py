@@ -53,7 +53,11 @@ class RoslinQcOperator(Operator):
                                             pipeline_version)
 
         if self.job_group_id:
-            output_directory = os.path.join(output_directory, self.job_group_id)
+            try:
+                j = JobGroup.objects.get(id=self.job_group_id)
+                output_directory = os.path.join(output_directory, j.timestamp)
+            except JobGroupDoesNotExit:
+                LOGGER.error("Job group for id %s does not exist.", self.job_group_id)
 
         roslin_qc_outputs_job_data['output_directory'] = output_directory
 
