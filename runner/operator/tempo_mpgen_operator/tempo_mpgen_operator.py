@@ -23,7 +23,7 @@ class TempoMPGenOperator(Operator):
         Build complex Q object assay query from given data
         Only does OR queries, as seen in line
            query |= item
-        Very similar to build_preservation_query, but "filemetadata__metadata__runId"
+        Very similar to build_assay_query, but "filemetadata__metadata__recipe"
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
@@ -33,15 +33,38 @@ class TempoMPGenOperator(Operator):
             query |= item
         return query
 
+
+    def build_assay_query(self):
+        """
+        Build complex Q object assay query from given data
+        Only does OR queries, as seen in line
+           query |= item
+        Very similar to build_recipe_query, but "filemetadata__metadata__baitSet"
+        can't be sent as a value, so had to make a semi-redundant function
+        """
+        data = self.get_assays()
+        data_query_set = [Q(filemetadata__metadata__baitSet=value) for value in set(data)]
+        query = data_query_set.pop()
+        for item in data_query_set:
+            query |= item
+        return query
+
+
     def get_jobs(self):
         recipe_query = self.build_recipe_query()
+        assay_query = self.build_assay_query()
         igocomplete_query = Q(filemetadata__metadata__igocomplete=True)
-        files = self.files.filter(recipe_query & igocomplete_query).all()
+        files = self.files.filter(recipe_query & assay_query & igocomplete_query).all()
 
         self.send_message("""
             Querying database for the following recipes:
                 {recipes}
-            """.format(recipes="\t\n".join(self.get_recipes())))
+
+            Querying database for the following assays/bait sets:
+                {assays}
+            """.format(recipes="\t\n".join(self.get_recipes()),
+                       assays="\t\n".join(self.get_assays()))
+                      )
 
         data = list()
         for file in files:
@@ -144,3 +167,13 @@ class TempoMPGenOperator(Operator):
             "WholeExomeSequencing",
         ]
         return recipe
+
+
+    def get_assays(self):
+        assays = [
+        "Agilent_v4_51MB_Human_hg19_BAITS",
+        "IDT_Exome_v1_FP_b37_baits",
+        "IDT_Exome_v1_FP_BAITS",
+        "SureSelect-All-Exon-V4-hg19"
+        ]
+        return assays
