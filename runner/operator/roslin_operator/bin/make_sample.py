@@ -202,6 +202,9 @@ def build_sample(data, ignore_sample_formatting=False):
         elif 'R2' in r_orientation:
             sample['R2'] = fpath
             sample['R2_bid'] = bid
+        else:
+            sample['bam'] = fpath
+            sample['bam_bid'] = bid
         samples[rg_id] = sample
     check_samples(samples)
 
@@ -223,6 +226,8 @@ def build_sample(data, ignore_sample_formatting=False):
     result['R2'] = list()
     result['R1_bid'] = list()
     result['R2_bid'] = list()
+    result['bam'] = list()
+    result['bam_bid'] = list()
     result['request_id'] = list()
     result['pi'] = list()
     result['pi_email'] = list()
