@@ -21,6 +21,7 @@ notifier = JiraEventHandler()
 
 
 def create_jobs_from_operator(operator, job_group_id=None):
+    print("DEBUG")
     jobs = operator.get_jobs()
     jg = None
     try:
@@ -35,6 +36,7 @@ def create_jobs_from_operator(operator, job_group_id=None):
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg)
+    print("OperatorRun [%s]" % str(operator_run.id))
     run_ids = []
     for job in valid_jobs:
         logger.info("Creating Run object")
