@@ -295,6 +295,15 @@ def check_jobs_status():
 
 
 def run_routine_operator_job(operator, job_group_id=None):
+    """
+    Bit of a workaround.
+
+    Similar to create_runs_from_operator() except this doesn't check if api_serializer is valid (valid_jobs in 
+    create_runs_from_operator() function) and also only runs one job/task
+
+    If api_serializer is None, this doesn't submit a pipeline run, although *anything that was in the operator will
+    still be executed*
+    """
     job = operator.get_jobs()
     jg = None
     try:
