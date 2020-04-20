@@ -158,7 +158,7 @@ class APIRunCreateSerializer(serializers.Serializer):
                   output_metadata=validated_data.get('output_metadata', {}),
                   tags=tags)
         if validated_data.get('output_directory'):
-            run.output_directory=validated_data.get('output_directory'))
+            run.output_directory=validated_data.get('output_directory')
         try:
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:
