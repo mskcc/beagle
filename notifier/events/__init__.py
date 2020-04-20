@@ -9,3 +9,4 @@ from .set_ci_review_event import SetCIReviewEvent
 from .set_pipeline_completed_event import SetPipelineCompletedEvent
 from .upload_attachment_event import UploadAttachmentEvent
 from .operator_request_event import OperatorRequestEvent
+from .etl_generic_event import ETLGenericEvent

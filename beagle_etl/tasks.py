@@ -9,7 +9,7 @@ from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.models import File, FileMetadata
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLGenericEvent, SetCIReviewEvent, UploadAttachmentEvent
 # TODO: Consider moving `format_sample_name` to some other place
 from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
@@ -199,6 +199,8 @@ class JobObject(object):
         if self.job.run == TYPES['REQUEST']:
             import time
             time.sleep(5)
+            e = ETLGenericEvent(job_group_id, "CIReviewEvent: ETL Job failed, likely child job import.").to_dict()
+            send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
