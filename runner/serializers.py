@@ -152,9 +152,6 @@ class APIRunCreateSerializer(serializers.Serializer):
         output_directory = validated_data.get('output_directory')
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        if validated_data.get('output_directory'):
-            output_directory = validated_data.get('output_directory',
-                                                  os.path.join(pipeline.output_directory, str(self.id)))
         run = Run(name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,

@@ -77,9 +77,11 @@ class RoslinOperator(Operator):
             pi_email = job['pi_email']
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
+            output_directory = os.path.join(output_directory, self.operator_run.id)
 
             roslin_jobs.append((APIRunCreateSerializer(
                 data={'app': self.get_pipeline_id(), 'inputs': roslin_inputs, 'name': name,
+                      'output_directory': output_directory,
                       'tags': {'requestId': self.request_id,
                           'sampleNameTumor': tumor_sample_name,
                           'sampleNameNormal': normal_sample_name,
