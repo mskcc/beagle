@@ -213,7 +213,7 @@ def build_dmp_query(patient_id, bait_set):
         value = "IMPACT410"
     if "impact468" in bait_set.lower():
         value = "IMPACT468"
-    if "hemepact" in bait_set.lower():
+    if "hemepact_v4" in bait_set.lower():
         value = "HEMEPACT"
     assay = Q(filemetadata__metadata__cmo_assay=value)
     patient = Q(filemetadata__metadata__patient__cmo=patient_id.lstrip('C-'))
