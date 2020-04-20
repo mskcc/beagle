@@ -142,7 +142,7 @@ class Run(BaseModel):
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
-    output_directory = models.CharField(default=os.path.join(output_directory, str(self.id)), max_length=1000, editable=True, blank=True, null=True)
+    output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
@@ -155,6 +155,14 @@ class Run(BaseModel):
         }
 
     def save(self, *args, **kwargs):
+        """
+        If output directory is set to None, by default assign it to the pipeline output directory
+        plus the run id
+        """
+        if not self.output_directory:
+            pipeline = self.app
+            pipeline_output_directory = pipeline.output_directory
+            self.output_directory = os.path.join(pipeline_output_directory, str(self.id))
         # TODO do we want to decrement if a job goes from completed/failed to open or failed to complete?
         # We can also a prevent a job from going to open once it's in a closed state
         if self.operator_run and self.original["status"] != self.status:
