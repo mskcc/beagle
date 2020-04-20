@@ -106,20 +106,20 @@ class OperatorViewSet(GenericAPIView):
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
                 if job_group_id:
-                    create_jobs_from_operator(operator, job_group_id)
+                    create_jobs_from_operator.delay(operator, job_group_id)
                     body = {"details": "Operator Job submitted to pipeline %s, job group id %s,  with runs %s" % (pipeline_name, job_group_id,  str(run_ids))}
                 else:
-                    create_jobs_from_operator(operator)
+                    create_jobs_from_operator.delay(operator)
                     body = {"details": "Operator Job submitted to pipeline %s with runs %s" % (pipeline_name, str(run_ids))}
             else:
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 if job_group_id:
                     operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id)
-                    run_routine_operator_job(operator, job_group_id)
+                    run_routine_operator_job.delay(operator, job_group_id)
                     body = {"details": "Operator Job submitted to operator %s (JobGroupId: %s)" % (operator, job_group_id)}
                 else:
                     operator = OperatorFactory.get_by_model(operator_model)
-                    run_routine_operator_job(operator)
+                    run_routine_operator_job.delay(operator)
                     body = {"details": "Operator Job submitted to operator %s" % operator}
         return Response(body, status=status.HTTP_200_OK)
 
