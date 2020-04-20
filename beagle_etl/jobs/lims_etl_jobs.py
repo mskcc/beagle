@@ -89,14 +89,14 @@ def request_callback(request_id, job_group=None):
         )
     except Operator.DoesNotExist:
         logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
-        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        e = OperatorRequestEvent(job_group_id, "CIReviewEvent: No operator defined for requestId").to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
     if not operator.active:
         logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        e = OperatorRequestEvent(job_group_id, "CIReviewEvent: Operator %s inactive" % operator.class_name).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
