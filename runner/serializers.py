@@ -149,19 +149,16 @@ class APIRunCreateSerializer(serializers.Serializer):
         tags = validated_data.get('tags')
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        output_directory = validated_data.get('output_directory')
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        if validated_data.get('output_directory'):
-            output_directory = validated_data.get('output_directory',
-                                                  os.path.join(pipeline.output_directory, str(self.id)))
         run = Run(name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
                   output_metadata=validated_data.get('output_metadata', {}),
-                  tags=tags,
-                  output_directory=output_directory)
+                  tags=tags)
+        if validated_data.get('output_directory'):
+            run.output_directory=validated_data.get('output_directory')
         try:
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:

@@ -292,3 +292,13 @@ def check_jobs_status():
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
             logger.error("Job %s not submitted" % str(run.id))
+
+
+def run_routine_operator_job(operator, job_group_id=None):
+    """
+    Bit of a workaround.
+
+    Only runs the get_jobs() function of the given operator; does not expect any pipeline runs.
+    """
+    job = operator.get_jobs()
+    logger.info("Running single operator job; no pipeline runs submitted.")
