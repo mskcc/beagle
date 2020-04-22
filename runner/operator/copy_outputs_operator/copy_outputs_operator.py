@@ -31,7 +31,6 @@ class CopyOutputsOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        output_directory = pipeline.output_directory
         project_prefix = input_json['project_prefix']
 
         tags = {"run_ids": run_ids}
@@ -43,16 +42,19 @@ class CopyOutputsOperator(Operator):
             'tags': tags
         }
 
+        """
+        If project_prefix and job_group_id, write output to a directory
+        that uses both
+        """
+        output_directory = None
         if project_prefix:
             tags["project_prefix"] = project_prefix
-            output_directory = os.path.join(output_directory,
-                                            "roslin",
-                                            project_prefix,
-                                            pipeline_version)
-        if self.job_group_id:
-            output_directory = os.path.join(output_directory, self.job_group_id)
-
-        if output_directory:
+            if self.job_group_id:
+                output_directory = os.path.join(pipeline.output_directory,
+                                                "roslin",
+                                                project_prefix,
+                                                pipeline_version,
+                                                self.job_group_id)
             copy_outputs_job_data['output_directory'] = output_directory
 
         copy_outputs_job = [(APIRunCreateSerializer(

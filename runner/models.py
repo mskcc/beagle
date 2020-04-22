@@ -1,3 +1,4 @@
+import os
 import uuid
 from enum import IntEnum
 from django.db import models
@@ -155,6 +156,14 @@ class Run(BaseModel):
         }
 
     def save(self, *args, **kwargs):
+        """
+        If output directory is set to None, by default assign it to the pipeline output directory
+        plus the run id
+        """
+        if not self.output_directory:
+            pipeline = self.app
+            pipeline_output_directory = pipeline.output_directory
+            self.output_directory = os.path.join(pipeline_output_directory, str(self.id))
         # TODO do we want to decrement if a job goes from completed/failed to open or failed to complete?
         # We can also a prevent a job from going to open once it's in a closed state
         if self.operator_run and self.original["status"] != self.status:
