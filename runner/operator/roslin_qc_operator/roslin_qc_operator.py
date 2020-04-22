@@ -33,7 +33,6 @@ class RoslinQcOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        output_directory = pipeline.output_directory
         project_prefix = input_json['project_prefix']
 
         tags = {"tumor_sample_names": input_json['tumor_sample_names'],
@@ -45,21 +44,21 @@ class RoslinQcOperator(Operator):
             'name': name,
             'tags': tags}
 
+        """
+        If project_prefix and job_group_id, write output to a directory
+        that uses both
+        """
+        output_directory = None
         if project_prefix:
             tags["project_prefix"] = project_prefix 
-            output_directory = os.path.join(output_directory,
-                                            "roslin",
-                                            project_prefix,
-                                            pipeline_version)
+            if self.job_group_id:
+                output_directory = os.path.join(pipeline.output_directory,
+                                                "roslin",
+                                                project_prefix,
+                                                pipeline_version,
+                                                self.job_group_id)
 
-        if self.job_group_id:
-            try:
-                j = JobGroup.objects.get(id=self.job_group_id)
-                output_directory = os.path.join(output_directory, j.timestamp)
-            except JobGroupDoesNotExit:
-                LOGGER.error("Job group for id %s does not exist.", self.job_group_id)
-
-        roslin_qc_outputs_job_data['output_directory'] = output_directory
+            roslin_qc_outputs_job_data['output_directory'] = output_directory
 
         roslin_qc_outputs_job = [(APIRunCreateSerializer(
             data=roslin_qc_outputs_job_data), input_json)]
