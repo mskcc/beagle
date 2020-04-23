@@ -1,4 +1,5 @@
 import os
+from uuid import UUID
 from django.test import TestCase
 from django.db.models import Prefetch, Q
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_dmp_query
@@ -91,10 +92,10 @@ class TestRetrieveSamplesByQuery(TestCase):
             metadata = {
                 "bai": "/C-8VK0V7.bai",
                 "bam": "/C-8VK0V7.bam",
-                "type": "T",
+                "type": "N",
                 "assay": "IM6",
-                "sample": "P-1234567-T01-IM6",
-                "anon_id": "ABCDEF-T",
+                "sample": "P-1234567-N01-IM6",
+                "anon_id": "ABCDEF-N",
                 "patient": {
                     "cmo": "8VK0V7",
                     "dmp": "P-1234567",
@@ -106,7 +107,7 @@ class TestRetrieveSamplesByQuery(TestCase):
                 "imported": "2020-03-25T19:45:16.421137Z",
                 "cmo_assay": "IMPACT468",
                 "tumor_type": "MBC",
-                "external_id": "C-8VK0V7-T901-dZ-IM6",
+                "external_id": "C-8VK0V7-N901-dZ-IM6",
                 "sample_type": "0",
                 "tissue_type": "Breast",
                 "primary_site": "Breast",
@@ -126,8 +127,44 @@ class TestRetrieveSamplesByQuery(TestCase):
         dmp_normal = get_dmp_normal(patient_id, bait_set)
         self.assertEqual(dmp_normal, None)
 
-        # # test with a patient ID taken from fixtures and a matching bait_set
-        # patient_id = "C-8VK0V7"
-        # bait_set = "IMPACT468_BAITS"
-        # dmp_normal = get_dmp_normal(patient_id, bait_set)
-        # self.assertEqual(dmp_normal, ',')
+        # test with a patient ID taken from fixtures and a matching bait_set
+        patient_id = "C-8VK0V7"
+        bait_set = "IMPACT468_BAITS"
+        dmp_normal = get_dmp_normal(patient_id, bait_set)
+
+        expected_dmp_normal = {
+            'CN': 'MSKCC',
+            'PL': 'Illumina',
+            'PU': ['DMP_FCID_DMP_BARCODEIDX'],
+            'LB': 'C-8VK0V7-N901-dZ-IM6_1',
+            'tumor_type': 'Normal',
+            'ID': ['C-8VK0V7-N901-dZ-IM6_DMP_FCID_DMP_BARCODEIDX'],
+            'SM': 'C-8VK0V7-N901-dZ-IM6',
+            'species': '',
+            'patient_id': 'C-8VK0V7',
+            'bait_set': 'IMPACT468_BAITS',
+            'sample_id': 'C-8VK0V7-N901-dZ-IM6',
+            'run_date': [''],
+            'specimen_type': '',
+            'R1': [],
+            'R2': [],
+            'R1_bid': [],
+            'R2_bid': [],
+            'bam': ['/C-8VK0V7.bam'],
+            'bam_bid': [
+                # mock the UUID for testing since it will be different every time
+                "deletemeplease"
+                ],
+            'request_id': 'C-8VK0V7-N901-dZ-IM6',
+            'pi': '',
+            'pi_email': '',
+            'run_id': [''],
+            'preservation_type': ['']
+        }
+
+        # remove the bam_bid UUID value for testing because it will be different every time
+        # TODO: patch or mock this
+        dmp_normal.pop('bam_bid')
+        expected_dmp_normal.pop('bam_bid')
+
+        self.assertEqual(dmp_normal, expected_dmp_normal)
