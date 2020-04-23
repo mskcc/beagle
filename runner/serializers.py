@@ -136,7 +136,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
     tags = serializers.JSONField(allow_null=True, required=False)
-    output_directory = serializers.CharField(max_length=1000, required=False, default=None)
+    output_directory = serializers.CharField(max_length=1000, required=False, default=None, allow_null=True)
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
