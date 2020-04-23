@@ -23,9 +23,6 @@ class TestPairRequest(TestCase):
     "file_system.storage.json"
     ]
 
-    def test_true(self):
-        self.assertTrue(True)
-
     def test_validate_test_db_files(self):
         """
         Sanity check
