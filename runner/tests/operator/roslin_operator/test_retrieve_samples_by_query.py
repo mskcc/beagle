@@ -127,6 +127,12 @@ class TestRetrieveSamplesByQuery(TestCase):
         dmp_normal = get_dmp_normal(patient_id, bait_set)
         self.assertEqual(dmp_normal, None)
 
+        # test with a non-matching patient ID and a matching bait_set
+        patient_id = "foo"
+        bait_set = "IMPACT468_BAITS"
+        dmp_normal = get_dmp_normal(patient_id, bait_set)
+        self.assertEqual(dmp_normal, None)
+
         # test with a patient ID taken from fixtures and a matching bait_set
         patient_id = "C-8VK0V7"
         bait_set = "IMPACT468_BAITS"
