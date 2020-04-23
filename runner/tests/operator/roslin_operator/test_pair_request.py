@@ -203,8 +203,7 @@ class TestPairRequest(TestCase):
         Test that the appropriate Normal sample is found from the other samples in the same request
         missing normal for sample 10075_D_1; querying patient C-DRKHP7
         """
-        # Load fixtures:w
-
+        # Load fixtures:
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.file.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.filemetadata.json")
