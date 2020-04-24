@@ -199,7 +199,7 @@ class JobObject(object):
         if self.job.run == TYPES['REQUEST']:
             import time
             time.sleep(5)
-            e = ETLGenericEvent(self.job.job_group.id, "CIReviewEvent: ETL Job failed, likely child job import.").to_dict()
+            e = ETLGenericEvent(self.job.job_group.id, "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
             send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
