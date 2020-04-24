@@ -138,7 +138,7 @@ def process_triggers():
                 else:
                     operator_run.fail()
                     if job_group_id:
-                        e = OperatorRequestEvent(job_group_id, "CIReviewEvent: Operator Run %s failed" % operator_run.id).to_dict()
+                        e = OperatorRequestEvent(job_group_id, "CIReviewEvent: Operator Run %s failed" % str(operator_run.id)).to_dict()
                         send_notification.delay(e)
                         ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
                         send_notification.delay(ci_review_event)
