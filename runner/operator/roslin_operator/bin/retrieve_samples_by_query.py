@@ -113,6 +113,8 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
         order_by('file_name')
     descriptor = get_descriptor(bait_set, pooled_normals)
 
+    # TODO: what is this boolean testing and what is its significance?
+    # TODO: why does the lack of a descriptor mean there is no pooled normal?
     if not descriptor: # i.e., no pooled normal
         return None
     pooled_normals = pooled_normals.filter(filemetadata__metadata__recipe=descriptor)
@@ -156,7 +158,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
 def get_dmp_normal(patient_id, bait_set):
     """
-    From a patient id and bait set, get matching dmp bam normal 
+    From a patient id and bait set, get matching dmp bam normal
     """
     file_objs = File.objects.prefetch_related(
         Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').\
