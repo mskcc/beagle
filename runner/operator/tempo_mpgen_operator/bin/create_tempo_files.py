@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-from make_sample import is_cmo_sample_name_format
+from .make_sample import is_cmo_sample_name_format
 
 
 def create_pairing(data):
