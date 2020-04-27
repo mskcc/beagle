@@ -17,11 +17,18 @@ def remove_with_caveats(samples):
             add = False
         if "noNormalFound" in sample_name:
             add = False
+        if not is_cmo_sample_name_format(sample_name):
+            add = False
         if add:
             data.append(sample)
         else:
             error_data.append(sample)
     return data, error_data
+
+
+def is_cmo_sample_name_format(sample_name):
+    sample_pattern = re.compile(r's_C_\w{6}_\w{4}_\w')
+    return bool(sample_pattern.match(sample_name))
 
 
 def format_sample_name(sample_name):
