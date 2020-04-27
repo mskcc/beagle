@@ -46,15 +46,13 @@ def scheduler():
     jobs = get_pending_jobs()
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
-        with transaction.atomic():
-            j = Job.objects.get(id=job.id)
-            if not j.lock:
-                logger.info("Submitting job: %s" % str(job.id))
-                j.lock = True
-                j.save()
-                job_processor.delay(j.id)
-            else:
-                logger.info("Job already locked: %s" % str(job.id))
+        j = Job.objects.get(id=job.id)
+        if not j.is_locked:
+            j.lock_job()
+            logger.info("Submitting job: %s" % str(job.id))
+            job_processor.delay(j.id)
+        else:
+            logger.info("Job already locked: %s" % str(job.id))
 
 
 def get_pending_jobs():
@@ -87,12 +85,12 @@ class JobObject(object):
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
 
-        with transaction.atomic():
-            self.job.lock = False
-            self.job.save()
-
         logger.info("Job %s in status: %s" % (str(self.job.id), JobStatus(self.job.status).name))
+        self._unlock()
         self._save()
+
+    def _unlock(self):
+        self.job.unlock_job()
 
     def _save(self):
         self.job.save()

@@ -14,6 +14,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
+from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
@@ -429,6 +430,13 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         try:
             f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
                                     file_type=file_type_obj)
+            try:
+                checksum = sha1(os.path.basename(path))
+                f.checksum = checksum
+            except FailedToCalculateChecksum as e:
+                logger.info("Failed to calculate checksum. Error:%s", f.path)
+            else:
+                f.checksum = None
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
