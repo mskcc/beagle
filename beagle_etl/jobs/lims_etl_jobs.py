@@ -393,6 +393,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(name=file_type).first()
         metadata = copy.deepcopy(data)
+        library_copy = copy.deepcopy(library)
         sample_name = metadata.pop('cmoSampleName', None)
         external_sample_name = metadata.pop('sampleName', None)
         sample_id = metadata.pop('igoId', None)
@@ -407,8 +408,8 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
-        metadata['libraryId'] = library.pop('libraryIgoId', None)
-        for k, v in library.items():
+        metadata['libraryId'] = library_copy.pop('libraryIgoId', None)
+        for k, v in library_copy.items():
             metadata[k] = v
         for k, v in run.items():
             metadata[k] = v
@@ -483,7 +484,7 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
         logger.error("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
         raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
     try:
-        data = sampleMetadata.json()[0]
+        data = copy.deepcopy(sampleMetadata.json()[0])
     except Exception as e:
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
