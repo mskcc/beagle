@@ -129,7 +129,7 @@ class TempoMPGenOperator(Operator):
         sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
  
-        cleaned_inputs = clean_inputs(tempo_inputs, error_samples)
+        cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
         sample_pairing = create_pairing(cleaned_inputs)
 
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
@@ -137,7 +137,7 @@ class TempoMPGenOperator(Operator):
 
 
     def create_mapping_file(self, tempo_inputs, error_samples):
-        cleaned_inputs = clean_inputs(tempo_inputs, error_samples)
+        cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
         sample_mapping = create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
@@ -171,7 +171,7 @@ class TempoMPGenOperator(Operator):
         Number of samples with error: {number_of_errors}
 
         Error samples (also see error_sample_formatting.txt):
-        | IGO Sample ID | CMO Sample Name Error |
+        | IGO Sample ID | Sample Name / Error |
         {error_sample_names}
         """
 
