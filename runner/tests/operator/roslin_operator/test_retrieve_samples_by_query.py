@@ -201,7 +201,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             metadata = {
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
-                'bait_set': 'IMPACT468_BAITS',
+                'baitSet': 'IMPACT468_BAITS',
                 "preservation": "Frozen"
             }
         )
@@ -216,13 +216,15 @@ class TestRetrieveSamplesByQuery(TestCase):
             metadata = {
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
-                'bait_set': 'IMPACT468_BAITS',
+                'baitSet': 'IMPACT468_BAITS',
                 "preservation": "Frozen"
             }
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids = ['PITT_0439'], preservation_types = ['Frozen'], bait_set = "IMPACT468_BAITS"
+            run_ids = ['PITT_0439'],
+            preservation_types = ['Frozen'],
+            bait_set = "IMPACT468_BAITS"
         )
         expected_pooled_normals = [{
             "run_id": ["PITT_0439"],
