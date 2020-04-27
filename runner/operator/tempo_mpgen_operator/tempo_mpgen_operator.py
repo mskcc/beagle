@@ -89,15 +89,15 @@ class TempoMPGenOperator(Operator):
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
 
-        create_tracker_file(tempo_inputs)
-        generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
-        create_mapping_file(tempo_inputs, error_samples)
-        crate_pairing_file(tempo_inputs, error_samples)
+        self.create_tracker_file(tempo_inputs)
+        self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
+        self.create_mapping_file(tempo_inputs, error_samples)
+        self.create_pairing_file(tempo_inputs, error_samples)
 
         return [], []
 
 
-    def create_pairing_file(tempo_inputs, error_samples):
+    def create_pairing_file(self, tempo_inputs, error_samples):
         """
         Messy function that pairs with errors first then parses each line
         for 'noNormal' substring, which indicates a paired tumor has no associated normal
@@ -136,15 +136,14 @@ class TempoMPGenOperator(Operator):
         send_notification.delay(pairing_file_event)
 
 
-
-    def create_mapping_file(tempo_inputs, error_samples):
+    def create_mapping_file(self, tempo_inputs, error_samples):
         cleaned_inputs = clean_inputs(tempo_inputs, error_samples)
         sample_mapping = create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
 
-    def clean_inputs(tempo_inputs, error_samples):
+    def clean_inputs(self, tempo_inputs, error_samples):
         """
         Removes samples that don't have valid cmo sample names
 
@@ -159,7 +158,7 @@ class TempoMPGenOperator(Operator):
         return pair
 
 
-    def generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples):
+    def generate_sample_formatting_errors_file(self, tempo_inputs, samples, error_samples):
         number_of_inputs = len(tempo_inputs)
         s = list()
         unformatted_s = list()
