@@ -10,10 +10,17 @@ from django.core.management import call_command
 Order of smart pairing
 Given a single tumor sample, find
 1. a normal sample that belongs to the same patient. This should be first from the same request, then should search across other requests and projects. We can get help from the IGO PMs on which other requests/projects should be searched for a custom request.
-2. a dmp normal bam to be pulled in for that patient if it exists. (Need to modify existing code)
+2. a dmp normal bam to be pulled in for that patient if it exists.
 3. a closest related normal. (No code written yet)
 4. the appropriate pooled normal. This will be frozen or FFPE depending on the data_clinical information for that sample, and need to parse by assay used (impact/hemepact).
 """
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
 
 class TestPairRequest(TestCase):
     # load fixtures for the test case temp db
@@ -510,11 +517,251 @@ class TestPairRequest(TestCase):
         print(json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertTrue(pairs == expected_pairs)
 
+    def test_compile_pairs_pooled_normal_and_dmp_bam(self):
+        """
+        Test that a DMP bam can be found for a tumor sample without any normal in the current request or other requests
+
+        Start with no Normals and add them in reverse order of the Pairing priority (as per docstring header in this document)
+        and make sure each added Normal results in the correct pairing
+        """
+        lims_filegroup_instance = FileGroup.objects.get(name = "LIMS")
+        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        dmp_bam_filegroup_instance = FileGroup.objects.get(name = "DMP BAMs")
+        bam_filetype_instance = FileType.objects.get(name = "bam")
+
+        # generate tumor samples
+        # Sample 1 C-8VK0V7
+        tumor1_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-8VK0V7.R1.fastq",
+            path = "/C-8VK0V7.R1.fastq"
+        )
+        tumor1_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = tumor1_R1_file_instance,
+            metadata = {
+                "R": "R1",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "10075_D_3_5",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-8VK0V7",
+                "requestId": "10075_D_3",
+                "sampleName": "C-8VK0V7-R001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Tumor",
+                "cmoSampleClass": "Local Recurrence",
+                "externalSampleId": "SK_MEL_1091A_T",
+                "investigatorSampleId": "SK_MEL_1091A_T",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+        tumor1_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-8VK0V7.R2.fastq",
+            path = "/C-8VK0V7.R2.fastq"
+        )
+        tumor1_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = tumor1_R2_file_instance,
+            metadata = {
+                "R": "R2",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "10075_D_3_5",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-8VK0V7",
+                "requestId": "10075_D_3",
+                "sampleName": "C-8VK0V7-R001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Tumor",
+                "cmoSampleClass": "Local Recurrence",
+                "externalSampleId": "SK_MEL_1091A_T",
+                "investigatorSampleId": "SK_MEL_1091A_T",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+
+        # Sample 2 C-ABCDEF
+        tumor2_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-ABCDEF.R1.fastq",
+            path = "/C-ABCDEF.R1.fastq"
+        )
+        tumor2_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = tumor2_R1_file_instance,
+            metadata = {
+                "R": "R1",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "Sample12345",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-ABCDEF",
+                "requestId": "10075_D_3",
+                "sampleName": "C-ABCDEF-R001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Tumor",
+                "cmoSampleClass": "Local Recurrence",
+                "externalSampleId": "SK_MEL_1234_T",
+                "investigatorSampleId": "SK_MEL_1234_T",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+        tumor2_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-ABCDEF.R2.fastq",
+            path = "/C-ABCDEF.R2.fastq"
+        )
+        tumor2_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = tumor2_R2_file_instance,
+            metadata = {
+                "R": "R2",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "Sample12345",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-ABCDEF",
+                "requestId": "10075_D_3",
+                "sampleName": "C-ABCDEF-R001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Tumor",
+                "cmoSampleClass": "Local Recurrence",
+                "externalSampleId": "SK_MEL_1234_T",
+                "investigatorSampleId": "SK_MEL_1234_T",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+
+        samples = [
+        {
+        "bait_set": "IMPACT468_BAITS",
+        "patient_id": "C-8VK0V7",
+        "tumor_type": "Tumor",
+        "sample_id": "10075_D_3_5",
+        "SM": "10075_D_3_5",
+        "request_id": "10075_D_3",
+        'run_id': ['PITT_0439'],
+        "preservation_type": ["Frozen"]
+        }
+        ]
+
+        # test that no pairs are found since there are no Normals loaded yet
+        pairs = compile_pairs(samples)
+        self.assertDictEqual(pairs, {'tumor': [], 'normal': []} )
+
+        # add Pooled Normal from another run
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
+            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+        )
+        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R1_file_instance,
+            metadata = {
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                'bait_set': 'IMPACT468_BAITS',
+                "preservation": "Frozen"
+            }
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
+            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+        )
+        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R2_file_instance,
+            metadata = {
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                'bait_set': 'IMPACT468_BAITS',
+                "preservation": "Frozen"
+            }
+        )
+
+        # test that the Frozen Pooled Normal is found
+        pairs = compile_pairs(samples)
+        expected_pairs = {
+        'tumor': [{
+            'bait_set': 'IMPACT468_BAITS',
+            'patient_id': 'C-8VK0V7',
+            'tumor_type': 'Tumor',
+            'sample_id': '10075_D_3_5',
+            "SM": "10075_D_3_5",
+            'request_id': '10075_D_3',
+            'run_id': ['PITT_0439'],
+            "preservation_type": ["Frozen"]
+        }],
+        'normal': [{
+            "run_id": ["PITT_0439"],
+            'bait_set': 'IMPACT468_BAITS',
+            "preservation_type": ["Frozen"]
+        }]
+        }
+        self.assertDictEqual(pairs, expected_pairs)
+
+
     def test_compile_pairs_custom1(self):
         """
         Test the ability to compile pairs with a custom sample set
+
+        TODO: what pair attributes is this testing?
         """
-        samples = [{'CN': 'MSKCC',
+        samples = [{
+        'CN': 'MSKCC',
         'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
         'LB': 'juno_roslin_demo1_3',
         'PL': 'Illumina',
@@ -535,8 +782,10 @@ class TestPairRequest(TestCase):
         'run_date': ['2019-12-12'],
         'species': 'Human',
         'specimen_type': 'Blood',
-        'tumor_type': 'Normal'},
-        {'CN': 'MSKCC',
+        'tumor_type': 'Normal'
+        },
+        {
+        'CN': 'MSKCC',
         'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
         'LB': 'juno_roslin_demo1_5_1_1_1',
         'PL': 'Illumina',
@@ -557,12 +806,13 @@ class TestPairRequest(TestCase):
         'run_date': ['2019-12-17'],
         'species': 'Human',
         'specimen_type': 'Resection',
-        'tumor_type': 'Tumor'}]
+        'tumor_type': 'Tumor'
+        }]
         pairs = compile_pairs(samples)
 
         expected_pairs = {
-        'tumor': [
-            {'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+        'tumor': [{
+            'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
             'LB': 'juno_roslin_demo1_5_1_1_1',
             'PL': 'Illumina',
             'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'],
@@ -582,10 +832,10 @@ class TestPairRequest(TestCase):
             'tumor_type': 'Tumor',
             "preservation_type": ["EDTA-Streck"],
             'bam': [],
-            'bam_bid': []}
-            ],
-        'normal': [
-            {'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
+            'bam_bid': []
+            }],
+        'normal': [{
+            'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
             'LB': 'juno_roslin_demo1_3',
             'PL': 'Illumina',
             'PU': ['HCYYWBBXY'],
@@ -605,8 +855,8 @@ class TestPairRequest(TestCase):
             'tumor_type': 'Normal',
             "preservation_type": ["EDTA-Streck"],
             'bam': [],
-            'bam_bid': []}
-            ]
+            'bam_bid': []
+            }]
         }
 
 
@@ -615,10 +865,3 @@ class TestPairRequest(TestCase):
         print(json.dumps(expected_pairs, cls=UUIDEncoder))
 
         self.assertTrue(pairs == expected_pairs)
-
-class UUIDEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, UUID):
-            # if the obj is uuid, we simply return the value of uuid
-            return obj.hex
-        return json.JSONEncoder.default(self, obj)
