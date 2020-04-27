@@ -19,10 +19,9 @@ def remove_with_caveats(samples):
             add = False
         if not is_cmo_sample_name_format(sample_name):
             add = False
-        if add:
-            data.append(sample)
-        else:
+        if not add:
             error_data.append(sample)
+        data.append(sample)
     return data, error_data
 
 
