@@ -7,6 +7,7 @@ from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_dm
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_pooled_normals
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_run_id_query
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_preservation_query
+from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_descriptor
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -275,6 +276,90 @@ class TestRetrieveSamplesByQuery(TestCase):
         query = build_preservation_query(preservation_types)
         expected_query = Q(filemetadata__metadata__preservation='FROZEN')
         self.assertEqual(query, expected_query)
+
+    def test_get_descriptor1(self):
+        """
+        Test that re-labeled descriptor is returned when needed
+        """
+        # create some Pooled Normals
+        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
+            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+        )
+        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R1_file_instance,
+            metadata = {
+                "recipe": "IMPACT468",
+            }
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
+            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+        )
+        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R2_file_instance,
+            metadata = {
+                "recipe": "IMPACT468",
+            }
+        )
+        pooled_normals = File.objects.all()
+
+        descriptor = get_descriptor(bait_set = "IMPACT468_BAITS", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, "IMPACT468")
+
+        descriptor = get_descriptor(bait_set = "IMPACT468", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, "IMPACT468")
+
+    def test_get_descriptor2(self):
+        """
+        Test that no descriptor is returned when its not needed
+        """
+        # create some Pooled Normals
+        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
+            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+        )
+        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R1_file_instance,
+            metadata = {
+                "recipe": "foo_IMPACT468_bar",
+            }
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
+            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+        )
+        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R2_file_instance,
+            metadata = {
+                "recipe": "foo_IMPACT468_bar",
+            }
+        )
+        pooled_normals = File.objects.all()
+
+        descriptor = get_descriptor(bait_set = "IMPACT468", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, None)
+
+        descriptor = get_descriptor(bait_set = "IMPACT468_bar", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, None)
+
+        descriptor = get_descriptor(bait_set = "foo_IMPACT468", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, None)
+
+        descriptor = get_descriptor(bait_set = "foo_IMPACT468_bar", pooled_normals = pooled_normals)
+        self.assertEqual(descriptor, "foo_IMPACT468_bar")
 
     def test_get_pooled_normals1(self):
         """
