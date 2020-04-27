@@ -153,7 +153,7 @@ class TempoMPGenOperator(Operator):
         for pair in tempo_inputs:
             normal = pair["normal_sample"]
             tumor = pair["tumor_sample"]
-            if is_cmo_sample_name_format(normal) and is_cmo_sample_name_format(tumor):
+            if is_cmo_sample_name_format(normal['sample_name']) and is_cmo_sample_name_format(tumor['sample_name']):
                 clean_pair.append(pair)
         return pair
 
