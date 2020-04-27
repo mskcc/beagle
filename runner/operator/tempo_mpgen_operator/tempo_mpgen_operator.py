@@ -155,7 +155,7 @@ class TempoMPGenOperator(Operator):
             tumor = pair["tumor_sample"]
             if is_cmo_sample_name_format(normal['sample_name']) and is_cmo_sample_name_format(tumor['sample_name']):
                 clean_pair.append(pair)
-        return pair
+        return clean_pair
 
 
     def generate_sample_formatting_errors_file(self, tempo_inputs, samples, error_samples):
