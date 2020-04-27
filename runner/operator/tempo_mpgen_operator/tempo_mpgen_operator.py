@@ -8,7 +8,7 @@ from notifier.models import JobGroup
 from notifier.tasks import send_notification
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
-from .bin.make_sample import build_sample
+from .bin.make_sample import build_sample, is_cmo_sample_name_format
 from .bin.create_tempo_files import create_mapping, create_pairing, create_tempo_tracker_example
 from notifier.events import UploadAttachmentEvent
 import json
@@ -88,8 +88,79 @@ class TempoMPGenOperator(Operator):
             samples.append(build_sample(sample_id_group[sample_id]))
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
-        number_of_inputs = len(tempo_inputs)
 
+        create_tracker_file(tempo_inputs)
+        generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
+        create_mapping_file(tempo_inputs, error_samples)
+        crate_pairing_file(tempo_inputs, error_samples)
+
+        return [], []
+
+
+    def create_pairing_file(tempo_inputs, error_samples):
+        """
+        Messy function that pairs with errors first then parses each line
+        for 'noNormal' substring, which indicates a paired tumor has no associated normal
+
+        tempo_inputs is then "cleaned" with clean_inputs()
+
+        Afterwards, the function create_pairing is called again against the clean input set.
+        """
+        pair_with_errors = create_pairing(tempo_inputs)
+        pairing = pair_with_errors.split("\n")
+        pairing_errors = list()
+        pairing_errors_unformatted = list()
+
+        for line in pairing:
+            if "noNormal" in line:
+                pairing_errors.append("| " + line.replace("\t"," | ") + " |")
+                pairing_errors_unformatted.append(line + "\n")
+
+        self.send_message("""
+        Number of samples with pairing errors: {num_pairing_errors}
+
+        Samples with pairing errors (also see file error_unpaired_samples.txt):
+
+        | Error | CMO Sample Name |
+        {pairing_errors}
+        """.format(num_pairing_errors=str(len(pairing_errors)),
+            pairing_errors="\n".join(pairing_errors)))
+
+        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
+        send_notification.delay(sample_pairing_errors_event)
+ 
+        cleaned_inputs = clean_inputs(tempo_inputs, error_samples)
+        sample_pairing = create_pairing(cleaned_inputs)
+
+        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        send_notification.delay(pairing_file_event)
+
+
+
+    def create_mapping_file(tempo_inputs, error_samples):
+        cleaned_inputs = clean_inputs(tempo_inputs, error_samples)
+        sample_mapping = create_mapping(cleaned_inputs)
+        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
+        send_notification.delay(mapping_file_event)
+
+
+    def clean_inputs(tempo_inputs, error_samples):
+        """
+        Removes samples that don't have valid cmo sample names
+
+        Goes for both sample types (tumor or normal)
+        """
+        clean_pair = list()
+        for pair in tempo_inputs:
+            normal = pair["normal_sample"]
+            tumor = pair["tumor_sample"]
+            if is_cmo_sample_name_format(normal) and is_cmo_sample_name_format(tumor):
+                clean_pair.append(pair)
+        return pair
+
+
+    def generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples):
+        number_of_inputs = len(tempo_inputs)
         s = list()
         unformatted_s = list()
         for sample in error_samples:
@@ -98,11 +169,10 @@ class TempoMPGenOperator(Operator):
 
         msg = """
         Number of samples (both tumor and normal): {num_samples}
-        Number of tumor samples paired: {number_valid_inputs}
         Number of samples with error: {number_of_errors}
 
         Error samples (also see error_sample_formatting.txt):
-        | IGO Sample ID | CMO Sample Name|
+        | IGO Sample ID | CMO Sample Name Error |
         {error_sample_names}
         """
 
@@ -116,43 +186,12 @@ class TempoMPGenOperator(Operator):
         sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
 
-        sample_mapping = create_mapping(tempo_inputs)
-        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
-        send_notification.delay(mapping_file_event)
 
+    def create_tracker_file(self, tempo_inputs):
         sample_tracker = create_tempo_tracker_example(tempo_inputs)
         tracker_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', sample_tracker).to_dict()
         send_notification.delay(tracker_file_event)
 
-        sample_pairing = create_pairing(tempo_inputs)
-        valid_pairing = list()
-        pairing = sample_pairing.split("\n")
-        pairing_errors = list()
-        pairing_errors_unformatted = list()
-
-        for line in pairing:
-            if "noNormal" in line:
-                pairing_errors.append("| " + line.replace("\t"," | ") + " |")
-                pairing_errors_unformatted.append(line + "\n")
-            else:
-                valid_pairing.append(line + "\n")
-
-        self.send_message("""
-        Number of samples with pairing errors: {num_pairing_errors}
-
-        Samples with pairing errors (also see file error_unpaired_samples.txt):
-
-        | Error | CMO Sample Name |
-        {pairing_errors}
-        """.format(num_pairing_errors=str(len(pairing_errors)),
-            pairing_errors="\n".join(pairing_errors)))
- 
-        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', "".join(valid_pairing)).to_dict()
-        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
-        send_notification.delay(pairing_file_event)
-        send_notification.delay(sample_pairing_errors_event)
-
-        return [], []
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_id, msg)
