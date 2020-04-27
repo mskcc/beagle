@@ -5,6 +5,8 @@ from django.db.models import Prefetch, Q
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_dmp_query
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_dmp_normal
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_pooled_normals
+from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_run_id_query
+from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_preservation_query
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -175,6 +177,104 @@ class TestRetrieveSamplesByQuery(TestCase):
         expected_dmp_normal.pop('bam_bid')
 
         self.assertEqual(dmp_normal, expected_dmp_normal)
+
+    def test_build_run_id_query(self):
+        """
+        Test that a run id query is built correctly
+        """
+        run_ids = ['bar']
+        query = build_run_id_query(run_ids)
+        # (AND: (('filemetadata__metadata__runId', 'bar'))
+        expected_query = Q(filemetadata__metadata__runId='bar')
+        self.assertEqual(query, expected_query)
+
+        # run them through set then back to list to ensure ordering for testing
+        run_ids = set(['bar', 'baz'])
+        query = build_run_id_query(run_ids)
+        # query.__dict__
+        # {'children': [('filemetadata__metadata__runId', 'baz'), ('filemetadata__metadata__runId', 'bar')], 'connector': 'OR', 'negated': False}
+
+        # order not guaranteed due to usage of set inside build_run_id_query
+        expected_query = Q(filemetadata__metadata__runId='bar') | Q(filemetadata__metadata__runId='baz')
+        # (OR: ('filemetadata__metadata__runId', 'baz'), ('filemetadata__metadata__runId', 'bar'))
+
+        self.assertTrue( ('filemetadata__metadata__runId', 'baz') in query.__dict__['children'] )
+        self.assertTrue( ('filemetadata__metadata__runId', 'bar') in query.__dict__['children'] )
+        self.assertTrue( query.__dict__['connector'] == 'OR' )
+        self.assertTrue( query.__dict__['negated'] == False )
+
+
+    def test_build_preservation_query(self):
+        """
+        Test that a preservation type query is built correctly
+        Test different combinations of valid and invalid preservation types, with and without caps
+        """
+        preservation_types = list(set(['foo', 'bar']))
+        query = build_preservation_query(preservation_types)
+        # TODO: why does this give the preservation type of "FROZEN"?
+        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['foo', 'frozen']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['foo', 'ffpe']))
+        query = build_preservation_query(preservation_types)
+        # TODO: why does this give the preservation type of "FFPE"?
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['foo', 'FFPE']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['frozen', 'ffpe']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['frozen', 'FFPE']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['FROZEN', 'ffpe']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['FROZEN', 'FFPE']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['FFPE']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['ffpe']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['frozen']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['Frozen']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        self.assertEqual(query, expected_query)
+
+        preservation_types = list(set(['FROZEN']))
+        query = build_preservation_query(preservation_types)
+        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        self.assertEqual(query, expected_query)
 
     def test_get_pooled_normals1(self):
         """
