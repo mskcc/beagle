@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.db.models import Prefetch, Q
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import build_dmp_query
 from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_dmp_normal
+from runner.operator.roslin_operator.bin.retrieve_samples_by_query import get_pooled_normals
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -174,3 +175,58 @@ class TestRetrieveSamplesByQuery(TestCase):
         expected_dmp_normal.pop('bam_bid')
 
         self.assertEqual(dmp_normal, expected_dmp_normal)
+
+    def test_get_pooled_normals1(self):
+        """
+        Test that Pooled Normals can be retrived correctly
+        """
+        # test that an empty database and irrelevant args returns None
+        pooled_normals = get_pooled_normals(
+            run_ids = ['foo'], preservation_types = ['bar'], bait_set = "baz"
+        )
+        self.assertEqual(pooled_normals, None)
+
+        # start adding Pooled Normals to the database
+        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        # add Pooled Normal from another run
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
+            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+        )
+        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R1_file_instance,
+            metadata = {
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                'bait_set': 'IMPACT468_BAITS',
+                "preservation": "Frozen"
+            }
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = poolednormal_filegroup_instance,
+            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
+            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+        )
+        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = poolednormal_R2_file_instance,
+            metadata = {
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                'bait_set': 'IMPACT468_BAITS',
+                "preservation": "Frozen"
+            }
+        )
+
+        pooled_normals = get_pooled_normals(
+            run_ids = ['PITT_0439'], preservation_types = ['Frozen'], bait_set = "IMPACT468_BAITS"
+        )
+        expected_pooled_normals = [{
+            "run_id": ["PITT_0439"],
+            'bait_set': 'IMPACT468_BAITS',
+            "preservation_type": ["Frozen"]
+        }]
+        self.assertEqual(pooled_normals, expected_pooled_normals)
