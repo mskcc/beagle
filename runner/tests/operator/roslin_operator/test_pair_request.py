@@ -607,7 +607,7 @@ class TestPairRequest(TestCase):
             }
         )
 
-        # Sample 2 C-ABCDEF
+        # Sample 2 C-ABCDEF ; dummy sample
         tumor2_R1_file_instance = File.objects.create(
             file_type = fastq_filetype_instance,
             file_group = lims_filegroup_instance,
@@ -779,8 +779,217 @@ class TestPairRequest(TestCase):
             }
         self.assertDictEqual(pairs, expected_pairs)
 
-        # TODO: next add the DMP bam to the pairing
+        # Add a DMP Bam for the tumor sample to the database
+        dmp_bam_file_instance = File.objects.create(
+            file_type = bam_filetype_instance,
+            file_group = dmp_bam_filegroup_instance,
+            file_name = "C-8VK0V7.bam",
+            path = "/C-8VK0V7.bam"
+        )
+        dmp_bam_filemetadata_instance = FileMetadata.objects.create(
+            file = dmp_bam_file_instance,
+            version = 1,
+            metadata = {
+                "bai": "/C-8VK0V7.bai",
+                "bam": "/C-8VK0V7.bam",
+                "type": "N",
+                "assay": "IM6",
+                "sample": "P-1234567-N01-IM6",
+                "anon_id": "ABCDEF-N",
+                "patient": {
+                    "cmo": "8VK0V7",
+                    "dmp": "P-1234567",
+                    "updated": "2020-03-19T23:57:51.941963Z",
+                    "imported": "2020-03-19T23:57:51.941945Z"},
+                "updated": "2020-03-25T19:45:16.421154Z",
+                "version": 1,
+                "coverage": 648,
+                "imported": "2020-03-25T19:45:16.421137Z",
+                "cmo_assay": "IMPACT468",
+                "tumor_type": "MBC",
+                "external_id": "C-8VK0V7-N901-dZ-IM6",
+                "sample_type": "0",
+                "tissue_type": "Breast",
+                "primary_site": "Breast",
+                "project_name": "UK12344567890VB",
+                "patient_group": "Group_12344567890",
+                "part_c_consent": 1,
+                "metastasis_site": "Not Applicable",
+                "somatic_calling_status": "Matched",
+                "major_allele_contamination": 0.452,
+                "minor_allele_contamination": 0.00069
+            }
+        )
 
+        # test that the DMP bam gets chosen as the sample's matched normal now instead of the pooled normal
+        pairs = compile_pairs(samples)
+        # remove the bam_bid for testing because it is non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['bam_bid'].pop()
+
+        expected_pairs = {
+            'tumor': [{
+                'bait_set': 'IMPACT468_BAITS',
+                'patient_id': 'C-8VK0V7',
+                'tumor_type': 'Tumor',
+                'sample_id': '10075_D_3_5',
+                'SM': '10075_D_3_5',
+                'request_id': '10075_D_3',
+                'run_id': ['PITT_0439'],
+                'preservation_type': ['Frozen']
+                }],
+            'normal': [{
+                'CN': 'MSKCC',
+                'PL': 'Illumina',
+                'PU': ['DMP_FCID_DMP_BARCODEIDX'],
+                'LB': 'C-8VK0V7-N901-dZ-IM6_1',
+                'tumor_type': 'Normal',
+                'ID': ['C-8VK0V7-N901-dZ-IM6_DMP_FCID_DMP_BARCODEIDX'],
+                'SM': 'C-8VK0V7-N901-dZ-IM6',
+                'species': '',
+                'patient_id': 'C-8VK0V7',
+                'bait_set': 'IMPACT468_BAITS',
+                'sample_id': 'C-8VK0V7-N901-dZ-IM6',
+                'run_date': [''],
+                'specimen_type': '',
+                'R1': [],
+                'R2': [],
+                'R1_bid': [],
+                'R2_bid': [],
+                'bam': ['/C-8VK0V7.bam'],
+                'bam_bid': [], # UUID('77b9a78f-1bed-475c-9799-c18a6f57b347')
+                'request_id': 'C-8VK0V7-N901-dZ-IM6',
+                'pi': '',
+                'pi_email': '',
+                'run_id': [''],
+                'preservation_type': ['']
+                }]
+            }
+        self.assertDictEqual(pairs, expected_pairs)
+
+        # Now add a matched normal to the original request for the sample
+        # Sample 1 C-8VK0V7
+        normal1_R1_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-8VK0V7-N.R1.fastq",
+            path = "/C-8VK0V7-N.R1.fastq"
+        )
+        normal1_R1_filemetadata_instance = FileMetadata.objects.create(
+            file = normal1_R1_file_instance,
+            metadata = {
+                "R": "R1",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "10075_D_2_3",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-8VK0V7",
+                "requestId": "10075_D_3",
+                "sampleName": "C-8VK0V7-N001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Normal",
+                "cmoSampleClass": "Normal",
+                "externalSampleId": "SK_MEL_1091A_N",
+                "investigatorSampleId": "SK_MEL_1091A_N",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+        normal1_R2_file_instance = File.objects.create(
+            file_type = fastq_filetype_instance,
+            file_group = lims_filegroup_instance,
+            file_name = "C-8VK0V7-N.R2.fastq",
+            path = "/C-8VK0V7-N.R2.fastq"
+        )
+        normal1_R2_filemetadata_instance = FileMetadata.objects.create(
+            file = normal1_R2_file_instance,
+            metadata = {
+                "R": "R2",
+                "sex": "F",
+                "runId": "PITT_0439",
+                "recipe": "IMPACT468",
+                "baitSet": "IMPACT468_BAITS",
+                "species": "Human",
+                "sampleId": "10075_D_2_3",
+                "libraryId": None,
+                "flowCellId": "HFTCNBBXY",
+                "barcodeId": "DUAL_IDT_LIB_267",
+                "barcodeIndex": "GTATTGGC-TTGTCGGT",
+                "runDate": "2019-12-17",
+                "patientId": "C-8VK0V7",
+                "requestId": "10075_D_3",
+                "sampleName": "C-8VK0V7-N001-d",
+                "igocomplete": True,
+                "oncoTreeCode": "MEL",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "specimenType": "Resection",
+                "tumorOrNormal": "Normal",
+                "cmoSampleClass": "Normal",
+                "externalSampleId": "SK_MEL_1091A_N",
+                "investigatorSampleId": "SK_MEL_1091A_N",
+                "labHeadEmail": "",
+                "labHeadName": ""
+            }
+        )
+
+        # test that the paired normal from the same request gets chosen instead for the pairing
+        pairs = compile_pairs(samples)
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['R1_bid'].pop()
+        pairs['normal'][0]['R2_bid'].pop()
+
+        expected_pairs = {
+            'tumor': [{
+                'bait_set': 'IMPACT468_BAITS',
+                'patient_id': 'C-8VK0V7',
+                'tumor_type': 'Tumor',
+                'sample_id': '10075_D_3_5',
+                'SM': '10075_D_3_5',
+                'request_id': '10075_D_3',
+                'run_id': ['PITT_0439'],
+                'preservation_type': ['Frozen']
+                }],
+            'normal': [{
+                'CN': 'MSKCC',
+                'PL': 'Illumina',
+                'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+                'LB': 's_C_8VK0V7_N001_d_1',
+                'tumor_type': 'Normal',
+                'ID': ['s_C_8VK0V7_N001_d_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+                'SM': 's_C_8VK0V7_N001_d',
+                'species': 'Human',
+                'patient_id': 'C-8VK0V7',
+                'bait_set': 'IMPACT468_BAITS',
+                'sample_id': '10075_D_2_3',
+                'run_date': ['2019-12-17'],
+                'specimen_type': 'Resection',
+                'R1': ['/C-8VK0V7-N.R1.fastq'],
+                'R2': ['/C-8VK0V7-N.R2.fastq'],
+                'R1_bid': [], # UUID('bfb94fe6-bf46-431a-8f72-6ee47ee72fc9')
+                'R2_bid': [], # UUID('1e8b68f8-c333-499c-b22d-50fbef2d2ea7')
+                'bam': [],
+                'bam_bid': [],
+                'request_id': '10075_D_3',
+                'pi': '',
+                'pi_email': '',
+                'run_id': ['PITT_0439'],
+                'preservation_type': ['Frozen']
+                }]
+            }
+        self.assertDictEqual(pairs, expected_pairs)
 
     def test_compile_pairs_custom1(self):
         """
