@@ -734,24 +734,52 @@ class TestPairRequest(TestCase):
 
         # test that the Frozen Pooled Normal is found
         pairs = compile_pairs(samples)
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['R1_bid'].pop()
+        pairs['normal'][0]['R2_bid'].pop()
+
         expected_pairs = {
-        'tumor': [{
-            'bait_set': 'IMPACT468_BAITS',
-            'patient_id': 'C-8VK0V7',
-            'tumor_type': 'Tumor',
-            'sample_id': '10075_D_3_5',
-            "SM": "10075_D_3_5",
-            'request_id': '10075_D_3',
-            'run_id': ['PITT_0439'],
-            "preservation_type": ["Frozen"]
-        }],
-        'normal': [{
-            "run_id": ["PITT_0439"],
-            'bait_set': 'IMPACT468_BAITS',
-            "preservation_type": ["Frozen"]
-        }]
-        }
+            'tumor': [{
+                'bait_set': 'IMPACT468_BAITS',
+                'patient_id': 'C-8VK0V7',
+                'tumor_type': 'Tumor',
+                'sample_id': '10075_D_3_5',
+                'SM': '10075_D_3_5',
+                'request_id': '10075_D_3',
+                'run_id': ['PITT_0439'],
+                'preservation_type': ['Frozen']
+                }],
+            'normal': [{
+                'CN': 'MSKCC',
+                'PL': 'Illumina',
+                'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
+                'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+                'tumor_type': 'Normal',
+                'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
+                'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'species': '',
+                'patient_id': 'PN_PATIENT_ID',
+                'bait_set': 'IMPACT468',
+                'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'run_date': [''],
+                'specimen_type': '',
+                'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
+                'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
+                'R1_bid': [], # UUID('cf065d86-3096-47b3-9b6f-cf711a1d6e0f')
+                'R2_bid': [], # UUID('51232bdd-6b31-4a4d-80c4-3aef13965fcd')
+                'bam': [],
+                'bam_bid': [],
+                'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'pi': '',
+                'pi_email': '',
+                'run_id': [''],
+                'preservation_type': [['Frozen']]
+                }]
+            }
         self.assertDictEqual(pairs, expected_pairs)
+
+        # TODO: next add the DMP bam to the pairing
 
 
     def test_compile_pairs_custom1(self):

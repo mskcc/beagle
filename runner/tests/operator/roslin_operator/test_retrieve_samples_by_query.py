@@ -411,10 +411,36 @@ class TestRetrieveSamplesByQuery(TestCase):
             preservation_types = ['Frozen'],
             bait_set = "IMPACT468_BAITS"
         )
-        expected_pooled_normals = [{
-            "run_id": ["PITT_0439"],
-            'bait_set': 'IMPACT468_BAITS',
-            "preservation_type": ["Frozen"]
-        }]
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pooled_normals['R1_bid'].pop()
+        pooled_normals['R2_bid'].pop()
+
+        expected_pooled_normals = {
+        'CN': 'MSKCC',
+        'PL': 'Illumina',
+        'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
+        'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+        'tumor_type': 'Normal',
+        'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
+        'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+        'species': '',
+        'patient_id': 'PN_PATIENT_ID',
+        'bait_set': 'IMPACT468',
+        'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+        'run_date': [''],
+        'specimen_type': '',
+        'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
+        'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
+        'R1_bid': [], # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
+        'R2_bid': [], # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
+        'bam': [],
+        'bam_bid': [],
+        'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+        'pi': '',
+        'pi_email': '',
+        'run_id': [''],
+        'preservation_type': [['Frozen']]
+        }
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
