@@ -213,68 +213,68 @@ class TestRetrieveSamplesByQuery(TestCase):
         preservation_types = list(set(['foo', 'bar']))
         query = build_preservation_query(preservation_types)
         # TODO: why does this give the preservation type of "FROZEN"?
-        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'ffpe']))
         query = build_preservation_query(preservation_types)
         # TODO: why does this give the preservation type of "FFPE"?
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen', 'ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN', 'ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FFPE')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['Frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation='FROZEN')
+        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
     def test_get_descriptor1(self):
@@ -416,4 +416,5 @@ class TestRetrieveSamplesByQuery(TestCase):
             'bait_set': 'IMPACT468_BAITS',
             "preservation_type": ["Frozen"]
         }]
+
         self.assertEqual(pooled_normals, expected_pooled_normals)
