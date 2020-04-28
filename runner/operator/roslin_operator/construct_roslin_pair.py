@@ -34,7 +34,7 @@ def format_sample(data):
     sample['R2'] = list()
     sample['zR1'] = list()  # TODO: Add for Xenografts
     sample['zR2'] = list()  # TODO: Add for Xenografts
-    sample['bam'] = list()  # TODO: Remove entirely? For DMP Bams
+    sample['bam'] = list()
     sample['RG_ID'] = data['ID']
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
@@ -50,6 +50,8 @@ def format_sample(data):
         sample[r1].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['R2']:
         sample[r2].append({'class': 'File', 'location': 'juno://' + i})
+    for i in data['bam']:
+        sample['bam'].append({'class': 'File', 'location': 'juno://' + i})
 
     return sample
 
@@ -77,7 +79,6 @@ def construct_roslin_jobs(samples):
         job.update(references)
         roslin_jobs.append(job)
     return roslin_jobs, error_samples
-
 
 
 def get_curated_bams(assay,request_files):

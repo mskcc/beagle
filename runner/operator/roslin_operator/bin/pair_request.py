@@ -12,7 +12,7 @@ Normals will have to have the same patient and bait set in order to be considere
 """
 import logging
 from datetime import datetime as dt
-from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals
+from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals, get_dmp_normal
 LOGGER = logging.getLogger(__name__)
 
 
@@ -113,22 +113,33 @@ def compile_pairs(samples):
                     pairs['tumor'].append(tumor)
                     pairs['normal'].append(new_normal)
                 else:
-                    pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
-                    LOGGER.info("No normal found for patient %s; checking for Pooled Normal",
-                                patient_id)
-                    if pooled_normal:
+                    LOGGER.info("No normal found for patient %s; checking for DMP Normal", patient_id)
+                    dmp_normal = get_dmp_normal(patient_id, bait_set)
+                    if dmp_normal:
                         LOGGER.info("Pairing %s (%s) with %s (%s)",
                                     tumor['sample_id'],
                                     tumor['SM'],
-                                    pooled_normal['sample_id'],
-                                    pooled_normal['SM'])
+                                    dmp_normal['sample_id'],
+                                    dmp_normal['SM'])
                         pairs['tumor'].append(tumor)
-                        pairs['normal'].append(pooled_normal)
+                        pairs['normal'].append(dmp_normal)
                     else:
-                        LOGGER.error("No normal found for %s (%s), patient %s",
-                                     tumor['sample_id'],
-                                     tumor['SM'],
-                                     patient_id)
+                        pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
+                        LOGGER.info("No DMP Normal found for patient %s; checking for Pooled Normal",
+                                    patient_id)
+                        if pooled_normal:
+                            LOGGER.info("Pairing %s (%s) with %s (%s)",
+                                        tumor['sample_id'],
+                                        tumor['SM'],
+                                        pooled_normal['sample_id'],
+                                        pooled_normal['SM'])
+                            pairs['tumor'].append(tumor)
+                            pairs['normal'].append(pooled_normal)
+                        else:
+                            LOGGER.error("No normal found for %s (%s), patient %s",
+                                         tumor['sample_id'],
+                                         tumor['SM'],
+                                         patient_id)
         else:
             LOGGER.error("NoPatientIdError: No patient_id found for %s (%s); skipping.",
                          tumor['sample_id'],

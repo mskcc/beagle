@@ -91,7 +91,8 @@ def build_preservation_query(data):
     value = "FROZEN"
     if "ffpe" in preservations_lower_case:
         value = "FFPE"
-    query = Q(filemetadata__metadata__preservation=value)
+    # case-insensitive matching
+    query = Q(filemetadata__metadata__preservation__iexact=value)
     return query
 
 
@@ -113,6 +114,8 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
         order_by('file_name')
     descriptor = get_descriptor(bait_set, pooled_normals)
 
+    # TODO: what is this boolean testing and what is its significance?
+    # TODO: why does the lack of a descriptor mean there is no pooled normal?
     if not descriptor: # i.e., no pooled normal
         return None
     pooled_normals = pooled_normals.filter(filemetadata__metadata__recipe=descriptor)
@@ -153,6 +156,73 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
         return pooled_normal
     return None
 
+
+def get_dmp_normal(patient_id, bait_set):
+    """
+    From a patient id and bait set, get matching dmp bam normal
+    """
+    file_objs = File.objects.prefetch_related(
+        Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').\
+            order_by('-created_date')))
+    dmp_query = build_dmp_query(patient_id, bait_set)
+
+    dmp_bam = file_objs.\
+        filter(dmp_query).\
+        order_by('file_name').first()
+
+    if dmp_bam:
+        dmp_metadata = dmp_bam.filemetadata_set.first().metadata
+        sample_name = dmp_metadata['external_id']
+        sample = dict()
+        sample['id'] = dmp_bam.id
+        sample['path'] = dmp_bam.path
+        sample['file_name'] = dmp_bam.file_name
+        sample['file_type'] = dmp_bam.file_type
+        metadata = init_metadata()
+        metadata['sampleId'] = sample_name
+        metadata['sampleName'] = sample_name
+        metadata['requestId'] = sample_name
+        metadata['baitSet'] = bait_set
+        metadata['recipe'] = bait_set
+        metadata['run_id'] = ""
+        metadata['preservation'] = ""
+        metadata['libraryId'] = sample_name + "_1"
+        metadata['R'] = 'Not applicable'
+        # because rgid depends on flowCellId and barcodeIndex, we will
+        # spoof barcodeIndex so that pairing can work properly; see
+        # build_sample in runner.operator.roslin_operator.bin
+        metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
+        metadata['flowCellId'] = 'DMP_FCID'
+        metadata['tumorOrNormal'] = 'Normal'
+        metadata['patientId'] = patient_id
+        sample['metadata'] = metadata
+        return build_sample([sample], ignore_sample_formatting=True)
+    return None
+
+
+def build_dmp_query(patient_id, bait_set):
+    """
+    Build simple Q queries for patient id, bait set, and type 'N' to signify "normal"
+
+    The bait set from file groups/LIMS is different from what's in DMP, so this
+    translates it.
+
+    Patient ID in DMP also doesn't contain C-, so this removes that prefix
+    """
+    value = ""
+    if "impact341" in bait_set.lower():
+        value = "IMPACT341"
+    if "impact410" in bait_set.lower():
+        value = "IMPACT410"
+    if "impact468" in bait_set.lower():
+        value = "IMPACT468"
+    if "hemepact_v4" in bait_set.lower():
+        value = "HEMEPACT"
+    assay = Q(filemetadata__metadata__cmo_assay=value)
+    patient = Q(filemetadata__metadata__patient__cmo=patient_id.lstrip('C-'))
+    normal = Q(filemetadata__metadata__type='N')
+    query = assay & patient & normal
+    return query
 
 def get_r_orientation(fastq_filename):
     """
