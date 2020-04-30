@@ -94,12 +94,12 @@ def create_mapping(data):
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
-        seen.add(normal['sample_name'])
         normal_map = create_mapping_string_from_sample(normal)
         tumor_map = create_mapping_string_from_sample(tumor)
         mapping_string += tumor_map
         if normal['sample_name'] not in seen:
             mapping_string += normal_map
+        seen.add(normal['sample_name'])
     return mapping_string
 
 
