@@ -118,6 +118,8 @@ class TestMakeSample(TestCase):
                            'R2': [
                                '/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz'],
                            'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
+                           'bam': [],
+                           'bam_bid': [],
                            'SM': 's_C_8VK0V7_N001_d',
                            'bait_set': 'IMPACT468_BAITS',
                            'sample_id': '10075_D_2_3',
