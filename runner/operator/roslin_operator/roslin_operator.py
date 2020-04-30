@@ -71,6 +71,10 @@ class RoslinOperator(Operator):
                 sample_mapping += "\t".join(
                     [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
 
+            for p in job['pair'][1]['bam']:
+                sample_mapping += "\t".join(
+                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
+
             name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job['assay']
             pi = job['pi']
