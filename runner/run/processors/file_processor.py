@@ -64,7 +64,7 @@ class FileProcessor(object):
             raise FileHelperException("Unknown uri schema %s" % uri)
 
     @staticmethod
-    def create_file_obj(uri, size, group_id, metadata):
+    def create_file_obj(uri, size, checksum, group_id, metadata):
         file_path = FileProcessor.parse_path_from_uri(uri)
         basename = os.path.basename(file_path)
         file_type = FileProcessor.get_file_ext(basename)
@@ -74,6 +74,7 @@ class FileProcessor(object):
             raise FileHelperException('Invalid FileGroup id: %s' % group_id)
         file_object = File(path=file_path,
                            file_name=os.path.basename(file_path),
+                           checksum=checksum,
                            file_type=file_type,
                            file_group=group_id_obj,
                            size=size)

@@ -290,6 +290,7 @@ class ProcessorTest(APITestCase):
         file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.fastq.gz',
             123345,
+            'sha1$calculated checksum',
             str(self.file_group.id),
             {})
         self.assertEqual(file_obj.file_type, self.file_type_fastq)
@@ -298,6 +299,7 @@ class ProcessorTest(APITestCase):
         file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.unknown_data_type',
             123345,
+            'sha1$calculated checksum',
             str(self.file_group.id),
             {})
         self.assertEqual(file_obj.file_type, self.file_type_unknown)
@@ -308,6 +310,7 @@ class ProcessorTest(APITestCase):
             file_obj = FileProcessor.create_file_obj(
                 'file:///path/to/file.unknown_data_type',
                 123345,
+                'sha1$calculated checksum',
                 file_group_id,
                 {})
             self.assertTrue('Invalid FileGroup id: %s' % file_group_id in context.exception)
