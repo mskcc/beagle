@@ -104,7 +104,7 @@ def single_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a single of values in the JSON
     """
-    keys = ['is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
+    keys = ['assay', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
     return set(keys)
 
 
@@ -134,6 +134,7 @@ def construct_helix_filters_input(run_id_list):
                     input_json["is_impact"] = "True"
                 else:
                     input_json["is_impact"] = "False"
+                input_json['assay'] = single_port.value
 
     references = convert_references(input_json['assay'])
     input_json.update(references)
