@@ -104,7 +104,7 @@ def single_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a single of values in the JSON
     """
-    keys = ['assay', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
+    keys = ['assay', 'project_prefix', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
     return set(keys)
 
 
@@ -129,6 +129,8 @@ def construct_helix_filters_input(run_id_list):
                 input_json["maf_files"].append(get_file_obj(value))
             if name == "facets_txt_hisens":
                 input_json["hisens_cncfs"].append(get_file_obj(value))
+            if name == "project_prefix":
+                input_json[name] = single_port.value
             if name == "assay":
                 if "impact" in single_port.value.lower():
                     input_json["is_impact"] = "True"
