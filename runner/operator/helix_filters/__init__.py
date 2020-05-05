@@ -1,1 +1,1 @@
-from .roslin_qc_operator import RoslinQcOperator
+from .helix_filters_operator import HelixFiltersOperator
