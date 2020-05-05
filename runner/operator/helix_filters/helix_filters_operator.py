@@ -9,6 +9,7 @@ import logging
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
+from .construct_helix_filters_input import construct_helix_filters_input
 LOGGER = logging.getLogger(__name__)
 
 
