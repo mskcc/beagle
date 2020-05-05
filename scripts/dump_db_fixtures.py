@@ -49,6 +49,70 @@ from file_system.models import File, FileMetadata, FileGroup, FileType
 from runner.models import Run, RunStatus, Port, PortType, Pipeline, OperatorRun
 sys.path.pop(0)
 
+def sanitize_metadata(queryset_data_dicts):
+    """
+    Strip personal data from the FileMetadata queryset instances that have been converted to dicts
+
+    Parameters
+    ----------
+    queryset_data_dicts: list
+        a list of dicts that represent the FileMetadata instances.
+
+    Output
+    ------
+    list
+        a list of modified dicts
+
+    Notes
+    -----
+    Modifies dicts in place; pass by reference
+
+    Example of FileMetadata dict data structure:
+
+    [{
+        "model": "file_system.filemetadata",
+        "fields": {
+            "metadata": {
+                "patientId": "C-ABCD",
+                "sampleName": "C-ABCD-P001-d",
+                "labHeadName": "Roslyn Franklin",
+                "labHeadEmail": "username@internet.com",
+                "dataAnalystName": "",
+                "dataAnalystEmail": "",
+                "externalSampleId": "AB-123-XYZ",
+                "investigatorName": "Dr. Smith",
+                "investigatorEmail": "username@internet.com",
+                "projectManagerName": "Dr. Jones",
+                "investigatorSampleId": "AB-123-XYZ",
+            },
+        }
+    }, ... ]
+    """
+    for queryset_data_dict in queryset_data_dicts:
+        if 'metadata' in queryset_data_dict['fields']:
+            if 'labHeadName' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['labHeadName'] = 'Roslyn Franklin'
+
+            if 'labHeadEmail' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['labHeadEmail'] = 'username@internet.com'
+
+            if 'dataAnalystName' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['dataAnalystName'] = 'E Wilson'
+
+            if 'dataAnalystEmail' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['dataAnalystEmail'] = 'username@internet.com'
+
+            if 'investigatorName' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['investigatorName'] = 'Dr. Smith'
+
+            if 'investigatorEmail' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['investigatorEmail'] = 'username@internet.com'
+
+            if 'projectManagerName' in queryset_data_dict['fields']['metadata']:
+                queryset_data_dict['fields']['metadata']['projectManagerName'] = 'Dr. Jones'
+
+    return(queryset_data_dicts)
+
 def get_file_filemetadata_from_port(port_instance):
     """
     Get the queryset of all File and FileMetadata entries for a given Port entry
@@ -66,12 +130,16 @@ def dump_request(**kwargs):
     Dump re-loadable fixtures for File and FileMetadata items from a given request
     """
     requestID = kwargs.pop('requestID')
+    sanitize = kwargs.pop('sanitize', False)
     output_file_file = "{}.file.json".format(requestID)
     output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
     # get FileMetadata entries that match the request ID
     file_instances = FileMetadata.objects.filter(metadata__requestId = requestID)
-    print(json.dumps(json.loads(serializers.serialize('json', file_instances)), indent=4), file = open(output_filemetadata_file, "w"))
+    data = json.loads(serializers.serialize('json', file_instances))
+    if sanitize == True:
+        data = sanitize_metadata(queryset_data_dicts = data)
+    print(json.dumps(data, indent=4), file = open(output_filemetadata_file, "w"))
 
     # get the File entries that corresponds to the request ID
     queryset = File.objects.prefetch_related(
@@ -273,6 +341,7 @@ def parse():
     # subparser for dumping requests
     request = subparsers.add_parser('request', help = 'Dump File and FileMetadata based on a requestId')
     request.add_argument('requestID', help = 'requestID to dump items for')
+    request.add_argument('--sanitize', action = "store_true", help = 'Attempt to scrub personal data from the FileMetadata entries')
     request.set_defaults(func = dump_request)
 
     run = subparsers.add_parser('run', help = 'Dump output data for pipeline run')
