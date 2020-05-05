@@ -128,7 +128,7 @@ def construct_helix_filters_input(run_id_list):
             if name == "maf":
                 input_json["maf_files"].append(get_file_obj(value))
             if name == "facets_txt_hisens":
-                input_json["facets_txt_hisens"].append(get_file_obj(value))
+                input_json["hisens_cncfs"].append(get_file_obj(value))
             if name == "assay":
                 if "impact" in single_port.value.lower():
                     input_json["is_impact"] = "True"
