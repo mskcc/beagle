@@ -35,6 +35,7 @@ class HelixFiltersOperator(Operator):
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
         input_json = self.add_output_file_names(input_json, pipeline_version)
+        tags = { "project_prefix": project_prefix, "run_ids": run_ids }
 
         helix_filters_outputs_job_data = {
             'app': app,
