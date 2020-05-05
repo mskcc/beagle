@@ -16,7 +16,7 @@ def construct_sample_inputs(request_id, samples):
         for library in meta["libraries"]:
             run = library["runs"][0] # TODO(aef) should this be last? or should we sort by date
             input_file = template.render(
-                cmo_sample_name="hmmm",
+                cmo_sample_name=meta["cmoSampleName"],
                 tumor_type=meta["specimenType"],
                 igo_id=meta["igoId"],
                 patient_id=meta["cmoPatientId"],
@@ -33,15 +33,13 @@ def construct_sample_inputs(request_id, samples):
 
             # TODO(aef) maybe we can forgo this if DRW serializer can do it for us.
             sample = json.loads(input_file)
-            #sample = convert_to_file(sample)
             sample_inputs.append(sample)
 
     return sample_inputs
 
 class AccessFastqToBamOperator(Operator):
     def get_jobs(self):
-        #files = self.files.filter(filemetadata__metadata__request_id=self.request_id, filemetadata__metadata__igocomplete=True).all()
-        files = self.files.all()
+        files = self.files.filter(filemetadata__metadata__request_id=self.request_id, filemetadata__metadata__igocomplete=True).all()
 
         data = [
             {
@@ -56,12 +54,11 @@ class AccessFastqToBamOperator(Operator):
 
         number_of_inputs = len(sample_inputs)
 
-        # Not sure why we pass multiple inputs...
         return [
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs), 
+                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {'requestId': self.request_id}}
