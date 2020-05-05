@@ -17,6 +17,8 @@ $ dump_db_fixtures.py request 07951_AP
 
 $ dump_db_fixtures.py port_files fd41534c-71eb-4b1b-b3af-e3b1ec3aecde
 
+$ dump_db_fixtures.py run --onefile ca18b090-03ad-4bef-acd3-52600f8e62eb
+
 Output
 ------
 
@@ -34,7 +36,7 @@ import sys
 import json
 import argparse
 import django
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Max
 from django.core import serializers
 from pprint import pprint
 
@@ -44,9 +46,20 @@ sys.path.insert(0, parentdir)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 django.setup()
 from file_system.models import File, FileMetadata, FileGroup, FileType
-from runner.models import Run, RunStatus, Port, PortType, Pipeline
+from runner.models import Run, RunStatus, Port, PortType, Pipeline, OperatorRun
 sys.path.pop(0)
 
+def get_file_filemetadata_from_port(port_instance):
+    """
+    Get the queryset of all File and FileMetadata entries for a given Port entry
+    returns a tuple of type (files_queryset, filemetadata_queryset)
+    """
+    files_queryset = port_instance.files.all()
+    # filemetadata_queryset = FileMetadata.objects.filter(file__in = [i for i in files_queryset])
+    filemetata_instances = []
+    for file in files_queryset:
+        filemetata_instances.append(FileMetadata.objects.filter(file = file).order_by('-version').first())
+    return(files_queryset, filemetata_instances)
 
 def dump_request(**kwargs):
     """
@@ -73,22 +86,75 @@ def dump_run(**kwargs):
     Dump re-loadable Django database fixtures for a Run entry and its associated input and output Port entries
     """
     runID = kwargs.pop('runID')
+    onefile = kwargs.pop('onefile')
     output_run_file = "{}.run.json".format(runID)
-    output_port_input_file = "{}.port.input.json".format(runID)
-    output_port_output_file = "{}.port.output.json".format(runID)
+    output_port_input_file = "{}.run.port.input.json".format(runID)
+    output_port_output_file = "{}.run.port.output.json".format(runID)
+    output_port_file_input_file = "{}.run.port_file.input.json".format(runID)
+    output_port_filemetadata_input_file = "{}.run.port_filemetadata.input.json".format(runID)
+    output_port_file_output_file = "{}.run.port_file.output.json".format(runID)
+    output_port_filemetadata_output_file = "{}.run.port_filemetadata.output.json".format(runID)
+    output_operator_run_file = "{}.run.operator_run.json".format(runID)
+
+    all_data = []
+    input_files = []
+    input_filemetadatas = []
+    output_files = []
+    output_filemetadatas = []
 
     # get the parent Run instance
     run_instance = Run.objects.get(id = runID)
-    print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
+
+    operator_run_instance = run_instance.operator_run
 
     # get the Run input and output Port instances
-    input_queryset = run_instance.port_set.filter(port_type=PortType.INPUT)
-    print(json.dumps(json.loads(serializers.serialize('json', input_queryset.all())), indent=4), file = open(output_port_input_file, "w"))
+    input_port_queryset = run_instance.port_set.filter(port_type=PortType.INPUT)
+    output_port_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT)
 
-    output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT)
-    print(json.dumps(json.loads(serializers.serialize('json', output_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
-    for item in output_queryset:
-        pprint((item, item.files.all()))
+    for item in input_port_queryset:
+        files_queryset, filemetata_instances = get_file_filemetadata_from_port(item)
+        for file in files_queryset:
+            input_files.append(file)
+        for filemetadata in filemetata_instances:
+            input_filemetadatas.append(filemetadata)
+
+    for item in output_port_queryset:
+        files_queryset, filemetata_instances = get_file_filemetadata_from_port(item)
+        for file in files_queryset:
+            output_files.append(file)
+        for filemetadata in filemetata_instances:
+            output_filemetadatas.append(filemetadata)
+
+    # save each set of items to individual files by default
+    if onefile == False:
+        print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', [operator_run_instance])), indent=4), file = open(output_operator_run_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', input_port_queryset.all())), indent=4), file = open(output_port_input_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', output_port_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
+
+        print(json.dumps(json.loads(serializers.serialize('json', input_files)), indent=4), file = open(output_port_file_input_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', input_filemetadatas)), indent=4), file = open(output_port_filemetadata_input_file, "w"))
+
+        print(json.dumps(json.loads(serializers.serialize('json', output_files)), indent=4), file = open(output_port_file_output_file, "w"))
+        print(json.dumps(json.loads(serializers.serialize('json', output_filemetadatas)), indent=4), file = open(output_port_filemetadata_output_file, "w"))
+
+    # save all items to a single file
+    if onefile == True:
+        all_data.append(run_instance)
+        all_data.append(operator_run_instance)
+        for item in input_port_queryset:
+            all_data.append(item)
+        for item in output_port_queryset:
+            all_data.append(item)
+        for item in input_files:
+            all_data.append(item)
+        for item in input_filemetadatas:
+            all_data.append(item)
+        for item in output_files:
+            all_data.append(item)
+        for item in output_filemetadatas:
+            all_data.append(item)
+        print(json.dumps(json.loads(serializers.serialize('json', all_data)), indent=4), file = open(output_run_file, "w"))
 
 
 def dump_port_files(**kwargs):
@@ -113,13 +179,23 @@ def dump_pipeline(**kwargs):
     Dump re-loadable Django database fixtures for Pipeline entries and related table fixtures
     """
     pipelineName = kwargs.pop('pipelineName')
-    output_pipeline_file = "{}.pipeline.json".format(pipelineName)
-    output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(pipelineName)
+    if pipelineName == "all":
+        output_pipeline_file = "all_pipeline.json".format(pipelineName)
+        output_pipeline_filegroup_file = "all_pipeline.output_file_group.json".format(pipelineName)
 
-    pipeline_instance = Pipeline.objects.get(name = pipelineName)
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
+        pipelines = Pipeline.objects.all()
+        print(json.dumps(json.loads(serializers.serialize('json', pipelines)), indent=4), file = open(output_pipeline_file, "w"))
 
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+        file_groups = FileGroup.objects.all()
+        print(json.dumps(json.loads(serializers.serialize('json', file_groups)), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+    else:
+        output_pipeline_file = "{}.pipeline.json".format(pipelineName)
+        output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(pipelineName)
+
+        pipeline_instance = Pipeline.objects.get(name = pipelineName)
+        print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
+
+        print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
 
 def get_files(value, type):
     """
@@ -178,6 +254,14 @@ def dump_file(**kwargs):
         output_file = "all.file_filemetadata.json"
         print(json.dumps(all_data, indent=4), file = open(output_file, "w"))
 
+def dump_file_group(**kwargs):
+    """
+    Dump the FileGroup fixtures
+    """
+    fileGroupId = kwargs.pop('fileGroupID')
+    output_file_group_file = "{}.file_group.json".format(fileGroupId)
+    filegroup_instance = FileGroup.objects.get(id = fileGroupId)
+    print(json.dumps(json.loads(serializers.serialize('json', [filegroup_instance])), indent=4), file = open(output_file_group_file, "w"))
 
 def parse():
     """
@@ -193,6 +277,7 @@ def parse():
 
     run = subparsers.add_parser('run', help = 'Dump output data for pipeline run')
     run.add_argument('runID', help = 'Run ID to dump items for')
+    run.add_argument('--onefile', action = "store_true", help = 'Put all the outputs into a single file ')
     run.set_defaults(func = dump_run)
 
     pipeline = subparsers.add_parser('pipeline', help = 'Dump pipeline fixture')
@@ -209,6 +294,10 @@ def parse():
     port_files = subparsers.add_parser('port_files', help = 'Dump port.files fixture')
     port_files.add_argument('portID', help = 'Port ID to dump files for')
     port_files.set_defaults(func = dump_port_files)
+
+    file_group = subparsers.add_parser('filegroup', help = 'Dump filegroup fixture')
+    file_group.add_argument('fileGroupID', help = 'FileGroup ID ID to dump items for')
+    file_group.set_defaults(func = dump_file_group)
 
     args = parser.parse_args()
     args.func(**vars(args))
