@@ -8,6 +8,7 @@ and preservation type
 import logging
 import os
 from file_system.models import File, FileMetadata
+from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
 from .make_sample import build_sample, remove_with_caveats
@@ -19,18 +20,14 @@ def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
     """
-    file_objs = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=
-                 FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-                 order_by('file_name')
-    files = file_objs.filter(filemetadata__metadata__patientId=patient_id).all()
+    files = FileRepository.filter(metadata={"patientId": patient_id})
     data = list()
     for current_file in files:
         sample = dict()
-        sample['id'] = current_file.id
-        sample['path'] = current_file.path
-        sample['file_name'] = current_file.file_name
-        sample['metadata'] = current_file.filemetadata_set.first().metadata
+        sample['id'] = current_file.file.id
+        sample['path'] = current_file.file.path
+        sample['file_name'] = current_file.file.file_name
+        sample['metadata'] = current_file.metadata
         data.append(sample)
 
     samples = list()
@@ -74,11 +71,12 @@ def build_run_id_query(data):
     Very similar to build_preservation_query, but "filemetadata__metadata__runId"
     can't be sent as a value, so had to make a semi-redundant function
     """
-    data_query_set = [Q(filemetadata__metadata__runId=value) for value in set(data)]
-    query = data_query_set.pop()
-    for item in data_query_set:
-        query |= item
-    return query
+    # data_query_set = [Q(filemetadata__metadata__runId=value) for value in set(data)]
+    return {"runId__in": list(set(data))}
+    # query = data_query_set.pop()
+    # for item in data_query_set:
+    #     query |= item
+    # return query
 
 
 def build_preservation_query(data):
@@ -92,6 +90,7 @@ def build_preservation_query(data):
     if "ffpe" in preservations_lower_case:
         value = "FFPE"
     # case-insensitive matching
+    return {'preservation': value}
     query = Q(filemetadata__metadata__preservation__iexact=value)
     return query
 
@@ -106,6 +105,12 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     query = Q(file_group=settings.POOLED_NORMAL_FILE_GROUP)
     run_id_query = Q()
     preservation_query = Q()
+
+    pooled_normals = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    pooled_normals = FileRepository.filter(queryset=pooled_normals,
+                                           metadata=build_run_id_query(preservation_types))
+    pooled_normals = FileRepository.filter(queryset=pooled_normals,
+                                           metadata=build_preservation_query(preservation_types))
 
     run_id_query = build_run_id_query(run_ids)
     preservation_query = build_preservation_query(preservation_types)

@@ -7,7 +7,7 @@ from django.db import transaction
 from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
-from file_system.models import File, FileMetadata
+from file_system.repository.file_repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
 # TODO: Consider moving `format_sample_name` to some other place
@@ -169,10 +169,11 @@ class JobObject(object):
     def _generate_sample_data_file(self):
         result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
         ret_str = 'filemetadata__metadata__sampleId'
-        samples = File.objects.prefetch_related(Prefetch('filemetadata_set',
-                                                         queryset=FileMetadata.objects.select_related('file').order_by(
-                                                             '-created_date'))).filter(
-            filemetadata__metadata__requestId=self.job.args['request_id']).order_by(ret_str).distinct(ret_str).all()
+        # samples = File.objects.prefetch_related(Prefetch('filemetadata_set',
+        #                                                  queryset=FileMetadata.objects.select_related('file').order_by(
+        #                                                      '-created_date'))).filter(
+        #     filemetadata__metadata__requestId=self.job.args['request_id']).order_by(ret_str).distinct(ret_str).all()
+        samples = FileRepository.filter(metadata={"requestId": self.job.args['request_id']}, ret="sampleId")
         for sample in samples:
             metadata = sample.filemetadata_set.first().metadata
             print(metadata)
