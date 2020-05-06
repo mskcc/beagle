@@ -139,7 +139,7 @@ class TempoMPGenOperator(Operator):
 
     def create_mapping_file(self, tempo_inputs, error_samples):
         cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
-        header = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUMBER_OF_FASTQ_PAIRS_FOR_SAMPLE\n"
+        header = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUM_OF_PAIRS\n"
         sample_mapping = header + create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
