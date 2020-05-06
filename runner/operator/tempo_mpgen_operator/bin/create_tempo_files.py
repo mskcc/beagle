@@ -5,7 +5,7 @@ from .make_sample import is_cmo_sample_name_format
 
 
 def create_pairing(data):
-    pairing = "NORMAL_ID\tTUMOR_ID\n"
+    pairing = ""
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
@@ -26,7 +26,7 @@ def resolve_target(bait_set):
 
 
 def create_mapping_string_from_sample(sample):
-    mapping_string = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUMBER_OF_FASTQ_PAIRS_FOR_SAMPLE\n"
+    mapping_string = ""
     sample_name = sample["sample_name"]
     target = resolve_target(sample["bait_set"])
     num_fastqs = len(sample["R1"])

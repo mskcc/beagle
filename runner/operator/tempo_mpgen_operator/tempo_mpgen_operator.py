@@ -130,7 +130,8 @@ class TempoMPGenOperator(Operator):
         send_notification.delay(sample_pairing_errors_event)
  
         cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
-        sample_pairing = create_pairing(cleaned_inputs)
+        header = "NORMAL_ID\tTUMOR_ID\n"
+        sample_pairing = header + create_pairing(cleaned_inputs)
 
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(pairing_file_event)
@@ -138,7 +139,8 @@ class TempoMPGenOperator(Operator):
 
     def create_mapping_file(self, tempo_inputs, error_samples):
         cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
-        sample_mapping = create_mapping(cleaned_inputs)
+        header = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUMBER_OF_FASTQ_PAIRS_FOR_SAMPLE\n"
+        sample_mapping = header + create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
