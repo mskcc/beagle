@@ -30,6 +30,13 @@ class FileView(mixins.CreateModelMixin,
     def get_serializer_class(self):
         return FileSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            FileRepository.delete(kwargs['pk'])
+        except FileNotFoundException as e:
+            return Response({'details': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def retrieve(self, request, *args, **kwargs):
         try:
             f = FileRepository.get(kwargs['pk'])
@@ -39,47 +46,42 @@ class FileView(mixins.CreateModelMixin,
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
-        # queryset = File.objects.prefetch_related(
-        #     Prefetch('filemetadata_set', queryset=
-        #     FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-        #     order_by('file_name').all()
-        metadata_ids = FileMetadata.objects.order_by('file', '-version').distinct('file_id').values_list('id',
-                                                                                                         flat=True)
+        queryset = FileRepository.all()
         file_groups = request.query_params.getlist('file_group')
-        queryset = FileMetadata.objects.filter(id__in=metadata_ids)
         if file_groups:
-            queryset = queryset.filter(file__file_group_id__in=file_groups)
+            queryset = FileRepository.filter(queryset=queryset, file_group_in=file_groups)
         path = request.query_params.getlist('path')
         if path:
-            queryset = queryset.filter(file__path__in=path)
+            queryset = FileRepository.filter(queryset=queryset, path_in=path)
         metadata = request.query_params.getlist('metadata')
         if metadata:
             filter_query = dict()
             for val in metadata:
                 k, v = val.split(':')
-                filter_query['metadata__%s' % k] = v
-                queryset = queryset.filter(**filter_query)
+                filter_query[k] = v
+            queryset = FileRepository.filter(queryset=queryset, metadata=filter_query)
         metadata_regex = request.query_params.getlist('metadata_regex')
         if metadata_regex:
             filter_query = dict()
             for val in metadata_regex:
                 k, v = val.split(':')
-                filter_query['metadata__%s__regex' % k] = v
-                queryset = queryset.filter(**filter_query)
+                filter_query[k] = v
+        path_regex = request.query_params.get('path_regex')
+        if path_regex:
+            queryset = FileRepository.filter(queryset=queryset, path_regex=path_regex)
         filename = request.query_params.getlist('filename')
         if filename:
-            queryset = queryset.filter(file__file_name__in=filename)
+            queryset = FileRepository.filter(queryset=queryset, file_name_in=filename)
         filename_regex = request.query_params.get('filename_regex')
         if filename_regex:
-            queryset = queryset.filter(file__file_name__regex=filename_regex)
+            queryset = FileRepository.filter(queryset=queryset, path_regex=filename_regex)
         file_type = request.query_params.getlist('file_type')
         if file_type:
-            queryset = queryset.filter(file__file_type__name__in=file_type)
+            queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
         ret = request.query_params.get('return')
         if ret:
-            ret_str = 'metadata__%s' % ret
             try:
-                queryset = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+                queryset = FileRepository.filter(queryset=queryset, ret=ret)
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         page = self.paginate_queryset(queryset)
@@ -94,22 +96,20 @@ class FileView(mixins.CreateModelMixin,
         serializer = CreateFileSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             file = serializer.save()
-            response = FileSerializer(file)
+            response = FileSerializer(file.filemetadata_set.first())
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         try:
-            file = File.objects.get(id=kwargs.get('pk'))
-        except File.DoesNotExist:
+            f = FileRepository.get(id=kwargs.get('pk'))
+        except FileNotFoundException:
             return Response({'details': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = UpdateFileSerializer(file, data=request.data, context={'request': request})
+        serializer = UpdateFileSerializer(f.file, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            file = File.objects.prefetch_related(
-                Prefetch('filemetadata_set', queryset=
-                FileMetadata.objects.select_related('file').order_by('-created_date'))).get(id=kwargs.get('pk'))
-            response = FileSerializer(file)
+            f = FileRepository.get(id=kwargs.get('pk'))
+            response = FileSerializer(f)
             return Response(response.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
