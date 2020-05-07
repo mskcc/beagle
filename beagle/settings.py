@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_multiple_model',
-    'rest_framework_swagger'
+    'drf_yasg'
 ]
 
 
