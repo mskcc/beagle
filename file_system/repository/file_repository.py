@@ -27,7 +27,9 @@ class FileRepository(object):
             raise FileNotFoundException("File with id:%s does not exist" % str(id))
 
     @classmethod
-    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, ret=None):
+    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, ret=None):
+        if q:
+            return queryset.filter(q)
         if (path and path_in) or (path and path_regex) or (path_in and path_regex):
             raise InvalidQueryException("Can't specify multiple path queries")
         if file_type and file_type_in:
