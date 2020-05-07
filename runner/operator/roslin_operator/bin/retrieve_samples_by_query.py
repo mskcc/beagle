@@ -8,6 +8,7 @@ and preservation type
 import logging
 import os
 from file_system.models import File, FileMetadata
+from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
 from .make_sample import build_sample, remove_with_caveats
@@ -19,18 +20,14 @@ def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
     """
-    file_objs = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=
-                 FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-                 order_by('file_name')
-    files = file_objs.filter(filemetadata__metadata__patientId=patient_id).all()
+    files = FileRepository.filter(metadata={"patientId": patient_id})
     data = list()
     for current_file in files:
         sample = dict()
-        sample['id'] = current_file.id
-        sample['path'] = current_file.path
-        sample['file_name'] = current_file.file_name
-        sample['metadata'] = current_file.filemetadata_set.first().metadata
+        sample['id'] = current_file.file.id
+        sample['path'] = current_file.file.path
+        sample['file_name'] = current_file.file.file_name
+        sample['metadata'] = current_file.metadata
         data.append(sample)
 
     samples = list()
@@ -57,7 +54,7 @@ def get_descriptor(bait_set, pooled_normals):
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
     """
     for pooled_normal in pooled_normals:
-        descriptor = pooled_normal.filemetadata_set.first().metadata['recipe']
+        descriptor = pooled_normal.metadata['recipe']
         if descriptor.lower() in bait_set.lower():
             return descriptor
     return None
@@ -74,7 +71,7 @@ def build_run_id_query(data):
     Very similar to build_preservation_query, but "filemetadata__metadata__runId"
     can't be sent as a value, so had to make a semi-redundant function
     """
-    data_query_set = [Q(filemetadata__metadata__runId=value) for value in set(data)]
+    data_query_set = [Q(metadata__runId=value) for value in set(data)]
     query = data_query_set.pop()
     for item in data_query_set:
         query |= item
@@ -92,7 +89,7 @@ def build_preservation_query(data):
     if "ffpe" in preservations_lower_case:
         value = "FFPE"
     # case-insensitive matching
-    query = Q(filemetadata__metadata__preservation__iexact=value)
+    query = Q(metadata__preservation__iexact=value)
     return query
 
 
@@ -100,25 +97,23 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    file_objs = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').\
-            order_by('-created_date')))
-    query = Q(file_group=settings.POOLED_NORMAL_FILE_GROUP)
-    run_id_query = Q()
-    preservation_query = Q()
+    pooled_normals = FileRepository.all()
 
+    query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
     run_id_query = build_run_id_query(run_ids)
     preservation_query = build_preservation_query(preservation_types)
-    pooled_normals = file_objs.\
-        filter(query & run_id_query & preservation_query).\
-        order_by('file_name')
+
+    q = query & run_id_query & preservation_query
+
+    pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+
     descriptor = get_descriptor(bait_set, pooled_normals)
 
     # TODO: what is this boolean testing and what is its significance?
     # TODO: why does the lack of a descriptor mean there is no pooled normal?
     if not descriptor: # i.e., no pooled normal
         return None
-    pooled_normals = pooled_normals.filter(filemetadata__metadata__recipe=descriptor)
+    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
     sample_files = list()
 
     # arbitrarily named
@@ -130,9 +125,9 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     if num_of_pooled_normals > 0:
         for pooled_normal in pooled_normals:
             sample = dict()
-            sample['id'] = pooled_normal.id
-            sample['path'] = pooled_normal.path
-            sample['file_name'] = pooled_normal.file_name
+            sample['id'] = pooled_normal.file.id
+            sample['path'] = pooled_normal.file.path
+            sample['file_name'] = pooled_normal.file.file_name
             metadata = init_metadata()
             metadata['sampleId'] = sample_name
             metadata['sampleName'] = sample_name
@@ -145,7 +140,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
             # build_sample in runner.operator.roslin_operator.bin
-            metadata['R'] = get_r_orientation(pooled_normal.file_name)
+            metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
             metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
             metadata['flowCellId'] = 'PN_FCID'
             metadata['tumorOrNormal'] = 'Normal'
@@ -161,23 +156,20 @@ def get_dmp_normal(patient_id, bait_set):
     """
     From a patient id and bait set, get matching dmp bam normal
     """
-    file_objs = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').\
-            order_by('-created_date')))
+    file_objs = FileRepository.all()
+
     dmp_query = build_dmp_query(patient_id, bait_set)
 
-    dmp_bam = file_objs.\
-        filter(dmp_query).\
-        order_by('file_name').first()
+    dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
 
     if dmp_bam:
-        dmp_metadata = dmp_bam.filemetadata_set.first().metadata
+        dmp_metadata = dmp_bam.metadata
         sample_name = dmp_metadata['external_id']
         sample = dict()
-        sample['id'] = dmp_bam.id
-        sample['path'] = dmp_bam.path
-        sample['file_name'] = dmp_bam.file_name
-        sample['file_type'] = dmp_bam.file_type
+        sample['id'] = dmp_bam.file.id
+        sample['path'] = dmp_bam.file.path
+        sample['file_name'] = dmp_bam.file.file_name
+        sample['file_type'] = dmp_bam.file.file_type
         metadata = init_metadata()
         metadata['sampleId'] = sample_name
         metadata['sampleName'] = sample_name
@@ -218,11 +210,12 @@ def build_dmp_query(patient_id, bait_set):
         value = "IMPACT468"
     if "hemepact_v4" in bait_set.lower():
         value = "HEMEPACT"
-    assay = Q(filemetadata__metadata__cmo_assay=value)
-    patient = Q(filemetadata__metadata__patient__cmo=patient_id.lstrip('C-'))
-    normal = Q(filemetadata__metadata__type='N')
+    assay = Q(metadata__cmo_assay=value)
+    patient = Q(metadata__patient__cmo=patient_id.lstrip('C-'))
+    normal = Q(metadata__type='N')
     query = assay & patient & normal
     return query
+
 
 def get_r_orientation(fastq_filename):
     """

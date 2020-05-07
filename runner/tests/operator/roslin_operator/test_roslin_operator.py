@@ -70,11 +70,11 @@ class TestRoslinOperator(TestCase):
 
         # create some more fixtures
         file_instance = File.objects.create(
-            file_name = "foo.fastq.gz",
-            path = '/foo.fastq.gz',
-            file_group = FileGroup.objects.get(id = settings.IMPORT_FILE_GROUP)
-            )
-        filemetadata_instance = FileMetadata.objects.create(file = file_instance)
+            file_name="foo.fastq.gz",
+            path='/foo.fastq.gz',
+            file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP)
+        )
+        filemetadata_instance = FileMetadata.objects.create(file=file_instance)
 
         self.assertEqual(len(File.objects.all()), 5 )
         self.assertEqual(len(FileMetadata.objects.all()), 5 )

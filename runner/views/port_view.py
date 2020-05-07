@@ -1,6 +1,8 @@
 import os
 from runner.models import Port
 from file_system.models import File
+from file_system.exceptions import FileNotFoundException
+from file_system.repository.file_repository import FileRepository
 from runner.serializers import PortSerializer, UpdatePortSerializer
 from rest_framework import mixins
 from rest_framework import status
@@ -30,8 +32,8 @@ class PortViewSet(mixins.ListModelMixin,
                     files = []
                     for val in value.get('values'):
                         try:
-                            file = File.objects.get(pk=val)
-                        except File.DoesNotExist:
+                            file = FileRepository.get(id=val)
+                        except FileNotFoundException:
                             return Response({'details': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
                         input_ids.append(val)
                         file_val = self._create_file(file, port.schema.get('secondaryFiles'))
@@ -45,8 +47,8 @@ class PortViewSet(mixins.ListModelMixin,
                 port.value = {"inputs": value.get('values')}
             else:
                 try:
-                    file = File.objects.get(pk=value.get('values')[0])
-                except File.DoesNotExist:
+                    file = FileRepository.get(pk=value.get('values')[0])
+                except FileNotFoundException:
                     return Response({'details': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
                 port.value = {"inputs": self._create_file(file, port.schema.get('secondaryFiles')), "refs": str(file.id)}
         port.save()
@@ -64,7 +66,8 @@ class PortViewSet(mixins.ListModelMixin,
         cwl_secondary_files = []
         for sf in secondary_files:
             sf_name = self._resolve_secondary_file(file_obj.path, sf)
-            sf_file_obj = File.objects.get(path=sf_name)
+            f = FileRepository.filter(path=sf_name).first()
+            sf_file_obj = f.file
             cwl_secondary_file = self._create_file(sf_file_obj, [])
             cwl_secondary_files.append(cwl_secondary_file)
         cwl_file['secondaryFiles'] = cwl_secondary_files

@@ -1,5 +1,6 @@
 import logging
 from file_system.models import File, FileMetadata
+from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer, APIRunCreateSerializer
 from django.db.models import Prefetch
 from beagle_etl.models import Operator as OperatorModel
@@ -16,10 +17,7 @@ class Operator(object):
         self.request_id = request_id
         self.job_group_id = job_group_id
         self.run_ids = run_ids
-        self.files = File.objects.prefetch_related(
-            Prefetch('filemetadata_set', queryset=
-            FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-            order_by('file_name')
+        self.files = FileRepository.all()
         self._jobs = []
 
     def get_pipeline_id(self):
