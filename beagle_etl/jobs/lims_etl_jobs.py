@@ -75,13 +75,7 @@ def request_callback(request_id, job_group=None):
     except JobGroup.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
-    # queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
-    #                                                   queryset=FileMetadata.objects.select_related('file').order_by(
-    #                                                       '-created_date'))).order_by('file_name').filter(
-    #     filemetadata__metadata__requestId=request_id)
     recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
-    # ret_str = 'filemetadata__metadata__recipe'
-    # recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
@@ -325,23 +319,23 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 failed_runs.append(run['runId'])
             else:
                 file_search = FileRepository.filter(path=fastqs[0]).first()
-                file_obj = file_search.file
-                if not file_obj:
+                if not file_search:
                     create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata, R1_or_R2(fastqs[0]))
                 else:
-                    logger.error("File %s already created with id:%s" % (file_obj.path, str(file_obj.id)))
+                    logger.error(
+                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
                     conflict = True
-                    conflict_files.append((file_obj.path, str(file_obj.id)))
+                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
                 file_search = FileRepository.filter(path=fastqs[1]).first()
-                file_obj = file_search.file
-                if not file_obj:
+                if not file_search:
                     create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata, R1_or_R2(fastqs[1]))
                 else:
-                    logger.error("File %s already created with id:%s" % (file_obj.path, str(file_obj.id)))
+                    logger.error(
+                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
                     conflict = True
-                    conflict_files.append((file_obj.path, str(file_obj.id)))
+                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
     if conflict:
         raise FailedToFetchFilesException(
             "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
