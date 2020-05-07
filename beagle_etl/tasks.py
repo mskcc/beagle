@@ -168,10 +168,11 @@ class JobObject(object):
 
     def _generate_sample_data_file(self):
         result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
-        ret_str = 'filemetadata__metadata__sampleId'
-        samples = FileRepository.filter(metadata={"requestId": self.job.args['request_id']}, ret="sampleId")
+        ret_str = 'metadata__sampleId'
+        samples = FileRepository.filter(metadata={"requestId": self.job.args['request_id']}).order_by(ret_str).distinct(
+            ret_str).all()
         for sample in samples:
-            metadata = sample.filemetadata_set.first().metadata
+            metadata = sample.metadata
             print(metadata)
             result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
                 metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'])),
