@@ -54,7 +54,7 @@ def create_tempo_tracker_example(data):
     extra_keys += [ "data_analyst", "data_analyst_email" ]
     for key in extra_keys:
         tracker += key + "\t"
-    tracker = tracker.strip() + "\n"
+    tracker = tracker.rstrip("\n") + "\n"
 
     seen = set()
 
