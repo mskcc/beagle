@@ -99,39 +99,42 @@ class TempoMPGenOperator(Operator):
 
     def create_pairing_file(self, tempo_inputs, error_samples):
         """
-        Messy function that pairs with errors first then parses each line
-        for 'noNormal' substring, which indicates a paired tumor has no associated normal
-
-        tempo_inputs is then "cleaned" with clean_inputs()
-
-        Afterwards, the function create_pairing is called again against the clean input set.
+        Outputs valid paired samples and errors associated with those that couldn't be paired
         """
-        pair_with_errors = create_pairing(tempo_inputs)
-        pairing = pair_with_errors.split("\n")
+        pairing, unpaired_errors = create_pairing(tempo_inputs)
         pairing_errors = list()
         pairing_errors_unformatted = list()
 
-        for line in pairing:
-            if "noNormal" in line:
-                pairing_errors.append("| " + line.replace("\t"," | ") + " |")
-                pairing_errors_unformatted.append(line + "\n")
+        for pair in unpaired_errors:
+                error_sample = pair['normal_sample']
+                error_msg = error_sample['sample_name']
+                tumor_sample = pair['tumor_sample']
+                tumor_sample_name = tumor_sample['sample_name']
+                tumor_patient_id = tumor_sample['patient_id']
+                request_id = tumor_sample_name['request_id']
+                line = "%s\t%s\t%s\n" % (tumor_sample_name, request_id, patient_id, error_msg)
+                pairing_errors.append(line.replace("\t", "|"))
+                pairing_errors_unformatted.append(line)
 
         self.send_message("""
         Number of samples with pairing errors: {num_pairing_errors}
 
         Samples with pairing errors (also see file error_unpaired_samples.txt):
 
-        | Error | CMO Sample Name |
+        | Sample Name | Request ID | Patient ID | Error Message |
         {pairing_errors}
-        """.format(num_pairing_errors=str(len(pairing_errors)),
-            pairing_errors="\n".join(pairing_errors)))
+        """.format(
+            num_pairing_errors=str(len(pairing_errors)),
+            pairing_errors="\n".join(pairing_errors)
+            )
+        )
 
         sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
  
         cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
         header = "NORMAL_ID\tTUMOR_ID\n"
-        sample_pairing = header + create_pairing(cleaned_inputs)
+        sample_pairing = header + pairing
 
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(pairing_file_event)
