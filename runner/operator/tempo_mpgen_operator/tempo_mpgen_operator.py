@@ -88,20 +88,23 @@ class TempoMPGenOperator(Operator):
             samples.append(build_sample(sample_id_group[sample_id]))
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
+        # tempo_inputs is a paired list, error_samples are just samples that were processed
+        # through remove_with_caveats(0
 
         self.create_tracker_file(tempo_inputs)
         self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
-        self.create_mapping_file(tempo_inputs, error_samples)
-        self.create_pairing_file(tempo_inputs, error_samples)
+        self.create_mapping_file(tempo_inputs)
+        self.create_pairing_file(tempo_inputs)
 
         return [], []
 
 
-    def create_pairing_file(self, tempo_inputs, error_samples):
+    def create_pairing_file(self, tempo_inputs):
         """
         Outputs valid paired samples and errors associated with those that couldn't be paired
         """
-        pairing, unpaired_errors = create_pairing(tempo_inputs)
+        tmp_pairing, unpaired_errors = create_pairing(tempo_inputs)
+        pairing = create_pairing(cleaned_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string
         pairing_errors = list()
         pairing_errors_unformatted = list()
 
@@ -112,7 +115,7 @@ class TempoMPGenOperator(Operator):
                 tumor_sample_name = tumor_sample['sample_name']
                 tumor_patient_id = tumor_sample['patient_id']
                 igo_sample_id = tumor_sample['sample_id']
-                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, igo_sample_id, tumor_patient_id, error_msg)
+                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, igo_sample_id, error_msg, tumor_patient_id)
                 pairing_errors.append( "|" + line.replace("\t", "|") + "|")
                 pairing_errors_unformatted.append(line)
 
@@ -121,7 +124,7 @@ class TempoMPGenOperator(Operator):
 
         Samples with pairing errors (also see file error_unpaired_samples.txt):
 
-        | Sample Name | IGO Sample ID | Patient ID | Error Message |
+        | Sample Name | IGO Sample ID | Error Message | Patient ID |
         {pairing_errors}
         """.format(
             num_pairing_errors=str(len(pairing_errors)),
@@ -131,7 +134,7 @@ class TempoMPGenOperator(Operator):
 
         sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
- 
+
         header = "NORMAL_ID\tTUMOR_ID\n"
         sample_pairing = header + pairing
 
@@ -139,15 +142,15 @@ class TempoMPGenOperator(Operator):
         send_notification.delay(pairing_file_event)
 
 
-    def create_mapping_file(self, tempo_inputs, error_samples):
-        cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
+    def create_mapping_file(self, tempo_inputs):
+        cleaned_inputs = self.clean_inputs(tempo_inputs)
         header = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUM_OF_PAIRS\n"
         sample_mapping = header + create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
 
-    def clean_inputs(self, tempo_inputs, error_samples):
+    def clean_inputs(self, tempo_inputs):
         """
         Removes samples that don't have valid cmo sample names
 
