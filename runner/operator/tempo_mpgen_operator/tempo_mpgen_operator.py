@@ -104,7 +104,7 @@ class TempoMPGenOperator(Operator):
         Outputs valid paired samples and errors associated with those that couldn't be paired
         """
         tmp_pairing, unpaired_errors = create_pairing(tempo_inputs)
-        pairing = create_pairing(cleaned_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string
+        pairing = create_pairing(self.clean_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string
         pairing_errors = list()
         pairing_errors_unformatted = list()
 
