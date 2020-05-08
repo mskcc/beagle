@@ -10,7 +10,7 @@ def create_pairing(data):
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
-        if "noNormal" in normal['normal_name']:
+        if "noNormal" in normal['sample_name']:
             unpaired.append(pair)
         else:
             pairing += "%s\t%s\n" % (normal["sample_name"], tumor["sample_name"])
