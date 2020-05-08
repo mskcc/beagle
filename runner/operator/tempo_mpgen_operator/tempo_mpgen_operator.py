@@ -103,8 +103,9 @@ class TempoMPGenOperator(Operator):
         """
         Outputs valid paired samples and errors associated with those that couldn't be paired
         """
-        tmp_pairing, unpaired_errors = create_pairing(tempo_inputs)
-        pairing = create_pairing(self.clean_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string
+        # TODO: change next two lines in the future
+        tmp_pairing, unpaired_errors = create_pairing(tempo_inputs) # hack to identify samples that will not be paired; the pairing string tmp_pairing won't be used
+        pairing, tmp_unpaired = create_pairing(self.clean_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string, don't need tmp_unpaired
         pairing_errors = list()
         pairing_errors_unformatted = list()
 
@@ -116,7 +117,7 @@ class TempoMPGenOperator(Operator):
                 tumor_patient_id = tumor_sample['patient_id']
                 igo_sample_id = tumor_sample['sample_id']
                 line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, igo_sample_id, error_msg, tumor_patient_id)
-                pairing_errors.append( "|" + line.replace("\t", "|") + "|")
+                pairing_errors.append( "|" + line.replace("\t", "|") + " |")
                 pairing_errors_unformatted.append(line)
 
         self.send_message("""
