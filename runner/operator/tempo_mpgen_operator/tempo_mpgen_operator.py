@@ -112,7 +112,7 @@ class TempoMPGenOperator(Operator):
                 tumor_sample_name = tumor_sample['sample_name']
                 tumor_patient_id = tumor_sample['patient_id']
                 request_id = tumor_sample['request_id']
-                line = "%s\t%s\t%s\n" % (tumor_sample_name, request_id, tumor_patient_id, error_msg)
+                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, request_id, tumor_patient_id, error_msg)
                 pairing_errors.append(line.replace("\t", "|"))
                 pairing_errors_unformatted.append(line)
 
