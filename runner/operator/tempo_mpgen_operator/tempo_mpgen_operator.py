@@ -132,7 +132,6 @@ class TempoMPGenOperator(Operator):
         sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
  
-        cleaned_inputs = self.clean_inputs(tempo_inputs, error_samples)
         header = "NORMAL_ID\tTUMOR_ID\n"
         sample_pairing = header + pairing
 
@@ -157,8 +156,8 @@ class TempoMPGenOperator(Operator):
         clean_pair = list()
         for pair in tempo_inputs:
             normal = pair["normal_sample"]
-            tumor = pair["tumor_sample"]
-            if is_cmo_sample_name_format(normal['sample_name']) and is_cmo_sample_name_format(tumor['sample_name']):
+            tumor = pair["tumor_sample"]            
+            if is_cmo_sample_name_format(normal['sample_name'], normal['specimen_type']) and is_cmo_sample_name_format(tumor['sample_name'], tumor['specimen_type']):
                 clean_pair.append(pair)
         return clean_pair
 
