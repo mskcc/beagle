@@ -54,7 +54,7 @@ def create_tempo_tracker_example(data):
     extra_keys += [ "data_analyst", "data_analyst_email" ]
     for key in extra_keys:
         tracker += key + "\t"
-    tracker = tracker.rstrip("\n") + "\n"
+    tracker = tracker.strip() + "\n"
 
     seen = set()
 
@@ -62,28 +62,27 @@ def create_tempo_tracker_example(data):
         normal = strip_values(pair["normal_sample"])
         tumor = strip_values(pair["tumor_sample"])
 
-        running_s = ""
-        running_s += tumor["sample_name"] + "\t"
-        running_s += normal["sample_name"] + "\t"
+        running = list()
+        running.append(tumor["sample_name"])
+        running.append(normal["sample_name"])
 
         for key in key_order:
-            running_s += tumor[key] + "\t"  # update this once hpc is back
+            running.append(tumor[key]) 
         for key in extra_keys:
-            running_s += tumor[key] + "\t"
+            running.append(tumor[key])
 
-        running_s = running_s.rstrip() + "\n"
+        tracker += "\t".join(running) + "\n"
 
         if normal['sample_name'] not in seen:
             seen.add(normal['sample_name'])
-            running_s += normal["sample_name"] + "\t"
-            running_s += "N/A\t"
-
+            running_normal = list()
+            running_normal.append(normal["sample_name"])
+            running_normal.append("N/A")
             for key in key_order:
-                running_s += normal[key] + "\t"  # update this once hpc is back
+                running_normal.append(normal[key])
             for key in extra_keys:
-                running_s += normal[key] + "\t"
-            running_s = running_s.rstrip() + "\n"
-        tracker += running_s
+                running_normal.append(normal[key])
+            tracker += "\t".join(running_normal) + "\n"
 
     return tracker
 
