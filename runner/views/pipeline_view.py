@@ -22,6 +22,9 @@ class PipelineViewSet(mixins.ListModelMixin,
 
 class PipelineResolveViewSet(GenericAPIView):
 
+    queryset = Pipeline.objects.order_by('id').all()
+    serializer_class = PipelineResolvedSerializer
+
     def get(self, request, pk):
         try:
             pipeline = Pipeline.objects.get(id=pk)
@@ -38,6 +41,9 @@ class PipelineResolveViewSet(GenericAPIView):
 
 
 class PipelineDownloadViewSet(GenericAPIView):
+
+    queryset = Pipeline.objects.order_by('id').all()
+    serializer_class = PipelineSerializer
 
     def get(self, request, pk):
         try:
