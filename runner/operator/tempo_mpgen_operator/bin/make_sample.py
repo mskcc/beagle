@@ -11,13 +11,14 @@ def remove_with_caveats(samples):
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
         patient_id = sample['patient_id']
+        specimen_type = sample['specimen_type']
         if sample_name == "emptySampleName":
             add = False
         if sample_name == "nullSampleName":
             add = False
         if "noNormalFound" in sample_name:
             add = False
-        if not is_cmo_sample_name_format(sample_name):
+        if not is_cmo_sample_name_format(sample_name, specimen_type):
             add = False
         if not add:
             error_data.append(sample)
@@ -25,8 +26,10 @@ def remove_with_caveats(samples):
     return data, error_data
 
 
-def is_cmo_sample_name_format(sample_name):
+def is_cmo_sample_name_format(sample_name, specimen_type):
     sample_pattern = re.compile(r's_C_\w{6}_\w{4}_\w')
+    if "cellline" in specimen_type.lower():
+        return True
     return bool(sample_pattern.match(sample_name))
 
 
