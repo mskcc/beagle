@@ -111,9 +111,9 @@ class TempoMPGenOperator(Operator):
                 tumor_sample = pair['tumor_sample']
                 tumor_sample_name = tumor_sample['sample_name']
                 tumor_patient_id = tumor_sample['patient_id']
-                request_id = tumor_sample['request_id']
-                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, request_id, tumor_patient_id, error_msg)
-                pairing_errors.append(line.replace("\t", "|"))
+                igo_sample_id = tumor_sample['sample_id']
+                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, igo_sample_id, tumor_patient_id, error_msg)
+                pairing_errors.append( "|" + line.replace("\t", "|") + "|")
                 pairing_errors_unformatted.append(line)
 
         self.send_message("""
@@ -121,7 +121,7 @@ class TempoMPGenOperator(Operator):
 
         Samples with pairing errors (also see file error_unpaired_samples.txt):
 
-        | Sample Name | Request ID | Patient ID | Error Message |
+        | Sample Name | IGO Sample ID | Patient ID | Error Message |
         {pairing_errors}
         """.format(
             num_pairing_errors=str(len(pairing_errors)),
