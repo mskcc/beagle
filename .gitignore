@@ -8,3 +8,5 @@ scripts/*.json
 conda*
 input.json
 *.swp
+.DS_Store
+*.ipynb*

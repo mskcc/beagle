@@ -312,7 +312,7 @@ LOGGING = {
     },
 }
 
-SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
+SUPPORTED_NOTIFIERS = ('JIRA', 'SEQOSYSTEM', 'NONE')
 
 NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "NONE").split(',')
 for n in NOTIFIERS:
@@ -323,6 +323,8 @@ JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
+
+SEQOSYSTEM_URL = os.environ.get("SEQOSYSTEM_URL", "")
 
 BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
