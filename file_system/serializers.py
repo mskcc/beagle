@@ -66,28 +66,42 @@ class CreateMetadata(serializers.ModelSerializer):
 
 
 class FileSerializer(serializers.ModelSerializer):
-    file_group = FileGroupSerializer()
-    metadata = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+    file_group = serializers.SerializerMethodField()
     file_type = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
+    file_name = serializers.SerializerMethodField()
+    path = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        return obj.file.id
+
+    def get_file_group(self, obj):
+        return FileGroupSerializer(obj.file.file_group).data
 
     def get_file_type(self, obj):
-        return obj.file_type.name
-
-    def get_metadata(self, obj):
-        return Metadata(obj.filemetadata_set.first()).data.get('metadata', {})
+        return obj.file.file_type.name
 
     def get_user(self, obj):
-        user_id = Metadata(obj.filemetadata_set.first()).data.get('user', None)
-        if user_id:
+        if obj.user:
             try:
-                return User.objects.get(id=user_id).username
+                return User.objects.get(id=obj.user.id).username
             except User.DoesNotExist:
                 return None
         return None
 
+    def get_file_name(self, obj):
+        return obj.file.file_name
+
+    def get_path(self, obj):
+        return obj.file.path
+
+    def get_size(self, obj):
+        return obj.file.size
+
     class Meta:
-        model = File
+        model = FileMetadata
         fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'created_date', 'modified_date')
 
 

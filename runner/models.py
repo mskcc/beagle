@@ -2,10 +2,11 @@ import os
 import uuid
 from enum import IntEnum
 from django.db import models
-from file_system.models import File, FileGroup
-from django.contrib.postgres.fields import JSONField
-from beagle_etl.models import Operator, JobGroup
 from django.db.models import F
+from file_system.models import File, FileGroup
+from beagle_etl.models import Operator, JobGroup
+from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class RunStatus(IntEnum):
@@ -147,6 +148,7 @@ class Run(BaseModel):
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -186,6 +188,7 @@ class Port(BaseModel):
     db_value = JSONField(null=True)
     value = JSONField(null=True)
     files = models.ManyToManyField(File)
+    notify = models.BooleanField(default=False)
 
 
 class ExecutionEvents(BaseModel):

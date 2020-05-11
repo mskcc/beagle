@@ -8,20 +8,24 @@ from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent
 from notifier.tasks import send_notification
 from runner.run.processors.file_processor import FileProcessor
+from file_system.repository.file_repository import FileRepository
 
 
 class RoslinOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
+        # files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
+        files = FileRepository.filter(queryset=self.files,
+                                      metadata={'requestId': self.request_id,
+                                                'igocomplete': True})
         roslin_jobs = list()
 
         data = list()
-        for file in files:
+        for f in files:
             sample = dict()
-            sample['id'] = file.id
-            sample['path'] = file.path
-            sample['file_name'] = file.file_name
-            sample['metadata'] = file.filemetadata_set.first().metadata
+            sample['id'] = f.file.id
+            sample['path'] = f.file.path
+            sample['file_name'] = f.file.file_name
+            sample['metadata'] = f.metadata
             data.append(sample)
 
         samples = list()
