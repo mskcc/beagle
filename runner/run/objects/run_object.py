@@ -71,7 +71,7 @@ class RunObject(object):
         outputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
         return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses,
                    output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
-                   job_group=run.job_group)
+                   job_group=run.job_group, notify_for_outputs=run.notify_for_outputs)
 
     def to_db(self):
         [PortObject.to_db(p) for p in self.inputs]
@@ -82,6 +82,7 @@ class RunObject(object):
         self.run_obj.execution_id = self.execution_id
         self.run_obj.tags = self.tags
         self.run_obj.job_group = self.job_group
+        self.run_obj.notify_for_outputs = self.notify_for_outputs
         self.run_obj.save()
 
     def fail(self, error_message):

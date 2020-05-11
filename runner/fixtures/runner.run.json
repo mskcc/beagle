@@ -10,7 +10,8 @@
             "operator_run": 1,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -24,7 +25,8 @@
             "operator_run": 1,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -38,7 +40,8 @@
             "operator_run": 1,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -52,7 +55,8 @@
             "operator_run": 2,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -66,7 +70,8 @@
             "operator_run": 2,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -80,7 +85,8 @@
             "operator_run": 2,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     },
     {
@@ -94,7 +100,8 @@
             "operator_run": 3,
             "tags": {},
             "status": 0,
-            "execution_id": null
+            "execution_id": null,
+            "notify_for_outputs": "[]"
         }
     }
 ]
