@@ -184,7 +184,6 @@ class PortProcessor(object):
         uri = val.get('location')
         path = FileProcessor.parse_path_from_uri(uri)
         file_name = os.path.basename(path)
-        f = open(path, 'rb')
-        event = UploadAttachmentEvent(job_group, file_name, f)
-        send_notification(event.to_dict())
+        event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
+        send_notification.delay(event.to_dict())
         return val
