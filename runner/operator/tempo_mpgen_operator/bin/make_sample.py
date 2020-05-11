@@ -28,9 +28,9 @@ def remove_with_caveats(samples):
 
 def is_cmo_sample_name_format(sample_name, specimen_type):
     sample_pattern = re.compile(r's_C_\w{6}_\w{4}_\w')
-    if "cellline" in specimen_type.lower():
+    if "cellline" in specimen_type.lower() or bool(sample_pattern.match(sample_name)):
         return True
-    return bool(sample_pattern.match(sample_name))
+    return False
 
 
 def format_sample_name(sample_name, specimen_type):
