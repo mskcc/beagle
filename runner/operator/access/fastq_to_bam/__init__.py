@@ -13,27 +13,43 @@ def construct_sample_inputs(request_id, samples):
     sample_inputs = list()
     for sample in samples:
         meta = sample["metadata"]
+
+        input_file = template.render(
+            cmo_sample_name=meta["cmoSampleName"],
+            tumor_type=meta["specimenType"],
+            igo_id=meta["igoId"],
+            patient_id=meta["cmoPatientId"],
+
+            barcode_index=libraries[0]["barcodeIndex"],
+
+            flowcell_id=libraries[0]["runs"][0]["flowCellId"],
+            run_date=libraries[0]["runs"][0]["runDate"],
+
+            request_id=request_id
+        )
+
+        sample = json.loads(input_file)
+
+        sample["fastq1"] = []
+        sample["fastq2"] = []
+
+
         for library in meta["libraries"]:
-            run = library["runs"][0] # TODO(aef) should this be last? or should we sort by date
-            input_file = template.render(
-                cmo_sample_name=meta["cmoSampleName"],
-                tumor_type=meta["specimenType"],
-                igo_id=meta["igoId"],
-                patient_id=meta["cmoPatientId"],
+            for run in library["runs"]:
+                samples["fastq1"].append(
+                    {
+                        "class": "File",
+                        "path": "juno://" + run["fastqs"][0]
+                    }
+                )
+                samples["fastq2"].append(
+                    {
+                        "class": "File",
+                        "path": "juno://" + run["fastqs"][1]
+                    }
+                )
 
-                barcode_index=library["barcodeIndex"],
-
-                fastq1_path="juno://" + run["fastqs"][0],
-                fastq2_path="juno://" + run["fastqs"][1],
-                flowcell_id=run["flowCellId"],
-                run_date=run["runDate"],
-
-                request_id=request_id
-            )
-
-            # TODO(aef) maybe we can forgo this if DRW serializer can do it for us.
-            sample = json.loads(input_file)
-            sample_inputs.append(sample)
+        sample_inputs.append(sample)
 
     return sample_inputs
 
