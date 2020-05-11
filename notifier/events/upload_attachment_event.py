@@ -1,3 +1,4 @@
+import os
 from notifier.event_handler.event import Event
 
 
@@ -16,6 +17,12 @@ class UploadAttachmentEvent(Event):
     @classmethod
     def get_method(cls):
         return "process_upload_attachment_event"
+
+    def get_content(self):
+        if os.path.exists(self.content):
+            f = open(self.content, 'rb')
+            return f
+        return self.content
 
     def __str__(self):
         return self.content
