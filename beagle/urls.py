@@ -25,12 +25,12 @@ from core.views import BeagleTokenObtainPairView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-
+from beagle import __version__
 
 schema_view = get_schema_view(
    openapi.Info(
       title="Beagle API",
-      default_version='v0'
+      default_version=__version__
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
