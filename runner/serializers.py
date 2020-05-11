@@ -140,6 +140,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
+    notify_for_outputs = serializers.ListField(allow_null=True, required=False)
 
     def create(self, validated_data):
         try:
@@ -167,6 +168,7 @@ class APIRunCreateSerializer(serializers.Serializer):
             run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
         except JobGroup.DoesNotExist:
             print("[JobGroup] %s" % run.job_group)
+        run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run
 

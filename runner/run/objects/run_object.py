@@ -8,7 +8,7 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class RunObject(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, output_metadata={}, execution_id=None, tags={}, job_group=None):
+    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, output_metadata={}, execution_id=None, tags={}, job_group=None, notify_for_outputs=[]):
         self.run_id = run_id
         self.run_obj = run_obj
         self.output_file_group = run_obj.app.output_file_group
@@ -19,6 +19,7 @@ class RunObject(object):
         self.output_metadata = output_metadata
         self.execution_id = execution_id
         self.job_group = job_group
+        self.notify_for_outputs = notify_for_outputs
         self.tags = tags
 
     @classmethod
@@ -89,7 +90,7 @@ class RunObject(object):
 
     def complete(self, outputs):
         for out in self.outputs:
-            out.complete(outputs.get(out.name, None), self.output_file_group, self.output_metadata)
+            out.complete(outputs.get(out.name, None), self.output_file_group, self.job_group, self.output_metadata)
         self.status = RunStatus.COMPLETED
 
     def __repr__(self):
