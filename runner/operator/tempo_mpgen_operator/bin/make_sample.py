@@ -10,6 +10,9 @@ def remove_with_caveats(samples):
         add = True
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
+        # have to preformat because this function is called before formatting can occur
+        # in the samples list input
+        preformat_sample_name = format_sample_name(sample_name, specimen_type)
         patient_id = sample['patient_id']
         specimen_type = sample['specimen_type']
         if sample_name == "emptySampleName":
@@ -18,7 +21,7 @@ def remove_with_caveats(samples):
             add = False
         if "noNormalFound" in sample_name:
             add = False
-        if not is_cmo_sample_name_format(sample_name, specimen_type):
+        if not is_cmo_sample_name_format(preformat_sample_name, specimen_type):
             add = False
         if not add:
             error_data.append(sample)
