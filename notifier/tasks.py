@@ -21,7 +21,7 @@ def event_handler(handler_type):
         logger.info("Notifier type JIRA created")
         return JiraEventHandler()
     elif handler_type == "SEQO":
-        logger.info("Notifier type JIRA created")
+        logger.info("Notifier type SEQO created")
         return SeqosystemEventHandler()
     else:
         return NoOpEventHandler()
