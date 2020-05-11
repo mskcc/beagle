@@ -12,16 +12,18 @@ def remove_with_caveats(samples):
         sample_name = sample['sample_name']
         patient_id = sample['patient_id']
         specimen_type = sample['specimen_type']
-        # have to preformat because this function is called before formatting can occur
-        # in the samples list input
-        preformat_sample_name = format_sample_name(sample_name, specimen_type)
+        # hack; this has to happen so that is_cmo_sample_name works
+        # since this function is called after formatting already
+        #
+        # TODO: Fix this logic to use cmoSampleName field in the future
+        deformat_sample_name = sample_name.replace("s_","").replace("_", "-")
         if sample_name == "emptySampleName":
             add = False
-        if sample_name == "nullSampleName":
+        elif sample_name == "nullSampleName":
             add = False
-        if "noNormalFound" in sample_name:
+        elif "noNormalFound" in sample_name:
             add = False
-        if not is_cmo_sample_name_format(preformat_sample_name, specimen_type):
+        elif not is_cmo_sample_name_format(deformat_sample_name, specimen_type):
             add = False
         if not add:
             error_data.append(sample)
@@ -30,7 +32,7 @@ def remove_with_caveats(samples):
 
 
 def is_cmo_sample_name_format(sample_name, specimen_type):
-    sample_pattern = re.compile(r's_C_\w{6}_\w{4}_\w')
+    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
     if "cellline" in specimen_type.lower() or bool(sample_pattern.match(sample_name)):
         return True
     return False

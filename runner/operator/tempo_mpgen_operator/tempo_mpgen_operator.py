@@ -1,4 +1,5 @@
 import uuid
+import re
 from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
@@ -8,7 +9,7 @@ from notifier.models import JobGroup
 from notifier.tasks import send_notification
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
-from .bin.make_sample import build_sample, is_cmo_sample_name_format
+from .bin.make_sample import build_sample
 from .bin.create_tempo_files import create_mapping, create_pairing, create_tempo_tracker_example
 from notifier.events import UploadAttachmentEvent
 import json
@@ -170,7 +171,7 @@ class TempoMPGenOperator(Operator):
             if normal['sample_name'] not in error_sample_set or tumor['sample_name'] not in error_sample_set:
                 if normal['sample_name'] == tumor['sample_name']:
                     dupe_pairs.append(pair)
-                elif is_cmo_sample_name_format(normal['sample_name'], normal['specimen_type']) and is_cmo_sample_name_format(tumor['sample_name'], tumor['specimen_type']):
+                elif self.is_cleaned_cmo_sample_name_format(normal['sample_name'], normal['specimen_type']) and self.is_cleaned_cmo_sample_name_format(tumor['sample_name'], tumor['specimen_type']):
                     clean_pair.append(pair)
         return clean_pair, dupe_pairs
 
@@ -202,6 +203,22 @@ class TempoMPGenOperator(Operator):
 
         sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
+
+
+    def is_cleaned_cmo_sample_name_format(self, sample_name, specimen_type):
+        """
+        This needs to be refactored
+    
+        A similar function exists in bin/make_sample.py, but the sample pattern is different
+        In that one, it is still the old C-* format; this one checks cleaned, already built
+        sample format s_C-*
+
+        This is because of changing requirements an wasn't in the original plan
+        """
+        sample_pattern = re.compile(r's_C_\w{6}_\w{4}_\w')
+        if "cellline" in specimen_type.lower() or bool(sample_pattern.match(sample_name)):
+            return True
+        return False
 
 
     def create_tracker_file(self, tempo_inputs):
