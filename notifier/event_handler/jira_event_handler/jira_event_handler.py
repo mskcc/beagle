@@ -68,4 +68,4 @@ class JiraEventHandler(EventHandler):
 
     def process_upload_attachment_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.add_attachment(job_group.jira_id, event.file_name, str(event), download=event.download)
+        self.client.add_attachment(job_group.jira_id, event.file_name, event.get_content(), download=event.download)

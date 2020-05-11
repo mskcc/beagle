@@ -108,6 +108,7 @@ class JiraClient(object):
         if not download:
             files = {'file': (file_name, content, 'text/plain')}
         else:
+
             files = {'file': (file_name, content)}
         headers = {
             "X-Atlassian-Token": "nocheck"
