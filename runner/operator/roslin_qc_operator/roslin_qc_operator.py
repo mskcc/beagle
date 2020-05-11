@@ -42,6 +42,7 @@ class RoslinQcOperator(Operator):
             'app': app,
             'inputs': input_json,
             'name': name,
+            'notify_for_outputs': ['qc_pdf'],
             'tags': tags}
 
         """
