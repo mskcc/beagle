@@ -10,11 +10,11 @@ def remove_with_caveats(samples):
         add = True
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
+        patient_id = sample['patient_id']
+        specimen_type = sample['specimen_type']
         # have to preformat because this function is called before formatting can occur
         # in the samples list input
         preformat_sample_name = format_sample_name(sample_name, specimen_type)
-        patient_id = sample['patient_id']
-        specimen_type = sample['specimen_type']
         if sample_name == "emptySampleName":
             add = False
         if sample_name == "nullSampleName":
