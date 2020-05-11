@@ -33,12 +33,11 @@ def is_cmo_sample_name_format(sample_name, specimen_type):
     return bool(sample_pattern.match(sample_name))
 
 
-def format_sample_name(sample_name):
-    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
+def format_sample_name(sample_name, specimen_type):
     try:
         if "s_" in sample_name[:2]:
             return sample_name
-        elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+        elif is_cmo_sample_name_format(sample_name, specimen_type):
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         elif not sample_name:
@@ -116,7 +115,7 @@ def build_sample(data):
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['sampleName'])
+        cmo_sample_name = format_sample_name(meta['sampleName'], specimen_type)
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
         cmo_patient_id = meta['patientId']

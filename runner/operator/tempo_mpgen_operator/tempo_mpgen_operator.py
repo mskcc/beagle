@@ -93,39 +93,39 @@ class TempoMPGenOperator(Operator):
 
         self.create_tracker_file(tempo_inputs)
         self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
-        self.create_mapping_file(tempo_inputs)
-        self.create_pairing_file(tempo_inputs)
+        self.create_mapping_file(tempo_inputs, error_samples)
+        self.create_pairing_file(tempo_inputs, error_samples)
 
         return [], []
 
 
-    def create_pairing_file(self, tempo_inputs):
+    def create_pairing_file(self, tempo_inputs, error_samples):
         """
         Outputs valid paired samples and errors associated with those that couldn't be paired
         """
-        # TODO: change next two lines in the future
-        tmp_pairing, unpaired_errors = create_pairing(tempo_inputs) # hack to identify samples that will not be paired; the pairing string tmp_pairing won't be used
-        pairing, tmp_unpaired = create_pairing(self.clean_inputs(tempo_inputs)) # hack; cleans tempo_inputs before making pairing string, don't need tmp_unpaired
+        cleaned_inputs, duped_pairs = self.clean_inputs(tempo_inputs, error_samples)
+        pairing = create_pairing(cleaned_inputs)
         pairing_errors = list()
         pairing_errors_unformatted = list()
+        pairing_errors_unformatted.append("Tumor Sample Name\tTumor IGO Sample ID\tNormal Sample Name\tNormal Sample ID\n") # header
 
-        for pair in unpaired_errors:
-                error_sample = pair['normal_sample']
-                error_msg = error_sample['sample_name']
+        for pair in duped_pairs:
+                normal_sample = pair['normal_sample']
+                normal_sample_name = normal_sample['sample_name']
+                normal_igo_id = normal_sample['sample_id']
                 tumor_sample = pair['tumor_sample']
                 tumor_sample_name = tumor_sample['sample_name']
-                tumor_patient_id = tumor_sample['patient_id']
-                igo_sample_id = tumor_sample['sample_id']
-                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, igo_sample_id, error_msg, tumor_patient_id)
+                tumor_igo_id = tumor_sample['sample_id']
+                line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, tumor_igo_id, normal_sample_name, normal_igo_id)
                 pairing_errors.append( "|" + line.replace("\t", "|") + " |")
                 pairing_errors_unformatted.append(line)
 
         self.send_message("""
         Number of samples with pairing errors: {num_pairing_errors}
 
-        Samples with pairing errors (also see file error_unpaired_samples.txt):
+        Samples with pairing errors (also see file error_pairing.txt):
 
-        | Sample Name | IGO Sample ID | Error Message | Patient ID |
+        | Tumor Sample Name | Tumor IGO Sample ID | Normal Sample Name | Normal Sample ID |
         {pairing_errors}
         """.format(
             num_pairing_errors=str(len(pairing_errors)),
@@ -133,7 +133,7 @@ class TempoMPGenOperator(Operator):
             )
         )
 
-        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
+        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_pairing.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
 
         header = "NORMAL_ID\tTUMOR_ID\n"
@@ -143,43 +143,53 @@ class TempoMPGenOperator(Operator):
         send_notification.delay(pairing_file_event)
 
 
-    def create_mapping_file(self, tempo_inputs):
-        cleaned_inputs = self.clean_inputs(tempo_inputs)
+    def create_mapping_file(self, tempo_inputs, error_samples):
+        cleaned_inputs, duped_pairs = self.clean_inputs(tempo_inputs, error_samples)
         header = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUM_OF_PAIRS\n"
         sample_mapping = header + create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
 
-    def clean_inputs(self, tempo_inputs):
+    def clean_inputs(self, tempo_inputs, error_samples):
         """
         Removes samples that don't have valid cmo sample names
 
         Goes for both sample types (tumor or normal)
         """
+        error_sample_set = set()
+        for sample in error_samples:
+            error_sample_set.add(sample['sample_name'])
+
+        dupe_pairs = list()
+
         clean_pair = list()
         for pair in tempo_inputs:
             normal = pair["normal_sample"]
-            tumor = pair["tumor_sample"]            
-            if is_cmo_sample_name_format(normal['sample_name'], normal['specimen_type']) and is_cmo_sample_name_format(tumor['sample_name'], tumor['specimen_type']):
-                clean_pair.append(pair)
-        return clean_pair
+            tumor = pair["tumor_sample"]
+            if normal['sample_name'] not in error_sample_set or tumor['sample_name'] not in error_sample_set:
+                if normal['sample_name'] == tumor['sample_name']:
+                    dupe_pairs.append(pair)
+                elif is_cmo_sample_name_format(normal['sample_name'], normal['specimen_type']) and is_cmo_sample_name_format(tumor['sample_name'], tumor['specimen_type']):
+                    clean_pair.append(pair)
+        return clean_pair, dupe_pairs
 
 
     def generate_sample_formatting_errors_file(self, tempo_inputs, samples, error_samples):
         number_of_inputs = len(tempo_inputs)
         s = list()
         unformatted_s = list()
+        unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
         for sample in error_samples:
-            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |")
-            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\n")
+            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
+            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
 
         msg = """
         Number of samples (both tumor and normal): {num_samples}
         Number of samples with error: {number_of_errors}
 
         Error samples (also see error_sample_formatting.txt):
-        | IGO Sample ID | Sample Name / Error |
+        | IGO Sample ID | Sample Name / Error | Patient ID | Specimen Type |
         {error_sample_names}
         """
 

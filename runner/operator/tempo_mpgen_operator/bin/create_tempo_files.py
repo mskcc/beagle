@@ -6,16 +6,12 @@ from .make_sample import is_cmo_sample_name_format
 
 def create_pairing(data):
     pairing = ""
-    unpaired = list()
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
-        if "noNormal" in normal['sample_name']:
-            unpaired.append(pair)
-        else:
+        if "noNormal" not in normal['sample_name']:
             pairing += "%s\t%s\n" % (normal["sample_name"], tumor["sample_name"])
-
-    return pairing, unpaired
+    return pairing
 
 
 def resolve_target(bait_set):
