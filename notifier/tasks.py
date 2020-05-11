@@ -3,6 +3,7 @@ from celery import shared_task
 from django.conf import settings
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 from notifier.event_handler.noop_event_handler.noop_event_handler import NoOpEventHandler
+from notifier.event_handler.seqosystem_event_handler.seqosystem_event_handler import SeqosystemEventHandler
 
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,9 @@ def event_handler(handler_type):
     if handler_type == "JIRA":
         logger.info("Notifier type JIRA created")
         return JiraEventHandler()
+    elif handler_type == "SEQO":
+        logger.info("Notifier type JIRA created")
+        return SeqosystemEventHandler()
     else:
         return NoOpEventHandler()
 

@@ -5,7 +5,7 @@ import requests
 from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, ETLJobCreatedEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
@@ -188,6 +188,9 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
                   max_retry=1, children=[],
                   job_group=job_group)
         job.save()
+    if job_group:
+        e = ETLJobCreatedEvent(job_group.id, sample_id, request_id, request_metadata)
+        send_notification.delay(e)
     return job
 
 

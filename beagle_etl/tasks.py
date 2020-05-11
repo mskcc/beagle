@@ -104,7 +104,7 @@ class JobObject(object):
         children = func(**self.job.args)
         self.job.children = children or []
 
-    def _generate_ticket_decription(self):
+    def _generate_ticket_description(self):
         samples_completed = set()
         samples_failed = set()
         all_jobs = []
@@ -201,7 +201,7 @@ class JobObject(object):
             time.sleep(5)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
-            self._generate_ticket_decription()
+            self._generate_ticket_description()
             self._generate_sample_data_file()
 
     def _job_successful(self):
@@ -209,7 +209,7 @@ class JobObject(object):
             # TODO: Hack remove this ASAP
             import time
             time.sleep(5)
-            self._generate_ticket_decription()
+            self._generate_ticket_description()
             self._generate_sample_data_file()
 
     def _check_children(self):
