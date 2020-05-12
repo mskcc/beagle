@@ -190,9 +190,9 @@ export BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
 # corresponds to ./conf/rabbitmq.conf ;
 export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
-export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)
-export RABBITMQ_NODE_IP_ADDRESS:=127.0.0.1
-export RABBITMQ_NODE_PORT:=5679
+export RABBITMQ_NODENAME:=rabbit@localhost
+export RABBITMQ_NODE_IP_ADDRESS:=localhost
+export RABBITMQ_NODE_PORT:=5992
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
 export RABBITMQ_PID_FILE:=$(RABBITMQ_LOG_BASE)/rabbitmq.pid
@@ -320,6 +320,7 @@ django-init:
 	python manage.py migrate
 	python manage.py createsuperuser
 	python manage.py loaddata \
+	beagle_etl.operator.json \
 	file_system.filegroup.json \
 	file_system.filetype.json \
 	file_system.storage.json \
@@ -341,8 +342,9 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+
 shell : check-env
-	python manage.py shell_plus --notebook
+	python manage.py shell_plus
 
 
 dumpdata: check-env
