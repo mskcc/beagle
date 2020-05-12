@@ -10,6 +10,7 @@ from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
+from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
@@ -75,12 +76,7 @@ def request_callback(request_id, job_group=None):
     except JobGroup.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
-    queryset = File.objects.prefetch_related(Prefetch('filemetadata_set',
-                                                      queryset=FileMetadata.objects.select_related('file').order_by(
-                                                          '-created_date'))).order_by('file_name').filter(
-        filemetadata__metadata__requestId=request_id)
-    ret_str = 'filemetadata__metadata__recipe'
-    recipes = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+    recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
@@ -236,7 +232,7 @@ def create_pooled_normal(filepath, file_group_id):
     - flowCellId = HCYYWBBXY
     - [A|B] might be the flowcell bay the flowcell is placed into
     """
-    if File.objects.filter(path=filepath):
+    if FileRepository.filter(path=filepath):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
@@ -323,22 +319,24 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 invalid_number_of_fastq = True
                 failed_runs.append(run['runId'])
             else:
-                file_search = File.objects.filter(path=fastqs[0]).first()
+                file_search = FileRepository.filter(path=fastqs[0]).first()
                 if not file_search:
                     create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata, R1_or_R2(fastqs[0]))
                 else:
-                    logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+                    logger.error(
+                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
                     conflict = True
-                    conflict_files.append((file_search.path, str(file_search.id)))
-                file_search = File.objects.filter(path=fastqs[1]).first()
+                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
+                file_search = FileRepository.filter(path=fastqs[1]).first()
                 if not file_search:
                     create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
                                 request_metadata, R1_or_R2(fastqs[1]))
                 else:
-                    logger.error("File %s already created with id:%s" % (file_search.path, str(file_search.id)))
+                    logger.error(
+                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
                     conflict = True
-                    conflict_files.append((file_search.path, str(file_search.id)))
+                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
     if conflict:
         raise FailedToFetchFilesException(
             "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
@@ -520,7 +518,8 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
             else:
-                file_search = File.objects.filter(path=fastqs[0]).first()
+                f = FileRepository.filter(path=fastqs[0]).first()
+                file_search = f.file
                 if file_search:
                     update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata,
                                          R1_or_R2(fastqs[0]))
@@ -528,7 +527,8 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
                     logger.error("File %s missing" % file_search.path)
                     missing = True
                     missing_files.append((file_search.path, str(file_search.id)))
-                file_search = File.objects.filter(path=fastqs[1]).first()
+                f = FileRepository.filter(path=fastqs[1]).first()
+                file_search = f.file
                 if file_search:
                     update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata,
                                          R1_or_R2(fastqs[1]))
@@ -566,7 +566,8 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
         metadata[k] = v
     for k, v in request_metadata.items():
         metadata[k] = v
-    file_search = File.objects.filter(path=path).first()
+    f = FileRepository.filter(path=path).first()
+    file_search = f.file
     if not file_search:
         raise FailedToFetchFilesException("Failed to find file %s." % (path))
     data = {

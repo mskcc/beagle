@@ -33,7 +33,7 @@ class TestConstructPair(TestCase):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
-        files = File.objects.filter(filemetadata__metadata__requestId = "10075_D", filemetadata__metadata__igocomplete = True).all()
+        files = File.objects.filter(filemetadata__metadata__requestId="10075_D", filemetadata__metadata__igocomplete=True).all()
         data = list()
         for file in files:
             sample = dict()
