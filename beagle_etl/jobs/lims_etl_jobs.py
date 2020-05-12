@@ -5,7 +5,7 @@ import requests
 from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator
 from file_system.serializers import UpdateFileSerializer
@@ -94,6 +94,8 @@ def request_callback(request_id, job_group=None):
         logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
         e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
         send_notification.delay(e)
+        error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
+        send_notification.delay(error_label)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
