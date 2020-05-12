@@ -13,12 +13,26 @@ def restart(modeladmin, request, queryset):
             if child_job.status == JobStatus.FAILED:
                 child_job.status = JobStatus.CREATED
                 child_job.retry_count = 0
+                child_job.message = None
                 child_job.save()
         job.status = JobStatus.CREATED
+        job.message = None
         job.retry_count = 0
         job.save()
 
 restart.short_description = "Restart"
+
+class StatusFilter(SimpleListFilter):
+    title = 'Status'
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        return [(member.value, name) for name, member in JobStatus.__members__.items()]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(status=self.value())
+        return queryset
 
 class RecipeFilter(SimpleListFilter):
     title = 'Recipe'
@@ -50,7 +64,7 @@ class JobAdmin(ModelAdmin):
     readonly_fields = ('message',)
     actions = (restart,)
     ordering = ('-created_date',)
-    list_filter = (RecipeFilter, )
+    list_filter = (RecipeFilter, StatusFilter)
 
     def get_short_run(self, obj):
         if obj.run:
