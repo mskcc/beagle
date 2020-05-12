@@ -5,7 +5,7 @@ from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupM
 
 
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'size')
+    list_display = ('id', 'file_name', 'file_group', 'size')
     search_fields = ['file_name']
 
 

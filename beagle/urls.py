@@ -22,16 +22,24 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from core.views import BeagleTokenObtainPairView
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+from beagle import __version__
 
-
-from rest_framework_swagger.views import get_swagger_view
-
-
-schema_view = get_swagger_view(title='Beagle API')
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Beagle API",
+      default_version=__version__
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 
 urlpatterns = [
-    url(r'^$', schema_view),
+    url(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('v0/fs/', include('file_system.urls')),
     path('v0/run/', include('runner.urls')),
     path('v0/etl/', include('beagle_etl.urls')),

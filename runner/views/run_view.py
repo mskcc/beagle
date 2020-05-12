@@ -54,6 +54,9 @@ class RunViewSet(mixins.ListModelMixin,
 
 class StartRunViewSet(GenericAPIView):
 
+    queryset = Run.objects.all()
+    serializer_class = RunSerializerFull
+
     def get(self, request, pk):
         try:
             run = Run.objects.get(id=pk)
@@ -90,6 +93,7 @@ class StartRunViewSet(GenericAPIView):
 
 class UpdateJob(GenericAPIView):
 
+    queryset = Run.objects.all()
     serializer_class = RunStatusUpdateSerializer
 
     def post(self, request, pk):

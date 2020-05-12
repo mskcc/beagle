@@ -15,7 +15,8 @@
             },
             "tags": {
                 "requestId": "09670_D"
-            }
+            },
+            "notify_for_outputs": "[\"qc_pdf\"]"
         }
     },
     {
