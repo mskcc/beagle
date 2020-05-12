@@ -8,7 +8,7 @@ class PipelineAdmin(admin.ModelAdmin):
 
 
 class RunAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', link_relation("app"), link_relation("operator_run"), 'tags', 'status', 'execution_id', 'created_date')
+    list_display = ('id', 'name', link_relation("app"), link_relation("operator_run"), 'tags', 'status', 'execution_id', 'created_date', 'notify_for_outputs')
     ordering = ('-created_date',)
 
 
