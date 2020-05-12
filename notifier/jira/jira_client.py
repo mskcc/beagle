@@ -103,9 +103,12 @@ class JiraClient(object):
         response = self._get(comment_url)
         return response
 
-    def add_attachment(self, ticket_id, file_name, content):
+    def add_attachment(self, ticket_id, file_name, content, download=False):
         attachment_url = self.JiraEndpoints.ATTACHMENT.value % ticket_id
-        files = {'file': (file_name, content, 'text/plain')}
+        if not download:
+            files = {'file': (file_name, content, 'text/plain')}
+        else:
+            files = {'file': (file_name, content)}
         headers = {
             "X-Atlassian-Token": "nocheck"
         }
