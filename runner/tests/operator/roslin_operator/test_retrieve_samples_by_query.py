@@ -28,7 +28,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         patient_id = "foo"
         bait_set = "bar"
         dmp_query = build_dmp_query(patient_id, bait_set)
-        expected_query =  Q(filemetadata__metadata__cmo_assay='') & Q(filemetadata__metadata__patient__cmo='foo') & Q(filemetadata__metadata__type='N')
+        expected_query = Q(metadata__cmo_assay='') & Q(metadata__patient__cmo='foo') & Q(metadata__type='N')
         # (AND: ('filemetadata__metadata__cmo_assay', ''), ('filemetadata__metadata__patient__cmo', 'foo'), ('filemetadata__metadata__type', 'N'))
         self.assertEqual(dmp_query, expected_query)
 
@@ -36,14 +36,14 @@ class TestRetrieveSamplesByQuery(TestCase):
         patient_id = "C-foo"
         bait_set = "bar"
         dmp_query = build_dmp_query(patient_id, bait_set)
-        expected_query =  Q(filemetadata__metadata__cmo_assay='') & Q(filemetadata__metadata__patient__cmo='foo') & Q(filemetadata__metadata__type='N')
+        expected_query = Q(metadata__cmo_assay='') & Q(metadata__patient__cmo='foo') & Q(metadata__type='N')
         self.assertEqual(dmp_query, expected_query)
 
         # dummy CMO-ID style patient ID and partially matching bait_set impact341
         patient_id = "C-foo1"
         bait_set = "IMPACT341_foo"
         dmp_query = build_dmp_query(patient_id, bait_set)
-        expected_query =  Q(filemetadata__metadata__cmo_assay='IMPACT341') & Q(filemetadata__metadata__patient__cmo='foo1') & Q(filemetadata__metadata__type='N')
+        expected_query =  Q(metadata__cmo_assay='IMPACT341') & Q(metadata__patient__cmo='foo1') & Q(metadata__type='N')
         self.assertEqual(dmp_query, expected_query)
 
     def test_get_dmp_normal1(self):
@@ -82,18 +82,18 @@ class TestRetrieveSamplesByQuery(TestCase):
         self.assertEqual(dmp_normal, None)
 
         # create a DMP bam
-        file_group_instance = FileGroup.objects.get(name = "DMP BAMs")
-        filetype_instance = FileType.objects.get(name = "bam")
+        file_group_instance = FileGroup.objects.get(name="DMP BAMs")
+        filetype_instance = FileType.objects.get(name="bam")
         file_instance = File.objects.create(
-            file_type = filetype_instance,
-            file_group = file_group_instance,
-            file_name = "C-8VK0V7.bam",
-            path = "/C-8VK0V7.bam"
+            file_type=filetype_instance,
+            file_group=file_group_instance,
+            file_name="C-8VK0V7.bam",
+            path="/C-8VK0V7.bam"
         )
         dmp_bam_filemetadata_instance = FileMetadata.objects.create(
-            file = file_instance,
-            version = 1,
-            metadata = {
+            file=file_instance,
+            version=1,
+            metadata={
                 "bai": "/C-8VK0V7.bai",
                 "bam": "/C-8VK0V7.bam",
                 "type": "N",
@@ -186,7 +186,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         run_ids = ['bar']
         query = build_run_id_query(run_ids)
         # (AND: (('filemetadata__metadata__runId', 'bar'))
-        expected_query = Q(filemetadata__metadata__runId='bar')
+        expected_query = Q(metadata__runId='bar')
         self.assertEqual(query, expected_query)
 
         # run them through set then back to list to ensure ordering for testing
@@ -199,10 +199,10 @@ class TestRetrieveSamplesByQuery(TestCase):
         expected_query = Q(filemetadata__metadata__runId='bar') | Q(filemetadata__metadata__runId='baz')
         # (OR: ('filemetadata__metadata__runId', 'baz'), ('filemetadata__metadata__runId', 'bar'))
 
-        self.assertTrue( ('filemetadata__metadata__runId', 'baz') in query.__dict__['children'] )
-        self.assertTrue( ('filemetadata__metadata__runId', 'bar') in query.__dict__['children'] )
-        self.assertTrue( query.__dict__['connector'] == 'OR' )
-        self.assertTrue( query.__dict__['negated'] == False )
+        self.assertTrue(('metadata__runId', 'baz') in query.__dict__['children'])
+        self.assertTrue(('metadata__runId', 'bar') in query.__dict__['children'])
+        self.assertTrue(query.__dict__['connector'] == 'OR' )
+        self.assertTrue(query.__dict__['negated'] == False )
 
 
     def test_build_preservation_query(self):
@@ -213,68 +213,69 @@ class TestRetrieveSamplesByQuery(TestCase):
         preservation_types = list(set(['foo', 'bar']))
         query = build_preservation_query(preservation_types)
         # TODO: why does this give the preservation type of "FROZEN"?
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
+        expected_query = Q(metadata__preservation__iexact='FROZEN')
+        # expected_query = {'metadata__preservation__iexact': "FROZEN"}
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
+        expected_query = Q(metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'ffpe']))
         query = build_preservation_query(preservation_types)
         # TODO: why does this give the preservation type of "FFPE"?
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['foo', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen', 'ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN', 'ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN', 'FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FFPE']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['ffpe']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FFPE')
+        expected_query = Q(metadata__preservation__iexact='FFPE')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
+        expected_query = Q(metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['Frozen']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
+        expected_query = Q(metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
         preservation_types = list(set(['FROZEN']))
         query = build_preservation_query(preservation_types)
-        expected_query = Q(filemetadata__metadata__preservation__iexact='FROZEN')
+        expected_query = Q(metadata__preservation__iexact='FROZEN')
         self.assertEqual(query, expected_query)
 
     def test_get_descriptor1(self):
@@ -282,38 +283,38 @@ class TestRetrieveSamplesByQuery(TestCase):
         Test that re-labeled descriptor is returned when needed
         """
         # create some Pooled Normals
-        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
-        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name="fastq")
         poolednormal_R1_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
-            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R1.fastq",
+            path="/FROZENPOOLEDNORMAL.R1.fastq"
         )
         poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R1_file_instance,
-            metadata = {
+            file=poolednormal_R1_file_instance,
+            metadata={
                 "recipe": "IMPACT468",
             }
         )
-        poolednormal_R2_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
-            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+        poolednormal_R2_file_instance=File.objects.create(
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R2.fastq",
+            path="/FROZENPOOLEDNORMAL.R2.fastq"
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R2_file_instance,
-            metadata = {
+        poolednormal_R2_filemetadata_instance=FileMetadata.objects.create(
+            file=poolednormal_R2_file_instance,
+            metadata={
                 "recipe": "IMPACT468",
             }
         )
-        pooled_normals = File.objects.all()
+        pooled_normals = FileMetadata.objects.all()
 
-        descriptor = get_descriptor(bait_set = "IMPACT468_BAITS", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="IMPACT468_BAITS", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, "IMPACT468")
 
-        descriptor = get_descriptor(bait_set = "IMPACT468", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="IMPACT468", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, "IMPACT468")
 
     def test_get_descriptor2(self):
@@ -321,44 +322,44 @@ class TestRetrieveSamplesByQuery(TestCase):
         Test that no descriptor is returned when its not needed
         """
         # create some Pooled Normals
-        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
-        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name="fastq")
         poolednormal_R1_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
-            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R1.fastq",
+            path="/FROZENPOOLEDNORMAL.R1.fastq"
         )
         poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R1_file_instance,
-            metadata = {
+            file=poolednormal_R1_file_instance,
+            metadata={
                 "recipe": "foo_IMPACT468_bar",
             }
         )
         poolednormal_R2_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
-            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R2.fastq",
+            path="/FROZENPOOLEDNORMAL.R2.fastq"
         )
         poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R2_file_instance,
-            metadata = {
+            file=poolednormal_R2_file_instance,
+            metadata={
                 "recipe": "foo_IMPACT468_bar",
             }
         )
-        pooled_normals = File.objects.all()
+        pooled_normals = FileMetadata.objects.all()
 
-        descriptor = get_descriptor(bait_set = "IMPACT468", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="IMPACT468", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, None)
 
-        descriptor = get_descriptor(bait_set = "IMPACT468_bar", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="IMPACT468_bar", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, None)
 
-        descriptor = get_descriptor(bait_set = "foo_IMPACT468", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="foo_IMPACT468", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, None)
 
-        descriptor = get_descriptor(bait_set = "foo_IMPACT468_bar", pooled_normals = pooled_normals)
+        descriptor = get_descriptor(bait_set="foo_IMPACT468_bar", pooled_normals=pooled_normals)
         self.assertEqual(descriptor, "foo_IMPACT468_bar")
 
     def test_get_pooled_normals1(self):
@@ -367,23 +368,23 @@ class TestRetrieveSamplesByQuery(TestCase):
         """
         # test that an empty database and irrelevant args returns None
         pooled_normals = get_pooled_normals(
-            run_ids = ['foo'], preservation_types = ['bar'], bait_set = "baz"
+            run_ids=['foo'], preservation_types=['bar'], bait_set="baz"
         )
         self.assertEqual(pooled_normals, None)
 
         # start adding Pooled Normals to the database
-        poolednormal_filegroup_instance = FileGroup.objects.get(name = "Pooled Normal")
-        fastq_filetype_instance = FileType.objects.get(name = "fastq")
+        poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name="fastq")
         # add Pooled Normal from another run
         poolednormal_R1_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R1.fastq",
-            path = "/FROZENPOOLEDNORMAL.R1.fastq"
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R1.fastq",
+            path="/FROZENPOOLEDNORMAL.R1.fastq"
         )
         poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R1_file_instance,
-            metadata = {
+            file=poolednormal_R1_file_instance,
+            metadata={
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
                 'baitSet': 'IMPACT468_BAITS',
@@ -391,14 +392,14 @@ class TestRetrieveSamplesByQuery(TestCase):
             }
         )
         poolednormal_R2_file_instance = File.objects.create(
-            file_type = fastq_filetype_instance,
-            file_group = poolednormal_filegroup_instance,
-            file_name = "FROZENPOOLEDNORMAL.R2.fastq",
-            path = "/FROZENPOOLEDNORMAL.R2.fastq"
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R2.fastq",
+            path="/FROZENPOOLEDNORMAL.R2.fastq"
         )
         poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
-            file = poolednormal_R2_file_instance,
-            metadata = {
+            file=poolednormal_R2_file_instance,
+            metadata={
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
                 'baitSet': 'IMPACT468_BAITS',
@@ -407,9 +408,9 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids = ['PITT_0439'],
-            preservation_types = ['Frozen'],
-            bait_set = "IMPACT468_BAITS"
+            run_ids=['PITT_0439'],
+            preservation_types=['Frozen'],
+            bait_set="IMPACT468_BAITS"
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -417,30 +418,30 @@ class TestRetrieveSamplesByQuery(TestCase):
         pooled_normals['R2_bid'].pop()
 
         expected_pooled_normals = {
-        'CN': 'MSKCC',
-        'PL': 'Illumina',
-        'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
-        'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
-        'tumor_type': 'Normal',
-        'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
-        'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
-        'species': '',
-        'patient_id': 'PN_PATIENT_ID',
-        'bait_set': 'IMPACT468',
-        'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
-        'run_date': [''],
-        'specimen_type': '',
-        'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
-        'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
-        'R1_bid': [], # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
-        'R2_bid': [], # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
-        'bam': [],
-        'bam_bid': [],
-        'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
-        'pi': '',
-        'pi_email': '',
-        'run_id': [''],
-        'preservation_type': [['Frozen']]
+            'CN': 'MSKCC',
+            'PL': 'Illumina',
+            'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
+            'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+            'tumor_type': 'Normal',
+            'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
+            'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'species': '',
+            'patient_id': 'PN_PATIENT_ID',
+            'bait_set': 'IMPACT468',
+            'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'run_date': [''],
+            'specimen_type': '',
+            'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
+            'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
+            'R1_bid': [],  # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
+            'R2_bid': [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
+            'bam': [],
+            'bam_bid': [],
+            'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'pi': '',
+            'pi_email': '',
+            'run_id': [''],
+            'preservation_type': [['Frozen']]
         }
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
