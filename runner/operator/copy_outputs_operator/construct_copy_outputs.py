@@ -174,9 +174,6 @@ def generate_sample_pairing_and_mapping_files(run_ids):
 
         sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-    print(sample_mapping)
-    print(sample_pairing)
-
     data_clinical = generate_sample_data_content(request_id_set)
 
     return sample_mapping, sample_pairing, data_clinical
