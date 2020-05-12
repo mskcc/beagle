@@ -341,6 +341,9 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+shell : check-env
+	python manage.py shell_plus --notebook
+
 
 dumpdata: check-env
 	python manage.py dumpdata
