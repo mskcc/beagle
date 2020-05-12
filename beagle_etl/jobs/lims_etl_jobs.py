@@ -54,6 +54,7 @@ def get_or_create_request_job(request_id):
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
         job_group = JobGroup()
+        job_group.save()
         notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
