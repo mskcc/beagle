@@ -3,7 +3,9 @@ import sys
 import argparse
 import json
 from pprint import pprint
-from runner.models import Port
+from runner.models import Port, Run
+from runner.run.processors.file_processor import FileProcessor
+from notifier.helper import generate_sample_data_content
 
 
 def get_roslin_output_description():
@@ -124,6 +126,60 @@ def construct_copy_outputs_input(run_id_list):
         pair_number = pair_number + 1
     input_json["project_prefix"] = "_".join(project_prefix)
     return input_json
+
+
+def generate_sample_pairing_and_mapping_files(run_ids):
+
+    sample_pairing = ""
+    sample_mapping = ""
+
+    runs = Run.objects.filter(id__in=run_ids)
+
+    request_id_set = set()
+
+    for r in runs:
+        request_id_set.add(r.tags['requestId'])
+        inp_port = Port.objects.filter(run_id=r.id, name='pair').first()
+        tumor_sample_name = inp_port.db_value[0]['ID']
+        for p in inp_port.db_value[0]['R1']:
+            sample_mapping += "\t".join(
+                [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[0]['R2']:
+            sample_mapping += "\t".join(
+                [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[0]['zR1']:
+            sample_mapping += "\t".join(
+                [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[0]['zR2']:
+            sample_mapping += "\t".join(
+                [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+
+        normal_sample_name = inp_port.db_value[1]['ID']
+        for p in inp_port.db_value[1]['R1']:
+            sample_mapping += "\t".join(
+                [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[1]['R2']:
+            sample_mapping += "\t".join(
+                [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[1]['zR1']:
+            sample_mapping += "\t".join(
+                [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+        for p in inp_port.db_value[1]['zR2']:
+            sample_mapping += "\t".join(
+                [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+
+        for p in inp_port.db_value[1]['bam']:
+            sample_mapping += "\t".join(
+                [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+
+        sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
+
+    print(sample_mapping)
+    print(sample_pairing)
+
+    data_clinical = generate_sample_data_content(request_id_set)
+
+    return sample_mapping, sample_pairing, data_clinical
 
 
 if __name__ == '__main__':
