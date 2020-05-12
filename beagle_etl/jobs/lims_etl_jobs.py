@@ -400,7 +400,8 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         sample_class = metadata.pop('cmoSampleClass', None)
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
-        metadata['cmoSampleName'] = format_sample_name(sample_name)
+        metadata['specimenType'] = specimen_type
+        metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id
