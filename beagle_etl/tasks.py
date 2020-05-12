@@ -4,14 +4,11 @@ import datetime
 import traceback
 from celery import shared_task
 from django.db import transaction
-from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
-from file_system.repository.file_repository import FileRepository
 from notifier.tasks import send_notification
+from notifier.helper import generate_sample_data_content
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
-# TODO: Consider moving `format_sample_name` to some other place
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 
 logger = logging.getLogger(__name__)
@@ -167,26 +164,7 @@ class JobObject(object):
         send_notification.delay(etl_e)
 
     def _generate_sample_data_file(self):
-        result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
-        ret_str = 'metadata__sampleId'
-        samples = FileRepository.filter(metadata={"requestId": self.job.args['request_id']}).order_by(ret_str).distinct(
-            ret_str).all()
-        for sample in samples:
-            metadata = sample.metadata
-            print(metadata)
-            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'], metadata['specimenType'])),
-                metadata['patientId'],
-                metadata['investigatorSampleId'],
-                metadata['sampleClass'],
-                metadata['recipe'],
-                metadata['oncoTreeCode'],
-                metadata['specimenType'],
-                metadata['preservation'],
-                metadata['sex'],
-                metadata['tissueLocation'],
-                metadata['sampleId']
-            )
+        result = generate_sample_data_content(self.job.args['request_id'])
         e = UploadAttachmentEvent(str(self.job.job_group.id),
                                   '%s_sample_data_clinical.txt' % self.job.args['request_id'],
                                   result).to_dict()
