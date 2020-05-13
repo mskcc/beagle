@@ -36,7 +36,7 @@ def remove_with_caveats(samples):
     return data, error_data
 
 
-def format_sample_name(sample_name, ignore_sample_formatting=False):
+def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=False):
     """
     Formats a given sample_name to legacy ROSLIN naming conventions, provided that
     it is in valid CMO Sample Name format (see sample_pattern regex value, below)
@@ -44,7 +44,8 @@ def format_sample_name(sample_name, ignore_sample_formatting=False):
     Current format is to prepend sample name with "s_" and convert all hyphens to
     underscores
 
-    If it does not meet sample_pattern requirements, return 'sampleMalFormed'
+    If it does not meet sample_pattern requirements OR is not a specimen_type=="CellLine",
+    return 'sampleMalFormed'
 
     ignore_sample_formatting is applied if we want to return a sample name regardless of
     formatting
@@ -55,7 +56,7 @@ def format_sample_name(sample_name, ignore_sample_formatting=False):
         try:
             if "s_" in sample_name[:2]:
                 return sample_name
-            elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+            elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():  # cmoSampleName is formatted properly
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
             LOGGER.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
@@ -149,7 +150,7 @@ def build_sample(data, ignore_sample_formatting=False):
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta['specimenType']
         species = meta['species']
-        cmo_sample_name = format_sample_name(meta['sampleName'], ignore_sample_formatting)
+        cmo_sample_name = format_sample_name(meta['sampleName'], specimen_type, ignore_sample_formatting)
         if cmo_sample_name == "sampleNameMalformed":
             LOGGER.error("sampleName for %s is malformed", sample_id)
         flowcell_id = meta['flowCellId']

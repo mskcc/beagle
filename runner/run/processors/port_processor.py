@@ -1,10 +1,12 @@
+import os
 import uuid
 import copy
 import logging
 from enum import Enum
 from runner.run.processors.file_processor import FileProcessor
 from runner.exceptions import PortProcessorException, FileConflictException, FileHelperException
-
+from notifier.tasks import send_notification
+from notifier.events import UploadAttachmentEvent
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +15,7 @@ class PortAction(Enum):
     CONVERT_TO_BID = 0
     CONVERT_TO_PATH = 1
     REGISTER_OUTPUT_FILES = 2
+    SEND_AS_NOTIFICATION = 3
     FIX_DB_VALUES = 99 # Temporary for fixing values in DB
 
 
@@ -71,6 +74,8 @@ class PortProcessor(object):
                                                 kwargs.get('group_id'),
                                                 kwargs.get('metadata'),
                                                 kwargs.get('file_list'))
+        if action == PortAction.SEND_AS_NOTIFICATION:
+            return PortProcessor._send_as_notification(file_obj, kwargs.get('job_group'))
         else:
             raise PortProcessorException('Unknown PortProcessor action: %s' % action)
 
@@ -78,6 +83,9 @@ class PortProcessor(object):
     def _update_location_to_bid(val, file_list):
         file_obj = copy.deepcopy(val)
         location = val.get('location')
+        if not location and val.get('contents'):
+            logger.debug("Processing file literal %s", str(val))
+            return val
         bid = FileProcessor.get_file_id(location)
         file_obj['location'] = 'bid://%s' % bid
         secondary_files = file_obj.pop('secondaryFiles', [])
@@ -97,7 +105,10 @@ class PortProcessor(object):
     @staticmethod
     def _convert_to_path(val):
         file_obj = copy.deepcopy(val)
-        location = file_obj.pop('location')
+        location = file_obj.pop('location', None)
+        if not location and val.get('contents'):
+            logger.debug("Processing file literal %s", str(val))
+            return val
         try:
             path = FileProcessor.get_file_path(location)
         except FileHelperException as e:
@@ -173,3 +184,12 @@ class PortProcessor(object):
             file_list.append('bid://%s' % FileProcessor.get_bid_from_file(file_obj_db))
             file_list.extend([f['location'] for f in secondary_files_obj])
         return file_obj
+
+    @staticmethod
+    def _send_as_notification(val, job_group):
+        uri = val.get('location')
+        path = FileProcessor.parse_path_from_uri(uri)
+        file_name = os.path.basename(path)
+        event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
+        send_notification.delay(event.to_dict())
+        return val
