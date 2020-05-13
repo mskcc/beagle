@@ -5,6 +5,44 @@ from rest_framework import serializers
 from notifier.models import JobGroup
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
+def ValidateDict(value):
+    if len(value.split(":")) !=2:
+        raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
+class RunApiListSerializer(serializers.Serializer):
+    status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
+    job_groups = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    ports = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    tags = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    request_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    jira_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    created_before = serializers.DateTimeField(required=False)
+    created_after = serializers.DateTimeField(required=False)
+    modified_before = serializers.DateTimeField(required=False)
+    modified_after = serializers.DateTimeField(required=False)
+
+
 
 class PipelineResolvedSerializer(serializers.Serializer):
     app = serializers.JSONField()
