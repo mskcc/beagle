@@ -3,17 +3,19 @@ import logging
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
 from django.db.models import Prefetch
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
-    RequestIdOperatorSerializer, OperatorErrorSerializer
+    RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request
+from drf_yasg.utils import swagger_auto_schema
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -24,41 +26,91 @@ class RunApiViewSet(mixins.ListModelMixin,
     queryset = Run.objects.prefetch_related(Prefetch('port_set', queryset=
     Port.objects.select_related('run'))).order_by('-created_date').all()
 
-    serializer_class = RunSerializerFull
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return RunApiListSerializer
+        else:
+            return RunSerializerFull
 
+    def fix_query_list(self,request_query,key_list):
+        query_dict = request_query.dict()
+        for single_param in key_list:
+            query_value = request_query.getlist(single_param)
+            if query_value:
+                if ',' in query_value[0]:
+                    query_value = query_dict.get(single_param)
+                    query_dict[single_param] = query_value.split(",")
+                else:
+                    query_dict[single_param] = query_value
+        return query_dict
+
+    def query_from_dict(self,query_filter,queryset,input_list):
+        for single_input in input_list:
+            key, val = single_input.split(':')
+            query = {query_filter % key: val}
+            queryset = queryset.filter(**query).all()
+        return queryset
+
+    @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
-        queryset = time_filter(Run, request.query_params)
-        job_group = request.query_params.getlist('job_group')
-        if job_group:
-            queryset = queryset.filter(job_group__in=job_group).all()
-        status_param = request.query_params.get('status')
-        if status_param:
-            if status_param not in [s.name for s in RunStatus]:
-                return Response({'details': 'Invalid status value %s: expected values %s' % (status_param, [s.name for s in RunStatus])}, status=status.HTTP_400_BAD_REQUEST)
-            queryset = queryset.filter(status=RunStatus[status_param].value)
-        input_params = request.query_params.get('input')
-        if input_params:
-            inputs = input_params.split(',')
-            for input in inputs:
+        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids']
+        fixed_query_params = self.fix_query_list(request.query_params,query_list_types)
+        serializer = RunApiListSerializer(data=fixed_query_params)
+        if serializer.is_valid():
+            queryset = time_filter(Run, fixed_query_params)
+            job_groups = fixed_query_params.get('job_groups')
+            jira_ids = fixed_query_params.get('jira_ids')
+            status_param = fixed_query_params.get('status')
+            ports = fixed_query_params.get('ports')
+            tags = fixed_query_params.get('tags')
+            request_ids = fixed_query_params.get('request_ids')
+            created_before = fixed_query_params.get('created_before')
+            created_after = fixed_query_params.get('created_after')
+            modified_before = fixed_query_params.get('modified_before')
+            modified_after = fixed_query_params.get('modified_after')
+            if job_groups:
+                queryset = queryset.filter(job_group__in=job_groups).all()
+            if jira_ids:
+                queryset = queryset.filter(job_group__jira_id__in=jira_ids).all()
+            if status_param:
+                queryset = queryset.filter(status=RunStatus[status_param].value).all()
+            if ports:
                 try:
-                    key, val = input.split(':')
-                    query = {"port__value__%s" % key: val}
-                    queryset = queryset.filter(**query).all()
+                    queryset = self.query_from_dict("port__value__%s",queryset,ports)
                 except Exception as e:
                     return Response({'details': 'Query for inputs needs to be in format input:value'},
-                                    status=status.HTTP_400_BAD_REQUEST)
-        request_id = request.query_params.get('requestId')
-        if request_id:
-            queryset = queryset.filter(tags__requestId=request_id).all()
-        page = self.paginate_queryset(queryset)
-        full = request.query_params.get('full')
-        if page is not None:
-            if full:
-                serializer = RunSerializerFull(page, many=True)
-            else:
-                serializer = RunSerializerPartial(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        return Response([], status=status.HTTP_200_OK)
+                        status=status.HTTP_400_BAD_REQUEST)
+            if tags:
+                try:
+                    queryset = self.query_from_dict("tags__%s__exact",queryset,tags)
+                except Exception as e:
+                    raise
+                    return Response({'details': 'Query for inputs needs to be in format input:value'},
+                        status=status.HTTP_400_BAD_REQUEST)
+            if request_ids:
+                queryset = queryset.filter(tags__requestId__in=request_ids).all()
+            if created_after:
+                queryset = queryset.filter(created_date__gte=created_after).all()
+            if created_before:
+                queryset = queryset.filter(created_date__lte=created_before).all()
+            if modified_after:
+                queryset = queryset.filter(modified_date__gte=created_after).all()
+            if modified_before:
+                queryset = queryset.filter(modified_date__lte=created_after).all()
+            try:
+                page = self.paginate_queryset(queryset)
+            except ValidationError as e:
+                return Response(e, status=status.HTTP_400_BAD_REQUEST)
+            full = fixed_query_params.get('full')
+            if page is not None:
+                if full:
+                    serializer = RunSerializerFull(page, many=True)
+                else:
+                    serializer = RunSerializerPartial(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return Response([], status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = APIRunCreateSerializer(data=request.data, context={'request': request})
