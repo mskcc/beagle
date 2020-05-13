@@ -14,7 +14,7 @@ def generate_sample_data_content(request_ids):
         for sample in samples:
             metadata = sample.metadata
             result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'])),
+                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'], metadata['specimenType'])),
                 metadata['patientId'],
                 metadata['investigatorSampleId'],
                 metadata['sampleClass'],
