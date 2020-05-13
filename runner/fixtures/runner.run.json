@@ -8,7 +8,7 @@
             "name": "ROSLIN JOB 1",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 1,
-            "tags": {},
+            "tags": {"tag": "value", "requestId": "request1"},
             "status": 0,
             "execution_id": null,
             "notify_for_outputs": "[]"
@@ -23,7 +23,7 @@
             "name": "ROSLIN JOB 2",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 1,
-            "tags": {},
+            "tags": {"tag": "value", "requestId": "request2"},
             "status": 0,
             "execution_id": null,
             "notify_for_outputs": "[]"
