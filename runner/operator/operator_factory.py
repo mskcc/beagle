@@ -4,6 +4,7 @@ from .access_operator import AccessOperator
 from .roslin_qc_operator import RoslinQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
 from .access.fastq_to_bam import AccessFastqToBamOperator
+from .helix_filters import HelixFiltersOperator
 
 
 class OperatorFactory(object):
@@ -14,7 +15,8 @@ class OperatorFactory(object):
         "AccessOperator": AccessOperator,
         "RoslinQcOperator": RoslinQcOperator,
         "CopyOutputsOperator": CopyOutputsOperator,
-        "AccessFastqToBamOperator": AccessFastqToBamOperator
+        "AccessFastqToBamOperator": AccessFastqToBamOperator,
+        "HelixFiltersOperator": HelixFiltersOperator
     }
 
     def get_by_model(model, **kwargs):

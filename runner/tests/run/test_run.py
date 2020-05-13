@@ -28,7 +28,7 @@ class RunObjectTest(APITestCase):
                                  output_file_group=self.file_group,
                                  output_directory="/path/to/outputs")
         self.pipeline.save()
-        self.run = Run(app=self.pipeline, status=RunStatus.CREATING)
+        self.run = Run(app=self.pipeline, status=RunStatus.CREATING, notify_for_outputs=[])
         self.run.save()
         self.file_type_unknown = FileType(name='unknown')
         self.file_type_unknown.save()

@@ -1,7 +1,7 @@
 """
-RoslinQcOperator
+Helix Filters Operator
 
-Constructs input JSON for the roslin QC pipeline and then
+Constructs input JSON for the Helix Filters pipeline and then
 submits them as runs
 """
 import os
@@ -9,13 +9,13 @@ import logging
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
-from .construct_roslin_qc_outputs import construct_roslin_qc_input
+from .construct_helix_filters_input import construct_helix_filters_input
 LOGGER = logging.getLogger(__name__)
 
 
-class RoslinQcOperator(Operator):
+class HelixFiltersOperator(Operator):
     """
-    Constructs input JSON for the roslin QC pipeline and then
+    Constructs input JSON for the Helix Filters pipeline and then
     submits them as runs
     """
     def get_jobs(self):
@@ -25,24 +25,22 @@ class RoslinQcOperator(Operator):
         APIRunCreateSerializer
         """
         run_ids = self.run_ids
-        input_json = construct_roslin_qc_input(run_ids)
+        input_json = construct_helix_filters_input(run_ids)
         number_of_runs = len(run_ids)
-        name = "ROSLIN QC OUTPUTS %s runs [%s,..] " % (
+        name = "HELIX FILTERS OUTPUTS %s runs [%s,..] " % (
             number_of_runs, run_ids[0])
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
+        input_json = self.add_output_file_names(input_json, pipeline_version)
+        tags = { "project_prefix": project_prefix, "run_ids": run_ids }
 
-        tags = {"tumor_sample_names": input_json['tumor_sample_names'],
-                "normal_sample_names": input_json['normal_sample_names']}
-
-        roslin_qc_outputs_job_data = {
+        helix_filters_outputs_job_data = {
             'app': app,
             'inputs': input_json,
             'name': name,
-            'notify_for_outputs': ['qc_pdf'],
             'tags': tags}
 
         """
@@ -59,9 +57,23 @@ class RoslinQcOperator(Operator):
                                                 pipeline_version,
                                                 self.job_group_id)
 
-            roslin_qc_outputs_job_data['output_directory'] = output_directory
+            helix_filters_outputs_job_data['output_directory'] = output_directory
 
-        roslin_qc_outputs_job = [(APIRunCreateSerializer(
-            data=roslin_qc_outputs_job_data), input_json)]
+        helix_filters_outputs_job = [(APIRunCreateSerializer(
+            data=helix_filters_outputs_job_data), input_json)]
 
-        return roslin_qc_outputs_job
+        return helix_filters_outputs_job
+
+
+    def add_output_file_names(self, json_data, pipeline_version):
+        """
+        Adds strings that's used by the CWL for output file names
+        """
+        project_prefix = json_data["project_prefix"]
+        json_data["roslin_version_string"] = pipeline_version
+        json_data["analyst_file"] = "%s.muts.maf" % project_prefix
+        json_data["analysis_gene_cna_file"] = "%s.gene.cna.txt" % project_prefix
+        json_data["portal_file"] = "data_mutations_extended.txt"
+        json_data["portal_CNA_file"] = "data_CNA.txt"
+
+        return json_data
