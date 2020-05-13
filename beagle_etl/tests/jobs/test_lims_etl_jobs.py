@@ -2,7 +2,6 @@
 Tests for LIMS ETL jobs
 """
 import os
-import beagle_etl.celery
 from unittest import skipIf
 from uuid import UUID
 from django.test import TestCase
