@@ -21,6 +21,8 @@ class FileTest(APITestCase):
         self.file_type_fasta.save()
         self.file_type_bam = FileType(name='bam')
         self.file_type_bam.save()
+        self.file_type_fastq = FileType(name='fastq')
+        self.file_type_fastq.save()
 
     def _create_single_file(self, path, file_type, group_id, request_id, sample_id):
         file_type_obj = FileType.objects.get(name=file_type)
@@ -214,6 +216,16 @@ class FileTest(APITestCase):
         self.assertEqual(response.data['user'], user2.username)
         self.assertEqual(response.data['metadata']['requestId'], 'Request_002')
 
+        # Check listing files as well
+        response = self.client.get('/v0/fs/files/?metadata=requestId:Request_001',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 0)
+        response = self.client.get('/v0/fs/files/?metadata=requestId:Request_002',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 1)
+
     # def test_update_file_metadata_invalid(self):
         """
         Return this test when we implement metadata validation
@@ -272,8 +284,21 @@ class FileTest(APITestCase):
         response = self.client.get('/v0/fs/metadata/?file_id=%s' % str(_file.id), format='json')
         self.assertEqual(len(response.data['results']), 2)
 
-
-
+    def test_list_files(self):
+        self._create_single_file('/path/to/file1_R1.fastq', 'fastq', str(self.file_group.id), '1', '1s')
+        self._create_single_file('/path/to/file1_R2.fastq', 'fastq', str(self.file_group.id), '1', '1s')
+        self._create_single_file('/path/to/file2_R1.fastq', 'fastq', str(self.file_group.id), '2', '1s')
+        self._create_single_file('/path/to/file2_R2.fastq', 'fastq', str(self.file_group.id), '2', '1s')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/files/?path=/path/to/file1_R1.fastq',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 1)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/files/?path=/path/to/file1_R1.fastq&return=requestId',
+                                   format='json'
+                                   )
+        self.assertEqual(response.json()['results'][0], '1')
 
 
 

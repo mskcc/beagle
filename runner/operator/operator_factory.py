@@ -3,6 +3,7 @@ from .roslin_operator import RoslinOperator
 from .access_operator import AccessOperator
 from .roslin_qc_operator import RoslinQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
+from .helix_filters import HelixFiltersOperator
 
 
 class OperatorFactory(object):
@@ -12,7 +13,8 @@ class OperatorFactory(object):
         "RoslinOperator": RoslinOperator,
         "AccessOperator": AccessOperator,
         "RoslinQcOperator": RoslinQcOperator,
-        "CopyOutputsOperator": CopyOutputsOperator
+        "CopyOutputsOperator": CopyOutputsOperator,
+        "HelixFiltersOperator": HelixFiltersOperator
     }
 
     def get_by_model(model, **kwargs):
