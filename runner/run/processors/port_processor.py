@@ -190,6 +190,8 @@ class PortProcessor(object):
         uri = val.get('location')
         path = FileProcessor.parse_path_from_uri(uri)
         file_name = os.path.basename(path)
-        event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
-        send_notification.delay(event.to_dict())
+        if job_group:
+            event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
+            send_notification.delay(event.to_dict())
+        logger.info("Can't upload file:%s. JobGroup not specified", path)
         return val
