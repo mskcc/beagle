@@ -10,7 +10,7 @@ from notifier.tasks import send_notification
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
-from .bin.create_tempo_files import create_mapping, create_pairing, create_tempo_tracker_example
+from .bin.create_tempo_files import create_mapping, create_pairing, create_tempo_tracker_example, get_abnormal_pairing
 from notifier.events import UploadAttachmentEvent
 import json
 
@@ -90,11 +90,11 @@ class TempoMPGenOperator(Operator):
 
         tempo_inputs, error_samples = construct_tempo_jobs(samples)
         # tempo_inputs is a paired list, error_samples are just samples that were processed
-        # through remove_with_caveats(0
+        # through remove_with_caveats()
 
-        self.create_tracker_file(tempo_inputs)
-        self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
-        self.create_mapping_file(tempo_inputs, error_samples)
+#        self.create_tracker_file(tempo_inputs)
+#        self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
+#        self.create_mapping_file(tempo_inputs, error_samples)
         self.create_pairing_file(tempo_inputs, error_samples)
 
         return [], []
@@ -105,10 +105,21 @@ class TempoMPGenOperator(Operator):
         Outputs valid paired samples and errors associated with those that couldn't be paired
         """
         cleaned_inputs, duped_pairs = self.clean_inputs(tempo_inputs, error_samples)
+        self.report_unpaired_samples_with_error(tempo_inputs)
+        self.report_duplicated_pairing(duped_pairs)
         pairing = create_pairing(cleaned_inputs)
-        pairing_errors = list()
-        pairing_errors_unformatted = list()
-        pairing_errors_unformatted.append("Tumor Sample Name\tTumor IGO Sample ID\tNormal Sample Name\tNormal Sample ID\n") # header
+
+        header = "NORMAL_ID\tTUMOR_ID\n"
+        sample_pairing = header + pairing
+
+        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        send_notification.delay(pairing_file_event)
+
+
+    def report_duplicated_pairing(self, duped_pairs):
+        dupe_errors = list()
+        dupe_errors_unformatted = list()
+        dupe_errors_unformatted.append("Tumor Sample Name\tTumor IGO Sample ID\tNormal Sample Name\tNormal Sample ID\n") # header
 
         for pair in duped_pairs:
                 normal_sample = pair['normal_sample']
@@ -118,30 +129,47 @@ class TempoMPGenOperator(Operator):
                 tumor_sample_name = tumor_sample['sample_name']
                 tumor_igo_id = tumor_sample['sample_id']
                 line = "%s\t%s\t%s\t%s\n" % (tumor_sample_name, tumor_igo_id, normal_sample_name, normal_igo_id)
-                pairing_errors.append( "|" + line.replace("\t", "|") + " |")
-                pairing_errors_unformatted.append(line)
+                dupe_errors.append( "|" + line.replace("\t", "|") + " |")
+                dupe_errors_unformatted.append(line)
 
         self.send_message("""
-        Number of samples with pairing errors: {num_pairing_errors}
+        Number of samples with duplication pairing: {num_dupe_errors}
 
-        Samples with pairing errors (also see file error_pairing.txt):
+        Samples with pairing errors (also see file error_pairing_dupes.txt):
 
         | Tumor Sample Name | Tumor IGO Sample ID | Normal Sample Name | Normal Sample ID |
-        {pairing_errors}
+        {dupe_errors}
         """.format(
-            num_pairing_errors=str(len(pairing_errors)),
-            pairing_errors="\n".join(pairing_errors)
+            num_dupe_errors=str(len(dupe_errors)),
+            dupe_errors="\n".join(dupe_errors)
             )
         )
 
-        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_pairing.txt', "".join(pairing_errors_unformatted)).to_dict()
+        sample_dupe_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_pairing_dupes.txt', "".join(dupe_errors_unformatted)).to_dict()
+        send_notification.delay(sample_dupe_errors_event)
+
+
+    def report_unpaired_samples_with_error(self, data):
+        pair_with_errors = get_abnormal_pairing(data)
+        pairing = pair_with_errors.split("\n")
+        pairing_errors = list()
+        pairing_errors_unformatted = list()
+
+        for line in pairing:
+            if "noNormal" in line:
+                pairing_errors.append("| " + line.replace("\t"," | ") + " |")
+                pairing_errors_unformatted.append(line + "\n")
+
+        self.send_message("""
+        Number of samples with pairing errors: {num_pairing_errors}
+        Samples with pairing errors (also see file error_unpaired_samples.txt):
+        | Error | CMO Sample Name |
+        {pairing_errors}
+        """.format(num_pairing_errors=str(len(pairing_errors)),
+            pairing_errors="\n".join(pairing_errors)))
+
+        sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
-
-        header = "NORMAL_ID\tTUMOR_ID\n"
-        sample_pairing = header + pairing
-
-        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
-        send_notification.delay(pairing_file_event)
 
 
     def create_mapping_file(self, tempo_inputs, error_samples):

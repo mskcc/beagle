@@ -13,6 +13,16 @@ def create_pairing(data):
     return pairing
 
 
+def get_abnormal_pairing(data):
+    pairing = ""
+    for pair in data:
+        normal = pair["normal_sample"]
+        tumor = pair["tumor_sample"]
+        if "noNormal" in normal['sample_name']:
+            pairing += "%s\t%s\n" % (normal["sample_name"], tumor["sample_name"])
+    return pairing
+
+
 def resolve_target(bait_set):
     target_assay = bait_set.lower()
     if "agilent" in target_assay:
