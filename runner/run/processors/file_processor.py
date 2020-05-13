@@ -86,9 +86,6 @@ class FileProcessor(object):
             raise FileConflictException("File with path %s already exist" % file_path)
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()
-        job = Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                                 args={'file_id': str(file_object.id)},
-                                 status=JobStatus.CREATED, max_retry=3, children=[])
         return file_object
 
     @staticmethod
