@@ -3,6 +3,8 @@ from deepdiff import DeepDiff
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
+from beagle_etl.models import Job, JobStatus
+from beagle_etl.jobs import TYPES
 from file_system.metadata.validator import MetadataValidator
 from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -73,6 +75,7 @@ class FileSerializer(serializers.ModelSerializer):
     file_name = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
+    checksum = serializers.SerializerMethodField()
 
     def get_id(self, obj):
         return obj.file.id
@@ -100,9 +103,12 @@ class FileSerializer(serializers.ModelSerializer):
     def get_size(self, obj):
         return obj.file.size
 
+    def get_checksum(self, obj):
+        return obj.file.checksum
+
     class Meta:
         model = FileMetadata
-        fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'created_date', 'modified_date')
+        fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'created_date', 'modified_date')
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
@@ -137,6 +143,9 @@ class CreateFileSerializer(serializers.ModelSerializer):
         file = File.objects.create(**validated_data)
         metadata = FileMetadata(file=file, metadata=metadata, user=user)
         metadata.save()
+        job = Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
+                                 args={'file_id': str(file.id)},
+                                 status=JobStatus.CREATED, max_retry=3, children=[])
         return file
 
     class Meta:

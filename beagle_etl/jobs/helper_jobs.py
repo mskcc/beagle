@@ -36,3 +36,19 @@ def populate_file_size():
                 logger.error("Failed to get file size. Error:%s", f.path)
             sleep(1)
     return []
+
+
+def calculate_file_checksum(file_id):
+    logger.info("Calculate file checksum for file:%s", file_id)
+    try:
+        f = File.objects.get(id=file_id)
+    except File.DoesNotExist:
+        return None
+    else:
+        try:
+            checksum = sha1(f.path)
+            f.checksum = checksum
+            f.save(update_fields=['checksum'])
+        except FailedToCalculateChecksum as e:
+            logger.info("Failed to calculate checksum. Error:%s", f.path)
+    return []

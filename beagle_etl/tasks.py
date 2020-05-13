@@ -6,7 +6,7 @@ from celery import shared_task
 from django.db import transaction
 from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.jobs import TYPES
 from file_system.repository.file_repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent

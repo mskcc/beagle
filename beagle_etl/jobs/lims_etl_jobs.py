@@ -3,7 +3,8 @@ import copy
 import logging
 import requests
 from django.conf import settings
-from django.db.models import Prefetch
+
+from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent
 from notifier.tasks import send_notification, notifier_start
@@ -12,23 +13,12 @@ from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.roslin_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
-
-
-TYPES = {
-    "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
-    "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
-    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal",
-    "REQUEST_CALLBACK": "beagle_etl.jobs.lims_etl_jobs.request_callback",
-    "UPDATE_SAMPLE_METADATA": "beagle_etl.jobs.lims_etl_jobs.update_sample_metadata"
-}
 
 
 def fetch_new_requests_lims(timestamp):
