@@ -53,7 +53,9 @@ class JobViewSet(mixins.CreateModelMixin,
             queryset = queryset.filter(args__request_id=request_id)
         st = request.query_params.get('status')
         if st:
-            queryset = queryset.filter(status=st)
+            if st not in [s.name for s in JobStatus]:
+                return Response({'details': 'Invalid status value %s: expected values %s' % (st, [s.name for s in JobStatus])}, status=status.HTTP_400_BAD_REQUEST)
+            queryset = queryset.filter(status=JobStatus[st].value)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = JobSerializer(page, many=True)

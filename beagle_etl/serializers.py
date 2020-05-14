@@ -5,6 +5,10 @@ from beagle_etl.jobs.lims_etl_jobs import TYPES
 
 
 class JobSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return JobStatus(obj.status).name
 
     class Meta:
         model = Job
