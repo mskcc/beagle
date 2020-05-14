@@ -6,7 +6,7 @@ from celery import shared_task
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs import TYPES
 from notifier.tasks import send_notification
-from notifier.helper import generate_sample_data_content
+from runner.operator.helper import generate_sample_data_content
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
 
 

@@ -5,7 +5,7 @@ import json
 from pprint import pprint
 from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
-from notifier.helper import generate_sample_data_content
+from runner.operator.helper import generate_sample_data_content
 
 
 def get_roslin_output_description():
