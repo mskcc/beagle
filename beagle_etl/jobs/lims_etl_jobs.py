@@ -16,7 +16,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.helper import format_sample_name
 
 logger = logging.getLogger(__name__)
 
