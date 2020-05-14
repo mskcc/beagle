@@ -17,6 +17,25 @@ class JobSerializer(serializers.ModelSerializer):
             'max_retry', 'job_group')
 
 
+class JobQuerySerializer(serializers.Serializer):
+
+    status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
+                                     required=False)
+
+    job_group = serializers.ListField(required=False)
+
+    type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True,
+                                   required=False)
+
+    sample_id = serializers.CharField(required=False)
+
+    request_id = serializers.CharField(required=False)
+
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+
+
 class CreateJobSerializier(serializers.ModelSerializer):
     run = serializers.ChoiceField(choices=list(TYPES.keys()), required=True)
     args = serializers.JSONField()
