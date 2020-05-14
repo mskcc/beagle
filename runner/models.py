@@ -1,10 +1,12 @@
+import os
 import uuid
 from enum import IntEnum
 from django.db import models
-from file_system.models import File, FileGroup
-from django.contrib.postgres.fields import JSONField
-from beagle_etl.models import Operator, JobGroup
 from django.db.models import F
+from file_system.models import File, FileGroup
+from beagle_etl.models import Operator, JobGroup
+from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class RunStatus(IntEnum):
@@ -146,6 +148,7 @@ class Run(BaseModel):
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -155,6 +158,14 @@ class Run(BaseModel):
         }
 
     def save(self, *args, **kwargs):
+        """
+        If output directory is set to None, by default assign it to the pipeline output directory
+        plus the run id
+        """
+        if not self.output_directory:
+            pipeline = self.app
+            pipeline_output_directory = pipeline.output_directory
+            self.output_directory = os.path.join(pipeline_output_directory, str(self.id))
         # TODO do we want to decrement if a job goes from completed/failed to open or failed to complete?
         # We can also a prevent a job from going to open once it's in a closed state
         if self.operator_run and self.original["status"] != self.status:
@@ -177,6 +188,7 @@ class Port(BaseModel):
     db_value = JSONField(null=True)
     value = JSONField(null=True)
     files = models.ManyToManyField(File)
+    notify = models.BooleanField(default=False)
 
 
 class ExecutionEvents(BaseModel):

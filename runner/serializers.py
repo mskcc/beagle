@@ -136,10 +136,11 @@ class APIRunCreateSerializer(serializers.Serializer):
     inputs = serializers.JSONField(allow_null=True, required=True)
     outputs = serializers.JSONField(allow_null=True, required=False)
     tags = serializers.JSONField(allow_null=True, required=False)
-    output_directory = serializers.CharField(max_length=1000, required=False, default=None)
+    output_directory = serializers.CharField(max_length=1000, required=False, default=None, allow_null=True)
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
+    notify_for_outputs = serializers.ListField(allow_null=True, required=False)
 
     def create(self, validated_data):
         try:
@@ -149,19 +150,16 @@ class APIRunCreateSerializer(serializers.Serializer):
         tags = validated_data.get('tags')
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
-        output_directory = validated_data.get('output_directory')
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        if validated_data.get('output_directory'):
-            output_directory = validated_data.get('output_directory',
-                                                  os.path.join(pipeline.output_directory, str(self.id)))
         run = Run(name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
                   output_metadata=validated_data.get('output_metadata', {}),
-                  tags=tags,
-                  output_directory=output_directory)
+                  tags=tags)
+        if validated_data.get('output_directory'):
+            run.output_directory=validated_data.get('output_directory')
         try:
             run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
         except OperatorRun.DoesNotExist:
@@ -170,6 +168,7 @@ class APIRunCreateSerializer(serializers.Serializer):
             run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
         except JobGroup.DoesNotExist:
             print("[JobGroup] %s" % run.job_group)
+        run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run
 
