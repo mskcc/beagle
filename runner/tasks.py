@@ -36,21 +36,30 @@ def create_jobs_from_operator(operator, job_group_id=None):
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg)
     run_ids = []
+    pipeline_id = None
+
+    try:
+        pipeline_id = operator.get_pipeline_id()
+        p = Pipeline.objects.get(id=pipeline_id)
+        pipeline_name = p.name
+        pipeline_link = p.pipeline_link
+    except Pipeline.DoesNotExist:
+        pipeline_name = ""
+        pipeline_link = ""
+
     for job in valid_jobs:
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
         logger.info("Run object created with id: %s" % str(run.id))
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory
-        create_run_task.delay(str(run.id), job[1], output_directory)
+        if not pipeline_name and not pipeline_link:
+            logger.info("Run [ id: %s ] failed as the pipeline [ id: %s ] was not found", run.id, pipeline_id)
+            error_message = "Pipeline [ id: %s ] was not found.".format(pipeline_id)
+            fail_job(run.id, error_message)
+        else:
+            create_run_task.delay(str(run.id), job[1], output_directory)
 
-    try:
-        p = Pipeline.objects.get(id=operator.get_pipeline_id())
-        pipeline_name = p.name
-        pipeline_link = p.pipeline_link
-    except Pipeline.DoesNotExist:
-        pipeline_name = ""
-        pipeline_link = ""
 
     if job_group_id:
         event = OperatorRunEvent(job_group_id,
@@ -294,3 +303,13 @@ def check_jobs_status():
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
             logger.error("Job %s not submitted" % str(run.id))
+
+
+def run_routine_operator_job(operator, job_group_id=None):
+    """
+    Bit of a workaround.
+
+    Only runs the get_jobs() function of the given operator; does not expect any pipeline runs.
+    """
+    job = operator.get_jobs()
+    logger.info("Running single operator job; no pipeline runs submitted.")
