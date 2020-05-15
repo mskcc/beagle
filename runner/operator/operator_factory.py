@@ -4,6 +4,7 @@ from .access_operator import AccessOperator
 from .tempo_mpgen_operator import TempoMPGenOperator
 from .roslin_qc_operator import RoslinQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
+from .helix_filters import HelixFiltersOperator
 
 
 class OperatorFactory(object):
@@ -14,7 +15,8 @@ class OperatorFactory(object):
         "AccessOperator": AccessOperator,
         "TempoMPGenOperator": TempoMPGenOperator,
         "RoslinQcOperator": RoslinQcOperator,
-        "CopyOutputsOperator": CopyOutputsOperator
+        "CopyOutputsOperator": CopyOutputsOperator,
+        "HelixFiltersOperator": HelixFiltersOperator
     }
 
     def get_by_model(model, **kwargs):
