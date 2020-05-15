@@ -126,12 +126,14 @@ class JobObject(object):
                     samples_failed.add(job.args['sample_id'])
 
             if job.run == TYPES['SAMPLE']:
-                sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or ""))
+                sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                                   job.args.get('sample_id', '')))
             elif job.run == TYPES['REQUEST']:
-                request_jobs.append((str(job.id), "", self.get_key(job.run), job.message or ""))
+                request_jobs.append((str(job.id), "", self.get_key(job.run), job.message or "", ''))
             elif job.run == TYPES['POOLED_NORMAL']:
                 pooled_normal_jobs.append(
-                    (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or ""))
+                    (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                     job.args.get('sample_id', '')))
 
         all_jobs.extend(request_jobs)
         all_jobs.extend(sample_jobs)
