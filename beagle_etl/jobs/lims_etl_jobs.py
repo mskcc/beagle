@@ -315,7 +315,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
-            elif len(fastqs) != 2:
+            elif len(fastqs) % 2 != 0:
                 logger.error(
                     "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
                     sample_id, str(len(fastqs))))
@@ -347,7 +347,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
-            "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
+            "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
 
 
 def R1_or_R2(filename):
