@@ -20,9 +20,11 @@ class ETLJobsLinksEvent(Event):
     def __str__(self):
         ETL_COMMENT_MESSAGE_TEMPLATE = """
         ETLJobs:
+        | TYPE | SAMPLE ID | LINK | STATUS | MESSAGE |
         {etl_jobs}
         """
         etl_jobs = ""
         for j in self.etl_jobs:
-            etl_jobs += "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/etl/jobs/', j)
+            etl_jobs += "| %s | %s | %s%s%s | %s | %s |\n" % (
+            j[2], j[4], settings.BEAGLE_URL, '/v0/etl/jobs/', j[0], j[1], j[3])
         return ETL_COMMENT_MESSAGE_TEMPLATE.format(etl_jobs=etl_jobs)

@@ -10,3 +10,6 @@ from .set_pipeline_completed_event import SetPipelineCompletedEvent
 from .upload_attachment_event import UploadAttachmentEvent
 from .operator_request_event import OperatorRequestEvent
 from .etl_job_failed_event import ETLJobFailedEvent
+from .not_for_ci_review_event import NotForCIReviewEvent
+from .disabled_assay_event import DisabledAssayEvent
+from .unknown_assay_event import UnknownAssayEvent
