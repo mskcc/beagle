@@ -1,5 +1,6 @@
 import uuid
 import re
+import os
 from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
@@ -7,6 +8,7 @@ from runner.serializers import APIRunCreateSerializer
 from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
+from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
@@ -24,11 +26,11 @@ class TempoMPGenOperator(Operator):
         Build complex Q object assay query from given data
         Only does OR queries, as seen in line
            query |= item
-        Very similar to build_assay_query, but "filemetadata__metadata__recipe"
+        Very similar to build_assay_query, but "metadata__recipe"
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
-        data_query_set = [Q(filemetadata__metadata__recipe=value) for value in set(data)]
+        data_query_set = [Q(metadata__recipe=value) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -40,11 +42,11 @@ class TempoMPGenOperator(Operator):
         Build complex Q object assay query from given data
         Only does OR queries, as seen in line
            query |= item
-        Very similar to build_recipe_query, but "filemetadata__metadata__baitSet"
+        Very similar to build_recipe_query, but "metadata__baitSet"
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_assays()
-        data_query_set = [Q(filemetadata__metadata__baitSet=value) for value in set(data)]
+        data_query_set = [Q(metadata__baitSet=value) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -54,8 +56,19 @@ class TempoMPGenOperator(Operator):
     def get_jobs(self):
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
-        igocomplete_query = Q(filemetadata__metadata__igocomplete=True)
-        files = self.files.filter(recipe_query & assay_query & igocomplete_query).all()
+        igocomplete_query = Q(metadata__igocomplete=True)
+        q = recipe_query & assay_query & igocomplete_query
+        files = FileRepository.all()
+        files = FileRepository.filter(queryset=files, q=q)
+
+        data = list()
+        for f in files:
+            sample = dict()
+            sample['id'] = f.file.id
+            sample['path'] = f.file.path
+            sample['file_name'] = f.file.file_name
+            sample['metadata'] = f.metadata
+            data.append(sample)
 
         self.send_message("""
             Querying database for the following recipes:
@@ -66,15 +79,6 @@ class TempoMPGenOperator(Operator):
             """.format(recipes="\t\n".join(self.get_recipes()),
                        assays="\t\n".join(self.get_assays()))
                       )
-
-        data = list()
-        for file in files:
-            sample = dict()
-            sample['id'] = file.id
-            sample['path'] = file.path
-            sample['file_name'] = file.file_name
-            sample['metadata'] = file.filemetadata_set.first().metadata
-            data.append(sample)
 
         samples = list()
         # group by igoId
@@ -92,9 +96,9 @@ class TempoMPGenOperator(Operator):
         # tempo_inputs is a paired list, error_samples are just samples that were processed
         # through remove_with_caveats()
 
-#        self.create_tracker_file(tempo_inputs)
-#        self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
-#        self.create_mapping_file(tempo_inputs, error_samples)
+        self.create_tracker_file(tempo_inputs)
+        self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
+        self.create_mapping_file(tempo_inputs, error_samples)
         self.create_pairing_file(tempo_inputs, error_samples)
 
         return [], []
@@ -114,6 +118,14 @@ class TempoMPGenOperator(Operator):
 
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(pairing_file_event)
+
+        self.write_to_file("sample_pairing.txt", sample_pairing)
+
+
+    def write_to_file(self,fname,s):
+        OUTPUT_DIR = "/juno/work/tempo/voyager/"
+        output = os.path.join(OUTPUT_DIR, fname)
+        open(output,"w").write(s)
 
 
     def report_duplicated_pairing(self, duped_pairs):
@@ -148,6 +160,8 @@ class TempoMPGenOperator(Operator):
         sample_dupe_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_pairing_dupes.txt', "".join(dupe_errors_unformatted)).to_dict()
         send_notification.delay(sample_dupe_errors_event)
 
+        self.write_to_file("error_pairing_dupes.txt", "".join(dupe_errors_unformatted))
+
 
     def report_unpaired_samples_with_error(self, data):
         pair_with_errors = get_abnormal_pairing(data)
@@ -171,6 +185,8 @@ class TempoMPGenOperator(Operator):
         sample_pairing_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_unpaired_samples.txt', "".join(pairing_errors_unformatted)).to_dict()
         send_notification.delay(sample_pairing_errors_event)
 
+        self.write_to_file("error_unpaired_samples.txt", "".join(pairing_errors_unformatted))
+
 
     def create_mapping_file(self, tempo_inputs, error_samples):
         cleaned_inputs, duped_pairs = self.clean_inputs(tempo_inputs, error_samples)
@@ -178,6 +194,7 @@ class TempoMPGenOperator(Operator):
         sample_mapping = header + create_mapping(cleaned_inputs)
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
+        self.write_to_file("sample_mapping.txt", sample_mapping)
 
 
     def clean_inputs(self, tempo_inputs, error_samples):
@@ -232,6 +249,8 @@ class TempoMPGenOperator(Operator):
         sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
 
+        self.write_to_file("error_sample_formatting.txt", "".join(unformatted_s))
+
 
     def is_cleaned_cmo_sample_name_format(self, sample_name, specimen_type):
         """
@@ -253,6 +272,7 @@ class TempoMPGenOperator(Operator):
         sample_tracker = create_tempo_tracker_example(tempo_inputs)
         tracker_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', sample_tracker).to_dict()
         send_notification.delay(tracker_file_event)
+        self.write_to_file("sample_tracker.txt", sample_tracker)
 
 
     def send_message(self, msg):
