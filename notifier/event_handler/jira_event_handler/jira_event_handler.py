@@ -41,7 +41,7 @@ class JiraEventHandler(EventHandler):
     def process_operator_request_event(self, event):
         self._add_comment_event(event)
 
-    def process_etl_generic_event(self, event):
+    def process_etl_job_failed_event(self, event):
         self._add_comment_event(event)
 
     def process_operator_error_event(self, event):
