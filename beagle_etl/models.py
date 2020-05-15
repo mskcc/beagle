@@ -40,3 +40,8 @@ class Operator(models.Model):
 
     def __str__(self):
         return u"{}".format(self.slug)
+
+
+class Assay(models.Model):
+    all = ArrayField(models.CharField(max_length=100), null=True)
+    disabled = ArrayField(models.CharField(max_length=100), null=True)
