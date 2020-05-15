@@ -69,28 +69,29 @@ def get_or_create_request_job(request_id):
 
 def request_callback(request_id, job_group=None):
     jg = None
-    assays = Assay.object.first()
-    assay = FileRepository.filter(metadata={'requestId': request_id}, ret='assay')
     try:
         jg = JobGroup.objects.get(id=job_group)
         logger.debug("[RequestCallback] JobGroup id: %s", job_group)
     except JobGroup.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
-    if assay[0] in assays.disabled:
-        not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
-        send_notification.delay(not_for_ci)
-        disabled_assay_event = DisabledAssayEvent(job_group_id, assay[0]).to_dict()
-        send_notification.delay(disabled_assay_event)
-        return []
-    elif assay[0] not in assays.all:
+    assays = Assay.objects.first()
+    recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
+    if recipes[0] not in assays.all:
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
         send_notification.delay(set_unknown_assay_label)
-        unknown_assay_event = UnknownAssayEvent(job_group_id, assay[0]).to_dict()
+        unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
-    recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
+        return []
+    if recipes[0] in assays.disabled:
+        not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(not_for_ci)
+        disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(disabled_assay_event)
+        return []
+
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
