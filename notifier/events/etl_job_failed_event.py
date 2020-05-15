@@ -1,7 +1,7 @@
 from notifier.event_handler.event import Event
 
 
-class ETLGenericEvent(Event):
+class ETLJobFailedEvent(Event):
 
     def __init__(self, job_group, msg):
         self.job_group = job_group
@@ -9,11 +9,11 @@ class ETLGenericEvent(Event):
 
     @classmethod
     def get_type(cls):
-        return "ETLGenericEvent"
+        return "ETLJobFailedEvent"
 
     @classmethod
     def get_method(cls):
-        return "process_etl_generic_event"
+        return "process_etl_job_failed_event"
 
     def __str__(self):
         return self.msg
