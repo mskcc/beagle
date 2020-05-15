@@ -125,8 +125,9 @@ class TempoMPGenOperator(Operator):
     def write_to_file(self,fname,s):
         OUTPUT_DIR = "/juno/work/tempo/voyager/"
         output = os.path.join(OUTPUT_DIR, fname)
-        f = open(output,"w")
-        f.write(s)
+        with open(output, "w+") as fh:
+            fh.write(s)
+        os.chmod(output, 0o777)
 
 
     def report_duplicated_pairing(self, duped_pairs):
