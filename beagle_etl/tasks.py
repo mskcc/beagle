@@ -9,7 +9,7 @@ from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent, UploadAttachmentEvent
 
 
 logger = logging.getLogger(__name__)
@@ -206,6 +206,8 @@ class JobObject(object):
         if self.job.run == TYPES['REQUEST']:
             import time
             time.sleep(5)
+            e = ETLJobFailedEvent(self.job.job_group.id, "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
+            send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
