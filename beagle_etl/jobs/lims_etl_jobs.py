@@ -5,9 +5,9 @@ import requests
 from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator
+from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -75,7 +75,23 @@ def request_callback(request_id, job_group=None):
     except JobGroup.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
+    assays = Assay.objects.first()
     recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
+    if recipes[0] not in assays.all:
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
+        set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
+        send_notification.delay(set_unknown_assay_label)
+        unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(unknown_assay_event)
+        return []
+    if recipes[0] in assays.disabled:
+        not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(not_for_ci)
+        disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(disabled_assay_event)
+        return []
+
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
@@ -84,21 +100,23 @@ def request_callback(request_id, job_group=None):
             recipes__contains=[recipes[0]]
         )
     except Operator.DoesNotExist:
-        logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
-        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes[0])
+        logger.error(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
+        raise FailedToSubmitToOperatorException(msg)
     if not operator.active:
-        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        msg = "Operator not active: %s" % operator.class_name
+        logger.info(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
         send_notification.delay(error_label)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
+        raise FailedToSubmitToOperatorException(msg)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
@@ -313,39 +331,31 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
-            elif len(fastqs) != 2:
+            elif len(fastqs) % 2 != 0:
                 logger.error(
                     "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
                     sample_id, str(len(fastqs))))
                 invalid_number_of_fastq = True
                 failed_runs.append(run['runId'])
             else:
-                file_search = FileRepository.filter(path=fastqs[0]).first()
-                if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[0]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
-                file_search = FileRepository.filter(path=fastqs[1]).first()
-                if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[1]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
-    if conflict:
-        raise FailedToFetchFilesException(
-            "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
+                for fastq in fastqs:
+                    file_search = FileRepository.filter(path=fastq).first()
+                    logger.info("Processing %s" % fastq)
+                    if not file_search:
+                        logger.info("Adding file %s" % fastq)
+                        create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
+                                    request_metadata, R1_or_R2(fastq))
+                    else:
+                        logger.info("Found file %s already exists; checking if imported during this run to avoid duplicates")
+                        msg = "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id))
+                        logger.error(msg)
+                        conflict = True 
+                        conflict_files.append((file_search.file.path, str(file_search.file.id)))
     if missing_fastq:
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
-            "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
+            "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
 
 
 def R1_or_R2(filename):
