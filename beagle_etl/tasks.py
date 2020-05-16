@@ -6,9 +6,10 @@ from celery import shared_task
 from django.db import transaction
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
+from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent, UploadAttachmentEvent
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +78,7 @@ class JobObject(object):
             except Exception as e:
                 if self.job.retry_count == self.job.max_retry:
                     self.job.status = JobStatus.FAILED
-                    self.job.message = {"details": "Error: %s" % traceback.format_tb(e.__traceback__)}
+                    self.job.message = {"details": "Error: %s" % str(e)}
                     self._job_failed()
                     traceback.print_tb(e.__traceback__)
 
@@ -101,10 +102,19 @@ class JobObject(object):
         children = func(**self.job.args)
         self.job.children = children or []
 
+    def get_key(self, val):
+        for key, value in TYPES.items():
+            if val == value:
+                return key
+        return None
+
     def _generate_ticket_decription(self):
         samples_completed = set()
         samples_failed = set()
         all_jobs = []
+        request_jobs = []
+        sample_jobs = []
+        pooled_normal_jobs = []
 
         jobs = Job.objects.filter(job_group=self.job.job_group.id).all()
 
@@ -114,9 +124,27 @@ class JobObject(object):
                     samples_completed.add(job.args['sample_id'])
                 elif job.status == JobStatus.FAILED:
                     samples_failed.add(job.args['sample_id'])
-            all_jobs.append(str(job.id))
+
+            if job.run == TYPES['SAMPLE']:
+                sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                                   job.args.get('sample_id', '')))
+            elif job.run == TYPES['REQUEST']:
+                request_jobs.append((str(job.id), "", self.get_key(job.run), job.message or "", ''))
+            elif job.run == TYPES['POOLED_NORMAL']:
+                pooled_normal_jobs.append(
+                    (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                     job.args.get('sample_id', '')))
+
+        all_jobs.extend(request_jobs)
+        all_jobs.extend(sample_jobs)
+        all_jobs.extend(pooled_normal_jobs)
 
         request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
+
+        number_of_tumors = FileRepository.filter(
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, ret='sampleId').count()
+        number_of_normals = FileRepository.filter(
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, ret='sampleId').count()
 
         data_analyst_email = ""
         data_analyst_name = ""
@@ -152,7 +180,10 @@ class JobObject(object):
                                lab_head_email,
                                lab_head_name,
                                pi_email,
-                               project_manager_name
+                               project_manager_name,
+                               number_of_tumors,
+                               number_of_normals,
+                               len(pooled_normal_jobs)
                                )
         e = event.to_dict()
         send_notification.delay(e)
@@ -175,6 +206,8 @@ class JobObject(object):
         if self.job.run == TYPES['REQUEST']:
             import time
             time.sleep(5)
+            e = ETLJobFailedEvent(self.job.job_group.id, "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
+            send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
