@@ -366,7 +366,7 @@ def find_or_create_file(fastq, igocomplete, data, library, run, request_metadata
         logger.error(
             "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
         conflict = True
-        conflict_file.append((file_search.file.path, str(file_search.file.id)))
+        conflict_file = (file_search.file.path, str(file_search.file.id)))
     return conflict, conflict_file
 
 
