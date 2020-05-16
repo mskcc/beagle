@@ -100,21 +100,23 @@ def request_callback(request_id, job_group=None):
             recipes__contains=[recipes[0]]
         )
     except Operator.DoesNotExist:
-        logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
-        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes[0])
+        logger.error(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
+        raise FailedToSubmitToOperatorException(msg)
     if not operator.active:
-        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        msg = "Operator not active: %s" % operator.class_name
+        logger.info(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
         send_notification.delay(error_label)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
+        raise FailedToSubmitToOperatorException(msg)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
