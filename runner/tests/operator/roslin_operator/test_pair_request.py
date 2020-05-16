@@ -845,9 +845,9 @@ class TestPairRequest(TestCase):
 
         # test that the DMP bam gets chosen as the sample's matched normal now instead of the pooled normal
         pairs = compile_pairs(samples)
-        # remove the bam_bid for testing because it is non-deterministic
-        # TODO: mock this ^^
-        pairs['normal'][0]['bam_bid'].pop()
+        print("Running test_get_dmp_normal1 ---")
+        print(json.dumps(pairs, cls=UUIDEncoder))
+        print(json.dumps(expected_pairs, cls=UUIDEncoder))
 
         expected_pairs = {
             'tumor': [{
@@ -887,6 +887,11 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['']
             }]
         }
+
+        # remove the bam_bid for testing because it is non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['bam_bid'].pop()
+
         self.assertDictEqual(pairs, expected_pairs)
 
         # Now add a matched normal to the original request for the sample
