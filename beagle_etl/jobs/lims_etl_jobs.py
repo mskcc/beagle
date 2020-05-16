@@ -338,24 +338,12 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                 invalid_number_of_fastq = True
                 failed_runs.append(run['runId'])
             else:
-                file_search = FileRepository.filter(path=fastqs[0]).first()
-                if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[0]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
-                file_search = FileRepository.filter(path=fastqs[1]).first()
-                if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[1]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
+                for fastq in fastqs:
+                    logger.info("DEBUGGING: processing %s" % fastq)
+                    conflict_found, conflict_file = find_or_create_file(fastq, igocomplete, data, library, run, request_metadata, request_id)
+                    if conflict_found:
+                        conflict = True
+                        conflict_files.append(conflict_file)
     if conflict:
         raise FailedToFetchFilesException(
             "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
@@ -364,6 +352,23 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
             "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
+
+
+def find_or_create_file(fastq, igocomplete, data, library, run, request_metadata, request_id):
+    conflict = False
+    conflict_file = list()
+    file_search = FileRepository.filter(path=fastq).first()
+    if not file_search:
+        logger.info("Adding file %s" % fastq)
+        create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
+                    request_metadata, R1_or_R2(fastq))
+    else:
+        logger.error(
+            "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
+        conflict = True
+        conflict_file.append((file_search.file.path, str(file_search.file.id)))
+    return conflict, conflict_file
+
 
 
 def R1_or_R2(filename):
