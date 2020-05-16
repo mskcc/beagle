@@ -59,13 +59,15 @@ def check_samples(samples):
     for rg_id in samples:
         r1 = samples[rg_id]['R1']
         r2 = samples[rg_id]['R2']
+        num_fastqs = len(r1)
 
-        expected_r2 = 'R2'.join(r1.rsplit('R1', 1))
-        if expected_r2 != r2:
-            logging.error("Mismatched fastqs! Check data:")
-            logging.error("R1: %s" % r1)
-            logging.error("Expected R2: %s" % expected_r2)
-            logging.error("Actual R2: %s" % r2)
+        for index,fastq in enumerate(r1):
+            expected_r2 = 'R2'.join(fastq.rsplit('R1', 1))
+            if expected_r2 != r2[index]:
+                logging.error("Mismatched fastqs! Check data:")
+                logging.error("R1: %s" % fastq)
+                logging.error("Expected R2: %s" % expected_r2)
+                logging.error("Actual R2: %s" % r2[index])
 
 
 def check_and_return_single_values(data):
@@ -173,18 +175,22 @@ def build_sample(data):
             sample['recipe'] = recipe
             sample['data_analyst'] = data_analyst
             sample['data_analyst_email'] = data_analyst_email
+            sample['R1'] = list()
+            sample['R1_bid'] = list()
+            sample['R2'] = list()
+            sample['R2_bid'] = list()
         else:
             sample = samples[rg_id]
 
         # fastq pairing assumes flowcell id + barcode index are unique per run
         if 'R1' in r_orientation:
-            sample['R1'] = fpath
-            sample['R1_bid'] = bid
+            sample['R1'].append(fpath)
+            sample['R1_bid'].append(bid)
         else:
-            sample['R2'] = fpath
-            sample['R2_bid'] = bid
+            sample['R2'].append(fpath)
+            sample['R2_bid'].append(bid)
         samples[rg_id] = sample
-    check_samples(samples)
+#    check_samples(samples)
 
     result = dict()
     result['sequencing_center'] = list()
@@ -220,7 +226,11 @@ def build_sample(data):
     for rg_id in samples:
         sample = samples[rg_id]
         for key in sample:
-            result[key].append(sample[key])
+            if 'R1' in key or 'R2' in key:
+                for i in sample[key]:
+                    result[key].append(i)
+            else:
+                result[key].append(sample[key])
     result = check_and_return_single_values(result)
 
     return result
