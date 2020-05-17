@@ -205,9 +205,12 @@ def build_sample(data, ignore_sample_formatting=False):
         if 'R1' in r_orientation:
             sample['R1'].append(fpath)
             sample['R1_bid'].append(bid)
-        else:
+        elif 'R2' in r_orientation:
             sample['R2'].append(fpath)
             sample['R2_bid'].append(bid)
+        else:
+            sample['bam'] = fpath
+            sample['bam_bid'] = bid
         samples[rg_id] = sample
     check_samples(samples)
 

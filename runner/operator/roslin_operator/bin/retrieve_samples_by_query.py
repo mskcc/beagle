@@ -188,11 +188,8 @@ def get_dmp_normal(patient_id, bait_set):
         metadata['tumorOrNormal'] = 'Normal'
         metadata['patientId'] = patient_id
         sample['metadata'] = metadata
-        print("sample")
-        print(sample)
         built_sample = build_sample([sample], ignore_sample_formatting=True)
-        print("this is the built dmp_bam sample\n" % built_sample)
-        return 
+        return built_sample
     return None
 
 
