@@ -190,7 +190,7 @@ def build_sample(data):
             sample['R2'].append(fpath)
             sample['R2_bid'].append(bid)
         samples[rg_id] = sample
-#    check_samples(samples)
+    check_samples(samples)
 
     result = dict()
     result['sequencing_center'] = list()
