@@ -755,6 +755,7 @@ class TestPairRequest(TestCase):
         )
 
         # test that the Frozen Pooled Normal is found
+        print("printing samples before it gets compiled for failing test\n", samples)
         pairs = compile_pairs(samples)
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
