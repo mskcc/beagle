@@ -845,8 +845,8 @@ class TestPairRequest(TestCase):
 
         # test that the DMP bam gets chosen as the sample's matched normal now instead of the pooled normal
         pairs = compile_pairs(samples)
-        print( "Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
-        print(j"Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
 
         expected_pairs = {
             'tumor': [{
