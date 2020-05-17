@@ -755,6 +755,7 @@ class TestPairRequest(TestCase):
         )
 
         # test that the Frozen Pooled Normal is found
+        print("printing samples before it gets compiled for failing test\n", samples)
         pairs = compile_pairs(samples)
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -845,9 +846,6 @@ class TestPairRequest(TestCase):
 
         # test that the DMP bam gets chosen as the sample's matched normal now instead of the pooled normal
         pairs = compile_pairs(samples)
-        # remove the bam_bid for testing because it is non-deterministic
-        # TODO: mock this ^^
-        pairs['normal'][0]['bam_bid'].pop()
 
         expected_pairs = {
             'tumor': [{
@@ -887,6 +885,13 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['']
             }]
         }
+        print("Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
+
+        # remove the bam_bid for testing because it is non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['bam_bid'].pop()
+
         self.assertDictEqual(pairs, expected_pairs)
 
         # Now add a matched normal to the original request for the sample
