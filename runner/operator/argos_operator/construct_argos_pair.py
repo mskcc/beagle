@@ -12,16 +12,16 @@ LOGGER = logging.getLogger(__name__)
 
 # TODO: generalize
 def load_references():
-    d = json.load(open(os.path.join(WORKDIR, "reference_jsons/roslin_resources.json"), 'rb'))
+    d = json.load(open(os.path.join(WORKDIR, "reference_jsons/genomic_resources.json"), 'rb'))
     return d
 
 
-# TODO: obsolete this once Roslin has been in production for a while
+# TODO: obsolete this once Argos has been in production for a while
 def calculate_abra_ram_size(grouping_dict):
     return
 
 
-# TODO: This is ROSLIN-formatted, note the confusing IDs
+# TODO: This is ARGOS-formatted, note the confusing IDs
 def format_sample(data):
     specimen_type = data['specimen_type']
     sample = dict()
@@ -56,11 +56,11 @@ def format_sample(data):
     return sample
 
 
-def construct_roslin_jobs(samples):
+def construct_argos_jobs(samples):
     samples, error_samples = remove_with_caveats(samples)
     pairs = compile_pairs(samples)
     number_of_tumors = len(pairs['tumor'])
-    roslin_jobs = list()
+    argos_jobs = list()
     for i in range(0, number_of_tumors):
         tumor = pairs['tumor'][i]
         normal = pairs['normal'][i]
@@ -77,8 +77,8 @@ def construct_roslin_jobs(samples):
         job['pi_email'] = pi_email
         references = convert_references(project_id, assay, pi, pi_email)
         job.update(references)
-        roslin_jobs.append(job)
-    return roslin_jobs, error_samples
+        argos_jobs.append(job)
+    return argos_jobs, error_samples
 
 
 def get_curated_bams(assay,request_files):
@@ -95,9 +95,9 @@ def get_curated_bams(assay,request_files):
     return array
 
 
-def get_baits_and_targets(assay, roslin_resources):
+def get_baits_and_targets(assay, genomic_resources):
     # probably need similar rules for whatever "Exome" string is in rquest
-    targets = roslin_resources['targets']
+    targets = genomic_resources['targets']
 
     target_assay = assay
 
@@ -122,7 +122,7 @@ def get_baits_and_targets(assay, roslin_resources):
     }
     else:
         LOGGER.error(
-            "ERROR: Targets for Assay not found in roslin_resources.json: %s", assay
+            "ERROR: Targets for Assay not found in genomic_resources.json: %s", assay
             )
 
 
@@ -151,9 +151,9 @@ def get_complex_tn(assay):
 
 
 def convert_references(project_id, assay, pi, pi_email):
-    roslin_resources = load_references()
-    request_files = roslin_resources["request_files"]
-    intervals = get_baits_and_targets(assay, roslin_resources)
+    genomic_resources = load_references()
+    request_files = genomic_resources["request_files"]
+    intervals = get_baits_and_targets(assay, genomic_resources)
     curated_bams = get_curated_bams(assay,request_files)
     covariates = ['CycleCovariate', 'ContextCovariate', 'ReadGroupCovariate', 'QualityScoreCovariate']
     rf = ["BadCigar"]
@@ -173,9 +173,9 @@ def convert_references(project_id, assay, pi, pi_email):
         'vep_data': str(request_files['vep_data']),
         'hotspot_list': str(request_files['hotspot_list']),
         'hotspot_list_maf': {'class': 'File', 'location': str(request_files['hotspot_list_maf'])},
-        'delly_exclude': {'class': 'File', 'location': str(roslin_resources['genomes'][genome]['delly'])},
+        'delly_exclude': {'class': 'File', 'location': str(genomic_resources['genomes'][genome]['delly'])},
         'hotspot_vcf': str(request_files['hotspot_vcf']),
-        'facets_snps': {'class': 'File', 'location': str(roslin_resources['genomes'][genome]['facets_snps'])},
+        'facets_snps': {'class': 'File', 'location': str(genomic_resources['genomes'][genome]['facets_snps'])},
         'custom_enst': str(request_files['custom_enst']),
         'vep_path': str(request_files['vep_path']),
         'conpair_markers': str(request_files['conpair_markers']),
@@ -201,7 +201,7 @@ def convert_references(project_id, assay, pi, pi_email):
         "abra_scratch": temp_dir,
         "abra_ram_min": 84000,
         "genome": genome,
-        "intervals": roslin_resources['genomes'][genome]['intervals'],
+        "intervals": genomic_resources['genomes'][genome]['intervals'],
         "mutect_dcov": 50000,
         "mutect_rf": rf,
         "num_cpu_threads_per_data_thread": 6,
@@ -229,5 +229,5 @@ def convert_references(project_id, assay, pi, pi_email):
 if __name__ == '__main__':
     request_id = sys.argv[1]
 
-    roslin_jobs = construct_roslin_jobs(request_id)
-    pprint(roslin_jobs)
+    argos_jobs = construct_argos_jobs(request_id)
+    pprint(argos_jobs)
