@@ -76,7 +76,7 @@ def check_and_return_single_values(data):
 
 # TODO: if data is not from the LIMS, these hardcoded values will need to be generalized
 def build_sample(data):
-    # note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
+    # note that ID and SM are different field values in ARGOS (RG_ID and ID, respectively, in ARGOS)
     # but standardizing it here with what GATK sets bam headers to
 
     CN = "MSKCC"

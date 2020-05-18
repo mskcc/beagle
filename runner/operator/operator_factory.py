@@ -1,7 +1,7 @@
 from .tempo_operator import TempoOperator
-from .roslin_operator import RoslinOperator
+from .argos_operator import ArgosOperator
 from .access_operator import AccessOperator
-from .roslin_qc_operator import RoslinQcOperator
+from .argos_qc_operator import ArgosQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
 from .helix_filters import HelixFiltersOperator
 
@@ -10,9 +10,9 @@ class OperatorFactory(object):
 
     operators = {
         "TempoOperator": TempoOperator,
-        "RoslinOperator": RoslinOperator,
+        "ArgosOperator": ArgosOperator,
         "AccessOperator": AccessOperator,
-        "RoslinQcOperator": RoslinQcOperator,
+        "ArgosQcOperator": ArgosQcOperator,
         "CopyOutputsOperator": CopyOutputsOperator,
         "HelixFiltersOperator": HelixFiltersOperator
     }
