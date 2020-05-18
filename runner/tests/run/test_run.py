@@ -105,7 +105,7 @@ class RunObjectTest(APITestCase):
             },
             {
                 'file_name': 'hotspot-list-union-v1-v2.maf',
-                'path': '/resources/argos-qc/hotspot-list-union-v1-v2.maf',
+                'path': '/resources/qc_resources/hotspot-list-union-v1-v2.maf',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
