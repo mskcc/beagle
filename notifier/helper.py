@@ -34,7 +34,6 @@ def generate_sample_data_content_new(files, pipeline_name, pipeline_github, pipe
     result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\tLAB_HEAD_EMAIL\tPIPELINE_NAME\tPIPELINE_GITHUB_LINK\tPIPELINE_VERSION\n"
     ret_str = 'metadata__sampleId'
     samples = FileRepository.filter(path_in=files, file_group=settings.IMPORT_FILE_GROUP).order_by(ret_str).distinct(ret_str).all()
-    print(samples)
     for sample in samples:
         metadata = sample.metadata
         result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
