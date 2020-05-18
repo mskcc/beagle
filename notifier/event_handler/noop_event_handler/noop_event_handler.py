@@ -45,3 +45,6 @@ class NoOpEventHandler(EventHandler):
 
     def process_upload_attachment_event(self, event):
         pass
+
+    def process_assay_event(self, event):
+        pass
