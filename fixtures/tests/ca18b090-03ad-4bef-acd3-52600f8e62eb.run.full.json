@@ -361,12 +361,12 @@
                 },
                 "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
                 "fp_genotypes": {
-                    "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
                     "size": 38179,
                     "class": "File"
                 },
                 "fp_intervals": {
-                    "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
                     "size": 50804,
                     "class": "File"
                 },
@@ -377,18 +377,18 @@
                     "class": "File"
                 },
                 "bait_intervals": {
-                    "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
                     "size": 7083292,
                     "class": "File"
                 },
                 "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
                 "hotspot_list_maf": {
-                    "path": "/juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf",
+                    "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
                     "size": 624846,
                     "class": "File"
                 },
                 "target_intervals": {
-                    "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist",
                     "size": 6997415,
                     "class": "File"
                 },
@@ -1410,7 +1410,7 @@
                 "nameext": ".vcf",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
                 "checksum": "sha1$0201d57f5fd370615df7ce8b78f49ae512692e0e",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants"
             },
             "files": [
@@ -1450,7 +1450,7 @@
                 "nameext": ".maf",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
                 "checksum": "sha1$15db27138a1586bf4f017b572154875c5ff129db",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts"
             },
             "files": [
@@ -1526,7 +1526,7 @@
                     "nameext": ".bam",
                     "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
                     "checksum": "sha1$d67cf2c24cacfeaa222893c5d4303aed55556457",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads",
                     "secondaryFiles": [
                         {
@@ -1535,7 +1535,7 @@
                             "nameext": ".bai",
                             "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
                             "checksum": "sha1$776fc843bcdbd215452e611f03d7d9b42ad05a09",
-                            "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
+                            "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bai",
                             "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads"
                         }
                     ]
@@ -1546,7 +1546,7 @@
                     "nameext": ".bam",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
                     "checksum": "sha1$45f52cc5db96a9d90784ddcee324cedbe1ac5618",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads",
                     "secondaryFiles": [
                         {
@@ -1555,7 +1555,7 @@
                             "nameext": ".bai",
                             "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
                             "checksum": "sha1$67a9aff1f1cd7be0240b7fefe740f7852dee4933",
-                            "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
+                            "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bai",
                             "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads"
                         }
                     ]
@@ -1640,7 +1640,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
                         "checksum": "sha1$c3c14c67c47c1a9502a528685d8f24f1eda9dccd",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl"
                     },
                     {
@@ -1649,7 +1649,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
                         "checksum": "sha1$15260c3f7d8a521e7d2021f2581f8ffd96ff9519",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl"
                     },
                     {
@@ -1658,7 +1658,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
                         "checksum": "sha1$ef853b586f31afefcabe8be9ba28bcddd5e47919",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl"
                     }
                 ],
@@ -1669,7 +1669,7 @@
                         "nameext": ".stats",
                         "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
                         "checksum": "sha1$581103c999b49f012af12d4dd579a48ab7573991",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
                         "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl"
                     },
                     {
@@ -1678,7 +1678,7 @@
                         "nameext": ".stats",
                         "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
                         "checksum": "sha1$fe2dd352e11bc48feefc6f7e1035ea0b5c8265dc",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
                         "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl"
                     }
                 ]
@@ -1765,7 +1765,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
                         "checksum": "sha1$883cf9ba173211144550938349dfdbeefb6f38ee",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl"
                     },
                     {
@@ -1774,7 +1774,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
                         "checksum": "sha1$78e3a8aab3b20c83dee40acea967e25893ec2065",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl"
                     },
                     {
@@ -1783,7 +1783,7 @@
                         "nameext": ".stats",
                         "basename": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
                         "checksum": "sha1$83cee0ca80ff374fd6049f9cbf475fb81a380d91",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
                         "nameroot": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl"
                     }
                 ],
@@ -1794,7 +1794,7 @@
                         "nameext": ".stats",
                         "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
                         "checksum": "sha1$2f9093a15e3a538e80653637690e0410779df620",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
                         "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl"
                     },
                     {
@@ -1803,7 +1803,7 @@
                         "nameext": ".stats",
                         "basename": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
                         "checksum": "sha1$e583971745676ccfbbb0b09474f74ecef10ea922",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
                         "nameroot": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl"
                     }
                 ]
@@ -1849,7 +1849,7 @@
                 "nameext": ".maf",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
                 "checksum": "sha1$bc1d7f73cc72eecf3b13f88402d6952c92d933de",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep"
             },
             "files": [
@@ -1901,7 +1901,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
                     "checksum": "sha1$9ff5ad812b693a79512b12506f59d5d67df87c05",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
                 },
                 {
@@ -1910,7 +1910,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
                     "checksum": "sha1$716fb1c1bcd8040ecc6e4452cbbae25a20435c52",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
                 }
             ],
@@ -1964,7 +1964,7 @@
                     "nameext": ".asmetrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.asmetrics",
                     "checksum": "sha1$7e891f9f68deedb83626c728109097d9c562f7a1",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.asmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.asmetrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -1973,7 +1973,7 @@
                     "nameext": ".asmetrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.asmetrics",
                     "checksum": "sha1$65ab3f206ead19b7ae3aa0eb4a9d1c5e7dff9843",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.asmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.asmetrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -2027,7 +2027,7 @@
                     "nameext": ".out",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
                     "checksum": "sha1$adf1df0bad06a20de898606152b4562d13de5fba",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
                 },
                 {
@@ -2036,7 +2036,7 @@
                     "nameext": ".out",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
                     "checksum": "sha1$f376bc7c0c427199a8319cbe95fc368abc914535",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
                 }
             ],
@@ -2090,7 +2090,7 @@
                     "nameext": ".png",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
                     "checksum": "sha1$aa3cfccae19203ef9fa352574ecdbf8db6b42d5a",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF"
                 },
                 {
@@ -2099,7 +2099,7 @@
                     "nameext": ".png",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
                     "checksum": "sha1$dd13091946cb9b1ae3c002c0b86f8c1ca8f7bdea",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF"
                 }
             ],
@@ -2153,7 +2153,7 @@
                     "nameext": ".seg",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
                     "checksum": "sha1$31d0a6687ac647922e9d67a0d2d6a28a7e16ec7a",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
                 },
                 {
@@ -2162,7 +2162,7 @@
                     "nameext": ".seg",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
                     "checksum": "sha1$d15b1f7136fb9d107297f35abffd2ee9c9a229ac",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
                 }
             ],
@@ -2216,7 +2216,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_P001_d.rg.md.gcbias.pdf",
                     "checksum": "sha1$4d1ed6c4bda99d26a031b9e9651f2f4abe8cfdd2",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.pdf",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
                 },
                 {
@@ -2225,7 +2225,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_N001_d.rg.md.gcbias.pdf",
                     "checksum": "sha1$010c3e9323875594fa4d4469c13b91db5a46e8cc",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.pdf",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
                 }
             ],
@@ -2279,7 +2279,7 @@
                     "nameext": ".hsmetrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.hsmetrics",
                     "checksum": "sha1$d6ba79849a45f9fa69092453ada9f5992e7c0abb",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hsmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hsmetrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -2288,7 +2288,7 @@
                     "nameext": ".hsmetrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.hsmetrics",
                     "checksum": "sha1$2b08239d16dc6787ab37a7403313d46264877c7e",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hsmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hsmetrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -2342,7 +2342,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
                     "checksum": "sha1$aa4d306c3b2327fe6e84ebf6b371ca79644ec649",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.ismetrics"
                 },
                 {
@@ -2351,7 +2351,7 @@
                     "nameext": ".pdf",
                     "basename": "s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
                     "checksum": "sha1$5a57d43594e74ac8615409802377346f212e1cf7",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.ismetrics"
                 }
             ],
@@ -2405,7 +2405,7 @@
                     "nameext": ".md_metrics",
                     "basename": "s_C_K2902H_P001_d.rg.md_metrics",
                     "checksum": "sha1$379ec0abb55e3b1ff9adb8ff82ed31689aa8062b",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_metrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_metrics",
                     "nameroot": "s_C_K2902H_P001_d.rg"
                 },
                 {
@@ -2414,7 +2414,7 @@
                     "nameext": ".md_metrics",
                     "basename": "s_C_K2902H_N001_d.rg.md_metrics",
                     "checksum": "sha1$d2005e5e85d9e581671522c74548c8623d2c1979",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_metrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_metrics",
                     "nameroot": "s_C_K2902H_N001_d.rg"
                 }
             ],
@@ -2456,7 +2456,7 @@
                 "nameext": ".vcf",
                 "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
                 "checksum": "sha1$dc5d1aeb90cee217d736222d2dada308973832d6",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
                 "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
             },
             "files": [
@@ -2509,7 +2509,7 @@
                 "nameext": ".gz",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
                 "checksum": "sha1$11cb5a6370052fdfb1d83da53a7161cf3592e8f5",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf",
                 "secondaryFiles": [
                     {
@@ -2518,7 +2518,7 @@
                         "nameext": ".tbi",
                         "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
                         "checksum": "sha1$dd9315feeb320ec777dac7297b3a9bfc7a5d6c33",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz.tbi",
                         "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz"
                     }
                 ]
@@ -2560,7 +2560,7 @@
                 "nameext": ".vcf",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
                 "checksum": "sha1$c016b28102cd0e828dda14b1dfca985f822849ed",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass"
             },
             "files": [
@@ -2600,7 +2600,7 @@
                 "nameext": ".txt",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
                 "checksum": "sha1$14d8ca3da33d4d318fa5f5e2cdf77f8687a62148",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal"
             },
             "files": [
@@ -2640,7 +2640,7 @@
                 "nameext": ".vcf",
                 "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
                 "checksum": "sha1$cbcd1bd27821f1c527434bfe9abace8d3320819e",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
                 "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict"
             },
             "files": [
@@ -2692,7 +2692,7 @@
                     "nameext": ".Rdata",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
                     "checksum": "sha1$1e47fce47992626a03fe84ebcb3e95a0fecea4f1",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens"
                 },
                 {
@@ -2701,7 +2701,7 @@
                     "nameext": ".Rdata",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
                     "checksum": "sha1$b990bfe8c0471672e76056a0f291b5d4ee81d4d9",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity"
                 }
             ],
@@ -2755,7 +2755,7 @@
                     "nameext": ".quality_by_cycle_metrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
                     "checksum": "sha1$dad5640a5406c875b7fdaf4103b6edc2f763be56",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics"
                 },
                 {
@@ -2764,7 +2764,7 @@
                     "nameext": ".quality_by_cycle_metrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
                     "checksum": "sha1$e804183b1e07cfa754330005de8ff5c864130a41",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics"
                 }
             ],
@@ -2806,7 +2806,7 @@
                 "nameext": ".gz",
                 "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
                 "checksum": "sha1$a6f95a5e09c9e581321079f1f5fedd003ae5c221",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
                 "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat"
             },
             "files": [
@@ -2858,7 +2858,7 @@
                     "nameext": ".txt",
                     "basename": "s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
                     "checksum": "sha1$f2677685cda917f388dd395b7715d07ae1090ff4",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
                     "nameroot": "s_C_K2902H_P001_d.rg.md_FP_base_counts"
                 },
                 {
@@ -2867,7 +2867,7 @@
                     "nameext": ".txt",
                     "basename": "s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
                     "checksum": "sha1$a218a74b136aac74f9227e6cea7720c14fb0abce",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
                     "nameroot": "s_C_K2902H_N001_d.rg.md_FP_base_counts"
                 }
             ],
@@ -2921,7 +2921,7 @@
                     "nameext": ".gcbiasmetrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
                     "checksum": "sha1$bb7469356a97449579bdd25e0ab600d2a8fa426d",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -2930,7 +2930,7 @@
                     "nameext": ".gcbiasmetrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
                     "checksum": "sha1$01cbb4e6bca86f1d857ccb6446b7188d6892d71a",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -2984,7 +2984,7 @@
                     "nameext": ".summary",
                     "basename": "s_C_K2902H_P001_d.rg.md.gcbias.summary",
                     "checksum": "sha1$c6ca330351060e014b450e87b8fdd43731be79f6",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.summary",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.summary",
                     "nameroot": "s_C_K2902H_P001_d.rg.md.gcbias"
                 },
                 {
@@ -2993,7 +2993,7 @@
                     "nameext": ".summary",
                     "basename": "s_C_K2902H_N001_d.rg.md.gcbias.summary",
                     "checksum": "sha1$1932d9f758e45392212f1cf3c08a07ba988bde8c",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.summary",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.summary",
                     "nameroot": "s_C_K2902H_N001_d.rg.md.gcbias"
                 }
             ],
@@ -3047,7 +3047,7 @@
                     "nameext": ".ismetrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.ismetrics",
                     "checksum": "sha1$db6602f7efaf6fcce248ac81838e52c3e252fd24",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -3056,7 +3056,7 @@
                     "nameext": ".ismetrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.ismetrics",
                     "checksum": "sha1$ea3bd53219598f06bbae0868dcf4ebbcc38a4a5e",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -3110,7 +3110,7 @@
                     "nameext": ".pileup",
                     "basename": "s_C_K2902H_P001_d.rg.md.pileup",
                     "checksum": "sha1$611ccefbf82e2cc1414acd833fcf7252483d1241",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.pileup",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.pileup",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -3119,7 +3119,7 @@
                     "nameext": ".pileup",
                     "basename": "s_C_K2902H_N001_d.rg.md.pileup",
                     "checksum": "sha1$3dacd4c14bd6a19468145e911e58e7a258199d4b",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.pileup",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.pileup",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -3174,7 +3174,7 @@
                 "nameext": ".gz",
                 "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
                 "checksum": "sha1$a8f6c855b471bcf37a456ad441f72c8cf1b43be9",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
                 "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf",
                 "secondaryFiles": [
                     {
@@ -3183,7 +3183,7 @@
                         "nameext": ".tbi",
                         "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
                         "checksum": "sha1$e4a5c3663691f31da1bba6352dc16e35f3a8a197",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
                         "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz"
                     }
                 ]
@@ -3225,7 +3225,7 @@
                 "nameext": ".txt",
                 "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
                 "checksum": "sha1$7920889c2817038fb047c01d40187a083d928180",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
                 "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect"
             },
             "files": [
@@ -3278,7 +3278,7 @@
                 "nameext": ".gz",
                 "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
                 "checksum": "sha1$d377fe9dea989c10fc9bff2a02f215ac75aec897",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
                 "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf",
                 "secondaryFiles": [
                     {
@@ -3287,7 +3287,7 @@
                         "nameext": ".tbi",
                         "basename": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
                         "checksum": "sha1$e47841e84cd7b1c1ec384fa152d6ef4218b97704",
-                        "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
                         "nameroot": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz"
                     }
                 ]
@@ -3329,7 +3329,7 @@
                 "nameext": ".txt",
                 "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
                 "checksum": "sha1$e7474ae2f7a0479c54d379f089ac0b823ac06c2a",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
                 "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf"
             },
             "files": [
@@ -3369,7 +3369,7 @@
                 "nameext": ".txt",
                 "basename": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
                 "checksum": "sha1$0b46c330b744e3ef85d1f9c5ed585ee348cd6480",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
                 "nameroot": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf"
             },
             "files": [
@@ -3421,7 +3421,7 @@
                     "nameext": ".hstmetrics",
                     "basename": "s_C_K2902H_P001_d.rg.md.hstmetrics",
                     "checksum": "sha1$b8a270c8a6c15845afd2f0b87c4f6d4318b0ded2",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hstmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hstmetrics",
                     "nameroot": "s_C_K2902H_P001_d.rg.md"
                 },
                 {
@@ -3430,7 +3430,7 @@
                     "nameext": ".hstmetrics",
                     "basename": "s_C_K2902H_N001_d.rg.md.hstmetrics",
                     "checksum": "sha1$63c8d87423a1c41b71e4347cf19ab6cb63285d94",
-                    "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hstmetrics",
+                    "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hstmetrics",
                     "nameroot": "s_C_K2902H_N001_d.rg.md"
                 }
             ],
@@ -3472,7 +3472,7 @@
                 "nameext": ".vcf",
                 "basename": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
                 "checksum": "sha1$12f83bbc5e86c8dce79eeb145535f0c91e6ac6fb",
-                "location": "file:///juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
+                "location": "file:///juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
                 "nameroot": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs"
             },
             "files": [
@@ -3578,7 +3578,7 @@
             "created_date": "2019-10-24T00:23:22.167Z",
             "modified_date": "2019-10-24T00:23:22.167Z",
             "file_name": "FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 38179,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3591,7 +3591,7 @@
             "created_date": "2019-10-24T00:23:22.408Z",
             "modified_date": "2019-10-24T00:23:22.408Z",
             "file_name": "FP_tiling_intervals.intervals",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
             "file_type": 7,
             "size": 50804,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3617,7 +3617,7 @@
             "created_date": "2019-10-24T00:23:22.884Z",
             "modified_date": "2019-10-24T00:23:22.884Z",
             "file_name": "IDT_Exome_v1_FP_b37_baits.ilist",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
             "file_type": 7,
             "size": 7083292,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3630,7 +3630,7 @@
             "created_date": "2019-12-09T23:31:22.151Z",
             "modified_date": "2019-12-09T23:31:22.151Z",
             "file_name": "hotspot-list-union-v1-v2.maf",
-            "path": "/juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf",
+            "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
             "file_type": 24,
             "size": 624846,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3643,7 +3643,7 @@
             "created_date": "2019-10-24T00:23:23.578Z",
             "modified_date": "2019-10-24T00:23:23.578Z",
             "file_name": "IDT_Exome_v1_FP_b37_targets.ilist",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist",
             "file_type": 7,
             "size": 6997415,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -5334,7 +5334,7 @@
             "created_date": "2019-12-14T12:08:14.368Z",
             "modified_date": "2019-12-14T12:08:14.368Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.annotate-variants.vcf",
             "file_type": 11,
             "size": 65612975,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5347,7 +5347,7 @@
             "created_date": "2019-12-14T12:08:13.539Z",
             "modified_date": "2019-12-14T12:08:13.539Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.muts.maf",
             "file_type": 24,
             "size": 181310718,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5360,7 +5360,7 @@
             "created_date": "2019-12-14T12:08:13.575Z",
             "modified_date": "2019-12-14T12:08:13.575Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.bam",
             "file_type": 3,
             "size": 22899967017,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5373,7 +5373,7 @@
             "created_date": "2019-12-14T12:08:13.614Z",
             "modified_date": "2019-12-14T12:08:13.614Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.bam",
             "file_type": 3,
             "size": 14961505727,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5386,7 +5386,7 @@
             "created_date": "2019-12-14T12:08:13.658Z",
             "modified_date": "2019-12-14T12:08:13.658Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk000_cl.stats",
             "file_type": 21,
             "size": 2641,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5399,7 +5399,7 @@
             "created_date": "2019-12-14T12:08:13.676Z",
             "modified_date": "2019-12-14T12:08:13.676Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk001_cl.stats",
             "file_type": 21,
             "size": 2611,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5412,7 +5412,7 @@
             "created_date": "2019-12-14T12:08:13.695Z",
             "modified_date": "2019-12-14T12:08:13.695Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R1-001.chunk002_cl.stats",
             "file_type": 21,
             "size": 2576,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5425,7 +5425,7 @@
             "created_date": "2019-12-14T12:08:13.713Z",
             "modified_date": "2019-12-14T12:08:13.713Z",
             "file_name": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk000_cl.stats",
             "file_type": 21,
             "size": 2764,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5438,7 +5438,7 @@
             "created_date": "2019-12-14T12:08:13.731Z",
             "modified_date": "2019-12-14T12:08:13.731Z",
             "file_name": "H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R1-001.chunk001_cl.stats",
             "file_type": 21,
             "size": 2714,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5451,7 +5451,7 @@
             "created_date": "2019-12-14T12:08:13.754Z",
             "modified_date": "2019-12-14T12:08:13.754Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk000_cl.stats",
             "file_type": 21,
             "size": 2818,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5464,7 +5464,7 @@
             "created_date": "2019-12-14T12:08:13.778Z",
             "modified_date": "2019-12-14T12:08:13.778Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk001_cl.stats",
             "file_type": 21,
             "size": 2815,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5477,7 +5477,7 @@
             "created_date": "2019-12-14T12:08:13.803Z",
             "modified_date": "2019-12-14T12:08:13.803Z",
             "file_name": "H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7HCTBBXY_ACATACGG-IGO-09670-D-1-S11-R2-001.chunk002_cl.stats",
             "file_type": 21,
             "size": 2775,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5490,7 +5490,7 @@
             "created_date": "2019-12-14T12:08:13.820Z",
             "modified_date": "2019-12-14T12:08:13.820Z",
             "file_name": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk000_cl.stats",
             "file_type": 21,
             "size": 2873,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5503,7 +5503,7 @@
             "created_date": "2019-12-14T12:08:13.836Z",
             "modified_date": "2019-12-14T12:08:13.836Z",
             "file_name": "H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/H7FKJBBXY-IGO-09670-D-46-S12-R2-001.chunk001_cl.stats",
             "file_type": 21,
             "size": 2826,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5516,7 +5516,7 @@
             "created_date": "2019-12-14T12:08:13.858Z",
             "modified_date": "2019-12-14T12:08:13.858Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.maf",
             "file_type": 24,
             "size": 59073,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5529,7 +5529,7 @@
             "created_date": "2019-12-14T12:08:13.880Z",
             "modified_date": "2019-12-14T12:08:13.880Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
             "file_type": 21,
             "size": 8189,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5542,7 +5542,7 @@
             "created_date": "2019-12-14T12:08:13.896Z",
             "modified_date": "2019-12-14T12:08:13.896Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
             "file_type": 21,
             "size": 8219,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5555,7 +5555,7 @@
             "created_date": "2019-12-14T12:08:13.930Z",
             "modified_date": "2019-12-14T12:08:13.930Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.asmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.asmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.asmetrics",
             "file_type": 21,
             "size": 2171,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5568,7 +5568,7 @@
             "created_date": "2019-12-14T12:08:13.947Z",
             "modified_date": "2019-12-14T12:08:13.947Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.asmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.asmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.asmetrics",
             "file_type": 21,
             "size": 2134,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5581,7 +5581,7 @@
             "created_date": "2019-12-14T12:08:13.969Z",
             "modified_date": "2019-12-14T12:08:13.969Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.out",
             "file_type": 21,
             "size": 603,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5594,7 +5594,7 @@
             "created_date": "2019-12-14T12:08:13.986Z",
             "modified_date": "2019-12-14T12:08:13.986Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.out",
             "file_type": 21,
             "size": 602,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5607,7 +5607,7 @@
             "created_date": "2019-12-14T12:08:14.009Z",
             "modified_date": "2019-12-14T12:08:14.009Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.CNCF.png",
             "file_type": 21,
             "size": 124853,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5620,7 +5620,7 @@
             "created_date": "2019-12-14T12:08:14.027Z",
             "modified_date": "2019-12-14T12:08:14.027Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.CNCF.png",
             "file_type": 21,
             "size": 111084,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5633,7 +5633,7 @@
             "created_date": "2019-12-14T12:08:14.050Z",
             "modified_date": "2019-12-14T12:08:14.050Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.seg",
             "file_type": 21,
             "size": 4777,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5646,7 +5646,7 @@
             "created_date": "2019-12-14T12:08:14.068Z",
             "modified_date": "2019-12-14T12:08:14.068Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.seg",
             "file_type": 21,
             "size": 3222,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5659,7 +5659,7 @@
             "created_date": "2019-12-14T12:08:14.092Z",
             "modified_date": "2019-12-14T12:08:14.092Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.gcbias.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.pdf",
             "file_type": 21,
             "size": 6784,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5672,7 +5672,7 @@
             "created_date": "2019-12-14T12:08:14.108Z",
             "modified_date": "2019-12-14T12:08:14.108Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.gcbias.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.pdf",
             "file_type": 21,
             "size": 6794,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5685,7 +5685,7 @@
             "created_date": "2019-12-14T12:08:14.131Z",
             "modified_date": "2019-12-14T12:08:14.131Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.hsmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hsmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hsmetrics",
             "file_type": 21,
             "size": 5016,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5698,7 +5698,7 @@
             "created_date": "2019-12-14T12:08:14.147Z",
             "modified_date": "2019-12-14T12:08:14.147Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.hsmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hsmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hsmetrics",
             "file_type": 21,
             "size": 5029,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5711,7 +5711,7 @@
             "created_date": "2019-12-14T12:08:14.168Z",
             "modified_date": "2019-12-14T12:08:14.168Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics.pdf",
             "file_type": 21,
             "size": 13994,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5724,7 +5724,7 @@
             "created_date": "2019-12-14T12:08:14.183Z",
             "modified_date": "2019-12-14T12:08:14.183Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics.pdf",
             "file_type": 21,
             "size": 12712,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5737,7 +5737,7 @@
             "created_date": "2019-12-14T12:08:14.203Z",
             "modified_date": "2019-12-14T12:08:14.203Z",
             "file_name": "s_C_K2902H_P001_d.rg.md_metrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_metrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_metrics",
             "file_type": 21,
             "size": 2900,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5750,7 +5750,7 @@
             "created_date": "2019-12-14T12:08:14.219Z",
             "modified_date": "2019-12-14T12:08:14.219Z",
             "file_name": "s_C_K2902H_N001_d.rg.md_metrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_metrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_metrics",
             "file_type": 21,
             "size": 2866,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5763,7 +5763,7 @@
             "created_date": "2019-12-14T12:08:14.242Z",
             "modified_date": "2019-12-14T12:08:14.242Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.vcf",
             "file_type": 11,
             "size": 24213327,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5776,7 +5776,7 @@
             "created_date": "2019-12-14T12:08:14.263Z",
             "modified_date": "2019-12-14T12:08:14.263Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.combined-variants.vcf.gz",
             "file_type": 21,
             "size": 13440159,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5789,7 +5789,7 @@
             "created_date": "2019-12-14T12:08:14.302Z",
             "modified_date": "2019-12-14T12:08:14.302Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vcf",
             "file_type": 11,
             "size": 19739,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5802,7 +5802,7 @@
             "created_date": "2019-12-14T12:08:14.324Z",
             "modified_date": "2019-12-14T12:08:14.324Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.pass.vep.portal.txt",
             "file_type": 10,
             "size": 5795,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5815,7 +5815,7 @@
             "created_date": "2019-12-14T12:08:14.346Z",
             "modified_date": "2019-12-14T12:08:14.346Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.vcf",
             "file_type": 11,
             "size": 403491742,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5828,7 +5828,7 @@
             "created_date": "2019-12-14T12:08:14.390Z",
             "modified_date": "2019-12-14T12:08:14.390Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.Rdata",
             "file_type": 21,
             "size": 8622126,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5841,7 +5841,7 @@
             "created_date": "2019-12-14T12:08:14.406Z",
             "modified_date": "2019-12-14T12:08:14.406Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.Rdata",
             "file_type": 21,
             "size": 8618530,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5854,7 +5854,7 @@
             "created_date": "2019-12-14T12:08:14.428Z",
             "modified_date": "2019-12-14T12:08:14.428Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
             "file_type": 21,
             "size": 5494,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5867,7 +5867,7 @@
             "created_date": "2019-12-14T12:08:14.445Z",
             "modified_date": "2019-12-14T12:08:14.445Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
             "file_type": 21,
             "size": 5508,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5880,7 +5880,7 @@
             "created_date": "2019-12-14T12:08:14.466Z",
             "modified_date": "2019-12-14T12:08:14.466Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads.dat.gz",
             "file_type": 21,
             "size": 32693698,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5893,7 +5893,7 @@
             "created_date": "2019-12-14T12:08:14.488Z",
             "modified_date": "2019-12-14T12:08:14.488Z",
             "file_name": "s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md_FP_base_counts.txt",
             "file_type": 10,
             "size": 13779990,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5906,7 +5906,7 @@
             "created_date": "2019-12-14T12:08:14.504Z",
             "modified_date": "2019-12-14T12:08:14.504Z",
             "file_name": "s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md_FP_base_counts.txt",
             "file_type": 10,
             "size": 13586169,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5919,7 +5919,7 @@
             "created_date": "2019-12-14T12:08:14.527Z",
             "modified_date": "2019-12-14T12:08:14.527Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbiasmetrics",
             "file_type": 21,
             "size": 6648,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5932,7 +5932,7 @@
             "created_date": "2019-12-14T12:08:14.544Z",
             "modified_date": "2019-12-14T12:08:14.544Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbiasmetrics",
             "file_type": 21,
             "size": 6632,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5945,7 +5945,7 @@
             "created_date": "2019-12-14T12:08:14.574Z",
             "modified_date": "2019-12-14T12:08:14.575Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.gcbias.summary",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.summary",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.gcbias.summary",
             "file_type": 21,
             "size": 1201,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5958,7 +5958,7 @@
             "created_date": "2019-12-14T12:08:14.593Z",
             "modified_date": "2019-12-14T12:08:14.593Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.gcbias.summary",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.summary",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.gcbias.summary",
             "file_type": 21,
             "size": 1199,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5971,7 +5971,7 @@
             "created_date": "2019-12-14T12:08:14.616Z",
             "modified_date": "2019-12-14T12:08:14.616Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.ismetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.ismetrics",
             "file_type": 21,
             "size": 7754,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5984,7 +5984,7 @@
             "created_date": "2019-12-14T12:08:14.635Z",
             "modified_date": "2019-12-14T12:08:14.635Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.ismetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.ismetrics",
             "file_type": 21,
             "size": 7041,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -5997,7 +5997,7 @@
             "created_date": "2019-12-14T12:08:14.658Z",
             "modified_date": "2019-12-14T12:08:14.658Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.pileup",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.pileup",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.pileup",
             "file_type": 21,
             "size": 55203868,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6010,7 +6010,7 @@
             "created_date": "2019-12-14T12:08:14.675Z",
             "modified_date": "2019-12-14T12:08:14.675Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.pileup",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.pileup",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.pileup",
             "file_type": 21,
             "size": 33915095,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6023,7 +6023,7 @@
             "created_date": "2019-12-14T12:08:14.697Z",
             "modified_date": "2019-12-14T12:08:14.697Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
             "file_type": 21,
             "size": 129554,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6036,7 +6036,7 @@
             "created_date": "2019-12-14T12:08:14.738Z",
             "modified_date": "2019-12-14T12:08:14.738Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.mutect.txt",
             "file_type": 10,
             "size": 172715192,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6049,7 +6049,7 @@
             "created_date": "2019-12-14T12:08:14.762Z",
             "modified_date": "2019-12-14T12:08:14.762Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.abra.printreads.s_C_K2902H_N001_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
             "file_type": 21,
             "size": 13247144,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6062,7 +6062,7 @@
             "created_date": "2019-12-14T12:08:14.800Z",
             "modified_date": "2019-12-14T12:08:14.800Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_hisens.cncf.txt",
             "file_type": 10,
             "size": 11388,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6075,7 +6075,7 @@
             "created_date": "2019-12-14T12:08:14.822Z",
             "modified_date": "2019-12-14T12:08:14.822Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.abra.printreads__s_C_K2902H_P001_d.rg.md.abra.printreads_purity.cncf.txt",
             "file_type": 10,
             "size": 7525,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6088,7 +6088,7 @@
             "created_date": "2019-12-14T12:08:14.844Z",
             "modified_date": "2019-12-14T12:08:14.844Z",
             "file_name": "s_C_K2902H_P001_d.rg.md.hstmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hstmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.rg.md.hstmetrics",
             "file_type": 21,
             "size": 19302184,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6101,7 +6101,7 @@
             "created_date": "2019-12-14T12:08:14.860Z",
             "modified_date": "2019-12-14T12:08:14.860Z",
             "file_name": "s_C_K2902H_N001_d.rg.md.hstmetrics",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hstmetrics",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_N001_d.rg.md.hstmetrics",
             "file_type": 21,
             "size": 19114455,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"
@@ -6114,7 +6114,7 @@
             "created_date": "2019-12-14T12:08:14.883Z",
             "modified_date": "2019-12-14T12:08:14.883Z",
             "file_name": "s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
-            "path": "/juno/work/pi/beagle/output/roslin_pair_sv/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
+            "path": "/juno/work/ci/argos-test/data/ca18b090-03ad-4bef-acd3-52600f8e62eb/outputs/s_C_K2902H_P001_d.s_C_K2902H_N001_d.svs.vcf",
             "file_type": 11,
             "size": 2741838,
             "file_group": "a975f490-1b02-4575-abae-a4f8e3667733"

@@ -105,35 +105,35 @@ class RunObjectTest(APITestCase):
             },
             {
                 'file_name': 'hotspot-list-union-v1-v2.maf',
-                'path': '/resources/roslin-qc/hotspot-list-union-v1-v2.maf',
+                'path': '/resources/argos-qc/hotspot-list-union-v1-v2.maf',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
             },
             {
                 'file_name': 'AgilentExon_v2_FP_tiling_intervals.intervals',
-                'path': '/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals',
+                'path': '/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
             },
             {
                 'file_name': 'AgilentExon_v2_FP_tiling_genotypes.txt',
-                'path': '/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt',
+                'path': '/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
             },
             {
                 'file_name': 'AgilentExon_v2_b37_baits.ilist',
-                'path': '/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist',
+                'path': '/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
             },
             {
                 'file_name': 'AgilentExon_v2_b37_targets.ilist',
-                'path': '/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist',
+                'path': '/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist',
                 'size': 1234,
                 'file_group': self.file_group,
                 'file_type': self.file_type_unknown,
@@ -215,7 +215,7 @@ class RunObjectTest(APITestCase):
                     "nameext": ".bam",
                     "basename": "test_1.printreads.bam",
                     "checksum": "sha1$e4c05e8b3e7c1d682640e690f71536e22cb63802",
-                    "location": "file:///output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam",
+                    "location": "file:///output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam",
                     "nameroot": "test_1.printreads.bam",
                     "secondaryFiles": [
                         {
@@ -224,7 +224,7 @@ class RunObjectTest(APITestCase):
                             "nameext": ".bai",
                             "basename": "test_1.rg.md.abra.printreads.bai",
                             "checksum": "sha1$79299d55657a0226206a4bf3ddaba854ae11f9f1",
-                            "location": "file:///output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai",
+                            "location": "file:///output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai",
                             "nameroot": "test_1.rg.md.abra.printreads.bai"
                         }
                     ]
@@ -235,7 +235,7 @@ class RunObjectTest(APITestCase):
                     "nameext": ".bam",
                     "basename": "test_2.rg.md.abra.printreads.bam",
                     "checksum": "sha1$15ddc908c3ece551d331e78806d3ac19569174c3",
-                    "location": "file:///output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam",
+                    "location": "file:///output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam",
                     "nameroot": "test_2.rg.md.abra.printreads",
                     "secondaryFiles": [
                         {
@@ -244,7 +244,7 @@ class RunObjectTest(APITestCase):
                             "nameext": ".bai",
                             "basename": "test_2.rg.md.abra.printreads.bai",
                             "checksum": "sha1$6fd2fc0ce6b42253cbac89d31e8eddb169d65605",
-                            "location": "file:///output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai",
+                            "location": "file:///output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai",
                             "nameroot": "test_2.rg.md.abra.printreads"
                         }
                     ]
@@ -312,10 +312,10 @@ class RunObjectTest(APITestCase):
         port = Port.objects.filter(run_id=run_obj.run_id, name='bams').first()
         self.assertEqual(len(port.files.all()), 4)
         expected_result = (
-        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam',
-        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai',
-        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam',
-        '/output/roslin_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai')
+        '/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam',
+        '/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai',
+        '/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam',
+        '/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai')
         self.assertTrue(port.files.all()[0].path in expected_result)
         self.assertTrue(port.files.all()[1].path in expected_result)
         self.assertTrue(port.files.all()[2].path in expected_result)
