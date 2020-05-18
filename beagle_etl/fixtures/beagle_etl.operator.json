@@ -5,8 +5,8 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "RoslinOperator",
-            "slug": "roslin"
+            "class_name": "ArgosOperator",
+            "slug": "argos"
         }
     },
     {

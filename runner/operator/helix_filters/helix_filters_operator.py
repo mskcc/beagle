@@ -52,7 +52,7 @@ class HelixFiltersOperator(Operator):
             tags["project_prefix"] = project_prefix 
             if self.job_group_id:
                 output_directory = os.path.join(pipeline.output_directory,
-                                                "roslin",
+                                                "argos",
                                                 project_prefix,
                                                 pipeline_version,
                                                 self.job_group_id)
