@@ -49,7 +49,7 @@ class HelixFiltersOperator(Operator):
         """
         output_directory = None
         if project_prefix:
-            tags["project_prefix"] = project_prefix 
+            tags["project_prefix"] = project_prefix
             if self.job_group_id:
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
