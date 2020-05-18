@@ -291,11 +291,6 @@ def create_pooled_normal(filepath, file_group_id):
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
-    conflict = False
-    missing_fastq = False
-    invalid_number_of_fastq = False
-    conflict_files = []
-    failed_runs = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = requests.get('%s/LimsRest/api/getSampleManifest' % settings.LIMS_URL,
                                   params={"igoSampleId": sample_id},
@@ -313,20 +308,42 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
+
+    validate_sample(sample_id, data.get('libraries'))
+
     libraries = data.pop('libraries')
-    if not libraries:
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
-        if not runs:
-            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
-            raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
         run_dict = convert_to_dict(runs)
         logger.info("Processing runs %s" % run_dict)
         for run in run_dict.values():
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
+            for fastq in fastqs:
+                file_search = FileRepository.filter(path=fastq).first()
+                logger.info("Processing %s" % fastq)
+                if not file_search:
+                    logger.info("Adding file %s" % fastq)
+                    create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
+                                request_metadata, R1_or_R2(fastq))
+
+
+def validate_sample(sample_id, libraries):
+    missing_fastq = False
+    invalid_number_of_fastq = False
+    failed_runs = []
+    conflict_files = []
+    if not libraries:
+        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
+    for library in libraries:
+        runs = library.get('runs')
+        if not runs:
+            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+            raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+        run_dict = convert_to_dict(runs)
+        for run in run_dict.values():
+            fastqs = run.get('fastqs')
             if not fastqs:
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
@@ -334,22 +351,17 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
             elif len(fastqs) % 2 != 0:
                 logger.error(
                     "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
-                    sample_id, str(len(fastqs))))
+                        sample_id, str(len(fastqs))))
                 invalid_number_of_fastq = True
                 failed_runs.append(run['runId'])
             else:
                 for fastq in fastqs:
                     file_search = FileRepository.filter(path=fastq).first()
                     logger.info("Processing %s" % fastq)
-                    if not file_search:
-                        logger.info("Adding file %s" % fastq)
-                        create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                    request_metadata, R1_or_R2(fastq))
-                    else:
-                        logger.info("Found file %s already exists; checking if imported during this run to avoid duplicates")
+                    if file_search:
                         msg = "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id))
                         logger.error(msg)
-                        conflict = True 
+                        conflict = True
                         conflict_files.append((file_search.file.path, str(file_search.file.id)))
     if missing_fastq:
         raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
