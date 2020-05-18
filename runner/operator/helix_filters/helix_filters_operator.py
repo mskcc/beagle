@@ -70,7 +70,7 @@ class HelixFiltersOperator(Operator):
         Adds strings that's used by the CWL for output file names
         """
         project_prefix = json_data["project_prefix"]
-        json_data["roslin_version_string"] = pipeline_version
+        json_data["argos_version_string"] = pipeline_version
         json_data["analyst_file"] = "%s.muts.maf" % project_prefix
         json_data["analysis_gene_cna_file"] = "%s.gene.cna.txt" % project_prefix
         json_data["portal_file"] = "data_mutations_extended.txt"
