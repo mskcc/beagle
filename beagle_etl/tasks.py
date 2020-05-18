@@ -8,8 +8,7 @@ from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-from notifier.helper import generate_sample_data_content
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
 
 
 logger = logging.getLogger(__name__)
@@ -194,13 +193,6 @@ class JobObject(object):
         etl_e = etl_event.to_dict()
         send_notification.delay(etl_e)
 
-    def _generate_sample_data_file(self):
-        result = generate_sample_data_content(self.job.args['request_id'])
-        e = UploadAttachmentEvent(str(self.job.job_group.id),
-                                  '%s_sample_data_clinical.txt' % self.job.args['request_id'],
-                                  result).to_dict()
-        send_notification.delay(e)
-
     def _job_failed(self):
         # TODO: Hack remove this ASAP
         if self.job.run == TYPES['REQUEST']:
@@ -211,7 +203,6 @@ class JobObject(object):
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
@@ -219,7 +210,6 @@ class JobObject(object):
             import time
             time.sleep(5)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _check_children(self):
         finished = True
