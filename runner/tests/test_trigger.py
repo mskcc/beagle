@@ -24,13 +24,13 @@ class TestOperatorTriggers(TestCase):
     ]
     @patch('runner.tasks.create_run_task')
     @patch('notifier.tasks.send_notification')
-    @patch('runner.operator.roslin_operator.RoslinOperator.get_jobs')
-    @patch('runner.operator.roslin_operator.RoslinOperator.get_pipeline_id')
+    @patch('runner.operator.argos_operator.ArgosOperator.get_jobs')
+    @patch('runner.operator.argos_operator.ArgosOperator.get_pipeline_id')
     def test_create_jobs_from_operator_pipeline_deleted(self, get_pipeline_id, get_jobs, send_notification, create_run_task):
-        roslin_jobs = []
-        roslin_jobs.append((APIRunCreateSerializer(
+        argos_jobs = []
+        argos_jobs.append((APIRunCreateSerializer(
                 data={'app': 'cb5d793b-e650-4b7d-bfcd-882858e29cc5', 'inputs': None, 'name': None,}), None))
-        get_jobs.return_value = roslin_jobs
+        get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
         create_run_task.return_value = None
         send_notification.return_value = None

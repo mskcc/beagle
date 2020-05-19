@@ -1,9 +1,9 @@
 """
-Test for constructing Roslin samples
+Test for constructing Argos samples
 """
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.roslin_operator.bin.make_sample import build_sample
+from runner.operator.argos_operator.bin.make_sample import build_sample
 import json
 
 

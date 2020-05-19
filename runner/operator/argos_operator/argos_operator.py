@@ -2,8 +2,8 @@ import uuid
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
+from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
-from .construct_roslin_pair import construct_roslin_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent
@@ -13,14 +13,12 @@ from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 
 
-class RoslinOperator(Operator):
+class ArgosOperator(Operator):
     def get_jobs(self):
-        # files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
         files = FileRepository.filter(queryset=self.files,
                                       metadata={'requestId': self.request_id,
                                                 'igocomplete': True})
-
-        roslin_jobs = list()
+        argos_jobs = list()
 
         data = list()
         for f in files:
@@ -44,8 +42,8 @@ class RoslinOperator(Operator):
         for igo_id in igo_id_group:
             samples.append(build_sample(igo_id_group[igo_id]))
 
-        roslin_inputs, error_samples = construct_roslin_jobs(samples)
-        number_of_inputs = len(roslin_inputs)
+        argos_inputs, error_samples = construct_argos_jobs(samples)
+        number_of_inputs = len(argos_inputs)
 
         sample_pairing = ""
         sample_mapping = ""
@@ -56,7 +54,7 @@ class RoslinOperator(Operator):
         except Pipeline.DoesNotExist:
             pass
 
-        for i, job in enumerate(roslin_inputs):
+        for i, job in enumerate(argos_inputs):
             tumor_sample_name = job['pair'][0]['ID']
             for p in job['pair'][0]['R1']:
                 sample_mapping += "\t".join(
@@ -98,15 +96,15 @@ class RoslinOperator(Operator):
                     [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
                 files.append(FileProcessor.parse_path_from_uri(p['location']))
 
-            name = "ROSLIN %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job['assay']
             pi = job['pi']
             pi_email = job['pi_email']
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-            roslin_jobs.append((APIRunCreateSerializer(
-                data={'app': pipeline, 'inputs': roslin_inputs, 'name': name,
+            argos_jobs.append((APIRunCreateSerializer(
+                data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
                       'tags': {'requestId': self.request_id,
                           'sampleNameTumor': tumor_sample_name,
                           'sampleNameNormal': normal_sample_name,
@@ -126,4 +124,4 @@ class RoslinOperator(Operator):
                                                            data_clinical).to_dict()
         send_notification.delay(sample_data_clinical_event)
 
-        return roslin_jobs
+        return argos_jobs

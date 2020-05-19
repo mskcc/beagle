@@ -71,8 +71,8 @@
     "fields": {
         "created_date": "2019-11-18T17:44:56.345Z",
         "modified_date": "2019-11-18T17:44:56.345Z",
-        "name": "roslin_pair_sv_outputs",
-        "slug": "roslin_pair_sv_outputs",
+        "name": "argos_pair_sv_outputs",
+        "slug": "argos_pair_sv_outputs",
         "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
     }
 },

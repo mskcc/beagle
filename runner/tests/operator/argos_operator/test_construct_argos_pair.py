@@ -1,13 +1,13 @@
 """
-Test for constructing Roslin pair and jobs
+Test for constructing Argos pair and jobs
 """
 import os
 import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.roslin_operator.construct_roslin_pair import construct_roslin_jobs
-from runner.operator.roslin_operator.bin.make_sample import build_sample
+from runner.operator.argos_operator.construct_argos_pair import construct_argos_jobs
+from runner.operator.argos_operator.bin.make_sample import build_sample
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
@@ -23,9 +23,9 @@ class TestConstructPair(TestCase):
     def setUp(self):
         os.environ['TMPDIR'] = ''
 
-    def test_construct_roslin_jobs1(self):
+    def test_construct_argos_jobs1(self):
         """
-        Test that Roslin jobs are correctly created
+        Test that Argos jobs are correctly created
         """
         # Load fixtures
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
@@ -54,9 +54,9 @@ class TestConstructPair(TestCase):
         for igo_id in igo_id_group:
             samples.append(build_sample(igo_id_group[igo_id]))
 
-        roslin_inputs, error_samples = construct_roslin_jobs(samples)
-        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.roslin.input.json")))
+        argos_inputs, error_samples = construct_argos_jobs(samples)
+        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.argos.input.json")))
 
-        print(json.dumps(roslin_inputs))
+        print(json.dumps(argos_inputs))
         print(json.dumps(expected_inputs))
-        self.assertTrue(roslin_inputs == expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)
