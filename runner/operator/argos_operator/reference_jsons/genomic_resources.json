@@ -32,49 +32,49 @@
     },
     "targets": {
         "AgilentExon_51MB_b37_v3": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.bed",
-            "baits_ilist": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.ilist",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.intervals",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.bed",
-            "targets_ilist": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.ilist",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.intervals",
-            "targets_plus5bp_ilist": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets_plus5bp.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.bed",
+            "baits_ilist": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.ilist",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_baits.intervals",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.bed",
+            "targets_ilist": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.intervals",
+            "targets_plus5bp_ilist": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets_plus5bp.ilist"
         },
         "IDT_Exome_v1_FP_b37": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist"
         },
         "E90_NimbleGeneV3_WES": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.ilist"
         },
         "IMPACT341_b37": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_baits.interval_list",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_targets.interval_list"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_baits.interval_list",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_targets.interval_list"
         },
         "IMPACT410_b37": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_baits.interval_list",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_targets.interval_list"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_baits.interval_list",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_targets.interval_list"
         },
         "IMPACT468_b37": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_baits.interval_list",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
         },
         "IMPACT468_b37_mm10": {
             "FP_genotypes": "juno:///juno/work/ci/resources/genomes/GRCh37_mm10/targets/FP_tiling_genotypes.txt",
@@ -83,68 +83,68 @@
             "targets_list": "juno:///juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_targets.interval_list"
         },
         "IMPACT468_08390": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_FP_tiling_intervals.intervals",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_baits.ilist",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_targets.ilist"
         },
         "IMPACT468_08050": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_FP_tiling_intervals.intervals",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_baits.ilist",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_targets.ilist"
         },
         "Agilent_v4_51MB_Human": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.ilist"
         },
         "AgilentExon_v2": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
         },
         "AgilentExon_v5": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.ilist"
         },
         "IlluminaExome_38MB": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.ilist"
         },
         "SeqCap_EZ_Exome_v3": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_FP_tiling_intervals.intervals",
-            "baits_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_baits.bed",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_baits.ilist",
-            "targets_bed": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.bed",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_FP_tiling_intervals.intervals",
+            "baits_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_baits.bed",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_baits.ilist",
+            "targets_bed": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.bed",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.ilist"
         },
         "HemePACT_v3_BAIT": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_intervals.intervals",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_baits.ilist",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v3/b37/HemePACT_v3_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_targets.ilist"
         },
         "HemePACT_v4_BAITS": {
-            "FP_genotypes": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_genotypes.txt",
-            "FP_intervals": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_intervals.intervals",
-            "baits_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_baits.ilist",
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
         }
     },
     "request_files": {
@@ -287,7 +287,7 @@
             ]
         },
         "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
-        "hotspot_list_maf": "juno:///juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf",
+        "hotspot_list_maf": "juno:///juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
         "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
         "custom_enst": "/usr/bin/vcf2maf/data/isoform_overrides_at_mskcc",
         "vep_path": "/usr/bin/vep",
