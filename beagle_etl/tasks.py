@@ -8,8 +8,7 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-from runner.operator.helper import generate_sample_data_content
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+# from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
 
 
