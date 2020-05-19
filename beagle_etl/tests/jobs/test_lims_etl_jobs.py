@@ -176,6 +176,55 @@ class TestImportSample(APITestCase):
         self.job_group = FileGroup.objects.create(name="LIMS", storage=self.storage)
         self.old_val = settings.IMPORT_FILE_GROUP
         settings.IMPORT_FILE_GROUP = str(self.job_group.id)
+        self.data_0_fastq = [
+            {
+                "igoId": "igoId_000",
+                "cmoSampleName": "sampleName_000-d",
+                "sampleName": "sampleName_000-d",
+                "cmoSampleClass": "Normal",
+                "cmoPatientId": "patientId-000",
+                "investigatorSampleId": "InvestigatorSampleId-N01-WES",
+                "oncoTreeCode": None,
+                "tumorOrNormal": "Normal",
+                "tissueLocation": "na",
+                "specimenType": "Blood",
+                "sampleOrigin": "Whole Blood",
+                "preservation": "Blood",
+                "collectionYear": "2016",
+                "sex": "M",
+                "species": "Human",
+                "cfDNA2dBarcode": None,
+                "baitSet": "SureSelect-All-Exon-V4-hg19",
+                "qcReports": [],
+                "libraries": [
+                    {
+                        "barcodeId": "IDT36",
+                        "barcodeIndex": "CCAGTTCA",
+                        "libraryIgoId": "igoId_000_1",
+                        "libraryVolume": None,
+                        "libraryConcentrationNgul": 2.2051049976353,
+                        "dnaInputNg": None,
+                        "captureConcentrationNm": None,
+                        "captureInputNg": None,
+                        "captureName": None,
+                        "runs": [
+                            {
+                                "runMode": "HiSeq High Output",
+                                "runId": "runId_000",
+                                "flowCellId": "HHJ5HBBXX",
+                                "readLength": "",
+                                "runDate": "2017-04-21",
+                                "flowCellLanes": [
+                                    8
+                                ],
+                                "fastqs": [
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
         self.data_1_fastq = [
             {
                 "igoId": "igoId_001",
@@ -348,6 +397,12 @@ class TestImportSample(APITestCase):
 
     def tearDown(self):
         settings.IMPORT_FILE_GROUP = self.old_val
+
+    @patch('requests.get')
+    def test_invalid_number_of_fastq_files(self, mock_get_sample):
+        mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
+        with self.assertRaises(FailedToFetchFilesException) as e:
+            fetch_sample_metadata('igoId_000', True, 'sampleName_000', {})
 
     @patch('requests.get')
     def test_import_sample_two_fastq_files(self, mock_get_sample):
