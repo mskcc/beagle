@@ -5,9 +5,9 @@ import requests
 from django.conf import settings
 from django.db.models import Prefetch
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, ETLJobCreatedEvent, SetLabelEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, ETLJobCreatedEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator
+from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -15,7 +15,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +54,7 @@ def get_or_create_request_job(request_id):
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
         job_group = JobGroup()
+        job_group.save()
         notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
@@ -75,7 +76,23 @@ def request_callback(request_id, job_group=None):
     except JobGroup.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
+    assays = Assay.objects.first()
     recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
+    if recipes[0] not in assays.all:
+        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(ci_review_e)
+        set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
+        send_notification.delay(set_unknown_assay_label)
+        unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(unknown_assay_event)
+        return []
+    if recipes[0] in assays.disabled:
+        not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
+        send_notification.delay(not_for_ci)
+        disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(disabled_assay_event)
+        return []
+
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
@@ -84,21 +101,23 @@ def request_callback(request_id, job_group=None):
             recipes__contains=[recipes[0]]
         )
     except Operator.DoesNotExist:
-        logger.error("No operator defined for requestId: %s with recipe: %s" % (request_id, recipes[0]))
-        e = OperatorRequestEvent(job_group_id, "No operator defined for requestId").to_dict()
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes[0])
+        logger.error(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Not operator defined for recipe: %s" % recipes[0])
+        raise FailedToSubmitToOperatorException(msg)
     if not operator.active:
-        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-        e = OperatorRequestEvent(job_group_id, "Operator %s inactive" % operator.class_name).to_dict()
+        msg = "Operator not active: %s" % operator.class_name
+        logger.info(msg)
+        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
         send_notification.delay(error_label)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException("Operator %s not active: %s" % operator.class_name)
+        raise FailedToSubmitToOperatorException(msg)
     logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
     create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
@@ -401,9 +420,11 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         sample_id = metadata.pop('igoId', None)
         patient_id = metadata.pop('cmoPatientId', None)
         sample_class = metadata.pop('cmoSampleClass', None)
+        specimen_type = metadata.pop('specimenType', None)
+        metadata['specimenType'] = specimen_type
         metadata['requestId'] = request_id
         metadata['sampleName'] = sample_name
-        metadata['cmoSampleName'] = format_sample_name(sample_name)
+        metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
         metadata['externalSampleId'] = external_sample_name
         metadata['sampleId'] = sample_id
         metadata['patientId'] = patient_id

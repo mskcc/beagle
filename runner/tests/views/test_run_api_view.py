@@ -37,7 +37,7 @@ class TestRunAPIView(TestCase):
         """
         Test that data sent through the API view 'post' method returns a successful status and expected response
         """
-        pipeline_name = 'roslin'
+        pipeline_name = 'argos'
         request_ids = ['foo', 'bar']
 
         request = MockRequest()
@@ -63,13 +63,13 @@ class TestRunAPIView(TestCase):
         call_command('loaddata', test_files_fixture, verbosity=0)
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "roslin_reference_files.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "argos_reference_files.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
         number_of_runs = len(Run.objects.all())
         self.assertEqual(number_of_runs, 0)
 
-        pipeline_name = 'roslin'
+        pipeline_name = 'argos'
         request_ids = ['10075_D']
 
         request = MockRequest()
