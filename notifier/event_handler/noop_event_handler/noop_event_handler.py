@@ -25,6 +25,9 @@ class NoOpEventHandler(EventHandler):
     def process_operator_request_event(self, event):
         pass
 
+    def process_etl_job_failed_event(self, event):
+        pass
+
     def process_operator_run_event(self, event):
         pass
 
@@ -41,4 +44,7 @@ class NoOpEventHandler(EventHandler):
         pass
 
     def process_upload_attachment_event(self, event):
+        pass
+
+    def process_assay_event(self, event):
         pass
