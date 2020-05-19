@@ -1,5 +1,5 @@
 from file_system.repository.file_repository import FileRepository
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 
 def generate_sample_data_content(request_ids):
