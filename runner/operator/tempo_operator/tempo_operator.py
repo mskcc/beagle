@@ -6,6 +6,7 @@ from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 
+
 class TempoOperator(Operator):
     def get_jobs(self):
         files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
