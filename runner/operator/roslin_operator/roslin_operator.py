@@ -8,7 +8,7 @@ from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent
 from notifier.tasks import send_notification
-from notifier.helper import generate_sample_data_content_new
+from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 
@@ -119,9 +119,9 @@ class RoslinOperator(Operator):
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
-        data_clinical = generate_sample_data_content_new(files, pipeline_name=pipeline_obj.name,
-                                                         pipeline_github=pipeline_obj.github,
-                                                         pipeline_version=pipeline_obj.version)
+        data_clinical = generate_sample_data_content(files, pipeline_name=pipeline_obj.name,
+                                                     pipeline_github=pipeline_obj.github,
+                                                     pipeline_version=pipeline_obj.version)
         sample_data_clinical_event = UploadAttachmentEvent(self.job_group_id, 'sample_data_clinical.txt',
                                                            data_clinical).to_dict()
         send_notification.delay(sample_data_clinical_event)

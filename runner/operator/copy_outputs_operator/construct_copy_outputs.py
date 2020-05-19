@@ -137,6 +137,11 @@ def generate_sample_pairing_and_mapping_files(run_ids):
 
     request_id_set = set()
 
+    files = list()
+
+    if runs:
+        pipeline = runs[0].app
+
     for r in runs:
         request_id_set.add(r.tags['requestId'])
         inp_port = Port.objects.filter(run_id=r.id, name='pair').first()
@@ -144,37 +149,48 @@ def generate_sample_pairing_and_mapping_files(run_ids):
         for p in inp_port.db_value[0]['R1']:
             sample_mapping += "\t".join(
                 [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[0]['R2']:
             sample_mapping += "\t".join(
                 [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[0]['zR1']:
             sample_mapping += "\t".join(
                 [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[0]['zR2']:
             sample_mapping += "\t".join(
                 [tumor_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
-
+            files.append(FileProcessor.get_file_path(p['location']))
         normal_sample_name = inp_port.db_value[1]['ID']
         for p in inp_port.db_value[1]['R1']:
             sample_mapping += "\t".join(
                 [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[1]['R2']:
             sample_mapping += "\t".join(
                 [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[1]['zR1']:
             sample_mapping += "\t".join(
                 [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[1]['zR2']:
             sample_mapping += "\t".join(
                 [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
-
+            files.append(FileProcessor.get_file_path(p['location']))
         for p in inp_port.db_value[1]['bam']:
             sample_mapping += "\t".join(
                 [normal_sample_name, FileProcessor.get_file_path(p['location'])]) + "\n"
+            files.append(FileProcessor.get_file_path(p['location']))
 
         sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-    data_clinical = generate_sample_data_content(request_id_set)
+    if runs:
+        data_clinical = generate_sample_data_content(files,
+                                                     pipeline_name=pipeline.name,
+                                                     pipeline_github=pipeline.github,
+                                                     pipeline_version=pipeline.version)
 
     return sample_mapping, sample_pairing, data_clinical
 
