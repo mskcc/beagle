@@ -139,7 +139,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['libraryId'] = sample_name + "_1"
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
-            # build_sample in runner.operator.roslin_operator.bin
+            # build_sample in runner.operator.argos_operator.bin
             metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
             metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
             metadata['flowCellId'] = 'PN_FCID'
@@ -182,7 +182,7 @@ def get_dmp_normal(patient_id, bait_set):
         metadata['R'] = 'Not applicable'
         # because rgid depends on flowCellId and barcodeIndex, we will
         # spoof barcodeIndex so that pairing can work properly; see
-        # build_sample in runner.operator.roslin_operator.bin
+        # build_sample in runner.operator.argos_operator.bin
         metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
         metadata['flowCellId'] = 'DMP_FCID'
         metadata['tumorOrNormal'] = 'Normal'

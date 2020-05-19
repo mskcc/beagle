@@ -268,7 +268,7 @@
             "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
             "hotspot_list_maf": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf"
+                "location": "juno:///juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf"
             },
             "delly_exclude": {
                 "class": "File",
@@ -285,19 +285,19 @@
             "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed",
             "bait_intervals": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_baits.interval_list"
+                "location": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list"
             },
             "target_intervals": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+                "location": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
             },
             "fp_intervals": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_intervals.list"
+                "location": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list"
             },
             "fp_genotypes": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt"
+                "location": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt"
             }
         },
         "runparams": {
