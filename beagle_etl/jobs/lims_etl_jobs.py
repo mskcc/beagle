@@ -4,7 +4,6 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
-from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
@@ -53,9 +52,7 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
-        job_group = JobGroup()
-        job_group.save()
-        notifier_start(job_group, request_id)
+        job_group = notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
