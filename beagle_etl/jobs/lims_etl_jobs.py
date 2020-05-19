@@ -3,7 +3,8 @@ import copy
 import logging
 import requests
 from django.conf import settings
-from django.db.models import Prefetch
+
+from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
 from notifier.tasks import send_notification, notifier_start
@@ -12,22 +13,12 @@ from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
-from runner.operator.argos_operator.bin.make_sample import format_sample_name
+from file_system.helper.checksum import sha1, FailedToCalculateChecksum
+from runner.operator.helper import format_sample_name
 
 logger = logging.getLogger(__name__)
-
-
-TYPES = {
-    "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
-    "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
-    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal",
-    "REQUEST_CALLBACK": "beagle_etl.jobs.lims_etl_jobs.request_callback",
-    "UPDATE_SAMPLE_METADATA": "beagle_etl.jobs.lims_etl_jobs.update_sample_metadata"
-}
 
 
 def fetch_new_requests_lims(timestamp):
@@ -412,6 +403,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(name=file_type).first()
         metadata = copy.deepcopy(data)
+        library_copy = copy.deepcopy(library)
         sample_name = metadata.pop('cmoSampleName', None)
         external_sample_name = metadata.pop('sampleName', None)
         sample_id = metadata.pop('igoId', None)
@@ -428,8 +420,8 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
-        metadata['libraryId'] = library.pop('libraryIgoId', None)
-        for k, v in library.items():
+        metadata['libraryId'] = library_copy.pop('libraryIgoId', None)
+        for k, v in library_copy.items():
             metadata[k] = v
         for k, v in run.items():
             metadata[k] = v
@@ -449,6 +441,13 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         try:
             f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
                                     file_type=file_type_obj)
+            try:
+                checksum = sha1(os.path.basename(path))
+                f.checksum = checksum
+            except FailedToCalculateChecksum as e:
+                logger.info("Failed to calculate checksum. Error:%s", f.path)
+            else:
+                f.checksum = None
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
@@ -504,7 +503,7 @@ def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata)
         logger.error("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
         raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
     try:
-        data = sampleMetadata.json()[0]
+        data = copy.deepcopy(sampleMetadata.json()[0])
     except Exception as e:
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
