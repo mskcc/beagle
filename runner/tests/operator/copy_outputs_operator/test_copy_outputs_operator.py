@@ -1,5 +1,5 @@
 """
-Test for constructing Roslin pair and jobs
+Test for constructing Argos pair and jobs
 """
 import os
 import json

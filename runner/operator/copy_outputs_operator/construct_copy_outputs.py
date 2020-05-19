@@ -8,7 +8,7 @@ from runner.run.processors.file_processor import FileProcessor
 from notifier.helper import generate_sample_data_content
 
 
-def get_roslin_output_description():
+def get_argos_output_description():
     output_description = {'normal_bam': 'bam',
                           'tumor_bam': 'bam',
                           'clstats1': 'qc',
@@ -93,7 +93,7 @@ def construct_copy_outputs_input(run_id_list):
     input_json = {}
     facets_list = []
     pair_number = 0
-    output_description = get_roslin_output_description()
+    output_description = get_argos_output_description()
     project_prefix = set()
 
     for single_run_id in run_id_list:

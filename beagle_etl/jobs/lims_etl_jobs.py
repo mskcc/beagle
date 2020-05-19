@@ -15,7 +15,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 

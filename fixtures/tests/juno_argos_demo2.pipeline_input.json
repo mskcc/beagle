@@ -1,6 +1,6 @@
 {
   "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
-  "name": "ROSLIN Test API run",
+  "name": "ARGOS Test API run",
   "tags": {"requestId": "DemoRequest1"},
   "inputs": {
     "dbsnp": {
@@ -38,11 +38,11 @@
       "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
       "fp_genotypes": {
         "class": "File",
-        "location": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
+        "location": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
       },
       "fp_intervals": {
         "class": "File",
-        "location": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
+        "location": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
       },
       "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
       "delly_exclude": {
@@ -51,16 +51,16 @@
       },
       "bait_intervals": {
         "class": "File",
-        "location": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist"
+        "location": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist"
       },
       "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
       "hotspot_list_maf": {
         "class": "File",
-        "location": "juno:///juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf"
+        "location": "juno:///juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf"
       },
       "target_intervals": {
         "class": "File",
-        "location": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
+        "location": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
       },
       "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed"
     },
@@ -310,10 +310,10 @@
         "PU": [
         ],
         "R1": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
         ],
         "R2": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
         ],
         "bam": [],
         "zR1": [],
@@ -332,10 +332,10 @@
         "PU": [
         ],
         "R1": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
+            "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
         ],
         "R2": [
-            "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
+            "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
         ],
         "bam": [],
         "zR1": [],

@@ -1,6 +1,6 @@
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 
 def get_project_id(request_id):

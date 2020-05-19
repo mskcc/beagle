@@ -2,7 +2,7 @@ import os
 import json
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.roslin_operator.bin.pair_request import compile_pairs
+from runner.operator.argos_operator.bin.pair_request import compile_pairs
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
@@ -1021,23 +1021,23 @@ class TestPairRequest(TestCase):
         """
         samples = [{
             'CN': 'MSKCC',
-            'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
-            'LB': 'juno_roslin_demo1_3',
+            'ID': ['s_juno_argos_demo1_3_HCYYWBBXY'],
+            'LB': 'juno_argos_demo1_3',
             'PL': 'Illumina',
             'PU': ['HCYYWBBXY'],
             'R1': [
-                '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+                '/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'],
             'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
             'R2': [
-                '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+                '/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'],
             'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
             'bam': [],
             'bam_bid': [],
-            'SM': 's_juno_roslin_demo1_3',
+            'SM': 's_juno_argos_demo1_3',
             'bait_set': 'IMPACT468_BAITS',
-            'sample_id': 's_juno_roslin_demo1_3',
+            'sample_id': 's_juno_argos_demo1_3',
             'patient_id': 'DU874145',
-            'request_id': 'juno_roslin_demo1',
+            'request_id': 'juno_argos_demo1',
             'run_id': ['JAX_0397'],
             "preservation_type": ["EDTA-Streck"],
             'run_date': ['2019-12-12'],
@@ -1047,23 +1047,23 @@ class TestPairRequest(TestCase):
         },
             {
                 'CN': 'MSKCC',
-                'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
-                'LB': 'juno_roslin_demo1_5_1_1_1',
+                'ID': ['s_juno_argos_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+                'LB': 'juno_argos_demo1_5_1_1_1',
                 'PL': 'Illumina',
                 'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'],
                 'R1': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'],
                 'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')],
                 'R2': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'],
                 'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')],
                 'bam': [],
                 'bam_bid': [],
-                'SM': 's_juno_roslin_demo1_5',
+                'SM': 's_juno_argos_demo1_5',
                 'bait_set': 'IMPACT468_BAITS',
-                'sample_id': 's_juno_roslin_demo1_5',
+                'sample_id': 's_juno_argos_demo1_5',
                 'patient_id': 'DU874145',
-                'request_id': 'juno_roslin_demo1',
+                'request_id': 'juno_argos_demo1',
                 'run_id': ['JAX_0397'],
                 "preservation_type": ["EDTA-Streck"],
                 'run_date': ['2019-12-17'],
@@ -1075,21 +1075,21 @@ class TestPairRequest(TestCase):
 
         expected_pairs = {
             'tumor': [{
-                'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
-                'LB': 'juno_roslin_demo1_5_1_1_1',
+                'CN': 'MSKCC', 'ID': ['s_juno_argos_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT'],
+                'LB': 'juno_argos_demo1_5_1_1_1',
                 'PL': 'Illumina',
                 'PU': ['HFTCNBBXY_GTATTGGC-TTGTCGGT'],
                 'R1': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz'],
                 'R1_bid': [UUID('d2d8ed36-d8f4-4e93-b038-d38328fad021')],
                 'R2': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz'],
                 'R2_bid': [UUID('2f77f3ac-ab25-4a02-90bd-86542401ac89')],
-                'SM': 's_juno_roslin_demo1_5',
+                'SM': 's_juno_argos_demo1_5',
                 'bait_set': 'IMPACT468_BAITS',
-                'sample_id': 's_juno_roslin_demo1_5',
+                'sample_id': 's_juno_argos_demo1_5',
                 'patient_id': 'DU874145',
-                'request_id': 'juno_roslin_demo1',
+                'request_id': 'juno_argos_demo1',
                 'run_id': ['JAX_0397'],
                 'run_date': ['2019-12-17'],
                 'species': 'Human',
@@ -1100,21 +1100,21 @@ class TestPairRequest(TestCase):
                 'bam_bid': []
             }],
             'normal': [{
-                'CN': 'MSKCC', 'ID': ['s_juno_roslin_demo1_3_HCYYWBBXY'],
-                'LB': 'juno_roslin_demo1_3',
+                'CN': 'MSKCC', 'ID': ['s_juno_argos_demo1_3_HCYYWBBXY'],
+                'LB': 'juno_argos_demo1_3',
                 'PL': 'Illumina',
                 'PU': ['HCYYWBBXY'],
                 'R1': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz'],
                 'R1_bid': [UUID('a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac')],
                 'R2': [
-                    '/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'],
+                    '/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz'],
                 'R2_bid': [UUID('c71c259a-ebc0-4490-9af1-bc99387a70d7')],
-                'SM': 's_juno_roslin_demo1_3',
+                'SM': 's_juno_argos_demo1_3',
                 'bait_set': 'IMPACT468_BAITS',
-                'sample_id': 's_juno_roslin_demo1_3',
+                'sample_id': 's_juno_argos_demo1_3',
                 'patient_id': 'DU874145',
-                'request_id': 'juno_roslin_demo1',
+                'request_id': 'juno_argos_demo1',
                 'run_id': ['JAX_0397'],
                 'run_date': ['2019-12-12'],
                 'species': 'Human',
