@@ -310,7 +310,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
         raise FailedToFetchFilesException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
-    validate_sample(sample_id, data.get('libraries'))
+    validate_sample(sample_id, data.get('libraries'), igocomplete)
 
     libraries = data.pop('libraries')
     for library in libraries:
@@ -330,7 +330,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
                                 request_metadata, R1_or_R2(fastq))
 
 
-def validate_sample(sample_id, libraries):
+def validate_sample(sample_id, libraries, igocomplete):
     missing_fastq = False
     invalid_number_of_fastq = False
     failed_runs = []
@@ -364,8 +364,9 @@ def validate_sample(sample_id, libraries):
                         logger.error(msg)
                         conflict = True
                         conflict_files.append((file_search.file.path, str(file_search.file.id)))
-    if missing_fastq:
-        raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+    if missing_fastq and igocomplete:
+        raise FailedToFetchFilesException(
+            "Missing fastq files for igcomplete: %s sample %s : %s" % (igocomplete, sample_id, ' '.join(failed_runs)))
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
             "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
