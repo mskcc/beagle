@@ -8,7 +8,7 @@ def format_sample_name(sample_name):
         if "s_" in sample_name[:2]:
             return sample_name
         else:
-            sample_name = "s_" + sample_name.replace("-","_")
+            sample_name = "s_" + sample_name.replace("-", "_")
     except TypeError:
         print("sampleName is Nonetype; returning None.")
     return sample_name
