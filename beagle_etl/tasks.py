@@ -129,7 +129,8 @@ class JobObject(object):
                 sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
                                    job.args.get('sample_id', '')))
             elif job.run == TYPES['REQUEST']:
-                request_jobs.append((str(job.id), "", self.get_key(job.run), job.message or "", ''))
+                request_jobs.append(
+                    (str(job.id), '', self.get_key(job.run), job.message or "", ''))
             elif job.run == TYPES['POOLED_NORMAL']:
                 pooled_normal_jobs.append(
                     (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
@@ -202,11 +203,9 @@ class JobObject(object):
         send_notification.delay(e)
 
     def _job_failed(self):
-        # TODO: Hack remove this ASAP
         if self.job.run == TYPES['REQUEST']:
-            import time
-            time.sleep(5)
-            e = ETLJobFailedEvent(self.job.job_group.id, "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
+            e = ETLJobFailedEvent(self.job.job_group.id,
+                                  "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
             send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
@@ -215,9 +214,6 @@ class JobObject(object):
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
-            # TODO: Hack remove this ASAP
-            import time
-            time.sleep(5)
             self._generate_ticket_decription()
             self._generate_sample_data_file()
 
@@ -232,7 +228,7 @@ class JobObject(object):
                 continue
             if child_job.status == JobStatus.FAILED:
                 failed.append(child_id)
-            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED):
+            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False
                 break
         if finished:
