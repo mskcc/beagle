@@ -18,8 +18,8 @@ def add_operators(apps, _):
     )
 
     Operator.objects.create(
-        slug="roslin",
-        class_name="RoslinOperator",
+        slug="argos",
+        class_name="ArgosOperator",
         recipes=["IMPACT341", "IMPACT+ (341 genes plus custom content)", "IMPACT410", "IMPACT468"],
         active=True
     )
@@ -34,7 +34,7 @@ def add_operators(apps, _):
 def remove_operators(apps, _):
     Operator = apps.get_model('beagle_etl', 'Operator')
 
-    Operator.objects.filter(class_name__in=["RoslinOperator", "AccessOperator", "TempoOperator"]).delete()
+    Operator.objects.filter(class_name__in=["ArgosOperator", "AccessOperator", "TempoOperator"]).delete()
 
     Operator.objects.create(
         active=True,

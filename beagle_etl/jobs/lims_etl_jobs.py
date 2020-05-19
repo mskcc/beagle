@@ -15,7 +15,7 @@ from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
 from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
 from runner.tasks import create_jobs_from_request
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +54,7 @@ def get_or_create_request_job(request_id):
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
         job_group = JobGroup()
+        job_group.save()
         notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},

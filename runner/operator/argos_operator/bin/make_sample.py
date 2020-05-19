@@ -38,7 +38,7 @@ def remove_with_caveats(samples):
 
 def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=False):
     """
-    Formats a given sample_name to legacy ROSLIN naming conventions, provided that
+    Formats a given sample_name to legacy ARGOS naming conventions, provided that
     it is in valid CMO Sample Name format (see sample_pattern regex value, below)
 
     Current format is to prepend sample name with "s_" and convert all hyphens to
@@ -132,7 +132,7 @@ def build_sample(data, ignore_sample_formatting=False):
     per index - the data is then compiled into one sample dictionary consisting of one or more
     pairs of fastqs
 
-    Note that ID and SM are different field values in ROSLIN (RG_ID and ID, respectively, in ROSLIN)
+    Note that ID and SM are different field values in ARGOS (RG_ID and ID, respectively, in ARGOS)
     but standardizing it here with what GATK sets bam headers to
     """
 
