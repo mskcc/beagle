@@ -2,7 +2,7 @@ import os
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator
+from .models import Job, JobStatus, Operator, Assay
 from lib.admin import pretty_python_exception, pretty_json
 
 
@@ -79,5 +79,10 @@ class OperatorAdmin(ModelAdmin):
     list_display = ('id', 'class_name', 'recipes', 'active')
 
 
+class AssayAdmin(ModelAdmin):
+    list_display = ('all', 'disabled')
+
+
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
+admin.site.register(Assay, AssayAdmin)
