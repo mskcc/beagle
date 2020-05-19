@@ -3,7 +3,9 @@ This constructs a sample dictionary from the metadata in the Voyager/Beagle data
 """
 import logging
 import re
+
 LOGGER = logging.getLogger(__name__)
+
 
 
 def remove_with_caveats(samples):
