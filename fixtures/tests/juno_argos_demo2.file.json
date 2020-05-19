@@ -6,7 +6,7 @@
             "created_date": "2020-01-06T19:59:50.576Z",
             "modified_date": "2020-01-06T19:59:50.579Z",
             "file_name": "DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
-            "path": "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
+            "path": "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -19,7 +19,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
-            "path": "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
+            "path": "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -32,7 +32,7 @@
             "created_date": "2020-01-06T19:59:50.582Z",
             "modified_date": "2020-01-06T19:59:50.585Z",
             "file_name": "DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
-            "path": "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
+            "path": "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -45,7 +45,7 @@
             "created_date": "2020-01-06T19:59:50.597Z",
             "modified_date": "2020-01-06T19:59:50.598Z",
             "file_name": "DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
-            "path": "/juno/work/ci/roslin-pipelines/variant/2.6.0/workspace/test_data/examples/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
+            "path": "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"

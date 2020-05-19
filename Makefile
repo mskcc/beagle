@@ -387,12 +387,12 @@ import:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
 
-# create a dev instance of the Roslin pipeline
-DEVNAME:=roslin-dev
-DEVURL:=https://github.com/mskcc/roslin-cwl
+# create a dev instance of the Argos pipeline
+DEVNAME:=argos-dev
+DEVURL:=https://github.com/mskcc/argos-cwl
 DEVVER:=1.0.0-rc5
 DEVENTRY:=workflows/pair-workflow-sv.cwl
-DEVOUTPUT:=$(CURDIR)/output/roslin-dev
+DEVOUTPUT:=$(CURDIR)/output/argos-dev
 DEVGROUP:=1a1b29cf-3bc2-4f6c-b376-d4c5d701166a
 
 $(DEVOUTPUT):
@@ -442,16 +442,16 @@ file-get:
 	-H "Authorization: Bearer $(TOKEN)" \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
-# start a Roslin run for a given request in the Beagle db
+# start a Argos run for a given request in the Beagle db
 run-request:
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $(TOKEN)" \
-	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "argos"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # send a pipeline input to the API to start running
-REQJSON:=fixtures/tests/run_roslin.json
+REQJSON:=fixtures/tests/run_argos.json
 run-request-api: $(AUTH_FILE)
 	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	curl -H "Content-Type: application/json" \
@@ -460,24 +460,24 @@ run-request-api: $(AUTH_FILE)
 	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
 
-# make a demo Roslin input.json file from the template fixture;
+# make a demo Argos input.json file from the template fixture;
 # need to update the fixture with the app ID of the demo pipeline that was loaded in the database
-INPUT_TEMPLATE:=fixtures/tests/juno_roslin_demo2.pipeline_input.json
+INPUT_TEMPLATE:=fixtures/tests/juno_argos_demo2.pipeline_input.json
 DEMO_INPUT:=input.json
 $(DEMO_INPUT): $(INPUT_TEMPLATE) $(AUTH_FILE)
 	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	$(MAKE) check-dev-pipeline-registered && \
 	{ \
 	appid=$$(curl --silent -H "Content-Type: application/json" -X GET -H "Authorization: Bearer $$token" http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ | jq -r --exit-status '.results | .[] | select(.name | contains("$(DEVNAME)")) | .id' ) && \
-	jq --arg appid "$$appid" '.app = $$appid' fixtures/tests/juno_roslin_demo2.pipeline_input.json > $(DEMO_INPUT) ; \
+	jq --arg appid "$$appid" '.app = $$appid' fixtures/tests/juno_argos_demo2.pipeline_input.json > $(DEMO_INPUT) ; \
 	} || { echo ">>> input didnt work" ; exit 1; }
 .PHONY: $(DEMO_INPUT)
 
-# submit a demo Roslin run using the dev Roslin pipeline entry in the database
+# submit a demo Argos run using the dev Argos pipeline entry in the database
 demo-run: register-dev-pipeline $(DEMO_INPUT)
-	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
-	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
-	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
+	@python manage.py loaddata fixtures/tests/juno_argos_demo2.file.json
+	@python manage.py loaddata fixtures/tests/juno_argos_demo2.filemetadata.json
+	@python manage.py loaddata fixtures/tests/argos_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
 
 # check if the ports needed for services and servers are already in use on this system

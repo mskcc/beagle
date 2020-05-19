@@ -59,7 +59,7 @@
             "created_date": "2019-10-24T00:23:34.737Z",
             "modified_date": "2019-10-24T00:23:34.738Z",
             "file_name": "AgilentExon_v2_b37_baits.ilist",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
             "file_type": 7,
             "size": 7297884,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -87,7 +87,7 @@
             "created_date": "2019-10-24T00:23:35.220Z",
             "modified_date": "2019-10-24T00:23:35.220Z",
             "file_name": "AgilentExon_v2_b37_targets.ilist",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist",
             "file_type": 7,
             "size": 7297884,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -115,7 +115,7 @@
             "created_date": "2019-10-24T00:23:33.928Z",
             "modified_date": "2019-10-24T00:23:33.928Z",
             "file_name": "AgilentExon_v2_FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 99137,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -495,7 +495,7 @@
             "created_date": "2019-12-09T23:31:22.151Z",
             "modified_date": "2019-12-09T23:31:22.151Z",
             "file_name": "hotspot-list-union-v1-v2.maf",
-            "path": "/juno/work/ci/resources/roslin-qc/hotspot-list-union-v1-v2.maf",
+            "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
             "file_type": 24,
             "size": 624846,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1869,7 +1869,7 @@
             "created_date": "2019-10-24T00:23:28.565Z",
             "modified_date": "2019-10-24T00:23:28.565Z",
             "file_name": "picard_baits.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
             "file_type": 7,
             "size": 332599,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1897,7 +1897,7 @@
             "created_date": "2019-10-24T00:23:26.309Z",
             "modified_date": "2019-10-24T00:23:26.309Z",
             "file_name": "picard_baits.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_baits.interval_list",
             "file_type": 7,
             "size": 294464,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1925,7 +1925,7 @@
             "created_date": "2019-10-24T00:23:27.437Z",
             "modified_date": "2019-10-24T00:23:27.437Z",
             "file_name": "picard_baits.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_baits.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_baits.interval_list",
             "file_type": 7,
             "size": 278804,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1938,7 +1938,7 @@
             "created_date": "2019-10-24T00:23:26.600Z",
             "modified_date": "2019-10-24T00:23:26.600Z",
             "file_name": "picard_targets.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_targets.interval_list",
             "file_type": 7,
             "size": 157824,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1966,7 +1966,7 @@
             "created_date": "2019-10-24T00:23:27.688Z",
             "modified_date": "2019-10-24T00:23:27.688Z",
             "file_name": "picard_targets.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_targets.interval_list",
             "file_type": 7,
             "size": 175270,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1994,7 +1994,7 @@
             "created_date": "2019-10-24T00:23:28.892Z",
             "modified_date": "2019-10-24T00:23:28.892Z",
             "file_name": "picard_targets.interval_list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
             "file_type": 7,
             "size": 198736,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2050,7 +2050,7 @@
             "created_date": "2019-10-24T00:23:26.017Z",
             "modified_date": "2019-10-24T00:23:26.017Z",
             "file_name": "FP_tiling_intervals.list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
             "file_type": 7,
             "size": 21700,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2078,7 +2078,7 @@
             "created_date": "2019-10-24T00:23:27.113Z",
             "modified_date": "2019-10-24T00:23:27.113Z",
             "file_name": "FP_tiling_intervals.list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
             "file_type": 7,
             "size": 21700,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2106,7 +2106,7 @@
             "created_date": "2019-10-24T00:23:28.279Z",
             "modified_date": "2019-10-24T00:23:28.279Z",
             "file_name": "FP_tiling_intervals.list",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
             "file_type": 7,
             "size": 21700,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2162,7 +2162,7 @@
             "created_date": "2019-10-24T00:23:22.167Z",
             "modified_date": "2019-10-24T00:23:22.167Z",
             "file_name": "FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 38179,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2190,7 +2190,7 @@
             "created_date": "2019-10-24T00:23:25.702Z",
             "modified_date": "2019-10-24T00:23:25.702Z",
             "file_name": "FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 16088,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2218,7 +2218,7 @@
             "created_date": "2019-10-24T00:23:26.865Z",
             "modified_date": "2019-10-24T00:23:26.865Z",
             "file_name": "FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 16088,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2246,7 +2246,7 @@
             "created_date": "2019-10-24T00:23:27.976Z",
             "modified_date": "2019-10-24T00:23:27.976Z",
             "file_name": "FP_tiling_genotypes.txt",
-            "path": "/juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
             "file_type": 10,
             "size": 16088,
             "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
