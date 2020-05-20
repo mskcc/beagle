@@ -6,7 +6,7 @@ from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent
+from notifier.events import UploadAttachmentEvent, OperatorRequestEvent
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
@@ -125,7 +125,7 @@ class ArgosOperator(Operator):
         send_notification.delay(sample_data_clinical_event)
 
         self.evaluate_sample_errors(error_samples)
-        self.summarize_pairing_info(pairs)
+        self.summarize_pairing_info(argos_inputs)
 
         return argos_jobs
 
@@ -167,9 +167,15 @@ class ArgosOperator(Operator):
                 sample_name = i['sample_name']
                 matched_sample = i['matched_sample_name']
                 normal_request = i['normal_request']
-                s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request))
+                s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
 
-         self.send_message(s)
+        self.send_message(s)
+
+
+    def send_message(self, msg):
+        event = OperatorRequestEvent(self.job_group_id, msg)
+        e = event.to_dict()
+        send_notification.delay(e)
 
 
     def evaluate_sample_errors(self, error_samples):
@@ -188,8 +194,7 @@ class ArgosOperator(Operator):
         {error_sample_names}
         """
 
-        msg = msg.format(num_samples=str(len(samples)),
-                number_valid_inputs=str(number_of_inputs),
+        msg = msg.format(
                 number_of_errors=str(len(error_samples)),
                 error_sample_names='\n'.join(s))
 
@@ -197,5 +202,3 @@ class ArgosOperator(Operator):
 
         sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
-
-        self.write_to_file("error_sample_formatting.txt", "".join(unformatted_s))
