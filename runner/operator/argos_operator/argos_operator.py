@@ -130,7 +130,7 @@ class ArgosOperator(Operator):
         return argos_jobs
 
     def summarize_pairing_info(self, argos_inputs):
-        num_pairs = len(argos_inputs['pair'])
+        num_pairs = len(argos_inputs)
         num_dmp_normals = 0
         num_pooled_normals = 0
         num_outside_req = 0
