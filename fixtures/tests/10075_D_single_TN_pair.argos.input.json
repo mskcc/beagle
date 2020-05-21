@@ -32,7 +32,9 @@
                 ],
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-                "bwa_output": "s_C_8VK0V7_R001_d.bam"
+                "bwa_output": "s_C_8VK0V7_R001_d.bam",
+                "request_id": "10075_D",
+                "specimen_type": "Blood"
             },
             {
                 "ID": "s_C_8VK0V7_N001_d",
@@ -63,7 +65,8 @@
                 "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
                 "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
                 "bwa_output": "s_C_8VK0V7_N001_d.bam"
-            }
+                "request_id": "10075_D",
+                "specimen_type": "Blood"}
         ],
         "curated_bams": [
             {
