@@ -6,7 +6,7 @@ from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent
+from notifier.events import UploadAttachmentEvent, OperatorRequestEvent
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
@@ -124,4 +124,81 @@ class ArgosOperator(Operator):
                                                            data_clinical).to_dict()
         send_notification.delay(sample_data_clinical_event)
 
+        self.evaluate_sample_errors(error_samples)
+        self.summarize_pairing_info(argos_inputs)
+
         return argos_jobs
+
+    def summarize_pairing_info(self, argos_inputs):
+        num_pairs = len(argos_inputs)
+        num_dmp_normals = 0
+        num_pooled_normals = 0
+        num_outside_req = 0
+        num_within_req = 0
+        other_requests_matched = list()
+        for i, job in enumerate(argos_inputs):
+            tumor = job['pair'][0]
+            normal = job['pair'][1]
+            req_t = tumor['request_id']
+            req_n = normal['request_id']
+            specimen_type_n = normal['specimen_type']
+            if specimen_type_n.lower() in "DMP Normal".lower():
+                num_dmp_normals += 1
+            elif specimen_type_n.lower() in "Pooled Normal".lower():
+                num_pooled_normals += 1
+            elif req_t.strip() != req_n.strip():
+                num_outside_req += 1
+                data = dict()
+                data['sample_name'] = tumor['ID']
+                data['matched_sample_name'] = normal['ID']
+                data['normal_request'] = req_n
+                other_requests_matched.append(data)
+            else:
+                num_within_req += 1
+        s = "Number of pairs: %i\n\n" % num_pairs
+        s += "%i samples matched with DMP Normal\n" % num_dmp_normals
+        s += "%i samples matched with pooled normals\n" % num_pooled_normals
+        s += "%i samples matched with normal from different request" % num_outside_req
+
+        if num_outside_req > 0:
+            s += "\n\nMatched samples fom different request\n"
+            s += "| Sample Name | Matched Normal | Request Normal |\n"
+            for i in other_requests_matched:
+                sample_name = i['sample_name']
+                matched_sample = i['matched_sample_name']
+                normal_request = i['normal_request']
+                s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
+
+        self.send_message(s)
+
+
+    def send_message(self, msg):
+        event = OperatorRequestEvent(self.job_group_id, msg)
+        e = event.to_dict()
+        send_notification.delay(e)
+
+
+    def evaluate_sample_errors(self, error_samples):
+        s = list()
+        unformatted_s = list()
+        unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
+        for sample in error_samples:
+            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
+            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
+
+        msg = """
+        Number of samples with error: {number_of_errors}
+
+        Error samples (also see error_sample_formatting.txt):
+        | IGO Sample ID | Sample Name / Error | Patient ID | Specimen Type |
+        {error_sample_names}
+        """
+
+        msg = msg.format(
+                number_of_errors=str(len(error_samples)),
+                error_sample_names='\n'.join(s))
+
+        self.send_message(msg)
+
+        sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
+        send_notification.delay(sample_errors_event)
