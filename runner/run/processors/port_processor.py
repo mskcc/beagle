@@ -83,6 +83,9 @@ class PortProcessor(object):
     def _update_location_to_bid(val, file_list):
         file_obj = copy.deepcopy(val)
         location = val.get('location')
+        if not location and val.get('contents'):
+            logger.debug("Processing file literal %s", str(val))
+            return val
         bid = FileProcessor.get_file_id(location)
         file_obj['location'] = 'bid://%s' % bid
         secondary_files = file_obj.pop('secondaryFiles', [])
@@ -102,7 +105,10 @@ class PortProcessor(object):
     @staticmethod
     def _convert_to_path(val):
         file_obj = copy.deepcopy(val)
-        location = file_obj.pop('location')
+        location = file_obj.pop('location', None)
+        if not location and val.get('contents'):
+            logger.debug("Processing file literal %s", str(val))
+            return val
         try:
             path = FileProcessor.get_file_path(location)
         except FileHelperException as e:
@@ -152,13 +158,13 @@ class PortProcessor(object):
     @staticmethod
     def _register_file(val, size, group_id, metadata, file_list):
         file_obj = copy.deepcopy(val)
-        file_obj.pop("checksum", None)
         file_obj.pop("basename", None)
         file_obj.pop("nameroot", None)
         file_obj.pop("nameext", None)
         uri = file_obj.pop('location', None)
+        checksum = file_obj.pop("checksum", None)
         try:
-            file_obj_db = FileProcessor.create_file_obj(uri, size, group_id, metadata)
+            file_obj_db = FileProcessor.create_file_obj(uri, size, checksum, group_id, metadata)
         except FileConflictException as e:
             logger.warning(str(e))
             file_obj_db = FileProcessor.get_file_obj(uri)
@@ -184,6 +190,8 @@ class PortProcessor(object):
         uri = val.get('location')
         path = FileProcessor.parse_path_from_uri(uri)
         file_name = os.path.basename(path)
-        event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
-        send_notification.delay(event.to_dict())
+        if job_group:
+            event = UploadAttachmentEvent(str(job_group.id), file_name, path, download=True)
+            send_notification.delay(event.to_dict())
+        logger.info("Can't upload file:%s. JobGroup not specified", path)
         return val
