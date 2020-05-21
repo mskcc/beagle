@@ -136,9 +136,9 @@ class ArgosOperator(Operator):
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
-        for pair in argos_inputs['pair']:
-            tumor = pair[0]
-            normal = pair[1]
+        for i, job in enumerate(argos_inputs)):
+            tumor = job['pair'][0]
+            normal = job['pair'][1]
             req_t = tumor['request_id']
             req_n = normal['request_id']
             specimen_type_n = normal['specimen_type']
@@ -149,8 +149,8 @@ class ArgosOperator(Operator):
             elif req_t.strip() != req_n.strip():
                 num_outside_req += 1
                 data = dict()
-                data['sample_name'] = tumor['sample_name']
-                data['matched_sample_name'] = normal['sample_name']
+                data['sample_name'] = tumor['SM']
+                data['matched_sample_name'] = normal['SM']
                 data['normal_request'] = req_n
                 other_requests_matched.append(data)
             else:
