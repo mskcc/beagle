@@ -39,6 +39,8 @@ def format_sample(data):
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
     sample['bwa_output'] = sample['ID'] + '.bam'
+    sample['request_id'] = request_id
+
 
     r1 = 'R1'
     r2 = 'R2'
@@ -72,6 +74,7 @@ def construct_argos_jobs(samples):
         normal_sample = format_sample(normal)
         tumor_sample = format_sample(tumor)
         job['pair'] = [tumor_sample, normal_sample]
+        job['pair_raw'] = [tumor, normal]
         job['assay'] = assay
         job['pi'] = pi
         job['pi_email'] = pi_email
