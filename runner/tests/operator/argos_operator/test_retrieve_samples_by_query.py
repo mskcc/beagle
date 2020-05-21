@@ -158,7 +158,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             'bait_set': 'IMPACT468_BAITS',
             'sample_id': 's_C_8VK0V7_N901_dZ_IM6',
             'run_date': [''],
-            'specimen_type': '',
+            'specimen_type': 'DMP Normal',
             'R1': [],
             'R2': [],
             'R1_bid': [],
@@ -435,7 +435,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             'bait_set': 'IMPACT468',
             'sample_id': 'PN_Frozen',
             'run_date': [''],
-            'specimen_type': '',
+            'specimen_type': 'Pooled Normal',
             'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
             'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
             'R1_bid': [],  # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
