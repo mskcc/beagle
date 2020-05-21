@@ -1,5 +1,6 @@
 import os
 from uuid import UUID
+import json
 from django.test import TestCase
 from django.db.models import Prefetch, Q
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_dmp_query
@@ -8,6 +9,7 @@ from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_poo
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_run_id_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_preservation_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_descriptor
+from runner.tests.operator.argos_operator.test_pair_request import UUIDEncoder
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -19,6 +21,7 @@ class TestRetrieveSamplesByQuery(TestCase):
     "file_system.filetype.json",
     "file_system.storage.json"
     ]
+
 
     def test_build_dmp_query1(self):
         """
@@ -111,7 +114,7 @@ class TestRetrieveSamplesByQuery(TestCase):
                 "imported": "2020-03-25T19:45:16.421137Z",
                 "cmo_assay": "IMPACT468",
                 "tumor_type": "MBC",
-                "external_id": "C-8VK0V7-N901-dZ-IM6",
+                "external_id": "s_C_8VK0V7_N901_dZ_IM6",
                 "sample_type": "0",
                 "tissue_type": "Breast",
                 "primary_site": "Breast",
@@ -146,16 +149,16 @@ class TestRetrieveSamplesByQuery(TestCase):
             'CN': 'MSKCC',
             'PL': 'Illumina',
             'PU': ['DMP_FCID_DMP_BARCODEIDX'],
-            'LB': 'C-8VK0V7-N901-dZ-IM6_1',
+            'LB': 's_C_8VK0V7_N901_dZ_IM6_1',
             'tumor_type': 'Normal',
-            'ID': ['C-8VK0V7-N901-dZ-IM6_DMP_FCID_DMP_BARCODEIDX'],
-            'SM': 'C-8VK0V7-N901-dZ-IM6',
+            'ID': ['s_C_8VK0V7_N901_dZ_IM6_DMP_FCID_DMP_BARCODEIDX'],
+            'SM': 's_C_8VK0V7_N901_dZ_IM6',
             'species': '',
             'patient_id': 'C-8VK0V7',
             'bait_set': 'IMPACT468_BAITS',
-            'sample_id': 'C-8VK0V7-N901-dZ-IM6',
+            'sample_id': 's_C_8VK0V7_N901_dZ_IM6',
             'run_date': [''],
-            'specimen_type': '',
+            'specimen_type': 'DMP Normal',
             'R1': [],
             'R2': [],
             'R1_bid': [],
@@ -165,7 +168,7 @@ class TestRetrieveSamplesByQuery(TestCase):
                 # mock the UUID for testing since it will be different every time
                 "deletemeplease"
                 ],
-            'request_id': 'C-8VK0V7-N901-dZ-IM6',
+            'request_id': 's_C_8VK0V7_N901_dZ_IM6',
             'pi': '',
             'pi_email': '',
             'run_id': [''],
@@ -177,6 +180,8 @@ class TestRetrieveSamplesByQuery(TestCase):
         dmp_normal.pop('bam_bid')
         expected_dmp_normal.pop('bam_bid')
 
+        print("Running test_get_dmp_normal1: dmp normal ---\n", json.dumps(dmp_normal, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: expected dmp normal ---\n", json.dumps(expected_dmp_normal, cls=UUIDEncoder))
         self.assertEqual(dmp_normal, expected_dmp_normal)
 
     def test_build_run_id_query(self):
@@ -421,23 +426,23 @@ class TestRetrieveSamplesByQuery(TestCase):
             'CN': 'MSKCC',
             'PL': 'Illumina',
             'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
-            'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+            'LB': 'PN_Frozen_1',
             'tumor_type': 'Normal',
-            'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
-            'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'ID': ['PN_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
+            'SM': 'PN_Frozen',
             'species': '',
             'patient_id': 'PN_PATIENT_ID',
             'bait_set': 'IMPACT468',
-            'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'sample_id': 'PN_Frozen',
             'run_date': [''],
-            'specimen_type': '',
+            'specimen_type': 'Pooled Normal',
             'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
             'R2': ['/FROZENPOOLEDNORMAL.R2.fastq'],
             'R1_bid': [],  # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
             'R2_bid': [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
             'bam': [],
             'bam_bid': [],
-            'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+            'request_id': 'PN_Frozen',
             'pi': '',
             'pi_email': '',
             'run_id': [''],

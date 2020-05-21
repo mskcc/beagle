@@ -39,6 +39,9 @@ def format_sample(data):
     sample['adapter'] = 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG'
     sample['adapter2'] = 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT'
     sample['bwa_output'] = sample['ID'] + '.bam'
+    sample['request_id'] = data['request_id']
+    sample['specimen_type'] = data['specimen_type']
+
 
     r1 = 'R1'
     r2 = 'R2'
