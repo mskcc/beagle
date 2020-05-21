@@ -8,6 +8,7 @@ from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_poo
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_run_id_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_preservation_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_descriptor
+from test_pair_request import UUIDEncoder
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -178,6 +179,8 @@ class TestRetrieveSamplesByQuery(TestCase):
         dmp_normal.pop('bam_bid')
         expected_dmp_normal.pop('bam_bid')
 
+        print("Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertEqual(dmp_normal, expected_dmp_normal)
 
     def test_build_run_id_query(self):
