@@ -129,16 +129,16 @@ class ArgosOperator(Operator):
 
         return argos_jobs
 
-    def summarize_pairing_info(self, pairs):
-        num_pairs = len(pairs)
+    def summarize_pairing_info(self, argos_inputs):
+        num_pairs = len(argos_inputs['pair'])
         num_dmp_normals = 0
         num_pooled_normals = 0
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
-        for pair in pairs:
+        for pair in argos_inputs['pair']:
             tumor = pair[0]
-            normal = pair[0]
+            normal = pair[1]
             req_t = tumor['request_id']
             req_n = normal['request_id']
             specimen_type_n = normal['specimen_type']
