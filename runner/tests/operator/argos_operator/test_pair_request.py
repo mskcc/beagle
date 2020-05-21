@@ -754,8 +754,6 @@ class TestPairRequest(TestCase):
             }
         )
 
-        # test that the Frozen Pooled Normal is found
-        print("printing samples before it gets compiled for failing test\n", samples)
         pairs = compile_pairs(samples)
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -777,14 +775,14 @@ class TestPairRequest(TestCase):
                 'CN': 'MSKCC',
                 'PL': 'Illumina',
                 'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
-                'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+                'LB': 'PN_Frozen_1',
                 'tumor_type': 'Normal',
-                'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
-                'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'ID': ['PN_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
+                'SM': 'PN_Frozen',
                 'species': '',
                 'patient_id': 'PN_PATIENT_ID',
                 'bait_set': 'IMPACT468',
-                'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'sample_id': 'PN_Frozen',
                 'run_date': [''],
                 'specimen_type': '',
                 'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
@@ -793,13 +791,15 @@ class TestPairRequest(TestCase):
                 'R2_bid': [],  # UUID('51232bdd-6b31-4a4d-80c4-3aef13965fcd')
                 'bam': [],
                 'bam_bid': [],
-                'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'request_id': 'PN_Frozen',
                 'pi': '',
                 'pi_email': '',
                 'run_id': [''],
                 'preservation_type': [['Frozen']]
             }]
         }
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
         # Add a DMP Bam for the tumor sample to the database
