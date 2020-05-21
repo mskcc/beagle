@@ -42,6 +42,7 @@ class JobViewSet(mixins.CreateModelMixin,
         serializer = JobQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Job, request.query_params)
+            queryset = time_filter(Job, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_group = fixed_query_params.get('job_group')
             if job_group:
                 queryset = queryset.filter(job_group__in=job_group).all()
