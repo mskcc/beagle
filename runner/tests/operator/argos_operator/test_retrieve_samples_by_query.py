@@ -180,8 +180,8 @@ class TestRetrieveSamplesByQuery(TestCase):
         dmp_normal.pop('bam_bid')
         expected_dmp_normal.pop('bam_bid')
 
-        print("Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
-        print("Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: dmp normal ---\n", json.dumps(dmp_normal, cls=UUIDEncoder))
+        print("Running test_get_dmp_normal1: expected dmp normal ---\n", json.dumps(expected_dmp_normal, cls=UUIDEncoder))
         self.assertEqual(dmp_normal, expected_dmp_normal)
 
     def test_build_run_id_query(self):
