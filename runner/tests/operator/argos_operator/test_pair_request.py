@@ -791,6 +791,7 @@ class TestPairRequest(TestCase):
                 'R2_bid': [],  # UUID('51232bdd-6b31-4a4d-80c4-3aef13965fcd')
                 'bam': [],
                 'bam_bid': [],
+                'specimen_type': 'Pooled Normal',
                 'request_id': 'PN_Frozen',
                 'pi': '',
                 'pi_email': '',
@@ -871,7 +872,7 @@ class TestPairRequest(TestCase):
                 'bait_set': 'IMPACT468_BAITS',
                 'sample_id': 'C-8VK0V7-N901-dZ-IM6',
                 'run_date': [''],
-                'specimen_type': '',
+                'specimen_type': 'DMP Normal',
                 'R1': [],
                 'R2': [],
                 'R1_bid': [],
@@ -885,8 +886,6 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['']
             }]
         }
-        print("Running test_get_dmp_normal1: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
-        print("Running test_get_dmp_normal1: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
 
         # remove the bam_bid for testing because it is non-deterministic
         # TODO: mock this ^^
