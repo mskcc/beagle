@@ -136,7 +136,7 @@ class ArgosOperator(Operator):
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
-        for i, job in enumerate(argos_inputs)):
+        for i, job in enumerate(argos_inputs):
             tumor = job['pair'][0]
             normal = job['pair'][1]
             req_t = tumor['request_id']
