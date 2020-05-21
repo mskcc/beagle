@@ -68,8 +68,12 @@ def request_callback(request_id, job_group=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
     assays = Assay.objects.first()
-    recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
-    if recipes[0] not in assays.all:
+    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, ret='recipe').all())
+    if not recipes:
+        raise FailedToSubmitToOperatorException(
+           "Not enough metadata to choose the operator for requestId:%s" % request_id)
+
+    if not all(item in assays.all for item in recipes):
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
@@ -77,40 +81,36 @@ def request_callback(request_id, job_group=None):
         unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
-    if recipes[0] in assays.disabled:
+    if any(item in assays.disabled for item in recipes):
         not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(not_for_ci)
         disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
 
-    if not recipes:
-        raise FailedToSubmitToOperatorException(
-           "Not enough metadata to choose the operator for requestId:%s" % request_id)
-    try:
-        operator = Operator.objects.get(
-            recipes__contains=[recipes[0]]
-        )
-    except Operator.DoesNotExist:
-        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes[0])
+    operators = Operator.objects.filter(recipes__overlap=recipes)
+
+    if not operators:
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes)
         logger.error(msg)
         e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException(msg)
-    if not operator.active:
-        msg = "Operator not active: %s" % operator.class_name
-        logger.info(msg)
-        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
-        send_notification.delay(e)
-        error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
-        send_notification.delay(error_label)
-        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
-        send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException(msg)
-    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-    create_jobs_from_request.delay(request_id, operator.id, job_group_id)
+    for operator in operators:
+        if not operator.active:
+            msg = "Operator not active: %s" % operator.class_name
+            logger.info(msg)
+            e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
+            send_notification.delay(e)
+            error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
+            send_notification.delay(error_label)
+            ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+            send_notification.delay(ci_review_e)
+            raise FailedToSubmitToOperatorException(msg)
+        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+        create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
 
 
@@ -322,6 +322,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
 
 
 def validate_sample(sample_id, libraries, igocomplete):
+    conflict = False
     missing_fastq = False
     invalid_number_of_fastq = False
     failed_runs = []
@@ -361,6 +362,12 @@ def validate_sample(sample_id, libraries, igocomplete):
     if invalid_number_of_fastq:
         raise FailedToFetchFilesException(
             "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
+    if conflict:
+        res_str = ""
+        for f in conflict_files:
+            res_str += "%s: %s" % (f[0], f[1])
+        raise FailedToFetchFilesException(
+            "Conflict of fastq file(s) %s" % res_str)
 
 
 def R1_or_R2(filename):
@@ -452,7 +459,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
             except FailedToCalculateChecksum as e:
                 logger.info("Failed to calculate checksum. Error:%s", f.path)
             else:
-                f.checksum = None
+                f.checksum = checksum
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
