@@ -33,6 +33,8 @@ class TestPairRequest(TestCase):
         "file_system.storage.json"
     ]
 
+    self.maxDiff = None
+
     def test_validate_test_db_files(self):
         """
         Sanity check
