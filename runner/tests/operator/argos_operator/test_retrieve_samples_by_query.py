@@ -1,5 +1,6 @@
 import os
 from uuid import UUID
+import json
 from django.test import TestCase
 from django.db.models import Prefetch, Q
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_dmp_query
