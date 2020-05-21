@@ -73,7 +73,7 @@ class TestRunAPIList(APITestCase):
         self.assertEqual(response.json()['count'], 2)
 
     def test_date(self):
-        url = self.api_root + '?created_after=2019-10-08T22:59:41.044Z'
+        url = self.api_root + '?created_date_gt=2019-10-08T00:00'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['count'], 7)
