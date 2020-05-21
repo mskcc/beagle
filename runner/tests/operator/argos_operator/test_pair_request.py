@@ -799,8 +799,8 @@ class TestPairRequest(TestCase):
                 'preservation_type': [['Frozen']]
             }]
         }
-        print("Running test_compile_pairs_pooled_normal_and_dmp_bam: pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
-        print("Running test_compile_pairs_pooled_normal_and_dmp_bam: expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (pn part): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (pn part): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
         # Add a DMP Bam for the tumor sample to the database
@@ -891,6 +891,8 @@ class TestPairRequest(TestCase):
         # TODO: mock this ^^
         pairs['normal'][0]['bam_bid'].pop()
 
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (dmp part): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (dmp part): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
         # Now add a matched normal to the original request for the sample
@@ -1015,6 +1017,9 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['Frozen']
             }]
         }
+
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (third variation): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (third variation): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
     def test_compile_pairs_custom1(self):
