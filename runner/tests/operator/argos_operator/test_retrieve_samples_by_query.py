@@ -8,7 +8,7 @@ from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_poo
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_run_id_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_preservation_query
 from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_descriptor
-from test_pair_request import UUIDEncoder
+from runner.tests.operator.argos_operator.test_pair_request import UUIDEncoder
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
