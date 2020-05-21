@@ -58,16 +58,13 @@ class RunApiViewSet(mixins.ListModelMixin,
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Run, fixed_query_params)
+            queryset = time_filter(Run, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_groups = fixed_query_params.get('job_groups')
             jira_ids = fixed_query_params.get('jira_ids')
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
             request_ids = fixed_query_params.get('request_ids')
-            created_before = fixed_query_params.get('created_before')
-            created_after = fixed_query_params.get('created_after')
-            modified_before = fixed_query_params.get('modified_before')
-            modified_after = fixed_query_params.get('modified_after')
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups).all()
             if jira_ids:
@@ -89,14 +86,6 @@ class RunApiViewSet(mixins.ListModelMixin,
                         status=status.HTTP_400_BAD_REQUEST)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids).all()
-            if created_after:
-                queryset = queryset.filter(created_date__gte=created_after).all()
-            if created_before:
-                queryset = queryset.filter(created_date__lte=created_before).all()
-            if modified_after:
-                queryset = queryset.filter(modified_date__gte=created_after).all()
-            if modified_before:
-                queryset = queryset.filter(modified_date__lte=created_after).all()
             try:
                 page = self.paginate_queryset(queryset)
             except ValidationError as e:
