@@ -20,7 +20,6 @@ class TestRetrieveSamplesByQuery(TestCase):
     "file_system.storage.json"
     ]
 
-    assert_equal.__self__.maxDiff = None
 
     def test_build_dmp_query1(self):
         """
