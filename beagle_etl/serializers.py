@@ -34,6 +34,9 @@ class JobQuerySerializer(serializers.Serializer):
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
 
 class CreateJobSerializier(serializers.ModelSerializer):
