@@ -5,7 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunCompletedEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
+from notifier.events import RunCompletedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
@@ -147,6 +147,8 @@ def process_triggers():
                 else:
                     operator_run.fail()
                     if job_group_id:
+                        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] Operator Run %s failed" % str(operator_run.id)).to_dict()
+                        send_notification.delay(e)
                         ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
                         send_notification.delay(ci_review_event)
 

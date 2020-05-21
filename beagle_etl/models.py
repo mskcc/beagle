@@ -4,6 +4,7 @@ from notifier.models import JobGroup
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 
+
 class JobStatus(IntEnum):
     CREATED = 0
     IN_PROGRESS = 1
@@ -31,6 +32,19 @@ class Job(BaseModel):
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
+    @property
+    def is_locked(self):
+        self.refresh_from_db()
+        return self.lock
+
+    def lock_job(self):
+        self.lock = True
+        self.save()
+
+    def unlock_job(self):
+        self.lock = False
+        self.save()
+
 
 class Operator(models.Model):
     slug = models.CharField(max_length=100, default=False)
@@ -40,3 +54,8 @@ class Operator(models.Model):
 
     def __str__(self):
         return u"{}".format(self.slug)
+
+
+class Assay(models.Model):
+    all = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    disabled = ArrayField(models.CharField(max_length=100), null=True, blank=True)

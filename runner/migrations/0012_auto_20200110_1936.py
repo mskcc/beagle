@@ -16,6 +16,10 @@ def extract_request_id_from_filename(name):
         request = name.split(' ')[1]
         request = request.split(',')[0]
         return request
+    elif name.startswith('ARGOS'):
+        request = name.split(' ')[1]
+        request = request.split(',')[0]
+        return request
     return None
 
 

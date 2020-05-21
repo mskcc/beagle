@@ -1,5 +1,5 @@
 """
-Test for constructing Roslin pair and jobs
+Test for constructing Argos pair and jobs
 """
 import os
 import json
@@ -53,7 +53,12 @@ class TestCopyOutputs(TestCase):
         for single_field in input_json:
             if single_field == 'project_prefix':
                 continue # test is failing for this value because project_prefix isn't actually a lis
-            if single_field != 'facets':
+            elif single_field == 'meta':
+                if not len(input_json[single_field]) == 3:
+                    return False
+                else:
+                    continue
+            elif single_field != 'facets':
                 if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_file_obj_valid):
                     print("Error at %s", single_field)
                     return False
