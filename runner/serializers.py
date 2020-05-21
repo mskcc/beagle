@@ -37,11 +37,12 @@ class RunApiListSerializer(serializers.Serializer):
         required=False
     )
 
-    created_before = serializers.DateTimeField(required=False)
-    created_after = serializers.DateTimeField(required=False)
-    modified_before = serializers.DateTimeField(required=False)
-    modified_after = serializers.DateTimeField(required=False)
-
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
