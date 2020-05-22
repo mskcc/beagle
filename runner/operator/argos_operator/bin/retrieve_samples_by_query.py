@@ -90,7 +90,7 @@ def build_preservation_query(data):
         value = "FFPE"
     # case-insensitive matching
     query = Q(metadata__preservation__iexact=value)
-    return query, value
+    return query
 
 
 def get_pooled_normals(run_ids, preservation_types, bait_set):
@@ -101,7 +101,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
     run_id_query = build_run_id_query(run_ids)
-    preservation_query, sample_name_suffix = build_preservation_query(preservation_types)
+    preservation_query = build_preservation_query(preservation_types)
 
     q = query & run_id_query & preservation_query
 
@@ -117,8 +117,14 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
     sample_files = list()
-    sample_name = "PN_%s" % sample_name_suffix
- 
+
+    # sample_name is PN_FROZEN unless FFPE is in any of the preservation types
+    # in preservation_types
+    preservations_lower_case = set([x.lower() for x in preservation_types])
+    sample_name = "PN_FROZEN"
+    if "ffpe" in preservations_lower_case:
+        sample_name = "PN_FFPE"
+
     specimen_type = 'Pooled Normal'
     num_of_pooled_normals = len(pooled_normals)
     if num_of_pooled_normals > 0:
