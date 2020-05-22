@@ -6,6 +6,7 @@ from celery import shared_task
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs import TYPES
 from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.exceptions import ETLExceptions
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 # from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
@@ -74,9 +75,13 @@ class JobObject(object):
                 self._process()
                 self.job.status = JobStatus.WAITING_FOR_CHILDREN
             except Exception as e:
+                if isinstance(e, ETLExceptions):
+                    message = {"message": str(e), "code": e.code}
+                else:
+                    message = {'message': str(e)}
                 if self.job.retry_count == self.job.max_retry:
                     self.job.status = JobStatus.FAILED
-                    self.job.message = {"details": "Error: %s" % str(e)}
+                    self.job.message = message
                     self._job_failed()
                     traceback.print_tb(e.__traceback__)
 
