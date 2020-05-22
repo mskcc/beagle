@@ -4,10 +4,9 @@ import logging
 import requests
 from django.conf import settings
 from django.db.models import Prefetch
-from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, ETLJobCreatedEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator, Assay
+from beagle_etl.models import JobStatus, Job, Operator, Assay, JobGroup
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -19,6 +18,7 @@ from runner.operator.argos_operator.bin.make_sample import format_sample_name
 
 logger = logging.getLogger(__name__)
 
+#from beagle_etl.jobs.lims_etl_jobs import fetch_samples
 
 TYPES = {
     "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
@@ -53,9 +53,7 @@ def get_or_create_request_job(request_id):
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
     if not job:
-        job_group = JobGroup()
-        job_group.save()
-        notifier_start(job_group, request_id)
+        job_group = notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
@@ -160,8 +158,12 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
             job = get_or_create_pooled_normal_job(f, jg)
             children.add(str(job.id))
     logger.info("Response: %s" % str(sampleIds.json()))
+    #  from beagle_etl.jobs.lims_etl_jobs import fetch_samples
+    #  fetch_samples("06714_C", job_group="4c2484c3-f8f4-47bc-8275-802f0eba0931")
     if import_samples:
+        print("If import Samples!!!!!!!!")
         for sample in response_body.get('samples', []):
+            print("Sample Loop")
             if not sample:
                 raise FailedToFetchFilesException("Sample Id None")
             job = get_or_create_sample_job(sample['igoSampleId'],
@@ -206,8 +208,8 @@ def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadat
                   job_group=job_group)
         job.save()
     if job_group:
-        e = ETLJobCreatedEvent(job_group.id, sample_id, request_id, request_metadata)
-        send_notification.delay(e)
+        e = ETLJobCreatedEvent(job_group.id, sample_id, request_id, request_metadata).to_dict()
+        send_notification(e)
     return job
 
 

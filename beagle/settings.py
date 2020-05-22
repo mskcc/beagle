@@ -317,7 +317,7 @@ LOGGING = {
 
 SUPPORTED_NOTIFIERS = ('JIRA', 'SEQOSYSTEM', 'NONE')
 
-NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "NONE").split(',')
+NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "SEQOSYSTEM").split(',')
 for n in NOTIFIERS:
     if n not in SUPPORTED_NOTIFIERS:
         raise Exception("Invalid Notifier type")

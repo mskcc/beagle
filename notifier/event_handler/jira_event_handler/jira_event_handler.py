@@ -47,7 +47,7 @@ class JiraEventHandler(EventHandler):
     def process_operator_error_event(self, event):
         self._add_comment_event(event)
 
-    def process_etl_job_imported_event(self, event):
+    def process_etl_job_created_event(self, event):
         pass
 
     def process_assay_event(self, event):

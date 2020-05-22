@@ -16,7 +16,7 @@ class ETLJobCreatedEvent(Event):
 
     @classmethod
     def get_method(cls):
-        return "process_etl_job_imported_event"
+        return "process_etl_job_created_event"
 
     def __str__(self):
         return "Sample: {}, Request: {}".format(self.sample_id, self.request_id)

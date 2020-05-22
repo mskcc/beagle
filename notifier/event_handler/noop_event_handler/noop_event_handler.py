@@ -22,7 +22,7 @@ class NoOpEventHandler(EventHandler):
     def process_etl_set_recipe_event(self, event):
         pass
 
-    def process_etl_job_imported_event(self, event):
+    def process_etl_job_created_event(self, event):
         pass
 
     def process_operator_request_event(self, event):
