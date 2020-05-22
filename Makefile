@@ -183,10 +183,10 @@ export BEAGLE_RUNNER_QUEUE:=beagle_runner_queue
 export BEAGLE_DEFAULT_QUEUE:=beagle_default_queue
 export BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
 # these environment variables are required for IGO LIMS access by Beagle (values not included here):
-export BEAGLE_LIMS_USERNAME=pms
-export BEAGLE_LIMS_PASSWORD=tiagostarbuckslightbike
+# export BEAGLE_LIMS_USERNAME=some_username
+# export BEAGLE_LIMS_PASSWORD=some_password
 # export BEAGLE_AUTH_LDAP_SERVER_URI=ldap_url_goes_here
-export BEAGLE_LIMS_URL=https://igolims.mskcc.org:8443
+# export BEAGLE_LIMS_URL=beagle_lims_url_goes_here
 
 # corresponds to ./conf/rabbitmq.conf ;
 export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
