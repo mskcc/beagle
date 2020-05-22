@@ -10,7 +10,7 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
 from beagle_etl.models import JobStatus, Job, Assay
-from beagle_etl.exceptions import FailedToFetchFilesException
+from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup
@@ -478,14 +478,15 @@ class TestImportSample(APITestCase):
     @patch('requests.get')
     def test_zero_fastq_files(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
-        with self.assertRaises(FailedToFetchFilesException) as e:
+        with self.assertRaises(ErrorInconsistentDataException) as e:
             fetch_sample_metadata('igoId_000', True, 'sampleName_000', {})
             self.assertTrue("Missing fastq files for igcomplete: " in str(e))
 
     @patch('requests.get')
     def test_zero_samples_igocomplete_false(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
-        fetch_sample_metadata('igoId_000', False, 'sampleName_000', {})
+        with self.assertRaises(MissingDataException):
+            fetch_sample_metadata('igoId_000', False, 'sampleName_000', {})
         count_files = FileRepository.all().count()
         self.assertEqual(count_files, 0)
 
@@ -516,7 +517,7 @@ class TestImportSample(APITestCase):
     @patch('requests.get')
     def test_invalid_number_of_fastq_files(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_1_fastq, status_code=200)
-        with self.assertRaises(FailedToFetchFilesException) as e:
+        with self.assertRaises(ErrorInconsistentDataException) as e:
             fetch_sample_metadata('igoId_001', True, 'sampleName_001', {})
             self.assertTrue('Odd number of fastq file(s) provided' in str(e))
         count_files = FileRepository.filter(path_in=[
@@ -533,7 +534,7 @@ class TestImportSample(APITestCase):
             )
         file_metadata = FileMetadata.objects.create(file=file_conflict, version=1, metadata={})
         mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
-        with self.assertRaises(FailedToFetchFilesException) as e:
+        with self.assertRaises(ErrorInconsistentDataException) as e:
             fetch_sample_metadata('igoId_002', True, 'sampleName_002', {})
             self.assertTrue('Conflict of fastq file(s)' in str(e))
         count_files = FileRepository.filter(path_in=[
