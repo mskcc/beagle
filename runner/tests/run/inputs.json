@@ -26,26 +26,26 @@
     },
     "hotspot_list_maf": {
       "class": "File",
-      "location": "juno:///resources/roslin-qc/hotspot-list-union-v1-v2.maf"
+      "location": "juno:///resources/qc_resources/hotspot-list-union-v1-v2.maf"
     },
     "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
     "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
     "fp_intervals": {
       "class": "File",
-      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals"
+      "location": "juno:///resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_intervals.intervals"
     },
     "fp_genotypes": {
       "class": "File",
-      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
+      "location": "juno:///resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt"
     },
     "bait_intervals": {
       "class": "File",
-      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist"
+      "location": "juno:///resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist"
     },
     "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
     "target_intervals": {
       "class": "File",
-      "location": "juno:///resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
+      "location": "juno:///resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
     },
     "refseq": {
       "class": "File",

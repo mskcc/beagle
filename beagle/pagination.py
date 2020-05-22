@@ -28,17 +28,27 @@ class BeaglePagination(PageNumberPagination):
         return self.page_size
 
 
-def time_filter(model, query_params):
-    if query_params.get('created_date.timedelta'):
-        time_threshold = datetime.now() - timedelta(hours=int(query_params['created_date.timedelta']))
-        queryset = model.objects.filter(created_date__gt=time_threshold).order_by('-created_date')
-    elif query_params.get('created_date.gt') or query_params.get('created_date.lt'):
-        if query_params.get('created_date.gt'):
-            time_gt = datetime.fromtimestamp(int(query_params['created_date.gt']))
-            queryset = model.objects.filter(created_date__gt=time_gt).order_by('-created_date')
-        if query_params.get('created_date.lt'):
-            time_lt = datetime.fromtimestamp(int(query_params['created_date.lt']))
-            queryset = model.objects.filter(created_date__lt=time_lt).order_by('-created_date')
+def time_filter(model, query_params,time_modal='created_date', previous_queryset=None):
+    timedelta_query = '%s_timedelta' % time_modal
+    gt_query = '%s_gt' % time_modal
+    gt_query_filter = '%s__gt' % time_modal
+    lt_query = '%s_lt' % time_modal
+    lt_query_filter = '%s__lt' % time_modal
+    order_by = '-%s' % time_modal
+    if query_params.get(timedelta_query):
+        time_threshold = datetime.now() - timedelta(hours=int(query_params[timedelta_query]))
+        queryset = model.objects.filter(**{gt_query_filter:time_threshold}).order_by(order_by)
+    elif query_params.get(gt_query) or query_params.get(lt_query):
+        if query_params.get(gt_query):
+            time_gt = query_params[gt_query]
+            queryset = model.objects.filter(**{gt_query_filter:time_gt}).order_by(order_by)
+        if query_params.get(lt_query):
+            time_lt = query_params[lt_query]
+            queryset = model.objects.filter(**{lt_query_filter:time_lt}).order_by(order_by)
+
     else:
-        queryset = model.objects.order_by('-created_date').all()
+        if previous_queryset != None:
+            queryset = previous_queryset
+        else:
+            queryset = model.objects.order_by(order_by).all()
     return queryset

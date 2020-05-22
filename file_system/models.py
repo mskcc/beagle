@@ -60,6 +60,7 @@ class FileGroup(BaseModel):
     def __str__(self):
         return u"{}".format(self.name)
 
+
 class FileGroupMetadata(BaseModel):
     file_group = models.ForeignKey(FileGroup, blank=False, null=False, on_delete=models.CASCADE)
     version = models.IntegerField()
@@ -72,6 +73,7 @@ class File(BaseModel):
     file_type = models.ForeignKey(FileType, null=True, on_delete=models.SET_NULL)
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
+    checksum = models.CharField(max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.size:
