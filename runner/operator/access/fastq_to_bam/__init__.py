@@ -77,7 +77,7 @@ class AccessFastqToBamOperator(Operator):
                         'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'tags': {'requestId': self.request_id}}
+                        'tags': {'requestId': self.request_id, 'sampleId': job.cmo_sample_name}}
                 ),
                 job
              )

@@ -1,6 +1,7 @@
 import logging
 from celery import shared_task
 from django.conf import settings
+from notifier.models import JobGroup
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 from notifier.event_handler.noop_event_handler.noop_event_handler import NoOpEventHandler
 from notifier.event_handler.seqosystem_event_handler.seqosystem_event_handler import SeqosystemEventHandler
@@ -20,22 +21,27 @@ def event_handler(handler_type):
     if handler_type == "JIRA":
         logger.info("Notifier type JIRA created")
         return JiraEventHandler()
-    elif handler_type == "SEQO":
-        logger.info("Notifier type SEQO created")
+    elif handler_type == "SEQOSYSTEM":
+        logger.info("Notifier type SEQOSYSTEM created")
+        print("Creating SEQOOOOOOOOOOSYSTEM")
         return SeqosystemEventHandler()
     else:
         return NoOpEventHandler()
 
 
-def notifier_start(job_group, request_id):
+def notifier_start(request_id):
+    attrs = {}
     for eh in event_handlers():
-        notifier_id = eh.start(request_id)
-        try:
-            setattr(job_group, eh.db_name, notifier_id)
-            job_group.save()
-        except Exception:
-            logging.error("Failed to start notifier for event_handler %s", str(event_handler))
+        if eh.db_name:
+            try:
+                notifier_id = eh.start(request_id)
+                attrs[eh.db_name] = notifier_id
+            except Exception:
+                logging.error("Failed to start notifier for event_handler %s", str(event_handler))
 
+    job_group = JobGroup(**attrs)
+    job_group.save()
+    return job_group
 
 @shared_task
 def send_notification(event):

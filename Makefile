@@ -115,7 +115,7 @@ export BEAGLE_DB_USERNAME=$(shell whoami)
 export BEAGLE_DB_PASSWORD=admin
 export BEAGLE_DB_PORT:=65527
 export BEAGLE_DB_URL:=localhost
-export SEQOSYSTEM_URL:=localhost:5000
+export SEQOSYSTEM_URL:=http://localhost:5000
 
 export PGDATA=$(BEAGLE_DB_NAME)
 export PGUSER=$(BEAGLE_DB_USERNAME)
