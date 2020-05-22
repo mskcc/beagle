@@ -16,6 +16,8 @@ def add_assay_config(apps, _):
           "HemePACT_v4",
           "HumanWholeGenome",
           "IDT_Exome_v1_FP",
+          "IMPACT+ (341 genes plus custom content)",
+          "IMPACT341",
           "IMPACT410",
           "IMPACT468",
           "MSK-ACCESS_v1",
