@@ -16,7 +16,7 @@ class JiraEventHandler(EventHandler):
 
     def start(self, request_id):
         jira_id = JiraClient.parse_ticket_id(
-            self.client.create_ticket("[TEMPLATE] {request_id}".format(request_id=request_id), None, "").json())
+            self.client.create_ticket("{request_id}".format(request_id=request_id), None, "").json())
         self.logger.debug("Starting JIRA Ticket with ID %s" % jira_id)
         return jira_id
 
@@ -41,7 +41,13 @@ class JiraEventHandler(EventHandler):
     def process_operator_request_event(self, event):
         self._add_comment_event(event)
 
+    def process_etl_job_failed_event(self, event):
+        self._add_comment_event(event)
+
     def process_operator_error_event(self, event):
+        self._add_comment_event(event)
+
+    def process_assay_event(self, event):
         self._add_comment_event(event)
 
     def _add_comment_event(self, event):

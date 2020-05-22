@@ -1,52 +1,52 @@
 {
     "targets": {
         "AgilentExon_51MB_b37_v3": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.intervals"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.intervals"
         },
         "IDT_Exome_v1_FP_b37": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/IDT_Exome_v1_FP_b37_targets.ilist"
         },
         "E90_NimbleGeneV3_WES": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/E90_NimbleGeneV3_WES/b37/E90_NimbleGeneV3_WES_b37_targets.ilist"
         },
         "IMPACT341_b37": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT341/b37/picard_targets.interval_list"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_targets.interval_list"
         },
         "IMPACT410_b37": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT410/b37/picard_targets.interval_list"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_targets.interval_list"
         },
         "IMPACT468_b37": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
         },
         "IMPACT468_b37_mm10": {
             "targets_list": "juno:///juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_targets.interval_list"
         },
         "IMPACT468_08390": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08390/b37/IMPACT468_08390_b37_targets.ilist"
         },
         "IMPACT468_08050": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_targets.ilist"
         },
         "Agilent_v4_51MB_Human": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_b37_targets.ilist"
         },
         "AgilentExon_v2": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist"
         },
         "AgilentExon_v5": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_v5/b37/AgilentExon_v5_b37_targets.ilist"
         },
         "IlluminaExome_38MB": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IlluminaExome_38MB/b37/IlluminaExome_38MB_b37_targets.ilist"
         },
         "SeqCap_EZ_Exome_v3": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/SeqCap_EZ_Exome_v3/b37/SeqCap_EZ_Exome_v3_b37_targets.ilist"
         },
         "HemePACT_v3_BAIT": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v3/b37/HemePACT_v3_b37_targets.ilist"
         },
         "HemePACT_v4_BAITS": {
-            "targets_list": "juno:///juno/work/ci/resources/roslin_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
         }
     }
 }

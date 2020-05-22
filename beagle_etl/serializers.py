@@ -1,16 +1,42 @@
 from rest_framework import serializers
 from .models import Job, JobStatus
 from notifier.models import JobGroup
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.jobs import TYPES
 
 
 class JobSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return JobStatus(obj.status).name
 
     class Meta:
         model = Job
         fields = (
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
             'max_retry', 'job_group')
+
+
+class JobQuerySerializer(serializers.Serializer):
+
+    status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
+                                     required=False)
+
+    job_group = serializers.ListField(required=False)
+
+    type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True,
+                                   required=False)
+
+    sample_id = serializers.CharField(required=False)
+
+    request_id = serializers.CharField(required=False)
+
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
 
 class CreateJobSerializier(serializers.ModelSerializer):

@@ -14,7 +14,7 @@ def load_references():
     return d
 
 
-# TODO: This is ROSLIN-formatted, note the confusing IDs
+# TODO: This is ARGOS-formatted, note the confusing IDs
 def format_sample(data):
     sample = dict()
     sample['ID'] = data['SM'] # TODO: change someday
