@@ -33,13 +33,13 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in requestIds.json():
-        job = get_or_create_request_job(request['request'])
+        job = get_or_create_request_job(request['request'], request['deliveryDate'])
         if job.status == JobStatus.CREATED:
             children.add(str(job.id))
     return list(children)
 
 
-def get_or_create_request_job(request_id):
+def get_or_create_request_job(request_id, delivery_date):
     logger.info(
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).first()
@@ -48,12 +48,15 @@ def get_or_create_request_job(request_id):
         job_group.save()
         notifier_start(job_group, request_id)
         job = Job(run=TYPES['REQUEST'],
-                  args={'request_id': request_id, 'job_group': str(job_group.id)},
+                  args={'request_id': request_id,
+                        'delivery_date': delivery_date,
+                        'job_group': str(job_group.id)},
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
                   callback=TYPES['REQUEST_CALLBACK'],
-                  callback_args={'request_id': request_id, 'job_group': str(job_group.id)},
+                  callback_args={'request_id': request_id,
+                                 'job_group': str(job_group.id)},
                   job_group=job_group)
         job.save()
     return job
@@ -114,7 +117,7 @@ def request_callback(request_id, job_group=None):
     return []
 
 
-def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None):
+def fetch_samples(request_id, delivery_date, import_pooled_normals=True, import_samples=True, job_group=None):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     jg = None
     try:
@@ -132,6 +135,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         raise FailedToFetchFilesException("LIMS returned wrong response for request %s. Got %s instead" % (request_id, sampleIds.json()['requestId']))
     response_body = sampleIds.json()
     request_metadata = {
+        "deliveryDate": delivery_date,
         "dataAnalystEmail": response_body['dataAnalystEmail'],
         "dataAnalystName": response_body['dataAnalystName'],
         "investigatorEmail": response_body['investigatorEmail'],
