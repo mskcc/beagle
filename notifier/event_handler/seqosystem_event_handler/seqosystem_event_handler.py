@@ -50,7 +50,6 @@ class SeqosystemEventHandler(EventHandler):
             )
         }
 
-        #from beagle_etl.jobs.lims_etl_jobs import fetch_samples; fetch_samples("06714_C", job_group="4c2484c3-f8f4-47bc-8275-802f0eba0931")
         self.client.create_job(event.job_group_id, event.sample_id, workflows)
 
     def process_operator_run_event(self, event):
