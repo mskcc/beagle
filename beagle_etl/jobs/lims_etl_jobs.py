@@ -3,7 +3,6 @@ import copy
 import logging
 import requests
 from django.conf import settings
-
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
