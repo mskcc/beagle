@@ -19,6 +19,11 @@ logger = logging.getLogger(__name__)
 @shared_task
 def fetch_requests_lims():
     logger.info("Fetching requestIDs")
+    running = Job.objects.filter(run=TYPES['DELIVERY'],
+                                 status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
+    if len(running) > 0:
+        logger.info("Job already in progress %s" % running.first())
+        return
     latest = Job.objects.filter(run=TYPES['DELIVERY']).order_by('-created_date').first()
     timestamp = None
     if latest:
