@@ -161,9 +161,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     #  from beagle_etl.jobs.lims_etl_jobs import fetch_samples
     #  fetch_samples("06714_C", job_group="4c2484c3-f8f4-47bc-8275-802f0eba0931")
     if import_samples:
-        print("If import Samples!!!!!!!!")
         for sample in response_body.get('samples', []):
-            print("Sample Loop")
             if not sample:
                 raise FailedToFetchFilesException("Sample Id None")
             job = get_or_create_sample_job(sample['igoSampleId'],

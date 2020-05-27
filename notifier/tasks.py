@@ -23,7 +23,6 @@ def event_handler(handler_type):
         return JiraEventHandler()
     elif handler_type == "SEQOSYSTEM":
         logger.info("Notifier type SEQOSYSTEM created")
-        print("Creating SEQOOOOOOOOOOSYSTEM")
         return SeqosystemEventHandler()
     else:
         return NoOpEventHandler()
