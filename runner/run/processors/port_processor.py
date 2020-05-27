@@ -158,13 +158,13 @@ class PortProcessor(object):
     @staticmethod
     def _register_file(val, size, group_id, metadata, file_list):
         file_obj = copy.deepcopy(val)
-        file_obj.pop("checksum", None)
         file_obj.pop("basename", None)
         file_obj.pop("nameroot", None)
         file_obj.pop("nameext", None)
         uri = file_obj.pop('location', None)
+        checksum = file_obj.pop("checksum", None)
         try:
-            file_obj_db = FileProcessor.create_file_obj(uri, size, group_id, metadata)
+            file_obj_db = FileProcessor.create_file_obj(uri, size, checksum, group_id, metadata)
         except FileConflictException as e:
             logger.warning(str(e))
             file_obj_db = FileProcessor.get_file_obj(uri)
