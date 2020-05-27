@@ -5,7 +5,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
-            "name": "ROSLIN JOB 1",
+            "name": "ARGOS JOB 1",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 1,
             "tags": {},
@@ -20,7 +20,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
-            "name": "ROSLIN JOB 2",
+            "name": "ARGOS JOB 2",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 1,
             "tags": {},
@@ -35,7 +35,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
-            "name": "ROSLIN JOB 3",
+            "name": "ARGOS JOB 3",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 1,
             "tags": {},
@@ -50,7 +50,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
-            "name": "INDIVIDUAL ROSLIN JOB 1",
+            "name": "INDIVIDUAL ARGOS JOB 1",
             "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
             "operator_run": 2,
             "tags": {},
