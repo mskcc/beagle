@@ -13,7 +13,7 @@ from .construct_copy_outputs import construct_copy_outputs_input, generate_sampl
 
 class CopyOutputsOperator(Operator):
     """
-    Constructs input JSON for the roslin QC pipeline and then
+    Constructs input JSON for the argos QC pipeline and then
     submits them as runs
     """
     def get_jobs(self):
@@ -47,7 +47,7 @@ class CopyOutputsOperator(Operator):
         ]
 
         number_of_runs = len(run_ids)
-        name = "ROSLIN COPY OUTPUTS %s runs [%s,..] " % (
+        name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (
             number_of_runs, run_ids[0])
 
         app = self.get_pipeline_id()
@@ -73,7 +73,7 @@ class CopyOutputsOperator(Operator):
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
                 output_directory = os.path.join(pipeline.output_directory,
-                                                "roslin",
+                                                "argos",
                                                 project_prefix,
                                                 pipeline_version,
                                                 self.job_group_id)

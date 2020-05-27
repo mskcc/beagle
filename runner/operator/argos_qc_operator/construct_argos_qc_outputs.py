@@ -15,15 +15,15 @@ def load_references():
     """
     Loads QC reference data from the resources JSON
     """
-    data = json.load(open(os.path.join(WORKDIR, 'reference_jsons/roslin_qc_resources.json'), 'rb'))
+    data = json.load(open(os.path.join(WORKDIR, 'reference_jsons/qc_resources.json'), 'rb'))
     return data
 
 
-def get_baits_and_targets(assay, roslin_qc_resources):
+def get_baits_and_targets(assay, qc_resources):
     """
-    From value in assay, retrieve target files (mainly fp_genotypes) from roslin_qc_resources
+    From value in assay, retrieve target files (mainly fp_genotypes) from qc_resources
     """
-    targets = roslin_qc_resources['targets']
+    targets = qc_resources['targets']
 
     target_assay = assay
 
@@ -43,7 +43,7 @@ def get_baits_and_targets(assay, roslin_qc_resources):
     if target_assay in targets:
         return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])}
     else:
-        error_msg = "ERROR: Targets for Assay not found in roslin_qc_resources.json: %s" % assay
+        error_msg = "ERROR: Targets for Assay not found in qc_resources.json: %s" % assay
         LOGGER.error(error_msg)
 
 
@@ -110,10 +110,10 @@ def single_keys_for_qc():
     return keys
 
 
-def construct_roslin_qc_input(run_id_list):
+def construct_argos_qc_input(run_id_list):
     """
     Main function. From a list of run IDs, build a JSON that combines
-    the runs data into one JSON expected by the Roslin QC pipeline
+    the runs data into one JSON expected by the Argos QC pipeline
     """
     input_json = {}
     list_keys = list_keys_for_qc()
@@ -167,17 +167,17 @@ def construct_roslin_qc_input(run_id_list):
 def convert_references(assay):
     """
     Return a dictionary of references based on "assay" for fp_genotypes; other keys
-    are expected to be static but are still in the roslin_qc_resources reference file
+    are expected to be static but are still in the qc_resources reference file
     in case it varies in the future
     """
-    roslin_qc_resources = load_references()
+    qc_resources = load_references()
     references = dict()
-    fp_genotypes = get_baits_and_targets(assay, roslin_qc_resources)
+    fp_genotypes = get_baits_and_targets(assay, qc_resources)
     references['fp_genotypes'] = fp_genotypes
-    references['ref_fasta'] = {'class': 'File', 'location': roslin_qc_resources['ref_fasta']}
-    references['conpair_markers'] = roslin_qc_resources['conpair_markers']
+    references['ref_fasta'] = {'class': 'File', 'location': qc_resources['ref_fasta']}
+    references['conpair_markers'] = qc_resources['conpair_markers']
     references['hotspot_list_maf'] = {'class': 'File',
-                                      'location': roslin_qc_resources['hotspot_list_maf']}
+                                      'location': qc_resources['hotspot_list_maf']}
     return references
 
 
@@ -185,4 +185,4 @@ if __name__ == '__main__':
     RUN_ID_LIST = []
     for single_arg in sys.argv[1:]:
         RUN_ID_LIST.append(single_arg)
-    INPUT_JSON = construct_roslin_qc_input(RUN_ID_LIST)
+    INPUT_JSON = construct_argos_qc_input(RUN_ID_LIST)
