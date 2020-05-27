@@ -11,7 +11,7 @@ from file_system.models import File, FileMetadata
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
-from .make_sample import build_sample, remove_with_caveats
+from .make_sample import build_sample, remove_with_caveats, format_sample_name
 
 LOGGER = logging.getLogger(__name__)
 
@@ -107,20 +107,25 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
+    # 'descriptor' should be the same as bait set, but it's labeled
+    # descriptor because in pooled normals it's called 'recipe'
+    # TODO: change pooled normal field value 'recipe' -> bait_set/baitSet
     descriptor = get_descriptor(bait_set, pooled_normals)
 
-    # TODO: what is this boolean testing and what is its significance?
-    # TODO: why does the lack of a descriptor mean there is no pooled normal?
     if not descriptor: # i.e., no pooled normal
         return None
+
     pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
     sample_files = list()
 
-    # arbitrarily named
-    sample_name = "pooled_normal_%s_%s_%s" % (descriptor,
-                                              "_".join(run_ids),
-                                              "_".join(set(preservation_types)))
+    # sample_name is PN_FROZEN unless FFPE is in any of the preservation types
+    # in preservation_types
+    preservations_lower_case = set([x.lower() for x in preservation_types])
+    sample_name = "PN_FROZEN"
+    if "ffpe" in preservations_lower_case:
+        sample_name = "PN_FFPE"
 
+    specimen_type = 'Pooled Normal'
     num_of_pooled_normals = len(pooled_normals)
     if num_of_pooled_normals > 0:
         for pooled_normal in pooled_normals:
@@ -145,6 +150,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['flowCellId'] = 'PN_FCID'
             metadata['tumorOrNormal'] = 'Normal'
             metadata['patientId'] = 'PN_PATIENT_ID'
+            metadata['specimenType'] = specimen_type
             sample['metadata'] = metadata
             sample_files.append(sample)
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
@@ -164,6 +170,7 @@ def get_dmp_normal(patient_id, bait_set):
 
     if dmp_bam:
         dmp_metadata = dmp_bam.metadata
+        specimen_type = "DMP Normal"
         sample_name = dmp_metadata['external_id']
         sample = dict()
         sample['id'] = dmp_bam.file.id
@@ -172,7 +179,7 @@ def get_dmp_normal(patient_id, bait_set):
         sample['file_type'] = dmp_bam.file.file_type
         metadata = init_metadata()
         metadata['sampleId'] = sample_name
-        metadata['sampleName'] = sample_name
+        metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
         metadata['requestId'] = sample_name
         metadata['baitSet'] = bait_set
         metadata['recipe'] = bait_set
@@ -187,6 +194,7 @@ def get_dmp_normal(patient_id, bait_set):
         metadata['flowCellId'] = 'DMP_FCID'
         metadata['tumorOrNormal'] = 'Normal'
         metadata['patientId'] = patient_id
+        metadata['specimenType'] = specimen_type
         sample['metadata'] = metadata
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample

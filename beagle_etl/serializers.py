@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Job, JobStatus
 from notifier.models import JobGroup
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.jobs import TYPES
 
 
 class JobSerializer(serializers.ModelSerializer):
@@ -34,6 +34,9 @@ class JobQuerySerializer(serializers.Serializer):
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
 
 class CreateJobSerializier(serializers.ModelSerializer):

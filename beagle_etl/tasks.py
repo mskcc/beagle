@@ -3,13 +3,13 @@ import importlib
 import datetime
 import traceback
 from celery import shared_task
-from django.db import transaction
 from beagle_etl.models import JobStatus, Job
+from beagle_etl.jobs import TYPES
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-from notifier.helper import generate_sample_data_content
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent, UploadAttachmentEvent
+# from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
 
 
 logger = logging.getLogger(__name__)
@@ -44,15 +44,13 @@ def scheduler():
     jobs = get_pending_jobs()
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
-        with transaction.atomic():
-            j = Job.objects.get(id=job.id)
-            if not j.lock:
-                logger.info("Submitting job: %s" % str(job.id))
-                j.lock = True
-                j.save()
-                job_processor.delay(j.id)
-            else:
-                logger.info("Job already locked: %s" % str(job.id))
+        j = Job.objects.get(id=job.id)
+        if not j.is_locked:
+            j.lock_job()
+            logger.info("Submitting job: %s" % str(job.id))
+            job_processor.delay(j.id)
+        else:
+            logger.info("Job already locked: %s" % str(job.id))
 
 
 def get_pending_jobs():
@@ -85,12 +83,12 @@ class JobObject(object):
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
 
-        with transaction.atomic():
-            self.job.lock = False
-            self.job.save()
-
         logger.info("Job %s in status: %s" % (str(self.job.id), JobStatus(self.job.status).name))
+        self._unlock()
         self._save()
+
+    def _unlock(self):
+        self.job.unlock_job()
 
     def _save(self):
         self.job.save()
@@ -129,7 +127,8 @@ class JobObject(object):
                 sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
                                    job.args.get('sample_id', '')))
             elif job.run == TYPES['REQUEST']:
-                request_jobs.append((str(job.id), "", self.get_key(job.run), job.message or "", ''))
+                request_jobs.append(
+                    (str(job.id), '', self.get_key(job.run), job.message or "", ''))
             elif job.run == TYPES['POOLED_NORMAL']:
                 pooled_normal_jobs.append(
                     (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
@@ -194,32 +193,18 @@ class JobObject(object):
         etl_e = etl_event.to_dict()
         send_notification.delay(etl_e)
 
-    def _generate_sample_data_file(self):
-        result = generate_sample_data_content(self.job.args['request_id'])
-        e = UploadAttachmentEvent(str(self.job.job_group.id),
-                                  '%s_sample_data_clinical.txt' % self.job.args['request_id'],
-                                  result).to_dict()
-        send_notification.delay(e)
-
     def _job_failed(self):
-        # TODO: Hack remove this ASAP
         if self.job.run == TYPES['REQUEST']:
-            import time
-            time.sleep(5)
-            e = ETLJobFailedEvent(self.job.job_group.id, "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
+            e = ETLJobFailedEvent(self.job.job_group.id,
+                                  "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
             send_notification.delay(e)
             ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
-            # TODO: Hack remove this ASAP
-            import time
-            time.sleep(5)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _check_children(self):
         finished = True
@@ -232,7 +217,7 @@ class JobObject(object):
                 continue
             if child_job.status == JobStatus.FAILED:
                 failed.append(child_id)
-            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED):
+            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False
                 break
         if finished:

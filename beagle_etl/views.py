@@ -3,7 +3,7 @@ from rest_framework import mixins
 from rest_framework import status
 from beagle.pagination import time_filter
 from rest_framework.response import Response
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.jobs import TYPES
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
 from beagle_etl.models import JobStatus, Job
@@ -42,6 +42,7 @@ class JobViewSet(mixins.CreateModelMixin,
         serializer = JobQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Job, request.query_params)
+            queryset = time_filter(Job, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_group = fixed_query_params.get('job_group')
             if job_group:
                 queryset = queryset.filter(job_group__in=job_group).all()
