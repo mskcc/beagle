@@ -254,6 +254,10 @@ STATIC_URL = '/static/'
 LOGIN_URL='/admin/login/'
 LOGOUT_URL='/admin/logout/'
 
+SWAGGER_SETTINGS = {
+    'VALIDATOR_URL':None
+}
+
 RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
 
