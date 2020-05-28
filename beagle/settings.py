@@ -326,6 +326,9 @@ for n in NOTIFIERS:
     if n not in SUPPORTED_NOTIFIERS:
         raise Exception("Invalid Notifier type")
 
+
+NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
+
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
