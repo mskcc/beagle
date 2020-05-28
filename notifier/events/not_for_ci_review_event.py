@@ -8,7 +8,7 @@ class NotForCIReviewEvent(Event):
 
     @classmethod
     def get_type(cls):
-        return "SetCIReviewEvent"
+        return "NotForCIReviewEvent"
 
     @classmethod
     def get_method(cls):

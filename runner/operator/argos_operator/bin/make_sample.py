@@ -3,7 +3,9 @@ This constructs a sample dictionary from the metadata in the Voyager/Beagle data
 """
 import logging
 import re
+
 LOGGER = logging.getLogger(__name__)
+
 
 
 def remove_with_caveats(samples):
@@ -77,16 +79,17 @@ def check_samples(samples):
     We are assuming the fastq data from the LIMS only differs in the 'R1'/'R2' string
     """
     for rg_id in samples:
-        if 'R1' in samples[rg_id]:
-            fastq_r1 = samples[rg_id]['R1']
-            fastq_r2 = samples[rg_id]['R2']
+        r1 = samples[rg_id]['R1']
+        r2 = samples[rg_id]['R2']
+        num_fastqs = len(r1)
 
-            expected_fastq_r2 = 'R2'.join(fastq_r1.rsplit('R1', 1))
-            if expected_fastq_r2 != fastq_r2:
+        for index,fastq in enumerate(r1):
+            expected_r2 = 'R2'.join(fastq.rsplit('R1', 1))
+            if expected_r2 != r2[index]:
                 LOGGER.error("Mismatched fastqs! Check data:")
-                LOGGER.error("R1: %s", fastq_r1)
-                LOGGER.error("Expected R2: %s", expected_fastq_r2)
-                LOGGER.error("Actual R2: %s", fastq_r2)
+                LOGGER.error("R1: %s" % fastq)
+                LOGGER.error("Expected R2: %s" % expected_r2)
+                LOGGER.error("Actual R2: %s" % r2[index])
 
 
 def check_and_return_single_values(data):
@@ -193,16 +196,20 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['pi_email'] = pi_email
             sample['run_id'] = run_id
             sample['preservation_type'] = preservation_type
+            sample['R1'] = list()
+            sample['R1_bid'] = list()
+            sample['R2'] = list()
+            sample['R2_bid'] = list()
         else:
             sample = samples[rg_id]
 
         # fastq pairing assumes flowcell id + barcode index are unique per run
         if 'R1' in r_orientation:
-            sample['R1'] = fpath
-            sample['R1_bid'] = bid
+            sample['R1'].append(fpath)
+            sample['R1_bid'].append(bid)
         elif 'R2' in r_orientation:
-            sample['R2'] = fpath
-            sample['R2_bid'] = bid
+            sample['R2'].append(fpath)
+            sample['R2_bid'].append(bid)
         else:
             sample['bam'] = fpath
             sample['bam_bid'] = bid
@@ -238,7 +245,11 @@ def build_sample(data, ignore_sample_formatting=False):
     for rg_id in samples:
         sample = samples[rg_id]
         for key in sample:
-            result[key].append(sample[key])
+            if 'R1' in key or 'R2' in key:
+                for i in sample[key]:
+                    result[key].append(i)
+            else:
+                result[key].append(sample[key])
     result = check_and_return_single_values(result)
 
     return result

@@ -32,6 +32,19 @@ class Job(BaseModel):
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
+    @property
+    def is_locked(self):
+        self.refresh_from_db()
+        return self.lock
+
+    def lock_job(self):
+        self.lock = True
+        self.save()
+
+    def unlock_job(self):
+        self.lock = False
+        self.save()
+
 
 class Operator(models.Model):
     slug = models.CharField(max_length=100, default=False)
