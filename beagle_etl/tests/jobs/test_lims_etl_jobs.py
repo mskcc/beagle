@@ -10,7 +10,7 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
 from beagle_etl.models import JobStatus, Job, Assay
-from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException
+from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup
@@ -156,6 +156,16 @@ class TestCreatePooledNormal(TestCase):
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'HemePACT_v4')
+
+    def test_create_pooled_normal_disabled_recipe(self):
+        """
+        Test the rejection of the creation of a pooled normal with a disabled recipe
+        """
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG/FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG_S7_R2_001.fastq.gz"
+        self.assertRaises(FailedToFetchPoolNormalException, create_pooled_normal, filepath, self.file_group.id)
+        imported_file = File.objects.filter(path=filepath)
+        self.assertEqual(imported_file.count(), 0)
+
 
 class TestGetRunID(TestCase):
     def test_true(self):
