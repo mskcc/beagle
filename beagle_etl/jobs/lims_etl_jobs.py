@@ -250,7 +250,8 @@ def create_pooled_normal(filepath, file_group_id):
     try:
         parts = filepath.split('/')
         run_id = get_run_id_from_string(parts[6])
-        preservation_type = parts[8]
+        pooled_normal_folder = parts[8]
+        preservation_type = pooled_normal_folder
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
         recipe = parts[8]
