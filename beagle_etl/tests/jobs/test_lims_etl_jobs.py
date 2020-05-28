@@ -98,6 +98,12 @@ class TestCreatePooledNormal(TestCase):
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
         self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
+        assay = Assay.objects.first()
+        self.disabled_backup = assay.disabled
+        assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
+        assay.disabled = ['DisabledAssay']
+        assay.save()
+
     def test_true(self):
         self.assertTrue(True)
 
@@ -140,6 +146,16 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
         self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439')
 
+
+    def test_create_pooled_normal_recipe(self):
+        """
+        Test the creation of a pooled normal entry in the database with the right recipe
+        """
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG_S7_R2_001.fastq.gz"
+        create_pooled_normal(filepath, self.file_group.id)
+        imported_file = File.objects.get(path=filepath)
+        imported_file_metadata = FileMetadata.objects.get(file=imported_file)
+        self.assertTrue(imported_file_metadata.metadata['recipe'] == 'HemePACT_v4')
 
 class TestGetRunID(TestCase):
     def test_true(self):
