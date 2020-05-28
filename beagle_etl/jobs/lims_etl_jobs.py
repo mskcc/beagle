@@ -264,6 +264,8 @@ def create_pooled_normal(filepath, file_group_id):
         raise FailedToFetchPoolNormalException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
         raise FailedToFetchPoolNormalException("Invalid preservation type %s" % preservation_type)
+    if recipe in assays.disabled:
+        raise FailedToFetchPoolNormalException("Recipe %s, is marked as disabled" % recipe)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchPoolNormalException(
             "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
