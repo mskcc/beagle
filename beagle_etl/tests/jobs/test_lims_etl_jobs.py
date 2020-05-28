@@ -95,6 +95,9 @@ class TestCreatePooledNormal(TestCase):
     "file_system.storage.json"
     ]
 
+    def setUp(self):
+        self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
+        self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
     def test_true(self):
         self.assertTrue(True)
 
@@ -109,9 +112,8 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(len(files_metadata) == 0)
 
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
-        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
 
-        create_pooled_normal(filepath, file_group_id)
+        create_pooled_normal(filepath, self.file_group.id)
 
         # check that files are now in the database
         files = File.objects.all()
@@ -131,8 +133,7 @@ class TestCreatePooledNormal(TestCase):
         Test the creation of a pooled normal entry in the database
         """
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
-        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
-        create_pooled_normal(filepath, file_group_id)
+        create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FROZEN')
