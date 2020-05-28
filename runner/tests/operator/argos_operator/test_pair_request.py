@@ -754,7 +754,6 @@ class TestPairRequest(TestCase):
             }
         )
 
-        # test that the Frozen Pooled Normal is found
         pairs = compile_pairs(samples)
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -776,14 +775,14 @@ class TestPairRequest(TestCase):
                 'CN': 'MSKCC',
                 'PL': 'Illumina',
                 'PU': ['PN_FCID_FROZENPOOLEDNORMAL'],
-                'LB': 'pooled_normal_IMPACT468_PITT_0439_Frozen_1',
+                'LB': 'PN_FROZEN_1',
                 'tumor_type': 'Normal',
-                'ID': ['pooled_normal_IMPACT468_PITT_0439_Frozen_PN_FCID_FROZENPOOLEDNORMAL'],
-                'SM': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'ID': ['PN_FROZEN_PN_FCID_FROZENPOOLEDNORMAL'],
+                'SM': 'PN_FROZEN',
                 'species': '',
                 'patient_id': 'PN_PATIENT_ID',
                 'bait_set': 'IMPACT468',
-                'sample_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'sample_id': 'PN_FROZEN',
                 'run_date': [''],
                 'specimen_type': '',
                 'R1': ['/FROZENPOOLEDNORMAL.R1.fastq'],
@@ -792,13 +791,16 @@ class TestPairRequest(TestCase):
                 'R2_bid': [],  # UUID('51232bdd-6b31-4a4d-80c4-3aef13965fcd')
                 'bam': [],
                 'bam_bid': [],
-                'request_id': 'pooled_normal_IMPACT468_PITT_0439_Frozen',
+                'specimen_type': 'Pooled Normal',
+                'request_id': 'PN_FROZEN',
                 'pi': '',
                 'pi_email': '',
                 'run_id': [''],
                 'preservation_type': [['Frozen']]
             }]
         }
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (pn part): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (pn part): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
         # Add a DMP Bam for the tumor sample to the database
@@ -845,9 +847,6 @@ class TestPairRequest(TestCase):
 
         # test that the DMP bam gets chosen as the sample's matched normal now instead of the pooled normal
         pairs = compile_pairs(samples)
-        # remove the bam_bid for testing because it is non-deterministic
-        # TODO: mock this ^^
-        pairs['normal'][0]['bam_bid'].pop()
 
         expected_pairs = {
             'tumor': [{
@@ -866,14 +865,14 @@ class TestPairRequest(TestCase):
                 'PU': ['DMP_FCID_DMP_BARCODEIDX'],
                 'LB': 'C-8VK0V7-N901-dZ-IM6_1',
                 'tumor_type': 'Normal',
-                'ID': ['C-8VK0V7-N901-dZ-IM6_DMP_FCID_DMP_BARCODEIDX'],
-                'SM': 'C-8VK0V7-N901-dZ-IM6',
+                'ID': ['s_C_8VK0V7_N901_dZ_IM6_DMP_FCID_DMP_BARCODEIDX'],
+                'SM': 's_C_8VK0V7_N901_dZ_IM6',
                 'species': '',
                 'patient_id': 'C-8VK0V7',
                 'bait_set': 'IMPACT468_BAITS',
                 'sample_id': 'C-8VK0V7-N901-dZ-IM6',
                 'run_date': [''],
-                'specimen_type': '',
+                'specimen_type': 'DMP Normal',
                 'R1': [],
                 'R2': [],
                 'R1_bid': [],
@@ -887,6 +886,13 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['']
             }]
         }
+
+        # remove the bam_bid for testing because it is non-deterministic
+        # TODO: mock this ^^
+        pairs['normal'][0]['bam_bid'].pop()
+
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (dmp part): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (dmp part): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
         # Now add a matched normal to the original request for the sample
@@ -1011,6 +1017,9 @@ class TestPairRequest(TestCase):
                 'preservation_type': ['Frozen']
             }]
         }
+
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (third variation): pairs ---\n", json.dumps(pairs, cls=UUIDEncoder))
+        print("Running test_compile_pairs_pooled_normal_and_dmp_bam (third variation): expected ---\n", json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertDictEqual(pairs, expected_pairs)
 
     def test_compile_pairs_custom1(self):

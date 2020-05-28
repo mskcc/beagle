@@ -5,11 +5,14 @@ import os
 from mock import patch
 from unittest.mock import Mock
 from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APITestCase
 from runner.views.run_api_view import OperatorViewSet
-from runner.models import Run
+from runner.models import Run, RunStatus
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.management import call_command
-
+from django.urls import reverse
 from pprint import pprint
 
 import beagle_etl.celery
@@ -22,6 +25,58 @@ class MockRequest(object):
     empty object to simulate a 'request' object
     """
     pass
+
+class TestRunAPIList(APITestCase):
+    fixtures = [
+    "file_system.filegroup.json",
+    "file_system.filetype.json",
+    "file_system.storage.json",
+    "runner.pipeline.json",
+    "beagle_etl.operator.json",
+    "runner.operator_run.json",
+    "runner.run.json",
+    "runner.operator_trigger.json",]
+
+    def setUp(self):
+        self.api_root = reverse('run-list')
+        admin_user = User.objects.create_superuser('admin', 'sample_email', 'password')
+        self.client.force_authenticate(user=admin_user)
+
+    def test_request_id_list(self):
+        url = self.api_root + '?request_ids=request1&request_ids=request2'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_single_request_id(self):
+        url = self.api_root + '?request_ids=request1'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 1)
+
+    def test_request_id_comma_format(self):
+        url = self.api_root + '?request_ids=request1,request2'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_multiple_query(self):
+        url = self.api_root + '?request_ids=request1&status=CREATING'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 1)
+
+    def test_tag(self):
+        url = self.api_root + '?tags=tag:value'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_date(self):
+        url = self.api_root + '?created_date_gt=2019-10-08T00:00'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['count'], 7)
 
 
 class TestRunAPIView(TestCase):
