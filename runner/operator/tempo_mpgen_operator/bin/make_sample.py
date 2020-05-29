@@ -1,5 +1,6 @@
 import logging
 import re
+import copy
 logger = logging.getLogger(__name__)
 
 
@@ -7,32 +8,33 @@ def remove_with_caveats(samples):
     data = list()
     error_data = list()
     for sample in samples:
-        add = True
+        add = True 
         igo_id = sample['sample_id']
         sample_name = sample['sample_name']
         patient_id = sample['patient_id']
         specimen_type = sample['specimen_type']
-        # hack; this has to happen so that is_cmo_sample_name works
-        # since this function is called after formatting already
-        #
-        # TODO: Fix this logic to use cmoSampleName field in the future
-        deformat_sample_name = sample_name.replace("s_","").replace("_", "-")
-        if sample_name == "emptySampleName":
-            add = False
-        elif sample_name == "nullSampleName":
-            add = False
-        elif "noNormalFound" in sample_name:
-            add = False
-        elif not is_cmo_sample_name_format(deformat_sample_name, specimen_type):
-            add = False
-        if not add:
-            error_data.append(sample)
-        data.append(sample)
+        if not is_empty_sample(sample):
+            # hack; this has to happen so that is_cmo_sample_name works
+            # since this function is called after formatting already
+            #
+            # TODO: Fix this logic to use cmoSampleName field in the future
+            deformat_sample_name = sample_name.replace("s_","").replace("_", "-")
+            if sample_name == "emptySampleName":
+                add = False
+            elif sample_name == "nullSampleName":
+                add = False
+            elif "noNormalFound" in sample_name:
+                add = False
+            elif not is_cmo_sample_name_format(deformat_sample_name, specimen_type):
+                add = False
+            if not add:
+                error_data.append(sample)
+            data.append(sample)
     return data, error_data
 
 
 def is_cmo_sample_name_format(sample_name, specimen_type):
-    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
+    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w*')
     if "cellline" in specimen_type.lower() or bool(sample_pattern.match(sample_name)):
         return True
     return False
@@ -48,7 +50,7 @@ def format_sample_name(sample_name, specimen_type):
         elif not sample_name:
             return "emptySampleName"
         else:
-            logging.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
+            logger.error('Missing or malformed sampleName: %s' % sample_name, exc_info=True)
             return sample_name
     except TypeError as error:
         logger.error("sampleNameError: sampleName is Nonetype; returning 'nullSampleName'.")
@@ -56,18 +58,45 @@ def format_sample_name(sample_name, specimen_type):
 
 
 def check_samples(samples):
+    filtered_samples = dict()
+    error_samples = dict()
     for rg_id in samples:
-        r1 = samples[rg_id]['R1']
-        r2 = samples[rg_id]['R2']
-        num_fastqs = len(r1)
+        if not is_empty_sample(samples[rg_id]):
+            r1 = samples[rg_id]['R1']
+            r2 = samples[rg_id]['R2']
+            num_fastqs = len(r1)
+            if num_fastqs > len(r2):
+                logger.error("Not the same amount of R1s and R2s for %s" % rg_id)
+                error_samples[rg_id] = copy.deepcopy(samples[rg_id])
+            else:
+                for index,fastq in enumerate(r1):
+                    expected_r2 = 'R2'.join(fastq.rsplit('R1', 1)) 
+                    if expected_r2 != r2[index]:
+                        logger.error("Mismatched fastqs! Check data:")
+                        logger.error("R1: %s" % fastq)
+                        logger.error("Expected R2: %s" % expected_r2)
+                        logger.error("Actual R2: %s" % r2[index])
+                        error_samples[rg_id] = copy.deepcopy(samples[rg_id])
+                    else:
+                        filtered_samples[rg_id] = copy.deepcopy(samples[rg_id])
+    return filtered_samples, error_samples
 
-        for index,fastq in enumerate(r1):
-            expected_r2 = 'R2'.join(fastq.rsplit('R1', 1))
-            if expected_r2 != r2[index]:
-                logging.error("Mismatched fastqs! Check data:")
-                logging.error("R1: %s" % fastq)
-                logging.error("Expected R2: %s" % expected_r2)
-                logging.error("Actual R2: %s" % r2[index])
+
+def is_empty_sample(sample):
+    """
+    For some reason, we are adding an empty sample into the mix
+    Not sure if it's because it's in the database or if the build is breaking, below
+
+    This check will remove them from the list of samples used, in check_samples()
+
+    TODO: Check why this is happening
+    """
+    keys_to_check = [ 'request_id', 'sample_id']
+    for key in keys_to_check:
+        if not sample[key]:
+            logger.error("BuiltSampleError: Missing request id or sample id for sample")
+            return True
+    return False
 
 
 def check_and_return_single_values(data):
@@ -83,8 +112,8 @@ def check_and_return_single_values(data):
         if len(value) == 1:
             data[key] = value.pop()
         else:
-            logging.error("Expected only one value for %s!" %key)
-            logging.error("Check import, something went wrong.")
+            logger.error("Expected only one value for %s!" %key)
+            logger.error("Check import, something went wrong.")
 
     # concatenating pi and pi_email
     data['pi'] = '; '.join(set(data['pi']))
@@ -190,7 +219,10 @@ def build_sample(data):
             sample['R2'].append(fpath)
             sample['R2_bid'].append(bid)
         samples[rg_id] = sample
-    check_samples(samples)
+    samples, error_samples  = check_samples(samples)
+    for key in error_samples:
+        print("Error in %s, %s" % (key, error_samples[key]['request_id']))
+        logger.error("Error in %s, %s" % (key, error_samples[key]['request_id']))
 
     result = dict()
     result['sequencing_center'] = list()
