@@ -57,44 +57,62 @@ class ArgosOperator(Operator):
         for i, job in enumerate(argos_inputs):
             tumor_sample_name = job['pair'][0]['ID']
             for p in job['pair'][0]['R1']:
-                sample_mapping += "\t".join(
-                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [tumor_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][0]['R2']:
-                sample_mapping += "\t".join(
-                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [tumor_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][0]['zR1']:
-                sample_mapping += "\t".join(
-                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [tumor_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][0]['zR2']:
-                sample_mapping += "\t".join(
-                    [tumor_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [tumor_sample_name, filepath]) + "\n"
+                    files.append(filepath)
 
             normal_sample_name = job['pair'][1]['ID']
             for p in job['pair'][1]['R1']:
-                sample_mapping += "\t".join(
-                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][1]['R2']:
-                sample_mapping += "\t".join(
-                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][1]['zR1']:
-                sample_mapping += "\t".join(
-                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
+                    files.append(filepath)
             for p in job['pair'][1]['zR2']:
-                sample_mapping += "\t".join(
-                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
+                    files.append(filepath)
 
             for p in job['pair'][1]['bam']:
-                sample_mapping += "\t".join(
-                    [normal_sample_name, FileProcessor.parse_path_from_uri(p['location'])]) + "\n"
-                files.append(FileProcessor.parse_path_from_uri(p['location']))
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
+                    files.append(filepath)
 
             name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job['assay']
@@ -171,12 +189,10 @@ class ArgosOperator(Operator):
 
         self.send_message(s)
 
-
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
-
 
     def evaluate_sample_errors(self, error_samples):
         s = list()
