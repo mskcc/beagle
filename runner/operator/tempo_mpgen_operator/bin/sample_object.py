@@ -15,67 +15,34 @@ class Sample:
     From Files metadata, remove duplicates from fields with best knowledge
     available.
 
-    Sample class contains paired fastqss
+    Sample class contains paired fastqs
     """
-    def __init__(self, file_list):
-        self.metadata = dict()
-        metadata_list = [ i.metadata for i in file_list ]
-        for metadata in metadata_list:
-            for key in metadata:
-                if key not in self.metadata:
-                    self.metadata[key] = list()
-                self.metadata[key].append(metadata[key])
-        self.metadata.pop("R")
-        self.dedupe_metadata_values()
+    def __init__(self, sample_id, file_list):
         self.fastqs = Fastqs(file_list)
-
-
-    def dedupe_metadata_values(self):
-        for key in self.metadata:
-            values = self.metadata[key]
-            if not self.values_are_list(key):
-                # remove empty strings
-                values = [i for i in values if i]
-                if len(set(values)) == 1:
-                    self.metadata[key] = values[0]
-                else:
-                    value = set(values)
-                    self.metadata[key] = ','.join(value)
-            else:
-                # remove duplicate list values
-                values_set = set(tuple(x) for x in values)
-                values = [ list(x) for x in values_set ]
-                self.metadata[key] = values
-
-
-    def values_are_list(self, key):
-        for ele in self.metadata[key]:
-            if not isinstance(ele, list):
-                return False
-        return True
+        self.sample_id = sample_id
 
 
     def __str__(self):
-        keys_for_str = [ 'sampleName', 'requestId', 'sampleId', 'patientId', 'specimenType' ]
-        s = ""
-        for key in keys_for_str:
-            if not isinstance(self.metadata[key], str):
-                data = ",".join(self.metadata[key])
-            else:
-                data = self.metadata[key]
-            s += "%s: %s\n" % (key, data)
+        s = self.sample_id
         return s
 
 
     def __repr__(self):
-        return "{Sample %s}" % self.metadata['sampleName']
+        return "{Sample %s}" % self.sample_id
 
 
 class Fastqs:
+    """
+    Fastqs class to hold pairs of fastqs
+
+    Does the pairing from a list of files
+
+    The paired bool is True if all of the R1s in file list find a matching R2
+    """
     def __init__(self, file_list):
         self.fastqs = dict()
-        self.fastqs['R1'] = list()
-        self.fastqs['R2'] = list()
+        self.r1 = list()
+        self.r2 = list()
         self.paired = True
         self.set_R(file_list)
 
@@ -95,15 +62,15 @@ class Fastqs:
                 r1s.append(f)
             if r == "R2":
                 r2s.append(f)
-        for r1 in r1s:
-            self.fastqs['R1'].append(r1)
-            fastq1 = r1.path
+        for f in r1s:
+            self.r1.append(f)
+            fastq1 = f.path
             expected_r2 = 'R2'.join(fastq1.rsplit('R1', 1))
             fastq2 = self.get_fastq_from_list(expected_r2, r2s)
             if fastq2:
-                self.fastqs['R2'].append(fastq2)
+                self.r2.append(fastq2)
             else:
-                print("No fastq R2 found for %s" % r1.path)
+                print("No fastq R2 found for %s" % f.path)
                 self.paired = False
 
 
