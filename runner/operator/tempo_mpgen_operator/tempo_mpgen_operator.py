@@ -81,40 +81,20 @@ class TempoMPGenOperator(Operator):
                       )
 
         samples = list()
-        samples_marked_for_error = list()
-        # group by sample name
-        sample_name_group = dict()
+        # group by igoId
         sample_id_group = dict()
         for sample in data:
-            sample_name = sample['metadata']['sampleName']
             sample_id = sample['metadata']['sampleId']
-            # Need to group sample names across different requests together
-            if sample_name:
-                if sample_name not in sample_name_group:
-                    sample_name_group[sample_name] = list()
-                sample_name_group[sample_name].append(sample)
-            else:
-                # these samples don't have any cmo sample names, so they
-                # will error downstream
-                # Removing earlier so we can still mark these samples as containing errors
-                if sample_id not in sample_id_group:
-                    sample_id_group[sample_id] = list()
-                sample_id_group[sample_id].append(sample)
-
-        for sample_name in sample_name_group:
-            samples.append(build_sample(sample_name_group[sample_name]))
+            if sample_id not in sample_id_group:
+                sample_id_group[sample_id] = list()
+            sample_id_group[sample_id].append(sample)
 
         for sample_id in sample_id_group:
-            samples_marked_for_error.append(build_sample(sample_id_group[sample_id]))
+            samples.append(build_sample(sample_id_group[sample_id]))
 
+        tempo_inputs, error_samples = construct_tempo_jobs(samples)
         # tempo_inputs is a paired list, error_samples are just samples that were processed
         # through remove_with_caveats()
-        tempo_inputs, error_samples = construct_tempo_jobs(samples)
-
-        # adding samples_marked_for_error to error_samples
-        # TODO: do this error checking cleaner
-        for sample in samples_marked_for_error:
-            error_samples.append(sample)
 
         self.create_tracker_file(tempo_inputs)
         self.generate_sample_formatting_errors_file(tempo_inputs, samples, error_samples)
@@ -243,29 +223,14 @@ class TempoMPGenOperator(Operator):
         return clean_pair, dupe_pairs
 
 
-    def convert_values_to_str(self, data):
-        """
-        Sometimes these are strings when they shouldn't be. Convert them to a string so it can be printed out
-
-        This should be a temporary function, used only while we figure out how to handle these cases
-        """
-        if isinstance(data, list):
-            return ",".join(data)
-        return data
-
-
     def generate_sample_formatting_errors_file(self, tempo_inputs, samples, error_samples):
         number_of_inputs = len(tempo_inputs)
         s = list()
         unformatted_s = list()
         unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
         for sample in error_samples:
-            sample_id = self.convert_values_to_str(sample['sample_id'])
-            sample_name = self.convert_values_to_str(sample['sample_name'])
-            patient_id = self.convert_values_to_str(sample['patient_id'])
-            specimen_type = self.convert_values_to_str(sample['specimen_type'])
-            s.append("| " + sample_id  + " | " + sample_name + " |" + patient_id + " |" + specimen_type + " |")
-            unformatted_s.append(sample_id  + "\t" + sample_name + "\t" + patient_id + "\t" + specimen_type + "\n")
+            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
+            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
 
         msg = """
         Number of samples (both tumor and normal): {num_samples}
