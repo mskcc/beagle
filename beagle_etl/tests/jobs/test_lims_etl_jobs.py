@@ -10,7 +10,7 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
 from beagle_etl.models import JobStatus, Job, Assay
-from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException
+from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup
@@ -95,6 +95,15 @@ class TestCreatePooledNormal(TestCase):
     "file_system.storage.json"
     ]
 
+    def setUp(self):
+        self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
+        self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
+        assay = Assay.objects.first()
+        self.disabled_backup = assay.disabled
+        assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
+        assay.disabled = ['DisabledAssay']
+        assay.save()
+
     def test_true(self):
         self.assertTrue(True)
 
@@ -109,9 +118,8 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(len(files_metadata) == 0)
 
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
-        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
 
-        create_pooled_normal(filepath, file_group_id)
+        create_pooled_normal(filepath, self.file_group.id)
 
         # check that files are now in the database
         files = File.objects.all()
@@ -131,13 +139,32 @@ class TestCreatePooledNormal(TestCase):
         Test the creation of a pooled normal entry in the database
         """
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
-        file_group_id = str(settings.POOLED_NORMAL_FILE_GROUP)
-        create_pooled_normal(filepath, file_group_id)
+        create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FROZEN')
         self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
         self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439')
+
+
+    def test_create_pooled_normal_recipe(self):
+        """
+        Test the creation of a pooled normal entry in the database with the right recipe
+        """
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG_S7_R2_001.fastq.gz"
+        create_pooled_normal(filepath, self.file_group.id)
+        imported_file = File.objects.get(path=filepath)
+        imported_file_metadata = FileMetadata.objects.get(file=imported_file)
+        self.assertTrue(imported_file_metadata.metadata['recipe'] == 'HemePACT_v4')
+
+    def test_create_pooled_normal_disabled_recipe(self):
+        """
+        Test the rejection of the creation of a pooled normal with a disabled recipe
+        """
+        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG/FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG_S7_R2_001.fastq.gz"
+        self.assertRaises(FailedToFetchPoolNormalException, create_pooled_normal, filepath, self.file_group.id)
+        imported_file = File.objects.filter(path=filepath)
+        self.assertEqual(imported_file.count(), 0)
 
 
 class TestGetRunID(TestCase):

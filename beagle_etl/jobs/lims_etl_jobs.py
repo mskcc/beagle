@@ -244,22 +244,28 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
+    assays = Assay.objects.first()
+    assay_list = assays.all
     run_id = None
     preservation_type = None
     recipe = None
     try:
         parts = filepath.split('/')
         run_id = get_run_id_from_string(parts[6])
-        preservation_type = parts[8]
+        pooled_normal_folder = parts[8]
+        preservation_type = pooled_normal_folder
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
-        recipe = parts[8]
-        recipe = recipe.split('IGO_')[1]
-        recipe = recipe.split('_')[0]
+        potential_recipe = list(filter(lambda single_assay: single_assay in pooled_normal_folder, assay_list))
+        if potential_recipe:
+            potential_recipe.sort(key=len, reverse=True)
+            recipe = potential_recipe[0]
     except Exception as e:
         raise FailedToFetchPoolNormalException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
         raise FailedToFetchPoolNormalException("Invalid preservation type %s" % preservation_type)
+    if recipe in assays.disabled:
+        raise FailedToFetchPoolNormalException("Recipe %s, is marked as disabled" % recipe)
     if None in [run_id, preservation_type, recipe]:
         raise FailedToFetchPoolNormalException(
             "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
