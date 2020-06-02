@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from core.views import BeagleTokenObtainPairView
+from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, BeagleTokenVerifyView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -46,6 +46,6 @@ urlpatterns = [
     path('v0/notifier/', include('notifier.urls')),
     path('admin/', admin.site.urls),
     path('api-token-auth/', BeagleTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api-token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api-token-verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api-token-refresh/', BeagleTokenRefreshView.as_view(), name='token_refresh'),
+    path('api-token-verify/', BeagleTokenVerifyView.as_view(), name='token_verify'),
 ]
