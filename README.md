@@ -75,18 +75,8 @@ Usage:
 - Instructions
   - virtualenv beagle
   - pip install -r requirements.txt
-  - export BEAGLE_DB_NAME=<beagle_db_name>
-  - export BEAGLE_DB_USERNAME=<beagle_db_username>
-  - export BEAGLE_DB_PASSWORD=<beagle_db_password>
-  - export BEAGLE_AUTH_LDAP_SERVER_URI=<ldap_server_uri>
-  - export BEAGLE_RABIX_PATH=<rabix_cli_path>
-  - export BEAGLE_RABIX_URL=<rabix_url>
-  - export BEAGLE_RUNNER_QUEUE=<beagle_runner_queue>
-  - export BEAGLE_JOB_SCHEDULER_QUEUE=<beagle_job_scheduler_queue>
-  - export BEAGLE_DEFAULT_QUEUE=<beagle_default_queue>
-  - export BEAGLE_RABBITMQ_USERNAME=<rabbitmq_username>
-  - export BEAGLE_RABBITMQ_PASSWORD=<rabbitmq_password>
-  - export BEAGLE_RABBITMQ_URL=<rabbitmq_url>
+  - setup your environment using the [environment page](docs/ENVIRONMENT_VARIABLES.md)
+
   - python manage.py migrate
   - python manage.py runserver
 
