@@ -28,7 +28,12 @@ class FileRepository(object):
 
     @classmethod
     def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, ret=None):
+        if not queryset:
+            # If queryset not set, use all files
+            queryset = FileRepository.all()
+
         if q:
+            queryset = FileRepository.all()
             return queryset.filter(q)
         if (path and path_in) or (path and path_regex) or (path_in and path_regex):
             raise InvalidQueryException("Can't specify multiple path queries")
