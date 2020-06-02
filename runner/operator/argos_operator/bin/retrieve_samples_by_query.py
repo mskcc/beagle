@@ -118,12 +118,14 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
     sample_files = list()
 
-    # sample_name is PN_FROZEN unless FFPE is in any of the preservation types
+    # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
     # in preservation_types
     preservations_lower_case = set([x.lower() for x in preservation_types])
-    sample_name = "PN_FROZEN"
+    run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+    run_ids_suffix = "_".join(run_ids_suffix_list)
+    sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
     if "ffpe" in preservations_lower_case:
-        sample_name = "PN_FFPE"
+        sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
 
     specimen_type = 'Pooled Normal'
     num_of_pooled_normals = len(pooled_normals)
