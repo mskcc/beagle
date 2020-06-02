@@ -41,7 +41,7 @@ Beagle is a backend service for managing files, pipelines and runs.
 - Instructions
   - pip install -r requirements-cli.txt
 
-- Run  
+- Run
   - python beagle_cli.py
 
 
@@ -155,4 +155,4 @@ BEAGLE_LIMS_URL
 BEAGLE_AUTH_LDAP_SERVER_URI
 ```
 
-Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication. 
+Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication.
