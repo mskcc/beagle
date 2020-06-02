@@ -454,6 +454,8 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
+        metadata['sequencingCenter'] = 'MSKCC'
+        metadata['platform'] = 'Illumina'
         metadata['libraryId'] = library_copy.pop('libraryIgoId', None)
         for k, v in library_copy.items():
             metadata[k] = v
