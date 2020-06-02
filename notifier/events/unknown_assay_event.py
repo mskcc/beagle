@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -17,6 +18,6 @@ class UnknownAssayEvent(Event):
 
     def __str__(self):
         TEMPLATE = """
-        Unrecognized assay {assay}. CC [~webbera] and [~socci]
+        Unrecognized assay {assay}. {cc}
         """
-        return TEMPLATE.format(assay=self.assay)
+        return TEMPLATE.format(assay=self.assay, cc=settings.NOTIFIER_CC)
