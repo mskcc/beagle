@@ -162,7 +162,6 @@ class TestCreatePooledNormal(TestCase):
         Test the rejection of the creation of a pooled normal with a disabled recipe
         """
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG/FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG_S7_R2_001.fastq.gz"
-        self.assertRaises(FailedToFetchPoolNormalException, create_pooled_normal, filepath, self.file_group.id)
         imported_file = File.objects.filter(path=filepath)
         self.assertEqual(imported_file.count(), 0)
 
