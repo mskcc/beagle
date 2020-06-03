@@ -192,7 +192,7 @@ export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
 export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)@localhost
 export RABBITMQ_NODE_IP_ADDRESS:=localhost
-export RABBITMQ_NODE_PORT:=5992
+export RABBITMQ_NODE_PORT:=5679
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
 export RABBITMQ_PID_FILE:=$(RABBITMQ_LOG_BASE)/rabbitmq.pid
