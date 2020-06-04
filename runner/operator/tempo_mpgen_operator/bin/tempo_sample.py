@@ -5,17 +5,25 @@ class TempoSample(Sample):
     def __init__(self, sample_name, file_list):
         self.sample_name = sample_name
         super().__init__(sample_name, file_list)
-        self._metadata = dict()
+        self.metadata = dict() # every field in this dict will be a list
         metadata_list = [ i.metadata for i in file_list ]
         for metadata in metadata_list:
             for key in metadata:
-                if key not in self._metadata:
-                    self._metadata[key] = list()
-                self._metadata[key].append(metadata[key])
-        self._metadata.pop("R")
+                if key not in self.metadata:
+                    self.metadata[key] = list()
+                self.metadata[key].append(metadata[key])
+        self.metadata.pop("R")
         self.conflict = False
         self.conflict_fields = list()
         self._set_status()
+        self.specimen_type = ""
+        self.sample_class = ""
+        self.bait_set = ""
+        # _find_conflict_fields() did not discrepancies in fields it checked
+        if not self.conflict: 
+            self.bait_set = self.metadata['baitSet'][0]
+            self.specimen_type = self.metadata['specimenType'][0]
+            self.sample_class = self.metadata['sampleClass'][0]
 
 
     def _set_status(self):
@@ -38,9 +46,9 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [ 'patientId', 'requestId', 'sampleId', 'specimenType', 'runMode' ]
+        fields_to_check = [ 'patientId', 'requestId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
         for key in fields_to_check:
-            values = self._metadata[key]
+            values = self.metadata[key]
             if not self._values_are_list(key):
                 values_set = set(tuple(x) for x in values if x != None)
                 if len(values_set) > 1:
@@ -50,8 +58,8 @@ class TempoSample(Sample):
 
     def _dedupe_metadata_values(self):
         metadata = dict()
-        for key in self._metadata:
-            values = self._metadata[key]
+        for key in self.metadata:
+            values = self.metadata[key]
             if not self._values_are_list(key):
                 # remove empty strings
                 values = [i for i in values if i]
@@ -69,14 +77,14 @@ class TempoSample(Sample):
 
 
     def _values_are_list(self, key):
-        for ele in self._metadata[key]:
+        for ele in self.metadata[key]:
             if not isinstance(ele, list):
                 return False
         return True
 
 
     def __str__(self):
-        keys_for_str = [ 'sampleName', 'requestId', 'sampleId', 'patientId', 'specimenType' ]
+        keys_for_str = [ 'sampleName', 'requestId', 'sampleId', 'patientId', 'specimenType', 'sampleClass' ]
         s = ""
         metadata = self._dedupe_metadata_values()
         for key in keys_for_str:
