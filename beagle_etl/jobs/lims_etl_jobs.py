@@ -5,14 +5,16 @@ import requests
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, CustomCaptureEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException
+from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
@@ -72,6 +74,11 @@ def request_callback(request_id, job_group=None):
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
 
+    if 'CustomCapture' in recipes:
+        admin_hold_event = CustomCaptureEvent(job_group_id).to_dict()
+        send_notification.delay(admin_hold_event)
+        return []
+
     if not all(item in assays.all for item in recipes):
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
@@ -80,6 +87,7 @@ def request_callback(request_id, job_group=None):
         unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
+
     if any(item in assays.disabled for item in recipes):
         not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(not_for_ci)
