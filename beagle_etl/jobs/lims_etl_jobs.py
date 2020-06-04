@@ -6,7 +6,7 @@ from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
-    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, CustomCaptureEvent
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
@@ -74,11 +74,6 @@ def request_callback(request_id, job_group=None):
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
 
-    if 'CustomCapture' in recipes:
-        admin_hold_event = CustomCaptureEvent(job_group_id).to_dict()
-        send_notification.delay(admin_hold_event)
-        return []
-
     if not all(item in assays.all for item in recipes):
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
@@ -86,6 +81,11 @@ def request_callback(request_id, job_group=None):
         send_notification.delay(set_unknown_assay_label)
         unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
+        return []
+
+    if any(item in assays.hold for item in recipes):
+        admin_hold_event = AdminHoldEvent(job_group_id).to_dict()
+        send_notification.delay(admin_hold_event)
         return []
 
     if any(item in assays.disabled for item in recipes):
