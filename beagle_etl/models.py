@@ -59,3 +59,4 @@ class Operator(models.Model):
 class Assay(models.Model):
     all = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     disabled = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    hold = ArrayField(models.CharField(max_length=100), null=True, blank=True)
