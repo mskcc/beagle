@@ -46,7 +46,8 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [ 'patientId', 'requestId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
+        fields_to_check = [ 'patientId', 'requestId', 'specimenType',
+                'runMode', 'sampleClass', 'baitSet' ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -84,7 +85,8 @@ class TempoSample(Sample):
 
 
     def __str__(self):
-        keys_for_str = [ 'sampleName', 'requestId', 'sampleId', 'patientId', 'specimenType', 'sampleClass' ]
+        keys_for_str = [ 'sampleName', 'requestId', 'sampleId',
+                'patientId', 'specimenType', 'sampleClass' ]
         s = ""
         metadata = self._dedupe_metadata_values()
         for key in keys_for_str:
