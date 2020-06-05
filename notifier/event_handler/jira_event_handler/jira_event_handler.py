@@ -50,6 +50,9 @@ class JiraEventHandler(EventHandler):
     def process_assay_event(self, event):
         self._add_comment_event(event)
 
+    def process_custom_capture_event(self, event):
+        pass
+
     def _add_comment_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.comment(job_group.jira_id, str(event))

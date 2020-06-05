@@ -5,14 +5,16 @@ import requests
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException
+from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
@@ -80,6 +82,12 @@ def request_callback(request_id, job_group=None):
         unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
+
+    if any(item in assays.hold for item in recipes):
+        admin_hold_event = AdminHoldEvent(job_group_id).to_dict()
+        send_notification.delay(admin_hold_event)
+        return []
+
     if any(item in assays.disabled for item in recipes):
         not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(not_for_ci)
@@ -264,12 +272,14 @@ def create_pooled_normal(filepath, file_group_id):
     except Exception as e:
         raise FailedToFetchPoolNormalException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
-        raise FailedToFetchPoolNormalException("Invalid preservation type %s" % preservation_type)
+        logger.info("Invalid preservation type %s" % preservation_type)
+        return
     if recipe in assays.disabled:
-        raise FailedToFetchPoolNormalException("Recipe %s, is marked as disabled" % recipe)
+        logger.info("Recipe %s, is marked as disabled" % recipe)
+        return
     if None in [run_id, preservation_type, recipe]:
-        raise FailedToFetchPoolNormalException(
-            "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+        logger.info("Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+        return
     metadata = {
         "runId": run_id,
         "preservation": preservation_type,
@@ -479,7 +489,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
             f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
                                     file_type=file_type_obj)
             try:
-                checksum = sha1(os.path.basename(path))
+                checksum = sha1(path)
                 f.checksum = checksum
             except FailedToCalculateChecksum as e:
                 logger.info("Failed to calculate checksum. Error:%s", f.path)
