@@ -1,12 +1,42 @@
 
-
-class JobNotFoundExceptions(Exception):
-    pass
-
-
-class FailedToFetchFilesException(Exception):
-    pass
+class ETLExceptions(Exception):
+    code = None
 
 
-class FailedToSubmitToOperatorException(Exception):
-    pass
+class JobNotFoundExceptions(ETLExceptions):
+    code = 100
+
+
+class FailedToFetchSampleException(ETLExceptions):
+    """
+    Failed to get response from LIMS or data not in the right format
+    """
+    code = 101
+
+
+class MissingDataException(ETLExceptions):
+    """
+    Sample igoComplete: False, and missing data (partially or completely)
+    """
+    code = 102
+
+
+class ErrorInconsistentDataException(ETLExceptions):
+    """
+    Sample igoComplete: True, and missing data (partially or completely)
+    """
+    code = 103
+
+
+class FailedToSubmitToOperatorException(ETLExceptions):
+    """
+    Unable to find Operator for assay type
+    """
+    code = 104
+
+
+class FailedToFetchPoolNormalException(ETLExceptions):
+    """
+    Unable to parse and create pool normal file
+    """
+    code = 105

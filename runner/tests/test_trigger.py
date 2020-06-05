@@ -11,6 +11,7 @@ from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.serializers import APIRunCreateSerializer
 
+
 class TestOperatorTriggers(TestCase):
     fixtures = [
     "file_system.filegroup.json",
