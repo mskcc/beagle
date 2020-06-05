@@ -28,28 +28,28 @@ class Patient:
             data[sample_name].append(f)
 
         samples = dict()
-        for sample_id in data:
-            sample = data[sample_id]
-            samples[sample_id] = tempo_sample.TempoSample(sample_id, sample)
+        for sample_name in data:
+            sample = data[sample_name]
+            samples[sample_name] = tempo_sample.TempoSample(sample_name, sample)
         return samples
 
     def _characterize_samples(self):
-        for sample_id in self._samples:
-            sample = self._samples[sample_id]
+        for sample_name in self._samples:
+            sample = self._samples[sample_name]
             sample_class = sample.sample_class
             if not sample_class:
-                self.conflict_samples[sample_id] = sample
+                self.conflict_samples[sample_name] = sample
             elif isinstance(sample_class, list):
-                self.conflict_samples[sample_id] = sample
+                self.conflict_samples[sample_name] = sample
             else:
                 if "normal" in sample_class.lower():
-                    self.normal_samples[sample_id] = sample
+                    self.normal_samples[sample_name] = sample
                 else:
-                    self.tumor_samples[sample_id] = sample
+                    self.tumor_samples[sample_name] = sample
 
     def _pair_samples(self):
-        for tumor_sample_id in self.tumor_samples:
-            tumor_sample = self.tumor_samples[tumor_sample_id]
+        for tumor_sample_name in self.tumor_samples:
+            tumor_sample = self.tumor_samples[tumor_sample_name]
             tumor_baits = tumor_sample.bait_set
             normal = self._get_normal(tumor_baits)
             if normal:
@@ -59,8 +59,8 @@ class Patient:
 
     def _get_normal(self, bait_set):
         normal = None
-        for normal_sample_id in self.normal_samples:
-            normal_sample = self.normal_samples[normal_sample_id]
+        for normal_sample_name in self.normal_samples:
+            normal_sample = self.normal_samples[normal_sample_name]
             normal_baits = normal_sample.bait_set
             if normal_baits.lower() == bait_set.lower():
                 if not normal:
@@ -93,3 +93,43 @@ class Patient:
                         date = current_date
         return date
 
+    def get_sample(self, sample_name):
+        try:
+            return self._samples[sample_name]
+        except:
+            return None
+
+    def create_mapping_string(self):
+        s = ""
+        seen = set()
+        for pair in self.sample_pairing:
+            tumor_sample = pair[0]
+            normal_sample = pair[1]
+            s +=  self.get_mapping_string(tumor_sample)
+            if normal_sample not in seen:
+                s +=  self.get_mapping_string(normal_sample)
+                seen.add(normal_sample)
+        return s
+
+    def get_mapping_string(self, sample):
+        s = ""
+        target = self._resolve_target(sample.bait_set)
+        fastqs = sample.fastqs
+        sample_name = sample.sample_name
+        if fastqs.paired:
+            num_fq_pairs = len(fastqs.r1)
+            for i in range(0, num_fq_pairs):
+                r1 = fastqs.r1[i].path
+                r2 = fastqs.r2[i].path
+                s += "%s\t%s\t%s\t%s\t%i\n" % (sample_name, target, r1, r2, num_fq_pairs)
+        return s
+
+    def _resolve_target(self, bait_set):
+        target_assay = bait_set.lower()
+        if "agilent" in target_assay:
+            return "agilent"
+        if "idt" in target_assay:
+            return "idt"
+        if "sureselect" in target_assay:
+            return "agilent"
+        return None
