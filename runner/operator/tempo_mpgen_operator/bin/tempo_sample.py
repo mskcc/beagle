@@ -19,11 +19,13 @@ class TempoSample(Sample):
         self.specimen_type = ""
         self.sample_class = ""
         self.bait_set = ""
+        self.cmo_sample_name = ""
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict: 
             self.bait_set = self.metadata['baitSet'][0]
             self.specimen_type = self.metadata['specimenType'][0]
             self.sample_class = self.metadata['sampleClass'][0]
+            self.cmo_sample_name = self.metadata['cmoSampleName'][0]
 
 
     def _set_status(self):
@@ -47,7 +49,7 @@ class TempoSample(Sample):
         be runnable, as the fastqs are still paired in the Sample object
         """
         fields_to_check = [ 'patientId', 'requestId', 'specimenType',
-                'runMode', 'sampleClass', 'baitSet' ]
+                'runMode', 'sampleClass', 'baitSet', 'cmoSampleName' ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -63,7 +65,7 @@ class TempoSample(Sample):
             values = self.metadata[key]
             if not self._values_are_list(key):
                 # remove empty strings
-                values = [i for i in values if i]
+                values = [str(i) for i in values if i]
                 if len(set(values)) == 1:
                     metadata[key] = values[0]
                 else:
@@ -86,7 +88,8 @@ class TempoSample(Sample):
 
     def __str__(self):
         keys_for_str = [ 'sampleName', 'requestId', 'sampleId',
-                'patientId', 'specimenType', 'sampleClass' ]
+                'patientId', 'specimenType', 'sampleClass',
+                'cmoSampleName']
         s = ""
         metadata = self._dedupe_metadata_values()
         for key in keys_for_str:
