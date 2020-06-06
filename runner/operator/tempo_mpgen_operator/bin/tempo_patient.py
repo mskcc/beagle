@@ -41,6 +41,8 @@ class Patient:
                 self.conflict_samples[sample_name] = sample
             elif isinstance(sample_class, list):
                 self.conflict_samples[sample_name] = sample
+            elif not sample_name: # sample name empty
+                 self.conflict_samples[sample_name] = sample
             else:
                 if "normal" in sample_class.lower():
                     self.normal_samples[sample_name] = sample
@@ -123,6 +125,15 @@ class Patient:
                 r2 = fastqs.r2[i].path
                 s += "%s\t%s\t%s\t%s\t%i\n" % (sample_name, target, r1, r2, num_fq_pairs)
         return s
+    
+    def create_pairing_string(self):
+        pairing = ""
+        if self.sample_pairing:
+            for pair in self.sample_pairing:
+                tumor = pair[0].cmo_sample_name
+                normal = pair[1].cmo_sample_name
+                pairing += "%s\t%s\n" % (normal, tumor)
+        return pairing
 
     def _resolve_target(self, bait_set):
         target_assay = bait_set.lower()
