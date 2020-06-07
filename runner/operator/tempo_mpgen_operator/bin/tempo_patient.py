@@ -117,15 +117,15 @@ class Patient:
         s = ""
         target = self._resolve_target(sample.bait_set)
         fastqs = sample.fastqs
-        sample_name = sample.sample_name
+        cmo_sample_name = sample.cmo_sample_name
         if fastqs.paired:
             num_fq_pairs = len(fastqs.r1)
             for i in range(0, num_fq_pairs):
                 r1 = fastqs.r1[i].path
                 r2 = fastqs.r2[i].path
-                s += "%s\t%s\t%s\t%s\t%i\n" % (sample_name, target, r1, r2, num_fq_pairs)
+                s += "%s\t%s\t%s\t%s\t%i\n" % (cmo_sample_name, target, r1, r2, num_fq_pairs)
         return s
-    
+
     def create_pairing_string(self):
         pairing = ""
         if self.sample_pairing:
