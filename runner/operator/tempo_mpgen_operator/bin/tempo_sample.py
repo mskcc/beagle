@@ -59,27 +59,40 @@ class TempoSample(Sample):
                     self.conflict = True
 
 
-    def _dedupe_metadata_values(self):
+    def dedupe_metadata_values(self):
+        """
+        Removes duplicates from metadata lists
+        Duplicates are necessary because we are storing a copy of each
+        metadata associated with a fastq
+
+        Omitting qcReports value because it's got a complicated structure
+        that isn't relevant right now
+        """
         metadata = dict()
         for key in self.metadata:
             values = self.metadata[key]
-            if not self._values_are_list(key):
-                # remove empty strings
-                values = [str(i) for i in values if i]
-                if len(set(values)) == 1:
-                    metadata[key] = values[0]
+            # Removing qcReports, which is a list containing a dictionary
+            if key not in "qcReports":
+                if self._values_are_list(key):
+                    # remove duplicate list values
+                    values_set = set(tuple(x) for x in values)
+                    values = [ list(x) for x in values_set ]
+                    metadata[key] = values
                 else:
-                    value = set(values)
-                    metadata[key] = ','.join(value)
-            else:
-                # remove duplicate list values
-                values_set = set(tuple(x) for x in values)
-                values = [ list(x) for x in values_set ]
-                metadata[key] = values
+                    # remove empty strings
+                    values = [str(i) for i in values if i]
+                    if len(set(values)) == 1:
+                        metadata[key] = values[0]
+                    else:
+                        value = set(values)
+                        metadata[key] = ','.join(value)
         return metadata
 
 
     def _values_are_list(self, key):
+        """
+        Checks if the values within a list are also lists
+        """
         for ele in self.metadata[key]:
             if not isinstance(ele, list):
                 return False
@@ -91,7 +104,7 @@ class TempoSample(Sample):
                 'patientId', 'specimenType', 'sampleClass',
                 'cmoSampleName']
         s = ""
-        metadata = self._dedupe_metadata_values()
+        metadata = self.dedupe_metadata_values()
         for key in keys_for_str:
             if not isinstance(metadata[key], str):
                 data = ",".join(metadata[key])
