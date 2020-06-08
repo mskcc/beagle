@@ -253,7 +253,6 @@ def create_pooled_normal(filepath, file_group_id):
         File.objects.get(path=filepath)
     except File.DoesNotExist:
         logger.info("Pooled normal already created filepath")
-        return
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
     assays = Assay.objects.first()
