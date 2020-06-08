@@ -380,10 +380,10 @@ def validate_sample(sample_id, libraries, igocomplete, validate_update=False):
                         # file_search = FileRepository.filter(path=fastq).first()
                         logger.info("Processing %s" % fastq)
                         if file_search:
-                            msg = "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id))
+                            msg = "File %s already created with id:%s" % (file_search.path, str(file_search.id))
                             logger.error(msg)
                             conflict = True
-                            conflict_files.append((file_search.file.path, str(file_search.file.id)))
+                            conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
         if igocomplete:
             raise ErrorInconsistentDataException(
