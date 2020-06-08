@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, JobStatus
+from .models import Job, JobStatus, Assay
 from notifier.models import JobGroup
 from beagle_etl.jobs import TYPES
 
@@ -16,6 +16,12 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
             'max_retry', 'job_group')
 
+
+class AssaySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Assay
+        fields = '__all__'
 
 class JobQuerySerializer(serializers.Serializer):
 

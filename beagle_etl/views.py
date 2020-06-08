@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from beagle_etl.jobs import TYPES
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
-from beagle_etl.models import JobStatus, Job
+from beagle_etl.models import JobStatus, Job, Assay
 from drf_yasg.utils import swagger_auto_schema
 from .jobs.lims_etl_jobs import get_or_create_request_job
-from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer
+from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer
 
 
 class JobViewSet(mixins.CreateModelMixin,
@@ -77,6 +77,14 @@ class JobViewSet(mixins.CreateModelMixin,
                     query_dict[single_param] = query_value
         return query_dict
 
+class AssayViewSet(mixins.CreateModelMixin,
+                 mixins.DestroyModelMixin,
+                 mixins.RetrieveModelMixin,
+                 mixins.UpdateModelMixin,
+                 mixins.ListModelMixin,
+                 GenericViewSet):
+    queryset = Assay.objects.all()
+    serializer_class = AssaySerializer
 
 class RequestIdLimsPullViewSet(GenericAPIView):
     serializer_class = RequestIdLimsPullSerializer
