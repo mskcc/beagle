@@ -14,7 +14,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = (
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
-            'max_retry', 'job_group')
+            'max_retry', 'job_group', 'finished_date', 'created_date', 'modified_date')
 
 
 class JobQuerySerializer(serializers.Serializer):
