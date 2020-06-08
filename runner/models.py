@@ -7,6 +7,7 @@ from file_system.models import File, FileGroup
 from beagle_etl.models import Operator, JobGroup
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
+from django.utils.timezone import now
 
 
 class RunStatus(IntEnum):
@@ -84,6 +85,12 @@ class OperatorRun(BaseModel):
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    finished_date = models.DateTimeField(blank=True, null=True)
+    def save(self, *args, **kwargs):
+        if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
+            if not self.finished_date:
+                self.finished_date = now()
+        super().save(*args, **kwargs)
 
     def complete(self):
         self.status = RunStatus.COMPLETED
@@ -149,6 +156,7 @@ class Run(BaseModel):
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
+    finished_date = models.DateTimeField(blank=True, null=True)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -172,10 +180,11 @@ class Run(BaseModel):
             if self.status == RunStatus.COMPLETED:
                 self.operator_run.increment_completed_run()
                 self.original["status"] = RunStatus.COMPLETED
+                self.finished_date = now()
             elif self.status == RunStatus.FAILED:
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
-
+                self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 
 
