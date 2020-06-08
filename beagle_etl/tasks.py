@@ -60,7 +60,8 @@ def scheduler():
 
 
 def get_pending_jobs():
-    jobs = Job.objects.filter(status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
+    jobs = Job.objects.filter(
+        status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN), lock=False).iterator()
     return jobs
 
 

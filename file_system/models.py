@@ -69,7 +69,7 @@ class FileGroupMetadata(BaseModel):
 
 class File(BaseModel):
     file_name = models.CharField(max_length=500)
-    path = models.CharField(max_length=1500, unique=True)
+    path = models.CharField(max_length=1500, unique=True, db_index=True)
     file_type = models.ForeignKey(FileType, null=True, on_delete=models.SET_NULL)
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
