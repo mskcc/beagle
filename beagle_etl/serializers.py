@@ -23,6 +23,23 @@ class AssaySerializer(serializers.ModelSerializer):
         model = Assay
         fields = '__all__'
 
+class AssayElementSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    all = serializers.ListField(required=False,
+        child=serializers.CharField())
+    disabled = serializers.ListField(required=False,
+        child=serializers.CharField())
+    hold = serializers.ListField(required=False,
+        child=serializers.CharField())
+
+class AssayUpdateSerializer(serializers.Serializer):
+    all = serializers.ListField(required=False,
+        child=serializers.CharField())
+    disabled = serializers.ListField(required=False,
+        child=serializers.CharField())
+    hold = serializers.ListField(required=False,
+        child=serializers.CharField())
+
 class JobQuerySerializer(serializers.Serializer):
 
     status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
