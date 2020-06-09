@@ -105,6 +105,10 @@ class AssayViewSet(GenericAPIView):
                 assay.disabled = list(set(disabled_list))
             if hold_list:
                 assay.hold = list(set(hold_list))
+            for single_assay in assay.hold:
+                if single_assay in assay.disabled:
+                    error_message = "Assay {} is in both disabled and hold".format(single_assay)
+                    return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
             combined_list = assay.hold + assay.disabled
             for single_assay in combined_list:
                 if single_assay not in assay.all:
