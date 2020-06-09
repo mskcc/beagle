@@ -77,14 +77,45 @@ class JobViewSet(mixins.CreateModelMixin,
                     query_dict[single_param] = query_value
         return query_dict
 
-class AssayViewSet(mixins.CreateModelMixin,
-                 mixins.DestroyModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.ListModelMixin,
-                 GenericViewSet):
-    queryset = Assay.objects.all()
+class AssayViewSet(GenericAPIView):
     serializer_class = AssaySerializer
+    queryset = Assay.objects.all()
+    pagination_class = None
+
+    @swagger_auto_schema(responses={200: AssayElementSerializer})
+    def get(self, request):
+        assay_list = Assay.objects.all()
+        if assay_list and len(assay_list) == 1:
+            assay_response = AssaySerializer(assay_list[0])
+            return Response(assay_response.data, status=status.HTTP_200_OK)
+        error_message = "Assay list has unexpected length of {}".format(len(assay_list))
+        return Response(error_message,status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(request_body=AssayUpdateSerializer,responses={200: AssayElementSerializer})
+    def post(self, request):
+        all_list = request.data.getlist('all')
+        disabled_list = request.data.getlist('disabled')
+        hold_list = request.data.getlist('hold')
+        assay_list = Assay.objects.all()
+        if assay_list and len(assay_list) == 1:
+            assay = assay_list[0]
+            if all_list:
+                assay.all = list(set(all_list))
+            if disabled_list:
+                assay.disabled = list(set(disabled_list))
+            if hold_list:
+                assay.hold = list(set(hold_list))
+            combined_list = assay.hold + assay.disabled
+            for single_assay in combined_list:
+                if single_assay not in assay.all:
+                    error_message = "Assay {} is not listed in all".format(single_assay)
+                    return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
+            assay.save()
+            assay_response = AssaySerializer(assay)
+            return Response(assay_response.data, status=status.HTTP_200_OK)
+        error_message = "Assay list has unexpected length of {}".format(len(assay_list))
+        return Response(error_message, status=status.HTTP_404_NOT_FOUND)
+
 
 class RequestIdLimsPullViewSet(GenericAPIView):
     serializer_class = RequestIdLimsPullSerializer
