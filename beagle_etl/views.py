@@ -9,7 +9,7 @@ from rest_framework.viewsets import GenericViewSet
 from beagle_etl.models import JobStatus, Job, Assay
 from drf_yasg.utils import swagger_auto_schema
 from .jobs.lims_etl_jobs import get_or_create_request_job
-from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer
+from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer, AssayElementSerializer, AssayUpdateSerializer
 
 
 class JobViewSet(mixins.CreateModelMixin,
