@@ -88,3 +88,12 @@ class TestAssayAPIView(APITestCase):
         new_assay_request = {'hold':[extra_assay]}
         response = self.client.post(self.api_root, new_assay_request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_assay_in_hold_and_disabled(self):
+        """
+        Test attempt to add an assay in disabled thats already in hold
+        """
+        extra_assay = 'HoldAssay'
+        new_assay_request = {'disabled': [extra_assay]}
+        response = self.client.post(self.api_root, new_assay_request)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
