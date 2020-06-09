@@ -6,11 +6,12 @@ from beagle_etl.views import RequestIdLimsPullViewSet, RequestIdLimsUpdateViewSe
 
 router = routers.DefaultRouter()
 router.register('jobs', JobViewSet)
-router.register('assay', AssayViewSet)
+
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('import-requests/', RequestIdLimsPullViewSet.as_view()),
-    path('update-requests/', RequestIdLimsUpdateViewSet.as_view())
+    path('update-requests/', RequestIdLimsUpdateViewSet.as_view()),
+    path('assay', AssayViewSet.as_view())
 ]
