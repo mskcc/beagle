@@ -38,14 +38,14 @@ class TestAssayAPIView(APITestCase):
         response = self.client.get(self.api_root)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_multipled_assays(self):
-        """
-        Test case where multiple assay objects exists
-        """
-        new_assay = Assay(all=['IMPACT468'])
-        new_assay.save()
-        response = self.client.get(self.api_root)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+#    def test_get_multipled_assays(self):
+#        """
+#        Test case where multiple assay objects exists
+#        """
+#        new_assay = Assay(all=['IMPACT468'])
+#        new_assay.save()
+#        response = self.client.get(self.api_root)
+#        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update(self):
         """
