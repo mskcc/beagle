@@ -109,17 +109,19 @@ class AssayViewSet(GenericAPIView):
             for single_assay in assay.hold:
                 if single_assay in assay.disabled:
                     error_message = "Assay {} is in both disabled and hold".format(single_assay)
-                    return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
+                    error_message_list.append(error_message)
             combined_list = assay.hold + assay.disabled
             for single_assay in combined_list:
                 if single_assay not in assay.all:
                     error_message = "Assay {} is not listed in all".format(single_assay)
-                    return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
+                    error_message_list.append(error_message)
+            if error_message_list:
+                return Response({'errors':list(set(error_message_list))}, status=status.HTTP_400_BAD_REQUEST)
             assay.save()
             assay_response = AssaySerializer(assay)
             return Response(assay_response.data, status=status.HTTP_200_OK)
-        error_message = "Assay list has unexpected length of {}".format(len(assay_list))
-        return Response(error_message, status=status.HTTP_404_NOT_FOUND)
+        error_message_list = ["Assay list is empty"]
+        return Response({'errors':error_message_list}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RequestIdLimsPullViewSet(GenericAPIView):
