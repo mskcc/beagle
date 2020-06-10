@@ -84,21 +84,22 @@ class AssayViewSet(GenericAPIView):
 
     @swagger_auto_schema(responses={200: AssayElementSerializer})
     def get(self, request):
-        assay_list = Assay.objects.all()
-        if assay_list and len(assay_list) == 1:
-            assay_response = AssaySerializer(assay_list[0])
+        assay = Assay.objects.first()
+        if assay:
+            assay_response = AssaySerializer(assay)
             return Response(assay_response.data, status=status.HTTP_200_OK)
-        error_message = "Assay list has unexpected length of {}".format(len(assay_list))
-        return Response(error_message,status=status.HTTP_404_NOT_FOUND)
+        error_message_list = ["Assay list is empty"]
+        return Response({'errors':error_message_list},status=status.HTTP_404_NOT_FOUND)
 
     @swagger_auto_schema(request_body=AssayUpdateSerializer,responses={200: AssayElementSerializer})
     def post(self, request):
-        all_list = request.data.getlist('all')
-        disabled_list = request.data.getlist('disabled')
-        hold_list = request.data.getlist('hold')
-        assay_list = Assay.objects.all()
-        if assay_list and len(assay_list) == 1:
-            assay = assay_list[0]
+        request_data = dict(request.data)
+        all_list = request_data.get('all')
+        disabled_list = request_data.get('disabled')
+        hold_list = request_data.get('hold')
+        assay = Assay.objects.first()
+        error_message_list = []
+        if assay:
             if all_list:
                 assay.all = list(set(all_list))
             if disabled_list:
