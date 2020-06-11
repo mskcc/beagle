@@ -3,7 +3,7 @@ from enum import IntEnum
 from notifier.models import JobGroup
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
-
+from django.utils.timezone import now
 
 class JobStatus(IntEnum):
     CREATED = 0
@@ -31,6 +31,12 @@ class Job(BaseModel):
     callback_args = JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
+    finished_date = models.DateTimeField(blank=True, null=True)
+    def save(self, *args, **kwargs):
+        if self.status == JobStatus.COMPLETED or self.status == JobStatus.FAILED:
+            if not self.finished_date:
+                self.finished_date = now()
+        super().save(*args, **kwargs)
 
     @property
     def is_locked(self):
