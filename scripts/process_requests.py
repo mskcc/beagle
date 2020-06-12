@@ -19,17 +19,14 @@ def run_request(req_id, operator_class_name):
     """
     approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     files = FileRepository.filter(metadata={'requestId': req_id, 'igocomplete': True})
-    # create summary and description
     summary = req_id + " [%s]" % approx_create_time
     description = create_description(files)
-    # place values into jira ticket
     job_group = JobGroup()
     job_group.save()
     notifier.notifier_start(job_group, req_id) 
     jira_eh = JiraEventHandler()
     jira_eh.client.update_ticket_summary(job_group.jira_id, summary)
     jira_eh.client.update_ticket_description(job_group.jira_id, description)
-    # submit job through post query
     operator_model = Operator.objects.filter(class_name=operator_class_name)[0]
     op_id = operator_model.id
     create_jobs_from_request(req_id, op_id, str(job_group.id))
