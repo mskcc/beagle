@@ -1,3 +1,4 @@
+import datetime
 import notifier.tasks as notifier
 from django.db import models
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
@@ -6,27 +7,16 @@ from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.tasks import create_jobs_from_request
 
-import datetime
-
-
-class RequestObj:
-    def __init__(self, req_id, job_group_id, pipeline_name):
-        self.data = dict()
-        self.set_request(req_id)
-        self.set_job_group(job_group_id)
-        self.set_pipeline_name(pipeline_name)
-
-    def set_request(self, req_id):
-        self.data['request_ids'] = req_id
-
-    def set_job_group(self, job_group):
-        self.data['job_group_id'] = job_group
-
-    def set_pipeline_name(self, pipeline_name):
-        self.data['pipeline_name'] = pipeline_name
-
 
 def run_request(req_id, operator_class_name):
+    """
+    Creates a JIRA ticket and job group ID
+    Uses runner.tasks.create_jobs_from_request to submit pipeline runs for request ID
+
+    req_id is request ID
+    operator_class_name examples: "ArgosOperator"
+        Assumes operator_class_name exists in the model
+    """
     approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     files = FileRepository.filter(metadata={'requestId': req_id, 'igocomplete': True})
     # create summary and description
@@ -45,6 +35,9 @@ def run_request(req_id, operator_class_name):
     create_jobs_from_request(req_id, op_id, str(job_group.id))
 
 def create_description(files):
+    """
+    Mirrors the description generated in beagle_etl
+    """
     data = files.first().metadata
     request_id = data['requestId']
     recipe = data['recipe']
@@ -57,8 +50,6 @@ def create_description(files):
     p_email = data['piEmail']
     pm_name = data['projectManagerName']
     num_samples = files.order_by().values('metadata__cmoSampleName').annotate(n=models.Count("pk"))
-    # maybe a bug? can't re-filter files var, returns empty queryset, so re-doing FileRepository filter
-    # TODO: investigate this
     num_tumors = len(FileRepository.filter(queryset=files,metadata={'tumorOrNormal': 'Tumor'}).order_by().values('metadata__cmoSampleName').annotate(n=models.Count("pk")))
     num_normals = len(FileRepository.filter(queryset=files,metadata={'tumorOrNormal': 'Normal'}).order_by().values('metadata__cmoSampleName').annotate(n=models.Count("pk")))
     description = """
