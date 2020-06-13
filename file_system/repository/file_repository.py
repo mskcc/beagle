@@ -1,14 +1,19 @@
 from file_system.models import FileMetadata, File
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
 
-
 class FileRepository(object):
 
     @classmethod
-    def all(cls):
-        metadata_ids = FileMetadata.objects.order_by('file', '-version').distinct('file_id').values_list('id',
-                                                                                                         flat=True)
-        queryset = FileMetadata.objects.filter(id__in=metadata_ids).order_by('created_date').all()
+    def all(cls, distinct=True):
+        queryset = FileMetadata.objects.all()
+        if distinct:
+            queryset = FileRepository.distinct_files(queryset)
+        return queryset
+
+    @classmethod
+    def distinct_files(cls, queryset):
+        metadata_ids = queryset.order_by('file', '-version').distinct('file_id').values_list('id',flat=True)
+        queryset = queryset.filter(id__in=metadata_ids).order_by('created_date').all()
         return queryset
 
     @classmethod
@@ -27,11 +32,10 @@ class FileRepository(object):
             raise FileNotFoundException("File with id:%s does not exist" % str(id))
 
     @classmethod
-    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, ret=None):
+    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, values_metadata=None, distinct=True):
         if queryset == None:
             # If queryset not set, use all files
             queryset = FileRepository.all()
-
         if q:
             queryset = FileRepository.all()
             return queryset.filter(q)
@@ -72,5 +76,7 @@ class FileRepository(object):
             queryset = FileRepository.all().filter(**create_query_dict)
         if ret:
             ret_str = 'metadata__%s' % ret
+        if distinct:
+            queryset = FileRepository.distinct_files(queryset)
             return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
         return queryset
