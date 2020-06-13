@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request
 from drf_yasg.utils import swagger_auto_schema
+from beagle.common import fix_query_list
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -32,18 +33,6 @@ class RunApiViewSet(mixins.ListModelMixin,
         else:
             return RunSerializerFull
 
-    def fix_query_list(self,request_query,key_list):
-        query_dict = request_query.dict()
-        for single_param in key_list:
-            query_value = request_query.getlist(single_param)
-            if query_value:
-                if ',' in query_value[0]:
-                    query_value = query_dict.get(single_param)
-                    query_dict[single_param] = query_value.split(",")
-                else:
-                    query_dict[single_param] = query_value
-        return query_dict
-
     def query_from_dict(self,query_filter,queryset,input_list):
         for single_input in input_list:
             key, val = single_input.split(':')
@@ -54,7 +43,7 @@ class RunApiViewSet(mixins.ListModelMixin,
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
         query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids']
-        fixed_query_params = self.fix_query_list(request.query_params,query_list_types)
+        fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Run, fixed_query_params)
