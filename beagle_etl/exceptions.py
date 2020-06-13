@@ -35,6 +35,13 @@ class FailedToSubmitToOperatorException(ETLExceptions):
     code = 104
 
 
+class FailedToCalculateChecksum(ETLExceptions):
+    """
+        Unable to find Operator for assay type
+        """
+    code = 105
+
+
 class FailedToFetchPoolNormalException(ETLExceptions):
     """
     Unable to parse and create pool normal file

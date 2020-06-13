@@ -144,7 +144,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
         metadata = FileMetadata(file=file, metadata=metadata, user=user)
         metadata.save()
         job = Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                                 args={'file_id': str(file.id)},
+                                 args={'file_id': str(file.id), 'path': validated_data.get('path')},
                                  status=JobStatus.CREATED, max_retry=3, children=[])
         return file
 
