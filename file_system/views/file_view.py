@@ -9,8 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
-from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer
-
+from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer
+from drf_yasg.utils import swagger_auto_schema
+from beagle.pagination import time_filter
+from beagle.common import fix_query_list
 
 class FileView(mixins.CreateModelMixin,
                mixins.DestroyModelMixin,
@@ -45,6 +47,7 @@ class FileView(mixins.CreateModelMixin,
         serializer = FileSerializer(f)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
         queryset = FileRepository.all()
         file_groups = request.query_params.getlist('file_group')
