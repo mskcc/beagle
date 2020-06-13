@@ -74,9 +74,9 @@ class FileRepository(object):
             queryset = queryset.filter(**create_query_dict)
         else:
             queryset = FileRepository.all().filter(**create_query_dict)
-        if ret:
-            ret_str = 'metadata__%s' % ret
         if distinct:
             queryset = FileRepository.distinct_files(queryset)
+        if values_metadata:
+            ret_str = 'metadata__%s' % values_metadata
             return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
         return queryset
