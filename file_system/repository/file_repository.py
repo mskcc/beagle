@@ -28,7 +28,7 @@ class FileRepository(object):
 
     @classmethod
     def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, ret=None):
-        if not queryset:
+        if queryset == None:
             # If queryset not set, use all files
             queryset = FileRepository.all()
 
@@ -66,7 +66,7 @@ class FileRepository(object):
             for k, v in metadata.items():
                 metadata_query_dict['metadata__%s__regex' % k] = v
         create_query_dict.update(metadata_query_dict)
-        if queryset:
+        if queryset != None:
             queryset = queryset.filter(**create_query_dict)
         else:
             queryset = FileRepository.all().filter(**create_query_dict)
