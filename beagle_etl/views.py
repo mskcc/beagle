@@ -37,8 +37,8 @@ class JobViewSet(mixins.CreateModelMixin,
 
     @swagger_auto_schema(query_serializer=JobQuerySerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_group', 'type', 'sample_id', 'request_id', 'created_date_timedelta', 'created_date_gt', 'created_date_lt']
         fixed_query_params = self.fix_query_list(request.query_params, query_list_types)
+        query_list_types = ['job_group', 'type', 'sample_id', 'request_id']
         serializer = JobQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Job, request.query_params)
