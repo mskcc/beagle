@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from django.contrib.postgres.indexes import GinIndex
 
 
 class StorageType(IntEnum):
@@ -14,7 +15,7 @@ class StorageType(IntEnum):
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -95,6 +96,18 @@ class FileMetadata(BaseModel):
         version = max(versions) + 1 if versions else 0
         self.version = version
         super(FileMetadata, self).save(*args, **kwargs)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=['version'],
+                name='version_idx',
+            ),
+            GinIndex(
+                fields=['metadata'],
+                name='metadata_gin',
+            ),
+        ]
 
 
 class FileRunMap(BaseModel):
