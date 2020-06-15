@@ -28,7 +28,7 @@ def remove_with_caveats(samples):
             add = False
             LOGGER.info("No patient ID for sample %s; removing from set", sample_id)
         elif isinstance(patient_id, str):
-            if not patient_id.strip()
+            if not patient_id.strip():
                 add = False
                 LOGGER.info("Empty string for patient ID in sample %s; removing from set", sample_id)
         if add:
