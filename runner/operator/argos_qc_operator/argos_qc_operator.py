@@ -51,20 +51,16 @@ class ArgosQcOperator(Operator):
         that uses both
         """
         output_directory = None
-        project_prefix = "test_project_prefix"
-        print(project_prefix)
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
-                jg = JobGroup.objects.get(id=job_group_id)
+                jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 project_prefix,
                                                 pipeline_version,
-                                                jg_create_date)
-                print(output_directory)
-
+                                                jg_created_date)
             argos_qc_outputs_job_data['output_directory'] = output_directory
 
         argos_qc_outputs_job = [(APIRunCreateSerializer(
