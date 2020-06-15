@@ -146,6 +146,8 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
         "otherContactEmails": response_body['otherContactEmails'],
+        "dataAccessEmails": response_body['dataAccessEmails'],
+        "qcAccessEmails": response_body['qcAccessEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
