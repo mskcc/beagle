@@ -5,6 +5,7 @@ Constructs input JSON for the copy outputs pipeline and then
 submits them as runs
 """
 import os
+from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
@@ -72,13 +73,14 @@ class CopyOutputsOperator(Operator):
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
+                jg = JobGroup.objects.get(id=self.job_group_id)
+                jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 project_prefix,
                                                 pipeline_version,
-                                                self.job_group_id)
+                                                jg_created_date)
             copy_outputs_job_data['output_directory'] = output_directory
-
         copy_outputs_job = [(APIRunCreateSerializer(
             data=copy_outputs_job_data), input_json)]
 
