@@ -146,7 +146,7 @@ class FileQuerySerializer(serializers.Serializer):
     filename_regex = serializers.CharField(required=False)
 
     file_type = serializers.ListField(
-        child=serializers.UUIDField(),
+        child=serializers.CharField(),
         allow_empty=True,
         required=False
     )
