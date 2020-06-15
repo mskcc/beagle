@@ -43,8 +43,9 @@ def get_baits_and_targets(assay, qc_resources):
     if target_assay in targets:
         return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])}
     else:
-        error_msg = "ERROR: Targets for Assay not found in qc_resources.json: %s" % assay
-        LOGGER.error(error_msg)
+        return {"class": "File", 'location': str("")} # delete this
+#        error_msg = "ERROR: Targets for Assay not found in qc_resources.json: %s" % assay
+#        LOGGER.error(error_msg)
 
 
 def create_cwl_file_obj(file_path):

@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import logging
+from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
@@ -50,14 +51,19 @@ class ArgosQcOperator(Operator):
         that uses both
         """
         output_directory = None
+        project_prefix = "test_project_prefix"
+        print(project_prefix)
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
+                jg = JobGroup.objects.get(id=job_group_id)
+                jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 project_prefix,
                                                 pipeline_version,
-                                                self.job_group_id)
+                                                jg_create_date)
+                print(output_directory)
 
             argos_qc_outputs_job_data['output_directory'] = output_directory
 
