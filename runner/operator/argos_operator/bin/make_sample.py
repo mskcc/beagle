@@ -11,8 +11,7 @@ LOGGER = logging.getLogger(__name__)
 def remove_with_caveats(samples):
     """
     Removes samples from a list of samples if they either
-    don't contain a properly formatted patient ID or is
-    'sampleNameMalformed', which happens when function
+    don't contain a 'sampleNameMalformed', which happens when function
     format_sample_name returns it
     """
     data = list()
@@ -25,16 +24,17 @@ def remove_with_caveats(samples):
         if sample_name == 'sampleNameMalformed':
             add = False
             LOGGER.info("Sample name is malformed for for %s; removing from set", sample_id)
-        if patient_id[:2].lower() not in 'c-':
+        if not patient_id:
             add = False
-            LOGGER.info(
-                "Patient ID does not start with expected 'C-' prefix for %s; removing from set",
-                sample_id)
+            LOGGER.info("No patient ID for sample %s; removing from set", sample_id)
+        elif isinstance(patient_id, str):
+            if not patient_id.strip()
+                add = False
+                LOGGER.info("Empty string for patient ID in sample %s; removing from set", sample_id)
         if add:
             data.append(sample)
         else:
             error_data.append(sample)
-
     return data, error_data
 
 
