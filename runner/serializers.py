@@ -53,14 +53,14 @@ class PipelineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pipeline
-        fields = ('id', 'name', 'github', 'version', 'entrypoint', 'output_file_group', 'output_directory')
+        fields = '__all__'
 
 
 class PortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('id', 'name', 'schema', 'secondary_files', 'value', 'db_value')
+        fields = '__all__'
 
 
 class UpdatePortSerializer(serializers.Serializer):
@@ -140,8 +140,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = (
-        'id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
+        fields = '__all__'
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
@@ -246,7 +245,7 @@ class OperatorErrorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorErrors
-        fields = ('operator_name', 'request_id', 'error')
+        fields = '__all__'
 
 
 class OperatorRunSerializer(serializers.ModelSerializer):
@@ -261,4 +260,4 @@ class OperatorRunSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorRun
-        fields = ('id', 'operator', 'operator_class', 'status', 'num_total_runs', 'num_completed_runs', 'num_failed_runs', 'job_group')
+        fields = '__all__'
