@@ -17,6 +17,7 @@ class FileMetadataAdmin(admin.ModelAdmin):
     list_display = ('file', 'version')
     autocomplete_fields = ['file']
 
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(FileGroup)

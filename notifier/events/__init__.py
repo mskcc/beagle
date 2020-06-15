@@ -14,3 +14,4 @@ from .disabled_assay_event import DisabledAssayEvent
 from .unknown_assay_event import UnknownAssayEvent
 from .etl_job_failed_event import ETLJobFailedEvent
 from .custom_capture_event import AdminHoldEvent
+from .operator_start_event import OperatorStartEvent

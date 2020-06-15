@@ -60,7 +60,6 @@ def create_jobs_from_operator(operator, job_group_id=None):
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
 
-
     if job_group_id:
         event = OperatorRunEvent(job_group_id,
                                  operator.request_id,
