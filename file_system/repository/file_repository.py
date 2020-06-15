@@ -12,7 +12,8 @@ class FileRepository(object):
 
     @classmethod
     def distinct_files(cls, queryset):
-        metadata_ids = queryset.order_by('file', '-version').distinct('file_id').values_list('id',flat=True)
+        file_ids = queryset.values_list('file_id',flat=True)
+        metadata_ids = FileMetadata.objects.filter(file_id__in=file_ids).order_by('file', '-version').distinct('file_id').values_list('id',flat=True)
         queryset = queryset.filter(id__in=metadata_ids).order_by('created_date').all()
         return queryset
 
