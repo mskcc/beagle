@@ -69,7 +69,7 @@ def request_callback(request_id, job_group=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
     assays = Assay.objects.first()
-    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, ret='recipe').all())
+    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
