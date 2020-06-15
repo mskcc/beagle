@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import logging
+from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline

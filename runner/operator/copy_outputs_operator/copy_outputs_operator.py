@@ -5,6 +5,7 @@ Constructs input JSON for the copy outputs pipeline and then
 submits them as runs
 """
 import os
+from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
