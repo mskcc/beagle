@@ -79,17 +79,9 @@ class RunApiViewSet(mixins.ListModelMixin,
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value).all()
             if ports:
-                try:
-                    queryset = self.query_from_dict("port__value__%s",queryset,ports)
-                except Exception as e:
-                    return Response({'details': 'Query for inputs needs to be in format input:value'},
-                        status=status.HTTP_400_BAD_REQUEST)
+                queryset = self.query_from_dict("port__value__%s",queryset,ports)
             if tags:
-                try:
-                    queryset = self.query_from_dict("tags__%s__exact",queryset,tags)
-                except Exception as e:
-                    return Response({'details': 'Query for inputs needs to be in format input:value'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                queryset = self.query_from_dict("tags__%s__exact",queryset,tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids).all()
             try:
