@@ -116,7 +116,7 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True)),
+                                set(operator_run.runs.values_list('id', flat=True)),
                                 job_group_id=job_group_id
                             )
                             continue
@@ -126,7 +126,7 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True)),
+                                set(operator_run.runs.values_list('id', flat=True)),
                                 job_group_id=job_group_id
                             )
                             continue
