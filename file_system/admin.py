@@ -18,6 +18,7 @@ class FileMetadataAdmin(admin.ModelAdmin):
     autocomplete_fields = ['file']
     search_fields = ('id', 'metadata__requestId')
 
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(FileGroup)

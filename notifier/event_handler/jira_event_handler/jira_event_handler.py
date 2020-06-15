@@ -22,7 +22,11 @@ class JiraEventHandler(EventHandler):
 
     def process_import_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.update_ticket_summary(job_group.jira_id, event.request_id)
+        # self.client.update_ticket_summary(job_group.jira_id, event.request_id)
+        self.client.update_ticket_description(job_group.jira_id, str(event))
+
+    def process_operator_start_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_etl_jobs_links_event(self, event):

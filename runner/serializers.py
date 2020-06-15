@@ -221,6 +221,26 @@ class RequestIdOperatorSerializer(serializers.Serializer):
     pipeline_name = serializers.CharField(max_length=100)
 
 
+class RequestIdsOperatorSerializer(serializers.Serializer):
+    request_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    job_group = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(required=False, default=True)
+
+
+class RunIdsOperatorSerializer(serializers.Serializer):
+    run_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    job_group = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(default=False)
+
+
 class OperatorErrorSerializer(serializers.ModelSerializer):
 
     class Meta:
