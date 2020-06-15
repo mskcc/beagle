@@ -244,7 +244,7 @@ class RequestOperatorViewSet(GenericAPIView):
         send_notification.delay(operator_start_event)
 
 
-class RunOperatorViewSet(GenericViewSet):
+class RunOperatorViewSet(GenericAPIView):
     serializer_class = RunIdsOperatorSerializer
 
     def post(self, request):
