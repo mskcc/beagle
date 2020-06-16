@@ -178,6 +178,7 @@ class RequestOperatorViewSet(GenericAPIView):
                 for req in request_ids:
                     job_group = JobGroup()
                     job_group.save()
+                    job_group_id = str(job_group.id)
                     notifier_start(job_group, self._generate_summary(req))
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
                     self._generate_description(str(job_group.id), req)
