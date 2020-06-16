@@ -2,7 +2,7 @@ import logging
 import datetime
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
@@ -22,7 +22,8 @@ from notifier.events import OperatorStartEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
 from drf_yasg.utils import swagger_auto_schema
-from django.db import models
+from beagle.common import fix_query_list
+
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -39,18 +40,6 @@ class RunApiViewSet(mixins.ListModelMixin,
         else:
             return RunSerializerFull
 
-    def fix_query_list(self,request_query,key_list):
-        query_dict = request_query.dict()
-        for single_param in key_list:
-            query_value = request_query.getlist(single_param)
-            if query_value:
-                if ',' in query_value[0]:
-                    query_value = query_dict.get(single_param)
-                    query_dict[single_param] = query_value.split(",")
-                else:
-                    query_dict[single_param] = query_value
-        return query_dict
-
     def query_from_dict(self,query_filter,queryset,input_list):
         for single_input in input_list:
             key, val = single_input.split(':')
@@ -61,7 +50,7 @@ class RunApiViewSet(mixins.ListModelMixin,
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
         query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids']
-        fixed_query_params = self.fix_query_list(request.query_params,query_list_types)
+        fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Run, fixed_query_params)
@@ -297,11 +286,11 @@ class RunOperatorViewSet(GenericAPIView):
         l_email = data['labHeadEmail']
         p_email = data['piEmail']
         pm_name = data['projectManagerName']
-        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=models.Count("pk")))
+        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
         num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=models.Count("pk")))
+            'metadata__cmoSampleName').annotate(n=Count("pk")))
         num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=models.Count("pk")))
+            'metadata__cmoSampleName').annotate(n=Count("pk")))
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
