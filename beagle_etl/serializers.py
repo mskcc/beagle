@@ -48,7 +48,11 @@ class JobQuerySerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
                                      required=False)
 
-    job_group = serializers.ListField(required=False)
+    job_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
 
     type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True,
                                    required=False)
