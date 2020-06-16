@@ -16,7 +16,6 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
             'max_retry', 'job_group', 'finished_date', 'created_date', 'modified_date')
 
-
 class AssaySerializer(serializers.ModelSerializer):
 
     class Meta:
