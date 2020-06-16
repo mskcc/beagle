@@ -117,8 +117,9 @@ def request_callback(request_id, job_group=None):
             send_notification.delay(error_label)
             ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
             send_notification.delay(ci_review_e)
-        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-        create_jobs_from_request.delay(request_id, operator.id, job_group_id)
+        else:
+            logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+            create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
 
 
