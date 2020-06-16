@@ -2,6 +2,7 @@ import logging
 import datetime
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
+from django.db import models
 from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
