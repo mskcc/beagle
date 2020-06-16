@@ -16,11 +16,13 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
             'max_retry', 'job_group', 'finished_date', 'created_date', 'modified_date')
 
+
 class AssaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Assay
         fields = '__all__'
+
 
 class AssayElementSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
@@ -31,6 +33,7 @@ class AssayElementSerializer(serializers.Serializer):
     hold = serializers.ListField(required=False,
         child=serializers.CharField())
 
+
 class AssayUpdateSerializer(serializers.Serializer):
     all = serializers.ListField(required=False,
         child=serializers.CharField())
@@ -38,6 +41,7 @@ class AssayUpdateSerializer(serializers.Serializer):
         child=serializers.CharField())
     hold = serializers.ListField(required=False,
         child=serializers.CharField())
+
 
 class JobQuerySerializer(serializers.Serializer):
 

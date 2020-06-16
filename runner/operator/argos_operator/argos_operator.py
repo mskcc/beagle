@@ -6,7 +6,7 @@ from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent, OperatorRequestEvent
+from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
@@ -19,6 +19,15 @@ class ArgosOperator(Operator):
                                       metadata={'requestId': self.request_id,
                                                 'igocomplete': True})
         argos_jobs = list()
+
+        cnt_tumors = FileRepository.filter(queryset=self.files,
+                                           metadata={'requestId': self.request_id,
+                                                     'tumorOrNormal': 'Tumor',
+                                                     'igocomplete': True}).count()
+        if cnt_tumors == 0:
+            cant_do = CantDoEvent(self.job_group_id).to_dict()
+            send_notification.delay(cant_do)
+            return argos_jobs
 
         data = list()
         for f in files:
