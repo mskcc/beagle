@@ -14,8 +14,10 @@ class FileRunMapAdmin(admin.ModelAdmin):
 
 
 class FileMetadataAdmin(admin.ModelAdmin):
-    list_display = ('file', 'version')
+    list_display = ('file', 'version', 'metadata')
     autocomplete_fields = ['file']
+    search_fields = ('id', 'metadata__requestId')
+
 
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)

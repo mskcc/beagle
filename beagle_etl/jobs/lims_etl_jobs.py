@@ -3,32 +3,26 @@ import copy
 import logging
 import requests
 from django.conf import settings
+from beagle_etl.jobs import TYPES
 from django.db.models import Prefetch
-from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, ETLJobCreatedEvent
+from notifier.models import JobGroup
+from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, ETLJobCreatedEvent, AdminHoldEvent, CustomCaptureCCEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator, Assay, JobGroup
+from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from file_system.metadata.validator import MetadataValidator, METADATA_SCHEMA
-from beagle_etl.exceptions import FailedToFetchFilesException, FailedToSubmitToOperatorException
+from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
 from runner.tasks import create_jobs_from_request
-from runner.operator.argos_operator.bin.make_sample import format_sample_name
+from file_system.helper.checksum import sha1, FailedToCalculateChecksum
+from runner.operator.helper import format_sample_name
 
 logger = logging.getLogger(__name__)
 
 #from beagle_etl.jobs.lims_etl_jobs import fetch_samples
-
-TYPES = {
-    "DELIVERY": "beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
-    "REQUEST": "beagle_etl.jobs.lims_etl_jobs.fetch_samples",
-    "SAMPLE": "beagle_etl.jobs.lims_etl_jobs.fetch_sample_metadata",
-    "POOLED_NORMAL": "beagle_etl.jobs.lims_etl_jobs.create_pooled_normal",
-    "REQUEST_CALLBACK": "beagle_etl.jobs.lims_etl_jobs.request_callback",
-    "UPDATE_SAMPLE_METADATA": "beagle_etl.jobs.lims_etl_jobs.update_sample_metadata"
-}
-
 
 def fetch_new_requests_lims(timestamp):
     logger.info("Fetching requestIds")
@@ -37,7 +31,7 @@ def fetch_new_requests_lims(timestamp):
                               params={"timestamp": timestamp},
                               auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if requestIds.status_code != 200:
-        raise FailedToFetchFilesException("Failed to fetch new requests")
+        raise FailedToFetchSampleException("Failed to fetch new requests")
     if not requestIds.json():
         logger.info("There is no new RequestIDs")
         return []
@@ -75,8 +69,12 @@ def request_callback(request_id, job_group=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
     assays = Assay.objects.first()
-    recipes = FileRepository.filter(metadata={'requestId': request_id}, ret='recipe')
-    if recipes[0] not in assays.all:
+    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
+    if not recipes:
+        raise FailedToSubmitToOperatorException(
+           "Not enough metadata to choose the operator for requestId:%s" % request_id)
+
+    if not all(item in assays.all for item in recipes):
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
@@ -84,40 +82,43 @@ def request_callback(request_id, job_group=None):
         unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
-    if recipes[0] in assays.disabled:
+
+    if any(item in assays.hold for item in recipes):
+        admin_hold_event = AdminHoldEvent(job_group_id).to_dict()
+        send_notification.delay(admin_hold_event)
+        custom_capture_event = CustomCaptureCCEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(custom_capture_event)
+        return []
+
+    if any(item in assays.disabled for item in recipes):
         not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(not_for_ci)
         disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
 
-    if not recipes:
-        raise FailedToSubmitToOperatorException(
-           "Not enough metadata to choose the operator for requestId:%s" % request_id)
-    try:
-        operator = Operator.objects.get(
-            recipes__contains=[recipes[0]]
-        )
-    except Operator.DoesNotExist:
-        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes[0])
+    operators = Operator.objects.filter(recipes__overlap=recipes)
+
+    if not operators:
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes)
         logger.error(msg)
         e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
         ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException(msg)
-    if not operator.active:
-        msg = "Operator not active: %s" % operator.class_name
-        logger.info(msg)
-        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
-        send_notification.delay(e)
-        error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
-        send_notification.delay(error_label)
-        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
-        send_notification.delay(ci_review_e)
-        raise FailedToSubmitToOperatorException(msg)
-    logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-    create_jobs_from_request.delay(request_id, operator.id, job_group_id)
+    for operator in operators:
+        if not operator.active:
+            msg = "Operator not active: %s" % operator.class_name
+            logger.info(msg)
+            e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
+            send_notification.delay(e)
+            error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
+            send_notification.delay(error_label)
+            ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+            send_notification.delay(ci_review_e)
+        logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
+        create_jobs_from_request.delay(request_id, operator.id, job_group_id)
     return []
 
 
@@ -134,9 +135,10 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
                              params={"request": request_id},
                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleIds.status_code != 200:
-        raise FailedToFetchFilesException("Failed to fetch sampleIds for request %s" % request_id)
+        raise FailedToFetchSampleException("Failed to fetch sampleIds for request %s" % request_id)
     if sampleIds.json()['requestId'] != request_id:
-        raise FailedToFetchFilesException("LIMS returned wrong response for request %s. Got %s instead" % (request_id, sampleIds.json()['requestId']))
+        raise ErrorInconsistentDataException(
+            "LIMS returned wrong response for request %s. Got %s instead" % (request_id, sampleIds.json()['requestId']))
     response_body = sampleIds.json()
     request_metadata = {
         "dataAnalystEmail": response_body['dataAnalystEmail'],
@@ -146,6 +148,8 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
         "otherContactEmails": response_body['otherContactEmails'],
+        "dataAccessEmails": response_body['dataAccessEmails'],
+        "qcAccessEmails": response_body['qcAccessEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
@@ -161,9 +165,9 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     #  from beagle_etl.jobs.lims_etl_jobs import fetch_samples
     #  fetch_samples("06714_C", job_group="4c2484c3-f8f4-47bc-8275-802f0eba0931")
     if import_samples:
+        if not response_body.get('samples', False):
+            raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
         for sample in response_body.get('samples', []):
-            if not sample:
-                raise FailedToFetchFilesException("Sample Id None")
             job = get_or_create_sample_job(sample['igoSampleId'],
                                            sample['igocomplete'],
                                            request_id,
@@ -193,8 +197,6 @@ def get_or_create_pooled_normal_job(filepath, job_group=None):
 def get_or_create_sample_job(sample_id, igocomplete, request_id, request_metadata, job_group=None):
     logger.info(
         "Searching for job: %s for sample_id: %s" % (TYPES['SAMPLE'], sample_id))
-
-    # job_group_id = str(job_group.id) if job_group else None
 
     job = Job.objects.filter(run=TYPES['SAMPLE'], args__sample_id=sample_id).first()
     if not job:
@@ -255,30 +257,40 @@ def create_pooled_normal(filepath, file_group_id):
     - flowCellId = HCYYWBBXY
     - [A|B] might be the flowcell bay the flowcell is placed into
     """
-    if FileRepository.filter(path=filepath):
+    # if FileRepository.filter(path=filepath):
+    try:
+        File.objects.get(path=filepath)
+    except File.DoesNotExist:
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
+    assays = Assay.objects.first()
+    assay_list = assays.all
     run_id = None
     preservation_type = None
     recipe = None
     try:
         parts = filepath.split('/')
         run_id = get_run_id_from_string(parts[6])
-        preservation_type = parts[8]
+        pooled_normal_folder = parts[8]
+        preservation_type = pooled_normal_folder
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
-        recipe = parts[8]
-        recipe = recipe.split('IGO_')[1]
-        recipe = recipe.split('_')[0]
+        potential_recipe = list(filter(lambda single_assay: single_assay in pooled_normal_folder, assay_list))
+        if potential_recipe:
+            potential_recipe.sort(key=len, reverse=True)
+            recipe = potential_recipe[0]
     except Exception as e:
-        raise FailedToFetchFilesException("Failed to parse metadata for pooled normal file %s" % filepath)
+        raise FailedToFetchPoolNormalException("Failed to parse metadata for pooled normal file %s" % filepath)
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
-        # TODO: Don't import and set to COMPLETED
-        raise FailedToFetchFilesException("Invalid preservation type %s" % preservation_type)
+        logger.info("Invalid preservation type %s" % preservation_type)
+        return
+    if recipe in assays.disabled:
+        logger.info("Recipe %s, is marked as disabled" % recipe)
+        return
     if None in [run_id, preservation_type, recipe]:
-        raise FailedToFetchFilesException(
-            "Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+        logger.info("Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
+        return
     metadata = {
         "runId": run_id,
         "preservation": preservation_type,
@@ -295,79 +307,113 @@ def create_pooled_normal(filepath, file_group_id):
 
 
 def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
-    conflict = False
-    missing_fastq = False
-    invalid_number_of_fastq = False
-    conflict_files = []
-    failed_runs = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = requests.get('%s/LimsRest/api/getSampleManifest' % settings.LIMS_URL,
                                   params={"igoSampleId": sample_id},
                                   auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleMetadata.status_code != 200:
         logger.error("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
+        raise FailedToFetchSampleException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
     try:
         data = sampleMetadata.json()[0]
     except Exception as e:
-        raise FailedToFetchFilesException(
+        raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
         # logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
-        raise FailedToFetchFilesException(
+        raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
+
+    validate_sample(sample_id, data.get('libraries'), igocomplete)
+
     libraries = data.pop('libraries')
-    if not libraries:
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
-        if not runs:
-            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
-            raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
         run_dict = convert_to_dict(runs)
         logger.info("Processing runs %s" % run_dict)
         for run in run_dict.values():
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
+            for fastq in fastqs:
+                logger.info("Adding file %s" % fastq)
+                create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
+                            request_metadata, R1_or_R2(fastq))
+
+
+def validate_sample(sample_id, libraries, igocomplete, validate_update=False):
+    conflict = False
+    missing_fastq = False
+    invalid_number_of_fastq = False
+    failed_runs = []
+    conflict_files = []
+    if not libraries:
+        if igocomplete:
+            raise ErrorInconsistentDataException(
+                "Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
+        else:
+            raise MissingDataException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
+    for library in libraries:
+        runs = library.get('runs')
+        if not runs:
+            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+            if igocomplete:
+                raise ErrorInconsistentDataException(
+                    "Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+            else:
+                raise MissingDataException(
+                    "Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+        run_dict = convert_to_dict(runs)
+        for run in run_dict.values():
+            fastqs = run.get('fastqs')
             if not fastqs:
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
-            elif len(fastqs) != 2:
+            elif len(fastqs) % 2 != 0:
                 logger.error(
                     "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
-                    sample_id, str(len(fastqs))))
+                        sample_id, str(len(fastqs))))
                 invalid_number_of_fastq = True
                 failed_runs.append(run['runId'])
             else:
-                file_search = FileRepository.filter(path=fastqs[0]).first()
-                if not file_search:
-                    create_file(fastqs[0], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[0]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
-                file_search = FileRepository.filter(path=fastqs[1]).first()
-                if not file_search:
-                    create_file(fastqs[1], request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastqs[1]))
-                else:
-                    logger.error(
-                        "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id)))
-                    conflict = True
-                    conflict_files.append((file_search.file.path, str(file_search.file.id)))
-    if conflict:
-        raise FailedToFetchFilesException(
-            "Files %s already exists" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in conflict_files]))
+                if not validate_update:
+                    for fastq in fastqs:
+                        file_search = None
+                        try:
+                            file_search = File.objects.get(path=fastq)
+                        except File.DoesNotExist:
+                            pass
+                        # file_search = FileRepository.filter(path=fastq).first()
+                        logger.info("Processing %s" % fastq)
+                        if file_search:
+                            msg = "File %s already created with id:%s" % (file_search.path, str(file_search.id))
+                            logger.error(msg)
+                            conflict = True
+                            conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
-        raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+        if igocomplete:
+            raise ErrorInconsistentDataException(
+                "Missing fastq files for igcomplete: %s sample %s : %s" % (
+                igocomplete, sample_id, ' '.join(failed_runs)))
+        else:
+            raise MissingDataException(
+                "Missing fastq files for igcomplete: %s sample %s : %s" % (
+                    igocomplete, sample_id, ' '.join(failed_runs)))
     if invalid_number_of_fastq:
-        raise FailedToFetchFilesException(
-            "%s fastq file(s) provided: %s" % (str(len(failed_runs)), ' '.join(failed_runs)))
+        if igocomplete:
+            raise ErrorInconsistentDataException(
+                "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
+        else:
+            pass
+    if not validate_update:
+        if conflict:
+            res_str = ""
+            for f in conflict_files:
+                res_str += "%s: %s" % (f[0], f[1])
+            raise ErrorInconsistentDataException(
+                "Conflict of fastq file(s) %s" % res_str)
 
 
 def R1_or_R2(filename):
@@ -399,12 +445,12 @@ def convert_to_dict(runs):
                 if run_dict[run['runId']]['fastqs'][0] != run['fastqs'][0]:
                     logger.error(
                         "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][0], run['fastqs'][0]))
-                    raise FailedToFetchFilesException(
+                    raise FailedToFetchSampleException(
                         "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][0], run['fastqs'][0]))
                 if run_dict[run['runId']]['fastqs'][1] != run['fastqs'][1]:
                     logger.error(
                         "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][1], run['fastqs'][1]))
-                    raise FailedToFetchFilesException(
+                    raise FailedToFetchSampleException(
                         "File %s do not match with %s" % (run_dict[run['runId']]['fastqs'][1], run['fastqs'][1]))
     return run_dict
 
@@ -415,6 +461,7 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(name=file_type).first()
         metadata = copy.deepcopy(data)
+        library_copy = copy.deepcopy(library)
         sample_name = metadata.pop('cmoSampleName', None)
         external_sample_name = metadata.pop('sampleName', None)
         sample_id = metadata.pop('igoId', None)
@@ -431,8 +478,10 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         metadata['sampleClass'] = sample_class
         metadata['R'] = r
         metadata['igocomplete'] = igocomplete
-        metadata['libraryId'] = library.pop('libraryIgoId', None)
-        for k, v in library.items():
+        metadata['sequencingCenter'] = 'MSKCC'
+        metadata['platform'] = 'Illumina'
+        metadata['libraryId'] = library_copy.pop('libraryIgoId', None)
+        for k, v in library_copy.items():
             metadata[k] = v
         for k, v in run.items():
             metadata[k] = v
@@ -441,13 +490,13 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
-        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
+        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
         logger.info(metadata)
         # validator.validate(metadata)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
-        raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
+        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
         try:
             f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
@@ -455,9 +504,28 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
+            Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
+                               args={'file_id': str(f.id), 'path': path},
+                               status=JobStatus.CREATED, max_retry=3, children=[])
         except Exception as e:
             logger.error("Failed to create file %s. Error %s" % (path, str(e)))
-            raise FailedToFetchFilesException("Failed to create file %s. Error %s" % (path, str(e)))
+            raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
+
+
+def calculate_checksum(file_id, path):
+    try:
+        checksum = sha1(path)
+    except FailedToCalculateChecksum as e:
+        logger.info("Failed to calculate checksum for file: %s: %s", file_id, path)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    try:
+        f = File.objects.get(id=file_id)
+        f.checksum = checksum
+        f.save(update_fields=["checksum"])
+    except File.DoesNotExist:
+        logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    return []
 
 
 def update_metadata(request_id):
@@ -467,9 +535,9 @@ def update_metadata(request_id):
                              params={"request": request_id},
                              auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleIds.status_code != 200:
-        raise FailedToFetchFilesException("Failed to fetch sampleIds for request %s" % request_id)
+        raise FailedToFetchSampleException("Failed to fetch sampleIds for request %s" % request_id)
     if sampleIds.json()['requestId'] != request_id:
-        raise FailedToFetchFilesException(
+        raise FailedToFetchSampleException(
             "LIMS returned wrong response for request %s. Got %s instead" % (request_id, sampleIds.json()['requestId']))
     response_body = sampleIds.json()
     request_metadata = {
@@ -487,77 +555,47 @@ def update_metadata(request_id):
     }
     logger.info("Response: %s" % str(sampleIds.json()))
     for sample in response_body.get('samples', []):
-        if not sample:
-            raise FailedToFetchFilesException("Sample Id None")
         job = update_sample_job(sample['igoSampleId'], sample['igocomplete'], request_id, request_metadata)
         children.add(str(job.id))
     return list(children)
 
 
 def update_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
-    missing = False
-    missing_fastq = False
-    failed_runs = []
-    missing_files = []
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = requests.get('%s/LimsRest/api/getSampleManifest' % settings.LIMS_URL,
                                   params={"igoSampleId": sample_id},
                                   auth=(settings.LIMS_USERNAME, settings.LIMS_PASSWORD), verify=False)
     if sampleMetadata.status_code != 200:
         logger.error("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
+        raise FailedToFetchSampleException("Failed to fetch SampleManifest for sampleId:%s" % sample_id)
     try:
-        data = sampleMetadata.json()[0]
+        data = copy.deepcopy(sampleMetadata.json()[0])
     except Exception as e:
-        raise FailedToFetchFilesException(
+        raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
         logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
-        raise FailedToFetchFilesException(
+        raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
     libraries = data.pop('libraries')
-    if not libraries:
-        raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
+
+    validate_sample(sample_id, libraries, igocomplete, validate_update=True)
+
+    libraries = data.pop('libraries')
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
-        if not runs:
-            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
-            raise FailedToFetchFilesException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
         run_dict = convert_to_dict(runs)
         logger.info("Processing runs %s" % run_dict)
         for run in run_dict.values():
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
-            if not fastqs:
-                logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
-                missing_fastq = True
-                failed_runs.append(run['runId'])
-            else:
-                f = FileRepository.filter(path=fastqs[0]).first()
-                file_search = f.file
-                if file_search:
-                    update_file_metadata(fastqs[0], request_id, igocomplete, data, library, run, request_metadata,
-                                         R1_or_R2(fastqs[0]))
-                else:
-                    logger.error("File %s missing" % file_search.path)
-                    missing = True
-                    missing_files.append((file_search.path, str(file_search.id)))
-                f = FileRepository.filter(path=fastqs[1]).first()
-                file_search = f.file
-                if file_search:
-                    update_file_metadata(fastqs[1], request_id, igocomplete, data, library, run, request_metadata,
-                                         R1_or_R2(fastqs[1]))
-                else:
-                    logger.error("File %s missing" % file_search.path)
-                    missing = True
-                    missing_files.append((file_search.path, str(file_search.id)))
-    if missing:
-        raise FailedToFetchFilesException(
-            "Files %s missing" % ' '.join(['%s with id: %s' % (cf[0], cf[1]) for cf in missing_files]))
-    if missing_fastq:
-        raise FailedToFetchFilesException("Missing fastq files for %s : %s" % (sample_id, ' '.join(failed_runs)))
+            for fastq in fastqs:
+                logger.info("Processing %s" % fastq)
+                logger.info("Adding file %s" % fastq)
+                update_file_metadata(fastq, request_id, igocomplete, data, library, run, request_metadata,
+                                     R1_or_R2(fastq))
 
 
 def update_file_metadata(path, request_id, igocomplete, data, library, run, request_metadata, r):
@@ -583,10 +621,13 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
         metadata[k] = v
     for k, v in request_metadata.items():
         metadata[k] = v
-    f = FileRepository.filter(path=path).first()
-    file_search = f.file
+    file_search = None
+    try:
+        file_search = File.objects.get(path=path)
+    except File.DoesNotExist:
+        pass
     if not file_search:
-        raise FailedToFetchFilesException("Failed to find file %s." % (path))
+        raise FailedToFetchSampleException("Failed to find file %s." % (path))
     data = {
         "path": path,
         "metadata": metadata
@@ -597,7 +638,7 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
         serializer.save()
     else:
         logger.error("SERIALIZER NOT VALID %s" % serializer.errors)
-        raise FailedToFetchFilesException("Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
+        raise FailedToFetchSampleException("Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
 
 
 def update_sample_job(sample_id, igocomplete, request_id, request_metadata):

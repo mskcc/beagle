@@ -7,6 +7,7 @@ from file_system.models import File, FileGroup
 from beagle_etl.models import Operator, JobGroup
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
+from django.utils.timezone import now
 
 
 class RunStatus(IntEnum):
@@ -36,7 +37,7 @@ class TriggerAggregateConditionType(IntEnum):
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -78,12 +79,18 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING, db_index=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+    def save(self, *args, **kwargs):
+        if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
+            if not self.finished_date:
+                self.finished_date = now()
+        super().save(*args, **kwargs)
 
     def complete(self):
         self.status = RunStatus.COMPLETED
@@ -140,7 +147,7 @@ class OperatorRun(BaseModel):
 class Run(BaseModel):
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
@@ -149,6 +156,7 @@ class Run(BaseModel):
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
+    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -172,10 +180,11 @@ class Run(BaseModel):
             if self.status == RunStatus.COMPLETED:
                 self.operator_run.increment_completed_run()
                 self.original["status"] = RunStatus.COMPLETED
+                self.finished_date = now()
             elif self.status == RunStatus.FAILED:
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
-
+                self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 
 

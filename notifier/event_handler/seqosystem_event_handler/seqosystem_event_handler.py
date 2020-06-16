@@ -55,6 +55,9 @@ class SeqosystemEventHandler(EventHandler):
     def process_operator_run_event(self, event):
         pass
 
+    def process_input_creation_failed_event(self, event):
+        pass
+
     def process_run_completed(self, event):
         self.client.complete_job(event.job_group_id, event.pipeline.name, event.tags.sample_id)
 

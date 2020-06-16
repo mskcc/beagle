@@ -254,6 +254,10 @@ STATIC_URL = '/static/'
 LOGIN_URL='/admin/login/'
 LOGOUT_URL='/admin/logout/'
 
+SWAGGER_SETTINGS = {
+    'VALIDATOR_URL':None
+}
+
 RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
 
@@ -321,6 +325,9 @@ NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "SEQOSYSTEM").split(',')
 for n in NOTIFIERS:
     if n not in SUPPORTED_NOTIFIERS:
         raise Exception("Invalid Notifier type")
+
+
+NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")

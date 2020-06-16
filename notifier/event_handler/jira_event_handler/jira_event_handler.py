@@ -22,7 +22,11 @@ class JiraEventHandler(EventHandler):
 
     def process_import_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.update_ticket_summary(job_group.jira_id, event.request_id)
+        # self.client.update_ticket_summary(job_group.jira_id, event.request_id)
+        self.client.update_ticket_description(job_group.jira_id, str(event))
+
+    def process_operator_start_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_etl_jobs_links_event(self, event):
@@ -47,10 +51,16 @@ class JiraEventHandler(EventHandler):
     def process_operator_error_event(self, event):
         self._add_comment_event(event)
 
+    def process_input_creation_failed_event(self, event):
+        pass
+
     def process_etl_job_created_event(self, event):
         pass
 
     def process_assay_event(self, event):
+        self._add_comment_event(event)
+
+    def process_custom_capture_cc_event(self, event):
         self._add_comment_event(event)
 
     def _add_comment_event(self, event):

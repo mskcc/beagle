@@ -60,7 +60,6 @@ def create_jobs_from_operator(operator, job_group_id=None):
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
 
-
     if job_group_id:
         event = OperatorRunEvent(job_group_id,
                                  operator.request_id,
@@ -116,7 +115,7 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True)),
+                                set(operator_run.runs.values_list('id', flat=True)),
                                 job_group_id=job_group_id
                             )
                             continue
@@ -126,7 +125,7 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.values_list('id', flat=True)),
+                                set(operator_run.runs.values_list('id', flat=True)),
                                 job_group_id=job_group_id
                             )
                             continue

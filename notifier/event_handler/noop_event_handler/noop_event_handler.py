@@ -16,6 +16,9 @@ class NoOpEventHandler(EventHandler):
     def process_import_event(self, event):
         pass
 
+    def process_operator_start_event(self, event):
+        pass
+
     def process_etl_jobs_links_event(self, event):
         pass
 
@@ -26,6 +29,9 @@ class NoOpEventHandler(EventHandler):
         pass
 
     def process_operator_request_event(self, event):
+        pass
+
+    def process_input_creation_failed_event(self, event):
         pass
 
     def process_etl_job_failed_event(self, event):
