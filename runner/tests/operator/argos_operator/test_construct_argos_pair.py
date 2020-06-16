@@ -57,6 +57,7 @@ class TestConstructPair(TestCase):
         argos_inputs, error_samples = construct_argos_jobs(samples)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.argos.input.json")))
 
+        print("Running test_construct_argos_jobs1")
         print(json.dumps(argos_inputs))
         print(json.dumps(expected_inputs))
         self.assertTrue(argos_inputs == expected_inputs)
