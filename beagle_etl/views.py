@@ -38,7 +38,7 @@ class JobViewSet(mixins.CreateModelMixin,
     @swagger_auto_schema(query_serializer=JobQuerySerializer)
     def list(self, request, *args, **kwargs):
         query_list_types = ['job_group', 'type', 'sample_id', 'request_id']
-        fixed_query_params = fix_query_list(request.query_params, query_list_types)
+        fixed_query_params = self.fix_query_list(request.query_params, query_list_types)
         serializer = JobQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Job, request.query_params)
@@ -64,6 +64,19 @@ class JobViewSet(mixins.CreateModelMixin,
                 return self.get_paginated_response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def fix_query_list(self, request_query, key_list):
+        query_dict = request_query.dict()
+        for single_param in key_list:
+            query_value = request_query.get(single_param)
+            if query_value:
+                if ',' in query_value[0]:
+                    query_value = query_dict.get(single_param)
+                    query_dict[single_param] = query_value.split(",")
+                else:
+                    query_dict[single_param] = query_value
+        return query_dict
+
 
 class AssayViewSet(GenericAPIView):
     serializer_class = AssaySerializer
@@ -110,6 +123,7 @@ class AssayViewSet(GenericAPIView):
             return Response(assay_response.data, status=status.HTTP_200_OK)
         error_message_list = ["Assay list is empty"]
         return Response({'errors':error_message_list}, status=status.HTTP_404_NOT_FOUND)
+
 
 class RequestIdLimsPullViewSet(GenericAPIView):
     serializer_class = RequestIdLimsPullSerializer
