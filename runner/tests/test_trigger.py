@@ -46,7 +46,7 @@ class TestOperatorTriggers(TestCase):
     @patch('runner.tasks.create_jobs_from_chaining')
     def test_operator_trigger_creates_next_operator_run_when_90percent_runs_completed(self, create_jobs_from_chaining):
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
-        run_ids = set([run.id for run in operator_run.runs.all()])
+        run_ids = list(operator_run.runs.order_by('id').values_list('id', flat=True))
         for run_id in run_ids:
             complete_job(run_id, "done")
 
@@ -64,7 +64,7 @@ class TestOperatorTriggers(TestCase):
     def test_operator_trigger_does_not_create_next_operator_run_when_too_few_runs_completed(self,
                                                                                             create_jobs_from_chaining):
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
-        run_ids = set([run.id for run in operator_run.runs.all()])
+        run_ids = list(operator_run.runs.order_by('id').values_list('id', flat=True))
         complete_job(run_ids.pop(), "done")
 
         process_triggers()
