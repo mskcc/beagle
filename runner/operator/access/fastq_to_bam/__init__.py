@@ -1,53 +1,39 @@
 from collections import defaultdict
+from itertools import groupby
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
+from file_system.repository.file_repository import FileRepository
 
 import json
-import pprint
 from jinja2 import Template
 
-def construct_sample_inputs(request_id, samples):
+def construct_sample_inputs(samples):
     with open('runner/operator/access/fastq_to_bam/input_template.json.jinja2') as file:
         template = Template(file.read())
 
     sample_inputs = list()
-    for sample in samples:
-        meta = sample["metadata"]
+    for sample_id, sample_group in groupby(samples, lambda x: x["metadata"]["sampleId"]):
+        sample_group = list(sample_group)
+        meta = sample_group[0]["metadata"]
 
         input_file = template.render(
             cmo_sample_name=meta["cmoSampleName"],
             tumor_type=meta["specimenType"],
-            igo_id=meta["igoId"],
-            patient_id=meta["cmoPatientId"],
+            igo_id=sample_id,
+            patient_id=meta["patientId"],
 
-            barcode_index=libraries[0]["barcodeIndex"],
+            barcode_index=meta["barcodeIndex"],
 
-            flowcell_id=libraries[0]["runs"][0]["flowCellId"],
-            run_date=libraries[0]["runs"][0]["runDate"],
+            flowcell_id=meta["flowCellId"],
+            run_date=meta["runDate"],
 
-            request_id=request_id
+            request_id=meta["requestId"],
+
+            fastq1_path="juno://" + sample_group[0]["path"],
+            fastq2_path="juno://" + sample_group[1]["path"],
         )
 
         sample = json.loads(input_file)
-
-        sample["fastq1"] = []
-        sample["fastq2"] = []
-
-
-        for library in meta["libraries"]:
-            for run in library["runs"]:
-                samples["fastq1"].append(
-                    {
-                        "class": "File",
-                        "path": "juno://" + run["fastqs"][0]
-                    }
-                )
-                samples["fastq2"].append(
-                    {
-                        "class": "File",
-                        "path": "juno://" + run["fastqs"][1]
-                    }
-                )
 
         sample_inputs.append(sample)
 
@@ -55,18 +41,19 @@ def construct_sample_inputs(request_id, samples):
 
 class AccessFastqToBamOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__request_id=self.request_id, filemetadata__metadata__igocomplete=True).all()
-
+        files = FileRepository.filter(queryset=self.files,
+                                      metadata={'requestId': self.request_id,
+                                                'igocomplete': True})
         data = [
             {
-                "id": f.id,
-                "path": f.path,
-                "file_name": f.file_name,
-                "metadata": f.filemetadata_set.first().metadata
+                "id": f.file.id,
+                "path": f.file.path,
+                "file_name": f.file.file_name,
+                "metadata": f.metadata
             } for f in files
         ]
 
-        sample_inputs = construct_sample_inputs(self.request_id, data)
+        sample_inputs = construct_sample_inputs(data)
 
         number_of_inputs = len(sample_inputs)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, JobStatus
+from .models import Job, JobStatus, Assay
 from notifier.models import JobGroup
 from beagle_etl.jobs import TYPES
 
@@ -14,7 +14,33 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = (
             'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
-            'max_retry', 'job_group')
+            'max_retry', 'job_group', 'finished_date', 'created_date', 'modified_date')
+
+
+class AssaySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Assay
+        fields = '__all__'
+
+
+class AssayElementSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    all = serializers.ListField(required=False,
+        child=serializers.CharField())
+    disabled = serializers.ListField(required=False,
+        child=serializers.CharField())
+    hold = serializers.ListField(required=False,
+        child=serializers.CharField())
+
+
+class AssayUpdateSerializer(serializers.Serializer):
+    all = serializers.ListField(required=False,
+        child=serializers.CharField())
+    disabled = serializers.ListField(required=False,
+        child=serializers.CharField())
+    hold = serializers.ListField(required=False,
+        child=serializers.CharField())
 
 
 class JobQuerySerializer(serializers.Serializer):
@@ -22,7 +48,11 @@ class JobQuerySerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
                                      required=False)
 
-    job_group = serializers.ListField(required=False)
+    job_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
 
     type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True,
                                    required=False)

@@ -10,6 +10,10 @@ from file_system.models import File, Storage, StorageType, FileGroup, FileMetada
 from file_system.exceptions import MetadataValidationException
 
 
+def ValidateDict(value):
+    if len(value.split(":")) !=2:
+        raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
@@ -110,6 +114,53 @@ class FileSerializer(serializers.ModelSerializer):
         model = FileMetadata
         fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'created_date', 'modified_date')
 
+class FileQuerySerializer(serializers.Serializer):
+    file_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    path = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    metadata = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    path_regex = serializers.CharField(required=False)
+
+    filename = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    filename_regex = serializers.CharField(required=False)
+
+    file_type = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    count = serializers.BooleanField(required=False)
+
+    values_metadata = serializers.CharField(required=False)
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
+
 
 class CreateFileSerializer(serializers.ModelSerializer):
     path = serializers.CharField(max_length=400, required=True,
@@ -144,7 +195,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
         metadata = FileMetadata(file=file, metadata=metadata, user=user)
         metadata.save()
         job = Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                                 args={'file_id': str(file.id)},
+                                 args={'file_id': str(file.id), 'path': validated_data.get('path')},
                                  status=JobStatus.CREATED, max_retry=3, children=[])
         return file
 
