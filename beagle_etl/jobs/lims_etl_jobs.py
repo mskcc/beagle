@@ -6,7 +6,7 @@ from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
-    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
@@ -14,7 +14,7 @@ from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
-    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
@@ -69,7 +69,7 @@ def request_callback(request_id, job_group=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_id = str(jg.id) if jg else None
     assays = Assay.objects.first()
-    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, ret='recipe').all())
+    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
@@ -86,6 +86,8 @@ def request_callback(request_id, job_group=None):
     if any(item in assays.hold for item in recipes):
         admin_hold_event = AdminHoldEvent(job_group_id).to_dict()
         send_notification.delay(admin_hold_event)
+        custom_capture_event = CustomCaptureCCEvent(job_group_id, recipes[0]).to_dict()
+        send_notification.delay(custom_capture_event)
         return []
 
     if any(item in assays.disabled for item in recipes):
@@ -147,6 +149,8 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "labHeadEmail": response_body['labHeadEmail'],
         "labHeadName": response_body['labHeadName'],
         "otherContactEmails": response_body['otherContactEmails'],
+        "dataAccessEmails": response_body['dataAccessEmails'],
+        "qcAccessEmails": response_body['qcAccessEmails'],
         "projectManagerName": response_body['projectManagerName'],
         "recipe": response_body['recipe'],
         "piEmail": response_body["piEmail"],
@@ -249,7 +253,10 @@ def create_pooled_normal(filepath, file_group_id):
     - flowCellId = HCYYWBBXY
     - [A|B] might be the flowcell bay the flowcell is placed into
     """
-    if FileRepository.filter(path=filepath):
+    # if FileRepository.filter(path=filepath):
+    try:
+        File.objects.get(path=filepath)
+    except File.DoesNotExist:
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
@@ -326,12 +333,9 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata):
             logger.info("Processing run %s" % run)
             fastqs = run.pop('fastqs')
             for fastq in fastqs:
-                file_search = FileRepository.filter(path=fastq).first()
-                logger.info("Processing %s" % fastq)
-                if not file_search:
-                    logger.info("Adding file %s" % fastq)
-                    create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
-                                request_metadata, R1_or_R2(fastq))
+                logger.info("Adding file %s" % fastq)
+                create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data, library, run,
+                            request_metadata, R1_or_R2(fastq))
 
 
 def validate_sample(sample_id, libraries, igocomplete, validate_update=False):
@@ -372,13 +376,18 @@ def validate_sample(sample_id, libraries, igocomplete, validate_update=False):
             else:
                 if not validate_update:
                     for fastq in fastqs:
-                        file_search = FileRepository.filter(path=fastq).first()
+                        file_search = None
+                        try:
+                            file_search = File.objects.get(path=fastq)
+                        except File.DoesNotExist:
+                            pass
+                        # file_search = FileRepository.filter(path=fastq).first()
                         logger.info("Processing %s" % fastq)
                         if file_search:
-                            msg = "File %s already created with id:%s" % (file_search.file.path, str(file_search.file.id))
+                            msg = "File %s already created with id:%s" % (file_search.path, str(file_search.id))
                             logger.error(msg)
                             conflict = True
-                            conflict_files.append((file_search.file.path, str(file_search.file.id)))
+                            conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
         if igocomplete:
             raise ErrorInconsistentDataException(
@@ -488,19 +497,31 @@ def create_file(path, request_id, file_group_id, file_type, igocomplete, data, l
         try:
             f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group_obj,
                                     file_type=file_type_obj)
-            try:
-                checksum = sha1(path)
-                f.checksum = checksum
-            except FailedToCalculateChecksum as e:
-                logger.info("Failed to calculate checksum. Error:%s", f.path)
-            else:
-                f.checksum = checksum
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
+            Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
+                               args={'file_id': str(f.id), 'path': path},
+                               status=JobStatus.CREATED, max_retry=3, children=[])
         except Exception as e:
             logger.error("Failed to create file %s. Error %s" % (path, str(e)))
             raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
+
+
+def calculate_checksum(file_id, path):
+    try:
+        checksum = sha1(path)
+    except FailedToCalculateChecksum as e:
+        logger.info("Failed to calculate checksum for file: %s: %s", file_id, path)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    try:
+        f = File.objects.get(id=file_id)
+        f.checksum = checksum
+        f.save(update_fields=["checksum"])
+    except File.DoesNotExist:
+        logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    return []
 
 
 def update_metadata(request_id):
@@ -596,8 +617,11 @@ def update_file_metadata(path, request_id, igocomplete, data, library, run, requ
         metadata[k] = v
     for k, v in request_metadata.items():
         metadata[k] = v
-    f = FileRepository.filter(path=path).first()
-    file_search = f.file
+    file_search = None
+    try:
+        file_search = File.objects.get(path=path)
+    except File.DoesNotExist:
+        pass
     if not file_search:
         raise FailedToFetchSampleException("Failed to find file %s." % (path))
     data = {
