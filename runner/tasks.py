@@ -285,7 +285,8 @@ def check_jobs_status():
             if remote_status:
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    # TODO: Fetch error message from Executor here
+                    message = dict(details=remote_status.get('message'))
+                    run.message['details'] = message
                     fail_job(str(run.id),
                              'Job failed. You can find logs in /work/pi/beagle/work/%s' %
                              str(run.execution_id))
