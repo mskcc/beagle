@@ -151,9 +151,14 @@ class FileQuerySerializer(serializers.Serializer):
         required=False
     )
 
+    values_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
     count = serializers.BooleanField(required=False)
 
-    values_metadata = serializers.CharField(required=False)
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)

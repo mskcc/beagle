@@ -50,7 +50,7 @@ class FileView(mixins.CreateModelMixin,
 
     @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type',]
+        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type','values_metadata']
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
@@ -108,7 +108,10 @@ class FileView(mixins.CreateModelMixin,
                     kwargs['file_type_in'] = file_type
                 queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
             if values_metadata:
-                kwargs['values_metadata'] = values_metadata
+                if len(values_metadata) == 1:
+                    kwargs['values_metadata'] = values_metadata[0]
+                else:
+                    kwargs['values_metadata_list'] = values_metadata
             try:
                 queryset = FileRepository.filter(**kwargs)
             except Exception as e:
