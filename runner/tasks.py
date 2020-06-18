@@ -164,7 +164,7 @@ def create_run_task(run_id, inputs, output_directory=None):
         run.ready()
     except RunCreateException as e:
         run = RunObject.from_db(run_id)
-        run.fail(e)
+        run.fail({'details': str(e)})
         RunObject.to_db(run)
         logger.info("Run %s Failed" % run_id)
     else:
@@ -286,10 +286,8 @@ def check_jobs_status():
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
                     message = dict(details=remote_status.get('message'))
-                    run.message['details'] = message
                     fail_job(str(run.id),
-                             'Job failed. You can find logs in /work/pi/beagle/work/%s' %
-                             str(run.execution_id))
+                             message)
                     continue
                 if remote_status['status'] == 'COMPLETED':
                     logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
