@@ -55,7 +55,7 @@ def create_jobs_from_operator(operator, job_group_id=None):
         output_directory = run.output_directory
         if not pipeline_name and not pipeline_link:
             logger.info("Run [ id: %s ] failed as the pipeline [ id: %s ] was not found", run.id, pipeline_id)
-            error_message = "Pipeline [ id: %s ] was not found.".format(pipeline_id)
+            error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
