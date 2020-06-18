@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger
+from django.contrib.admin import SimpleListFilter
+from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, PortType
 from lib.admin import link_relation, progress_bar, pretty_python_exception
 
 
@@ -21,12 +22,26 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
     list_display = ('id', link_relation("from_operator"), link_relation("to_operator"), 'aggregate_condition')
 
 
+class PortTypeFilter(SimpleListFilter):
+    title = 'Type'
+    parameter_name = 'type'
+
+    def lookups(self, request, model_admin):
+        return [(member.value, name) for name, member in PortType.__members__.items()]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(port_type =self.value())
+        return queryset
+
+
 class PortAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'run', 'db_value')
+    list_display = ('id', 'port_type', 'name', 'run', 'db_value')
     raw_id_fields = ("run",)
     ordering = ('run',)
-    search_fields = ('run__id',)
-
+    search_fields = ('run__id', 'run__job_group')
+    autocomplete_fields = ['files']
+    list_filter = (PortTypeFilter,)
 
 admin.site.register(Run, RunAdmin)
 admin.site.register(Port, PortAdmin)
