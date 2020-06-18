@@ -5,7 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunCompletedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
+from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
@@ -223,12 +223,35 @@ def fail_job(run_id, error_message):
     run.fail(error_message)
     run.to_db()
 
+    job_group = run.job_group
+    job_group_id = str(job_group.id) if job_group else None
+
+    ci_review = SetCIReviewEvent(job_group_id).to_dict()
+    send_notification.delay(ci_review)
+
+    _job_finished_notify(run)
+
 
 def complete_job(run_id, outputs):
     run = RunObject.from_db(run_id)
     run.complete(outputs)
     run.to_db()
 
+    job_group = run.job_group
+    job_group_id = str(job_group.id) if job_group else None
+
+    _job_finished_notify(run)
+
+    for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
+        create_jobs_from_chaining.delay(
+            trigger.to_operator_id,
+            trigger.from_operator_id,
+            [run_id],
+            job_group_id=job_group_id
+        )
+
+
+def _job_finished_notify(run):
     job_group = run.job_group
     job_group_id = str(job_group.id) if job_group else None
 
@@ -240,34 +263,22 @@ def complete_job(run_id, outputs):
     failed_runs = run.run_obj.operator_run.failed_runs
     running_runs = run.run_obj.operator_run.running_runs
 
-    event = RunCompletedEvent(job_group_id,
-                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
-                              str(run.run_id),
-                              pipeline_name,
-                              pipeline_link,
-                              run.run_obj.output_directory,
-                              RunStatus(run.status).name,
-                              run.tags,
-                              running_runs,
-                              completed_runs,
-                              failed_runs,
-                              total_runs,
-                              str(run.run_obj.operator_run.id)
-                              )
+    event = RunFinishedEvent(job_group_id,
+                             run.tags.get('requestId', 'UNKNOWN REQUEST'),
+                             str(run.run_id),
+                             pipeline_name,
+                             pipeline_link,
+                             run.run_obj.output_directory,
+                             RunStatus(run.status).name,
+                             run.tags,
+                             running_runs,
+                             completed_runs,
+                             failed_runs,
+                             total_runs,
+                             str(run.run_obj.operator_run.id)
+                             )
     e = event.to_dict()
     send_notification.delay(e)
-
-    if run.status == RunStatus.FAILED:
-        ci_review = SetCIReviewEvent(job_group_id).to_dict()
-        send_notification.delay(ci_review)
-
-    for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
-        create_jobs_from_chaining.delay(
-            trigger.to_operator_id,
-            trigger.from_operator_id,
-            [run_id],
-            job_group_id=job_group_id
-        )
 
 
 def running_job(run):
