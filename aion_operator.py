@@ -73,3 +73,20 @@ def get_lab_head(argos_run_ids):
     if lab_head_emails:
          return sorted(lab_head_emails)[0]
     return None
+
+
+def get_helix_filter_runs(lab_head_email):
+    runs = Run.objects.filter(status=4, app__name="argos_helix_filters")
+    helix_filter_runs = set()
+    for i in runs:
+        argos_run_ids = i.tags['run_ids']
+        for run_id in argos_run_ids:
+            run = Run.objects.get(id=run_id)
+            try:
+                curr_lab_head_email = run.tags['labHeadEmail']
+                if lab_head_email.lower() in curr_lab_head_email.lower():
+                    helix_filter_runs.add(i.id)
+            except KeyError:
+                print("labHeadEmail not in this run %s", run_id)
+    print(helix_filter_runs)
+    return sorted(helix_filter_runs)
