@@ -75,7 +75,7 @@ def get_lab_head(argos_run_ids):
     return None
 
 
-def get_helix_filter_runs(lab_head_email):
+def get_helix_filter_run_ids(lab_head_email):
     runs = Run.objects.filter(status=4, app__name="argos_helix_filters")
     helix_filter_runs = set()
     for i in runs:
