@@ -23,7 +23,8 @@ Includecmd: no
         libldap2-dev libsasl2-dev libssl-dev \
         postgresql postgresql-contrib libpq-dev \
         gawk build-essential \
-        git
+        git \
+        nginx
 
     if [ -z "$BEAGLE_BRANCH" ]; then
     export BEAGLE_BRANCH=master
