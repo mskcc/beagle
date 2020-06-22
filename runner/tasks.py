@@ -339,7 +339,7 @@ def create_aion_job(operator, lab_head_email):
 
     for job in valid_jobs:
         logger.info("Creating Run object")
-        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
+        run = job[0].save(operator_run_id=operator_run.id)
         logger.info("Run object created with id: %s" % str(run.id))
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory

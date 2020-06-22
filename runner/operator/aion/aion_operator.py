@@ -24,10 +24,26 @@ class AionOperator(Operator):
         """
         run_ids = self.get_helix_filter_run_ids(lab_head_email)
         number_of_runs = len(run_ids)
-        name = "AION OUTPUTS %s runs [%s,..] " % (
-            number_of_runs, run_ids[0])
+        name = "AION merging %i runs for lab head email %s" % (
+            number_of_runs, lab_head_email)
+
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_version = pipeline.version
         input_json = self.build_input_json(run_ids)
-        return input_json
+        tags = { "study_id": input_json['study_id'], "num_runs_merged": len(run_ids)}
+        print(input_json)
+
+        aion_outputs_job_data = {
+            'app': app,
+            'inputs': input_json,
+            'name': name,
+            'tags': tags}
+
+        aion_outputs_job = [(APIRunCreateSerializer(
+            data=aion_outputs_job_data), input_json)]
+
+        return aion_outputs_job
     
     
     def build_input_json(self, run_ids):
