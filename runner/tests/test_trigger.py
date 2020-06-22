@@ -77,7 +77,8 @@ class TestOperatorTriggers(TestCase):
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
         run_ids = [run.id for run in operator_run.runs.all()]
         for run_id in run_ids:
-            fail_job(run_id, "done")
+            message = dict(details="done")
+            fail_job(run_id, message)
 
         process_triggers()
         operator_run.refresh_from_db()
