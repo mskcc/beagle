@@ -232,7 +232,7 @@ class RunOperatorViewSet(GenericAPIView):
 
     def post(self, request):
         run_ids = request.data.get('run_ids')
-        pipeline_names = request.data.get('pipeline')
+        pipeline_names = request.data.get('pipelines')
         job_group_id = request.data.get('job_group', None)
         for_each = request.data.get('for_each', False)
 
@@ -243,6 +243,7 @@ class RunOperatorViewSet(GenericAPIView):
             if not job_group_id:
                 job_group = JobGroup()
                 job_group.save()
+                job_group_id = str(job_group.id)
                 try:
                     run = Run.objects.get(id=run_ids[0])
                     req = run.tags.get('requestId', 'Unknown')
