@@ -1,31 +1,34 @@
-export SINGULARITYENV_BEAGLE_DB_NAME=<db_name>
-export SINGULARITYENV_BEAGLE_DB_USERNAME=<db_username>
-export SINGULARITYENV_BEAGLE_DB_PASSWORD=<db_password>
-export SINGULARITYENV_BEAGLE_DB_PORT=<db_port>
-export SINGULARITYENV_GIT_SSH_COMMAND=<git_ssh_add_command>
-export SINGULARITYENV_BEAGLE_AUTH_LDAP_SERVER_URI=<ldap_url>
-export SINGULARITYENV_BEAGLE_RIDGEBACK_URL=<ridgeback_url>
-export SINGULARITYENV_BEAGLE_RABIX_URL=<rabix_url> # TODO: Remove this
-export SINGULARITYENV_BEAGLE_RABBITMQ_USERNAME=<rabbitmq_username>
-export SINGULARITYENV_BEAGLE_RABBITMQ_PASSWORD=<rabbitmq_password>
-export SINGULARITYENV_BEAGLE_LIMS_USERNAME=<lims_username>
-export SINGULARITYENV_BEAGLE_LIMS_PASSWORD=<lims_password>
-export SINGULARITYENV_BEAGLE_URL=<beagle_url>
-export SINGULARITYENV_BEAGLE_PORT=<beagle_port>
-export SINGULARITYENV_BEAGLE_ALLOWED_HOSTS=<beagle_allowed_hosts>
-export SINGULARITYENV_BEAGLE_RUNNER_QUEUE=<beagle_runner_queue_name>
-export SINGULARITYENV_BEAGLE_DEFAULT_QUEUE=<beagle_default_queue_name>
-export SINGULARITYENV_BEAGLE_JOB_SCHEDULER_QUEUE=<beagle_scheduler_queue_name>
-export SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX=<queue_prefix>
-export SINGULARITYENV_BEAGLE_LOG_PATH=<log_path>
-export SINGULARITYENV_BEAGLE_POOLED_NORMAL_FILE_GROUP=<pooled_normal_group_id>
-export SINGULARITYENV_BEAGLE_DMP_BAM_FILE_GROUP=<dmp_bam_group_id>
-export SINGULARITYENV_BEAGLE_RABIX_PATH=<rabix_path>
-export SINGULARITYENV_CELERY_LOG_PATH=<celery_log_path>
-export SINGULARITYENV_BEAGLE_PATH=<beagle_path>
-export SINGULARITYENV_JIRA_USERNAME=<jira_username>
-export SINGULARITYENV_JIRA_PASSWORD=<jira_password>
-export SINGULARITYENV_JIRA_URL=<jira_url>
-export SINGULARITYENV_JIRA_PROJECT=<jira_project>
-export SINGULARITYENV_BEAGLE_NOTIFIERS=<notifier_type>
-export SINGULARITYENV_BEAGLE_NOTIFIER_CC=<cc_users_in_jira_ticket>
+#!/bin/bash
+
+if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
+    echo "run_beagle.sh <environment> <config> <version>"
+    exit 1
+fi
+
+if [ $1 != "production" ] && [ $1 != "staging" ]; then
+    echo "Environment needs to be production or staging"
+    exit 1
+fi
+
+if [ ! -f $2 ]; then
+    echo "Config needs to be a path: $2"
+    exit 1
+fi
+
+module load singularity/3.3.0
+echo "Loading configuration from $2"
+source $2
+
+echo "Stopping $1 environment"
+singularity instance stop $1_beagle_services
+singularity instance stop $1_beagle_celery
+
+echo Starting $1 environment version $3
+
+if [ $1 != "production" ]; then
+    singularity instance start --containall --bind /srv/services/voyager/ --bind /home/ivkovic/rabix-cli-1.0.5 --bind /tmp --bind /ifs --bind /juno/work/ci /srv/services/voyager/beagle_service_%3.sif $1_beagle_services
+    singularity instance start --containall --bind /srv/services/voyager/ --bind /home/ivkovic/rabix-cli-1.0.5 --bind /tmp --bind /ifs --bind /juno/work/ci /srv/services/voyager/beagle_celery_%3.sif $1_beagle_celery
+else
+    singularity instance start --containall --bind /srv/services/staging_voyager/ --bind /home/ivkovic/rabix-cli-1.0.5 --bind /tmp --bind /ifs --bind /juno/work/ci /srv/services/staging_voyager/beagle_service_$3.sif $1_beagle_services
+    singularity instance start --containall --bind /srv/services/staging_voyager/ --bind /home/ivkovic/rabix-cli-1.0.5 --bind /tmp --bind /ifs --bind /juno/work/ci /srv/services/staging_voyager/beagle_celery_$3.sif $1_beagle_celery
+fi
