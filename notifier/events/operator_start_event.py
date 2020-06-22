@@ -58,5 +58,5 @@ class OperatorStartEvent(Event):
                                               project_manager_name=self.project_manager_name,
                                               number_of_tumors=self.number_of_tumors,
                                               number_of_normals=self.number_of_normals,
-                                              job_group=self.job_group
+                                              job_group=self.job_group.id
                                               )
