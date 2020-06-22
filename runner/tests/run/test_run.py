@@ -334,12 +334,12 @@ class RunObjectTest(APITestCase):
         operator_run = OperatorRun.objects.first()
         operator_run.runs.add(run.run_obj)
         num_failed_runs = operator_run.num_failed_runs
-        fail_job(run.run_id, 'Error has happened')
+        fail_job(run.run_id, {'details': 'Error has happened'})
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
 
         run_obj = RunObject.from_db(run.run_id)
-        self.assertEqual(run_obj.job_statuses['error'], 'Error has happened')
+        self.assertEqual(run_obj.message, {'details': 'Error has happened'})
 
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
     def test_multiple_failed_on_same_job(self, mock_get_pipeline):
@@ -355,8 +355,8 @@ class RunObjectTest(APITestCase):
         operator_run = OperatorRun.objects.first()
         operator_run.runs.add(run.run_obj)
         num_failed_runs = operator_run.num_failed_runs
-        fail_job(run.run_id, 'Error has happened')
-        fail_job(run.run_id, 'Error has happened')
-        fail_job(run.run_id, 'Error has happened')
+        fail_job(run.run_id, {'details': 'Error has happened'})
+        fail_job(run.run_id, {'details': 'Error has happened'})
+        fail_job(run.run_id, {'details': 'Error has happened'})
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)

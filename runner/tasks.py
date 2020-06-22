@@ -55,7 +55,7 @@ def create_jobs_from_operator(operator, job_group_id=None):
         output_directory = run.output_directory
         if not pipeline_name and not pipeline_link:
             logger.info("Run [ id: %s ] failed as the pipeline [ id: %s ] was not found", run.id, pipeline_id)
-            error_message = "Pipeline [ id: %s ] was not found.".format(pipeline_id)
+            error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
@@ -164,7 +164,7 @@ def create_run_task(run_id, inputs, output_directory=None):
         run.ready()
     except RunCreateException as e:
         run = RunObject.from_db(run_id)
-        run.fail(e)
+        run.fail({'details': str(e)})
         RunObject.to_db(run)
         logger.info("Run %s Failed" % run_id)
     else:
@@ -296,10 +296,9 @@ def check_jobs_status():
             if remote_status:
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    # TODO: Fetch error message from Executor here
+                    message = dict(details=remote_status.get('message'))
                     fail_job(str(run.id),
-                             'Job failed. You can find logs in /work/pi/beagle/work/%s' %
-                             str(run.execution_id))
+                             message)
                     continue
                 if remote_status['status'] == 'COMPLETED':
                     logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
