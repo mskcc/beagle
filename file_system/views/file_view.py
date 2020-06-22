@@ -54,6 +54,7 @@ class FileView(mixins.CreateModelMixin,
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
+            queryset = FileRepository.all(distinct=False)
             queryset = time_filter(FileMetadata, request.query_params)
             queryset = time_filter(FileMetadata, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             file_group = fixed_query_params.get('file_group')
@@ -66,7 +67,6 @@ class FileView(mixins.CreateModelMixin,
             file_type = fixed_query_params.get('file_type')
             values_metadata = fixed_query_params.get('values_metadata')
             count = fixed_query_params.get('count')
-            queryset = FileRepository.all(distinct=False)
             metadata_distribution = fixed_query_params.get('metadata_distribution')
             kwargs = {'queryset':queryset}
             if file_group:
