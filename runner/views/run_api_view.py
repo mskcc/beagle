@@ -36,7 +36,7 @@ class RunApiViewSet(mixins.ListModelMixin,
     Port.objects.select_related('run'))).order_by('-created_date').all()
 
     def get_serializer_class(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'list':
             return RunApiListSerializer
         else:
             return RunSerializerFull
