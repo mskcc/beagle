@@ -17,7 +17,7 @@ def construct_sample_inputs(samples):
         meta = sample_group[0]["metadata"]
 
         input_file = template.render(
-            cmo_sample_name=meta["cmoSampleName"],
+            cmo_sample_name=meta["sampleName"],
             tumor_type=meta["specimenType"],
             igo_id=sample_id,
             patient_id=meta["patientId"],
