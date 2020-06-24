@@ -2,7 +2,7 @@ from django.conf import settings
 from notifier.event_handler.event import Event
 
 
-class RunCompletedEvent(Event):
+class RunFinishedEvent(Event):
 
     def __init__(self, job_group, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags, running, completed, failed, total, operator_run_id):
         self.job_group = job_group
@@ -21,7 +21,7 @@ class RunCompletedEvent(Event):
 
     @classmethod
     def get_type(cls):
-        return "RunCompletedEvent"
+        return "RunFinishedEvent"
 
     @classmethod
     def get_method(cls):

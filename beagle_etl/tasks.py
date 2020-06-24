@@ -60,7 +60,8 @@ def scheduler():
 
 
 def get_pending_jobs():
-    jobs = Job.objects.filter(status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
+    jobs = Job.objects.filter(
+        status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN), lock=False).iterator()
     return jobs
 
 
@@ -151,9 +152,9 @@ class JobObject(object):
         request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
 
         number_of_tumors = FileRepository.filter(
-            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, ret='sampleId').count()
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata='sampleId').count()
         number_of_normals = FileRepository.filter(
-            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, ret='sampleId').count()
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, values_metadata='sampleId').count()
 
         data_analyst_email = ""
         data_analyst_name = ""
