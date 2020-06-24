@@ -117,7 +117,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'request_id', 'app', 'status_url', 'created_date')
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date')
 
 
 class RunSerializerFull(serializers.ModelSerializer):
@@ -140,7 +140,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = '__all__'
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date')
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):

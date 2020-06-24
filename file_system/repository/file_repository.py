@@ -33,7 +33,7 @@ class FileRepository(object):
             raise FileNotFoundException("File with id:%s does not exist" % str(id))
 
     @classmethod
-    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, values_metadata=None, distinct=True):
+    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, values_metadata=None, values_metadata_list=[], distinct=True):
         if queryset == None:
             # If queryset not set, use all files
             queryset = FileRepository.all()
@@ -50,6 +50,8 @@ class FileRepository(object):
             raise InvalidQueryException("Can't specify multiple path queries")
         if metadata and metadata_regex:
             raise InvalidQueryException("Can't specify both metadata and metadata_regex in the query")
+        if values_metadata and values_metadata_list:
+            raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
         create_query_dict = {
             'file__path': path,
             'file__path__in': path_in,
@@ -80,4 +82,9 @@ class FileRepository(object):
         if values_metadata:
             ret_str = 'metadata__%s' % values_metadata
             return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+        if values_metadata_list:
+            values_metadata_query_list = ['metadata__%s' % single_metadata for single_metadata in values_metadata_list ]
+            values_metadata_query_set = set(values_metadata_query_list)
+            return queryset.values_list(*values_metadata_query_set).distinct()
+
         return queryset
