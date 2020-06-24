@@ -228,4 +228,4 @@ class TempoMPGenOperator(Operator):
 
         sample_tracker_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', tracker).to_dict()
         send_notification.delay(sample_tracker_event)
-        self.write_to_file("tracker.txt", tracker)
+        self.write_to_file("sample_tracker.txt", tracker)
