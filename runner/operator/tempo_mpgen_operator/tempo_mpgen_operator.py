@@ -87,8 +87,12 @@ class TempoMPGenOperator(Operator):
                 no_patient_samples.append(entry)
         
         self.patients = dict()
+        self.non_cmo_patients = dict()
         for patient_id in patient_files:
-            self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+            if "C-" in patient_id[:2]:
+                self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+            else:
+                self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
         
         # output these strings to file
         self.create_mapping_file()
@@ -138,7 +142,7 @@ class TempoMPGenOperator(Operator):
             mapping_string += patient.create_mapping_string()
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', mapping_string).to_dict()
         send_notification.delay(mapping_file_event)
-#        self.write_to_file("sample_mapping.txt", mapping_string)
+        self.write_to_file("sample_mapping.txt", mapping_string)
 
 
     def create_pairing_file(self):
@@ -148,6 +152,7 @@ class TempoMPGenOperator(Operator):
 
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', pairing_string).to_dict()
         send_notification.delay(pairing_file_event)
+        self.write_to_file("sample_pairing.txt", pairing_string)
 
     def exclude_requests(self,l):
         q = None
@@ -223,3 +228,4 @@ class TempoMPGenOperator(Operator):
 
         sample_tracker_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', tracker).to_dict()
         send_notification.delay(sample_tracker_event)
+        self.write_to_file("tracker.txt", tracker)
