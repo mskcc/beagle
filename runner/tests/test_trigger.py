@@ -14,15 +14,16 @@ from runner.serializers import APIRunCreateSerializer
 
 class TestOperatorTriggers(TestCase):
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json",
-    "runner.pipeline.json",
-    "beagle_etl.operator.json",
-    "runner.operator_run.json",
-    "runner.run.json",
-    "runner.operator_trigger.json",
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "runner.pipeline.json",
+        "beagle_etl.operator.json",
+        "runner.operator_run.json",
+        "runner.run.json",
+        "runner.operator_trigger.json",
     ]
+
     @patch('runner.tasks.create_run_task')
     @patch('notifier.tasks.send_notification')
     @patch('runner.operator.argos_operator.ArgosOperator.get_jobs')
@@ -30,7 +31,7 @@ class TestOperatorTriggers(TestCase):
     def test_create_jobs_from_operator_pipeline_deleted(self, get_pipeline_id, get_jobs, send_notification, create_run_task):
         argos_jobs = []
         argos_jobs.append((APIRunCreateSerializer(
-                data={'app': 'cb5d793b-e650-4b7d-bfcd-882858e29cc5', 'inputs': None, 'name': None,}), None))
+                data={'app': 'cb5d793b-e650-4b7d-bfcd-882858e29cc5', 'inputs': None, 'name': None, 'tags': {}}), None))
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
         create_run_task.return_value = None
@@ -38,8 +39,8 @@ class TestOperatorTriggers(TestCase):
         Run.objects.all().delete()
 
         operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
-        create_jobs_from_operator(operator,None)
-        self.assertEqual(len(Run.objects.all()),1)
+        create_jobs_from_operator(operator, None)
+        self.assertEqual(len(Run.objects.all()), 1)
         self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
 
 
@@ -76,7 +77,8 @@ class TestOperatorTriggers(TestCase):
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
         run_ids = [run.id for run in operator_run.runs.all()]
         for run_id in run_ids:
-            fail_job(run_id, "done")
+            message = dict(details="done")
+            fail_job(run_id, message)
 
         process_triggers()
         operator_run.refresh_from_db()
