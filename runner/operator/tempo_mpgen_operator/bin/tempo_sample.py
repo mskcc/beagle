@@ -20,12 +20,18 @@ class TempoSample(Sample):
         self.sample_class = ""
         self.bait_set = ""
         self.cmo_sample_name = ""
+        self.run_mode = ""
+        self.request_id = ""
+        self.patient_id = ""
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict: 
             self.bait_set = self.metadata['baitSet'][0]
             self.specimen_type = self.metadata['specimenType'][0]
             self.sample_class = self.metadata['sampleClass'][0]
             self.cmo_sample_name = self.metadata['cmoSampleName'][0]
+            self.run_mode = self.metadata['runMode'][0]
+            self.request_id = self.metadata['requestId'][0]
+            self.patient_id = self.metadata['patientId'][0]
 
 
     def _set_status(self):
