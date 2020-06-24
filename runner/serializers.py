@@ -53,14 +53,14 @@ class PipelineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pipeline
-        fields = ('id', 'name', 'github', 'version', 'entrypoint', 'output_file_group', 'output_directory')
+        fields = '__all__'
 
 
 class PortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('id', 'name', 'schema', 'secondary_files', 'value', 'db_value')
+        fields = '__all__'
 
 
 class UpdatePortSerializer(serializers.Serializer):
@@ -117,7 +117,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'request_id', 'app', 'status_url', 'created_date')
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date')
 
 
 class RunSerializerFull(serializers.ModelSerializer):
@@ -140,8 +140,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = (
-        'id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date')
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
@@ -222,11 +221,31 @@ class RequestIdOperatorSerializer(serializers.Serializer):
     pipeline_name = serializers.CharField(max_length=100)
 
 
+class RequestIdsOperatorSerializer(serializers.Serializer):
+    request_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    job_group = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(required=False, default=True)
+
+
+class RunIdsOperatorSerializer(serializers.Serializer):
+    run_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    job_group = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(default=False)
+
+
 class OperatorErrorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorErrors
-        fields = ('operator_name', 'request_id', 'error')
+        fields = '__all__'
 
 
 class OperatorRunSerializer(serializers.ModelSerializer):
@@ -241,4 +260,4 @@ class OperatorRunSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorRun
-        fields = ('id', 'operator', 'operator_class', 'status', 'num_total_runs', 'num_completed_runs', 'num_failed_runs', 'job_group')
+        fields = '__all__'

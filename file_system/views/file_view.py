@@ -1,5 +1,6 @@
 import uuid
-from django.db.models import Prefetch
+from distutils.util import strtobool
+from django.db.models import Prefetch, Count
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,8 +10,10 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
-from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer
-
+from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer
+from drf_yasg.utils import swagger_auto_schema
+from beagle.pagination import time_filter
+from beagle.common import fix_query_list
 
 class FileView(mixins.CreateModelMixin,
                mixins.DestroyModelMixin,
@@ -45,52 +48,103 @@ class FileView(mixins.CreateModelMixin,
         serializer = FileSerializer(f)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
-        queryset = FileRepository.all()
-        file_groups = request.query_params.getlist('file_group')
-        if file_groups:
-            queryset = FileRepository.filter(queryset=queryset, file_group_in=file_groups)
-        path = request.query_params.getlist('path')
-        if path:
-            queryset = FileRepository.filter(queryset=queryset, path_in=path)
-        metadata = request.query_params.getlist('metadata')
-        if metadata:
-            filter_query = dict()
-            for val in metadata:
-                k, v = val.split(':')
-                filter_query[k] = v
-            queryset = FileRepository.filter(queryset=queryset, metadata=filter_query)
-        metadata_regex = request.query_params.getlist('metadata_regex')
-        if metadata_regex:
-            filter_query = dict()
-            for val in metadata_regex:
-                k, v = val.split(':')
-                filter_query[k] = v
-        path_regex = request.query_params.get('path_regex')
-        if path_regex:
-            queryset = FileRepository.filter(queryset=queryset, path_regex=path_regex)
-        filename = request.query_params.getlist('filename')
-        if filename:
-            queryset = FileRepository.filter(queryset=queryset, file_name_in=filename)
-        filename_regex = request.query_params.get('filename_regex')
-        if filename_regex:
-            queryset = FileRepository.filter(queryset=queryset, path_regex=filename_regex)
-        file_type = request.query_params.getlist('file_type')
-        if file_type:
-            queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
-        ret = request.query_params.get('return')
-        if ret:
+        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type','values_metadata']
+        fixed_query_params = fix_query_list(request.query_params, query_list_types)
+        serializer = FileQuerySerializer(data=fixed_query_params)
+        if serializer.is_valid():
+            queryset = FileRepository.all(distinct=False)
+            queryset = time_filter(FileMetadata, request.query_params)
+            queryset = time_filter(FileMetadata, request.query_params,time_modal='modified_date', previous_queryset=queryset)
+            file_group = fixed_query_params.get('file_group')
+            path = fixed_query_params.get('path')
+            metadata = fixed_query_params.get('metadata')
+            metadata_regex = fixed_query_params.get('metadata_regex')
+            path_regex = fixed_query_params.get('path_regex')
+            filename = fixed_query_params.get('filename')
+            filename_regex = fixed_query_params.get('filename_regex')
+            file_type = fixed_query_params.get('file_type')
+            values_metadata = fixed_query_params.get('values_metadata')
+            count = fixed_query_params.get('count')
+            metadata_distribution = fixed_query_params.get('metadata_distribution')
+            kwargs = {'queryset':queryset}
+            if file_group:
+                if len(file_group) == 1:
+                    kwargs['file_group'] = file_group[0]
+                else:
+                    kwargs['file_group_in'] = file_group
+            if path:
+                if len(path) == 1:
+                    kwargs['path'] = path[0]
+                else:
+                    kwargs['path_in'] = path
+            if metadata:
+                filter_query = dict()
+                for val in metadata:
+                    k, v = val.split(':')
+                    filter_query[k] = v
+                if filter_query:
+                    kwargs['metadata'] = filter_query
+            if metadata_regex:
+                filter_query = dict()
+                for val in metadata_regex:
+                    k, v = val.split(':')
+                    filter_query[k] = v
+                if filter_query:
+                    kwargs['metadata_regex'] = filter_query
+            if path_regex:
+                kwargs['path_regex'] = path_regex
+            if filename:
+                if len(filename) == 1:
+                    kwargs['file_name'] = filename[0]
+                else:
+                    kwargs['file_name_in'] = filename
+            if filename_regex:
+                kwargs['file_name_regex'] = filename_regex
+            if file_type:
+                if len(file_type) == 1:
+                    kwargs['file_type'] = file_type[0]
+                else:
+                    kwargs['file_type_in'] = file_type
+                queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
+            if values_metadata:
+                if len(values_metadata) == 1:
+                    kwargs['values_metadata'] = values_metadata[0]
+                else:
+                    kwargs['values_metadata_list'] = values_metadata
             try:
-                queryset = FileRepository.filter(queryset=queryset, ret=ret)
+                queryset = FileRepository.filter(**kwargs)
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            if ret:
-                return self.get_paginated_response(page)
-            else:
-                serializer = FileSerializer(page, many=True, context={'request': request})
-                return self.get_paginated_response(serializer.data)
+            if metadata_distribution:
+                distribution_dict = {}
+                metadata_query = 'metadata__%s' % metadata_distribution
+                queryset = queryset.values(metadata_query).order_by().annotate(Count(metadata_query))
+                for single_metadata in queryset:
+                    single_metadata_name = None
+                    single_metadata_count = 0
+                    for single_key, single_value in single_metadata.items():
+                        if 'count' in single_key:
+                            single_metadata_count = single_value
+                        else:
+                            single_metadata_name = single_value
+                    if single_metadata_name:
+                        distribution_dict[single_metadata_name] = single_metadata_count
+                return Response(distribution_dict, status=status.HTTP_200_OK)
+            if count:
+                count = bool(strtobool(count))
+                if count:
+                    return Response(queryset.count(), status=status.HTTP_200_OK)
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                if values_metadata:
+                    return self.get_paginated_response(page)
+                else:
+                    serializer = FileSerializer(page, many=True, context={'request': request})
+                    return self.get_paginated_response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         serializer = CreateFileSerializer(data=request.data, context={'request': request})

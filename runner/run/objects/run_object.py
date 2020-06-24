@@ -8,7 +8,8 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class RunObject(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, output_metadata={}, execution_id=None, tags={}, job_group=None, notify_for_outputs=[]):
+    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, message={}, output_metadata={},
+                 execution_id=None, tags={}, job_group=None, notify_for_outputs=[]):
         self.run_id = run_id
         self.run_obj = run_obj
         self.output_file_group = run_obj.app.output_file_group
@@ -16,6 +17,7 @@ class RunObject(object):
         self.outputs = outputs
         self.status = status
         self.job_statuses = job_statuses
+        self.message = message
         self.output_metadata = output_metadata
         self.execution_id = execution_id
         self.job_group = job_group
@@ -52,6 +54,7 @@ class RunObject(object):
                    output_ports,
                    run.status,
                    job_statuses=run.job_statuses,
+                   message=run.message,
                    output_metadata=run.output_metadata,
                    tags=run.tags,
                    job_group=run.job_group)
@@ -69,7 +72,7 @@ class RunObject(object):
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
         outputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
-        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses,
+        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, message=run.message,
                    output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
                    job_group=run.job_group, notify_for_outputs=run.notify_for_outputs)
 
@@ -78,6 +81,7 @@ class RunObject(object):
         [PortObject.to_db(p) for p in self.outputs]
         self.run_obj.status = self.status
         self.run_obj.job_statuses = self.job_statuses
+        self.run_obj.message = self.message
         self.run_obj.output_metadata = self.output_metadata
         self.run_obj.execution_id = self.execution_id
         self.run_obj.tags = self.tags
@@ -87,7 +91,7 @@ class RunObject(object):
 
     def fail(self, error_message):
         self.status = RunStatus.FAILED
-        self.job_statuses = {'error': '%s' % str(error_message)}
+        self.message = error_message
 
     def complete(self, outputs):
         for out in self.outputs:
