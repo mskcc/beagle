@@ -227,11 +227,11 @@ class RequestOperatorViewSet(GenericAPIView):
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
-    def _generate_label(self, request):
+    def _generate_label(self, job_group_id, request):
         files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
         data = files.first().metadata
         recipe = data['recipe']
-        recipe_label_event = SetLabelEvent(self.job_group_id, recipe).to_dict()
+        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
         send_notification.delay(recipe_label_event)
 
 
@@ -306,11 +306,11 @@ class RunOperatorViewSet(GenericAPIView):
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
-    def _generate_label(self, request):
+    def _generate_label(self, job_group_id, request):
         files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
         data = files.first().metadata
         recipe = data['recipe']
-        recipe_label_event = SetLabelEvent(self.job_group_id, recipe).to_dict()
+        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
         send_notification.delay(recipe_label_event)
 
 
