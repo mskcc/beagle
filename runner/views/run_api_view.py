@@ -19,7 +19,7 @@ from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request
 from file_system.repository import FileRepository
 from notifier.models import JobGroup
-from notifier.events import OperatorStartEvent
+from notifier.events import OperatorStartEvent, SetLabelEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
 from drf_yasg.utils import swagger_auto_schema
@@ -182,6 +182,7 @@ class RequestOperatorViewSet(GenericAPIView):
                     notifier_start(job_group, self._generate_summary(req))
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
                     self._generate_description(str(job_group.id), req)
+                    self._generate_label(str(job_group.id), req)
                     create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id)
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
@@ -226,6 +227,13 @@ class RequestOperatorViewSet(GenericAPIView):
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
+    def _generate_label(self, request):
+        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+        data = files.first().metadata
+        recipe = data['recipe']
+        recipe_label_event = SetLabelEvent(self.job_group_id, recipe).to_dict()
+        send_notification.delay(recipe_label_event)
+
 
 class RunOperatorViewSet(GenericAPIView):
     serializer_class = RunIdsOperatorSerializer
@@ -252,6 +260,7 @@ class RunOperatorViewSet(GenericAPIView):
                 notifier_start(job_group, self._generate_summary(req))
                 if req != 'Unknown':
                     self._generate_description(str(job_group.id), req)
+                    self._generate_label(str(job_group.id), req)
             else:
                 try:
                     job_group = JobGroup.objects.get(id=job_group_id)
@@ -296,6 +305,13 @@ class RunOperatorViewSet(GenericAPIView):
             'metadata__cmoSampleName').annotate(n=Count("pk")))
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
+
+    def _generate_label(self, request):
+        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+        data = files.first().metadata
+        recipe = data['recipe']
+        recipe_label_event = SetLabelEvent(self.job_group_id, recipe).to_dict()
+        send_notification.delay(recipe_label_event)
 
 
 class OperatorErrorViewSet(mixins.ListModelMixin,
