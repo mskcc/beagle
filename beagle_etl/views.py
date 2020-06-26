@@ -128,21 +128,3 @@ class RequestIdLimsPullViewSet(GenericAPIView):
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)
 
-
-class RequestIdLimsUpdateViewSet(GenericAPIView):
-    serializer_class = RequestIdLimsPullSerializer
-
-    logger = logging.getLogger(__name__)
-
-    def post(self, request):
-        request_ids = request.data['request_ids']
-        for request_id in request_ids:
-            logging.info("Submitting requestId %s to pipeline" % request_id)
-            job = Job(run='beagle_etl.jobs.lims_etl_jobs.update_metadata', args={'request_id': request_id},
-                      status=JobStatus.CREATED, max_retry=1, children=[],
-                      callback='beagle_etl.jobs.lims_etl_jobs.request_callback',
-                      callback_args={'request_id': request_id})
-
-            job.save()
-        return Response({"details": "Update requests from LIMS jobs submitted %s" % str(request_ids)},
-                        status=status.HTTP_201_CREATED)
