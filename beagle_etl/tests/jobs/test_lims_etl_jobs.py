@@ -26,9 +26,9 @@ from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_met
 class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json"
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json"
     ]
 
     @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
@@ -67,8 +67,9 @@ class TestFetchSamples(TestCase):
         print(">>> job scheduler complete")
 
         # check that all jobs completed successfully
-        jobs = Job.objects.all()
+        jobs = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.create_pooled_normal').all()
         for job in jobs:
+            print("%s %s" % (job.run, JobStatus(job.status).name))
             self.assertTrue(job.status == JobStatus.COMPLETED)
 
         # check for updated files in the database
@@ -90,9 +91,9 @@ class TestFetchSamples(TestCase):
 class TestCreatePooledNormal(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json"
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json"
     ]
 
     def setUp(self):
