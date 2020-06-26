@@ -157,6 +157,8 @@ class FileQuerySerializer(serializers.Serializer):
         required=False
     )
 
+    metadata_distribution = serializers.CharField(required=False)
+
     count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)

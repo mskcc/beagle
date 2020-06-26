@@ -45,13 +45,14 @@ class ETLImportEvent(Event):
         Lab Head e-mail: {lab_head_email}
         PI e-email: {pi_email}
         Project Manager Name: {project_manager_name}
-        
+
         {cnt_samples_completed} samples successfully imported
         {cnt_samples_fail} samples failed
-        
+
         Number of tumor samples: {number_of_tumors}
         Number of normal samples: {number_of_normals}
         Number of pooled normals: {number_of_pool_normals}
+        Job Group ID: {job_group}
         """
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,
@@ -69,5 +70,6 @@ class ETLImportEvent(Event):
                                                   project_manager_name=self.project_manager_name,
                                                   number_of_tumors=self.number_of_tumors,
                                                   number_of_normals=self.number_of_normals,
-                                                  number_of_pool_normals=self.number_of_pool_normals
+                                                  number_of_pool_normals=self.number_of_pool_normals,
+                                                  job_group=self.job_group
                                                   )
