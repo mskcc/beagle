@@ -226,7 +226,7 @@ class RequestIdsOperatorSerializer(serializers.Serializer):
         child=serializers.CharField(max_length=30), allow_empty=True
     )
     pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
-    job_group = serializers.UUIDField(required=False)
+    job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(required=False, default=True)
 
 
@@ -237,7 +237,7 @@ class RunIdsOperatorSerializer(serializers.Serializer):
     pipelines = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
-    job_group = serializers.UUIDField(required=False)
+    job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(default=False)
 
 
