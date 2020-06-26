@@ -40,9 +40,10 @@ class OperatorStartEvent(Event):
         Lab Head e-mail: {lab_head_email}
         PI e-email: {pi_email}
         Project Manager Name: {project_manager_name}
-        
+
         Number of tumor samples: {number_of_tumors}
         Number of normal samples: {number_of_normals}
+        Job Group ID: {job_group}
         """
         return OPERATOR_START_TEMPLATE.format(request_id=self.request_id,
                                               cnt_samples=self.sample_list_completed,
@@ -56,5 +57,6 @@ class OperatorStartEvent(Event):
                                               pi_email=self.pi_email,
                                               project_manager_name=self.project_manager_name,
                                               number_of_tumors=self.number_of_tumors,
-                                              number_of_normals=self.number_of_normals
+                                              number_of_normals=self.number_of_normals,
+                                              job_group=self.job_group
                                               )
