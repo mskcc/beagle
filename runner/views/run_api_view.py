@@ -159,7 +159,7 @@ class RequestOperatorViewSet(GenericAPIView):
     def post(self, request):
         request_ids = request.data.get('request_ids')
         pipeline_name = request.data.get('pipeline')
-        job_group_id = request.data.get('job_group', None)
+        job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', True)
 
         pipeline = get_object_or_404(Pipeline, name=pipeline_name)
@@ -232,7 +232,7 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipeline')
-        job_group_id = request.data.get('job_group', None)
+        job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
