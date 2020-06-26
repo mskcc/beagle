@@ -1,7 +1,6 @@
 import os
 import copy
 import logging
-import requests
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
@@ -202,63 +201,6 @@ def create_sample_job(sample_id, igocomplete, request_id, request_metadata, rede
               job_group=job_group)
     job.save()
     return job
-
-
-# def redelivery_fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None):
-#     logger.info("Re-fetching sampleIds for requestId:%s" % request_id)
-#     jg = None
-#     try:
-#         jg = JobGroup.objects.get(id=job_group)
-#         logger.debug("JobGroup found")
-#     except JobGroup.DoesNotExist:
-#         logger.debug("No JobGroup Found")
-#     children = set()
-#     sample_ids = LIMSClient.get_request_samples(request_id)
-#     if sample_ids['requestId'] != request_id:
-#         raise ErrorInconsistentDataException(
-#             "LIMS returned wrong response for request %s. Got %s instead" % (request_id, sample_ids['requestId']))
-#     request_metadata = {
-#         "dataAnalystEmail": sample_ids['dataAnalystEmail'],
-#         "dataAnalystName": sample_ids['dataAnalystName'],
-#         "investigatorEmail": sample_ids['investigatorEmail'],
-#         "investigatorName": sample_ids['investigatorName'],
-#         "labHeadEmail": sample_ids['labHeadEmail'],
-#         "labHeadName": sample_ids['labHeadName'],
-#         "otherContactEmails": sample_ids['otherContactEmails'],
-#         "dataAccessEmails": sample_ids['dataAccessEmails'],
-#         "qcAccessEmails": sample_ids['qcAccessEmails'],
-#         "projectManagerName": sample_ids['projectManagerName'],
-#         "recipe": sample_ids['recipe'],
-#         "piEmail": sample_ids["piEmail"],
-#     }
-#     set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
-#     send_notification.delay(set_recipe_event)
-#     pooled_normals = sample_ids.get("pooledNormals", [])
-#     if import_pooled_normals and pooled_normals:
-#         for f in pooled_normals:
-#             job = get_or_create_pooled_normal_job(f, jg)
-#             children.add(str(job.id))
-#     if import_samples:
-#         if not sample_ids.get('samples', False):
-#             raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
-#         for sample in sample_ids.get('samples', []):
-#             job = create_redelivery_sample_job(sample['igoSampleId'],
-#                                                sample['igocomplete'],
-#                                                request_id,
-#                                                request_metadata,
-#                                                jg)
-#
-#             children.add(str(job.id))
-
-
-# def create_redelivery_sample_job(sample_id, igocomplete, request_id, request_metadata, job_group=None):
-#     job = Job.objects.create(run=TYPES['REDELIVERY_SAMPLE'],
-#               args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
-#                     'request_metadata': request_metadata, 'redelivery': True},
-#               status=JobStatus.CREATED,
-#               max_retry=1, children=[],
-#               job_group=job_group)
-#     return job
 
 
 def get_run_id_from_string(string):
