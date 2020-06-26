@@ -26,7 +26,6 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 
 
-
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,
@@ -233,7 +232,7 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
-        job_group_id = request.data.get('job_group', None)
+        job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
