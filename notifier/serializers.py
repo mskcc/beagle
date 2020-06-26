@@ -13,3 +13,7 @@ class NotificationSerializer(serializers.Serializer):
     job_group = serializers.UUIDField(required=True)
     notification = serializers.CharField()
     arguments = serializers.JSONField()
+
+
+class JobGroupQuerySerializer(serializers.Serializer):
+    jira_id = serializers.CharField(allow_blank=False)
