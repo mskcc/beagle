@@ -4,10 +4,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import GenericAPIView
-
+from drf_yasg.utils import swagger_auto_schema
 from .tasks import send_notification
 from .models import JobGroup
-from .serializers import JobGroupSerializer, NotificationSerializer
+from .serializers import JobGroupSerializer, NotificationSerializer, JobGroupQuerySerializer
 
 
 class JobGroupViews(mixins.CreateModelMixin,
@@ -19,6 +19,20 @@ class JobGroupViews(mixins.CreateModelMixin,
 
     queryset = JobGroup.objects.all()
     serializer_class = JobGroupSerializer
+
+    @swagger_auto_schema(query_serializer=JobGroupQuerySerializer)
+    def list(self, request, *args, **kwargs):
+        job_groups = JobGroup.objects.all()
+        serializer = JobGroupQuerySerializer(data=request.query_params)
+        if serializer.is_valid():
+            jira_id = request.query_params.get('jira_id')
+            if jira_id:
+                job_groups = JobGroup.objects.filter(jira_id=jira_id).all()
+        else:
+            Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        page = self.paginate_queryset(job_groups)
+        response = JobGroupSerializer(page, many=True)
+        return self.get_paginated_response(response.data)
 
 
 class JobGroupNotificationView(GenericAPIView):
