@@ -357,12 +357,6 @@ def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
                 failed_runs.append(run['runId'])
-            elif len(fastqs) % 2 != 0:
-                logger.error(
-                    "Failed to fetch SampleManifest for sampleId:%s. %s fastq file(s) provided" % (
-                        sample_id, str(len(fastqs))))
-                invalid_number_of_fastq = True
-                failed_runs.append(run['runId'])
             else:
                 if not redelivery:
                     for fastq in fastqs:
@@ -387,12 +381,6 @@ def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
             raise MissingDataException(
                 "Missing fastq files for igcomplete: %s sample %s : %s" % (
                     igocomplete, sample_id, ' '.join(failed_runs)))
-    if invalid_number_of_fastq:
-        if igocomplete:
-            raise ErrorInconsistentDataException(
-                "Odd number of fastq file(s) provided (%s) for RunId: %s" % (str(len(fastqs)), ' '.join(failed_runs)))
-        else:
-            pass
     if not redelivery:
         if conflict:
             res_str = ""
@@ -407,7 +395,7 @@ def R1_or_R2(filename):
     R1_idx = reversed_filename.find('1R')
     R2_idx = reversed_filename.find('2R')
     if R1_idx == -1 and R2_idx == -1:
-        return "ERROR"
+        return "UNKNOWN"
     elif R1_idx > 0 and R2_idx == -1:
         return "R1"
     elif R2_idx > 0 and R1_idx == -1:
@@ -417,7 +405,7 @@ def R1_or_R2(filename):
             return 'R1'
         else:
             return 'R2'
-    return 'ERROR'
+    return 'UNKNOWN'
 
 
 def convert_to_dict(runs):
