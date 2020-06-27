@@ -542,17 +542,6 @@ class TestImportSample(APITestCase):
         self.assertEqual(count_files, 6)
 
     @patch('requests.get')
-    def test_invalid_number_of_fastq_files(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_1_fastq, status_code=200)
-        with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata('igoId_001', True, 'sampleName_001', {})
-            self.assertTrue('Odd number of fastq file(s) provided' in str(e))
-        count_files = FileRepository.filter(path_in=[
-            "/path/to/sample/10/sampleName_001-d_IGO_igoId_002_S728_L008_R2_001.fastq.gz"
-        ]).count()
-        self.assertEqual(count_files, 0)
-
-    @patch('requests.get')
     def test_file_conflict(self, mock_get_sample):
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
