@@ -120,7 +120,9 @@ class FileView(mixins.CreateModelMixin,
             if metadata_distribution:
                 distribution_dict = {}
                 metadata_query = 'metadata__%s' % metadata_distribution
-                queryset = queryset.values(metadata_query).order_by().annotate(Count(metadata_query))
+                metadata_ids = queryset.values_list('id',flat=True)
+                queryset = FileRepository.all(distinct=False)
+                queryset = queryset.filter(id__in=metadata_ids).values(metadata_query).order_by().annotate(Count(metadata_query))
                 for single_metadata in queryset:
                     single_metadata_name = None
                     single_metadata_count = 0
