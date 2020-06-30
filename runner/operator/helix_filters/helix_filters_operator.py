@@ -38,6 +38,8 @@ class HelixFiltersOperator(Operator):
         input_json = self.add_output_file_names(input_json, pipeline_version)
         tags = { "project_prefix": project_prefix, "run_ids": run_ids }
 
+        #TODO: Remove purity facets seg files from facerts_hisens_seg_files
+
         helix_filters_outputs_job_data = {
             'app': app,
             'inputs': input_json,
