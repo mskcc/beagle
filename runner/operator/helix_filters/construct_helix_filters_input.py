@@ -7,6 +7,8 @@ import os
 import sys
 import json
 from runner.models import Port
+from runner.run.processors.file_processor import FileProcessor
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
@@ -82,12 +84,13 @@ def get_files_from_port(port_obj):
     """
     file_list = []
     if isinstance(port_obj, list):
-        for single_file in port_obj:
-            file_list.append(get_file_obj(single_file))
-    elif isinstance(port_obj, dict):
-        file_list.append(get_file_obj(port_obj))
+        for data in port_obj:
+            if isinstance(data, list):
+                return get_files_from_port(data)
+            else:
+                return get_file_obj(data)
+    file_list.append(get_file_obj(port_obj))
     return file_list
-
 
 
 def list_keys_for_filters():
@@ -95,7 +98,8 @@ def list_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a list of values in the JSON
     """
-    keys = ['maf_files', 'hisens_cncfs', 'targets_list']
+    keys = ['mutation_maf_files', 'mutation_svs_maf_files', 'mutation_svs_txt_files',
+            'facets_hisens_seg_files', 'facets_hisens_cncf_files', 'targets_list']
     return set(keys)
 
 
@@ -126,9 +130,15 @@ def construct_helix_filters_input(run_id_list):
             name = single_port.name
             value = single_port.value
             if name == "maf":
-                input_json["maf_files"].append(get_file_obj(value))
+                input_json["mutation_maf_files"].append(get_file_obj(value))
+            if name == "maf_file":
+                input_json["mutation_svs_maf_files"].append(get_file_obj(value))
+            if name == "portal_file":
+                input_json["mutation_svs_txt_files"].append(get_file_obj(value))
             if name == "facets_txt_hisens":
-                input_json["hisens_cncfs"].append(get_file_obj(value))
+                input_json["facets_hisens_cncf_files"].append(get_files_from_port(value))
+            if name == "facets_seg":
+                input_json["facets_hisens_seg_files"].append(get_files_from_port(value))
             if name == "project_prefix":
                 input_json[name] = single_port.value
             if name == "assay":
@@ -151,6 +161,7 @@ def convert_references(assay):
     references = dict()
     targets_list = get_baits_and_targets(assay, helix_filters_resources)
     references['targets_list'] = targets_list
+    references['known_fusions_file'] = {'class': 'File', 'location': FileProcessor.parse_path_from_uri(helix_filters_resources['known_fusions_file']) }
     return references
 
 
