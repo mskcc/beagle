@@ -11,9 +11,8 @@ from rest_framework.viewsets import GenericViewSet
 from beagle_etl.models import JobStatus, Job, Assay
 from drf_yasg.utils import swagger_auto_schema
 from .jobs.lims_etl_jobs import create_request_job
-from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer, AssayElementSerializer, AssayUpdateSerializer
+from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer, AssayElementSerializer, AssayUpdateSerializer, JobsTypesSerializer
 from beagle.common import fix_query_list
-
 
 class JobViewSet(mixins.CreateModelMixin,
                  mixins.DestroyModelMixin,
@@ -177,4 +176,13 @@ class RequestIdLimsPullViewSet(GenericAPIView):
             created_jobs.append(job)
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)
+
+class GetJobsTypes(GenericAPIView):
+    serializer_class = JobsTypesSerializer
+    pagination_class = None
+    queryset = Job.objects.none()
+
+    def get(self, request):
+        response_dict = { 'job_types': TYPES}
+        return Response(response_dict, status=status.HTTP_200_OK)
 

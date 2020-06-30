@@ -27,6 +27,8 @@ class AssaySerializer(serializers.ModelSerializer):
         model = Assay
         fields = '__all__'
 
+class JobsTypesSerializer(serializers.Serializer):
+    job_types = serializers.JSONField(required=False)
 
 class AssayElementSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
