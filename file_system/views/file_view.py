@@ -131,7 +131,7 @@ class FileView(mixins.CreateModelMixin,
                             single_metadata_count = single_value
                         else:
                             single_metadata_name = single_value
-                    if single_metadata_name:
+                    if single_metadata_name is not None:
                         distribution_dict[single_metadata_name] = single_metadata_count
                 return Response(distribution_dict, status=status.HTTP_200_OK)
             if count:
