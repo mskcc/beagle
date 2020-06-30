@@ -79,17 +79,15 @@ def get_file_obj(file_obj):
 
 
 def get_files_from_port(port_obj):
-    """
-    From port object, retrieve a list of files
-    """
     file_list = []
     if isinstance(port_obj, list):
-        for data in port_obj:
-            if isinstance(data, list):
-                return get_files_from_port(data)
+        for single_file in port_obj:
+            if isinstance(single_file, list):
+                file_list.append(get_files_from_port(single_file))
             else:
-                return get_file_obj(data)
-    file_list.append(get_file_obj(port_obj))
+                file_list.append(get_file_obj(single_file))
+    elif isinstance(port_obj, dict):
+        file_list.append(get_file_obj(port_obj))
     return file_list
 
 
@@ -136,9 +134,9 @@ def construct_helix_filters_input(run_id_list):
             if name == "portal_file":
                 input_json["mutation_svs_txt_files"].append(get_file_obj(value))
             if name == "facets_txt_hisens":
-                input_json["facets_hisens_cncf_files"].append(get_files_from_port(value))
+                input_json["facets_hisens_cncf_files"] = input_json["facets_hisens_cncf_files"] + get_files_from_port(value)
             if name == "facets_seg":
-                input_json["facets_hisens_seg_files"].append(get_files_from_port(value))
+                input_json["facets_hisens_seg_files"] =  input_json["facets_hisens_seg_files"] + get_files_from_port(value)
             if name == "project_prefix":
                 input_json[name] = single_port.value
             if name == "assay":
