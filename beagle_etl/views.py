@@ -1,4 +1,6 @@
 import logging
+from distutils.util import strtobool
+from django.db.models import Count
 from rest_framework import mixins
 from rest_framework import status
 from beagle.pagination import time_filter
@@ -38,31 +40,79 @@ class JobViewSet(mixins.CreateModelMixin,
 
     @swagger_auto_schema(query_serializer=JobQuerySerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_group']
+        query_list_types = ['job_group','values_args','args']
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = JobQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Job, request.query_params)
             queryset = time_filter(Job, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_group = fixed_query_params.get('job_group')
-            if job_group:
-                queryset = queryset.filter(job_group__in=job_group).all()
             job_type = fixed_query_params.get('type')
+            sample_id = fixed_query_params.get('sample_id')
+            request_id = fixed_query_params.get('request_id')
+            st = fixed_query_params.get('status')
+            values_args = fixed_query_params.get('values_args')
+            args = fixed_query_params.get('args')
+            args_distribution = fixed_query_params.get('args_distribution')
+            count = fixed_query_params.get('count')
+            if job_group:
+                queryset = queryset.filter(job_group__in=job_group)
             if job_type:
                 queryset = queryset.filter(run=TYPES[job_type])
-            sample_id = fixed_query_params.get('sample_id')
             if sample_id:
                 queryset = queryset.filter(args__sample_id=sample_id)
-            request_id = fixed_query_params.get('request_id')
             if request_id:
                 queryset = queryset.filter(args__request_id=request_id)
-            st = fixed_query_params.get('status')
             if st:
                 queryset = queryset.filter(status=JobStatus[st].value)
-            page = self.paginate_queryset(queryset)
+            if args:
+                filter_query = dict()
+                for single_arg in args:
+                    key, value = single_arg.split(':')
+                    key = 'args__%s' % key
+                    if value == 'True' or value == 'true':
+                        value = True
+                    if value == 'False' or value == 'false':
+                        value = False
+                    filter_query[key] = value
+                if filter_query:
+                    queryset = queryset.filter(**filter_query)
+            if values_args:
+                if len(values_args) == 1:
+                    ret_str = 'args__%s' % values_args[0]
+                    queryset = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+                else:
+                    values_args_query_list = ['args__%s' % single_arg for single_arg in values_args ]
+                    values_args_query_set = set(values_args_query_list)
+                    queryset = queryset.values_list(*values_args_query_set).distinct()
+            if args_distribution:
+                distribution_dict = {}
+                args_query = 'args__%s' % args_distribution
+                job_ids = queryset.values_list('id',flat=True)
+                queryset = Job.objects.all()
+                queryset = queryset.filter(id__in=job_ids).values(args_query).order_by().annotate(Count(args_query))
+                for single_arg in queryset:
+                    single_arg_name = None
+                    single_arg_count = 0
+                    for single_key, single_value in single_arg.items():
+                        if 'count' in single_key:
+                            single_arg_count = single_value
+                        else:
+                            single_arg_name = single_value
+                    if single_arg_name is not None:
+                        distribution_dict[single_arg_name] = single_arg_count
+                return Response(distribution_dict, status=status.HTTP_200_OK)
+            if count:
+                count = bool(strtobool(count))
+                if count:
+                    return Response(queryset.count(), status=status.HTTP_200_OK)
+            page = self.paginate_queryset(queryset.all())
             if page is not None:
-                serializer = JobSerializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
+                if values_args:
+                    return self.get_paginated_response(page)
+                else:
+                    serializer = JobSerializer(page, many=True)
+                    return self.get_paginated_response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

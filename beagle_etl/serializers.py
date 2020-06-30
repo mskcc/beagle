@@ -4,6 +4,10 @@ from notifier.models import JobGroup
 from beagle_etl.jobs import TYPES
 
 
+def ValidateDict(value):
+    if len(value.split(":")) !=2:
+        raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
 class JobSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
 
@@ -60,6 +64,22 @@ class JobQuerySerializer(serializers.Serializer):
     sample_id = serializers.CharField(required=False)
 
     request_id = serializers.CharField(required=False)
+
+    count = serializers.BooleanField(required=False)
+
+    values_args = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    args_distribution = serializers.CharField(required=False)
+
+    args = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
