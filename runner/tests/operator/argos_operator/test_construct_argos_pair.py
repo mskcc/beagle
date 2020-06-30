@@ -40,8 +40,6 @@ class TestConstructPair(TestCase):
             sample['id'] = file.id
             sample['path'] = file.path
             sample['file_name'] = file.file_name
-            sample['platform'] = file.platform
-            sample['sequencingCenter'] = file.sequencingCenter
             sample['metadata'] = file.filemetadata_set.first().metadata
             data.append(sample)
         samples = list()
