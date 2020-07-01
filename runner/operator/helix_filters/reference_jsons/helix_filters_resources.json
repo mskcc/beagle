@@ -1,4 +1,5 @@
 {
+    "known_fusions_file": "juno:///juno/work/ci/resources/known_fusions/known_fusions_at_mskcc.txt",
     "targets": {
         "AgilentExon_51MB_b37_v3": {
             "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/AgilentExon_51MB_b37_v3/b37/AgilentExon_51MB_b37_v3_targets.intervals"
