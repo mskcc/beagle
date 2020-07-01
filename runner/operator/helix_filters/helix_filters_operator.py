@@ -10,6 +10,7 @@ from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
+from file_system.repository.file_repository import FileRepository
 from .construct_helix_filters_input import construct_helix_filters_input
 LOGGER = logging.getLogger(__name__)
 
@@ -25,20 +26,21 @@ class HelixFiltersOperator(Operator):
         the pipeline, and then submit them as jobs through the
         APIRunCreateSerializer
         """
-        run_ids = self.run_ids
-        input_json = construct_helix_filters_input(run_ids)
-        number_of_runs = len(run_ids)
+        argos_run_ids = self.run_ids
+        input_json = construct_helix_filters_input(argos_run_ids)
+        number_of_runs = len(argos_run_ids)
         name = "HELIX FILTERS OUTPUTS %s runs [%s,..] " % (
-            number_of_runs, run_ids[0])
+            number_of_runs, argos_run_ids[0])
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
         input_json = self.add_output_file_names(input_json, pipeline_version)
-        tags = { "project_prefix": project_prefix, "run_ids": run_ids }
+        tags = { "project_prefix": project_prefix, "argos_run_ids": argos_run_ids }
 
-        #TODO: Remove purity facets seg files from facerts_hisens_seg_files
+        #TODO:  Remove purity facets seg files from facets_hisens_seg_files
+        input_json['facets_hisens_seg_files'] = self.remove_purity_files(input_json['facets_hisens_seg_files'])
 
         helix_filters_outputs_job_data = {
             'app': app,
@@ -79,3 +81,16 @@ class HelixFiltersOperator(Operator):
         json_data["portal_CNA_file"] = "data_CNA.txt"
 
         return json_data
+
+    def remove_purity_files(self, data):
+        """
+        Currently all seg files are in one array output; need to remove the _purity.seg files
+        from input_json['facets_hisens_seg_files']
+        """
+        new_data = list()
+        for i in data:
+            location = i['location']
+            if '_purity.seg' not in location:
+                new_data.append(i)
+        return new_data
+
