@@ -288,7 +288,7 @@ def convert_references(assay):
     references = dict()
     targets_list = get_baits_and_targets(assay, helix_filters_resources)
     references['targets_list'] = targets_list
-    references['known_fusions_file'] = {'class': 'File', 'location': FileProcessor.parse_path_from_uri(helix_filters_resources['known_fusions_file']) }
+    references['known_fusions_file'] = {'class': 'File', 'location': str(helix_filters_resources['known_fusions_file']) }
     return references
 
 
