@@ -306,7 +306,7 @@ def get_oncotree_codes(request_id):
     shared_nodes = oncotree_dh.find_shared_nodes_by_code_list(oncotree_codes)
     common_anc = oncotree_dh.get_highest_level_shared_node(shared_nodes)
     if common_anc.code.lower() == "tissue":
-        common_anc = 'mixed'
+        common_anc.code = 'mixed'
     return common_anc.code.lower()
 
 if __name__ == '__main__':
