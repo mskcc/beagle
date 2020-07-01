@@ -11,6 +11,7 @@ from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
 from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler
+from django.db.models import Q
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -169,7 +170,74 @@ def construct_helix_filters_input(argos_run_id_list):
     input_json['argos_version_string'] = get_argos_pipeline_version(argos_run_id_list)
     input_json['project_pi'] = get_project_pi(argos_run_id_list)
     input_json['request_pi'] = get_request_pi(argos_run_id_list)
+
+    # generate data_clinical file
+    input_json['data_clinical_file'] = create_data_clinical_file(argos_run_id_list)
+
     return input_json
+
+
+def create_data_clinical_file(run_id_list):
+    files = list()
+    pipeline_names = set()
+    pipeline_githubs = set()
+    pipeline_versions = set()
+    for run_id in run_id_list:
+        argos_run = Run.objects.get(id=run_id)
+        pipeline = argos_run.app
+        pipeline_names.add(pipeline.name)
+        pipeline_githubs.add(pipeline.github)
+        pipeline_versions.add(pipeline.version)
+        files = files + get_files_from_run(argos_run)
+    data_clinical_content = generate_sample_data_content(files,
+            pipeline_name=','.join(pipeline_names),
+            pipeline_github=','.join(pipeline_githubs),
+            pipeline_version=','.join(pipeline_versions))
+    return {
+                "class": "File",
+                "basename": "sample_data_clinical.txt",
+                "contents": data_clinical_content
+            }
+
+
+def get_files_from_run(r):
+    files = list()
+    inp_port = Port.objects.filter(run_id=r.id, name='pair').first()
+    for p in inp_port.db_value[0]['R1']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[0]['R2']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[0]['zR1']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[0]['zR2']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[1]['R1']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[1]['R2']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[1]['zR1']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[1]['zR2']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[1]['bam']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    return files
+
+
+def build_request_ids_query(data):
+    """
+    Build complex Q object run id query from given data
+
+    Only does OR queries, as seen in line
+
+       query |= item
+
+    """
+    data_query_set = [Q(metadata__requestId=value) for value in set(data)]
+    query = data_query_set.pop()
+    for item in data_query_set:
+        query |= item
+    return query
 
 
 def get_project_pi(run_id_list):
