@@ -75,11 +75,12 @@ class HelixFiltersOperator(Operator):
         """
         project_prefix = json_data["project_prefix"]
         json_data["argos_version_string"] = pipeline_version
-        json_data["analyst_file"] = "%s.muts.maf" % project_prefix
-        json_data["analysis_gene_cna_file"] = "%s.gene.cna.txt" % project_prefix
-        json_data["portal_file"] = "data_mutations_extended.txt"
-        json_data["portal_CNA_file"] = "data_CNA.txt"
-
+        json_data['analysis_mutations_filename'] = project_prefix + ".muts.maf"
+        json_data['analysis_gene_cna_filename'] = project_prefix + ".gene.cna.txt"
+        json_data['analysis_sv_filename'] = project_prefix + ".svs.maf"
+        json_data['analysis_segment_cna_filename'] = project_prefix + ".seg.cna.txt"
+        json_data['cbio_segment_data_filename'] = project_prefix + "_data_cna_hg19.seg"
+        json_data['cbio_meta_cna_segments_filename'] = project_prefix + "_meta_cna_hg19_seg.txt"
         return json_data
 
     def remove_purity_files(self, data):
