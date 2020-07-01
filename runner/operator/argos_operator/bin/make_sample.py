@@ -138,13 +138,13 @@ def build_sample(data, ignore_sample_formatting=False):
     but standardizing it here with what GATK sets bam headers to
     """
 
-    sequencing_center = "MSKCC"
-    platform = "Illumina"
     samples = dict()
 
     for value in data:
         meta = value['metadata']
         bid = value['id']
+        sequencing_center = meta['sequencingCenter']
+        platform = meta['platform']
         request_id = meta['requestId']
         fpath = value['path']
         sample_id = meta['sampleId']
