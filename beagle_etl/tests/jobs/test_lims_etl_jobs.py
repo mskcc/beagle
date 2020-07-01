@@ -26,9 +26,9 @@ from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_met
 class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json"
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json"
     ]
 
     @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
@@ -67,8 +67,9 @@ class TestFetchSamples(TestCase):
         print(">>> job scheduler complete")
 
         # check that all jobs completed successfully
-        jobs = Job.objects.all()
+        jobs = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.create_pooled_normal').all()
         for job in jobs:
+            print("%s %s" % (job.run, JobStatus(job.status).name))
             self.assertTrue(job.status == JobStatus.COMPLETED)
 
         # check for updated files in the database
@@ -90,9 +91,9 @@ class TestFetchSamples(TestCase):
 class TestCreatePooledNormal(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json"
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json"
     ]
 
     def setUp(self):
@@ -539,17 +540,6 @@ class TestImportSample(APITestCase):
             "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
         ]).count()
         self.assertEqual(count_files, 6)
-
-    @patch('requests.get')
-    def test_invalid_number_of_fastq_files(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_1_fastq, status_code=200)
-        with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata('igoId_001', True, 'sampleName_001', {})
-            self.assertTrue('Odd number of fastq file(s) provided' in str(e))
-        count_files = FileRepository.filter(path_in=[
-            "/path/to/sample/10/sampleName_001-d_IGO_igoId_002_S728_L008_R2_001.fastq.gz"
-        ]).count()
-        self.assertEqual(count_files, 0)
 
     @patch('requests.get')
     def test_file_conflict(self, mock_get_sample):
