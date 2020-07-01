@@ -193,6 +193,7 @@ def create_data_clinical_file(run_id_list):
             pipeline_name=','.join(pipeline_names),
             pipeline_github=','.join(pipeline_githubs),
             pipeline_version=','.join(pipeline_versions))
+    data_clinical_content = data_clinical_content.strip()
     return {
                 "class": "File",
                 "basename": "sample_data_clinical.txt",
