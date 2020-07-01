@@ -16,6 +16,11 @@ class RunApiListSerializer(serializers.Serializer):
         allow_empty=True,
         required=False
     )
+    apps = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
     ports = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
         allow_empty=True,
@@ -36,6 +41,22 @@ class RunApiListSerializer(serializers.Serializer):
         allow_empty=True,
         required=False
     )
+
+    values_run = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    run_distribution = serializers.CharField(required=False)
+
+    run = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+
+    full = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
@@ -140,7 +161,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date')
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
