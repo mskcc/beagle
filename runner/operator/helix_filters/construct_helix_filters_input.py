@@ -265,7 +265,7 @@ def get_request_pi(run_id_list):
     for request_pi in request_pis:
         if request_pi:
             request_pis_final.append(format_msk_id(request_pi))
-    return request_pis_final
+    return ','.join(request_pis_final)
 
 
 def get_argos_pipeline_version(run_id_list):
