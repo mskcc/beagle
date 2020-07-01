@@ -6,8 +6,11 @@ import logging
 import os
 import sys
 import json
-from runner.models import Port
+from runner.models import Port,Run
 from runner.run.processors.file_processor import FileProcessor
+from file_system.repository.file_repository import FileRepository
+from notifier.helper import generate_sample_data_content
+from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -110,7 +113,7 @@ def single_keys_for_filters():
     return set(keys)
 
 
-def construct_helix_filters_input(run_id_list):
+def construct_helix_filters_input(argos_run_id_list):
     """
     Main function. From a list of run IDs, build a JSON that combines
     the runs data into one JSON expected by the helix filters pipeline
@@ -122,7 +125,7 @@ def construct_helix_filters_input(run_id_list):
     for key in list_keys:
         input_json[key] = list()
 
-    for single_run_id in run_id_list:
+    for single_run_id in argos_run_id_list:
         port_list = Port.objects.filter(run=single_run_id)
         for single_port in port_list:
             name = single_port.name
@@ -148,7 +151,65 @@ def construct_helix_filters_input(run_id_list):
 
     references = convert_references(input_json['assay'])
     input_json.update(references)
+
+    # some default values
+    project_prefix = input_json['project_prefix']
+    input_json['project_id'] = project_prefix
+    input_json['project_short_name'] = project_prefix
+    input_json['project_name'] = project_prefix
+    input_json['project_description'] = project_prefix
+    input_json['cancer_study_identifier'] = project_prefix
+
+    # Gotta retrieve extra info that's not in the run porto have to query the database
+    #
+    # Get oncotree codes from samples in project_prefix/request_id FileMetadata
+    # will need to change project_prefix to request_id values everywhere, but for now we assume 
+    # there is only one project_prefix/request_id per helix_filters run
+    input_json['cancer_type'] = get_oncotree_codes(project_prefix)
+    input_json['argos_version_string'] = get_argos_pipeline_version(argos_run_id_list)
+    input_json['project_pi'] = get_project_pi(argos_run_id_list)
+    input_json['request_pi'] = get_request_pi(argos_run_id_list)
     return input_json
+
+
+def get_project_pi(run_id_list):
+    project_pis = set()
+    for run_id in run_id_list:
+        argos_run = Run.objects.get(id=run_id)
+        project_pi = format_msk_id(argos_run.tags['labHeadEmail'])
+        project_pis.add(project_pi)
+    return ','.join(list(sorted(project_pis)))
+
+
+def get_request_pi(run_id_list):
+    request_pis = set()
+    files = FileRepository.all()
+    all_request_ids = set()
+    # reducing number of queries
+    for run_id in run_id_list:
+        argos_run = Run.objects.get(id=run_id)
+        run_request_id = argos_run.tags['requestId']
+        all_request_ids.add(run_request_id)
+    for request_id in all_request_ids:
+        investigator_emails = FileRepository.filter(queryset=files,metadata={"requestId": request_id}).values_list('metadata__investigatorEmail', flat=True)
+        request_pis = request_pis.union(set(investigator_emails))
+    request_pis_final = list()
+    for request_pi in request_pis:
+        if request_pi:
+            request_pis_final.append(format_msk_id(request_pi))
+    return request_pis_final
+
+
+def get_argos_pipeline_version(run_id_list):
+    versions = set()
+    for run_id in run_id_list:
+        argos_run = Run.objects.get(id=run_id)
+        versions.add(argos_run.app.version)
+    return "_".join(list(sorted(versions)))
+
+
+def format_msk_id(email_address):
+    return email_address.split("@")[0]
 
 
 def convert_references(assay):
@@ -162,6 +223,22 @@ def convert_references(assay):
     references['known_fusions_file'] = {'class': 'File', 'location': FileProcessor.parse_path_from_uri(helix_filters_resources['known_fusions_file']) }
     return references
 
+
+def get_oncotree_codes(request_id):
+    oncotree_dh = OncotreeDataHandler()
+    files = FileRepository.all()
+    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={"requestId": request_id}).values_list('metadata__oncoTreeCode', flat=True))
+    oncotree_codes = list()
+    for val in oncotree_codes_tmp:
+        if val:
+            oncotree_codes.append(val)
+    if not oncotree_codes: # hack; if there are no oncotree codes, just say it's mixed
+        return 'mixed'
+    shared_nodes = oncotree_dh.find_shared_nodes_by_code_list(oncotree_codes)
+    common_anc = oncotree_dh.get_highest_level_shared_node(shared_nodes)
+    if common_anc.code.lower() == "tissue":
+        common_anc = 'mixed'
+    return common_anc
 
 if __name__ == '__main__':
     RUN_ID_LIST = []
