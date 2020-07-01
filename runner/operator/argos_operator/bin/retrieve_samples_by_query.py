@@ -139,8 +139,8 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['sampleId'] = sample_name
             metadata['sampleName'] = sample_name
             metadata['requestId'] = sample_name
-            metadata['sequencingCenter'] = pooled_normal.metadata.sequencingCenter
-            metadata['platform'] = pooled_normal.metadata.platform
+            metadata['sequencingCenter'] = pooled_normal.metadata['sequencingCenter']
+            metadata['platform'] = pooled_normal.metadata['platform']
             metadata['baitSet'] = descriptor
             metadata['recipe'] = descriptor
             metadata['run_id'] = run_ids
