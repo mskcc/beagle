@@ -9,7 +9,7 @@ import logging
 from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
+from runner.models import Pipeline, Run
 from file_system.repository.file_repository import FileRepository
 from .construct_helix_filters_input import construct_helix_filters_input
 LOGGER = logging.getLogger(__name__)
@@ -52,7 +52,12 @@ class HelixFiltersOperator(Operator):
         """
         If project_prefix and job_group_id, write output to a directory
         that uses both
+
+        Going by argos pipeline version id, assuming all runs use the same argos version
         """
+        argos_run = Run.objects.get(id=argos_run_ids[0])
+        argos_pipeline = argos_run.app
+
         output_directory = None
         if project_prefix:
             tags["project_prefix"] = project_prefix
@@ -62,7 +67,7 @@ class HelixFiltersOperator(Operator):
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 project_prefix,
-                                                pipeline_version,
+                                                argos_pipeline.version,
                                                 jg_created_date)
             helix_filters_outputs_job_data['output_directory'] = output_directory
         helix_filters_outputs_job = [(APIRunCreateSerializer(
