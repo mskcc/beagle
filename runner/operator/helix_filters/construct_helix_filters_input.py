@@ -212,16 +212,6 @@ def get_files_from_run(r):
         files.append(FileProcessor.get_file_path(p['location']))
     for p in inp_port.db_value[0]['zR2']:
         files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[1]['R1']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[1]['R2']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[1]['zR1']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[1]['zR2']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[1]['bam']:
-        files.append(FileProcessor.get_file_path(p['location']))
     return files
 
 
@@ -306,8 +296,8 @@ def get_oncotree_codes(request_id):
     shared_nodes = oncotree_dh.find_shared_nodes_by_code_list(oncotree_codes)
     common_anc = oncotree_dh.get_highest_level_shared_node(shared_nodes)
     if common_anc.code.lower() == "tissue":
-        common_anc = 'mixed'
-    return common_anc
+        common_anc.code = 'mixed'
+    return common_anc.code.lower()
 
 if __name__ == '__main__':
     RUN_ID_LIST = []
