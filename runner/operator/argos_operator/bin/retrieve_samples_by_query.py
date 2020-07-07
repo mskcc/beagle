@@ -139,8 +139,8 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['sampleId'] = sample_name
             metadata['sampleName'] = sample_name
             metadata['requestId'] = sample_name
-            metadata['sequencingCenter'] = pooled_normal.metadata['sequencingCenter']
-            metadata['platform'] = pooled_normal.metadata['platform']
+            metadata['sequencingCenter'] = "MSKCC"
+            metadata['platform'] = "Illumina"
             metadata['baitSet'] = descriptor
             metadata['recipe'] = descriptor
             metadata['run_id'] = run_ids
@@ -176,8 +176,8 @@ def get_dmp_normal(patient_id, bait_set):
         dmp_metadata = dmp_bam.metadata
         specimen_type = "DMP Normal"
         sample_name = dmp_metadata['external_id']
-        sequencingCenter = dmp_metadata['sequencingCenter']
-        platform = dmp_metadata['platform']
+        sequencingCenter = "MSKCC"
+        platform = "Illumina"
         sample = dict()
         sample['id'] = dmp_bam.file.id
         sample['path'] = dmp_bam.file.path
