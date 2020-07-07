@@ -5,7 +5,7 @@ from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
-    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
@@ -59,6 +59,9 @@ def create_request_job(request_id):
                   callback_args={'request_id': request_id, 'job_group': str(job_group.id)},
                   job_group=job_group)
         job.save()
+        if redelivery:
+            redelivery_event = RedeliveryEvent(str(job_group.id), request_id).to_dict()
+            send_notification.delay(redelivery_event)
         return job
 
 

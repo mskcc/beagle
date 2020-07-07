@@ -25,29 +25,35 @@ class NoOpEventHandler(EventHandler):
     def process_etl_set_recipe_event(self, event):
         pass
 
+    def process_operator_run_event(self, event):
+        pass
+
+    def process_run_completed(self, event):
+        pass
+
     def process_operator_request_event(self, event):
         pass
 
     def process_etl_job_failed_event(self, event):
         pass
 
-    def process_operator_run_event(self, event):
+    def process_operator_error_event(self, event):
+        pass
+
+    def process_assay_event(self, event):
+        pass
+
+    def process_custom_capture_cc_event(self, event):
+        pass
+
+    def process_redelivery_event(self, event):
         pass
 
     def process_set_label_event(self, event):
-        pass
-
-    def process_run_completed(self, event):
-        pass
-
-    def process_operator_error_event(self, event):
         pass
 
     def process_transition_event(self, event):
         pass
 
     def process_upload_attachment_event(self, event):
-        pass
-
-    def process_assay_event(self, event):
         pass

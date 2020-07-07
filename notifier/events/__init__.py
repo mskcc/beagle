@@ -17,3 +17,4 @@ from .custom_capture_event import AdminHoldEvent
 from .operator_start_event import OperatorStartEvent
 from .custom_capture_cc_event import CustomCaptureCCEvent
 from .cant_do_event import CantDoEvent
+from .redelivery_event import RedeliveryEvent

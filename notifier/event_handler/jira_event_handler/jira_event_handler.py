@@ -57,9 +57,8 @@ class JiraEventHandler(EventHandler):
     def process_custom_capture_cc_event(self, event):
         self._add_comment_event(event)
 
-    def _add_comment_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+    def process_redelivery_event(self, event):
+        self._add_comment_event(event)
 
     def process_set_label_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
@@ -82,3 +81,7 @@ class JiraEventHandler(EventHandler):
     def process_upload_attachment_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.add_attachment(job_group.jira_id, event.file_name, event.get_content(), download=event.download)
+
+    def _add_comment_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.comment(job_group.jira_id, str(event))
