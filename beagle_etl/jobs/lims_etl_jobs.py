@@ -45,8 +45,7 @@ def create_request_job(request_id):
     count = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
-    redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
-                                    status=JobStatus.COMPLETED).count() > 0
+    redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
     if count == 0:
         job_group = JobGroup()
         job_group.save()
