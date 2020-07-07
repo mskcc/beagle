@@ -329,6 +329,8 @@ for n in NOTIFIERS:
 
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 
+REDELIVERY_CC = os.environ.get("BEAGLE_REDELIVERY_CC", '') # Put "CC [~songt]" for production
+
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
