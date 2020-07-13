@@ -49,6 +49,9 @@ class NoOpEventHandler(EventHandler):
     def process_redelivery_event(self, event):
         pass
 
+    def process_redelivery_update_event(self, event):
+        pass
+
     def process_set_label_event(self, event):
         pass
 

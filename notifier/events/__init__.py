@@ -18,3 +18,4 @@ from .operator_start_event import OperatorStartEvent
 from .custom_capture_cc_event import CustomCaptureCCEvent
 from .cant_do_event import CantDoEvent
 from .redelivery_event import RedeliveryEvent
+from .redelivery_update_event import RedeliveryUpdateEvent
