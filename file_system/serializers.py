@@ -243,28 +243,10 @@ class UpdateFileSerializer(serializers.Serializer):
         instance.size = validated_data.get('size', instance.size)
         instance.file_group_id = validated_data.get('file_group_id', instance.file_group_id)
         instance.file_type = validated_data.get('file_type', instance.file_type)
-        ddiff = DeepDiff(validated_data.get('metadata'), instance.filemetadata_set.first().metadata, ignore_order=True)
+        ddiff = DeepDiff(validated_data.get('metadata'),
+                         instance.filemetadata_set.order_by('-created_date').first().metadata, ignore_order=True)
         if ddiff:
             metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
             metadata.save()
         instance.save()
         return instance
-
-
-# class BatchCreateFileSerializer(serializers.Serializer):
-#     files = serializers.ListField(required=True, allow_empty=False)
-#     metadata = serializers.JSONField(allow_null=True, default=dict)
-#     file_group = serializers.UUIDField(required=True)
-#
-#     def create(self, validated_data):
-#         request = self.context.get("request")
-#         user = request.user if request and hasattr(request, "user") else None
-#         sample = Sample(name=validated_data['name'])
-#         sample.save()
-#         metadata = SampleMetadata(sample=sample, metadata=validated_data['metadata'], user=user)
-#         metadata.save()
-#         file_group = FileGroup.objects.get(id=validated_data['file_group'])
-#         for file in validated_data['files']:
-#             File(file_name=os.path.basename(file), path=file, file_group=file_group, sample=sample).save()
-#         return sample
-

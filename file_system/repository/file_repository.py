@@ -1,6 +1,7 @@
 from file_system.models import FileMetadata, File
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
 
+
 class FileRepository(object):
 
     @classmethod
@@ -13,7 +14,7 @@ class FileRepository(object):
     @classmethod
     def distinct_files(cls, queryset):
         file_ids = queryset.values_list('file_id',flat=True)
-        metadata_ids = FileMetadata.objects.filter(file_id__in=file_ids).order_by('file', '-version').distinct('file_id').values_list('id',flat=True)
+        metadata_ids = FileMetadata.objects.filter(file_id__in=file_ids).order_by('file', '-version').distinct('file_id').values_list('id', flat=True)
         queryset = queryset.filter(id__in=metadata_ids).order_by('created_date').all()
         return queryset
 
