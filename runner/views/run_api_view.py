@@ -382,3 +382,6 @@ class AionViewSet(GenericAPIView):
             operator_model = Operator.objects.get(class_name="AionOperator")
             operator = OperatorFactory.get_by_model(operator_model)
             create_aion_job(operator, lab_head_email)
+        body = {"details": "Aion Job submitted for %s" % lab_head_email}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
