@@ -282,3 +282,7 @@ class OperatorRunSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperatorRun
         fields = '__all__'
+
+
+class AionOperatorSerializer(serializers.Serializer):
+    lab_head_email = serializers.CharField(max_length=100)
