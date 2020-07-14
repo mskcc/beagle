@@ -12,12 +12,12 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer
+    RunIdsOperatorSerializer, AionOperatorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from runner.tasks import create_jobs_from_request
+from runner.tasks import create_jobs_from_request, create_aion_job
 from file_system.repository import FileRepository
 from notifier.models import JobGroup
 from notifier.events import OperatorStartEvent, SetLabelEvent
@@ -369,3 +369,19 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
                            GenericViewSet):
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
+
+
+class AionViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = AionOperatorSerializer
+
+    def post(self, request):
+        lab_head_email = request.data.get('lab_head_email', [])
+        if lab_head_email:
+            operator_model = Operator.objects.get(class_name="AionOperator")
+            operator = OperatorFactory.get_by_model(operator_model)
+            create_aion_job(operator, lab_head_email)
+        body = {"details": "Aion Job submitted for %s" % lab_head_email}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
