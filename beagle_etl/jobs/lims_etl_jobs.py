@@ -1,11 +1,13 @@
 import os
 import copy
 import logging
+from deepdiff import DeepDiff
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
-    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
+    RedeliveryUpdateEvent, UploadAttachmentEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, Assay
 from file_system.serializers import UpdateFileSerializer
@@ -18,6 +20,8 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
 from beagle_etl.lims_client import LIMSClient
+import traceback
+
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +49,7 @@ def create_request_job(request_id):
     count = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
-    redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
-                                    status=JobStatus.COMPLETED).count() > 0
+    redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
     if count == 0:
         job_group = JobGroup()
         job_group.save()
@@ -60,6 +63,9 @@ def create_request_job(request_id):
                   callback_args={'request_id': request_id, 'job_group': str(job_group.id)},
                   job_group=job_group)
         job.save()
+        if redelivery:
+            redelivery_event = RedeliveryEvent(str(job_group.id)).to_dict()
+            send_notification.delay(redelivery_event)
         return job
 
 
@@ -195,7 +201,7 @@ def get_or_create_pooled_normal_job(filepath, job_group=None):
 def create_sample_job(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None):
     job = Job(run=TYPES['SAMPLE'],
               args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
-                    'request_metadata': request_metadata, 'redelivery': redelivery},
+                    'request_metadata': request_metadata, 'redelivery': redelivery, 'job_group': str(job_group.id)},
               status=JobStatus.CREATED,
               max_retry=1, children=[],
               job_group=job_group)
@@ -296,7 +302,7 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("File already exist %s." % (filepath))
 
 
-def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, redelivery=False):
+def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None):
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = LIMSClient.get_sample_manifest(sample_id)
     try:
@@ -310,7 +316,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
-    validate_sample(sample_id, data.get('libraries'), igocomplete, redelivery)
+    validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
 
     libraries = data.pop('libraries')
     for library in libraries:
@@ -325,7 +331,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
                 logger.info("Adding file %s" % fastq)
                 create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
                                       library, run,
-                                      request_metadata, R1_or_R2(fastq), redelivery)
+                                      request_metadata, R1_or_R2(fastq), update=redelivery, job_group=job_group)
 
 
 def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
@@ -356,7 +362,8 @@ def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
             if not fastqs:
                 logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
                 missing_fastq = True
-                failed_runs.append(run['runId'])
+                run_id = run['runId'] if run['runId'] else 'None'
+                failed_runs.append(run_id)
             else:
                 if not redelivery:
                     for fastq in fastqs:
@@ -429,7 +436,8 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r, update=False):
+def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata,
+                          r, update=False, job_group=None):
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
@@ -472,13 +480,29 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        try:
-            f = File.objects.get(path=path)
-        except File.DoesNotExist:
+        f = FileRepository.filter(path=path).first()
+        if not f:
             create_file_object(path, file_group_obj, metadata, file_type_obj)
+            if update:
+                message = "File registered: %s" % path
+                update = RedeliveryUpdateEvent(job_group, message).to_dict()
+                send_notification.delay(update)
         else:
             if update:
-                update_file_object(f, path, metadata)
+                before = f.file.filemetadata_set.order_by('-created_date').count()
+                update_file_object(f.file, path, metadata)
+                after = f.file.filemetadata_set.order_by('-created_date').count()
+                if after != before:
+                    all_metadata = f.file.filemetadata_set.order_by('-created_date')
+                    ddiff = DeepDiff(all_metadata[1].metadata,
+                                     all_metadata[0].metadata,
+                                     ignore_order=True)
+                    diff_file_name = "%s_metadata_update.json" % f.file.file_name
+                    message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
+                    update = RedeliveryUpdateEvent(job_group, message).to_dict()
+                    diff_details_event = UploadAttachmentEvent(job_group, diff_file_name, str(ddiff)).to_dict()
+                    send_notification.delay(update)
+                    send_notification.delay(diff_details_event)
             else:
                 raise FailedToFetchSampleException("File %s already exist with id %s" % (path, str(f.id)))
 

@@ -22,7 +22,6 @@ class JiraEventHandler(EventHandler):
 
     def process_import_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        # self.client.update_ticket_summary(job_group.jira_id, event.request_id)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_operator_start_event(self, event):
@@ -57,18 +56,14 @@ class JiraEventHandler(EventHandler):
     def process_custom_capture_cc_event(self, event):
         self._add_comment_event(event)
 
-    def _add_comment_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+    def process_redelivery_event(self, event):
+        self._set_label(event)
+
+    def process_redelivery_update_event(self, event):
+        self._add_comment_event(event)
 
     def process_set_label_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        ticket = self.client.get_ticket(job_group.jira_id)
-        if ticket.status_code != 200:
-            return
-        labels = ticket.json()['fields'].get('labels', [])
-        labels.append(str(event))
-        self.client.update_labels(job_group.jira_id, labels)
+        self._set_label(event)
 
     def process_transition_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
@@ -76,9 +71,30 @@ class JiraEventHandler(EventHandler):
         for transition in response.json().get('transitions', []):
             if transition.get('name') == str(event):
                 self.client.update_status(job_group.jira_id, transition['id'])
+                self._check_transition(job_group.jira_id, str(event), event)
                 self.logger.debug("Transition to state %s", transition.get('name'))
                 break
+
+    def _check_transition(self, jira_id, expected_status, event):
+        response = self.client.get_ticket(jira_id)
+        status = response.json()['fields']['status']['name']
+        if status == expected_status:
+            return
+        self.process_transition_event(event)
 
     def process_upload_attachment_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         self.client.add_attachment(job_group.jira_id, event.file_name, event.get_content(), download=event.download)
+
+    def _add_comment_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        self.client.comment(job_group.jira_id, str(event))
+
+    def _set_label(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        ticket = self.client.get_ticket(job_group.jira_id)
+        if ticket.status_code != 200:
+            return
+        labels = ticket.json()['fields'].get('labels', [])
+        labels.append(str(event))
+        self.client.update_labels(job_group.jira_id, labels)
