@@ -114,6 +114,8 @@ class TestRetrieveSamplesByQuery(TestCase):
                 "imported": "2020-03-25T19:45:16.421137Z",
                 "cmo_assay": "IMPACT468",
                 "tumor_type": "MBC",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "external_id": "s_C_8VK0V7_N901_dZ_IM6",
                 "sample_type": "0",
                 "tissue_type": "Breast",
@@ -392,6 +394,8 @@ class TestRetrieveSamplesByQuery(TestCase):
             metadata={
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 'baitSet': 'IMPACT468_BAITS',
                 "preservation": "Frozen"
             }
@@ -407,6 +411,8 @@ class TestRetrieveSamplesByQuery(TestCase):
             metadata={
                 "runId": "PITT_0439",
                 "recipe": "IMPACT468",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 'baitSet': 'IMPACT468_BAITS',
                 "preservation": "Frozen"
             }

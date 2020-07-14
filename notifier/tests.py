@@ -25,6 +25,12 @@ class JobGroupAPITest(APITestCase):
         response = self.client.get('/v0/notifier/job-groups/', format='json')
         self.assertEqual(len(response.data['results']), 2)
 
+    def test_list_job_groups_by_jira_id(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/notifier/job-groups/?jira_id=%s' % self.job_group1.jira_id,
+                                   format='json')
+        self.assertEqual(len(response.data['results']), 1)
+
     def test_create_job_group(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.post('/v0/notifier/job-groups/',

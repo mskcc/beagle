@@ -150,6 +150,7 @@ class Run(BaseModel):
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
+    message = JSONField(default=dict, blank=True, null=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
     output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
