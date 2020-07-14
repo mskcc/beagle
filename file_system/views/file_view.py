@@ -1,6 +1,6 @@
 import uuid
 from distutils.util import strtobool
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -50,10 +50,11 @@ class FileView(mixins.CreateModelMixin,
 
     @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type',]
+        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type','values_metadata']
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
+            queryset = FileRepository.all(distinct=False)
             queryset = time_filter(FileMetadata, request.query_params)
             queryset = time_filter(FileMetadata, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             file_group = fixed_query_params.get('file_group')
@@ -66,7 +67,7 @@ class FileView(mixins.CreateModelMixin,
             file_type = fixed_query_params.get('file_type')
             values_metadata = fixed_query_params.get('values_metadata')
             count = fixed_query_params.get('count')
-            queryset = FileRepository.all(distinct=False)
+            metadata_distribution = fixed_query_params.get('metadata_distribution')
             kwargs = {'queryset':queryset}
             if file_group:
                 if len(file_group) == 1:
@@ -108,11 +109,31 @@ class FileView(mixins.CreateModelMixin,
                     kwargs['file_type_in'] = file_type
                 queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
             if values_metadata:
-                kwargs['values_metadata'] = values_metadata
+                if len(values_metadata) == 1:
+                    kwargs['values_metadata'] = values_metadata[0]
+                else:
+                    kwargs['values_metadata_list'] = values_metadata
             try:
                 queryset = FileRepository.filter(**kwargs)
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            if metadata_distribution:
+                distribution_dict = {}
+                metadata_query = 'metadata__%s' % metadata_distribution
+                metadata_ids = queryset.values_list('id',flat=True)
+                queryset = FileRepository.all(distinct=False)
+                queryset = queryset.filter(id__in=metadata_ids).values(metadata_query).order_by().annotate(Count(metadata_query))
+                for single_metadata in queryset:
+                    single_metadata_name = None
+                    single_metadata_count = 0
+                    for single_key, single_value in single_metadata.items():
+                        if 'count' in single_key:
+                            single_metadata_count = single_value
+                        else:
+                            single_metadata_name = single_value
+                    if single_metadata_name is not None:
+                        distribution_dict[single_metadata_name] = single_metadata_count
+                return Response(distribution_dict, status=status.HTTP_200_OK)
             if count:
                 count = bool(strtobool(count))
                 if count:
