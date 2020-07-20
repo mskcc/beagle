@@ -32,8 +32,7 @@ class JiraEventHandler(EventHandler):
         self._add_comment_event(event)
 
     def process_etl_set_recipe_event(self, event):
-        job_group = JobGroup.objects.get(id=event.job_group)
-        self.client.update_labels(job_group.jira_id, [str(event)])
+        self._set_label(event)
 
     def process_operator_run_event(self, event):
         self._add_comment_event(event)
