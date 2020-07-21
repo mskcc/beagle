@@ -48,6 +48,9 @@
         },
         "HemePACT_v4_BAITS": {
             "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
+        },
+        "IMPACT505_b37": {
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_targets.ilist"
         }
     }
 }
