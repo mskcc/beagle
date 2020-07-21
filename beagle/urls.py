@@ -17,15 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from beagle import __version__
 from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, BeagleTokenVerifyView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from beagle import __version__
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -49,3 +46,5 @@ urlpatterns = [
     path('api-token-refresh/', BeagleTokenRefreshView.as_view(), name='token_refresh'),
     path('api-token-verify/', BeagleTokenVerifyView.as_view(), name='token_verify'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

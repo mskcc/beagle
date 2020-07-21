@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
@@ -247,10 +247,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_URL = '/static/'
 LOGIN_URL='/admin/login/'
 LOGOUT_URL='/admin/logout/'
 
@@ -343,3 +339,6 @@ BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagl
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
 TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
+
+STATIC_ROOT = '%s/static' % ROOT_DIR
+STATIC_URL = '/tmp/static'
