@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:19.10
+From: nginx:latest
 Includecmd: no
 
 %startscript
@@ -13,7 +13,10 @@ Includecmd: no
     fi
 
     nohup python3 ${BEAGLE_PATH}/manage.py migrate
-    nohup python3 ${BEAGLE_PATH}/manage.py runserver 0.0.0.0:$BEAGLE_PORT
+
+    nohup python3 ${BEAGLE_PATH}/manage.py collectstatic
+
+    gunicorn beagle.wsgi --log-file $BEAGLE_LOG_PATH --bind 0.0.0.0:$BEAGLE_PORT --threads 10 --pythonpath ${BEAGLE_PATH}
 
 %post
     export DEBIAN_FRONTEND=noninteractive \

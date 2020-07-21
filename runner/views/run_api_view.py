@@ -1,4 +1,5 @@
 import logging
+from distutils.util import strtobool
 import datetime
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
@@ -11,20 +12,19 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer
+    RunIdsOperatorSerializer, AionOperatorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from runner.tasks import create_jobs_from_request
+from runner.tasks import create_jobs_from_request, create_aion_job
 from file_system.repository import FileRepository
 from notifier.models import JobGroup
-from notifier.events import OperatorStartEvent
+from notifier.events import OperatorStartEvent, SetLabelEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
-
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -50,7 +50,7 @@ class RunApiViewSet(mixins.ListModelMixin,
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids']
+        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','apps','run','values_run','ports']
         fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
@@ -62,24 +62,73 @@ class RunApiViewSet(mixins.ListModelMixin,
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
             request_ids = fixed_query_params.get('request_ids')
+            apps = fixed_query_params.get('apps')
+            values_run = fixed_query_params.get('values_run')
+            run = fixed_query_params.get('run')
+            run_distribution = fixed_query_params.get('run_distribution')
+            count = fixed_query_params.get('count')
             if job_groups:
-                queryset = queryset.filter(job_group__in=job_groups).all()
+                queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
-                queryset = queryset.filter(job_group__jira_id__in=jira_ids).all()
+                queryset = queryset.filter(job_group__jira_id__in=jira_ids)
             if status_param:
-                queryset = queryset.filter(status=RunStatus[status_param].value).all()
+                queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
-                queryset = self.query_from_dict("port__value__%s",queryset,ports)
+                queryset = self.query_from_dict("port__%s__exact",queryset,ports)
             if tags:
                 queryset = self.query_from_dict("tags__%s__exact",queryset,tags)
             if request_ids:
-                queryset = queryset.filter(tags__requestId__in=request_ids).all()
+                queryset = queryset.filter(tags__requestId__in=request_ids)
+            if apps:
+                queryset = queryset.filter(app__in=apps)
+            if run:
+                filter_query = dict()
+                for single_run in run:
+                    key, value = single_run.split(':')
+                    if value == 'True' or value == 'true':
+                        value = True
+                    if value == 'False' or value == 'false':
+                        value = False
+                    filter_query[key] = value
+                if filter_query:
+                    queryset = queryset.filter(**filter_query)
+            if values_run:
+                if len(values_run) == 1:
+                    ret_str = values_run[0]
+                    queryset = queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+                else:
+                    values_run_query_list = [single_run for single_run in values_run ]
+                    values_run_query_set = set(values_run_query_list)
+                    queryset = queryset.values_list(*values_run_query_set).distinct()
+            if run_distribution:
+                distribution_dict = {}
+                run_query = run_distribution
+                run_ids = queryset.values_list('id',flat=True)
+                queryset = Run.objects.all()
+                queryset = queryset.filter(id__in=run_ids).values(run_query).order_by().annotate(Count(run_query))
+                for single_arg in queryset:
+                    single_arg_name = None
+                    single_arg_count = 0
+                    for single_key, single_value in single_arg.items():
+                        if 'count' in single_key:
+                            single_arg_count = single_value
+                        else:
+                            single_arg_name = single_value
+                    if single_arg_name is not None:
+                        distribution_dict[single_arg_name] = single_arg_count
+                return Response(distribution_dict, status=status.HTTP_200_OK)
+            if count:
+                count = bool(strtobool(count))
+                if count:
+                    return Response(queryset.count(), status=status.HTTP_200_OK)
             try:
-                page = self.paginate_queryset(queryset)
+                page = self.paginate_queryset(queryset.all())
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
             full = fixed_query_params.get('full')
             if page is not None:
+                if values_run:
+                    return self.get_paginated_response(page)
                 if full:
                     serializer = RunSerializerFull(page, many=True)
                 else:
@@ -182,6 +231,7 @@ class RequestOperatorViewSet(GenericAPIView):
                     notifier_start(job_group, self._generate_summary(req))
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
                     self._generate_description(str(job_group.id), req)
+                    self._generate_label(str(job_group.id), req)
                     create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id)
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
@@ -226,6 +276,13 @@ class RequestOperatorViewSet(GenericAPIView):
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
+    def _generate_label(self, job_group_id, request):
+        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+        data = files.first().metadata
+        recipe = data['recipe']
+        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
+        send_notification.delay(recipe_label_event)
+
 
 class RunOperatorViewSet(GenericAPIView):
     serializer_class = RunIdsOperatorSerializer
@@ -233,7 +290,7 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
-        job_group_id = request.data.get('job_group', None)
+        job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
@@ -252,6 +309,7 @@ class RunOperatorViewSet(GenericAPIView):
                 notifier_start(job_group, self._generate_summary(req))
                 if req != 'Unknown':
                     self._generate_description(str(job_group.id), req)
+                    self._generate_label(str(job_group.id), req)
             else:
                 try:
                     job_group = JobGroup.objects.get(id=job_group_id)
@@ -297,6 +355,13 @@ class RunOperatorViewSet(GenericAPIView):
         operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
+    def _generate_label(self, job_group_id, request):
+        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+        data = files.first().metadata
+        recipe = data['recipe']
+        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
+        send_notification.delay(recipe_label_event)
+
 
 class OperatorErrorViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
@@ -304,3 +369,19 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
                            GenericViewSet):
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
+
+
+class AionViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = AionOperatorSerializer
+
+    def post(self, request):
+        lab_head_email = request.data.get('lab_head_email', [])
+        if lab_head_email:
+            operator_model = Operator.objects.get(class_name="AionOperator")
+            operator = OperatorFactory.get_by_model(operator_model)
+            create_aion_job(operator, lab_head_email)
+        body = {"details": "Aion Job submitted for %s" % lab_head_email}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+

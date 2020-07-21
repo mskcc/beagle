@@ -6,6 +6,7 @@ from .argos_qc_operator import ArgosQcOperator
 from .copy_outputs_operator import CopyOutputsOperator
 from .access.fastq_to_bam import AccessFastqToBamOperator
 from .helix_filters import HelixFiltersOperator
+from .aion import AionOperator
 
 
 class OperatorFactory(object):
@@ -18,7 +19,8 @@ class OperatorFactory(object):
         "ArgosQcOperator": ArgosQcOperator,
         "CopyOutputsOperator": CopyOutputsOperator,
         "AccessFastqToBamOperator": AccessFastqToBamOperator,
-        "HelixFiltersOperator": HelixFiltersOperator
+        "HelixFiltersOperator": HelixFiltersOperator,
+        "AionOperator": AionOperator
     }
 
     def get_by_model(model, **kwargs):

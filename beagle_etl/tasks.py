@@ -81,7 +81,9 @@ class JobObject(object):
                 self._process()
                 self.job.status = JobStatus.WAITING_FOR_CHILDREN
             except Exception as e:
+                print(e)
                 if isinstance(e, ETLExceptions):
+                    print("Is this correct exception")
                     message = {"message": str(e), "code": e.code}
                 else:
                     message = {'message': str(e)}

@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
 
+
 class JobStatus(IntEnum):
     CREATED = 0
     IN_PROGRESS = 1

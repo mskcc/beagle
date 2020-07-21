@@ -46,4 +46,4 @@ class FailedToFetchPoolNormalException(ETLExceptions):
     """
     Unable to parse and create pool normal file
     """
-    code = 105
+    code = 106
