@@ -94,6 +94,12 @@
             "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_baits.ilist",
             "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT468_08050/b37/IMPACT468_08050_b37_targets.ilist"
         },
+        "IMPACT505_b37": {
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_targets.ilist"
+        },
         "Agilent_v4_51MB_Human": {
             "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_genotypes.txt",
             "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/Agilent_v4_51MB_Human/b37/Agilent_v4_51MB_Human_FP_tiling_intervals.intervals",
