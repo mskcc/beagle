@@ -12,10 +12,14 @@ def create_IMPACT505_b37_reference_files(apps, schema_editor):
     FileMetadata = apps.get_model('file_system', 'FileMetadata')
     FileGroup = apps.get_model('file_system', 'FileGroup')
     FileType = apps.get_model('file_system', 'FileType')
-    file_group = FileGroup.objects.get(name='Reference Files')
-    txt = FileType.objects.get(name='txt')
-    ilist = FileType.objects.get(name='ilist')
-    interval_list = FileType.objects.get(name='interval_list')
+    try:
+        file_group = FileGroup.objects.get(name='Reference Files')
+        txt = FileType.objects.get(name='txt')
+        ilist = FileType.objects.get(name='ilist')
+        interval_list = FileType.objects.get(name='interval_list')
+    except Exception:
+        print("No file group or file_types defined")
+        return
     try:
 
         file1 = File.objects.create(
