@@ -340,5 +340,5 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
 TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
 
-STATIC_ROOT = '%s/static' % ROOT_DIR
-STATIC_URL = '/tmp/static'
+STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/static/'

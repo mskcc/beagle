@@ -22,7 +22,7 @@ from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, Beagle
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -46,5 +46,3 @@ urlpatterns = [
     path('api-token-refresh/', BeagleTokenRefreshView.as_view(), name='token_refresh'),
     path('api-token-verify/', BeagleTokenVerifyView.as_view(), name='token_verify'),
 ]
-
-urlpatterns += staticfiles_urlpatterns()
