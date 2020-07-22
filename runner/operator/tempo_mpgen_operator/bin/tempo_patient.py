@@ -144,3 +144,11 @@ class Patient:
         if "sureselect" in target_assay:
             return "agilent"
         return None
+
+
+    def create_unpaired_string(self, fields):
+        s = ""
+        for sample in self.unpaired_samples:
+            data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
+            s += "\n" + "\t".join(data)
+        return s
