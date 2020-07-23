@@ -67,6 +67,21 @@ class RunApiViewSet(mixins.ListModelMixin,
             run = fixed_query_params.get('run')
             run_distribution = fixed_query_params.get('run_distribution')
             count = fixed_query_params.get('count')
+            full = fixed_query_params.get('full')
+            cwl_inputs = fixed_query_params.get('cwl_inputs')
+            cwl_outputs = fixed_query_params.get('cwl_outputs')
+            if full:
+                full = bool(strtobool(full))
+            if cwl_inputs:
+                cwl_inputs = bool(strtobool(cwl_inputs))
+            if cwl_outputs:
+                cwl_outputs = bool(strtobool(cwl_outputs))
+            run_format_types = [full, cwl_inputs, cwl_outputs]
+            format_types_iter = iter(run_format_types)
+            has_one_true = any(format_types_iter)
+            has_another_true = any(format_types_iter)
+            if has_one_true and has_another_true:
+                return Response("Please specify one of cwl_inputs, cwl_outputs, or full", status=status.HTTP_400_BAD_REQUEST)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
