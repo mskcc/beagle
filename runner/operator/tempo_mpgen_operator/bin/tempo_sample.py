@@ -21,18 +21,27 @@ class TempoSample(Sample):
         self.bait_set = ""
         self.cmo_sample_name = ""
         self.run_mode = ""
-        self.request_id = ""
         self.patient_id = ""
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict: 
-            self.bait_set = self.metadata['baitSet'][0]
+            self.bait_set = self._get_bait_sets().pop()
             self.specimen_type = self.metadata['specimenType'][0]
             self.sample_class = self.metadata['sampleClass'][0]
             self.cmo_sample_name = self.metadata['cmoSampleName'][0]
             self.run_mode = self.metadata['runMode'][0]
-            self.request_id = self.metadata['requestId'][0]
             self.patient_id = self.metadata['patientId'][0]
 
+    def _resolve_target(self, bait_set):
+        """
+        """
+        target_assay = bait_set.lower()
+        if "agilent" in target_assay:
+            return "agilent"
+        if "idt" in target_assay:
+            return "idt"
+        if "sureselect" in target_assay:
+            return "agilent"
+        return None
 
     def _set_status(self):
         """
@@ -54,8 +63,8 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [ 'patientId', 'requestId', 'specimenType',
-                'runMode', 'sampleClass', 'baitSet', 'cmoSampleName' ]
+        fields_to_check = [ 'patientId', 'specimenType',
+                'runMode', 'sampleClass', 'cmoSampleName' ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -63,7 +72,18 @@ class TempoSample(Sample):
                 if len(values_set) > 1:
                     self.conflict_fields.append(key)
                     self.conflict = True
+        bait_sets = self._get_bait_sets()
+        if len(bait_sets) > 1 or len(bait_sets) == 0:
+            self.conflict_fields.append('baitSet')
+            self.conflict = True
 
+
+    def _get_bait_sets(self):
+        bait_sets = set()
+        for value in self.metadata['baitSet']:
+            bait_set = self._resolve_target(value)
+            bait_sets.add(bait_set)
+        return bait_sets
 
     def dedupe_metadata_values(self):
         """

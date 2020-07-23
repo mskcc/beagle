@@ -43,6 +43,8 @@ class Patient:
                 self.conflict_samples[sample_name] = sample
             elif not sample_name: # sample name empty
                  self.conflict_samples[sample_name] = sample
+            elif 'sampleNameMalformed' in sample.metadata['cmoSampleName']: # cmo sample name is no good 
+                 self.conflict_samples[sample_name] = sample
             else:
                 if "normal" in sample_class.lower():
                     self.normal_samples[sample_name] = sample
@@ -115,7 +117,7 @@ class Patient:
 
     def get_mapping_string(self, sample):
         s = ""
-        target = self._resolve_target(sample.bait_set)
+        target = sample.bait_set
         fastqs = sample.fastqs
         cmo_sample_name = sample.cmo_sample_name
         if fastqs.paired:
@@ -135,20 +137,26 @@ class Patient:
                 pairing += "%s\t%s\n" % (normal, tumor)
         return pairing
 
-    def _resolve_target(self, bait_set):
-        target_assay = bait_set.lower()
-        if "agilent" in target_assay:
-            return "agilent"
-        if "idt" in target_assay:
-            return "idt"
-        if "sureselect" in target_assay:
-            return "agilent"
-        return None
-
 
     def create_unpaired_string(self, fields):
         s = ""
         for sample in self.unpaired_samples:
             data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
             s += "\n" + "\t".join(data)
+        return s
+
+
+    def create_conflict_string(self, fields):
+        s = ""
+        for sample_name in self.conflict_samples:
+            sample = self.conflict_samples[sample_name]
+            data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
+            conflicts = []
+            if "sampleNameMalformed" in sample.metadata['cmoSampleName']:
+                conflicts.append("incorrect CMO Sample Name")
+            if not "".join(sample.metadata['sampleClass']):
+                    conflicts.append("no sample class")
+            multiple_values = [ "" + field + "[" + ";".join(list(set(sample.metadata[field]))).strip() + "]" for field in sample.conflict_fields ]
+            conflicts = conflicts + multiple_values
+            s += "\n" + "\t".join(data) + "\t" + ";".join(conflicts)
         return s

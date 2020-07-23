@@ -95,32 +95,33 @@ class TempoMPGenOperator(Operator):
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
         
         # output these strings to file
+        self.create_conflict_samples_txt_file()
         self.create_unpaired_txt_file()
-#        self.create_mapping_file()
-#        self.create_pairing_file()
-#        self.create_tracker_file()
+        self.create_mapping_file()
+        self.create_pairing_file()
+        self.create_tracker_file()
 
         return [], []
 
 
-    def create_unpaired_txt_file(self):       
+    def create_unpaired_txt_file(self):
+        # Add runDate
         fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
         unpaired_string = "\t".join(fields)
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             unpaired_string += patient.create_unpaired_string(fields)
         unpaired_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_unpaired.txt', unpaired_string).to_dict()
-        print(unpaired_string)
-#        send_notification.delay(unpaired_file_event)
-#        self.write_to_file("sample_unpaired.txt", unpaired_string)
+        send_notification.delay(unpaired_file_event)
+        self.write_to_file("sample_unpaired.txt", unpaired_string)
 
 
     def write_to_file(self,fname,s):
         OUTPUT_DIR = "/juno/work/tempo/voyager/"
-        output = os.path.join(OUTPUT_DIR, fname)
-        with open(output, "w+") as fh:
-            fh.write(s)
-        os.chmod(output, 0o777)
+#        output = os.path.join(OUTPUT_DIR, fname)
+#        with open(output, "w+") as fh:
+#            fh.write(s)
+#        os.chmod(output, 0o777)
 
 
     def send_message(self, msg):
@@ -156,6 +157,17 @@ class TempoMPGenOperator(Operator):
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', mapping_string).to_dict()
         send_notification.delay(mapping_file_event)
         self.write_to_file("sample_mapping.txt", mapping_string)
+
+
+    def create_conflict_samples_txt_file(self):       
+        fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
+        conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
+        for patient_id in self.patients:
+            patient = self.patients[patient_id]
+            conflict_string += patient.create_conflict_string(fields)
+        conflict_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_conflict.txt', conflict_string).to_dict()
+        send_notification.delay(conflict_file_event)
+        self.write_to_file("sample_conflict.txt", conflict_string)
 
 
     def create_pairing_file(self):
