@@ -9,6 +9,14 @@ def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
+def format_port_data(port_data):
+    port_dict = {}
+    for single_port in port_data:
+        port_name = single_port['name']
+        port_value = single_port['value']
+        port_dict[port_name] = port_value
+    return port_dict
+
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
     job_groups = serializers.ListField(
@@ -165,6 +173,30 @@ class RunSerializerFull(serializers.ModelSerializer):
         model = Run
         fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
 
+
+class RunSerializerCWLInput(RunSerializerPartial):
+
+    inputs = serializers.SerializerMethodField()
+
+    def get_inputs(self, obj):
+        input_data = PortSerializer(obj.port_set.filter(port_type=PortType.INPUT).all(), many=True).data
+        return format_port_data(input_data)
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','inputs')
+
+class RunSerializerCWLOutput(RunSerializerPartial):
+
+    outputs = serializers.SerializerMethodField()
+
+    def get_outputs(self, obj):
+        output_data = PortSerializer(obj.port_set.filter(port_type=PortType.OUTPUT).all(), many=True).data
+        return format_port_data(output_data)
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','outputs')
 
 class RunStatusUpdateSerializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
