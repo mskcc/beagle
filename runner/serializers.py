@@ -58,6 +58,8 @@ class RunApiListSerializer(serializers.Serializer):
 
     full = serializers.BooleanField(required=False)
 
+    cwl_inputs = serializers.BooleanField(required=False)
+    cwl_outputs = serializers.BooleanField(required=False)
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)
