@@ -106,8 +106,8 @@ class TempoMPGenOperator(Operator):
 
     def create_unpaired_txt_file(self):
         # Add runDate
-        fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
-        unpaired_string = "\t".join(fields)
+        fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet', 'runDate' ]
+        unpaired_string = "\t".join(fields) + "\tPossible Reason?"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             unpaired_string += patient.create_unpaired_string(fields)
@@ -160,7 +160,7 @@ class TempoMPGenOperator(Operator):
 
 
     def create_conflict_samples_txt_file(self):       
-        fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet' ]
+        fields = [ 'cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet', 'runDate' ]
         conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
         for patient_id in self.patients:
             patient = self.patients[patient_id]

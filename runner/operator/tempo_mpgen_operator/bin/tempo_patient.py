@@ -142,9 +142,33 @@ class Patient:
         s = ""
         for sample in self.unpaired_samples:
             data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
-            s += "\n" + "\t".join(data)
+            possible_reason = self._get_possible_reason(sample)
+            s += "\n" + "\t".join(data) + "\t" + possible_reason
         return s
 
+    def _get_possible_reason(self, sample):
+        num_normals = len(self.normal_samples)
+        if num_normals == 0:
+            return "No normals for patient"
+        matching_baits = False
+        for sample_name in self.normal_samples:
+            normal = self.normal_samples[sample_name]
+            if normal.bait_set.lower() == sample.bait_set.lower():
+                matching_baits = True
+        if not matching_baits:
+            return "No normal sample has same bait set as tumor in patient"
+        first_half_of_2017 = False
+        run_dates = sample.metadata['runDate'].split(";")
+        for run_date in run_dates:
+            try:
+                current_date = dt.strptime(d, '%y-%m-%d')
+            except ValueError:
+                current_date = dt.strptime(d, '%Y-%m-%d')
+            if current_date < dt(2017, 6, 1):
+                first_half_of_2017 = True
+        if first_half_of_2017:
+            return "Sample run date first half of 2017; normal may have been sequenced in 2016?"
+        return ""
 
     def create_conflict_string(self, fields):
         s = ""
