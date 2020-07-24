@@ -47,6 +47,9 @@
         },
         "HemePACT_v4_BAITS": {
             "fp_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_genotypes.txt"
+        },
+        "IMPACT505_b37": {
+            "fp_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_FP_tiling_genotypes.txt"
         }
     },
     "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
