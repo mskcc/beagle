@@ -5,7 +5,8 @@ from celery import shared_task
 from django.conf import settings
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, SetPipelineCompletedEvent
+from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
+    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent
 from notifier.tasks import send_notification
 from runner.operator import OperatorFactory
 from beagle_etl.models import Operator
@@ -42,10 +43,19 @@ def create_jobs_from_operator(operator, job_group_id=None):
         pipeline_id = operator.get_pipeline_id()
         p = Pipeline.objects.get(id=pipeline_id)
         pipeline_name = p.name
+        pipeline_version = p.version
         pipeline_link = p.pipeline_link
     except Pipeline.DoesNotExist:
         pipeline_name = ""
         pipeline_link = ""
+        pipeline_version = ""
+
+    pipeline_description_event = AddPipelineToDescriptionEvent(job_group_id, pipeline_name, pipeline_version,
+                                                               pipeline_link).to_dict()
+    send_notification.delay(pipeline_description_event)
+
+    set_pipeline_field = SetPipelineFieldEvent(job_group_id, pipeline_name).to_dict()
+    send_notification.delay(set_pipeline_field)
 
     for job in valid_jobs:
         logger.info("Creating Run object")
