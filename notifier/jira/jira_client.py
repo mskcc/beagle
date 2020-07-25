@@ -87,6 +87,11 @@ class JiraClient(object):
         response = self._post(update_status_url, body)
         return response
 
+    def update_pipeline(self, ticket_id, pipeline):
+        update_url = self.JiraEndpoints.UPDATE.value % ticket_id
+        body = {"fields": {"pipeline": pipeline}}
+        return self._put(update_url, body)
+
     def get_status_transitions(self, ticket_id):
         transitions_url = self.JiraEndpoints.TRANSITION.value % ticket_id
         response = self._get(transitions_url)
@@ -97,6 +102,10 @@ class JiraClient(object):
         body = {"body": comment}
         response = self._post(comment_url, body)
         return response
+
+    def get_ticket_description(self, ticket_id):
+        description = self.get_ticket(ticket_id).json()
+        return description['fields']['description']
 
     def get_comments(self, ticket_id):
         comment_url = self.JiraEndpoints.COMMENT.value % ticket_id

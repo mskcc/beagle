@@ -64,6 +64,19 @@ class JiraEventHandler(EventHandler):
     def process_set_label_event(self, event):
         self._set_label(event)
 
+    def process_add_pipeline_to_description_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        description = self.client.get_ticket_description(job_group.jira_id)
+        if not str(event) in description:
+            description += str(event)
+            self.client.update_ticket_description(job_group.jira_id, description)
+
+    def process_set_pipeline_field_event(self, event):
+        job_group = JobGroup.objects.get(id=event.job_group)
+        pipeline = self.client.get_ticket(job_group.jira_id).json().get('fields', {}).get('pipeline')
+        if not pipeline:
+            self.client.update_pipeline(job_group.jira_id, str(event))
+
     def process_transition_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
         response = self.client.get_status_transitions(job_group.jira_id)
