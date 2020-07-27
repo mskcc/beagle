@@ -3,6 +3,7 @@ import uuid
 import copy
 import logging
 from enum import Enum
+from pathlib import Path
 from runner.run.processors.file_processor import FileProcessor
 from runner.exceptions import PortProcessorException, FileConflictException, FileHelperException
 from notifier.tasks import send_notification
@@ -16,6 +17,7 @@ class PortAction(Enum):
     CONVERT_TO_PATH = 1
     REGISTER_OUTPUT_FILES = 2
     SEND_AS_NOTIFICATION = 3
+    CONVERT_TO_CWL_FORMAT = 4
     FIX_DB_VALUES = 99 # Temporary for fixing values in DB
 
 
@@ -68,6 +70,8 @@ class PortProcessor(object):
             return PortProcessor._fix_locations_in_db(file_obj, kwargs.get('file_list'))
         if action == PortAction.CONVERT_TO_PATH:
             return PortProcessor._convert_to_path(file_obj)
+        if action == PortAction.CONVERT_TO_CWL_FORMAT:
+            return PortProcessor._covert_to_cwl_format(file_obj)
         if action == PortAction.REGISTER_OUTPUT_FILES:
             return PortProcessor._register_file(file_obj,
                                                 kwargs.get('size'),
@@ -119,6 +123,37 @@ class PortProcessor(object):
         if secondary_files_value:
             file_obj['secondaryFiles'] = secondary_files_value
         file_obj['path'] = path
+        return file_obj
+
+    @staticmethod
+    def _covert_to_cwl_format(val):
+        file_obj = copy.deepcopy(val)
+        location = file_obj.pop('location',None)
+        if location:
+            try:
+                file_db_object = FileProcessor.get_file_obj(location)
+            except FileHelperException as e:
+                raise PortProcessorException('File %s not found' % location)
+            path = file_db_object.path
+            if path:
+                path_obj = Path(path)
+                if not file_obj.get('checksum'):
+                    checksum = FileProcessor.get_file_checksum(file_db_object)
+                    if checksum:
+                        file_obj['checksum'] = checksum
+                size = FileProcessor.get_file_size(file_db_object)
+                if size:
+                    file_obj['size'] = size
+                file_obj['basename'] = path_obj.name
+                file_obj['nameext'] = path_obj.suffix
+                file_obj['nameroot'] = path_obj.stem
+                file_obj['path'] = path
+        secondary_files = file_obj.pop('secondaryFiles', [])
+        secondary_files_value = PortProcessor.process_files(secondary_files,
+                                                                 PortAction.CONVERT_TO_CWL_FORMAT)
+        if secondary_files_value:
+            file_obj['secondaryFiles'] = secondary_files_value
+
         return file_obj
 
     @staticmethod
