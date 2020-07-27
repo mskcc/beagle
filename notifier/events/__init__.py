@@ -19,3 +19,5 @@ from .custom_capture_cc_event import CustomCaptureCCEvent
 from .cant_do_event import CantDoEvent
 from .redelivery_event import RedeliveryEvent
 from .redelivery_update_event import RedeliveryUpdateEvent
+from .add_pipeline_to_decription_event import AddPipelineToDescriptionEvent
+from .set_pipeline_field_event import SetPipelineFieldEvent
