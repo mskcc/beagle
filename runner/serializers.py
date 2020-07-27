@@ -4,6 +4,7 @@ from django.conf import settings
 from rest_framework import serializers
 from notifier.models import JobGroup
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
+from runner.run.processors.port_processor import PortProcessor, PortAction
 
 def ValidateDict(value):
     if len(value.split(":")) !=2:
@@ -13,7 +14,7 @@ def format_port_data(port_data):
     port_dict = {}
     for single_port in port_data:
         port_name = single_port['name']
-        port_value = single_port['value']
+        port_value = PortProcessor.process_files(single_port['db_value'],PortAction.CONVERT_TO_CWL_FORMAT)
         port_dict[port_name] = port_value
     return port_dict
 
