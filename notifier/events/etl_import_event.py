@@ -55,7 +55,7 @@ class ETLImportEvent(Event):
         Job Group ID: {job_group}
         
         Pipelines:
-        | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |\n
+        | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,

@@ -73,7 +73,7 @@ class JiraEventHandler(EventHandler):
 
     def process_set_pipeline_field_event(self, event):
         job_group = JobGroup.objects.get(id=event.job_group)
-        pipeline = self.client.get_ticket(job_group.jira_id).json().get('fields', {}).get('pipeline')
+        pipeline = self.client.get_ticket(job_group.jira_id).json().get('fields', {}).get(settings.JIRA_PIPELINE_FIELD_ID)
         if not pipeline:
             self.client.update_pipeline(job_group.jira_id, str(event))
 

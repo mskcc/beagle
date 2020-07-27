@@ -1,8 +1,8 @@
-import io
 import json
 import enum
 import requests
 from urllib.parse import urljoin
+from django.conf import settings
 from requests.auth import HTTPBasicAuth
 
 
@@ -89,7 +89,7 @@ class JiraClient(object):
 
     def update_pipeline(self, ticket_id, pipeline):
         update_url = self.JiraEndpoints.UPDATE.value % ticket_id
-        body = {"fields": {"pipeline": pipeline}}
+        body = {"fields": {settings.JIRA_PIPELINE_FIELD_ID: pipeline}}
         return self._put(update_url, body)
 
     def get_status_transitions(self, ticket_id):
