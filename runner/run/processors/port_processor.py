@@ -135,19 +135,17 @@ class PortProcessor(object):
             except FileHelperException as e:
                 raise PortProcessorException('File %s not found' % location)
             path = file_db_object.path
-            if path:
-                path_obj = Path(path)
-                if not file_obj.get('checksum'):
-                    checksum = FileProcessor.get_file_checksum(file_db_object)
-                    if checksum:
-                        file_obj['checksum'] = checksum
-                size = FileProcessor.get_file_size(file_db_object)
-                if size:
-                    file_obj['size'] = size
-                file_obj['basename'] = path_obj.name
-                file_obj['nameext'] = path_obj.suffix
-                file_obj['nameroot'] = path_obj.stem
-                file_obj['path'] = path
+            path_obj = Path(path)
+            checksum = FileProcessor.get_file_checksum(file_db_object)
+            if checksum:
+                file_obj['checksum'] = checksum
+            size = FileProcessor.get_file_size(file_db_object)
+            if size:
+                file_obj['size'] = size
+            file_obj['basename'] = path_obj.name
+            file_obj['nameext'] = path_obj.suffix
+            file_obj['nameroot'] = path_obj.stem
+            file_obj['path'] = path
         secondary_files = file_obj.pop('secondaryFiles', [])
         secondary_files_value = PortProcessor.process_files(secondary_files,
                                                                  PortAction.CONVERT_TO_CWL_FORMAT)
