@@ -27,6 +27,8 @@ def get_baits_and_targets(assay, qc_resources):
 
     target_assay = assay
 
+    if assay.find("IMPACT505") > -1:
+        target_assay = "IMPACT505_b37"
     if assay.find("IMPACT410") > -1:
         target_assay = "IMPACT410_b37"
     if assay.find("IMPACT468") > -1:
