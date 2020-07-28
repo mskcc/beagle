@@ -61,8 +61,11 @@ class SeqosystemEventHandler(EventHandler):
     def process_run_completed(self, event):
         self.client.complete_job(event.job_group_id, event.pipeline.name, event.tags.sample_id)
 
+    def process_input_creation_failed_event(self, event):
+        self.client.fail_job(event.job_group_id, event.pipeline.name, event.message, "bad_input")
+
     def process_run_failed(self, event):
-        self.client.fail_job(event.job_group_id, event.pipeline.name, event.tags.sample_id)
+        self.client.fail_job(event.job_group_id, event.pipeline.name, event.message, "unknown")
 
     def process_run_started(self, event):
         self.client.start_job(event.job_group_id, event.pipeline.name, event.tags.sample_id)
