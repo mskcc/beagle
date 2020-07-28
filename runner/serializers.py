@@ -5,6 +5,7 @@ from rest_framework import serializers
 from notifier.models import JobGroup
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.exceptions import PortProcessorException
 
 def ValidateDict(value):
     if len(value.split(":")) !=2:
@@ -14,7 +15,10 @@ def format_port_data(port_data):
     port_dict = {}
     for single_port in port_data:
         port_name = single_port['name']
-        port_value = PortProcessor.process_files(single_port['db_value'],PortAction.CONVERT_TO_CWL_FORMAT)
+        try:
+            port_value = PortProcessor.process_files(single_port['db_value'],PortAction.CONVERT_TO_CWL_FORMAT)
+        except PortProcessorException as e:
+            raise serializers.ValidationError(e)
         port_dict[port_name] = port_value
     return port_dict
 
