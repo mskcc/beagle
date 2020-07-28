@@ -35,11 +35,13 @@ class SeqosystemClient(object):
         }
         return self._post(self.SeqosystemEndpoints.CREATE_JOB.value, body)
 
-    def fail_job(job_group_id, pipeline_name, sample_id):
+    def fail_job(job_group_id, pipeline_name, sample_id, error_type, error_message):
         body = {
             "group_id": str(job_group_id),
             "sample_id": sample_id,
             "workflow_name": pipeline_name,
+            "error_type": error_type,
+            "error_message": error_message,
         }
         return self._post(self.SeqosystemEndpoints.FAIL_JOB.value, body)
 

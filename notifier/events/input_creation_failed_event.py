@@ -7,7 +7,7 @@ class InputCreationFailedEvent(Event):
         self.job_group = job_group
         self.request_id = request_id
         self.sample_id = sample_id
-        self.label = label
+        self.message = message
 
     @classmethod
     def get_type(cls):
