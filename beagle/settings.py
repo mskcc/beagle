@@ -329,6 +329,7 @@ JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
+JIRA_PIPELINE_FIELD_ID = os.environ.get('JIRA_PIPELINE_FIELD_ID', "customfield_10901")
 
 BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
