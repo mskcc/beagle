@@ -12,7 +12,7 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer, AionOperatorSerializer
+    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
@@ -67,6 +67,21 @@ class RunApiViewSet(mixins.ListModelMixin,
             run = fixed_query_params.get('run')
             run_distribution = fixed_query_params.get('run_distribution')
             count = fixed_query_params.get('count')
+            full = fixed_query_params.get('full')
+            cwl_inputs = fixed_query_params.get('cwl_inputs')
+            cwl_outputs = fixed_query_params.get('cwl_outputs')
+            if full:
+                full = bool(strtobool(full))
+            if cwl_inputs:
+                cwl_inputs = bool(strtobool(cwl_inputs))
+            if cwl_outputs:
+                cwl_outputs = bool(strtobool(cwl_outputs))
+            run_format_types = [full, cwl_inputs, cwl_outputs]
+            format_types_iter = iter(run_format_types)
+            has_one_true = any(format_types_iter)
+            has_another_true = any(format_types_iter)
+            if has_one_true and has_another_true:
+                return Response("Please specify one of cwl_inputs, cwl_outputs, or full", status=status.HTTP_400_BAD_REQUEST)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
@@ -125,12 +140,15 @@ class RunApiViewSet(mixins.ListModelMixin,
                 page = self.paginate_queryset(queryset.all())
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
-            full = fixed_query_params.get('full')
             if page is not None:
                 if values_run:
                     return self.get_paginated_response(page)
                 if full:
                     serializer = RunSerializerFull(page, many=True)
+                elif cwl_inputs:
+                    serializer = RunSerializerCWLInput(page, many=True)
+                elif cwl_outputs:
+                    serializer = RunSerializerCWLOutput(page, many=True)
                 else:
                     serializer = RunSerializerPartial(page, many=True)
                 return self.get_paginated_response(serializer.data)
