@@ -44,6 +44,9 @@ class OperatorStartEvent(Event):
         Number of tumor samples: {number_of_tumors}
         Number of normal samples: {number_of_normals}
         Job Group ID: {job_group}
+        
+        Pipelines:
+        | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
         return OPERATOR_START_TEMPLATE.format(request_id=self.request_id,
                                               cnt_samples=self.sample_list_completed,
