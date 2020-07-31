@@ -14,8 +14,13 @@ from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
 from notifier.events import UploadAttachmentEvent
 import json
+from pathlib import Path
+import pickle
+from beagle import __version__
+from datetime import datetime
 
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
+
 notifier = JiraEventHandler()
 
 
@@ -53,6 +58,11 @@ class TempoMPGenOperator(Operator):
 
 
     def get_jobs(self):
+
+        tmpdir = os.environ['TMPDIR']
+        self.OUTPUT_DIR = os.path.join(tmpdir, str(self.job_group_id))
+        Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
         igocomplete_query = Q(metadata__igocomplete=True)
@@ -93,15 +103,56 @@ class TempoMPGenOperator(Operator):
                 self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
             else:
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
-        
-        # output these strings to file
-        self.create_conflict_samples_txt_file()
-        self.create_unpaired_txt_file()
-        self.create_mapping_file()
-        self.create_pairing_file()
-        self.create_tracker_file()
 
-        return [], []
+        input_json = dict()
+        # output these strings to file
+        input_json['conflict_data'] = self.create_conflict_samples_txt_file()
+        input_json['unpaired_data'] = self.create_unpaired_txt_file()
+        input_json['mapping_data'] = self.create_mapping_file()
+        input_json['pairing_data'] = self.create_pairing_file()
+        input_json['tracker_data'] = self.create_tracker_file()
+
+        pickle_file = os.path.join(self.OUTPUT_DIR, "patients_data_pickle")
+        fh = open(pickle_file, 'wb')
+        pickle.dump(self.patients, fh)
+        os.chmod(pickle_file, 0o777)
+
+        input_json['pickle_data'] = {'class': 'File', 'location': pickle_file }
+
+        beagle_version = __version__
+
+        tags = { "beagle_version": beagle_version,
+                "run_date" : datetime.now().strftime("%Y%m%d_%H:%M:%f")}
+
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_version = pipeline.version
+        output_directory = pipeline.output_directory
+
+        self.debug_json = input_json
+
+        tempo_mpgen_outputs_job_data = {
+            'app': app,
+            'inputs': input_json,
+            'name': name,
+            'tags': tags,
+            'output_directory': output_directory,
+            'notify_for_outputs': [ 'conflict_file', 'unpaired_file', 'mapping_file', 'pairing_file', 'tracker_file']
+        }
+
+        tempo_mpgen_outputs_job = [(APIRunCreateSerializer(
+            data=tempo_mpgen_outputs_job_data), input_json)]
+
+        return tempo_mpgen_outputs_job
+
+
+    def write_to_file(self,fname,s):
+        output = os.path.join(self.OUTPUT_DIR, fname)
+        with open(output, "w+") as fh:
+            fh.write(s)
+        os.chmod(output, 0o777)
+        print("Writing %s" % output)
+        return { 'class': 'File', 'location': output }
 
 
     def create_unpaired_txt_file(self):
@@ -112,16 +163,8 @@ class TempoMPGenOperator(Operator):
             patient = self.patients[patient_id]
             unpaired_string += patient.create_unpaired_string(fields)
         unpaired_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_unpaired.txt', unpaired_string).to_dict()
-        send_notification.delay(unpaired_file_event)
-        self.write_to_file("sample_unpaired.txt", unpaired_string)
-
-
-    def write_to_file(self,fname,s):
-        OUTPUT_DIR = "/juno/work/tempo/voyager/"
-#        output = os.path.join(OUTPUT_DIR, fname)
-#        with open(output, "w+") as fh:
-#            fh.write(s)
-#        os.chmod(output, 0o777)
+#        send_notification.delay(unpaired_file_event)
+        return self.write_to_file('sample_unpaired.txt', unpaired_string)
 
 
     def send_message(self, msg):
@@ -155,8 +198,7 @@ class TempoMPGenOperator(Operator):
             patient = self.patients[patient_id]
             mapping_string += patient.create_mapping_string()
         mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', mapping_string).to_dict()
-        send_notification.delay(mapping_file_event)
-        self.write_to_file("sample_mapping.txt", mapping_string)
+        return self.write_to_file('sample_mapping.txt', mapping_string)
 
 
     def create_conflict_samples_txt_file(self):       
@@ -166,18 +208,16 @@ class TempoMPGenOperator(Operator):
             patient = self.patients[patient_id]
             conflict_string += patient.create_conflict_string(fields)
         conflict_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_conflict.txt', conflict_string).to_dict()
-        send_notification.delay(conflict_file_event)
-        self.write_to_file("sample_conflict.txt", conflict_string)
+        return self.write_to_file('sample_conflict.txt', conflict_string)
 
 
     def create_pairing_file(self):
         pairing_string = "NORMAL_ID\tTUMOR_ID\n"
         for patient_id in self.patients:
             pairing_string += self.patients[patient_id].create_pairing_string()
-
         pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', pairing_string).to_dict()
-        send_notification.delay(pairing_file_event)
-        self.write_to_file("sample_pairing.txt", pairing_string)
+        return self.write_to_file('sample_pairing.txt', pairing_string)
+
 
     def exclude_requests(self,l):
         q = None
@@ -252,5 +292,4 @@ class TempoMPGenOperator(Operator):
                     tracker += "\t".join(running_normal) + "\n"
 
         sample_tracker_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', tracker).to_dict()
-        send_notification.delay(sample_tracker_event)
-        self.write_to_file("sample_tracker.txt", tracker)
+        return self.write_to_file('sample_tracker.txt', tracker)
