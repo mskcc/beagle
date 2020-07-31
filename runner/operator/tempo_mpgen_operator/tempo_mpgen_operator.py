@@ -13,6 +13,7 @@ from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
 from notifier.events import UploadAttachmentEvent
+from runner.models import Pipeline
 import json
 from pathlib import Path
 import pickle
