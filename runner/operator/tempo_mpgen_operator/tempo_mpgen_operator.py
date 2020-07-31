@@ -58,8 +58,10 @@ class TempoMPGenOperator(Operator):
 
 
     def get_jobs(self):
-
-        tmpdir = os.environ['TMPDIR']
+        try:
+            tmpdir = os.environ['TMPDIR']
+        except KeyError:
+            tmpdir = "/scratch"
         self.OUTPUT_DIR = os.path.join(tmpdir, str(self.job_group_id))
         Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
