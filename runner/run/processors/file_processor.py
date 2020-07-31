@@ -23,6 +23,14 @@ class FileProcessor(object):
         return 'juno://%s' % file.path
 
     @staticmethod
+    def get_file_size(file):
+        return file.size
+
+    @staticmethod
+    def get_file_checksum(file):
+        return file.checksum
+
+    @staticmethod
     def get_bid_from_file(file):
         return 'bid://%s' % str(file.id)
 
