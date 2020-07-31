@@ -58,6 +58,18 @@ class TempoMPGenOperator(Operator):
         return query
 
 
+    def filter_out_missing_fields_query(self):
+        """
+        This is for legacy purposes - if FileMetadata don't contain sampleClass or cmoSampleName,
+        remove them from the file set
+        """
+        data_query_set = [Q(metadata__cmoSampleName__isnull=False), Q(metadata__sampleClass__isnull=False)]
+        query = data_query_set.pop()
+        for item in data_query_set:
+            query |= item
+        return query
+
+
     def get_jobs(self):
         try:
             tmpdir = os.environ['TMPDIR']
@@ -69,7 +81,8 @@ class TempoMPGenOperator(Operator):
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
         igocomplete_query = Q(metadata__igocomplete=True)
-        q = recipe_query & assay_query & igocomplete_query
+        missing_fields_query = self.filter_out_missing_fields_query()
+        q = recipe_query & assay_query & igocomplete_query & missing_fields_query
         files = FileRepository.all()
         tempo_files = FileRepository.filter(queryset=files, q=q)
 
@@ -98,7 +111,7 @@ class TempoMPGenOperator(Operator):
                 patient_files[patient_id].append(entry)
             else:
                 no_patient_samples.append(entry)
-        
+
         self.patients = dict()
         self.non_cmo_patients = dict()
         for patient_id in patient_files:
@@ -123,9 +136,10 @@ class TempoMPGenOperator(Operator):
         input_json['pickle_data'] = {'class': 'File', 'location': pickle_file }
 
         beagle_version = __version__
+        run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
 
         tags = { "beagle_version": beagle_version,
-                "run_date" : datetime.now().strftime("%Y%m%d_%H:%M:%f")}
+                "run_date" : run_date}
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
@@ -137,7 +151,7 @@ class TempoMPGenOperator(Operator):
         tempo_mpgen_outputs_job_data = {
             'app': app,
             'inputs': input_json,
-            'name': name,
+            'name': "Tempo mpgen %s" % run_date,
             'tags': tags,
             'output_directory': output_directory,
             'notify_for_outputs': [ 'conflict_file', 'unpaired_file', 'mapping_file', 'pairing_file', 'tracker_file']
