@@ -55,6 +55,12 @@ class NoOpEventHandler(EventHandler):
     def process_set_label_event(self, event):
         pass
 
+    def process_add_pipeline_to_description_event(self, event):
+        pass
+
+    def process_set_pipeline_field_event(self, event):
+        pass
+
     def process_transition_event(self, event):
         pass
 
