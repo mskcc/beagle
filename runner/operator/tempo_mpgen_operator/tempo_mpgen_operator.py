@@ -206,7 +206,7 @@ class TempoMPGenOperator(Operator):
         return assays
 
     def set_juno_uri_from_path(self, path):
-        return os.path.join("juno://", path)
+        return "juno://" + path
 
 
     def create_mapping_file(self):
