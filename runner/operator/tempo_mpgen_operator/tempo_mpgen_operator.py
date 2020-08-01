@@ -18,6 +18,7 @@ from runner.models import Pipeline
 import json
 from pathlib import Path
 import pickle
+import uuid
 from beagle import __version__
 from datetime import datetime
 from file_system.models import File
@@ -70,11 +71,8 @@ class TempoMPGenOperator(Operator):
 
 
     def get_jobs(self):
-        try:
-            tmpdir = os.environ['TMPDIR']
-        except KeyError:
-            tmpdir = "/scratch"
-        self.OUTPUT_DIR = os.path.join(tmpdir, str(self.job_group_id))
+        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
+        self.OUTPUT_DIR = tmpdir 
         Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
         recipe_query = self.build_recipe_query()
@@ -133,7 +131,7 @@ class TempoMPGenOperator(Operator):
         os.chmod(pickle_file, 0o777)
         self.register_tmp_file(pickle_file)
 
-        input_json['pickle_data'] = { 'class': 'File', 'location': pickle_file }
+        input_json['pickle_data'] = { 'class': 'File', 'location': "juno://" + pickle_file }
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
@@ -159,7 +157,6 @@ class TempoMPGenOperator(Operator):
 
         tempo_mpgen_outputs_job = [(APIRunCreateSerializer(
             data=tempo_mpgen_outputs_job_data), input_json)]
-
         return tempo_mpgen_outputs_job
 
 
@@ -169,7 +166,8 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        return { 'class': 'File', 'location': output }
+        return { 'class': 'File', 'location': "juno://" + output }
+
 
     def register_tmp_file(self, path):
         fname = os.path.basename(path)
