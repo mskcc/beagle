@@ -12,7 +12,7 @@ from notifier.models import JobGroup
 from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
-from notifier.events import UploadAttachment
+from notifier.events import UploadAttachmentEvent
 import run.processors.file_processor
 from runner.models import Pipeline
 import json
