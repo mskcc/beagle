@@ -171,7 +171,7 @@ class TempoMPGenOperator(Operator):
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
         if self.job_group_id:
-            upload_file_event = UploadAttachmentEvent(self.job_group_id, fname, s)
+            upload_file_event = UploadAttachmentEvent(self.job_group_id, fname, s).to_dict()
             send_notification.delay(upload_file_event)
         return { 'class': 'File', 'location': "juno://" + output }
 
