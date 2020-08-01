@@ -13,7 +13,6 @@ from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
 from notifier.events import UploadAttachmentEvent
-import run.processors.file_processor
 from runner.models import Pipeline
 import json
 from pathlib import Path
@@ -131,8 +130,7 @@ class TempoMPGenOperator(Operator):
         pickle.dump(self.patients, fh)
         os.chmod(pickle_file, 0o777)
 
-        fp = FileProcessor()
-        input_json['pickle_data'] = {'class': 'File', 'location': fp.get_juno_uri_from_file(pickle_file) }
+        input_json['pickle_data'] = {'class': 'File', 'location': self.set_juno_uri_from_path(pickle_file) }
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
@@ -168,7 +166,7 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         print("Writing %s" % output)
-        return { 'class': 'File', 'location': FileProcessor.get_juno_uri_from_file(output) }
+        return { 'class': 'File', 'location': self.set_juno_uri_from_path(output) }
 
 
     def create_unpaired_txt_file(self):
@@ -206,6 +204,9 @@ class TempoMPGenOperator(Operator):
         "SureSelect-All-Exon-V4-hg19"
         ]
         return assays
+
+    def set_juno_uri_from_path(self, path):
+        return os.path.join("juno://", path)
 
 
     def create_mapping_file(self):
