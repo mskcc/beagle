@@ -2,6 +2,7 @@ import uuid
 import re
 import os
 from django.db.models import Q
+from file_system.models import File, FileGroup, FileType
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
@@ -19,6 +20,7 @@ from pathlib import Path
 import pickle
 from beagle import __version__
 from datetime import datetime
+from file_system.models import File
 
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
@@ -129,8 +131,9 @@ class TempoMPGenOperator(Operator):
         fh = open(pickle_file, 'wb')
         pickle.dump(self.patients, fh)
         os.chmod(pickle_file, 0o777)
+        self.register_tmp_file(pickle_file)
 
-        input_json['pickle_data'] = {'class': 'File', 'location': self.set_juno_uri_from_path(pickle_file) }
+        input_json['pickle_data'] = { 'class': 'File', 'location': pickle_file }
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
@@ -165,8 +168,22 @@ class TempoMPGenOperator(Operator):
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
-        print("Writing %s" % output)
-        return { 'class': 'File', 'location': self.set_juno_uri_from_path(output) }
+        self.register_tmp_file(output)
+        return { 'class': 'File', 'location': output }
+
+    def register_tmp_file(self, path):
+        fname = os.path.basename(path)
+        temp_file_group = FileGroup.objects.get(slug="temp")
+        file_type = FileType.objects.get(name="txt")
+        try:
+            File.objects.get(path=path)
+        except:
+            print("Registering temp file %s" % path)
+            f = File(file_name=fname,
+                    path=path,
+                    file_type=file_type,
+                    file_group=temp_file_group)
+            f.save()
 
 
     def create_unpaired_txt_file(self):
