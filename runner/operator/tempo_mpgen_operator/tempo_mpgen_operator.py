@@ -152,8 +152,7 @@ class TempoMPGenOperator(Operator):
             'inputs': input_json,
             'name': "Tempo mpgen %s" % run_date,
             'tags': tags,
-            'output_directory': output_directory,
-            'notify_for_outputs': [ 'conflict_file', 'unpaired_file', 'mapping_file', 'pairing_file', 'tracker_file']
+            'output_directory': output_directory
         }
 
         tempo_mpgen_outputs_job = [(APIRunCreateSerializer(
@@ -162,11 +161,18 @@ class TempoMPGenOperator(Operator):
 
 
     def write_to_file(self,fname,s):
+        """
+        Writes file to temporary location, then registers it to the temp file group
+        Also uploads it to notifier if there is a job group id
+        """
         output = os.path.join(self.OUTPUT_DIR, fname)
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
+        if self.job_group_id:
+            upload_file_event = UploadAttachmentEvent(self.job_group_id, fname, s)
+            send_notification.delay(upload_file_event)
         return { 'class': 'File', 'location': "juno://" + output }
 
 
@@ -192,8 +198,6 @@ class TempoMPGenOperator(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             unpaired_string += patient.create_unpaired_string(fields)
-        unpaired_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_unpaired.txt', unpaired_string).to_dict()
-#        send_notification.delay(unpaired_file_event)
         return self.write_to_file('sample_unpaired.txt', unpaired_string)
 
 
@@ -230,7 +234,6 @@ class TempoMPGenOperator(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             mapping_string += patient.create_mapping_string()
-        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', mapping_string).to_dict()
         return self.write_to_file('sample_mapping.txt', mapping_string)
 
 
@@ -240,7 +243,6 @@ class TempoMPGenOperator(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             conflict_string += patient.create_conflict_string(fields)
-        conflict_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_conflict.txt', conflict_string).to_dict()
         return self.write_to_file('sample_conflict.txt', conflict_string)
 
 
@@ -248,7 +250,6 @@ class TempoMPGenOperator(Operator):
         pairing_string = "NORMAL_ID\tTUMOR_ID\n"
         for patient_id in self.patients:
             pairing_string += self.patients[patient_id].create_pairing_string()
-        pairing_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', pairing_string).to_dict()
         return self.write_to_file('sample_pairing.txt', pairing_string)
 
 
@@ -323,6 +324,4 @@ class TempoMPGenOperator(Operator):
                     for key in extra_keys:
                         running_normal.append(n_meta[key])
                     tracker += "\t".join(running_normal) + "\n"
-
-        sample_tracker_event = UploadAttachmentEvent(self.job_group_id, 'sample_tracker.txt', tracker).to_dict()
         return self.write_to_file('sample_tracker.txt', tracker)
