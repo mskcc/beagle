@@ -15,6 +15,7 @@ from file_system.repository.file_repository import FileRepository
 from .construct_tempo_pair import construct_tempo_jobs
 from notifier.events import UploadAttachmentEvent
 from runner.models import Pipeline
+from django.conf import settings
 import json
 from pathlib import Path
 import pickle
