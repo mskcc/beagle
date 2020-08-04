@@ -208,16 +208,16 @@ class ArgosOperator(Operator):
     def evaluate_sample_errors(self, error_samples):
         s = list()
         unformatted_s = list()
-        unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
+        unformatted_s.append("IGO Sample ID\tPatient ID\tSpecimen Type\n")
         for sample in error_samples:
-            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
-            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
+            s.append("| " + sample['sample_id']  + " | "  + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
+            unformatted_s.append(sample['sample_id']  + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
 
         msg = """
         Number of samples with error: {number_of_errors}
 
         Error samples (also see error_sample_formatting.txt):
-        | IGO Sample ID | Sample Name / Error | Patient ID | Specimen Type |
+        | IGO Sample ID | Patient ID | Specimen Type |
         {error_sample_names}
         """
 
