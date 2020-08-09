@@ -12,18 +12,17 @@ from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
-from .construct_tempo_pair import construct_tempo_jobs
 from notifier.events import UploadAttachmentEvent
 from runner.models import Pipeline
 from django.conf import settings
 import json
+import csv
 from pathlib import Path
 import pickle
 import uuid
 from beagle import __version__
 from datetime import datetime
 from file_system.models import File
-
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 notifier = JiraEventHandler()
@@ -97,6 +96,8 @@ class TempoMPGenOperator(Operator):
         exclude_query = self.get_exclusions()
         if exclude_query:
             tempo_files = tempo_files.exclude(exclude_query)
+        # replace with run operator logic, most recent pairing
+        pre_pairing = self.load_pairing_file('runner/operator/tempo_mpgen_operator/reference_jsons/megatron_pairing_file.tsv')
         patient_ids = set()
         patient_files = dict()
         no_patient_samples = list()
@@ -114,7 +115,7 @@ class TempoMPGenOperator(Operator):
         self.non_cmo_patients = dict()
         for patient_id in patient_files:
             if "C-" in patient_id[:2]:
-                self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+                self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
             else:
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
@@ -158,6 +159,24 @@ class TempoMPGenOperator(Operator):
         tempo_mpgen_outputs_job = [(APIRunCreateSerializer(
             data=tempo_mpgen_outputs_job_data), input_json)]
         return tempo_mpgen_outputs_job
+
+
+    def load_pairing_file(self, tsv_file):
+        pairing = dict()
+        with open(tsv_file, 'r') as pairing_file:
+            reader = csv.reader(pairing_file, delimiter='\t')
+            next(reader, None) # consume header
+            for row in reader:
+                try:
+                    tumor_id = row[1]
+                    normal_id = row[0]
+                    if tumor_id not in pairing:
+                        pairing[tumor_id] = normal_id
+                    else:
+                        LOGGER.error("Duplicate pairing found for %s", tumor_id)
+                except:
+                    LOGGER.error("Pairing could not be found from file for row.")
+        return pairing
 
 
     def write_to_file(self,fname,s):

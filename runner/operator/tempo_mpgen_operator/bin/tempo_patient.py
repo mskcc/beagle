@@ -8,12 +8,13 @@ import runner.operator.tempo_mpgen_operator.bin.tempo_sample as tempo_sample
 
 
 class Patient:
-    def __init__(self, patient_id, file_list):
+    def __init__(self, patient_id, file_list, pairing={}):
         self.tumor_samples = dict()
         self.normal_samples = dict()
         self.conflict_samples = dict()
         self.sample_pairing = list()
         self.unpaired_samples = list()
+        self.pre_pairing = pairing
         self._samples = self._get_samples(file_list)
         self._characterize_samples()
         self._pair_samples()
@@ -54,19 +55,28 @@ class Patient:
     def _pair_samples(self):
         for tumor_sample_name in self.tumor_samples:
             tumor_sample = self.tumor_samples[tumor_sample_name]
+            tumor_cmo_sample_name = tumor_sample.metadata['cmoSampleName'][0] # they should all be the same
             tumor_baits = tumor_sample.bait_set
-            normal = self._get_normal(tumor_baits)
+            expected_normal_cmo_sample_name = ""
+            if tumor_cmo_sample_name in self.pre_pairing:
+                expected_normal_cmo_sample_name = self.pre_pairing[tumor_cmo_sample_name]
+            normal = self._get_normal(tumor_baits, expected_normal_cmo_sample_name)
             if normal:
                 self.sample_pairing.append([tumor_sample, normal])
             else:
                 self.unpaired_samples.append(tumor_sample)
 
-    def _get_normal(self, bait_set):
+    def _get_normal(self, bait_set, expected_normal_cmo_sample_name=""):
         normal = None
         for normal_sample_name in self.normal_samples:
             normal_sample = self.normal_samples[normal_sample_name]
             normal_baits = normal_sample.bait_set
-            if normal_baits.lower() == bait_set.lower():
+            if expected_normal_cmo_sample_name: # if this is True, we're using historical pairing info
+                normal_cmo_sample_name = normal_sample.metadata['cmoSampleName'][0] # they should all be the same for this sample
+                if normal_cmo_sample_name == expected_normal_cmo_sample_name:
+                    normal = normal_sample
+                    return normal
+            elif normal_baits.lower() == bait_set.lower():
                 if not normal:
                     normal = normal_sample
                 else:
@@ -158,16 +168,19 @@ class Patient:
         if not matching_baits:
             return "No normal sample has same bait set as tumor in patient"
         first_half_of_2017 = False
-        run_dates = sample.metadata['runDate'].split(";")
-        for run_date in run_dates:
-            try:
-                current_date = dt.strptime(d, '%y-%m-%d')
-            except ValueError:
-                current_date = dt.strptime(d, '%Y-%m-%d')
-            if current_date < dt(2017, 6, 1):
-                first_half_of_2017 = True
-        if first_half_of_2017:
-            return "Sample run date first half of 2017; normal may have been sequenced in 2016?"
+        run_dates = sample.metadata['runDate']
+        if run_dates and isinstance(run_dates, str):
+            run_dates = run_dates.split(";")
+            for run_date in run_dates:
+                if run_date:
+                    try:
+                        current_date = dt.strptime(d, '%y-%m-%d')
+                    except ValueError:
+                        current_date = dt.strptime(d, '%Y-%m-%d')
+                    if current_date < dt(2017, 6, 1):
+                        first_half_of_2017 = True
+            if first_half_of_2017:
+                return "Sample run date first half of 2017; normal may have been sequenced in 2016?"
         return ""
 
     def create_conflict_string(self, fields):
