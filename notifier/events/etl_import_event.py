@@ -53,9 +53,6 @@ class ETLImportEvent(Event):
         Number of normal samples: {number_of_normals}
         Number of pooled normals: {number_of_pool_normals}
         Job Group ID: {job_group}
-        
-        Pipelines:
-        | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,
