@@ -29,7 +29,7 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
             metadata['specimenType'],
             metadata['preservation'],
             metadata['sex'],
-            metadata['tissueLocation'],
+            metadata['tissueLocation'].replace('\n', ''),
             metadata['sampleId'],
             pipeline_name,
             pipeline_github,
