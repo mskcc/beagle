@@ -4,7 +4,7 @@ from enum import IntEnum
 from django.db import models
 from django.db.models import F
 from file_system.models import File, FileGroup
-from beagle_etl.models import Operator, JobGroup
+from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
@@ -71,7 +71,8 @@ class OperatorTrigger(BaseModel):
 
     def __str__(self):
         if self.run_type == TriggerRunType.AGGREGATE:
-            return u"{} -> {} when {}".format(self.from_operator, self.to_operator, TriggerAggregateConditionType(self.aggregate_condition).name.title())
+            return u"{} -> {} when {}".format(self.from_operator, self.to_operator,
+                                              TriggerAggregateConditionType(self.aggregate_condition).name.title())
         elif self.run_type == TriggerRunType.INDIVIDUAL:
             return u"{} -> {} on each run".format(self.from_operator, self.to_operator)
         else:
@@ -85,7 +86,9 @@ class OperatorRun(BaseModel):
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+
     def save(self, *args, **kwargs):
         if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
             if not self.finished_date:
@@ -156,6 +159,7 @@ class Run(BaseModel):
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
 
