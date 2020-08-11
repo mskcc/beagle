@@ -83,7 +83,7 @@ class JobViewSet(mixins.CreateModelMixin,
                 else:
                     values_args_query_list = ['args__%s' % single_arg for single_arg in values_args ]
                     values_args_query_set = set(values_args_query_list)
-                    queryset = queryset.values_list(*values_args_query_set).distinct()
+                    queryset = queryset.values_list(*values_args_query_set).order_by(values_args_query_list[0]).distinct()
             if args_distribution:
                 distribution_dict = {}
                 args_query = 'args__%s' % args_distribution
