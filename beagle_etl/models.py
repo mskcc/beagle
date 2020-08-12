@@ -65,8 +65,8 @@ class Operator(models.Model):
         return u"{}".format(self.slug)
 
 
-class Assay(models.Model):
+class ETLConfiguration(models.Model):
     redelivery = models.BooleanField(default=True)
-    all = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-    disabled = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-    hold = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    all_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    disabled_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
