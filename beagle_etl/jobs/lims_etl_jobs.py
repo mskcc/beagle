@@ -34,12 +34,12 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        job = create_request_job(request['request'])
+        job, message = create_request_job(request['request'])
         if job:
             if job.status == JobStatus.CREATED:
                 children.add(str(job.id))
         else:
-            logger.info("Job for requestId: %s not completed", request['request'])
+            logger.info("Job for requestId: %s not completed. %s", request['request'], message)
     return list(children)
 
 
@@ -50,6 +50,10 @@ def create_request_job(request_id):
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
+    assays = Assay.objects.first()
+    if redelivery and not assays.redelivery:
+        return None, "Redelivery Deactivated"
+
     if count == 0:
         job_group = JobGroup()
         job_group.save()
@@ -70,7 +74,7 @@ def create_request_job(request_id):
         if redelivery:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
-        return job
+        return job, "Job Created"
 
 
 def request_callback(request_id, job_group=None, job_group_notifier=None):
