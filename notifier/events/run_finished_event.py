@@ -4,8 +4,8 @@ from notifier.event_handler.event import Event
 
 class RunFinishedEvent(Event):
 
-    def __init__(self, job_group, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags, running, completed, failed, total, operator_run_id):
-        self.job_group = job_group
+    def __init__(self, job_notifier, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags, running, completed, failed, total, operator_run_id):
+        self.job_notifier = job_notifier
         self.request_id = request_id
         self.pipeline = pipeline
         self.pipeline_link = pipeline_link

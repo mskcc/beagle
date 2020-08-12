@@ -177,6 +177,7 @@ class RequestIdLimsPullViewSet(GenericAPIView):
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)
 
+
 class GetJobsTypes(GenericAPIView):
     serializer_class = JobsTypesSerializer
     pagination_class = None
