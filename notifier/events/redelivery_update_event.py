@@ -3,8 +3,8 @@ from notifier.event_handler.event import Event
 
 class RedeliveryUpdateEvent(Event):
 
-    def __init__(self, job_group, update):
-        self.job_group = job_group
+    def __init__(self, job_notifier, update):
+        self.job_notifier = job_notifier
         self.update = update
 
     @classmethod

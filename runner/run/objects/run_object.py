@@ -9,7 +9,7 @@ class RunObject(object):
     logger = logging.getLogger(__name__)
 
     def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, message={}, output_metadata={},
-                 execution_id=None, tags={}, job_group=None, notify_for_outputs=[]):
+                 execution_id=None, tags={}, job_group=None, job_group_notifier=None, notify_for_outputs=[]):
         self.run_id = run_id
         self.run_obj = run_obj
         self.output_file_group = run_obj.app.output_file_group
@@ -21,6 +21,7 @@ class RunObject(object):
         self.output_metadata = output_metadata
         self.execution_id = execution_id
         self.job_group = job_group
+        self.job_group_notifier = job_group_notifier
         self.notify_for_outputs = notify_for_outputs
         self.tags = tags
 
@@ -57,7 +58,8 @@ class RunObject(object):
                    message=run.message,
                    output_metadata=run.output_metadata,
                    tags=run.tags,
-                   job_group=run.job_group)
+                   job_group=run.job_group,
+                   job_group_notifier=run.job_group_notifier)
 
     def ready(self):
         [PortObject.ready(p) for p in self.inputs]
@@ -74,7 +76,8 @@ class RunObject(object):
         outputs = [PortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
         return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, message=run.message,
                    output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
-                   job_group=run.job_group, notify_for_outputs=run.notify_for_outputs)
+                   job_group=run.job_group, job_group_notifier=run.job_group_notifier,
+                   notify_for_outputs=run.notify_for_outputs)
 
     def to_db(self):
         [PortObject.to_db(p) for p in self.inputs]
@@ -86,6 +89,7 @@ class RunObject(object):
         self.run_obj.execution_id = self.execution_id
         self.run_obj.tags = self.tags
         self.run_obj.job_group = self.job_group
+        self.run_obj.job_group_notifier = self.job_group_notifier
         self.run_obj.notify_for_outputs = self.notify_for_outputs
         self.run_obj.save()
 
@@ -95,7 +99,7 @@ class RunObject(object):
 
     def complete(self, outputs):
         for out in self.outputs:
-            out.complete(outputs.get(out.name, None), self.output_file_group, self.job_group, self.output_metadata)
+            out.complete(outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata)
         self.status = RunStatus.COMPLETED
 
     def __repr__(self):

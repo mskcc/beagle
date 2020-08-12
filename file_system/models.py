@@ -113,4 +113,3 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
-
