@@ -317,11 +317,7 @@ LOGGING = {
 
 SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
 
-NOTIFIERS = os.environ.get("BEAGLE_NOTIFIERS", "NONE").split(',')
-for n in NOTIFIERS:
-    if n not in SUPPORTED_NOTIFIERS:
-        raise Exception("Invalid Notifier type")
-
+NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", True)
 
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 

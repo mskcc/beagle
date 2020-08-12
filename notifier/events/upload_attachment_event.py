@@ -4,8 +4,8 @@ from notifier.event_handler.event import Event
 
 class UploadAttachmentEvent(Event):
 
-    def __init__(self, job_group, file_name, content, download=False):
-        self.job_group = job_group
+    def __init__(self, job_notifier, file_name, content, download=False):
+        self.job_notifier = job_notifier
         self.file_name = file_name
         self.content = content
         self.download = download
