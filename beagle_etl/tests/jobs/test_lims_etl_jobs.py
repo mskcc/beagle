@@ -630,16 +630,16 @@ class TestImportSample(APITestCase):
         calls = [
             call({
                 'class': 'SetCIReviewEvent',
-                'job_group': str(job_group_notifier.id)
+                'job_notifier': str(job_group_notifier.id)
             }),
             call({
                 'class': 'SetLabelEvent',
-                'job_group': str(job_group_notifier.id),
+                'job_notifier': str(job_group_notifier.id),
                 'label': 'unrecognized_assay'
             }),
             call({
                 'class': 'UnknownAssayEvent',
-                'job_group': str(job_group_notifier.id),
+                'job_notifier': str(job_group_notifier.id),
                 'assay': 'UnknownAssay'
             })
         ]
@@ -667,11 +667,11 @@ class TestImportSample(APITestCase):
         calls = [
             call({
                 'class': 'NotForCIReviewEvent',
-                'job_group': str(job_group_notifier.id)
+                'job_notifier': str(job_group_notifier.id)
             }),
             call({
                 'class': 'DisabledAssayEvent',
-                'job_group': str(job_group_notifier.id),
+                'job_notifier': str(job_group_notifier.id),
                 'assay': 'DisabledAssay1'
             })
         ]
