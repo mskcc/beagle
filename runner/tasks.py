@@ -322,10 +322,10 @@ def fail_job(run_id, error_message):
     run.fail(error_message)
     run.to_db()
 
-    job_group = run.job_group
-    job_group_id = str(job_group.id) if job_group else None
+    job_group_notifier = run.job_group_notifier
+    job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
-    ci_review = SetCIReviewEvent(job_group_id).to_dict()
+    ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
     send_notification.delay(ci_review)
 
     _job_finished_notify(run)
