@@ -3,8 +3,8 @@ from notifier.event_handler.event import Event
 
 class AddPipelineToDescriptionEvent(Event):
 
-    def __init__(self, job_group, pipeline_name, pipeline_version, github_link):
-        self.job_group = job_group
+    def __init__(self, job_notifier, pipeline_name, pipeline_version, github_link):
+        self.job_notifier = job_notifier
         self.pipeline_name = pipeline_name
         self.pipeline_version = pipeline_version
         self.github_link = github_link

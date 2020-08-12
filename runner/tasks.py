@@ -67,9 +67,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
     for job in valid_jobs:
         logger.info("Creating Run object")
         run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id,
-                          job_group_notifier_id=str(job_group_notifier_id))
-        print("Notifier Id")
-        print(run.job_group_notifier.id)
+                          job_group_notifier_id=job_group_notifier_id)
         logger.info("Run object created with id: %s" % str(run.id))
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory
@@ -107,23 +105,25 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
             job_group = JobGroup.objects.get(id=job_group_id)
         except JobGroup.DoesNotExist:
             raise Exception("JobGroup doesn't exist")
-        job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
+        try:
+            job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
+        except Exception as e:
+            logger.error("Failed to instantiate Notifier: %s" % str(e))
 
     operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
                                             job_group_notifier_id=job_group_notifier_id, request_id=request_id)
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
-    generate_description(job_group_notifier_id, request_id)
+    generate_description(job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
 
 
 def _set_link_to_run_ticket(request_id, job_group_notifier_id):
     jira_id = None
-    try:
-        import_job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).order_by('-created_date').first()
-    except Job.DoesNotExist:
+    import_job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).order_by('-created_date').first()
+    if not import_job:
         logger.error("Could not find Import JIRA ticket")
         return
     try:
@@ -136,7 +136,7 @@ def _set_link_to_run_ticket(request_id, job_group_notifier_id):
     except JobGroupNotifier.DoesNotExist:
         logger.error("Could not find Import JIRA ticket")
         return
-    event = SetRunTicketInImportEvent(job_group=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id).to_dict()
+    event = SetRunTicketInImportEvent(job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id).to_dict()
     send_notification.delay(event)
 
 
@@ -146,7 +146,9 @@ def _generate_summary(req):
     return summary
 
 
-def generate_description(job_group, request):
+def generate_description(job_group, job_group_notifier, request):
+    print("job_group_notifier")
+    print(job_group_notifier)
     files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
     data = files.first().metadata
     request_id = data['requestId']
@@ -164,7 +166,7 @@ def generate_description(job_group, request):
             'metadata__cmoSampleName').annotate(n=Count("pk")))
     num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
             'metadata__cmoSampleName').annotate(n=Count("pk")))
-    operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
+    operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
     send_notification.delay(operator_start_event)
 
 

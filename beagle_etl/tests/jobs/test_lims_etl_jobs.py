@@ -13,7 +13,7 @@ from beagle_etl.models import JobStatus, Job, Assay
 from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
 from rest_framework.test import APITestCase
 from runner.models import Operator
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_metadata, get_run_id_from_string, fetch_samples, request_callback
@@ -612,6 +612,8 @@ class TestImportSample(APITestCase):
     @patch('notifier.tasks.send_notification.delay')
     def test_request_callback_unknown_assay(self, mock_send_notification):
         job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -623,21 +625,21 @@ class TestImportSample(APITestCase):
                                                         'requestId': 'test1',
                                                         'recipe': 'UnknownAssay'
                                                     })
-        request_callback('test1', str(job_group.id))
+        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({
                 'class': 'SetCIReviewEvent',
-                'job_group': str(job_group.id)
+                'job_group': str(job_group_notifier.id)
             }),
             call({
                 'class': 'SetLabelEvent',
-                'job_group': str(job_group.id),
+                'job_group': str(job_group_notifier.id),
                 'label': 'unrecognized_assay'
             }),
             call({
                 'class': 'UnknownAssayEvent',
-                'job_group': str(job_group.id),
+                'job_group': str(job_group_notifier.id),
                 'assay': 'UnknownAssay'
             })
         ]
@@ -647,6 +649,8 @@ class TestImportSample(APITestCase):
     @patch('notifier.tasks.send_notification.delay')
     def test_request_callback_disabled_assay(self, mock_send_notification):
         job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -658,16 +662,16 @@ class TestImportSample(APITestCase):
                                                         'requestId': 'test1',
                                                         'recipe': 'DisabledAssay1'
                                                     })
-        request_callback('test1', str(job_group.id))
+        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({
                 'class': 'NotForCIReviewEvent',
-                'job_group': str(job_group.id)
+                'job_group': str(job_group_notifier.id)
             }),
             call({
                 'class': 'DisabledAssayEvent',
-                'job_group': str(job_group.id),
+                'job_group': str(job_group_notifier.id),
                 'assay': 'DisabledAssay1'
             })
         ]

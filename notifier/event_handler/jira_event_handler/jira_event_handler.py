@@ -21,11 +21,11 @@ class JiraEventHandler(EventHandler):
         return jira_id
 
     def process_import_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
+        job_group = JobGroupNotifier.objects.get(id=event.job_notifier)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_operator_start_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
+        job_group = JobGroupNotifier.objects.get(id=event.job_notifier)
         self.client.update_ticket_description(job_group.jira_id, str(event))
 
     def process_etl_jobs_links_event(self, event):
@@ -68,25 +68,25 @@ class JiraEventHandler(EventHandler):
         self._add_comment_event(event)
 
     def process_add_pipeline_to_description_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        description = self.client.get_ticket_description(job_group.jira_id)
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        description = self.client.get_ticket_description(job_notifier.jira_id)
         if not str(event) in description:
             description += str(event)
-            self.client.update_ticket_description(job_group.jira_id, description)
+            self.client.update_ticket_description(job_notifier.jira_id, description)
 
     def process_set_pipeline_field_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        pipeline = self.client.get_ticket(job_group.jira_id).json().get('fields', {}).get(settings.JIRA_PIPELINE_FIELD_ID)
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        pipeline = self.client.get_ticket(job_notifier.jira_id).json().get('fields', {}).get(settings.JIRA_PIPELINE_FIELD_ID)
         if not pipeline:
-            self.client.update_pipeline(job_group.jira_id, str(event))
+            self.client.update_pipeline(job_notifier.jira_id, str(event))
 
     def process_transition_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        response = self.client.get_status_transitions(job_group.jira_id)
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        response = self.client.get_status_transitions(job_notifier.jira_id)
         for transition in response.json().get('transitions', []):
             if transition.get('name') == str(event):
-                self.client.update_status(job_group.jira_id, transition['id'])
-                self._check_transition(job_group.jira_id, str(event), event)
+                self.client.update_status(job_notifier.jira_id, transition['id'])
+                self._check_transition(job_notifier.jira_id, str(event), event)
                 self.logger.debug("Transition to state %s", transition.get('name'))
                 break
 
@@ -98,18 +98,18 @@ class JiraEventHandler(EventHandler):
         self.process_transition_event(event)
 
     def process_upload_attachment_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        self.client.add_attachment(job_group.jira_id, event.file_name, event.get_content(), download=event.download)
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        self.client.add_attachment(job_notifier.jira_id, event.file_name, event.get_content(), download=event.download)
 
     def _add_comment_event(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        self.client.comment(job_group.jira_id, str(event))
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        self.client.comment(job_notifier.jira_id, str(event))
 
     def _set_label(self, event):
-        job_group = JobGroupNotifier.objects.get(id=event.job_group)
-        ticket = self.client.get_ticket(job_group.jira_id)
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        ticket = self.client.get_ticket(job_notifier.jira_id)
         if ticket.status_code != 200:
             return
         labels = ticket.json()['fields'].get('labels', [])
         labels.append(str(event))
-        self.client.update_labels(job_group.jira_id, labels)
+        self.client.update_labels(job_notifier.jira_id, labels)

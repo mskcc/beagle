@@ -192,10 +192,10 @@ class OperatorViewSet(GenericAPIView):
         if request_ids:
             for request_id in request_ids:
                 logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
-                if job_group_id:
-                    create_jobs_from_request.delay(request_id, pipeline.operator_id, job_group_id)
-                else:
-                    create_jobs_from_request.delay(request_id, pipeline.operator_id)
+                if not job_group_id:
+                    job_group = JobGroup.objects.create()
+                    job_group_id = str(job_group.id)
+                create_jobs_from_request.delay(request_id, pipeline.operator_id, job_group_id)
             body = {"details": "Operator Job submitted %s" % str(request_ids)}
         else:
             if run_ids:
