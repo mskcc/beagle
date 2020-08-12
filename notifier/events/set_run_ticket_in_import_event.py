@@ -4,8 +4,8 @@ from notifier.event_handler.event import Event
 
 class SetRunTicketInImportEvent(Event):
 
-    def __init__(self, job_group, run_jira_id):
-        self.job_group = job_group
+    def __init__(self, job_notifier, run_jira_id):
+        self.job_notifier = job_notifier
         self.run_jira_id = run_jira_id
 
     @classmethod
@@ -20,6 +20,6 @@ class SetRunTicketInImportEvent(Event):
         if not self.run_jira_id:
             comment = "Could not find Import JIRA ticket"
         else:
-            comment = "Run JIRA Id: {jira_url}/browse/{jira_id}".format(jira_url=settings.JIRA_URL,
+            comment = "Run JIRA Id: {jira_url}browse/{jira_id}".format(jira_url=settings.JIRA_URL,
                                                                         jira_id=self.run_jira_id)
         return comment

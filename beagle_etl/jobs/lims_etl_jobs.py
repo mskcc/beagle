@@ -75,10 +75,11 @@ def create_request_job(request_id):
 
 def request_callback(request_id, job_group=None, job_group_notifier=None):
     jg = None
+    jgn = None
     try:
         jgn = JobGroupNotifier.objects.get(id=job_group_notifier)
         logger.debug("[RequestCallback] JobGroup id: %s", job_group)
-    except JobGroup.DoesNotExist:
+    except JobGroupNotifier.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_notifier_id = str(jgn.id) if jgn else None
     assays = Assay.objects.first()
@@ -138,11 +139,12 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-            if Job.objects.filter(job_group=job_group, args__request_id=request_id, run=TYPES['SAMPLE'], status=JobStatus.FAILED).all():
-                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_group=job_group_notifier_id).to_dict()
+            if Job.objects.filter(job_group=job_group, args__request_id=request_id, run=TYPES['SAMPLE'],
+                                  status=JobStatus.FAILED).all():
+                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(partialy_complete_event)
             else:
-                complete_event = ETLImportCompleteEvent(job_group=job_group_notifier_id).to_dict()
+                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(complete_event)
 
             create_jobs_from_request.delay(request_id, operator.id, job_group)

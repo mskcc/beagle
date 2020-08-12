@@ -57,7 +57,9 @@ class TestOperatorTriggers(TestCase):
 
         create_jobs_from_chaining.delay.assert_called_once_with(trigger.to_operator.pk,
                                                                 trigger.from_operator.pk,
-                                                                run_ids, job_group_id=None)
+                                                                run_ids,
+                                                                job_group_id=None,
+                                                                job_group_notifier_id=None)
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
 
 

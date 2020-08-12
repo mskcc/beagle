@@ -181,6 +181,7 @@ class JobObject(object):
             project_manager_name = metadata['projectManagerName']
 
         event = ETLImportEvent(str(self.job.job_group_notifier.id),
+                               str(self.job.job_group.id),
                                self.job.args['request_id'],
                                list(samples_completed),
                                list(samples_failed),
