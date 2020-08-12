@@ -3,8 +3,8 @@ from notifier.event_handler.event import Event
 
 class ETLJobFailedEvent(Event):
 
-    def __init__(self, job_group, msg):
-        self.job_group = job_group
+    def __init__(self, job_notifier, msg):
+        self.job_notifier = job_notifier
         self.msg = msg
 
     @classmethod

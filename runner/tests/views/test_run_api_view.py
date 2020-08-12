@@ -88,6 +88,12 @@ class TestRunAPIView(TestCase):
     "runner.pipeline.json"
     ]
 
+    def setUp(self):
+        settings.NOTIFIER_ACTIVE = False
+
+    def tearDown(self):
+        settings.NOTIFIER_ACTIVE = True
+
     def test_post_to_view1(self):
         """
         Test that data sent through the API view 'post' method returns a successful status and expected response

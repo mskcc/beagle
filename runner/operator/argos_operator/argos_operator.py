@@ -25,9 +25,9 @@ class ArgosOperator(Operator):
                                                      'tumorOrNormal': 'Tumor',
                                                      'igocomplete': True}).count()
         if cnt_tumors == 0:
-            cant_do = CantDoEvent(self.job_group_id).to_dict()
+            cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
             send_notification.delay(cant_do)
-            all_normals_event = SetLabelEvent(self.job_group_id, 'all_normals').to_dict()
+            all_normals_event = SetLabelEvent(self.job_group_notifier_id, 'all_normals').to_dict()
             send_notification.delay(all_normals_event)
             return argos_jobs
 
@@ -140,16 +140,16 @@ class ArgosOperator(Operator):
                           'labHeadName': pi,
                           'labHeadEmail': pi_email}}), job))
 
-        operator_run_summary = UploadAttachmentEvent(self.job_group_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)
 
-        mapping_file_event = UploadAttachmentEvent(self.job_group_id, 'sample_mapping.txt', sample_mapping).to_dict()
+        mapping_file_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
         data_clinical = generate_sample_data_content(files, pipeline_name=pipeline_obj.name,
                                                      pipeline_github=pipeline_obj.github,
                                                      pipeline_version=pipeline_obj.version)
-        sample_data_clinical_event = UploadAttachmentEvent(self.job_group_id, 'sample_data_clinical.txt',
+        sample_data_clinical_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_data_clinical.txt',
                                                            data_clinical).to_dict()
         send_notification.delay(sample_data_clinical_event)
 
@@ -201,7 +201,7 @@ class ArgosOperator(Operator):
         self.send_message(s)
 
     def send_message(self, msg):
-        event = OperatorRequestEvent(self.job_group_id, msg)
+        event = OperatorRequestEvent(self.job_group_notifier_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
 
@@ -227,5 +227,6 @@ class ArgosOperator(Operator):
 
         self.send_message(msg)
 
-        sample_errors_event = UploadAttachmentEvent(self.job_group_id, 'error_sample_formatting.txt', "".join(unformatted_s)).to_dict()
+        sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, 'error_sample_formatting.txt',
+                                                    "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
