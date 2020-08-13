@@ -4,7 +4,7 @@ from rest_framework import routers
 from runner.views.run_view import RunViewSet, StartRunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
 from runner.views.operator_run_view import OperatorRunViews
-from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet, RequestOperatorViewSet, RunOperatorViewSet, AionViewSet
+from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet, RequestOperatorViewSet, RunOperatorViewSet, AionViewSet, CWLJsonViewSet
 from runner.views.pipeline_view import PipelineViewSet, PipelineResolveViewSet, PipelineDownloadViewSet
 
 
@@ -16,6 +16,7 @@ router.register('api', RunApiViewSet)
 router.register('operator-run', OperatorRunViews)
 router.register('operator-errors', OperatorErrorViewSet)
 
+
 urlpatterns = [
     path('', include(router.urls)),
     path('pipeline/resolve/<uuid:pk>', PipelineResolveViewSet.as_view(), name='resolve-pipeline'),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('request/', OperatorViewSet.as_view()),
     path('operator/request/', RequestOperatorViewSet.as_view()),
     path('operator/runs/', RunOperatorViewSet.as_view()),
-    path('aion/', AionViewSet.as_view())
+    path('aion/', AionViewSet.as_view()),
+    path('cwljson/', CWLJsonViewSet.as_view())
 ]
