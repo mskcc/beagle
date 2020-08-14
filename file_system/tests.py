@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
+from file_system.metadata.validator import MetadataValidator
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata
 
 
@@ -300,6 +301,13 @@ class FileTest(APITestCase):
                                    )
         self.assertEqual(response.json()['results'][0], '1')
 
+    def test_metadata_clean_function(self):
+        test1 = "abc\tdef2"
+        test2 = """
+            abc\tdef!
+            """
+        self.assertEqual(MetadataValidator.clean_value(test1), "abc def2")
+        self.assertEqual(MetadataValidator.clean_value(test2), "abc def")
 
 
 
