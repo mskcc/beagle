@@ -162,12 +162,14 @@ class MetadataValidator(object):
 
     @staticmethod
     def clean_value(val):
-        regex = re.compile('[\t\r\n]')
-        result = regex.sub(' ', val)
-        result = result.strip()
-        regex = re.compile('[^a-zA-Z0-9 ]')
-        result = regex.sub('', result)
-        return result
+        if val:
+            regex = re.compile('[\t\r\n]')
+            result = regex.sub(' ', val)
+            result = result.strip()
+            regex = re.compile('[^a-zA-Z0-9 ]')
+            result = regex.sub('', result)
+            return result
+        return None
 
     def validate(self, data):
         try:
