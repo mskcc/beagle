@@ -26,8 +26,8 @@ class TestOperatorTriggers(TestCase):
 
     @patch('runner.tasks.create_run_task')
     @patch('notifier.tasks.send_notification')
-    @patch('runner.operator.argos_operator.ArgosOperator.get_jobs')
-    @patch('runner.operator.argos_operator.ArgosOperator.get_pipeline_id')
+    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs')
+    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id')
     def test_create_jobs_from_operator_pipeline_deleted(self, get_pipeline_id, get_jobs, send_notification, create_run_task):
         argos_jobs = []
         argos_jobs.append((APIRunCreateSerializer(
@@ -38,7 +38,7 @@ class TestOperatorTriggers(TestCase):
         send_notification.return_value = None
         Run.objects.all().delete()
 
-        operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
+        operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), version="v1.0.0", request_id="bar")
         create_jobs_from_operator(operator, None)
         self.assertEqual(len(Run.objects.all()), 1)
         self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
