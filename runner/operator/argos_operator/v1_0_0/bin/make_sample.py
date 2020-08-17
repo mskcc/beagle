@@ -3,6 +3,7 @@ This constructs a sample dictionary from the metadata in the Voyager/Beagle data
 """
 import logging
 import re
+from runner.operator.helper import format_sample_name
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,40 +37,6 @@ def remove_with_caveats(samples):
         else:
             error_data.append(sample)
     return data, error_data
-
-
-def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=False):
-    """
-    Formats a given sample_name to legacy ARGOS naming conventions, provided that
-    it is in valid CMO Sample Name format (see sample_pattern regex value, below)
-
-    Current format is to prepend sample name with "s_" and convert all hyphens to
-    underscores
-
-    If it does not meet sample_pattern requirements OR is not a specimen_type=="CellLine",
-    return 'sampleMalFormed'
-
-    ignore_sample_formatting is applied if we want to return a sample name regardless of
-    formatting
-    """
-    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
-
-    if not ignore_sample_formatting:
-        try:
-            if "s_" in sample_name[:2]:
-                return sample_name
-            elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():  # cmoSampleName is formatted properly
-                sample_name = "s_" + sample_name.replace("-", "_")
-                return sample_name
-            LOGGER.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
-            return 'sampleNameMalformed'
-        except TypeError:
-            LOGGER.error(
-                "sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'."
-                )
-            return "sampleNameMalformed"
-    else:
-        return sample_name
 
 
 def check_samples(samples):
