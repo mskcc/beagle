@@ -10,7 +10,7 @@ from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReview
     RedeliveryUpdateEvent, UploadAttachmentEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
     ETLImportNoSamplesEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator, Assay
+from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -34,12 +34,12 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        job = create_request_job(request['request'])
+        job, message = create_request_job(request['request'])
         if job:
             if job.status == JobStatus.CREATED:
                 children.add(str(job.id))
         else:
-            logger.info("Job for requestId: %s not completed", request['request'])
+            logger.info("Job for requestId: %s not completed. %s", request['request'], message)
     return list(children)
 
 
@@ -50,6 +50,10 @@ def create_request_job(request_id):
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
+    assays = ETLConfiguration.objects.first()
+    if redelivery and not assays.redelivery:
+        return None, "Redelivery Deactivated"
+
     if count == 0:
         job_group = JobGroup()
         job_group.save()
@@ -70,7 +74,7 @@ def create_request_job(request_id):
         if redelivery:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
-        return job
+        return job, "Job Created"
 
 
 def request_callback(request_id, job_group=None, job_group_notifier=None):
@@ -82,7 +86,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     except JobGroupNotifier.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_notifier_id = str(jgn.id) if jgn else None
-    assays = Assay.objects.first()
+    assays = ETLConfiguration.objects.first()
     recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
     if not recipes:
         raise FailedToSubmitToOperatorException(
@@ -93,7 +97,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         send_notification.delay(no_samples_event)
         return []
 
-    if not all(item in assays.all for item in recipes):
+    if not all(item in assays.all_recipes for item in recipes):
         ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
         set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, 'unrecognized_assay').to_dict()
@@ -102,14 +106,14 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         send_notification.delay(unknown_assay_event)
         return []
 
-    if any(item in assays.hold for item in recipes):
+    if any(item in assays.hold_recipes for item in recipes):
         admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(admin_hold_event)
         custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipes[0]).to_dict()
         send_notification.delay(custom_capture_event)
         return []
 
-    if any(item in assays.disabled for item in recipes):
+    if any(item in assays.disabled_recipes for item in recipes):
         not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(not_for_ci)
         disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
@@ -291,8 +295,8 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
-    assays = Assay.objects.first()
-    assay_list = assays.all
+    assays = ETLConfiguration.objects.first()
+    assay_list = assays.all_recipes
     run_id = None
     preservation_type = None
     recipe = None
@@ -312,7 +316,7 @@ def create_pooled_normal(filepath, file_group_id):
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
         logger.info("Invalid preservation type %s" % preservation_type)
         return
-    if recipe in assays.disabled:
+    if recipe in assays.disabled_recipes:
         logger.info("Recipe %s, is marked as disabled" % recipe)
         return
     if None in [run_id, preservation_type, recipe]:
