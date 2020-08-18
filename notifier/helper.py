@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from file_system.metadata.validator import MetadataValidator
-from runner.operator.argos_operator.bin.make_sample import format_sample_name
+from runner.operator.helper import format_sample_name
 
 
 def get_project_id(request_id):
