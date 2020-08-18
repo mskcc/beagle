@@ -13,7 +13,7 @@ def add_lab_head_email(apps, _):
             tags = run.tags
             if 'project_prefix' in tags:
                 project_prefix = tags['project_prefix']
-                metadata = FileRepository.filter(queryset=files, {'metadata': project_prefix}).first().metadata
+                metadata = FileRepository.filter(queryset=files, metadata={'requestId': project_prefix}).first().metadata
                 if "labHeadEmail" in metadata:
                     tags['labHeadEmail'] = metadata['labHeadEmail']
                     run.tags = tags
