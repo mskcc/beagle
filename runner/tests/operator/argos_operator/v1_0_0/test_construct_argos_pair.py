@@ -6,8 +6,8 @@ import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.argos_operator.construct_argos_pair import construct_argos_jobs
-from runner.operator.argos_operator.bin.make_sample import build_sample
+from runner.operator.argos_operator.v1_0_0.construct_argos_pair import construct_argos_jobs
+from runner.operator.argos_operator.v1_0_0.bin.make_sample import build_sample
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
