@@ -46,6 +46,11 @@ def get_helix_pipelines(apps, _):
 
 
 class Migration(migrations.Migration):
+
+    dependencies = [
+            ('runner', '0032_auto_20200805_0153'),
+            ]
+
     operations = [
             migrations.RunPython(add_lab_head_email, reverse_code=revert_migration)
     ]
