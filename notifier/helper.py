@@ -1,7 +1,9 @@
 from django.db.models import Q
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
+from file_system.metadata.validator import MetadataValidator
 from runner.operator.helper import format_sample_name
+
 
 def get_project_id(request_id):
     return request_id.split('_')[0]
@@ -22,13 +24,13 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
             get_project_id(metadata['requestId']),
             metadata['patientId'],
             metadata['investigatorSampleId'],
-            metadata['sampleClass'],
-            metadata['recipe'],
-            metadata['oncoTreeCode'],
-            metadata['specimenType'],
-            metadata['preservation'],
-            metadata['sex'],
-            metadata['tissueLocation'].replace('\n', ''),
+            MetadataValidator.clean_value(metadata['sampleClass']),
+            MetadataValidator.clean_value(metadata['recipe']),
+            MetadataValidator.clean_value(metadata['oncoTreeCode']),
+            MetadataValidator.clean_value(metadata['specimenType']),
+            MetadataValidator.clean_value(metadata['preservation']),
+            MetadataValidator.clean_value(metadata['sex']),
+            MetadataValidator.clean_value(metadata['tissueLocation']),
             metadata['sampleId'],
             pipeline_name,
             pipeline_github,
