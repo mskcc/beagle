@@ -1,3 +1,4 @@
+import re
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from file_system.exceptions import MetadataValidationException
@@ -147,6 +148,28 @@ class MetadataValidator(object):
 
     def __init__(self, schema=METADATA_SCHEMA):
         self.schema = schema
+
+    @staticmethod
+    def clean(metadata):
+        metadata['sampleClass'] = MetadataValidator.clean_value(metadata.pop('sampleClass'))
+        metadata['recipe'] = MetadataValidator.clean_value(metadata.pop('recipe'))
+        metadata['oncoTreeCode'] = MetadataValidator.clean_value(metadata.pop('oncoTreeCode'))
+        metadata['specimenType'] = MetadataValidator.clean_value(metadata.pop('specimenType'))
+        metadata['preservation'] = MetadataValidator.clean_value(metadata.pop('preservation'))
+        metadata['sex'] = MetadataValidator.clean_value(metadata.pop('sex'))
+        metadata['tissueLocation'] = MetadataValidator.clean_value(metadata.pop('tissueLocation'))
+        return metadata
+
+    @staticmethod
+    def clean_value(val):
+        if val:
+            regex = re.compile('[\t\r\n]')
+            result = regex.sub(' ', val)
+            result = result.strip()
+            regex = re.compile('[^a-zA-Z0-9 ]')
+            result = regex.sub('', result)
+            return result
+        return None
 
     def validate(self, data):
         try:
