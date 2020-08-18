@@ -4,25 +4,26 @@ from file_system.repository.file_repository import FileRepository
 
 def add_lab_head_email(apps, _):
     Run = apps.get_model('runner', 'Run')
-    files = FileRepository.all()
-    helix_pipelines = get_helix_pipelines()
-
+    FileMetadata = apps.get_model('file_system', 'FileMetadata')
+    helix_pipelines = get_helix_pipelines(apps)
     for helix_pipeline in helix_pipelines:
         helix_runs = Run.objects.filter(app=helix_pipeline.id)
         for run in helix_runs:
             tags = run.tags
             if 'project_prefix' in tags:
                 project_prefix = tags['project_prefix']
-                metadata = FileRepository.filter(queryset=files, metadata={'requestId': project_prefix}).first().metadata
-                if "labHeadEmail" in metadata:
-                    tags['labHeadEmail'] = metadata['labHeadEmail']
-                    run.tags = tags
-                    run.save()
+                metadata = FileMetadata.objects.filter(metadata__requestId=project_prefix).first()
+                if metadata:
+                    labHeadEmail = metadata.metadata.get('labHeadEmail')
+                    if labHeadEmail:
+                        tags['labHeadEmail'] = labHeadEmail
+                        run.tags = tags
+                        run.save()
 
 
 def revert_migration(apps, _):
     Run = apps.get_model('runner', 'Run')
-    helix_pipelines = get_helix_pipelines()
+    helix_pipelines = get_helix_pipelines(apps)
 
     for helix_pipeline in helix_pipelines:
         helix_runs = Run.objects.filter(app=helix_pipeline.id)
@@ -31,9 +32,9 @@ def revert_migration(apps, _):
             run.save()
 
 
-def get_helix_pipelines(apps, _):
+def get_helix_pipelines(apps):
     Pipeline = apps.get_model('runner', 'Pipeline')
-    Operator = apps.get_model('runner', 'Operator')
+    Operator = apps.get_model('beagle_etl', 'Operator')
     pipelines = Pipeline.objects.all()
     helix_pipelines = []
 
