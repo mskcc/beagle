@@ -71,8 +71,6 @@ class RunApiListSerializer(serializers.Serializer):
 
     full = serializers.BooleanField(required=False)
 
-    cwl_inputs = serializers.BooleanField(required=False)
-    cwl_outputs = serializers.BooleanField(required=False)
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)
@@ -189,7 +187,7 @@ class RunSerializerCWLInput(RunSerializerPartial):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','inputs')
+        fields = ('id', 'name', 'inputs')
 
 class RunSerializerCWLOutput(RunSerializerPartial):
 
@@ -201,7 +199,31 @@ class RunSerializerCWLOutput(RunSerializerPartial):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','outputs')
+        fields = ('id', 'name', 'outputs')
+
+class CWLJsonSerializer(serializers.Serializer):
+    cwl_inputs = serializers.BooleanField(required=False)
+    runs = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    job_groups = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    jira_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    request_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
 
 class RunStatusUpdateSerializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
