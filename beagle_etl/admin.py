@@ -2,7 +2,7 @@ import os
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator, Assay
+from .models import Job, JobStatus, Operator, ETLConfiguration
 from lib.admin import pretty_python_exception, pretty_json
 
 
@@ -66,7 +66,7 @@ class OperatorAdmin(ModelAdmin):
 
 
 class AssayAdmin(ModelAdmin):
-    list_display = ('all', 'disabled')
+    list_display = ('redelivery', 'all_recipes', 'disabled_recipes')
 
     def has_add_permission(self, request):
         return False
@@ -77,4 +77,4 @@ class AssayAdmin(ModelAdmin):
 
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
-admin.site.register(Assay, AssayAdmin)
+admin.site.register(ETLConfiguration, AssayAdmin)

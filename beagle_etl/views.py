@@ -8,11 +8,12 @@ from rest_framework.response import Response
 from beagle_etl.jobs import TYPES
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
-from beagle_etl.models import JobStatus, Job, Assay
+from beagle_etl.models import JobStatus, Job, ETLConfiguration
 from drf_yasg.utils import swagger_auto_schema
 from .jobs.lims_etl_jobs import create_request_job
 from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer, AssayElementSerializer, AssayUpdateSerializer, JobsTypesSerializer
 from beagle.common import fix_query_list
+
 
 class JobViewSet(mixins.CreateModelMixin,
                  mixins.DestroyModelMixin,
@@ -83,7 +84,7 @@ class JobViewSet(mixins.CreateModelMixin,
                 else:
                     values_args_query_list = ['args__%s' % single_arg for single_arg in values_args ]
                     values_args_query_set = set(values_args_query_list)
-                    queryset = queryset.values_list(*values_args_query_set).distinct()
+                    queryset = queryset.values_list(*values_args_query_set).order_by(values_args_query_list[0]).distinct()
             if args_distribution:
                 distribution_dict = {}
                 args_query = 'args__%s' % args_distribution
@@ -118,12 +119,12 @@ class JobViewSet(mixins.CreateModelMixin,
 
 class AssayViewSet(GenericAPIView):
     serializer_class = AssaySerializer
-    queryset = Assay.objects.all()
+    queryset = ETLConfiguration.objects.all()
     pagination_class = None
 
     @swagger_auto_schema(responses={200: AssayElementSerializer})
     def get(self, request):
-        assay = Assay.objects.first()
+        assay = ETLConfiguration.objects.first()
         if assay:
             assay_response = AssaySerializer(assay)
             return Response(assay_response.data, status=status.HTTP_200_OK)
@@ -136,22 +137,22 @@ class AssayViewSet(GenericAPIView):
         all_list = request_data.get('all')
         disabled_list = request_data.get('disabled')
         hold_list = request_data.get('hold')
-        assay = Assay.objects.first()
+        assay = ETLConfiguration.objects.first()
         error_message_list = []
         if assay:
             if all_list:
-                assay.all = list(set(all_list))
+                assay.all_recipes = list(set(all_list))
             if disabled_list:
-                assay.disabled = list(set(disabled_list))
+                assay.disabled_recipes = list(set(disabled_list))
             if hold_list:
-                assay.hold = list(set(hold_list))
-            for single_assay in assay.hold:
-                if single_assay in assay.disabled:
+                assay.hold_recipes = list(set(hold_list))
+            for single_assay in assay.hold_recipes:
+                if single_assay in assay.disabled_recipes:
                     error_message = "Assay {} is in both disabled and hold".format(single_assay)
                     error_message_list.append(error_message)
-            combined_list = assay.hold + assay.disabled
+            combined_list = assay.hold_recipes + assay.disabled_recipes
             for single_assay in combined_list:
-                if single_assay not in assay.all:
+                if single_assay not in assay.all_recipes:
                     error_message = "Assay {} is not listed in all".format(single_assay)
                     error_message_list.append(error_message)
             if error_message_list:

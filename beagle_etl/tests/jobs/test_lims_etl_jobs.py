@@ -9,7 +9,7 @@ from uuid import UUID
 from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
-from beagle_etl.models import JobStatus, Job, Assay
+from beagle_etl.models import JobStatus, Job, ETLConfiguration
 from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
 from rest_framework.test import APITestCase
 from runner.models import Operator
@@ -99,8 +99,8 @@ class TestCreatePooledNormal(TestCase):
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
         self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
-        assay = Assay.objects.first()
-        self.disabled_backup = assay.disabled
+        assay = ETLConfiguration.objects.first()
+        self.disabled_backup = assay.disabled_recipes
         assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
         assay.disabled = ['DisabledAssay']
         assay.save()
@@ -204,12 +204,12 @@ class TestImportSample(APITestCase):
         self.file_group = FileGroup.objects.create(name="LIMS", storage=self.storage)
         self.old_val = settings.IMPORT_FILE_GROUP
         settings.IMPORT_FILE_GROUP = str(self.file_group.id)
-        assay = Assay.objects.first()
-        self.disabled_backup = assay.disabled
-        assay.all.append('DisabledAssay1')
-        assay.all.append('DisabledAssay2')
-        assay.all.append('TestAssay')
-        assay.disabled = ['DisabledAssay1', 'DisabledAssay2']
+        assay = ETLConfiguration.objects.first()
+        self.disabled_backup = assay.disabled_recipes
+        assay.all_recipes.append('DisabledAssay1')
+        assay.all_recipes.append('DisabledAssay2')
+        assay.all_recipes.append('TestAssay')
+        assay.disabled_recipes = ['DisabledAssay1', 'DisabledAssay2']
         assay.save()
         self.data_0_fastq = [
             {
@@ -497,8 +497,8 @@ class TestImportSample(APITestCase):
         ]
 
     def tearDown(self):
-        assay = Assay.objects.first()
-        assay.disabled = self.disabled_backup
+        assay = ETLConfiguration.objects.first()
+        assay.disabled_recipes = self.disabled_backup
         assay.save()
         settings.IMPORT_FILE_GROUP = self.old_val
 
