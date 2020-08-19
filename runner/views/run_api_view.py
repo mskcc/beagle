@@ -12,7 +12,7 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput
+    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
@@ -68,20 +68,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             run_distribution = fixed_query_params.get('run_distribution')
             count = fixed_query_params.get('count')
             full = fixed_query_params.get('full')
-            cwl_inputs = fixed_query_params.get('cwl_inputs')
-            cwl_outputs = fixed_query_params.get('cwl_outputs')
             if full:
                 full = bool(strtobool(full))
-            if cwl_inputs:
-                cwl_inputs = bool(strtobool(cwl_inputs))
-            if cwl_outputs:
-                cwl_outputs = bool(strtobool(cwl_outputs))
-            run_format_types = [full, cwl_inputs, cwl_outputs]
-            format_types_iter = iter(run_format_types)
-            has_one_true = any(format_types_iter)
-            has_another_true = any(format_types_iter)
-            if has_one_true and has_another_true:
-                return Response("Please specify one of cwl_inputs, cwl_outputs, or full", status=status.HTTP_400_BAD_REQUEST)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
@@ -145,10 +133,6 @@ class RunApiViewSet(mixins.ListModelMixin,
                     return self.get_paginated_response(page)
                 if full:
                     serializer = RunSerializerFull(page, many=True)
-                elif cwl_inputs:
-                    serializer = RunSerializerCWLInput(page, many=True)
-                elif cwl_outputs:
-                    serializer = RunSerializerCWLOutput(page, many=True)
                 else:
                     serializer = RunSerializerPartial(page, many=True)
                 return self.get_paginated_response(serializer.data)
@@ -319,6 +303,51 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
                            GenericViewSet):
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
+
+class CWLJsonViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+    serializer_class = CWLJsonSerializer
+
+    @swagger_auto_schema(query_serializer=CWLJsonSerializer)
+    def get(self, request):
+        query_list_types = ['job_groups','jira_ids','request_ids','runs']
+        fixed_query_params = fix_query_list(request.query_params,query_list_types)
+        serializer = CWLJsonSerializer(data=fixed_query_params)
+        show_inputs = False
+        if serializer.is_valid():
+            job_groups = fixed_query_params.get('job_groups')
+            jira_ids = fixed_query_params.get('jira_ids')
+            request_ids = fixed_query_params.get('request_ids')
+            runs = fixed_query_params.get('runs')
+            cwl_inputs = fixed_query_params.get('cwl_inputs')
+            if not job_groups and not jira_ids and not request_ids and not runs:
+                return Response("Error: No runs specified", status=status.HTTP_400_BAD_REQUEST)
+            queryset = Run.objects.all()
+            if job_groups:
+                queryset = queryset.filter(job_group__in=job_groups)
+            if jira_ids:
+                queryset = queryset.filter(job_group__jira_id__in=jira_ids)
+            if request_ids:
+                queryset = queryset.filter(tags__requestId__in=request_ids)
+            if runs:
+                queryset = queryset.filter(id__in=runs)
+            if cwl_inputs:
+                show_inputs = bool(strtobool(cwl_inputs))
+            try:
+                page = self.paginate_queryset(queryset.order_by('-created_date').all())
+            except ValidationError as e:
+                return Response(e, status=status.HTTP_400_BAD_REQUEST)
+            if page is not None:
+                if show_inputs:
+                    serializer = RunSerializerCWLInput(page, many=True)
+                else:
+                    serializer = RunSerializerCWLOutput(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            else:
+                return Response([], status=status.HTTP_200_OK)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AionViewSet(GenericAPIView):

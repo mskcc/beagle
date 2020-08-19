@@ -8,6 +8,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from runner.views.run_api_view import OperatorViewSet
+from beagle_etl.models import JobGroup
 from runner.models import Run, RunStatus
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -143,3 +144,53 @@ class TestRunAPIView(TestCase):
 
         number_of_runs = len(Run.objects.all())
         self.assertEqual(number_of_runs, 1)
+
+class TestCWLJsonView(APITestCase):
+    fixtures = [
+    "file_system.filegroup.json",
+    "file_system.filetype.json",
+    "file_system.storage.json",
+    "runner.pipeline.json",
+    "beagle_etl.operator.json",
+    "runner.operator_run.json",
+    "runner.run.json",
+    "runner.operator_trigger.json",]
+
+    def setUp(self):
+        admin_user = User.objects.create_superuser('admin', 'sample_email', 'password')
+        self.client.force_authenticate(user=admin_user)
+        self.jobgroup1 = JobGroup(jira_id='jira_id_1')
+        self.jobgroup1.save()
+        runs = Run.objects.all()
+        self.run1 = runs[0]
+        self.run2 = runs[1]
+        self.run1.job_group = self.jobgroup1
+        self.run1.save()
+        self.run2.job_group = self.jobgroup1
+        self.run2.save()
+        self.api_root = '/v0/run/cwljson'
+
+    def test_get_runs_job_group(self):
+        response = self.client.get(self.api_root+'/?job_groups='+str(self.jobgroup1.id))
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_get_runs_jira_id(self):
+        response = self.client.get(self.api_root+'/?jira_ids=jira_id_1')
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_get_runs_run_ids(self):
+        response = self.client.get(self.api_root+'/?runs='+str(self.run1.id)+','+str(self.run2.id))
+        self.assertEqual(response.json()['count'], 2)
+
+    def test_get_runs_request_id(self):
+        response = self.client.get(self.api_root+'/?request_ids=request1')
+        self.assertEqual(response.json()['count'], 1)
+
+    def test_get_output(self):
+        response = self.client.get(self.api_root+'/?runs='+str(self.run1.id))
+        self.assertTrue('outputs' in response.json()['results'][0])
+
+    def test_get_input(self):
+        response = self.client.get(self.api_root+'/?cwl_inputs=true&runs='+str(self.run1.id))
+        self.assertTrue('inputs' in response.json()['results'][0])
+

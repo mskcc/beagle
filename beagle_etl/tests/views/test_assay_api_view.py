@@ -4,7 +4,7 @@ Tests for Assay API View
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
-from beagle_etl.models import Assay
+from beagle_etl.models import ETLConfiguration
 
 
 
@@ -20,14 +20,14 @@ class TestAssayAPIView(APITestCase):
         """
         admin_user = User.objects.create_superuser('admin', 'sample_email', 'password')
         self.client.force_authenticate(user=admin_user)
-        assay = Assay.objects.first()
-        assay.all = ['IMPACT468',
-                     'HemePACT',
-                     'HemePACT_v4',
-                     'DisabledAssay',
-                     'HoldAssay']
-        assay.disabled = ['DisabledAssay']
-        assay.hold = ['HoldAssay']
+        assay = ETLConfiguration.objects.first()
+        assay.all_recipes = ['IMPACT468',
+                             'HemePACT',
+                             'HemePACT_v4',
+                             'DisabledAssay',
+                             'HoldAssay']
+        assay.disabled_recipes = ['DisabledAssay']
+        assay.hold_recipes = ['HoldAssay']
         assay.save()
         self.api_root = '/v0/etl/assay'
 
@@ -60,8 +60,8 @@ class TestAssayAPIView(APITestCase):
                                     extra_assay]}
         response = self.client.post(self.api_root, new_assay_request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        assay = Assay.objects.first()
-        self.assertTrue(extra_assay in assay.all)
+        assay = ETLConfiguration.objects.first()
+        self.assertTrue(extra_assay in assay.all_recipes)
 
     def test_all_truncate(self):
         """

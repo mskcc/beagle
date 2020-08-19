@@ -11,6 +11,7 @@ from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
+from .bin.make_sample import format_sample_name
 
 
 class ArgosOperator(Operator):
@@ -230,3 +231,6 @@ class ArgosOperator(Operator):
         sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, 'error_sample_formatting.txt',
                                                     "".join(unformatted_s)).to_dict()
         send_notification.delay(sample_errors_event)
+
+    def format_sample_name(self,*args, **kwargs):
+        return format_sample_name(*args, **kwargs)

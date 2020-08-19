@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
+from file_system.metadata.validator import MetadataValidator
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata
 
 
@@ -299,6 +300,30 @@ class FileTest(APITestCase):
                                    format='json'
                                    )
         self.assertEqual(response.json()['results'][0], '1')
+
+    def test_metadata_clean_function(self):
+        test1 = "abc\tdef2"
+        test2 = """
+            abc\tdef!
+            """
+        self.assertEqual(MetadataValidator.clean_value(test1), "abc def2")
+        self.assertEqual(MetadataValidator.clean_value(test2), "abc def")
+
+    def test_query_files(self):
+        self._create_single_file('/path/to/file1.fastq', 'fastq', str(self.file_group.id), '1', '3')
+        self._create_single_file('/path/to/file2.fastq', 'fastq', str(self.file_group.id), '1', '2')
+        self._create_single_file('/path/to/file3.fastq', 'fastq', str(self.file_group.id), '2', '1')
+        self._create_single_file('/path/to/file4.fastq', 'fastq', str(self.file_group.id), '3', '4')
+        self._create_single_file('/path/to/file5.fastq', 'fastq', str(self.file_group.id), '4', '3')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/files/?metadata=requestId:1&values_metadata=requestId,igoSampleId',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 2)
+        response = self.client.get('/v0/fs/files/?values_metadata=requestId,igoSampleId',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 5)
 
 
 
