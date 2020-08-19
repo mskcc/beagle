@@ -3,13 +3,13 @@ from uuid import UUID
 import json
 from django.test import TestCase
 from django.db.models import Prefetch, Q
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_dmp_query
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_dmp_normal
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_pooled_normals
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_run_id_query
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import build_preservation_query
-from runner.operator.argos_operator.bin.retrieve_samples_by_query import get_descriptor
-from runner.tests.operator.argos_operator.test_pair_request import UUIDEncoder
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import build_dmp_query
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import get_dmp_normal
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import get_pooled_normals
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import build_run_id_query
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import build_preservation_query
+from runner.operator.argos_operator.v1_0_0.bin.retrieve_samples_by_query import get_descriptor
+from runner.tests.operator.argos_operator.v1_0_0.test_pair_request import UUIDEncoder
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
