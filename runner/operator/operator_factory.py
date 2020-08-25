@@ -24,7 +24,8 @@ class OperatorFactory(object):
             {"version": "v1.0.0", "latest": True, "operator": ArgosQcOperator_v1_0_0}
         ],
         "CopyOutputsOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": CopyOutputsOperator_v1_0_0}
+            {"version": "v1.0.0", "latest": False, "operator": CopyOutputsOperator_v1_0_0},
+            {"version": "v1.1.0", "latest": True, "operator": CopyOutputsOperator_v1_0_0}
         ],
         "AccessFastqToBamOperator": [
             {"version": "v1.0.0", "latest": True, "operator": AccessFastqToBamOperator_v1_0_0}
