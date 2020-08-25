@@ -1,7 +1,9 @@
 from .argos_operator.v1_0_0 import ArgosOperator as ArgosOperator_v1_0_0
+from .argos_operator.v1_1_0 import ArgosOperator as ArgosOperator_v1_1_0
 from .copy_outputs_operator.v1_0_0 import CopyOutputsOperator as CopyOutputsOperator_v1_0_0
 from .copy_outputs_operator.v1_1_0 import CopyOutputsOperator as CopyOutputsOperator_v1_1_0
 from .argos_qc_operator.v1_0_0 import ArgosQcOperator as ArgosQcOperator_v1_0_0
+from .argos_qc_operator.v1_1_0 import ArgosQcOperator as ArgosQcOperator_v1_1_0
 from .tempo_operator.v1_0_0 import TempoOperator as TempoOperator_v1_0_0
 from .access_operator.v1_0_0 import AccessOperator as AccessOperator_v1_0_0
 from .helix_filters.v20_07_1 import HelixFiltersOperator as HelixFiltersOperator_v20_07_1
@@ -17,13 +19,15 @@ class OperatorFactory(object):
             {"version": "v1.0.0", "latest": True, "operator": TempoOperator_v1_0_0}
         ],
         "ArgosOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": ArgosOperator_v1_0_0}
+            {"version": "v1.0.0", "latest": False, "operator": ArgosOperator_v1_0_0},
+            {"version": "v1.1.0", "latest": True, "operator": ArgosOperator_v1_1_0}
         ],
         "AccessOperator": [
             {"version": "v1.0.0", "latest": True, "operator": AccessOperator_v1_0_0}
         ],
         "ArgosQcOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": ArgosQcOperator_v1_0_0}
+            {"version": "v1.0.0", "latest": False, "operator": ArgosQcOperator_v1_0_0},
+            {"version": "v1.1.0", "latest": True, "operator": ArgosQcOperator_v1_1_0}
         ],
         "CopyOutputsOperator": [
             {"version": "v1.0.0", "latest": False, "operator": CopyOutputsOperator_v1_0_0},
