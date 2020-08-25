@@ -307,6 +307,8 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
 class CWLJsonViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
     serializer_class = CWLJsonSerializer
+    queryset = Run.objects.prefetch_related(Prefetch('port_set', queryset=
+    Port.objects.select_related('run'))).order_by('-created_date').all()
 
     @swagger_auto_schema(query_serializer=CWLJsonSerializer)
     def get(self, request):
