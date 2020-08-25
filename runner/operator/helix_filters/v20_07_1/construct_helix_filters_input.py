@@ -163,7 +163,7 @@ def construct_helix_filters_input(argos_run_id_list):
     input_json['project_description'] = project_prefix
     input_json['cancer_study_identifier'] = project_prefix
 
-    # Gotta retrieve extra info that's not in the run porto have to query the database
+    # Gotta retrieve extra info that's not in the run port; have to query the database
     #
     # Get oncotree codes from samples in project_prefix/request_id FileMetadata
     # will need to change project_prefix to request_id values everywhere, but for now we assume 
@@ -175,6 +175,9 @@ def construct_helix_filters_input(argos_run_id_list):
 
     # generate data_clinical file
     input_json['data_clinical_file'] = create_data_clinical_file(argos_run_id_list)
+
+    # need this for aion
+    input_json['lab_head_email'] = get_lab_head_email(argos_run_id_list)
 
     return input_json
 
@@ -240,6 +243,16 @@ def get_project_pi(run_id_list):
         project_pi = format_msk_id(argos_run.tags['labHeadEmail'])
         project_pis.add(project_pi)
     return ','.join(list(sorted(project_pis)))
+
+
+def get_lab_head_email(run_id_list):
+    lab_head_emails = set()
+    for run_id in run_id_list:
+        argos_run = Run.objects.get(id=run_id)
+        lab_head_email = format_msk_id(argos_run.tags['labHeadEmail'])
+        lab_head_emails.add(lab_head_email)
+    lab_head_email = ','.join(list(sorted(lab_head_emails)))
+    return lab_head_email
 
 
 def get_request_pi(run_id_list):

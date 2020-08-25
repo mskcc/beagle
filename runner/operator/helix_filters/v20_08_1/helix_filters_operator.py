@@ -36,9 +36,10 @@ class HelixFiltersOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
+        labhead_email = input_json['lab_head_email']
         input_json['helix_filter_version'] = pipeline_version
         input_json = self.add_output_file_names(input_json, pipeline_version)
-        tags = { "project_prefix": project_prefix, "argos_run_ids": argos_run_ids }
+        tags = { "project_prefix": project_prefix, "argos_run_ids": argos_run_ids, "labHeadEmail": lab_head_email }
 
         #TODO:  Remove purity facets seg files from facets_hisens_seg_files
         input_json['facets_hisens_seg_files'] = self.remove_purity_files(input_json['facets_hisens_seg_files'])
