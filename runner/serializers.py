@@ -352,3 +352,12 @@ class OperatorRunSerializer(serializers.ModelSerializer):
 
 class AionOperatorSerializer(serializers.Serializer):
     lab_head_email = serializers.CharField(max_length=100)
+
+
+class TempoMPGenOperatorSerializer(serializers.Serializer):
+    normals_override = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    tumors_override = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )

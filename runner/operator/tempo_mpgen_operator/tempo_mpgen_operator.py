@@ -1,6 +1,7 @@
 import uuid
 import re
 import os
+import logging
 from django.db.models import Q
 from file_system.models import File, FileGroup, FileType
 from rest_framework import serializers
@@ -25,8 +26,7 @@ from datetime import datetime
 from file_system.models import File
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-notifier = JiraEventHandler()
-
+logger = logging.getLogger(__name__)
 
 class TempoMPGenOperator(Operator):
     def build_recipe_query(self):
@@ -70,7 +70,8 @@ class TempoMPGenOperator(Operator):
         return query
 
 
-    def get_jobs(self, pairing_override):
+    def get_jobs(self, pairing_override=None):
+        logger.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         self.OUTPUT_DIR = tmpdir 
         Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
@@ -201,8 +202,8 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        if self.job_group_id:
-            upload_file_event = UploadAttachmentEvent(self.job_group_id, fname, s).to_dict()
+        if self.job_group_notifier_id:
+            upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
             send_notification.delay(upload_file_event)
         return { 'class': 'File', 'location': "juno://" + output }
 
@@ -233,7 +234,7 @@ class TempoMPGenOperator(Operator):
 
 
     def send_message(self, msg):
-        event = OperatorRequestEvent(self.job_group_id, msg)
+        event = OperatorRequestEvent(self.job_group_notifier_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
 
