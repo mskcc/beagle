@@ -27,4 +27,3 @@ class OperatorFactory(object):
         mod = importlib.import_module(mod_name)
         operator_class = getattr(mod, func_name)
         return operator_class(model, **kwargs)
-    # get_by_model = staticmethod(get_by_model)
