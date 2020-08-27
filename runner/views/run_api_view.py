@@ -12,14 +12,14 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput
+    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request, create_aion_job
 from file_system.repository import FileRepository
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import OperatorStartEvent, SetLabelEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
@@ -68,20 +68,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             run_distribution = fixed_query_params.get('run_distribution')
             count = fixed_query_params.get('count')
             full = fixed_query_params.get('full')
-            cwl_inputs = fixed_query_params.get('cwl_inputs')
-            cwl_outputs = fixed_query_params.get('cwl_outputs')
             if full:
                 full = bool(strtobool(full))
-            if cwl_inputs:
-                cwl_inputs = bool(strtobool(cwl_inputs))
-            if cwl_outputs:
-                cwl_outputs = bool(strtobool(cwl_outputs))
-            run_format_types = [full, cwl_inputs, cwl_outputs]
-            format_types_iter = iter(run_format_types)
-            has_one_true = any(format_types_iter)
-            has_another_true = any(format_types_iter)
-            if has_one_true and has_another_true:
-                return Response("Please specify one of cwl_inputs, cwl_outputs, or full", status=status.HTTP_400_BAD_REQUEST)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
@@ -145,10 +133,6 @@ class RunApiViewSet(mixins.ListModelMixin,
                     return self.get_paginated_response(page)
                 if full:
                     serializer = RunSerializerFull(page, many=True)
-                elif cwl_inputs:
-                    serializer = RunSerializerCWLInput(page, many=True)
-                elif cwl_outputs:
-                    serializer = RunSerializerCWLOutput(page, many=True)
                 else:
                     serializer = RunSerializerPartial(page, many=True)
                 return self.get_paginated_response(serializer.data)
@@ -192,10 +176,10 @@ class OperatorViewSet(GenericAPIView):
         if request_ids:
             for request_id in request_ids:
                 logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
-                if job_group_id:
-                    create_jobs_from_request.delay(request_id, pipeline.operator_id, job_group_id)
-                else:
-                    create_jobs_from_request.delay(request_id, pipeline.operator_id)
+                if not job_group_id:
+                    job_group = JobGroup.objects.create()
+                    job_group_id = str(job_group.id)
+                create_jobs_from_request.delay(request_id, pipeline.operator_id, job_group_id)
             body = {"details": "Operator Job submitted %s" % str(request_ids)}
         else:
             if run_ids:
@@ -246,60 +230,32 @@ class RequestOperatorViewSet(GenericAPIView):
                     job_group = JobGroup()
                     job_group.save()
                     job_group_id = str(job_group.id)
-                    notifier_start(job_group, self._generate_summary(req))
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    self._generate_description(str(job_group.id), req)
-                    self._generate_label(str(job_group.id), req)
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id)
+                    create_jobs_from_request.delay(req,
+                                                   pipeline.operator_id,
+                                                   job_group_id,
+                                                   pipeline=str(pipeline.id))
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             if for_each:
                 for req in request_ids:
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id)
+                    try:
+                        job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
+                                                                          notifier_type__operator_id=pipeline.operator_id)
+                    except JobGroupNotifier.DoesNotExist:
+                        return Response({'details': "Notifier for JobGroup doesn't exist"},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    create_jobs_from_request.delay(req, pipeline.operator_id,
+                                                   job_group_id,
+                                                   str(job_group_notifier.id),
+                                                   pipeline=str(pipeline.id))
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
 
         body = {"details": "Operator Job submitted %s" % str(request_ids)}
         return Response(body, status=status.HTTP_202_ACCEPTED)
-
-    def _generate_summary(self, request):
-        if isinstance(request, list):
-            req_id = ', '.join(request)
-        else:
-            req_id = request
-        approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        summary = req_id + " [%s]" % approx_create_time
-        return summary
-
-    def _generate_description(self, job_group, request):
-        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
-        data = files.first().metadata
-        request_id = data['requestId']
-        recipe = data['recipe']
-        a_name = data['dataAnalystName']
-        a_email = data['dataAnalystEmail']
-        i_name = data['investigatorName']
-        i_email = data['investigatorEmail']
-        l_name = data['labHeadName']
-        l_email = data['labHeadEmail']
-        p_email = data['piEmail']
-        pm_name = data['projectManagerName']
-        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=models.Count("pk")))
-        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=models.Count("pk")))
-        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=models.Count("pk")))
-        operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
-        send_notification.delay(operator_start_event)
-
-    def _generate_label(self, job_group_id, request):
-        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
-        data = files.first().metadata
-        recipe = data['recipe']
-        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
-        send_notification.delay(recipe_label_event)
 
 
 class RunOperatorViewSet(GenericAPIView):
@@ -319,15 +275,14 @@ class RunOperatorViewSet(GenericAPIView):
                 job_group = JobGroup()
                 job_group.save()
                 job_group_id = str(job_group.id)
+
                 try:
                     run = Run.objects.get(id=run_ids[0])
                     req = run.tags.get('requestId', 'Unknown')
                 except Run.DoesNotExist:
                     req = 'Unknown'
-                notifier_start(job_group, self._generate_summary(req))
-                if req != 'Unknown':
-                    self._generate_description(str(job_group.id), req)
-                    self._generate_label(str(job_group.id), req)
+
+                notifier_start(job_group)
             else:
                 try:
                     job_group = JobGroup.objects.get(id=job_group_id)
@@ -347,39 +302,6 @@ class RunOperatorViewSet(GenericAPIView):
             pipeline_names, job_group_id, str(run_ids))}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
-    def _generate_summary(self, req):
-        approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        summary = req + " [%s]" % approx_create_time
-        return summary
-
-    def _generate_description(self, job_group, request):
-        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
-        data = files.first().metadata
-        request_id = data['requestId']
-        recipe = data['recipe']
-        a_name = data['dataAnalystName']
-        a_email = data['dataAnalystEmail']
-        i_name = data['investigatorName']
-        i_email = data['investigatorEmail']
-        l_name = data['labHeadName']
-        l_email = data['labHeadEmail']
-        p_email = data['piEmail']
-        pm_name = data['projectManagerName']
-        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
-        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=Count("pk")))
-        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=Count("pk")))
-        operator_start_event = OperatorStartEvent(job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
-        send_notification.delay(operator_start_event)
-
-    def _generate_label(self, job_group_id, request):
-        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
-        data = files.first().metadata
-        recipe = data['recipe']
-        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
-        send_notification.delay(recipe_label_event)
-
 
 class OperatorErrorViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
@@ -387,6 +309,53 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
                            GenericViewSet):
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
+
+class CWLJsonViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+    serializer_class = CWLJsonSerializer
+    queryset = Run.objects.prefetch_related(Prefetch('port_set', queryset=
+    Port.objects.select_related('run'))).order_by('-created_date').all()
+
+    @swagger_auto_schema(query_serializer=CWLJsonSerializer)
+    def get(self, request):
+        query_list_types = ['job_groups','jira_ids','request_ids','runs']
+        fixed_query_params = fix_query_list(request.query_params,query_list_types)
+        serializer = CWLJsonSerializer(data=fixed_query_params)
+        show_inputs = False
+        if serializer.is_valid():
+            job_groups = fixed_query_params.get('job_groups')
+            jira_ids = fixed_query_params.get('jira_ids')
+            request_ids = fixed_query_params.get('request_ids')
+            runs = fixed_query_params.get('runs')
+            cwl_inputs = fixed_query_params.get('cwl_inputs')
+            if not job_groups and not jira_ids and not request_ids and not runs:
+                return Response("Error: No runs specified", status=status.HTTP_400_BAD_REQUEST)
+            queryset = Run.objects.all()
+            if job_groups:
+                queryset = queryset.filter(job_group__in=job_groups)
+            if jira_ids:
+                queryset = queryset.filter(job_group__jira_id__in=jira_ids)
+            if request_ids:
+                queryset = queryset.filter(tags__requestId__in=request_ids)
+            if runs:
+                queryset = queryset.filter(id__in=runs)
+            if cwl_inputs:
+                show_inputs = bool(strtobool(cwl_inputs))
+            try:
+                page = self.paginate_queryset(queryset.order_by('-created_date').all())
+            except ValidationError as e:
+                return Response(e, status=status.HTTP_400_BAD_REQUEST)
+            if page is not None:
+                if show_inputs:
+                    serializer = RunSerializerCWLInput(page, many=True)
+                else:
+                    serializer = RunSerializerCWLOutput(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            else:
+                return Response([], status=status.HTTP_200_OK)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AionViewSet(GenericAPIView):

@@ -2,7 +2,7 @@ import os
 import datetime
 from django.conf import settings
 from rest_framework import serializers
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException
@@ -71,8 +71,6 @@ class RunApiListSerializer(serializers.Serializer):
 
     full = serializers.BooleanField(required=False)
 
-    cwl_inputs = serializers.BooleanField(required=False)
-    cwl_outputs = serializers.BooleanField(required=False)
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
     created_date_lt = serializers.DateTimeField(required=False)
@@ -189,7 +187,7 @@ class RunSerializerCWLInput(RunSerializerPartial):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','inputs')
+        fields = ('id', 'name', 'inputs')
 
 class RunSerializerCWLOutput(RunSerializerPartial):
 
@@ -201,7 +199,31 @@ class RunSerializerCWLOutput(RunSerializerPartial):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date','outputs')
+        fields = ('id', 'name', 'outputs')
+
+class CWLJsonSerializer(serializers.Serializer):
+    cwl_inputs = serializers.BooleanField(required=False)
+    runs = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    job_groups = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    jira_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    request_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
 
 class RunStatusUpdateSerializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
@@ -238,6 +260,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
+    job_group_notifier_id = serializers.UUIDField(required=False)
     notify_for_outputs = serializers.ListField(allow_null=True, required=False)
 
     def create(self, validated_data):
@@ -265,7 +288,11 @@ class APIRunCreateSerializer(serializers.Serializer):
         try:
             run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
         except JobGroup.DoesNotExist:
-            print("[JobGroup] %s" % run.job_group)
+            print("[JobGroup] %s" % validated_data.get('job_group_id'))
+        try:
+            run.job_group_notifier = JobGroupNotifier.objects.get(id=validated_data.get('job_group_notifier_id'))
+        except JobGroupNotifier.DoesNotExist:
+            print("[JobGroupNotifier] %s" % validated_data.get('job_group_notifier_id'))
         run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run

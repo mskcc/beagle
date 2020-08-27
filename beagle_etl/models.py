@@ -1,6 +1,6 @@
 import uuid
 from enum import IntEnum
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
@@ -31,8 +31,10 @@ class Job(BaseModel):
     callback = models.CharField(max_length=100, default=None, blank=True, null=True)
     callback_args = JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+
     def save(self, *args, **kwargs):
         if self.status == JobStatus.COMPLETED or self.status == JobStatus.FAILED:
             if not self.finished_date:
@@ -55,7 +57,8 @@ class Job(BaseModel):
 
 class Operator(models.Model):
     slug = models.CharField(max_length=100, default=False)
-    class_name = models.CharField(max_length=100)
+    class_name = models.CharField(max_length=150)
+    version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
     recipes = ArrayField(models.CharField(max_length=50, default=False))
 
@@ -63,7 +66,8 @@ class Operator(models.Model):
         return u"{}".format(self.slug)
 
 
-class Assay(models.Model):
-    all = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-    disabled = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-    hold = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+class ETLConfiguration(models.Model):
+    redelivery = models.BooleanField(default=True)
+    all_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    disabled_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+    hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)

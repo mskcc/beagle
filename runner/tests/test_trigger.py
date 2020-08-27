@@ -26,8 +26,8 @@ class TestOperatorTriggers(TestCase):
 
     @patch('runner.tasks.create_run_task')
     @patch('notifier.tasks.send_notification')
-    @patch('runner.operator.argos_operator.ArgosOperator.get_jobs')
-    @patch('runner.operator.argos_operator.ArgosOperator.get_pipeline_id')
+    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs')
+    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id')
     def test_create_jobs_from_operator_pipeline_deleted(self, get_pipeline_id, get_jobs, send_notification, create_run_task):
         argos_jobs = []
         argos_jobs.append((APIRunCreateSerializer(
@@ -57,7 +57,9 @@ class TestOperatorTriggers(TestCase):
 
         create_jobs_from_chaining.delay.assert_called_once_with(trigger.to_operator.pk,
                                                                 trigger.from_operator.pk,
-                                                                run_ids, job_group_id=None)
+                                                                run_ids,
+                                                                job_group_id=None,
+                                                                job_group_notifier_id=None)
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
 
 

@@ -4,12 +4,13 @@ import logging
 from deepdiff import DeepDiff
 from django.conf import settings
 from beagle_etl.jobs import TYPES
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, UploadAttachmentEvent
+    RedeliveryUpdateEvent, UploadAttachmentEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
+    ETLImportNoSamplesEvent
 from notifier.tasks import send_notification, notifier_start
-from beagle_etl.models import JobStatus, Job, Operator, Assay
+from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -20,7 +21,6 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
 from beagle_etl.lims_client import LIMSClient
-import traceback
 
 
 logger = logging.getLogger(__name__)
@@ -34,12 +34,12 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        job = create_request_job(request['request'])
+        job, message = create_request_job(request['request'])
         if job:
             if job.status == JobStatus.CREATED:
                 children.add(str(job.id))
         else:
-            logger.info("Job for requestId: %s not completed", request['request'])
+            logger.info("Job for requestId: %s not completed. %s", request['request'], message)
     return list(children)
 
 
@@ -50,95 +50,125 @@ def create_request_job(request_id):
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
+    assays = ETLConfiguration.objects.first()
+    if redelivery and not assays.redelivery:
+        return None, "Redelivery Deactivated"
+
     if count == 0:
         job_group = JobGroup()
         job_group.save()
-        notifier_start(job_group, request_id)
+        job_group_notifier_id = notifier_start(job_group, request_id)
+        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
         job = Job(run=TYPES['REQUEST'],
-                  args={'request_id': request_id, 'job_group': str(job_group.id), 'redelivery': redelivery},
+                  args={'request_id': request_id, 'job_group': str(job_group.id),
+                        'job_group_notifier': job_group_notifier_id, 'redelivery': redelivery},
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
                   callback=TYPES['REQUEST_CALLBACK'],
-                  callback_args={'request_id': request_id, 'job_group': str(job_group.id)},
-                  job_group=job_group)
+                  callback_args={'request_id': request_id, 'job_group': str(job_group.id),
+                                 'job_group_notifier': job_group_notifier_id},
+                  job_group=job_group,
+                  job_group_notifier=job_group_notifier)
         job.save()
         if redelivery:
-            redelivery_event = RedeliveryEvent(str(job_group.id)).to_dict()
+            redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
-        return job
+        return job, "Job Created"
 
 
-def request_callback(request_id, job_group=None):
+def request_callback(request_id, job_group=None, job_group_notifier=None):
     jg = None
+    jgn = None
     try:
-        jg = JobGroup.objects.get(id=job_group)
+        jgn = JobGroupNotifier.objects.get(id=job_group_notifier)
         logger.debug("[RequestCallback] JobGroup id: %s", job_group)
-    except JobGroup.DoesNotExist:
+    except JobGroupNotifier.DoesNotExist:
         logger.debug("[RequestCallback] JobGroup not set")
-    job_group_id = str(jg.id) if jg else None
-    assays = Assay.objects.first()
+    job_group_notifier_id = str(jgn.id) if jgn else None
+    assays = ETLConfiguration.objects.first()
     recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
     if not recipes:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
 
-    if not all(item in assays.all for item in recipes):
-        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+    if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
+        no_samples_event = ETLImportNoSamplesEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(no_samples_event)
+        return []
+
+    if not all(item in assays.all_recipes for item in recipes):
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
-        set_unknown_assay_label = SetLabelEvent(job_group_id, 'unrecognized_assay').to_dict()
+        set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, 'unrecognized_assay').to_dict()
         send_notification.delay(set_unknown_assay_label)
-        unknown_assay_event = UnknownAssayEvent(job_group_id, recipes[0]).to_dict()
+        unknown_assay_event = UnknownAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
 
-    if any(item in assays.hold for item in recipes):
-        admin_hold_event = AdminHoldEvent(job_group_id).to_dict()
+    if any(item in assays.hold_recipes for item in recipes):
+        admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(admin_hold_event)
-        custom_capture_event = CustomCaptureCCEvent(job_group_id, recipes[0]).to_dict()
+        custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipes[0]).to_dict()
         send_notification.delay(custom_capture_event)
         return []
 
-    if any(item in assays.disabled for item in recipes):
-        not_for_ci = NotForCIReviewEvent(job_group_id).to_dict()
+    if any(item in assays.disabled_recipes for item in recipes):
+        not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(not_for_ci)
-        disabled_assay_event = DisabledAssayEvent(job_group_id, recipes[0]).to_dict()
+        disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
 
     operators = Operator.objects.filter(recipes__overlap=recipes)
 
     if not operators:
+        # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes)
         logger.error(msg)
-        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
+        e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
-        ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException(msg)
     for operator in operators:
         if not operator.active:
             msg = "Operator not active: %s" % operator.class_name
             logger.info(msg)
-            e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] %s" % msg).to_dict()
+            e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
             send_notification.delay(e)
-            error_label = SetLabelEvent(job_group_id, 'operator_inactive').to_dict()
+            error_label = SetLabelEvent(job_group_notifier_id, 'operator_inactive').to_dict()
             send_notification.delay(error_label)
-            ci_review_e = SetCIReviewEvent(job_group_id).to_dict()
+            ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-            create_jobs_from_request.delay(request_id, operator.id, job_group_id)
+            if Job.objects.filter(job_group=job_group, args__request_id=request_id, run=TYPES['SAMPLE'],
+                                  status=JobStatus.FAILED).all():
+                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+                send_notification.delay(partialy_complete_event)
+            else:
+                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+                send_notification.delay(complete_event)
+
+            create_jobs_from_request.delay(request_id, operator.id, job_group)
     return []
 
 
-def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None, redelivery=False):
+def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None, job_group_notifier=None,
+                  redelivery=False):
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     jg = None
+    jgn = None
     try:
         jg = JobGroup.objects.get(id=job_group)
         logger.debug("JobGroup found")
     except JobGroup.DoesNotExist:
+        logger.debug("No JobGroup Found")
+    try:
+        jgn = JobGroupNotifier.objects.get(id=job_group_notifier)
+        logger.debug("JobGroup found")
+    except JobGroupNotifier.DoesNotExist:
         logger.debug("No JobGroup Found")
     children = set()
     sample_ids = LIMSClient.get_request_samples(request_id)
@@ -159,7 +189,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
         "recipe": sample_ids['recipe'],
         "piEmail": sample_ids["piEmail"],
     }
-    set_recipe_event = ETLSetRecipeEvent(job_group, request_metadata['recipe']).to_dict()
+    set_recipe_event = ETLSetRecipeEvent(job_group_notifier, request_metadata['recipe']).to_dict()
     send_notification.delay(set_recipe_event)
     pooled_normals = sample_ids.get("pooledNormals", [])
     if import_pooled_normals and pooled_normals:
@@ -176,12 +206,13 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
                                     request_id,
                                     request_metadata,
                                     redelivery,
-                                    jg)
+                                    jg,
+                                    jgn)
             children.add(str(job.id))
     return list(children)
 
 
-def get_or_create_pooled_normal_job(filepath, job_group=None):
+def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
 
@@ -193,18 +224,22 @@ def get_or_create_pooled_normal_job(filepath, job_group=None):
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
-                  job_group=job_group)
+                  job_group=job_group,
+                  job_group_notifier=job_group_notifier)
         job.save()
     return job
 
 
-def create_sample_job(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None):
+def create_sample_job(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None,
+                      job_group_notifier=None):
     job = Job(run=TYPES['SAMPLE'],
               args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
-                    'request_metadata': request_metadata, 'redelivery': redelivery, 'job_group': str(job_group.id)},
+                    'request_metadata': request_metadata, 'redelivery': redelivery,
+                    'job_group_notifier': str(job_group_notifier.id)},
               status=JobStatus.CREATED,
               max_retry=1, children=[],
-              job_group=job_group)
+              job_group=job_group,
+              job_group_notifier=job_group_notifier)
     job.save()
     return job
 
@@ -260,8 +295,8 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("Pooled normal already created filepath")
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name='fastq').first()
-    assays = Assay.objects.first()
-    assay_list = assays.all
+    assays = ETLConfiguration.objects.first()
+    assay_list = assays.all_recipes
     run_id = None
     preservation_type = None
     recipe = None
@@ -281,7 +316,7 @@ def create_pooled_normal(filepath, file_group_id):
     if preservation_type not in ('FFPE', 'FROZEN', 'MOUSE'):
         logger.info("Invalid preservation type %s" % preservation_type)
         return
-    if recipe in assays.disabled:
+    if recipe in assays.disabled_recipes:
         logger.info("Recipe %s, is marked as disabled" % recipe)
         return
     if None in [run_id, preservation_type, recipe]:
@@ -302,7 +337,7 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("File already exist %s." % (filepath))
 
 
-def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None):
+def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group_notifier=None):
     logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
     sampleMetadata = LIMSClient.get_sample_manifest(sample_id)
     try:
@@ -331,7 +366,8 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
                 logger.info("Adding file %s" % fastq)
                 create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
                                       library, run,
-                                      request_metadata, R1_or_R2(fastq), update=redelivery, job_group=job_group)
+                                      request_metadata, R1_or_R2(fastq), update=redelivery,
+                                      job_group_notifier=job_group_notifier)
 
 
 def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
@@ -437,7 +473,7 @@ def convert_to_dict(runs):
 
 
 def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata,
-                          r, update=False, job_group=None):
+                          r, update=False, job_group_notifier=None):
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
@@ -485,7 +521,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
             create_file_object(path, file_group_obj, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
-                update = RedeliveryUpdateEvent(job_group, message).to_dict()
+                update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
                 send_notification.delay(update)
         else:
             if update:
@@ -499,8 +535,8 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                                      ignore_order=True)
                     diff_file_name = "%s_metadata_update.json" % f.file.file_name
                     message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
-                    update = RedeliveryUpdateEvent(job_group, message).to_dict()
-                    diff_details_event = UploadAttachmentEvent(job_group, diff_file_name, str(ddiff)).to_dict()
+                    update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
+                    diff_details_event = UploadAttachmentEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
                     send_notification.delay(update)
                     send_notification.delay(diff_details_event)
             else:

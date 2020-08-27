@@ -180,7 +180,8 @@ class JobObject(object):
             pi_email = metadata['piEmail']
             project_manager_name = metadata['projectManagerName']
 
-        event = ETLImportEvent(str(self.job.job_group.id),
+        event = ETLImportEvent(str(self.job.job_group_notifier.id),
+                               str(self.job.job_group.id),
                                self.job.args['request_id'],
                                list(samples_completed),
                                list(samples_failed),
@@ -200,7 +201,7 @@ class JobObject(object):
         e = event.to_dict()
         send_notification.delay(e)
 
-        etl_event = ETLJobsLinksEvent(str(self.job.job_group.id),
+        etl_event = ETLJobsLinksEvent(str(self.job.job_group_notifier.id),
                                       self.job.args['request_id'],
                                       all_jobs)
         etl_e = etl_event.to_dict()
@@ -208,10 +209,10 @@ class JobObject(object):
 
     def _job_failed(self):
         if self.job.run == TYPES['REQUEST']:
-            e = ETLJobFailedEvent(self.job.job_group.id,
+            e = ETLJobFailedEvent(self.job.job_group_notifier.id,
                                   "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
             send_notification.delay(e)
-            ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
+            ci_review = SetCIReviewEvent(str(self.job.job_group_notifier.id)).to_dict()
             send_notification.delay(ci_review)
             self._generate_ticket_decription()
 
