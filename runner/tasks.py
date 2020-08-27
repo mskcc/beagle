@@ -96,7 +96,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None):
+def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
     logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
 
@@ -110,8 +110,11 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
         except Exception as e:
             logger.error("Failed to instantiate Notifier: %s" % str(e))
 
-    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
-                                            job_group_notifier_id=job_group_notifier_id, request_id=request_id)
+    operator = OperatorFactory.get_by_model(operator_model,
+                                            job_group_id=job_group_id,
+                                            job_group_notifier_id=job_group_notifier_id,
+                                            request_id=request_id,
+                                            pipeline=pipeline)
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
