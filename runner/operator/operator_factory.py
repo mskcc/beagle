@@ -1,75 +1,29 @@
-from .argos_operator.v1_0_0 import ArgosOperator as ArgosOperator_v1_0_0
-from .argos_operator.v1_1_0 import ArgosOperator as ArgosOperator_v1_1_0
-from .copy_outputs_operator.v1_0_0 import CopyOutputsOperator as CopyOutputsOperator_v1_0_0
-from .copy_outputs_operator.v1_1_0 import CopyOutputsOperator as CopyOutputsOperator_v1_1_0
-from .argos_qc_operator.v1_0_0 import ArgosQcOperator as ArgosQcOperator_v1_0_0
-from .argos_qc_operator.v1_1_0 import ArgosQcOperator as ArgosQcOperator_v1_1_0
-from .tempo_operator.v1_0_0 import TempoOperator as TempoOperator_v1_0_0
-from .access_operator.v1_0_0 import AccessOperator as AccessOperator_v1_0_0
-from .helix_filters.v20_07_1 import HelixFiltersOperator as HelixFiltersOperator_v20_07_1
-from .helix_filters.v20_08_1 import HelixFiltersOperator as HelixFiltersOperator_v20_08_1
-from .aion.v1_0_0 import AionOperator as AionOperator_v1_0_0
-from .access.v1_0_0.fastq_to_bam import AccessFastqToBamOperator as AccessFastqToBamOperator_v1_0_0
+import importlib
+from beagle_etl.models import Operator
 
 
 class OperatorFactory(object):
 
-    operators = {
-        "TempoOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": TempoOperator_v1_0_0}
-        ],
-        "ArgosOperator": [
-            {"version": "v1.0.0", "latest": False, "operator": ArgosOperator_v1_0_0},
-            {"version": "v1.1.0", "latest": True, "operator": ArgosOperator_v1_1_0}
-        ],
-        "AccessOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": AccessOperator_v1_0_0}
-        ],
-        "ArgosQcOperator": [
-            {"version": "v1.0.0", "latest": False, "operator": ArgosQcOperator_v1_0_0},
-            {"version": "v1.1.0", "latest": True, "operator": ArgosQcOperator_v1_1_0}
-        ],
-        "CopyOutputsOperator": [
-            {"version": "v1.0.0", "latest": False, "operator": CopyOutputsOperator_v1_0_0},
-            {"version": "v1.1.0", "latest": True, "operator": CopyOutputsOperator_v1_1_0}
-        ],
-        "AccessFastqToBamOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": AccessFastqToBamOperator_v1_0_0}
-        ],
-        "HelixFiltersOperator": [
-            {"version": "v20.07.1", "latest": False, "operator": HelixFiltersOperator_v20_07_1},
-            {"version": "v20_08_1", "latest": True, "operator": HelixFiltersOperator_v20_08_1}
-        ],
-        "AionOperator": [
-            {"version": "v1.0.0", "latest": True, "operator": AionOperator_v1_0_0}
-        ]
-    }
+    @classmethod
+    def get_operators(cls):
+        operators = Operator.objects.all()
+        all_operators = dict()
+        for operator in operators:
+            if operator.slug not in all_operators:
+                all_operators[operator.slug] = []
+            mod_name, func_name = operator.class_name.rsplit('.', 1)
+            mod = importlib.import_module(mod_name)
+            func = getattr(mod, func_name)
+            operator_value = {
+                "version": operator.version,
+                "operator": func
+            }
+            all_operators[operator.slug].append(operator_value)
+        return all_operators
 
-    def get_by_model(model, version=None, **kwargs):
-        if model.class_name not in OperatorFactory.operators:
-            raise Exception("No operator matching {}" % model.class_name)
-        operator_list = OperatorFactory.operators[model.class_name]
-        latest_operator = None
-        version_operator = None
-        for single_operator in operator_list:
-            if single_operator['version'] == version:
-                if not version_operator:
-                    version_operator = single_operator['operator']
-                else:
-                    raise Exception("Cannot have multiple " + str(version) + " version operators for " + str(model.class_name))
-            if single_operator['latest']:
-                if not latest_operator:
-                    latest_operator = single_operator['operator']
-                else:
-                    raise Exception("Cannot have multiple latest operators for " + str(model.class_name))
-        if not latest_operator:
-            raise Exception("No latest version specified for " + str(model.class_name))
-        if version and not version_operator:
-            raise Exception("Could not find version " + str(version) + " of operator " + str(model.class_name))
-
-        if version_operator:
-            return version_operator(model, **kwargs)
-        if latest_operator:
-            return latest_operator(model, **kwargs)
-
-    get_by_model = staticmethod(get_by_model)
+    @staticmethod
+    def get_by_model(model, **kwargs):
+        mod_name, func_name = model.class_name.rsplit('.', 1)
+        mod = importlib.import_module(mod_name)
+        operator_class = getattr(mod, func_name)
+        return operator_class(model, **kwargs)

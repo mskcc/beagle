@@ -231,7 +231,10 @@ class RequestOperatorViewSet(GenericAPIView):
                     job_group.save()
                     job_group_id = str(job_group.id)
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id)
+                    create_jobs_from_request.delay(req,
+                                                   pipeline.operator_id,
+                                                   job_group_id,
+                                                   pipeline=str(pipeline.id))
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -244,7 +247,10 @@ class RequestOperatorViewSet(GenericAPIView):
                     except JobGroupNotifier.DoesNotExist:
                         return Response({'details': "Notifier for JobGroup doesn't exist"},
                                         status=status.HTTP_400_BAD_REQUEST)
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id, str(job_group_notifier.id))
+                    create_jobs_from_request.delay(req, pipeline.operator_id,
+                                                   job_group_id,
+                                                   str(job_group_notifier.id),
+                                                   pipeline=str(pipeline.id))
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
 
