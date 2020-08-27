@@ -5,8 +5,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "ArgosOperator",
-            "slug": "argos"
+            "class_name": "runner.operator.argos_operator.v1_0_0.argos_operator.ArgosOperator",
+            "version": "v1.0.0",
+            "slug": "ArgosOperator"
         }
     },
     {
@@ -15,8 +16,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "AccessOperator",
-            "slug": "access"
+            "class_name": "runner.operator.access_operator.v1_0_0.access_operator.AccessOperator",
+            "version": "v1.0.0",
+            "slug": "AccessOperator"
         }
     },
     {
@@ -25,8 +27,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"400FAKESOMETHING\"]",
-            "class_name": "AccessOperator",
-            "slug": "access"
+            "class_name": "runner.operator.access_operator.v1_0_0.access_operator.AccessOperator",
+            "version": "v1.0.0",
+            "slug": "AccessOperator"
         }
     },
     {
@@ -35,8 +38,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"None\"]",
-            "class_name": "CopyOutputsOperator",
-            "slug": "copyOutputs"
+            "class_name": "runner.operator.copy_outputs_operator.v1_0_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v1.0.0",
+            "slug": "CopyOutputsOperator"
         }
     }
 ]

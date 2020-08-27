@@ -4,7 +4,13 @@ from lib.admin import link_relation, progress_bar, pretty_python_exception
 
 
 class PipelineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'github', 'version', 'output_directory', link_relation("operator"))
+    list_display = ('id', 'name', 'output_directory', link_relation("operator"))
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ('github', 'version')
+        else:
+            return []
 
 
 class RunAdmin(admin.ModelAdmin):
