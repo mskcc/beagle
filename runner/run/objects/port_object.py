@@ -61,7 +61,7 @@ class PortObject(object):
                                                  PortAction.CONVERT_TO_PATH)
         self.files = files
 
-    def complete(self, value, group, job_group, output_metadata={}):
+    def complete(self, value, group, job_group_notifier, output_metadata={}):
 
         self.value = value
         files = []
@@ -73,7 +73,7 @@ class PortObject(object):
         if self.notify:
             PortProcessor.process_files(copy.deepcopy(self.value),
                                         PortAction.SEND_AS_NOTIFICATION,
-                                        job_group=job_group,
+                                        job_group=job_group_notifier,
                                         download=True)
         self.files = files
 

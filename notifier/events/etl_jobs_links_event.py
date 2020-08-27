@@ -5,8 +5,8 @@ from notifier.event_handler.event import Event
 
 class ETLJobsLinksEvent(Event):
 
-    def __init__(self, job_group, request_id, etl_jobs):
-        self.job_group = job_group
+    def __init__(self, job_notifier, request_id, etl_jobs):
+        self.job_notifier = job_notifier
         self.request_id = request_id
         self.etl_jobs = etl_jobs
 

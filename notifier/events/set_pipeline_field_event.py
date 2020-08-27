@@ -3,8 +3,8 @@ from notifier.event_handler.event import Event
 
 class SetPipelineFieldEvent(Event):
 
-    def __init__(self, job_group, pipeline_name):
-        self.job_group = job_group
+    def __init__(self, job_notifier, pipeline_name):
+        self.job_notifier = job_notifier
         self.pipeline_name = pipeline_name
 
     @classmethod

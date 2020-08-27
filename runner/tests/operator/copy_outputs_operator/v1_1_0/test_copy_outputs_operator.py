@@ -41,14 +41,6 @@ class TestCopyOutputs(TestCase):
                 return False
         return True
 
-    def check_if_pair_record_is_valid(self, record):
-        if 'normal_id' not in record or 'tumor_id' not in record or 'files' not in record:
-            return False
-        if not record['files']:
-            return False
-        else:
-            return self.check_if_list_is_valid(record['files'], False, self.check_if_file_obj_valid)
-
     def validate_copy_outputs_input(self, input_json):
         for single_field in input_json:
             if single_field == 'project_prefix':
@@ -58,12 +50,8 @@ class TestCopyOutputs(TestCase):
                     return False
                 else:
                     continue
-            elif single_field != 'facets':
-                if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_file_obj_valid):
-                    print("Error at %s", single_field)
-                    return False
             else:
-                if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_pair_record_is_valid):
+                if not self.check_if_list_is_valid(input_json[single_field], False, self.check_if_file_obj_valid):
                     print("Error at %s", single_field)
                     return False
         return True
@@ -79,7 +67,7 @@ class TestCopyOutputs(TestCase):
         call_command('loaddata', test_files_fixture, verbosity=0)
         operator_model = Operator.objects.get(id=4)
         operator = OperatorFactory.get_by_model(
-            operator_model,  run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"])
+            operator_model, version='v1.1.0', run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"])
         input_json_valid = False
         if operator.get_jobs()[0][0].is_valid():
             input_json = operator.get_jobs()[0][0].initial_data['inputs']

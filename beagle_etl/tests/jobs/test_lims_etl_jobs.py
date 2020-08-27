@@ -9,11 +9,11 @@ from uuid import UUID
 from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
-from beagle_etl.models import JobStatus, Job, Assay
+from beagle_etl.models import JobStatus, Job, ETLConfiguration
 from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
 from rest_framework.test import APITestCase
 from runner.models import Operator
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_metadata, get_run_id_from_string, fetch_samples, request_callback
@@ -99,8 +99,8 @@ class TestCreatePooledNormal(TestCase):
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
         self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
-        assay = Assay.objects.first()
-        self.disabled_backup = assay.disabled
+        assay = ETLConfiguration.objects.first()
+        self.disabled_backup = assay.disabled_recipes
         assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
         assay.disabled = ['DisabledAssay']
         assay.save()
@@ -204,12 +204,12 @@ class TestImportSample(APITestCase):
         self.file_group = FileGroup.objects.create(name="LIMS", storage=self.storage)
         self.old_val = settings.IMPORT_FILE_GROUP
         settings.IMPORT_FILE_GROUP = str(self.file_group.id)
-        assay = Assay.objects.first()
-        self.disabled_backup = assay.disabled
-        assay.all.append('DisabledAssay1')
-        assay.all.append('DisabledAssay2')
-        assay.all.append('TestAssay')
-        assay.disabled = ['DisabledAssay1', 'DisabledAssay2']
+        assay = ETLConfiguration.objects.first()
+        self.disabled_backup = assay.disabled_recipes
+        assay.all_recipes.append('DisabledAssay1')
+        assay.all_recipes.append('DisabledAssay2')
+        assay.all_recipes.append('TestAssay')
+        assay.disabled_recipes = ['DisabledAssay1', 'DisabledAssay2']
         assay.save()
         self.data_0_fastq = [
             {
@@ -497,8 +497,8 @@ class TestImportSample(APITestCase):
         ]
 
     def tearDown(self):
-        assay = Assay.objects.first()
-        assay.disabled = self.disabled_backup
+        assay = ETLConfiguration.objects.first()
+        assay.disabled_recipes = self.disabled_backup
         assay.save()
         settings.IMPORT_FILE_GROUP = self.old_val
 
@@ -612,6 +612,8 @@ class TestImportSample(APITestCase):
     @patch('notifier.tasks.send_notification.delay')
     def test_request_callback_unknown_assay(self, mock_send_notification):
         job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -623,21 +625,21 @@ class TestImportSample(APITestCase):
                                                         'requestId': 'test1',
                                                         'recipe': 'UnknownAssay'
                                                     })
-        request_callback('test1', str(job_group.id))
+        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({
                 'class': 'SetCIReviewEvent',
-                'job_group': str(job_group.id)
+                'job_notifier': str(job_group_notifier.id)
             }),
             call({
                 'class': 'SetLabelEvent',
-                'job_group': str(job_group.id),
+                'job_notifier': str(job_group_notifier.id),
                 'label': 'unrecognized_assay'
             }),
             call({
                 'class': 'UnknownAssayEvent',
-                'job_group': str(job_group.id),
+                'job_notifier': str(job_group_notifier.id),
                 'assay': 'UnknownAssay'
             })
         ]
@@ -647,6 +649,8 @@ class TestImportSample(APITestCase):
     @patch('notifier.tasks.send_notification.delay')
     def test_request_callback_disabled_assay(self, mock_send_notification):
         job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -658,16 +662,16 @@ class TestImportSample(APITestCase):
                                                         'requestId': 'test1',
                                                         'recipe': 'DisabledAssay1'
                                                     })
-        request_callback('test1', str(job_group.id))
+        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({
                 'class': 'NotForCIReviewEvent',
-                'job_group': str(job_group.id)
+                'job_notifier': str(job_group_notifier.id)
             }),
             call({
                 'class': 'DisabledAssayEvent',
-                'job_group': str(job_group.id),
+                'job_notifier': str(job_group_notifier.id),
                 'assay': 'DisabledAssay1'
             })
         ]

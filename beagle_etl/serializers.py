@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, JobStatus, Assay
+from .models import Job, JobStatus, ETLConfiguration
 from notifier.models import JobGroup
 from beagle_etl.jobs import TYPES
 
@@ -24,29 +24,31 @@ class JobSerializer(serializers.ModelSerializer):
 class AssaySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Assay
+        model = ETLConfiguration
         fields = '__all__'
+
 
 class JobsTypesSerializer(serializers.Serializer):
     job_types = serializers.JSONField(required=False)
 
+
 class AssayElementSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
     all = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                child=serializers.CharField())
     disabled = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                     child=serializers.CharField())
     hold = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                 child=serializers.CharField())
 
 
 class AssayUpdateSerializer(serializers.Serializer):
     all = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                child=serializers.CharField())
     disabled = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                     child=serializers.CharField())
     hold = serializers.ListField(required=False,
-        child=serializers.CharField())
+                                 child=serializers.CharField())
 
 
 class JobQuerySerializer(serializers.Serializer):

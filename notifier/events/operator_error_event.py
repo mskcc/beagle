@@ -3,8 +3,8 @@ from notifier.event_handler.event import Event
 
 class OperatorErrorEvent(Event):
 
-    def __init__(self, job_group, operator_run_id, sample_id, pipeline, error):
-        self.job_group = job_group
+    def __init__(self, job_notifier, operator_run_id, sample_id, pipeline, error):
+        self.job_notifier = job_notifier
         self.operator_run_id = operator_run_id
         self.sample_id = sample_id
         self.pipeline = pipeline

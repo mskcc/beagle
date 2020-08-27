@@ -1,41 +1,47 @@
 import os
 import logging
 import requests
+import datetime
 from celery import shared_task
 from django.conf import settings
+from django.db.models import Count
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
-    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent
-from notifier.tasks import send_notification
+    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, SetLabelEvent, SetRunTicketInImportEvent
+from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
-from beagle_etl.models import Operator
+from beagle_etl.jobs import TYPES
+from beagle_etl.models import Operator, Job
 from runner.exceptions import RunCreateException
-from notifier.models import JobGroup
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
+from notifier.models import JobGroup, JobGroupNotifier
+from file_system.repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
 
 
-notifier = JiraEventHandler()
-
-
-def create_jobs_from_operator(operator, job_group_id=None):
+def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None):
     jobs = operator.get_jobs()
     jg = None
+    jgn = None
     try:
         jg = JobGroup.objects.get(id=job_group_id)
         logger.info("JobGroup id: %s", job_group_id)
     except JobGroup.DoesNotExist:
         logger.info("JobGroup not set")
+    try:
+        jgn = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    except JobGroupNotifier.DoesNotExist:
+        logger.info("JobGroupNotifier not set")
     valid_jobs, invalid_jobs = [], []
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
-                                              job_group=jg)
+                                              job_group=jg,
+                                              job_group_notifier=jgn)
     run_ids = []
     pipeline_id = None
 
@@ -50,16 +56,18 @@ def create_jobs_from_operator(operator, job_group_id=None):
         pipeline_link = ""
         pipeline_version = ""
 
-    pipeline_description_event = AddPipelineToDescriptionEvent(job_group_id, pipeline_name, pipeline_version,
+    pipeline_description_event = AddPipelineToDescriptionEvent(job_group_notifier_id, pipeline_name,
+                                                               pipeline_version,
                                                                pipeline_link).to_dict()
     send_notification.delay(pipeline_description_event)
 
-    set_pipeline_field = SetPipelineFieldEvent(job_group_id, pipeline_name).to_dict()
+    set_pipeline_field = SetPipelineFieldEvent(job_group_notifier_id, pipeline_name).to_dict()
     send_notification.delay(set_pipeline_field)
 
     for job in valid_jobs:
         logger.info("Creating Run object")
-        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id)
+        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id,
+                          job_group_notifier_id=job_group_notifier_id)
         logger.info("Run object created with id: %s" % str(run.id))
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory
@@ -71,13 +79,13 @@ def create_jobs_from_operator(operator, job_group_id=None):
             create_run_task.delay(str(run.id), job[1], output_directory)
 
     if job_group_id:
-        event = OperatorRunEvent(job_group_id,
+        event = OperatorRunEvent(job_group_notifier_id,
                                  operator.request_id,
                                  pipeline_name,
                                  pipeline_link,
                                  run_ids,
-                                 str(operator_run.id))
-        send_notification.delay(event.to_dict())
+                                 str(operator_run.id)).to_dict()
+        send_notification.delay(event)
 
     for job in invalid_jobs:
         # TODO: Report this to JIRA ticket also
@@ -88,19 +96,99 @@ def create_jobs_from_operator(operator, job_group_id=None):
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id, job_group_id=None):
+def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
     logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, request_id=request_id)
-    create_jobs_from_operator(operator, job_group_id)
+
+    if not job_group_notifier_id:
+        try:
+            job_group = JobGroup.objects.get(id=job_group_id)
+        except JobGroup.DoesNotExist:
+            raise Exception("JobGroup doesn't exist")
+        try:
+            job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
+        except Exception as e:
+            logger.error("Failed to instantiate Notifier: %s" % str(e))
+
+    operator = OperatorFactory.get_by_model(operator_model,
+                                            job_group_id=job_group_id,
+                                            job_group_notifier_id=job_group_notifier_id,
+                                            request_id=request_id,
+                                            pipeline=pipeline)
+
+    _set_link_to_run_ticket(request_id, job_group_notifier_id)
+
+    generate_description(job_group_id, job_group_notifier_id, request_id)
+    generate_label(job_group_notifier_id, request_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
+
+
+def _set_link_to_run_ticket(request_id, job_group_notifier_id):
+    jira_id = None
+    import_job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).order_by('-created_date').first()
+    if not import_job:
+        logger.error("Could not find Import JIRA ticket")
+        return
+    try:
+        job_group_notifier_job = JobGroupNotifier.objects.get(job_group=import_job.job_group.id, notifier_type__default=True)
+    except JobGroupNotifier.DoesNotExist:
+        logger.error("Could not find Import JIRA ticket")
+        return
+    try:
+        new_jira = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    except JobGroupNotifier.DoesNotExist:
+        logger.error("Could not find Import JIRA ticket")
+        return
+    event = SetRunTicketInImportEvent(job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id).to_dict()
+    send_notification.delay(event)
+
+
+def _generate_summary(req):
+    approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    summary = req + " [%s]" % approx_create_time
+    return summary
+
+
+def generate_description(job_group, job_group_notifier, request):
+    files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    if files:
+        data = files.first().metadata
+        request_id = data['requestId']
+        recipe = data['recipe']
+        a_name = data['dataAnalystName']
+        a_email = data['dataAnalystEmail']
+        i_name = data['investigatorName']
+        i_email = data['investigatorEmail']
+        l_name = data['labHeadName']
+        l_email = data['labHeadEmail']
+        p_email = data['piEmail']
+        pm_name = data['projectManagerName']
+        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
+        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
+                'metadata__cmoSampleName').annotate(n=Count("pk")))
+        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
+                'metadata__cmoSampleName').annotate(n=Count("pk")))
+        operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
+        send_notification.delay(operator_start_event)
+
+
+def generate_label(job_group_id, request):
+    files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    if files:
+        data = files.first().metadata
+        recipe = data['recipe']
+        recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
+        send_notification.delay(recipe_label_event)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None):
+def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None,
+                              job_group_notifier_id=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id, run_ids=run_ids)
-    create_jobs_from_operator(operator, job_group_id)
+    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
+                                            job_group_notifier_id=job_group_notifier_id, run_ids=run_ids)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
 
 
 @shared_task
@@ -113,6 +201,8 @@ def process_triggers():
         created_chained_job = False
         job_group = operator_run.job_group
         job_group_id = str(job_group.id) if job_group else None
+        job_group_notifier = operator_run.job_group_notifier
+        job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
         try:
             for trigger in operator_run.operator.from_triggers.all():
                 trigger_type = trigger.run_type
@@ -126,7 +216,8 @@ def process_triggers():
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
-                                job_group_id=job_group_id
+                                job_group_id=job_group_id,
+                                job_group_notifier_id=job_group_notifier_id
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -136,7 +227,8 @@ def process_triggers():
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
-                                job_group_id=job_group_id
+                                job_group_id=job_group_id,
+                                job_group_notifier_id=job_group_notifier_id
                             )
                             continue
 
@@ -150,15 +242,15 @@ def process_triggers():
             if operator_run.percent_runs_finished == 100.0:
                 if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
-                    if not created_chained_job and job_group_id:
-                        completed_event = SetPipelineCompletedEvent(job_group_id).to_dict()
+                    if not created_chained_job and job_group_notifier_id:
+                        completed_event = SetPipelineCompletedEvent(job_group_notifier_id).to_dict()
                         send_notification.delay(completed_event)
                 else:
                     operator_run.fail()
-                    if job_group_id:
-                        e = OperatorRequestEvent(job_group_id, "[CIReviewEvent] Operator Run %s failed" % str(operator_run.id)).to_dict()
+                    if job_group_notifier_id:
+                        e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] Operator Run %s failed" % str(operator_run.id)).to_dict()
                         send_notification.delay(e)
-                        ci_review_event = SetCIReviewEvent(job_group_id).to_dict()
+                        ci_review_event = SetCIReviewEvent(job_group_notifier_id).to_dict()
                         send_notification.delay(ci_review_event)
 
         except Exception as e:
@@ -233,10 +325,10 @@ def fail_job(run_id, error_message):
     run.fail(error_message)
     run.to_db()
 
-    job_group = run.job_group
-    job_group_id = str(job_group.id) if job_group else None
+    job_group_notifier = run.job_group_notifier
+    job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
-    ci_review = SetCIReviewEvent(job_group_id).to_dict()
+    ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
     send_notification.delay(ci_review)
 
     _job_finished_notify(run)
@@ -263,6 +355,8 @@ def complete_job(run_id, outputs):
 
 def _job_finished_notify(run):
     job_group = run.job_group
+    job_group_notifier = run.job_group_notifier
+    job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
     job_group_id = str(job_group.id) if job_group else None
 
     pipeline_name = run.run_obj.app.name
@@ -273,7 +367,7 @@ def _job_finished_notify(run):
     failed_runs = run.run_obj.operator_run.failed_runs
     running_runs = run.run_obj.operator_run.running_runs
 
-    event = RunFinishedEvent(job_group_id,
+    event = RunFinishedEvent(job_group_notifier_id,
                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
                              str(run.run_id),
                              pipeline_name,
@@ -334,7 +428,6 @@ def run_routine_operator_job(operator, job_group_id=None):
     logger.info("Running single operator job; no pipeline runs submitted.")
 
 
-
 def create_aion_job(operator, lab_head_email):
     jobs = operator.get_jobs(lab_head_email)
     jg = None
@@ -369,7 +462,6 @@ def create_aion_job(operator, lab_head_email):
             fail_job(run.id, error_message)
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
-
 
     for job in invalid_jobs:
         # TODO: Report this to JIRA ticket also

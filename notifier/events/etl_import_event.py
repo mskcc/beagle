@@ -4,9 +4,11 @@ from notifier.event_handler.event import Event
 
 class ETLImportEvent(Event):
 
-    def __init__(self, job_group, request_id, sample_list_completed, sample_list_fail, recipe,
+    def __init__(self, job_notifier, job_group, request_id, sample_list_completed, sample_list_fail, recipe,
                  data_analyst_email, data_analyst_name, investigator_email, investigator_name, lab_head_email,
-                 lab_head_name, pi_email, project_manager_name, number_of_tumors, number_of_normals, number_of_pool_normals):
+                 lab_head_name, pi_email, project_manager_name, number_of_tumors, number_of_normals,
+                 number_of_pool_normals):
+        self.job_notifier = job_notifier
         self.job_group = job_group
         self.request_id = request_id
         self.sample_list_completed = sample_list_completed
@@ -53,9 +55,6 @@ class ETLImportEvent(Event):
         Number of normal samples: {number_of_normals}
         Number of pooled normals: {number_of_pool_normals}
         Job Group ID: {job_group}
-        
-        Pipelines:
-        | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,

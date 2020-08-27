@@ -3,7 +3,10 @@ from notifier.event_handler.event import Event
 
 class OperatorStartEvent(Event):
 
-    def __init__(self, job_group, request_id, sample_list_completed, recipe,data_analyst_name, data_analyst_email, investigator_name, investigator_email, lab_head_name, lab_head_email, pi_email, project_manager_name, number_of_tumors, number_of_normals):
+    def __init__(self, job_notifier, job_group, request_id, sample_list_completed, recipe, data_analyst_name,
+                 data_analyst_email, investigator_name, investigator_email, lab_head_name, lab_head_email, pi_email,
+                 project_manager_name, number_of_tumors, number_of_normals):
+        self.job_notifier = job_notifier
         self.job_group = job_group
         self.request_id = request_id
         self.sample_list_completed = sample_list_completed

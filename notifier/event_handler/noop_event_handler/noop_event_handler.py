@@ -66,3 +66,6 @@ class NoOpEventHandler(EventHandler):
 
     def process_upload_attachment_event(self, event):
         pass
+
+    def process_set_run_ticket_in_import_event(self, event):
+        pass
