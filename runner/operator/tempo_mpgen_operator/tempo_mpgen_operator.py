@@ -70,7 +70,7 @@ class TempoMPGenOperator(Operator):
         return query
 
 
-    def get_jobs(self):
+    def get_jobs(self, pairing_override):
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         self.OUTPUT_DIR = tmpdir 
         Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
@@ -98,6 +98,18 @@ class TempoMPGenOperator(Operator):
             tempo_files = tempo_files.exclude(exclude_query)
         # replace with run operator logic, most recent pairing
         pre_pairing = self.load_pairing_file(os.path.join(WORKDIR,'reference_jsons/pairing.tsv')) # pairing.tsv is not in repo
+        if pairing_override:
+            normal_samples = pairing_override['normal_samples']
+            tumor_samples = pairing_override['tumor_samples']
+            num_ns = len(normal_samples)
+            num_ts = len(tumor_samples)
+            if num_ns != num_ts:
+                print("Number of tumors and normals not the same; can't pair")
+            else:
+                for i in range(0, num_ns):
+                    tumor_id = tumor_samples[i]
+                    normal_id = normal_samples[i]
+                    pre_pairing[tumor_id] = normal_id
         patient_ids = set()
         patient_files = dict()
         no_patient_samples = list()
