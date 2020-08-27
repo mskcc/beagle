@@ -243,13 +243,13 @@ class RequestOperatorViewSet(GenericAPIView):
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
                     try:
                         job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
-                                                                          notifier_type__operator_id=pipeline.operator_id)
+                                                                          notifier_type_id=pipeline.operator.notifier_id)
+                        job_group_notifier_id = str(job_group_notifier.id)
                     except JobGroupNotifier.DoesNotExist:
-                        return Response({'details': "Notifier for JobGroup doesn't exist"},
-                                        status=status.HTTP_400_BAD_REQUEST)
+                        job_group_notifier_id = notifier_start(job_group_id, req, pipeline.operator)
                     create_jobs_from_request.delay(req, pipeline.operator_id,
                                                    job_group_id,
-                                                   str(job_group_notifier.id),
+                                                   job_group_notifier_id=job_group_notifier_id,
                                                    pipeline=str(pipeline.id))
             else:
                 return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
@@ -271,17 +271,16 @@ class RunOperatorViewSet(GenericAPIView):
             for pipeline_name in pipeline_names:
                 get_object_or_404(Pipeline, name=pipeline_name)
 
+            try:
+                run = Run.objects.get(id=run_ids[0])
+                req = run.tags.get('requestId', 'Unknown')
+            except Run.DoesNotExist:
+                req = 'Unknown'
+
             if not job_group_id:
                 job_group = JobGroup()
                 job_group.save()
                 job_group_id = str(job_group.id)
-
-                try:
-                    run = Run.objects.get(id=run_ids[0])
-                    req = run.tags.get('requestId', 'Unknown')
-                except Run.DoesNotExist:
-                    req = 'Unknown'
-
                 notifier_start(job_group, req)
             else:
                 try:
@@ -292,9 +291,17 @@ class RunOperatorViewSet(GenericAPIView):
 
             for pipeline_name in pipeline_names:
                 pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+                try:
+                    job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
+                                                                      notifier_type_id=pipeline.operator.notifier_id)
+                    job_group_notifier_id = str(job_group_notifier.id)
+                except JobGroupNotifier.DoesNotExist:
+                    job_group_notifier_id = notifier_start(job_group, req)
+
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
-                operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id)
-                create_jobs_from_operator(operator, job_group_id)
+                operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
+                                                        job_group_notifier_id=job_group_notifier_id)
+                create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
 
