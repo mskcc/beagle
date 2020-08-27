@@ -282,7 +282,7 @@ class RunOperatorViewSet(GenericAPIView):
                 except Run.DoesNotExist:
                     req = 'Unknown'
 
-                notifier_start(job_group)
+                notifier_start(job_group, req)
             else:
                 try:
                     job_group = JobGroup.objects.get(id=job_group_id)
