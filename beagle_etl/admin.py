@@ -20,6 +20,7 @@ def restart(modeladmin, request, queryset):
 
 restart.short_description = "Restart"
 
+
 class RecipeFilter(SimpleListFilter):
     title = 'Recipe'
     parameter_name = 'recipe'
@@ -61,8 +62,9 @@ class JobAdmin(ModelAdmin):
 
     get_short_run.short_description = 'Run'
 
+
 class OperatorAdmin(ModelAdmin):
-    list_display = ('id', 'class_name', 'recipes', 'active')
+    list_display = ('id', 'slug', 'class_name', 'version', 'recipes', 'active')
 
 
 class AssayAdmin(ModelAdmin):

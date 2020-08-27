@@ -57,7 +57,8 @@ class Job(BaseModel):
 
 class Operator(models.Model):
     slug = models.CharField(max_length=100, default=False)
-    class_name = models.CharField(max_length=100)
+    class_name = models.CharField(max_length=150)
+    version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
     recipes = ArrayField(models.CharField(max_length=50, default=False))
 

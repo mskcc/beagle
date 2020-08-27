@@ -96,7 +96,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None):
+def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
     logger.info("Creating operator id %s for requestId: %s for job_group: %s" % (operator_id, request_id, job_group_id))
     operator_model = Operator.objects.get(id=operator_id)
 
@@ -110,8 +110,11 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
         except Exception as e:
             logger.error("Failed to instantiate Notifier: %s" % str(e))
 
-    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
-                                            job_group_notifier_id=job_group_notifier_id, request_id=request_id)
+    operator = OperatorFactory.get_by_model(operator_model,
+                                            job_group_id=job_group_id,
+                                            job_group_notifier_id=job_group_notifier_id,
+                                            request_id=request_id,
+                                            pipeline=pipeline)
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
@@ -147,31 +150,31 @@ def _generate_summary(req):
 
 
 def generate_description(job_group, job_group_notifier, request):
-    print("job_group_notifier")
-    print(job_group_notifier)
     files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
-    data = files.first().metadata
-    request_id = data['requestId']
-    recipe = data['recipe']
-    a_name = data['dataAnalystName']
-    a_email = data['dataAnalystEmail']
-    i_name = data['investigatorName']
-    i_email = data['investigatorEmail']
-    l_name = data['labHeadName']
-    l_email = data['labHeadEmail']
-    p_email = data['piEmail']
-    pm_name = data['projectManagerName']
-    num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
-    num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=Count("pk")))
-    num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-            'metadata__cmoSampleName').annotate(n=Count("pk")))
-    operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
-    send_notification.delay(operator_start_event)
+    if files:
+        data = files.first().metadata
+        request_id = data['requestId']
+        recipe = data['recipe']
+        a_name = data['dataAnalystName']
+        a_email = data['dataAnalystEmail']
+        i_name = data['investigatorName']
+        i_email = data['investigatorEmail']
+        l_name = data['labHeadName']
+        l_email = data['labHeadEmail']
+        p_email = data['piEmail']
+        pm_name = data['projectManagerName']
+        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
+        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
+                'metadata__cmoSampleName').annotate(n=Count("pk")))
+        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
+                'metadata__cmoSampleName').annotate(n=Count("pk")))
+        operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
+        send_notification.delay(operator_start_event)
 
 
 def generate_label(job_group_id, request):
-        files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    if files:
         data = files.first().metadata
         recipe = data['recipe']
         recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
