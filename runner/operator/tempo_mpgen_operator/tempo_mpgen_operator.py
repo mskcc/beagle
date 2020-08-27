@@ -24,7 +24,7 @@ from beagle import __version__
 from datetime import datetime
 from file_system.models import File
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
-
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
 notifier = JiraEventHandler()
 
 
@@ -97,7 +97,7 @@ class TempoMPGenOperator(Operator):
         if exclude_query:
             tempo_files = tempo_files.exclude(exclude_query)
         # replace with run operator logic, most recent pairing
-        pre_pairing = self.load_pairing_file('runner/operator/tempo_mpgen_operator/reference_jsons/megatron_pairing_file.tsv')
+        pre_pairing = self.load_pairing_file(os.path.join(WORKDIR,'reference_jsons/pairing.tsv')) # pairing.tsv is not in repo
         patient_ids = set()
         patient_files = dict()
         no_patient_samples = list()
