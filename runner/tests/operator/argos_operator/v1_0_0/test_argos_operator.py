@@ -10,13 +10,14 @@ from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from pprint import pprint
 
+
 class TestArgosOperator(TestCase):
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json",
-    "beagle_etl.operator.json",
-    "runner.pipeline.json",
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "beagle_etl.operator.json",
+        "runner.pipeline.json",
     ]
 
     def test_operator_factory_argos1(self):
@@ -65,8 +66,8 @@ class TestArgosOperator(TestCase):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
         call_command('loaddata', test_files_fixture, verbosity=0)
 
-        self.assertEqual(len(File.objects.all()), 4 )
-        self.assertEqual(len(FileMetadata.objects.all()), 4 )
+        self.assertEqual(len(File.objects.all()), 4)
+        self.assertEqual(len(FileMetadata.objects.all()), 4)
 
         # create some more fixtures
         file_instance = File.objects.create(
@@ -76,8 +77,8 @@ class TestArgosOperator(TestCase):
         )
         filemetadata_instance = FileMetadata.objects.create(file=file_instance)
 
-        self.assertEqual(len(File.objects.all()), 5 )
-        self.assertEqual(len(FileMetadata.objects.all()), 5 )
+        self.assertEqual(len(File.objects.all()), 5)
+        self.assertEqual(len(FileMetadata.objects.all()), 5)
 
         # create Argos operator
         request_id = "bar"
