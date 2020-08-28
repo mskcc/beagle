@@ -377,11 +377,11 @@ class AionViewSet(GenericAPIView):
             operator_model = Operator.objects.get(class_name="AionOperator")
             operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
                                                     job_group_notifier_id=job_group_notifier_id)
-            req = "Unknown"
+            heading = "Aion Run for %s" % lab_head_email
             job_group = JobGroup()
             job_group.save()
             job_group_id = str(job_group.id)
-            job_group_notifier_id = notifier_start(job_group, req, operator_model)
+            job_group_notifier_id = notifier_start(job_group, heading, operator_model)
             create_aion_job(operator, lab_head_email, job_group_id, job_group_notifier_id)
             body = {"details": "Aion Job submitted for %s" % lab_head_email}
         return Response(body, status=status.HTTP_202_ACCEPTED)
@@ -397,11 +397,11 @@ class TempoMPGenViewSet(GenericAPIView):
         tumors_override = request.data.get('tumors_override', [])
         operator_model = Operator.objects.get(slug="tempo_mpgen_operator")
         pairing_override=None
-        req = "Unknown"
+        heading = "TempoMPGen Run %s" % datetime.datetime.now().isoformat()
         job_group = JobGroup()
         job_group.save()
         job_group_id = str(job_group.id)
-        job_group_notifier_id = notifier_start(job_group, req, operator_model)
+        job_group_notifier_id = notifier_start(job_group, heading, operator_model)
         operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
                                                 job_group_notifier_id=job_group_notifier_id)
         if normals_override and tumors_override:
