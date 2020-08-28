@@ -38,7 +38,7 @@ class TestOperatorTriggers(TestCase):
         send_notification.return_value = None
         Run.objects.all().delete()
 
-        operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), version="v1.0.0", request_id="bar")
+        operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
         create_jobs_from_operator(operator, None)
         self.assertEqual(len(Run.objects.all()), 1)
         self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
