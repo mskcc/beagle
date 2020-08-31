@@ -174,6 +174,34 @@ class FileTest(APITestCase):
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
 
+    def test_patch_file_metadata(self):
+        _file = self._create_single_file('/path/to/sample_file.bam', 'bam', str(self.file_group.id), 'request_id', 'sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
+                                   {
+                                       "metadata": {
+                                           "requestId": "Request_001",
+                                       }
+                                   },
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['metadata']['requestId'], "Request_001")
+        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
+        self.assertEqual(file_metadata_count, 2)
+        response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
+                                     {
+                                         "metadata": {
+                                             "requestId": "Request_002",
+                                         }
+                                     },
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['metadata']['requestId'], "Request_002")
+        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
+        self.assertEqual(file_metadata_count, 3)
+
     def test_update_file_metadata_users_update(self):
         _file = self._create_single_file('/path/to/sample_file.bam',
                                          'bam',
