@@ -28,7 +28,7 @@ class TempoSample(Sample):
             self.specimen_type = self.metadata['specimenType'][0]
             self.sample_class = self.metadata['sampleClass'][0]
             self.cmo_sample_name = self.metadata['cmoSampleName'][0]
-            self.run_mode = self.metadata['runMode'][0]
+            self.run_mode = self.remapped_run_mode.pop()
             self.patient_id = self.metadata['patientId'][0]
 
     def _resolve_target(self, bait_set):
@@ -49,8 +49,26 @@ class TempoSample(Sample):
 
         If some predefined fields contain multiple, different values, set conflict to True
         If some information is missing, set conflict to True
+
+        Run modes get grouped by similarity in _map_run_modes()
         """
+        self._map_run_modes()
         self._find_conflict_fields()
+
+
+    def _map_run_modes():
+        run_modes = self.metadata['runMode']
+        self.remapped_run_mode = set()
+
+        for i in run_modes:
+            if 'novaseq' in i.lower():
+                self.remapped_run_mode.add("NovaSeq")
+            elif 'hiseq' in i.lower():
+                self.remapped_run_mode.add("HiSeq")
+            else:
+                self.remapped_run_mode.add(i)
+        if len(self.remapped_run_mode) > 1:
+            self.conflict = True
 
 
     def _find_conflict_fields(self):
@@ -64,7 +82,7 @@ class TempoSample(Sample):
         be runnable, as the fastqs are still paired in the Sample object
         """
         fields_to_check = [ 'patientId', 'specimenType',
-                'runMode', 'sampleClass', 'cmoSampleName' ]
+                    'sampleClass', 'cmoSampleName' ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
