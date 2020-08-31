@@ -56,7 +56,7 @@ class TempoSample(Sample):
         self._find_conflict_fields()
 
 
-    def _map_run_modes():
+    def _map_run_modes(self):
         run_modes = self.metadata['runMode']
         self.remapped_run_mode = set()
 
