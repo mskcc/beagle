@@ -114,6 +114,7 @@ class FileSerializer(serializers.ModelSerializer):
         model = FileMetadata
         fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'created_date', 'modified_date')
 
+
 class FileQuerySerializer(serializers.Serializer):
     file_group = serializers.ListField(
         child=serializers.UUIDField(),
@@ -243,10 +244,17 @@ class UpdateFileSerializer(serializers.Serializer):
         instance.size = validated_data.get('size', instance.size)
         instance.file_group_id = validated_data.get('file_group_id', instance.file_group_id)
         instance.file_type = validated_data.get('file_type', instance.file_type)
-        ddiff = DeepDiff(validated_data.get('metadata'),
-                         instance.filemetadata_set.order_by('-created_date').first().metadata, ignore_order=True)
-        if ddiff:
-            metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
+
+        if self.partial:
+            old_metadata = instance.filemetadata_set.order_by('-version').first().metadata
+            old_metadata.update(validated_data.get('metadata'))
+            metadata = FileMetadata(file=instance, metadata=old_metadata, user=user)
             metadata.save()
+        else:
+            ddiff = DeepDiff(validated_data.get('metadata'),
+                             instance.filemetadata_set.order_by('-created_date').first().metadata, ignore_order=True)
+            if ddiff:
+                metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
+                metadata.save()
         instance.save()
         return instance
