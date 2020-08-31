@@ -12,7 +12,6 @@ class Notifier(BaseModel):
     default = models.BooleanField(default=False)
     notifier_type = models.CharField(max_length=100, null=False)
     board = models.CharField(max_length=20, null=False)
-    operator = models.ForeignKey('beagle_etl.Operator', null=True, blank=True, on_delete=models.CASCADE)
 
 
 class JobGroup(BaseModel):

@@ -1,6 +1,6 @@
 import uuid
 from enum import IntEnum
-from notifier.models import JobGroup, JobGroupNotifier
+from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
@@ -57,9 +57,11 @@ class Job(BaseModel):
 
 class Operator(models.Model):
     slug = models.CharField(max_length=100, default=False)
-    class_name = models.CharField(max_length=100)
+    class_name = models.CharField(max_length=150)
+    version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
     recipes = ArrayField(models.CharField(max_length=50, default=False))
+    notifier = models.ForeignKey(Notifier, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return u"{}".format(self.slug)
