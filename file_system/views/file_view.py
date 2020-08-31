@@ -161,7 +161,8 @@ class FileView(mixins.CreateModelMixin,
             f = FileRepository.get(id=kwargs.get('pk'))
         except FileNotFoundException:
             return Response({'details': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = UpdateFileSerializer(f.file, data=request.data, context={'request': request})
+        serializer = UpdateFileSerializer(f.file, data=request.data, context={'request': request},
+                                          partial=request.method == 'PATCH')
         if serializer.is_valid():
             serializer.save()
             f = FileRepository.get(id=kwargs.get('pk'))
