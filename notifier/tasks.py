@@ -23,10 +23,12 @@ def event_handler(job_group_notifier):
 
 def notifier_start(job_group, request_id, operator=None):
     if settings.NOTIFIER_ACTIVE:
+        notifier = Notifier.objects.get(default=True)
         try:
-            notifier = Notifier.objects.get(operator_id=operator)
+            if operator:
+                notifier = Notifier.objects.filter(operator__id=operator.id).first()
         except Notifier.DoesNotExist:
-            notifier = Notifier.objects.get(default=True)
+            pass
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group,
                                                              notifier_type=notifier)
         eh = event_handler(job_group_notifier.id)

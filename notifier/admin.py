@@ -13,7 +13,7 @@ class JobGroupNotifierAdmin(admin.ModelAdmin):
 
 
 class NotifierAdmin(admin.ModelAdmin):
-    list_display = ('id', 'notifier_type', 'operator', 'default', 'created_date')
+    list_display = ('id', 'notifier_type', 'default', 'created_date')
 
 
 admin.site.register(JobGroup, JobGroupAdmin)

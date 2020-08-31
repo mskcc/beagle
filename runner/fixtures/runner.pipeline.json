@@ -10,7 +10,8 @@
             "version": "0.1.0",
             "entrypoint": "align_sort_bam.cwl",
             "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-            "output_directory": null
+            "output_directory": null,
+            "default": true
         }
     },
     {
@@ -24,7 +25,8 @@
             "version": "0.1.1",
             "entrypoint": "fastq_to_bam.cwl",
             "output_file_group": "d9015037-cd6b-4cb6-87a8-16d355482461",
-            "output_directory": "/work/pi/beagle/output/access_m1"
+            "output_directory": "/work/pi/beagle/output/access_m1",
+            "default": true
         }
     },
     {
@@ -39,7 +41,8 @@
             "entrypoint": "workflows/pair-workflow-sv.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
-            "operator": 1
+            "operator": 1,
+            "default": true
         }
     },
     {
@@ -53,7 +56,8 @@
             "version": "master",
             "entrypoint": "flatbush.cwl",
             "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-            "output_directory": "/juno/work/pi/beagle/output/flatbush"
+            "output_directory": "/juno/work/pi/beagle/output/flatbush",
+            "default": true
         }
     },
     {
@@ -68,7 +72,8 @@
             "entrypoint": "workflows/copy_outputs.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
-            "operator": 4
+            "operator": 4,
+            "default": true
         }
     }
 ]
