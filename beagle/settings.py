@@ -332,6 +332,7 @@ BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
+BEAGLE_SHARED_TMPDIR = os.environ.get('BEAGLE_SHARED_TMPDIR', '/juno/work/ci/temp')
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)

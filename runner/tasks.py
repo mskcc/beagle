@@ -23,6 +23,10 @@ logger = logging.getLogger(__name__)
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None):
     jobs = operator.get_jobs()
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+
+
+def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None):
     jg = None
     jgn = None
     try:
@@ -428,44 +432,11 @@ def run_routine_operator_job(operator, job_group_id=None):
     logger.info("Running single operator job; no pipeline runs submitted.")
 
 
-def create_aion_job(operator, lab_head_email):
+def create_aion_job(operator, lab_head_email, job_group_id=None, job_group_notifier_id=None):
     jobs = operator.get_jobs(lab_head_email)
-    jg = None
-    valid_jobs, invalid_jobs = [], []
-    for job in jobs:
-        valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
 
-    operator_run = OperatorRun.objects.create(operator=operator.model,
-                                              num_total_runs=len(valid_jobs),
-                                              job_group=jg)
-    run_ids = []
-    pipeline_id = None
 
-    try:
-        pipeline_id = operator.get_pipeline_id()
-        p = Pipeline.objects.get(id=pipeline_id)
-        pipeline_name = p.name
-        pipeline_link = p.pipeline_link
-    except Pipeline.DoesNotExist:
-        pipeline_name = ""
-        pipeline_link = ""
-
-    for job in valid_jobs:
-        logger.info("Creating Run object")
-        run = job[0].save(operator_run_id=operator_run.id)
-        logger.info("Run object created with id: %s" % str(run.id))
-        run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
-        output_directory = run.output_directory
-        if not pipeline_name and not pipeline_link:
-            logger.info("Run [ id: %s ] failed as the pipeline [ id: %s ] was not found", run.id, pipeline_id)
-            error_message = "Pipeline [ id: %s ] was not found.".format(pipeline_id)
-            fail_job(run.id, error_message)
-        else:
-            create_run_task.delay(str(run.id), job[1], output_directory)
-
-    for job in invalid_jobs:
-        # TODO: Report this to JIRA ticket also
-        logger.error("Job invalid: %s" % str(job[0].errors))
-
-    operator_run.status = RunStatus.RUNNING
-    operator_run.save()
+def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, job_group_notifier_id=None):
+    jobs = operator.get_jobs(pairing_override)
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
