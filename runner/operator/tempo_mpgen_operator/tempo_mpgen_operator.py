@@ -26,6 +26,7 @@ from datetime import datetime
 from file_system.models import File
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
+PAIRING_FILE_LOCATION = os.path.join(WORKDIR,'reference_jsons/pairing.tsv') # used for historical pairing
 logger = logging.getLogger(__name__)
 
 class TempoMPGenOperator(Operator):
@@ -98,7 +99,7 @@ class TempoMPGenOperator(Operator):
         if exclude_query:
             tempo_files = tempo_files.exclude(exclude_query)
         # replace with run operator logic, most recent pairing
-        pre_pairing = self.load_pairing_file(os.path.join(WORKDIR,'reference_jsons/pairing.tsv')) # pairing.tsv is not in repo
+        pre_pairing = self.load_pairing_file(PAIRING_FILE_LOCATION) # pairing.tsv is not in repo
         if pairing_override:
             normal_samples = pairing_override['normal_samples']
             tumor_samples = pairing_override['tumor_samples']
@@ -208,6 +209,17 @@ class TempoMPGenOperator(Operator):
         return { 'class': 'File', 'location': "juno://" + output }
 
 
+    def write_historical_pairing_file(self,pairing_file_str):
+        """
+        Writes file to temporary location, then registers it to the temp file group
+        Also uploads it to notifier if there is a job group id
+        """
+        output = PAIRING_FILE_LOCATION
+        with open(output, "w+") as fh:
+            fh.write(pairing_file_str)
+        os.chmod(output, 0o777)
+
+
     def register_tmp_file(self, path):
         fname = os.path.basename(path)
         temp_file_group = FileGroup.objects.get(slug="temp")
@@ -282,6 +294,7 @@ class TempoMPGenOperator(Operator):
         pairing_string = "NORMAL_ID\tTUMOR_ID\n"
         for patient_id in self.patients:
             pairing_string += self.patients[patient_id].create_pairing_string()
+        self.write_historical_pairing_file(pairing_string)
         return self.write_to_file('sample_pairing.txt', pairing_string)
 
 
