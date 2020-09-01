@@ -12,12 +12,13 @@ from runner.tasks import create_run_task, create_jobs_from_operator, run_routine
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
-    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer
+    RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
+    TempoMPGenOperatorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from runner.tasks import create_jobs_from_request, create_aion_job
+from runner.tasks import create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
 from file_system.repository import FileRepository
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import OperatorStartEvent, SetLabelEvent
@@ -374,8 +375,41 @@ class AionViewSet(GenericAPIView):
         lab_head_email = request.data.get('lab_head_email', [])
         if lab_head_email:
             operator_model = Operator.objects.get(class_name="AionOperator")
-            operator = OperatorFactory.get_by_model(operator_model)
-            create_aion_job(operator, lab_head_email)
-        body = {"details": "Aion Job submitted for %s" % lab_head_email}
+            operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
+                                                    job_group_notifier_id=job_group_notifier_id)
+            heading = "Aion Run for %s" % lab_head_email
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+            job_group_notifier_id = notifier_start(job_group, heading, operator_model)
+            create_aion_job(operator, lab_head_email, job_group_id, job_group_notifier_id)
+            body = {"details": "Aion Job submitted for %s" % lab_head_email}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
+
+class TempoMPGenViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = TempoMPGenOperatorSerializer
+
+    def post(self, request):
+        normals_override = request.data.get('normals_override', [])
+        tumors_override = request.data.get('tumors_override', [])
+        operator_model = Operator.objects.get(slug="tempo_mpgen_operator")
+        pairing_override=None
+        heading = "TempoMPGen Run %s" % datetime.datetime.now().isoformat()
+        job_group = JobGroup()
+        job_group.save()
+        job_group_id = str(job_group.id)
+        job_group_notifier_id = notifier_start(job_group, heading, operator_model)
+        operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
+                                                job_group_notifier_id=job_group_notifier_id)
+        if normals_override and tumors_override:
+            pairing_override = dict()
+            pairing_override['normal_samples'] = normals_override
+            pairing_override['tumor_samples'] = tumors_override
+            body = {"details": "Submitting TempoMPGen Job with pairing overrides."}
+        else:
+            body = {"details": "TempoMPGen Job submitted."}
+        create_tempo_mpgen_job(operator, pairing_override, job_group_id, job_group_notifier_id)
+        return Response(body, status=status.HTTP_202_ACCEPTED)
