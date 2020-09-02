@@ -128,7 +128,20 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
         sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
 
     specimen_type = 'Pooled Normal'
+
     num_of_pooled_normals = len(pooled_normals)
+
+    if "impact505" in bait_set.lower() and num_of_pooled_normals == 0:
+        preservations_lower_case = set([x.lower() for x in data])
+        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        q = query & Q(metadata__sampleName=sample_name)
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+        if not pooled_normals:
+            return None
+
+
     if num_of_pooled_normals > 0:
         for pooled_normal in pooled_normals:
             sample = dict()
