@@ -125,4 +125,4 @@ class RequestIdLimsPullSerializer(serializers.Serializer):
     request_ids = serializers.ListField(
         child=serializers.CharField(max_length=30)
     )
-
+    retry = serializers.BooleanField(default=False)

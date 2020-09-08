@@ -14,13 +14,14 @@ from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
-from runner.operator.helper import format_sample_name
+from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.lims_client import LIMSClient
+from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        job, message = create_request_job(request['request'])
+        job, message = create_request_job(request['request'], redelivery=True)
         if job:
             if job.status == JobStatus.CREATED:
                 children.add(str(job.id))
@@ -43,13 +44,13 @@ def fetch_new_requests_lims(timestamp):
     return list(children)
 
 
-def create_request_job(request_id):
+def create_request_job(request_id, redelivery=False):
     logger.info(
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     count = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
-    redelivery = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
+
     assays = ETLConfiguration.objects.first()
     if redelivery and not assays.redelivery:
         return None, "Redelivery Deactivated"
@@ -478,39 +479,24 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(name=file_type).first()
-        metadata = copy.deepcopy(data)
+        lims_metadata = copy.deepcopy(data)
         library_copy = copy.deepcopy(library)
-        sample_name = metadata.pop('cmoSampleName', None)
-        external_sample_name = metadata.pop('sampleName', None)
-        sample_id = metadata.pop('igoId', None)
-        patient_id = metadata.pop('cmoPatientId', None)
-        sample_class = metadata.pop('cmoSampleClass', None)
-        specimen_type = metadata.pop('specimenType', None)
-        metadata['specimenType'] = specimen_type
-        metadata['requestId'] = request_id
-        metadata['sampleName'] = sample_name
-        metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
-        metadata['externalSampleId'] = external_sample_name
-        metadata['sampleId'] = sample_id
-        metadata['patientId'] = patient_id
-        metadata['sampleClass'] = sample_class
-        metadata['R'] = r
-        metadata['igocomplete'] = igocomplete
-        metadata['sequencingCenter'] = 'MSKCC'
-        metadata['platform'] = 'Illumina'
-        metadata['libraryId'] = library_copy.pop('libraryIgoId', None)
+        lims_metadata['requestId'] = request_id
+        lims_metadata['igocomplete'] = igocomplete
+        lims_metadata['R'] = r
         for k, v in library_copy.items():
-            metadata[k] = v
+            lims_metadata[k] = v
         for k, v in run.items():
-            metadata[k] = v
+            lims_metadata[k] = v
         for k, v in request_metadata.items():
-            metadata[k] = v
+            lims_metadata[k] = v
+        metadata = format_metadata(lims_metadata)
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
-        logger.info(metadata)
+        logger.info(lims_metadata)
         # validator.validate(metadata)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
@@ -518,7 +504,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
     else:
         f = FileRepository.filter(path=path).first()
         if not f:
-            create_file_object(path, file_group_obj, metadata, file_type_obj)
+            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -543,16 +529,43 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                 raise FailedToFetchSampleException("File %s already exist with id %s" % (path, str(f.id)))
 
 
-def create_file_object(path, file_group, metadata, file_type):
+def format_metadata(original_metadata):
+    metadata = dict()
+    sample_name = original_metadata.pop('cmoSampleName', None)
+    external_sample_name = original_metadata.pop('sampleName', None)
+    sample_id = original_metadata.pop('igoId', None)
+    patient_id = original_metadata.pop('cmoPatientId', None)
+    sample_class = original_metadata.pop('cmoSampleClass', None)
+    specimen_type = original_metadata.pop('specimenType', None)
+    # ciTag is the new field which needs to be used for the operators
+    metadata['ciTag'] = format_sample_name(sample_name, specimen_type)
+    metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
+    metadata['specimenType'] = specimen_type
+    metadata['sampleName'] = sample_name
+    metadata['externalSampleId'] = external_sample_name
+    metadata['sampleId'] = sample_id
+    metadata['patientId'] = format_patient_id(patient_id)
+    metadata['sampleClass'] = sample_class
+    metadata['sequencingCenter'] = 'MSKCC'
+    metadata['platform'] = 'Illumina'
+    metadata['libraryId'] = original_metadata.pop('libraryIgoId', None)
+    for k, v in original_metadata.items():
+        metadata[k] = v
+    return metadata
+
+
+def create_file_object(path, file_group, lims_metadata, metadata, file_type):
     try:
         f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group,
                                 file_type=file_type)
         f.save()
+
         fm = FileMetadata(file=f, metadata=metadata)
         fm.save()
         Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
                            args={'file_id': str(f.id), 'path': path},
                            status=JobStatus.CREATED, max_retry=3, children=[])
+        import_metadata = ImportMetadata.objects.create(file=f, metadata=lims_metadata)
     except Exception as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
@@ -561,8 +574,13 @@ def create_file_object(path, file_group, metadata, file_type):
 def update_file_object(file_object, path, metadata):
     data = {
         "path": path,
-        "metadata": metadata
+        "metadata": metadata,
     }
+    try:
+        user = User.objects.get(username=settings.ETL_USER)
+        data['user'] = user.id
+    except User.DoesNotExist:
+        user = None
     serializer = UpdateFileSerializer(file_object, data=data)
     if serializer.is_valid():
         serializer.save()
