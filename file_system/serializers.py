@@ -219,6 +219,7 @@ class UpdateFileSerializer(serializers.Serializer):
     file_group_id = serializers.UUIDField(required=False)
     file_type = serializers.CharField(max_length=30, required=False)
     metadata = serializers.JSONField(required=False)
+    user = serializers.IntegerField(required=False)
 
     def validate_metadata(self, data):
         validator = MetadataValidator()
@@ -239,6 +240,11 @@ class UpdateFileSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
+        if not user:
+            try:
+                user = User.objects.get(id=validated_data.get('user'))
+            except User.DoesNotExist:
+                pass
         instance.path = validated_data.get('path', instance.path)
         instance.file_name = os.path.basename(instance.path)
         instance.size = validated_data.get('size', instance.size)
