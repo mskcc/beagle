@@ -9,7 +9,10 @@ def add_import_metadata(apps, schema_editor):
     FileGroup = apps.get_model('file_system', 'FileGroup')
     ImportMetadata = apps.get_model('file_system', 'ImportMetadata')
 
-    fg = FileGroup.objects.get(name="LIMS")
+    try:
+        fg = FileGroup.objects.get(name="LIMS")
+    except FileGroup.DoesNotExist:
+        return
     metadatas = FileMetadata.objects.filter(file__file_group=fg, version=0)
 
     for m in metadatas:
