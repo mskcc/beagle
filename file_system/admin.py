@@ -21,7 +21,7 @@ class FileMetadataAdmin(admin.ModelAdmin):
 
 class ImportMetadataAdmin(admin.ModelAdmin):
     list_display = ('file',)
-    search_fields = ('id',)
+    search_fields = ('file__id',)
 
 
 admin.site.register(File, FileAdmin)
