@@ -531,12 +531,13 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
 
 def format_metadata(original_metadata):
     metadata = dict()
-    sample_name = original_metadata.pop('cmoSampleName', None)
-    external_sample_name = original_metadata.pop('sampleName', None)
-    sample_id = original_metadata.pop('igoId', None)
-    patient_id = original_metadata.pop('cmoPatientId', None)
-    sample_class = original_metadata.pop('cmoSampleClass', None)
-    specimen_type = original_metadata.pop('specimenType', None)
+    original_metadata_copy = copy.deepcopy(original_metadata)
+    sample_name = original_metadata_copy.pop('cmoSampleName', None)
+    external_sample_name = original_metadata_copy.pop('sampleName', None)
+    sample_id = original_metadata_copy.pop('igoId', None)
+    patient_id = original_metadata_copy.pop('cmoPatientId', None)
+    sample_class = original_metadata_copy.pop('cmoSampleClass', None)
+    specimen_type = original_metadata_copy.pop('specimenType', None)
     # ciTag is the new field which needs to be used for the operators
     metadata['ciTag'] = format_sample_name(sample_name, specimen_type)
     metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
@@ -548,8 +549,8 @@ def format_metadata(original_metadata):
     metadata['sampleClass'] = sample_class
     metadata['sequencingCenter'] = 'MSKCC'
     metadata['platform'] = 'Illumina'
-    metadata['libraryId'] = original_metadata.pop('libraryIgoId', None)
-    for k, v in original_metadata.items():
+    metadata['libraryId'] = original_metadata_copy.pop('libraryIgoId', None)
+    for k, v in original_metadata_copy.items():
         metadata[k] = v
     return metadata
 
