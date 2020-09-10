@@ -42,9 +42,6 @@ class HelixFiltersOperator(Operator):
         tags = { "project_prefix": project_prefix, "argos_run_ids": argos_run_ids,
                 "labHeadEmail": lab_head_email }
 
-        #TODO:  Remove purity facets seg files from facets_hisens_seg_files
-        input_json['facets_hisens_seg_files'] = self.remove_purity_files(input_json['facets_hisens_seg_files'])
-
         helix_filters_outputs_job_data = {
             'app': app,
             'inputs': input_json,
@@ -90,16 +87,3 @@ class HelixFiltersOperator(Operator):
         json_data['cbio_segment_data_filename'] = project_prefix + "_data_cna_hg19.seg"
         json_data['cbio_meta_cna_segments_filename'] = project_prefix + "_meta_cna_hg19_seg.txt"
         return json_data
-
-    def remove_purity_files(self, data):
-        """
-        Currently all seg files are in one array output; need to remove the _purity.seg files
-        from input_json['facets_hisens_seg_files']
-        """
-        new_data = list()
-        for i in data:
-            location = i['location']
-            if '_purity.seg' not in location:
-                new_data.append(i)
-        return new_data
-
