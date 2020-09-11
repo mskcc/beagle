@@ -153,9 +153,9 @@ def construct_helix_filters_input(argos_run_id_list):
                 input_json[name] = single_port.value
             if name == "assay":
                 if "impact" in single_port.value.lower():
-                    input_json["is_impact"] = "True"
+                    input_json["is_impact"] = True
                 else:
-                    input_json["is_impact"] = "False"
+                    input_json["is_impact"] = False
                 input_json['assay'] = single_port.value
         pairs.append(pair_info)
 
