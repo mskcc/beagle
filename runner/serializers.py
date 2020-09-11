@@ -55,6 +55,12 @@ class RunApiListSerializer(serializers.Serializer):
         required=False
     )
 
+    run_ids = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+
     values_run = serializers.ListField(
         child=serializers.CharField(),
         allow_empty=True,
