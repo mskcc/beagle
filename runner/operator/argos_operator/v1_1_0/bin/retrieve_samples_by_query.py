@@ -107,29 +107,38 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    # 'descriptor' should be the same as bait set, but it's labeled
-    # descriptor because in pooled normals it's called 'recipe'
-    # TODO: change pooled normal field value 'recipe' -> bait_set/baitSet
     descriptor = get_descriptor(bait_set, pooled_normals)
 
-    if not descriptor: # i.e., no pooled normal
+    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+
+        # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
+        # in preservation_types
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+        run_ids_suffix = "_".join(run_ids_suffix_list)
+        sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
+    elif "impact505" in bait_set.lower():
+        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        q = query & Q(metadata__sampleName=sample_name)
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+        if not pooled_normals:
+            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+            return None
+    else:
         return None
 
-    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+    specimen_type = 'Pooled Normal'
+
     sample_files = list()
 
-    # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
-    # in preservation_types
-    preservations_lower_case = set([x.lower() for x in preservation_types])
-    run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
-    run_ids_suffix = "_".join(run_ids_suffix_list)
-    sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
-    if "ffpe" in preservations_lower_case:
-        sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
-
-    specimen_type = 'Pooled Normal'
-    num_of_pooled_normals = len(pooled_normals)
-    if num_of_pooled_normals > 0:
+    if len(pooled_normals) > 0:
         for pooled_normal in pooled_normals:
             sample = dict()
             sample['id'] = pooled_normal.file.id
