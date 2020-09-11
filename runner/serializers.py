@@ -76,6 +76,7 @@ class RunApiListSerializer(serializers.Serializer):
     )
 
     full = serializers.BooleanField(required=False)
+    count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
