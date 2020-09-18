@@ -19,13 +19,12 @@ from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
-from file_system.repository import FileRepository
 from notifier.models import JobGroup, JobGroupNotifier
-from notifier.events import OperatorStartEvent, SetLabelEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
+from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -146,20 +145,25 @@ class RunApiViewSet(mixins.ListModelMixin,
         if serializer.is_valid():
             run = serializer.save()
             response = RunSerializerFull(run)
-            # cwl_resolver = CWLResolver(run.app.github, run.app.entrypoint, run.app.version)
-            # resolved_dict = cwl_resolver.resolve()
-            # task = runner.run.run_creator.Run(resolved_dict, request.data['inputs'])
-            # for input in task.inputs:
-            #     port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-            #                 secondary_files=input.secondary_files, db_value=request.data['inputs'][input.id], value=input.value)
-            #     port.save()
-            # for output in task.outputs:
-            #     port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
-            #                 secondary_files=output.secondary_files, db_value=output.value)
-            #     port.save()
             create_run_task.delay(response.data['id'], request.data['inputs'])
+            job_group_notifier_id = str(run.job_group_notifier_id)
+            self._send_notifications(job_group_notifier_id, run)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def _send_notifications(self, job_group_notifier_id, run):
+        pipeline_name = run.app.name
+        pipeline_version = run.app.version
+        pipeline_link = run.app.pipeline_link
+
+        pipeline_description_event = AddPipelineToDescriptionEvent(job_group_notifier_id, pipeline_name,
+                                                                   pipeline_version,
+                                                                   pipeline_link).to_dict()
+        send_notification.delay(pipeline_description_event)
+
+        run_event = RunStartedEvent(job_group_notifier_id, str(run.id), run.app.name, run.app.pipeline_link,
+                                    run.output_directory, run.tags).to_dict()
+        send_notification.delay(run_event)
 
 
 class OperatorViewSet(GenericAPIView):
