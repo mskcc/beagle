@@ -8,11 +8,39 @@ from beagle_etl.jobs import TYPES
 from file_system.metadata.validator import MetadataValidator
 from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
+from drf_yasg import openapi
 
 
 def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
+class PatchFile(serializers.JSONField):
+
+    class Meta:
+        swagger_schema_fields = {
+            "type": openapi.TYPE_OBJECT,
+            "title": "PatchFile",
+            "properties": {
+                "patch": openapi.Schema(
+                    title="patch",
+                    type=openapi.TYPE_OBJECT,
+                ),
+                "id": openapi.Schema(
+                    title="id",
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_UUID
+                )
+            },
+            "required":["patch", "id"]
+         }
+
+class BatchPatchFileSerializer(serializers.Serializer):
+    patch_files = serializers.ListField(
+        child=PatchFile(required=True),
+        allow_empty=False,
+        required=True
+    )
 
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
