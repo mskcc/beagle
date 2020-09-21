@@ -55,6 +55,12 @@ class RunApiListSerializer(serializers.Serializer):
         required=False
     )
 
+    run_ids = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+
     values_run = serializers.ListField(
         child=serializers.CharField(),
         allow_empty=True,
@@ -70,6 +76,7 @@ class RunApiListSerializer(serializers.Serializer):
     )
 
     full = serializers.BooleanField(required=False)
+    count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
