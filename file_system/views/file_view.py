@@ -1,6 +1,7 @@
 import uuid
 from distutils.util import strtobool
 from django.db.models import Prefetch, Count
+from django.db import transaction, IntegrityError
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,10 +11,11 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
-from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer
+from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer, BatchPatchFileSerializer
 from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
+from rest_framework.generics import GenericAPIView
 
 class FileView(mixins.CreateModelMixin,
                mixins.DestroyModelMixin,
@@ -197,3 +199,44 @@ class FileView(mixins.CreateModelMixin,
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
+class BatchPatchFiles(GenericAPIView):
+
+    queryset = FileMetadata.objects.order_by('file', '-version').distinct('file')
+    serializer_class = BatchPatchFileSerializer
+
+    def post(self, request):
+        patch_files = request.data.get('patch_files', [])
+        sid = transaction.savepoint()
+        current_file_id = None
+        current_file_data = None
+        file_count = len(patch_files)
+        try:
+            for single_file_patch in patch_files:
+                current_file_id = single_file_patch['id']
+                current_file_data = single_file_patch['patch']
+                f = FileRepository.get(id=current_file_id)
+                serializer = UpdateFileSerializer(f.file, data=current_file_data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    transaction.savepoint_rollback(sid)
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            transaction.savepoint_commit(sid)
+        except FileNotFoundException:
+            transaction.savepoint_rollback(sid)
+            error_message = 'File {} not found'.format(current_file_id)
+            return Response({'details': error_message}, status=status.HTTP_404_NOT_FOUND)
+        except IntegrityError:
+            transaction.savepoint_rollback(sid)
+            error_message = 'Integrity error'
+            return Response({'details':error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            transaction.savepoint_rollback(sid)
+            error_message = 'An unexpected error occured: '+repr(e)
+            return Response({'details':error_message}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+        success_message = 'Successfully updated {} files'.format(file_count)
+        return Response(success_message, status=status.HTTP_200_OK)

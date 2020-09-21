@@ -202,6 +202,107 @@ class FileTest(APITestCase):
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 3)
 
+    def test_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": first_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": second_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        first_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(first_file.id)).first()
+        second_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(second_file.id)).first()
+        self.assertEqual(first_file_metadata.metadata['requestId'], "Request_001")
+        self.assertEqual(second_file_metadata.metadata['requestId'], "Request_002")
+
+    def test_fail_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_partial_fail_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": first_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        first_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(first_file.id)).first()
+        second_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(second_file.id)).first()
+        self.assertEqual(first_file_metadata.metadata['requestId'], "first_request_id")
+        self.assertEqual(second_file_metadata.metadata['requestId'], "second_request_id")
+
     def test_update_file_metadata_users_update(self):
         _file = self._create_single_file('/path/to/sample_file.bam',
                                          'bam',
