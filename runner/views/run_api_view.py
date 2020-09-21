@@ -51,7 +51,7 @@ class RunApiViewSet(mixins.ListModelMixin,
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','apps','run','values_run','ports']
+        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','run_ids','apps','run','values_run','ports']
         fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
@@ -59,6 +59,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             queryset = time_filter(Run, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_groups = fixed_query_params.get('job_groups')
             jira_ids = fixed_query_params.get('jira_ids')
+            run_ids = fixed_query_params.get('run_ids')
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
@@ -75,6 +76,8 @@ class RunApiViewSet(mixins.ListModelMixin,
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
                 queryset = queryset.filter(job_group__jira_id__in=jira_ids)
+            if run_ids:
+                queryset = queryset.filter(id__in=run_ids)
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
