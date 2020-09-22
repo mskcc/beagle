@@ -325,6 +325,7 @@ class OperatorErrorViewSet(mixins.ListModelMixin,
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
 
+
 class CWLJsonViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
     serializer_class = CWLJsonSerializer

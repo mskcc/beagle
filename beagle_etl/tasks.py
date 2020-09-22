@@ -38,6 +38,22 @@ def fetch_requests_lims():
 
 
 @shared_task
+def check_missing_requests():
+    """
+    Method implemented because some requests on LIMS can show up with the date from the past
+    """
+    logger.info("Check for missing requests")
+    timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=12)).timestamp()) * 1000
+
+    job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims',
+              args={'timestamp': timestamp, 'redelivery': False},
+              status=JobStatus.CREATED,
+              max_retry=3, children=[])
+    job.save()
+    logger.info("Fetching fetch_new_requests_lims job created")
+
+
+@shared_task
 def job_processor(job_id):
     logger.info("Creating job: %s" % str(job_id))
     job = JobObject(job_id)
