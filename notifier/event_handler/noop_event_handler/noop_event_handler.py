@@ -31,6 +31,9 @@ class NoOpEventHandler(EventHandler):
     def process_run_completed(self, event):
         pass
 
+    def process_run_started_event(self, event):
+        pass
+
     def process_operator_request_event(self, event):
         pass
 
