@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 logger = logging.getLogger(__name__)
 
 
-def fetch_new_requests_lims(timestamp):
+def fetch_new_requests_lims(timestamp, redelivery=True):
     logger.info("Fetching requestIds")
     children = set()
     request_ids = LIMSClient.get_deliveries(timestamp)
@@ -35,7 +35,7 @@ def fetch_new_requests_lims(timestamp):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        job, message = create_request_job(request['request'], redelivery=True)
+        job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
                 children.add(str(job.id))
@@ -50,10 +50,12 @@ def create_request_job(request_id, redelivery=False):
     count = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
                                status__in=[JobStatus.CREATED, JobStatus.IN_PROGRESS,
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
+    request_redelivered = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
 
     assays = ETLConfiguration.objects.first()
-    if redelivery and not assays.redelivery:
-        return None, "Redelivery Deactivated"
+
+    if request_redelivered and not (assays.redelivery and redelivery):
+        return None, "Request is redelivered, but redelivery deactivated"
 
     if count == 0:
         job_group = JobGroup()
