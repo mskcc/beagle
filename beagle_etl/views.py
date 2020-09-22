@@ -171,9 +171,10 @@ class RequestIdLimsPullViewSet(GenericAPIView):
 
     def post(self, request):
         request_ids = request.data['request_ids']
+        redelivery = request.data['redelivery']
         created_jobs = []
         for request_id in request_ids:
-            job = create_request_job(request_id)
+            job = create_request_job(request_id, redelivery)
             created_jobs.append(job)
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)

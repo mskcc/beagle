@@ -37,6 +37,11 @@ app.conf.beat_schedule = {
         "schedule": 900.0,
         "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
     },
+    "check_missing_requests": {
+        "task": "beagle_etl.tasks.check_missing_requests",
+        "schedule": 22800.0,
+        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
+    },
     "scheduler_tick": {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0,

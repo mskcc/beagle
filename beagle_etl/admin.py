@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
 from .models import Job, JobStatus, Operator, ETLConfiguration
-from lib.admin import pretty_python_exception, pretty_json
+from lib.admin import pretty_json
 
 
 def restart(modeladmin, request, queryset):
