@@ -299,7 +299,13 @@ class APIRunCreateSerializer(serializers.Serializer):
         try:
             run.job_group_notifier = JobGroupNotifier.objects.get(id=validated_data.get('job_group_notifier_id'))
         except JobGroupNotifier.DoesNotExist:
-            print("[JobGroupNotifier] %s" % validated_data.get('job_group_notifier_id'))
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
+        # Try to find JobGroupNotifier using app and job_group_id
+        try:
+            run.job_group_notifier = JobGroupNotifier.objects.get(job_group_id=validated_data.get('job_group_id'),
+                                                                  notifier_type_id=run.app.operator.notifier_id)
+        except JobGroupNotifier.DoesNotExist:
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
         run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run
