@@ -232,8 +232,12 @@ class ArgosOperator(Operator):
         unformatted_s = list()
         unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
         for sample in error_samples:
-            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
-            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
+            sample_name = sample.get('SM', "missingSampleName")
+            sample_id = sample.get('sample_id', 'missingSampleId')
+            patient_id = sample.get('patient_id', 'missingPatientId')
+            specimen_type = sample.get('specimen_type', 'missingSpecimenType')
+            s.append("| " + sample_id + " | " + sample_name + " |" + patient_id + " |" + specimen_type + " |")
+            unformatted_s.append(sample_id  + "\t" + sample_name + "\t" + patient_id + "\t" + specimen_type + "\n")
 
         msg = """
         Number of samples with error: {number_of_errors}
