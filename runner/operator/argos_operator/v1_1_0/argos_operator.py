@@ -16,15 +16,21 @@ from .bin.make_sample import format_sample_name
 
 class ArgosOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
-                                                'igocomplete': True})
+
         argos_jobs = list()
 
-        cnt_tumors = FileRepository.filter(queryset=self.files,
-                                           metadata={'requestId': self.request_id,
-                                                     'tumorOrNormal': 'Tumor',
-                                                     'igocomplete': True}).count()
+        if self.request_id:
+            files = FileRepository.filter(queryset=self.files,
+                                          metadata={'requestId': self.request_id,
+                                                    'igocomplete': True})
+
+            cnt_tumors = FileRepository.filter(queryset=self.files,
+                                               metadata={'requestId': self.request_id,
+                                                         'tumorOrNormal': 'Tumor',
+                                                         'igocomplete': True}).count()
+        elif self.pairing:
+            files, cnt_tumors = self.get_files_for_pairs()
+
         if cnt_tumors == 0:
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
             send_notification.delay(cant_do)
@@ -54,7 +60,7 @@ class ArgosOperator(Operator):
         for igo_id in igo_id_group:
             samples.append(build_sample(igo_id_group[igo_id]))
 
-        argos_inputs, error_samples = construct_argos_jobs(samples)
+        argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
 
         sample_pairing = ""
@@ -179,6 +185,32 @@ class ArgosOperator(Operator):
         self.summarize_pairing_info(argos_inputs)
 
         return argos_jobs
+
+    def get_files_for_pairs(self):
+        all_files = []
+        cnt_tumors = 0
+        for pair in self.pairing.get('pairs'):
+            tumors = FileRepository.filter(queryset=self.files,
+                                           metadata={'cmoSampleName': pair['tumor'],
+                                                     'igocomplete': True})
+            cnt_tumors += len(tumors)
+            normals = FileRepository.filter(queryset=self.files,
+                                            metadata={'cmoSampleName': pair['normal'],
+                                                      'igocomplete': True})
+            all_files.extend(list(tumors))
+            all_files.extend(list(normals))
+
+        data = list()
+
+        for f in all_files:
+            sample = dict()
+            sample['id'] = f.file.id
+            sample['path'] = f.file.path
+            sample['file_name'] = f.file.file_name
+            sample['metadata'] = f.metadata
+            data.append(sample)
+
+        return all_files, cnt_tumors
 
     def summarize_pairing_info(self, argos_inputs):
         num_pairs = len(argos_inputs)

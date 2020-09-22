@@ -341,6 +341,15 @@ class RunIdsOperatorSerializer(serializers.Serializer):
     for_each = serializers.BooleanField(default=False)
 
 
+class PairOperatorSerializer(serializers.Serializer):
+    pairs = serializers.JSONField()
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    name = serializers.CharField(allow_blank=False, allow_null=False)
+    job_group_id = serializers.UUIDField(required=False)
+
+
 class OperatorErrorSerializer(serializers.ModelSerializer):
 
     class Meta:
