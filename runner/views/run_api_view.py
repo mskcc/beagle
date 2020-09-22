@@ -13,7 +13,7 @@ from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operat
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
-    TempoMPGenOperatorSerializer
+    TempoMPGenOperatorSerializer, PairOperatorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
@@ -304,7 +304,7 @@ class RunOperatorViewSet(GenericAPIView):
                                                                       notifier_type_id=pipeline.operator.notifier_id)
                     job_group_notifier_id = str(job_group_notifier.id)
                 except JobGroupNotifier.DoesNotExist:
-                    job_group_notifier_id = notifier_start(job_group, req)
+                    job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
@@ -315,6 +315,40 @@ class RunOperatorViewSet(GenericAPIView):
 
         body = {"details": "Operator Job submitted to pipelines %s, job group id %s,  with runs %s" % (
             pipeline_names, job_group_id, str(run_ids))}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class PairsOperatorViewSet(GenericAPIView):
+    serializer_class = PairOperatorSerializer
+
+    def post(self, request):
+        pairs = request.data.get('pairs')
+        pipeline_names = request.data.get('pipelines')
+        name = request.data.get('name')
+        job_group_id = request.data.get('job_group_id', None)
+
+        if not job_group_id:
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+
+        for pipeline_name in pipeline_names:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+
+            try:
+                job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
+                                                                  notifier_type_id=pipeline.operator.notifier_id)
+                job_group_notifier_id = str(job_group_notifier.id)
+            except JobGroupNotifier.DoesNotExist:
+                job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator)
+
+            operator_model = Operator.objects.get(id=pipeline.operator_id)
+            operator = OperatorFactory.get_by_model(operator_model, pairing={'pairs': pairs}, job_group_id=job_group_id,
+                                                    job_group_notifier_id=job_group_notifier_id)
+            create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
+
+        body = {"details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s" % (
+            pipeline_names, job_group_id, str(pairs))}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
 
