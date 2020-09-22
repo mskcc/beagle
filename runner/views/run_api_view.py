@@ -336,7 +336,7 @@ class PairsOperatorViewSet(GenericAPIView):
                 job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator)
 
             operator_model = Operator.objects.get(id=pipeline.operator_id)
-            operator = OperatorFactory.get_by_model(operator_model, pairing=pairs, job_group_id=job_group_id,
+            operator = OperatorFactory.get_by_model(operator_model, pairing={'pairs': pairs}, job_group_id=job_group_id,
                                                     job_group_notifier_id=job_group_notifier_id)
             create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
 
