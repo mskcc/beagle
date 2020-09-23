@@ -40,6 +40,10 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
         return sample_name
 
 
+def format_patient_id(patient_id):
+    return patient_id
+
+
 def generate_sample_data_content(request_ids):
     # TODO: Move this method to some better place
     result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"

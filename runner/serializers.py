@@ -55,6 +55,12 @@ class RunApiListSerializer(serializers.Serializer):
         required=False
     )
 
+    run_ids = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+
     values_run = serializers.ListField(
         child=serializers.CharField(),
         allow_empty=True,
@@ -70,6 +76,7 @@ class RunApiListSerializer(serializers.Serializer):
     )
 
     full = serializers.BooleanField(required=False)
+    count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
@@ -292,7 +299,13 @@ class APIRunCreateSerializer(serializers.Serializer):
         try:
             run.job_group_notifier = JobGroupNotifier.objects.get(id=validated_data.get('job_group_notifier_id'))
         except JobGroupNotifier.DoesNotExist:
-            print("[JobGroupNotifier] %s" % validated_data.get('job_group_notifier_id'))
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
+        # Try to find JobGroupNotifier using app and job_group_id
+        try:
+            run.job_group_notifier = JobGroupNotifier.objects.get(job_group_id=validated_data.get('job_group_id'),
+                                                                  notifier_type_id=run.app.operator.notifier_id)
+        except JobGroupNotifier.DoesNotExist:
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
         run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run
@@ -326,6 +339,15 @@ class RunIdsOperatorSerializer(serializers.Serializer):
     )
     job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(default=False)
+
+
+class PairOperatorSerializer(serializers.Serializer):
+    pairs = serializers.JSONField()
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    name = serializers.CharField(allow_blank=False, allow_null=False)
+    job_group_id = serializers.UUIDField(required=False)
 
 
 class OperatorErrorSerializer(serializers.ModelSerializer):

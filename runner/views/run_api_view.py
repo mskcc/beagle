@@ -13,19 +13,18 @@ from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operat
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
-    TempoMPGenOperatorSerializer
+    TempoMPGenOperatorSerializer, PairOperatorSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
-from file_system.repository import FileRepository
 from notifier.models import JobGroup, JobGroupNotifier
-from notifier.events import OperatorStartEvent, SetLabelEvent
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
+from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 
 
 class RunApiViewSet(mixins.ListModelMixin,
@@ -51,7 +50,7 @@ class RunApiViewSet(mixins.ListModelMixin,
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','apps','run','values_run','ports']
+        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','run_ids','apps','run','values_run','ports']
         fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
@@ -59,6 +58,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             queryset = time_filter(Run, request.query_params,time_modal='modified_date', previous_queryset=queryset)
             job_groups = fixed_query_params.get('job_groups')
             jira_ids = fixed_query_params.get('jira_ids')
+            run_ids = fixed_query_params.get('run_ids')
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
@@ -75,6 +75,8 @@ class RunApiViewSet(mixins.ListModelMixin,
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
                 queryset = queryset.filter(job_group__jira_id__in=jira_ids)
+            if run_ids:
+                queryset = queryset.filter(id__in=run_ids)
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
@@ -146,20 +148,25 @@ class RunApiViewSet(mixins.ListModelMixin,
         if serializer.is_valid():
             run = serializer.save()
             response = RunSerializerFull(run)
-            # cwl_resolver = CWLResolver(run.app.github, run.app.entrypoint, run.app.version)
-            # resolved_dict = cwl_resolver.resolve()
-            # task = runner.run.run_creator.Run(resolved_dict, request.data['inputs'])
-            # for input in task.inputs:
-            #     port = Port(run=run, name=input.id, port_type=input.type, schema=input.schema,
-            #                 secondary_files=input.secondary_files, db_value=request.data['inputs'][input.id], value=input.value)
-            #     port.save()
-            # for output in task.outputs:
-            #     port = Port(run=run, name=output.id, port_type=output.type, schema=output.schema,
-            #                 secondary_files=output.secondary_files, db_value=output.value)
-            #     port.save()
             create_run_task.delay(response.data['id'], request.data['inputs'])
+            job_group_notifier_id = str(run.job_group_notifier_id)
+            self._send_notifications(job_group_notifier_id, run)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def _send_notifications(self, job_group_notifier_id, run):
+        pipeline_name = run.app.name
+        pipeline_version = run.app.version
+        pipeline_link = run.app.pipeline_link
+
+        pipeline_description_event = AddPipelineToDescriptionEvent(job_group_notifier_id, pipeline_name,
+                                                                   pipeline_version,
+                                                                   pipeline_link).to_dict()
+        send_notification.delay(pipeline_description_event)
+
+        run_event = RunStartedEvent(job_group_notifier_id, str(run.id), run.app.name, run.app.pipeline_link,
+                                    run.output_directory, run.tags).to_dict()
+        send_notification.delay(run_event)
 
 
 class OperatorViewSet(GenericAPIView):
@@ -297,7 +304,7 @@ class RunOperatorViewSet(GenericAPIView):
                                                                       notifier_type_id=pipeline.operator.notifier_id)
                     job_group_notifier_id = str(job_group_notifier.id)
                 except JobGroupNotifier.DoesNotExist:
-                    job_group_notifier_id = notifier_start(job_group, req)
+                    job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
@@ -311,12 +318,47 @@ class RunOperatorViewSet(GenericAPIView):
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
 
+class PairsOperatorViewSet(GenericAPIView):
+    serializer_class = PairOperatorSerializer
+
+    def post(self, request):
+        pairs = request.data.get('pairs')
+        pipeline_names = request.data.get('pipelines')
+        name = request.data.get('name')
+        job_group_id = request.data.get('job_group_id', None)
+
+        if not job_group_id:
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+
+        for pipeline_name in pipeline_names:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+
+            try:
+                job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
+                                                                  notifier_type_id=pipeline.operator.notifier_id)
+                job_group_notifier_id = str(job_group_notifier.id)
+            except JobGroupNotifier.DoesNotExist:
+                job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator)
+
+            operator_model = Operator.objects.get(id=pipeline.operator_id)
+            operator = OperatorFactory.get_by_model(operator_model, pairing={'pairs': pairs}, job_group_id=job_group_id,
+                                                    job_group_notifier_id=job_group_notifier_id)
+            create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
+
+        body = {"details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s" % (
+            pipeline_names, job_group_id, str(pairs))}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
 class OperatorErrorViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
                            mixins.RetrieveModelMixin,
                            GenericViewSet):
     serializer_class = OperatorErrorSerializer
     queryset = OperatorErrors.objects.order_by('-created_date').all()
+
 
 class CWLJsonViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
