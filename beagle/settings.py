@@ -277,6 +277,7 @@ CELERY_EVENT_QUEUE_PREFIX = os.environ.get('BEAGLE_CELERY_QUEUE_PREFIX', 'beagle
 
 LIMS_USERNAME = os.environ.get('BEAGLE_LIMS_USERNAME')
 LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
+ETL_USER = os.environ.get('BEAGLE_ETL_USER')
 
 LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 

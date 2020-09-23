@@ -85,6 +85,11 @@ class File(BaseModel):
         super(File, self).save(*args, **kwargs)
 
 
+class ImportMetadata(BaseModel):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    metadata = JSONField(default=dict)
+
+
 class FileMetadata(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     version = models.IntegerField()
