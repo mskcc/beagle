@@ -123,6 +123,11 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         send_notification.delay(disabled_assay_event)
         return []
 
+    if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
+        Job.objects.filter(job_group=job_group).values("status")]):
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(ci_review_e)
+
     operators = Operator.objects.filter(recipes__overlap=recipes)
 
     if not operators:
