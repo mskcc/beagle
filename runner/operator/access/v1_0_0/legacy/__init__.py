@@ -47,9 +47,66 @@ in source or exist with an empty value.
 def get_missing_fields(source, fields):
     return filter(lambda field: field not in source or not source[field], fields)
 
+# In standard order
+TITLE_FILE_COLUMNS = [
+    'Barcode'
+    'Pool'
+    'Sample'
+    'Collab_ID'
+    'Patient_ID'
+    'Class'
+    'Sample_type'
+    'Input_ng'
+    'Library_yield'
+    'Pool_input'
+    'Bait_version'
+    'Sex'
+    'Barcode_index_1'
+    'Barcode_index_2'
+    'Lane'
+    'Study_ID'
+]
 
-def construct_title_file(samples):
-    return "path_to_title_file"
+def generate_title_file_content(samples):
+    title_file_content = '\t'.join(TITLE_FILE_COLUMNS) + '\n'
+    for sample in samples:
+        metadata = sample.metadata
+        libraries = metadata['libraries']
+
+        # Todo: using first library for now
+        l = libraries[0]
+
+        pool_info = ';'.join([str(l['captureName']) for l in libraries])
+        if l['libraryVolume'] and l['libraryConcentrationNgul']:
+            library_yield = l['libraryVolume'] * l['libraryConcentrationNgul']
+        else:
+            library_yield = '-'
+
+        title_file_content += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+            libraries[0]['barcodeId'] if libraries[0]['barcodeId'] else '-',
+            pool_info,
+            metadata['cmoSampleName'],
+            metadata['investigatorSampleId'],
+            metadata['patientId'], # todo: should be cmoPatientId?
+            metadata['tumorOrNormal'],
+            metadata['sampleOrigin'],
+            l['dnaInputNg'] if l['dnaInputNg'] else '-',
+            library_yield,
+            l['captureInputNg'] if l['captureInputNg'] else '-',
+            metadata['baitSet'],
+            metadata['sex'] if metadata['sex'] in ['Male', 'M', 'Female', 'F'] else '-',
+            l['barcodeIndex'].split('-')[0] if l['barcodeIndex'] else '-',
+            l['barcodeIndex'].split('-')[1] if l['barcodeIndex'] else '-',
+            # Todo: Get correct lane info
+            '1',
+            '-'
+        )
+    title_file_content = title_file_content.strip()
+    return {
+                "class": "File",
+                "basename": "title_file.txt",
+                "contents": title_file_content
+            }
 
 def construct_sample_inputs(samples):
     with open('runner/operator/access/v1_0_0/legacy/input_template.json.jinja2') as file:
@@ -83,7 +140,7 @@ def construct_sample_inputs(samples):
         add_rg_LBs = [1] * SAMPLE_GROUP_SIZE
         adapters = [ADAPTER] * SAMPLE_GROUP_SIZE
         adapters2 = [ADAPTER2] * SAMPLE_GROUP_SIZE
-        title_file_path = construct_title_file(samples)
+        title_file_content = generate_title_file_content(samples)
         fastq1_files = []
         fastq2_files = []
 
@@ -112,7 +169,7 @@ def construct_sample_inputs(samples):
             adapters2=adapters2,
             fastq1_files=fastq1_files,
             fastq2_files=fastq2_files,
-            title_file_path=title_file_path,
+            title_file=title_file_content,
             request_id=meta["requestId"],
         )
 
