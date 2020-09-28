@@ -64,7 +64,7 @@ def create_request_job(request_id, redelivery=False):
         job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id),
-                        'job_group_notifier': job_group_notifier_id, 'redelivery': redelivery},
+                        'job_group_notifier': job_group_notifier_id, 'redelivery': request_redelivered},
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
@@ -74,7 +74,7 @@ def create_request_job(request_id, redelivery=False):
                   job_group=job_group,
                   job_group_notifier=job_group_notifier)
         job.save()
-        if redelivery:
+        if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
         return job, "Job Created"
