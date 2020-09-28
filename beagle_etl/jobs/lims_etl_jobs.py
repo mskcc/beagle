@@ -7,8 +7,8 @@ from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, UploadAttachmentEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent
+    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
+    ETLImportNoSamplesEvent, LocalStoreFileEvent
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
@@ -507,6 +507,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         f = FileRepository.filter(path=path).first()
         if not f:
             create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
+
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -524,7 +525,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                     diff_file_name = "%s_metadata_update.json" % f.file.file_name
                     message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
                     update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
-                    diff_details_event = UploadAttachmentEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
+                    diff_details_event = LocalStoreFileEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
                     send_notification.delay(update)
                     send_notification.delay(diff_details_event)
             else:

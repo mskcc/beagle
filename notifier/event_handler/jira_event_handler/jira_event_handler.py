@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from ..event_handler import EventHandler
 from notifier.models import JobGroup, JobGroupNotifier
@@ -103,6 +104,15 @@ class JiraEventHandler(EventHandler):
     def process_upload_attachment_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         self.client.add_attachment(job_notifier.jira_id, event.file_name, event.get_content(), download=event.download)
+
+    def process_local_store_file_event(self, event):
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        dir_path = os.path.join(settings.NOTIFIER_STORAGE_DIR, job_notifier.jira_id)
+        if not os.path.exists(dir_path):
+            os.mkdir(dir_path)
+        file_path = os.path.join(dir_path, event.file_name)
+        with open(file_path, 'w') as f:
+            f.write(event.get_content())
 
     def _add_comment_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
