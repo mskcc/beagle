@@ -56,6 +56,9 @@ class JiraEventHandler(EventHandler):
     def process_assay_event(self, event):
         self._add_comment_event(event)
 
+    def process_external_email_event(self, event):
+        self._add_comment_event(event)
+
     def process_custom_capture_cc_event(self, event):
         self._add_comment_event(event)
 

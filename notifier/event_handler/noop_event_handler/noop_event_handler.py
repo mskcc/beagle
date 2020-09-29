@@ -46,6 +46,9 @@ class NoOpEventHandler(EventHandler):
     def process_assay_event(self, event):
         pass
 
+    def process_external_email_event(self, event):
+        pass
+
     def process_custom_capture_cc_event(self, event):
         pass
 
