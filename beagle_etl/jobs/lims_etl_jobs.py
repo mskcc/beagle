@@ -8,7 +8,8 @@ from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
     RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent, LocalStoreFileEvent
+    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent
+
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
@@ -127,6 +128,14 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         Job.objects.filter(job_group=job_group).values("status")]):
         ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
+
+    lab_head_email = FileRepository.filter(metadata={'requestId': request_id}, values_metadata='labHeadEmail').first()
+    try:
+        if lab_head_email.split("@")[1] != "mskcc.org":
+            event = ExternalEmailEvent(job_group_notifier_id, request_id).to_dict()
+            send_notification.delay(event)
+    except Exception:
+        logger.error("Failed to check labHeadEmail")
 
     operators = Operator.objects.filter(recipes__overlap=recipes)
 
