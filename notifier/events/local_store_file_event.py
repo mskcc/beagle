@@ -1,0 +1,28 @@
+import os
+from notifier.event_handler.event import Event
+
+
+class LocalStoreFileEvent(Event):
+
+    def __init__(self, job_notifier, file_name, content, download=False):
+        self.job_notifier = job_notifier
+        self.file_name = file_name
+        self.content = content
+        self.download = download
+
+    @classmethod
+    def get_type(cls):
+        return "LocalStoreFileEvent"
+
+    @classmethod
+    def get_method(cls):
+        return "process_local_store_file_event"
+
+    def get_content(self):
+        if os.path.exists(self.content):
+            f = open(self.content, 'rb')
+            return f
+        return self.content
+
+    def __str__(self):
+        return self.content
