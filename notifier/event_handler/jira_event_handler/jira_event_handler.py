@@ -1,6 +1,7 @@
 import os
 from django.conf import settings
 from ..event_handler import EventHandler
+from file_system.models import FileGroup, File, FileMetadata, FileType
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.jira.jira_client import JiraClient
 
@@ -109,13 +110,36 @@ class JiraEventHandler(EventHandler):
         self.client.add_attachment(job_notifier.jira_id, event.file_name, event.get_content(), download=event.download)
 
     def process_local_store_file_event(self, event):
+        print("Started processing")
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         dir_path = os.path.join(settings.NOTIFIER_STORAGE_DIR, job_notifier.jira_id)
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
+        metadata = {
+            "jiraId": job_notifier.jira_id
+        }
         with open(file_path, 'w') as f:
             f.write(event.get_content())
+        self._register_as_file(file_path, metadata)
+
+    def _register_as_file(self, path, metadata):
+        print("Registering file")
+        try:
+            file_group = FileGroup.objects.get(id=settings.NOTIFIER_FILE_GROUP)
+        except FileGroup.DoesNotExist:
+            return
+        file_type_obj = FileType.objects.filter(name='json').first()
+        try:
+            f = File.objects.create(file_name=os.path.basename(path),
+                                    path=path,
+                                    file_group=file_group,
+                                    file_type=file_type_obj)
+            f.save()
+            fm = FileMetadata(file=f, metadata=metadata)
+            fm.save()
+        except Exception as e:
+            self.logger.error("Failed to create file %s. Error %s" % (path, str(e)))
 
     def _add_comment_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
