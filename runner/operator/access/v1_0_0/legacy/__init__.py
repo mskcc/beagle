@@ -19,21 +19,11 @@ REQUIRED_META_FIELDS = [
     "cmoSampleName",
     "requestId",
     "tumorOrNormal",
+    "sampleId"
 ]
 
 REQUIRED_INPUT_FIELDS = [
-    "read_group_identifier",
-    "read_group_sequencing_center",
-    "read_group_library",
-    "read_group_platform_unit",
-    "read_group_sequencing_platform",
-    "output_name_collapsed_gzip_R1",
-    "output_name_collapsed_gzip_R2",
-    "standard_aln_output_file_name",
-    "standard_picard_addrg_output_filename",
-    "collapsing_aln_output_file_name",
-    "collapsing_picard_output_file_name",
-    "sort_first_pass_output_file_name",
+    "fastq1", "fastq2", "add_rg_ID", "add_rg_LB", "adapter", "adapter2"
 ]
 
 ADAPTER = "GATCGGAAGAGC"
@@ -45,70 +35,63 @@ This returns a list of keys that are subset of `fields`, that do not exist
 in source or exist with an empty value.
 """
 def get_missing_fields(source, fields):
-    return filter(lambda field: field not in source or not source[field], fields)
+    return list(filter(lambda field: field not in source or not source[field], fields))
 
 # In standard order
 TITLE_FILE_COLUMNS = [
-    'Barcode'
-    'Pool'
-    'Sample'
-    'Collab_ID'
-    'Patient_ID'
-    'Class'
-    'Sample_type'
-    'Input_ng'
-    'Library_yield'
-    'Pool_input'
-    'Bait_version'
-    'Sex'
-    'Barcode_index_1'
-    'Barcode_index_2'
-    'Lane'
-    'Study_ID'
+    'Barcode',
+    'Pool',
+    'Sample',
+    'Collab_ID',
+    'Patient_ID',
+    'Class',
+    'Sample_type',
+    'Input_ng',
+    'Library_yield',
+    'Pool_input',
+    'Bait_version',
+    'Sex',
+    'Barcode_index_1',
+    'Barcode_index_2',
+    'Lane',
+    'Study_ID',
 ]
 
-def generate_title_file_content(samples):
+def generate_title_file_content(sample_group):
     title_file_content = '\t'.join(TITLE_FILE_COLUMNS) + '\n'
-    for sample in samples:
-        metadata = sample.metadata
-        libraries = metadata['libraries']
+    for sample_pair in sample_group:
+        sample = sample_pair[0]
+        meta = sample["metadata"]
 
-        # Todo: using first library for now
-        l = libraries[0]
-
-        pool_info = ';'.join([str(l['captureName']) for l in libraries])
-        if l['libraryVolume'] and l['libraryConcentrationNgul']:
-            library_yield = l['libraryVolume'] * l['libraryConcentrationNgul']
+        pool_info = meta["captureName"]
+        if meta['libraryVolume'] and meta['libraryConcentrationNgul']:
+            library_yield = meta['libraryVolume'] * meta['libraryConcentrationNgul']
         else:
             library_yield = '-'
 
-        title_file_content += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-            libraries[0]['barcodeId'] if libraries[0]['barcodeId'] else '-',
+        line_content = "\t".join(["{}"] * len(TITLE_FILE_COLUMNS)) + "\n"
+        title_file_content += line_content.format(
+            meta['barcodeId'] if meta['barcodeId'] else '-',
             pool_info,
-            metadata['cmoSampleName'],
-            metadata['investigatorSampleId'],
-            metadata['patientId'], # todo: should be cmoPatientId?
-            metadata['tumorOrNormal'],
-            metadata['sampleOrigin'],
-            l['dnaInputNg'] if l['dnaInputNg'] else '-',
+            meta['cmoSampleName'],
+            meta['investigatorSampleId'],
+            meta['patientId'],
+            meta['tumorOrNormal'],
+            meta['sampleOrigin'],
+            meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
             library_yield,
-            l['captureInputNg'] if l['captureInputNg'] else '-',
-            metadata['baitSet'],
-            metadata['sex'] if metadata['sex'] in ['Male', 'M', 'Female', 'F'] else '-',
-            l['barcodeIndex'].split('-')[0] if l['barcodeIndex'] else '-',
-            l['barcodeIndex'].split('-')[1] if l['barcodeIndex'] else '-',
+            meta['captureInputNg'] if meta['captureInputNg'] else '-',
+            meta['baitSet'],
+            meta['sex'] if meta['sex'] in ['Male', 'M', 'Female', 'F'] else '-',
+            meta['barcodeIndex'].split('-')[0] if meta['barcodeIndex'] else '-',
+            meta['barcodeIndex'].split('-')[1] if meta['barcodeIndex'] else '-',
             # Todo: Get correct lane info
             '1',
             '-'
         )
-    title_file_content = title_file_content.strip()
-    return {
-                "class": "File",
-                "basename": "title_file.txt",
-                "contents": title_file_content
-            }
+    return title_file_content.strip()
 
-def construct_sample_inputs(samples):
+def construct_sample_inputs(samples, request_id, group_id):
     with open('runner/operator/access/v1_0_0/legacy/input_template.json.jinja2') as file:
         template = Template(file.read())
 
@@ -116,82 +99,86 @@ def construct_sample_inputs(samples):
     errors = 0
 
     # Pair FASTQs
-    sample_pairs = groupby(samples, lambda x: x["metadata"]["sampleId"])
+    sample_pairs = [list(value) for key, value in groupby(samples, lambda x: x["metadata"]["sampleId"])]
 
+    # A sample group is a group of 20 PAIRS of samples.
     for sample_group in chunks(sample_pairs, SAMPLE_GROUP_SIZE):
-        meta = sample_group[0]["metadata"]
-
-        missing_fields = get_missing_fields(meta, REQUIRED_META_FIELDS)
-        if missing_fields:
-            ic_error = InputCreationFailedEvent(
-                "The follwing fields are missing from the input: {}", ",".join(missing_fields)
-                group_id,
-                meta["requestId"],
-                sample_id
-            ).to_dict()
-            send_notification.delay(ic_error)
-            errors += 1
-            continue
-
-        barcodeIds = []
-        tumorOrNormals = []
-        cmoSampleNames = []
-        patientIds = []
-        add_rg_LBs = [1] * SAMPLE_GROUP_SIZE
-        adapters = [ADAPTER] * SAMPLE_GROUP_SIZE
-        adapters2 = [ADAPTER2] * SAMPLE_GROUP_SIZE
-        title_file_content = generate_title_file_content(samples)
+        barcode_ids = []
+        tumor_or_normals = []
+        cmo_sample_names = []
+        patient_ids = []
+        add_rg_LBs = [1] * len(sample_group)
+        adapters = [ADAPTER] * len(sample_group)
+        adapters2 = [ADAPTER2] * len(sample_group)
+        title_file_content = generate_title_file_content(sample_group)
         fastq1_files = []
         fastq2_files = []
 
-        for sample in sample_group:
-            add_rg_PU.append(meta["barcodeId"])
-            sample_class.append(meta["tumorOrNormal"])
-            add_rg_SM.append(meta["cmoSampleName"])
-            patient_id.append(meta["cmoPatientId"])
-            add_rg_LBs.append(1)
+        for sample_pair in sample_group:
+            meta = sample_pair[0]["metadata"]
+
+            missing_fields = get_missing_fields(meta, REQUIRED_META_FIELDS)
+            if missing_fields:
+                ic_error = InputCreationFailedEvent(
+                    "The follwing fields are missing from the input: {}".format(",".join(missing_fields)),
+                    group_id,
+                    request_id,
+                    meta["sampleId"]
+                ).to_dict()
+                send_notification.delay(ic_error)
+                errors += 1
+                continue
+
+            cmo_sample_names.append(meta["cmoSampleName"])
+            barcode_ids.append(meta["barcodeId"])
+            tumor_or_normals.append(meta["tumorOrNormal"])
+            patient_ids.append(meta["patientId"])
+
             fastq1_files.append({
                 "class": "File",
-                "path": "juno://" + sample_group[0]["path"]
+                "path": "juno://" + sample_pair[0]["path"]
             })
 
             fastq2_files.append({
                 "class": "File",
-                "path": "juno://" + sample_group[1]["path"]
+                "path": "juno://" + sample_pair[1]["path"]
             })
 
         input_file = template.render(
-            barcodeIds=bardcodeIds,
-            tumorOrNormals=tumorOrNormals,
-            cmoSampleNames=cmoSampleNames,
-            add_rg_LBs=add_rg_LBs,
-            adapters=adapters,
-            adapters2=adapters2,
-            fastq1_files=fastq1_files,
-            fastq2_files=fastq2_files,
-            title_file=title_file_content,
-            request_id=meta["requestId"],
+            barcode_ids=json.dumps(barcode_ids),
+            tumor_or_normals=json.dumps(tumor_or_normals),
+            cmo_sample_names=json.dumps(cmo_sample_names),
+            add_rg_LBs=json.dumps(add_rg_LBs),
+            adapters=json.dumps(adapters),
+            adapters2=json.dumps(adapters2),
+            fastq1_files=json.dumps(fastq1_files),
+            fastq2_files=json.dumps(fastq2_files),
+            patient_ids=json.dumps(patient_ids),
+            title_file_content=json.dumps(title_file_content),
+            request_id=json.dumps(request_id),
         )
 
-        sample = json.loads(input_file)
+        sample_input = json.loads(input_file)
 
-        missing_fields = get_missing_fields(sample, REQUIRED_INPUT_FIELDS)
+        missing_fields = get_missing_fields(sample_input, REQUIRED_INPUT_FIELDS)
         if missing_fields:
-            ic_error = InputCreationFailedEvent(
-                "The follwing fields are missing from the input: {}", ",".join(missing_fields)
-                group_id,
-                meta["requestId"],
-                sample_id
-            ).to_dict()
-            send_notification.delay(ic_error)
-            errors += 1
+            for sample_pair in sample_group:
+                meta = sample_pair[0]["metadata"]
+                ic_error = InputCreationFailedEvent(
+                    "The following fields are missing from the input: {}".format(",".join(missing_fields)),
+                    group_id,
+                    request_id,
+                    meta["sampleId"]
+                ).to_dict()
+                send_notification.delay(ic_error)
+                errors += 1
             continue
 
-        sample_inputs.append(sample)
+        sample_inputs.append(sample_input)
 
     return (sample_inputs, errors)
 
-class AccessFastqToBamOperator(Operator):
+class AccessLegacyOperator(Operator):
     def get_jobs(self):
         files = FileRepository.filter(queryset=self.files,
                                       metadata={'requestId': self.request_id,
@@ -205,20 +192,22 @@ class AccessFastqToBamOperator(Operator):
             } for f in files
         ]
 
-        (sample_inputs, no_of_errors) = construct_sample_inputs(data)
+        (sample_inputs, no_of_errors) = construct_sample_inputs(data, self.request_id, self.job_group_id)
         if no_of_errors:
             return
 
+        print(sample_inputs)
         number_of_inputs = len(sample_inputs)
 
         return [
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        'name': "ACCESS LEGACY M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'tags': {'requestId': self.request_id, 'sampleId': job.cmo_sample_name}}
+                        'tags': {'requestId': self.request_id, 'cmoSampleIds': job["add_rg_ID"]}
+                    }
                 ),
                 job
              )
