@@ -196,7 +196,6 @@ class AccessLegacyOperator(Operator):
         if no_of_errors:
             return
 
-        print(sample_inputs)
         number_of_inputs = len(sample_inputs)
 
         return [
