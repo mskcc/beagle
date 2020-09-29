@@ -228,8 +228,6 @@ class JobObject(object):
             e = ETLJobFailedEvent(self.job.job_group_notifier.id,
                                   "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
             send_notification.delay(e)
-            ci_review = SetCIReviewEvent(str(self.job.job_group_notifier.id)).to_dict()
-            send_notification.delay(ci_review)
             self._generate_ticket_decription()
 
     def _job_successful(self):
