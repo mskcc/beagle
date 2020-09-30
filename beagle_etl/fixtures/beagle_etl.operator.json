@@ -16,7 +16,7 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "runner.operator.access_operator.v1_0_0.access_operator.AccessOperator",
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
             "version": "v1.0.0",
             "slug": "AccessOperator"
         }
@@ -27,7 +27,7 @@
         "fields": {
             "active": true,
             "recipes": "[\"400FAKESOMETHING\"]",
-            "class_name": "runner.operator.access_operator.v1_0_0.access_operator.AccessOperator",
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
             "version": "v1.0.0",
             "slug": "AccessOperator"
         }
