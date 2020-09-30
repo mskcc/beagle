@@ -7,8 +7,9 @@ from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, UploadAttachmentEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent
+    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
+    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent
+
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
@@ -64,7 +65,7 @@ def create_request_job(request_id, redelivery=False):
         job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
         job = Job(run=TYPES['REQUEST'],
                   args={'request_id': request_id, 'job_group': str(job_group.id),
-                        'job_group_notifier': job_group_notifier_id, 'redelivery': redelivery},
+                        'job_group_notifier': job_group_notifier_id, 'redelivery': request_redelivered},
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
@@ -74,7 +75,7 @@ def create_request_job(request_id, redelivery=False):
                   job_group=job_group,
                   job_group_notifier=job_group_notifier)
         job.save()
-        if redelivery:
+        if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
         return job, "Job Created"
@@ -122,6 +123,19 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
+
+    if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
+        Job.objects.filter(job_group=job_group).values("status")]):
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(ci_review_e)
+
+    lab_head_email = FileRepository.filter(metadata={'requestId': request_id}, values_metadata='labHeadEmail').first()
+    try:
+        if lab_head_email.split("@")[1] != "mskcc.org":
+            event = ExternalEmailEvent(job_group_notifier_id, request_id).to_dict()
+            send_notification.delay(event)
+    except Exception:
+        logger.error("Failed to check labHeadEmail")
 
     operators = Operator.objects.filter(recipes__overlap=recipes)
 
@@ -507,6 +521,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         f = FileRepository.filter(path=path).first()
         if not f:
             create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
+
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -524,7 +539,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                     diff_file_name = "%s_metadata_update.json" % f.file.file_name
                     message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
                     update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
-                    diff_details_event = UploadAttachmentEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
+                    diff_details_event = LocalStoreFileEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
                     send_notification.delay(update)
                     send_notification.delay(diff_details_event)
             else:
