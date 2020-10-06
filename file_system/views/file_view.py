@@ -11,11 +11,13 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
-from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer, BatchPatchFileSerializer
+from file_system.serializers import CreateFileSerializer, UpdateFileSerializer, FileSerializer, FileQuerySerializer, \
+    BatchPatchFileSerializer
 from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
+
 
 class FileView(mixins.CreateModelMixin,
                mixins.DestroyModelMixin,
@@ -25,10 +27,6 @@ class FileView(mixins.CreateModelMixin,
                GenericViewSet):
 
     queryset = FileMetadata.objects.order_by('file', '-version').distinct('file')
-
-    # File.objects.prefetch_related(
-    #     Prefetch('filemetadata_set', queryset=FileMetadata.objects.raw('select md.* from file_system_filemetadata md inner join (select file_id, max(version) as maxversion FROM file_system_filemetadata group by file_id) groupedmd on md.file_id = groupedmd.file_id and md.version = groupedmd.maxversion;'))).first()
-
     permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
@@ -199,6 +197,7 @@ class FileView(mixins.CreateModelMixin,
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
+
 class BatchPatchFiles(GenericAPIView):
 
     queryset = FileMetadata.objects.order_by('file', '-version').distinct('file')
@@ -234,9 +233,6 @@ class BatchPatchFiles(GenericAPIView):
             transaction.savepoint_rollback(sid)
             error_message = 'An unexpected error occured: '+repr(e)
             return Response({'details':error_message}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
         success_message = 'Successfully updated {} files'.format(file_count)
         return Response(success_message, status=status.HTTP_200_OK)
