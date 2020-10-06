@@ -11,6 +11,7 @@ from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
+from .bin.retrieve_samples_by_query import build_dmp_sample
 from .bin.make_sample import format_sample_name
 
 
@@ -197,12 +198,14 @@ class ArgosOperator(Operator):
             normals = FileRepository.filter(queryset=self.files,
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True})
-
             if not normals: # get from DMP bams
                 dmp_bam_id = pair['normal']
                 dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
-                normals = FileRepository.filter(queryset=self.files,
+                data = FileRepository.filter(queryset=self.files,
                                                 metadata={'external_id': dmp_bam_id})
+                normals = list()
+                for sample in data:
+                    normals.append(build_dmp_sample(d))
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
 
