@@ -197,6 +197,12 @@ class ArgosOperator(Operator):
             normals = FileRepository.filter(queryset=self.files,
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True})
+
+            if not normals: # get from DMP bams
+                dmp_bam_id = pair['normal']
+                dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
+                normals = FileRepository.filter(queryset=self.files,
+                                                metadata={'external_id': dmp_bam_id})
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
 
