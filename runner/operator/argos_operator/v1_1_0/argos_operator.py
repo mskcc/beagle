@@ -206,8 +206,10 @@ class ArgosOperator(Operator):
                 data = FileRepository.filter(queryset=self.files,
                                                 metadata={'external_id': dmp_bam_id})
                 normals = list()
-                for sample in data:
-                    normals.append(build_dmp_sample(sample, patient, bait_set))
+                for i in data:
+                    sample = i
+                    sample.metadata = build_dmp_sample(i)
+                    normals.append(sample)
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
 
