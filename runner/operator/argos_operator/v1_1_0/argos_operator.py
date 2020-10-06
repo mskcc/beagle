@@ -205,7 +205,7 @@ class ArgosOperator(Operator):
                                                 metadata={'external_id': dmp_bam_id})
                 normals = list()
                 for sample in data:
-                    normals.append(build_dmp_sample(d))
+                    normals.append(build_dmp_sample(sample))
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
 
