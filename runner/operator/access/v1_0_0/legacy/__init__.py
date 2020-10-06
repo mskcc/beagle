@@ -99,7 +99,7 @@ def construct_sample_inputs(samples, request_id, group_id):
     errors = 0
 
     # Pair FASTQs
-    sample_pairs = [list(value) for key, value in groupby(samples, lambda x: x["metadata"]["sampleId"])]
+    sample_pairs = list(group_by_sample_id(samples).values())
 
     # A sample group is a group of 20 PAIRS of samples.
     for sample_group in chunks(sample_pairs, SAMPLE_GROUP_SIZE):
@@ -218,3 +218,10 @@ class AccessLegacyOperator(Operator):
 def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
+
+def group_by_sample_id(samples):
+    sample_pairs = defaultdict(list)
+    for sample in samples:
+        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+
+    return sample_pairs
