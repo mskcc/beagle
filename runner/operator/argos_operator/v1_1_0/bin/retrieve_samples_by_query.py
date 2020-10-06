@@ -182,13 +182,13 @@ def get_dmp_normal(patient_id, bait_set):
     dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
 
     if dmp_bam:
-        sample = build_dmp_sample(dmp_bam)
+        sample = build_dmp_sample(dmp_bam, patient_id, bait_set)
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample
     return None
 
 
-def build_dmp_sample(dmp_bam):
+def build_dmp_sample(dmp_bam, patient,_id, bait_set):
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP Normal"
     sample_name = dmp_metadata['external_id']
