@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata
+from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, Sample
 
 # Register your models here.
 
@@ -7,6 +7,11 @@ from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupM
 class FileAdmin(admin.ModelAdmin):
     list_display = ('id', 'file_name', 'file_group', 'size')
     search_fields = ['file_name']
+
+
+class SampleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'tag', 'redact')
+    search_fields = ['tag']
 
 
 class FileRunMapAdmin(admin.ModelAdmin):
@@ -26,6 +31,7 @@ class ImportMetadataAdmin(admin.ModelAdmin):
 
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
+admin.site.register(Sample, SampleAdmin)
 admin.site.register(FileGroup)
 admin.site.register(FileType)
 admin.site.register(FileMetadata, FileMetadataAdmin)

@@ -41,6 +41,11 @@ class FileType(models.Model):
         return u"{}".format(self.name)
 
 
+class Sample(BaseModel):
+    tag = models.CharField(max_length=20, null=False, blank=False)
+    redact = models.BooleanField(default=False, null=False)
+
+
 class FileExtension(models.Model):
     extension = models.CharField(max_length=30, unique=True)
     file_type = models.ForeignKey(FileType, on_delete=models.CASCADE)
@@ -75,6 +80,7 @@ class File(BaseModel):
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     checksum = models.CharField(max_length=50, blank=True, null=True)
+    sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         if not self.size:
@@ -118,3 +124,4 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
+
