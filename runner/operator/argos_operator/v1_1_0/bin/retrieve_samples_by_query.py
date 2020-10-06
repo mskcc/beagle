@@ -188,7 +188,7 @@ def get_dmp_normal(patient_id, bait_set):
     return None
 
 
-def build_dmp_sample(dmp_bam, patient,_id, bait_set):
+def build_dmp_sample(dmp_bam, patient_id, bait_set):
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP Normal"
     sample_name = dmp_metadata['external_id']
