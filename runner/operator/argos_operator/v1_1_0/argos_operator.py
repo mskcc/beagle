@@ -198,7 +198,7 @@ class ArgosOperator(Operator):
             normals = FileRepository.filter(queryset=self.files,
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True})
-            patient = tumors[0].metadata['patientId']
+            patient_id = tumors[0].metadata['patientId']
             bait_set = tumors[0].metadata['baitSet']
             if not normals: # get from DMP bams
                 dmp_bam_id = pair['normal']
