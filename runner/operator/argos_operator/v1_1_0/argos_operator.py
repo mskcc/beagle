@@ -208,10 +208,12 @@ class ArgosOperator(Operator):
                 normals = list()
                 for i in data:
                     sample = i
-                    sample.metadata = build_dmp_sample(i, patient_id, bait_set)
+                    metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
+                    sample.metadata = metadata
                     normals.append(sample)
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
+            print(all_files)
 
         data = list()
 
