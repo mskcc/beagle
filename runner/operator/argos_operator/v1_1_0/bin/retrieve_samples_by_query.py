@@ -182,40 +182,45 @@ def get_dmp_normal(patient_id, bait_set):
     dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
 
     if dmp_bam:
-        dmp_metadata = dmp_bam.metadata
-        specimen_type = "DMP Normal"
-        sample_name = dmp_metadata['external_id']
-        sequencingCenter = "MSKCC"
-        platform = "Illumina"
-        sample = dict()
-        sample['id'] = dmp_bam.file.id
-        sample['path'] = dmp_bam.file.path
-        sample['file_name'] = dmp_bam.file.file_name
-        sample['file_type'] = dmp_bam.file.file_type
-        metadata = init_metadata()
-        metadata['sampleId'] = sample_name
-        metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
-        metadata['requestId'] = sample_name
-        metadata['sequencingCenter'] = sequencingCenter
-        metadata['platform'] = platform
-        metadata['baitSet'] = bait_set
-        metadata['recipe'] = bait_set
-        metadata['run_id'] = ""
-        metadata['preservation'] = ""
-        metadata['libraryId'] = sample_name + "_1"
-        metadata['R'] = 'Not applicable'
-        # because rgid depends on flowCellId and barcodeIndex, we will
-        # spoof barcodeIndex so that pairing can work properly; see
-        # build_sample in runner.operator.argos_operator.bin
-        metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
-        metadata['flowCellId'] = 'DMP_FCID'
-        metadata['tumorOrNormal'] = 'Normal'
-        metadata['patientId'] = patient_id
-        metadata['specimenType'] = specimen_type
-        sample['metadata'] = metadata
+        sample = build_dmp_sample(dmp_bam, patient_id, bait_set)
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample
     return None
+
+
+def build_dmp_sample(dmp_bam, patient_id, bait_set):
+    dmp_metadata = dmp_bam.metadata
+    specimen_type = "DMP Normal"
+    sample_name = dmp_metadata['external_id']
+    sequencingCenter = "MSKCC"
+    platform = "Illumina"
+    sample = dict()
+    sample['id'] = dmp_bam.file.id
+    sample['path'] = dmp_bam.file.path
+    sample['file_name'] = dmp_bam.file.file_name
+    sample['file_type'] = dmp_bam.file.file_type
+    metadata = init_metadata()
+    metadata['sampleId'] = sample_name
+    metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
+    metadata['requestId'] = sample_name
+    metadata['sequencingCenter'] = sequencingCenter
+    metadata['platform'] = platform
+    metadata['baitSet'] = bait_set
+    metadata['recipe'] = bait_set
+    metadata['run_id'] = ""
+    metadata['preservation'] = ""
+    metadata['libraryId'] = sample_name + "_1"
+    metadata['R'] = 'Not applicable'
+    # because rgid depends on flowCellId and barcodeIndex, we will
+    # spoof barcodeIndex so that pairing can work properly; see
+    # build_sample in runner.operator.argos_operator.bin
+    metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
+    metadata['flowCellId'] = 'DMP_FCID'
+    metadata['tumorOrNormal'] = 'Normal'
+    metadata['patientId'] = patient_id
+    metadata['specimenType'] = specimen_type
+    sample['metadata'] = metadata
+    return sample
 
 
 def build_dmp_query(patient_id, bait_set):
