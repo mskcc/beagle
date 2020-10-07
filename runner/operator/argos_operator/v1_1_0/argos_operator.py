@@ -11,6 +11,7 @@ from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
+from .bin.retrieve_samples_by_query import build_dmp_sample
 from .bin.make_sample import format_sample_name
 
 
@@ -197,18 +198,21 @@ class ArgosOperator(Operator):
             normals = FileRepository.filter(queryset=self.files,
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True})
+            if not normals and cnt_tumors > 0: # get from DMP bams
+                patient_id = tumors[0].metadata['patientId']
+                bait_set = tumors[0].metadata['baitSet']
+                dmp_bam_id = pair['normal']
+                dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
+                data = FileRepository.filter(queryset=self.files,
+                                                metadata={'external_id': dmp_bam_id})
+                normals = list()
+                for i in data:
+                    sample = i
+                    metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
+                    sample.metadata = metadata
+                    normals.append(sample)
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
-
-        data = list()
-
-        for f in all_files:
-            sample = dict()
-            sample['id'] = f.file.id
-            sample['path'] = f.file.path
-            sample['file_name'] = f.file.file_name
-            sample['metadata'] = f.metadata
-            data.append(sample)
 
         return all_files, cnt_tumors
 
