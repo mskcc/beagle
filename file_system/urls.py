@@ -20,7 +20,5 @@ router.register('metadata', FileMetadataView)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('batch-patch-files',BatchPatchFiles.as_view())
-#     path('files/', FileView.as_view()),
-    # path('samples/create/', SampleFullCreate.as_view())
+    path('batch-patch-files', BatchPatchFiles.as_view())
 ]

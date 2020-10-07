@@ -15,7 +15,7 @@ from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
 from runner.tasks import create_jobs_from_request
@@ -368,6 +368,11 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
+    try:
+        sample = Sample.objects.get(sample_id=sample_id)
+    except Sample.DoesNotExist:
+        sample = Sample.objects.create(sample_id=sample_id)
+
     validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
 
     libraries = data.pop('libraries')
@@ -382,7 +387,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
-                                      library, run,
+                                      library, run, sample,
                                       request_metadata, R1_or_R2(fastq), update=redelivery,
                                       job_group_notifier=job_group_notifier)
 
@@ -489,8 +494,8 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata,
-                          r, update=False, job_group_notifier=None):
+def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, sample,
+                          request_metadata, r, update=False, job_group_notifier=None):
     logger.info("Creating file %s " % path)
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
@@ -520,7 +525,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
     else:
         f = FileRepository.filter(path=path).first()
         if not f:
-            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
+            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj, sample)
 
             if update:
                 message = "File registered: %s" % path
@@ -572,10 +577,10 @@ def format_metadata(original_metadata):
     return metadata
 
 
-def create_file_object(path, file_group, lims_metadata, metadata, file_type):
+def create_file_object(path, file_group, lims_metadata, metadata, file_type, sample):
     try:
         f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group,
-                                file_type=file_type)
+                                file_type=file_type, sample=sample)
         f.save()
 
         fm = FileMetadata(file=f, metadata=metadata)
