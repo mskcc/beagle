@@ -135,14 +135,18 @@ def construct_sample_inputs(samples, request_id, group_id):
             tumor_or_normals.append(meta["tumorOrNormal"])
             patient_ids.append(meta["patientId"])
 
+            # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
+            r1_fastq = sample_pair[0] if '_R1_' in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if '_R2_' in sample_pair[0]["path"] else sample_pair[1]
+
             fastq1_files.append({
                 "class": "File",
-                "path": "juno://" + sample_pair[0]["path"]
+                "path": "juno://" + r1_fastq["path"]
             })
 
             fastq2_files.append({
                 "class": "File",
-                "path": "juno://" + sample_pair[1]["path"]
+                "path": "juno://" + r2_fastq["path"]
             })
 
             # Todo: Using dummy sample sheets until this requirement is removed from the pipeline
