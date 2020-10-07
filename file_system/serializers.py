@@ -111,6 +111,7 @@ class FileSerializer(serializers.ModelSerializer):
     path = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     checksum = serializers.SerializerMethodField()
+    redacted = serializers.SerializerMethodField()
 
     def get_id(self, obj):
         return obj.file.id
@@ -141,9 +142,14 @@ class FileSerializer(serializers.ModelSerializer):
     def get_checksum(self, obj):
         return obj.file.checksum
 
+    def get_redacted(self, obj):
+        return obj.file.sample.redact
+
     class Meta:
         model = FileMetadata
-        fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'created_date', 'modified_date')
+        fields = (
+            'id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'redacted',
+            'created_date', 'modified_date')
 
 
 class FileQuerySerializer(serializers.Serializer):

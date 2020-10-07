@@ -368,14 +368,10 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
-    sample_name = data.get('cmoSampleName', None)
-    specimen_type = data.get('specimenType', None)
-
-    ci_tag = format_sample_name(sample_name, specimen_type)
     try:
-        sample = Sample.objects.get(tag=ci_tag)
+        sample = Sample.objects.get(sample_id=sample_id)
     except Sample.DoesNotExist:
-        sample = Sample.objects.create(tag=ci_tag)
+        sample = Sample.objects.create(sample_id=sample_id)
 
     validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
 
@@ -391,7 +387,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
-                                      library, run, ci_tag, sample,
+                                      library, run, sample,
                                       request_metadata, R1_or_R2(fastq), update=redelivery,
                                       job_group_notifier=job_group_notifier)
 
@@ -498,7 +494,7 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, ci_tag, sample,
+def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, sample,
                           request_metadata, r, update=False, job_group_notifier=None):
     logger.info("Creating file %s " % path)
     try:
@@ -515,7 +511,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
             lims_metadata[k] = v
         for k, v in request_metadata.items():
             lims_metadata[k] = v
-        metadata = format_metadata(lims_metadata, ci_tag)
+        metadata = format_metadata(lims_metadata)
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
@@ -555,7 +551,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                 raise FailedToFetchSampleException("File %s already exist with id %s" % (path, str(f.id)))
 
 
-def format_metadata(original_metadata, ci_tag):
+def format_metadata(original_metadata):
     metadata = dict()
     original_metadata_copy = copy.deepcopy(original_metadata)
     sample_name = original_metadata_copy.pop('cmoSampleName', None)
@@ -565,7 +561,7 @@ def format_metadata(original_metadata, ci_tag):
     sample_class = original_metadata_copy.pop('cmoSampleClass', None)
     specimen_type = original_metadata_copy.pop('specimenType', None)
     # ciTag is the new field which needs to be used for the operators
-    metadata['ciTag'] = ci_tag
+    metadata['ciTag'] = format_sample_name(sample_name, specimen_type)
     metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
     metadata['specimenType'] = specimen_type
     metadata['sampleName'] = sample_name

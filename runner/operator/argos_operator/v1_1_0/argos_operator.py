@@ -22,12 +22,14 @@ class ArgosOperator(Operator):
         if self.request_id:
             files = FileRepository.filter(queryset=self.files,
                                           metadata={'requestId': self.request_id,
-                                                    'igocomplete': True})
+                                                    'igocomplete': True},
+                                          filter_redact=True)
 
             cnt_tumors = FileRepository.filter(queryset=self.files,
                                                metadata={'requestId': self.request_id,
                                                          'tumorOrNormal': 'Tumor',
-                                                         'igocomplete': True}).count()
+                                                         'igocomplete': True},
+                                               filter_redact=True).count()
         elif self.pairing:
             files, cnt_tumors = self.get_files_for_pairs()
 

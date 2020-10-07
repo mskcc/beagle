@@ -50,13 +50,15 @@ class FileView(mixins.CreateModelMixin,
 
     @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['file_group','path','metadata','metadata_regex','filename','file_type','values_metadata']
+        query_list_types = ['file_group', 'path', 'metadata', 'metadata_regex', 'filename', 'file_type',
+                            'values_metadata']
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
-            queryset = FileRepository.all(distinct=False)
-            queryset = time_filter(FileMetadata, request.query_params)
-            queryset = time_filter(FileMetadata, request.query_params,time_modal='modified_date', previous_queryset=queryset)
+            queryset = FileRepository.all()
+            queryset = time_filter(FileMetadata, request.query_params,
+                                   time_modal='modified_date',
+                                   previous_queryset=queryset)
             file_group = fixed_query_params.get('file_group')
             path = fixed_query_params.get('path')
             metadata = fixed_query_params.get('metadata')
@@ -107,6 +109,7 @@ class FileView(mixins.CreateModelMixin,
                     kwargs['file_type'] = file_type[0]
                 else:
                     kwargs['file_type_in'] = file_type
+                ## TODO: Check this!
                 queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
             if values_metadata:
                 if len(values_metadata) == 1:
