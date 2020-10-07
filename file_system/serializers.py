@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from file_system.metadata.validator import MetadataValidator
-from file_system.models import File, Storage, StorageType, FileGroup, FileMetadata, FileType
+from file_system.models import File, Sample, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
 from drf_yasg import openapi
 
@@ -14,6 +14,7 @@ from drf_yasg import openapi
 def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
 
 class PatchFile(serializers.JSONField):
 
@@ -35,12 +36,14 @@ class PatchFile(serializers.JSONField):
             "required":["patch", "id"]
          }
 
+
 class BatchPatchFileSerializer(serializers.Serializer):
     patch_files = serializers.ListField(
         child=PatchFile(required=True),
         allow_empty=False,
         required=True
     )
+
 
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,6 +111,7 @@ class FileSerializer(serializers.ModelSerializer):
     path = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     checksum = serializers.SerializerMethodField()
+    redacted = serializers.SerializerMethodField()
 
     def get_id(self, obj):
         return obj.file.id
@@ -138,9 +142,16 @@ class FileSerializer(serializers.ModelSerializer):
     def get_checksum(self, obj):
         return obj.file.checksum
 
+    def get_redacted(self, obj):
+        if obj.file.sample:
+            return obj.file.sample.redact
+        return "No sample associated with file"
+
     class Meta:
         model = FileMetadata
-        fields = ('id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'created_date', 'modified_date')
+        fields = (
+            'id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'redacted',
+            'created_date', 'modified_date')
 
 
 class FileQuerySerializer(serializers.Serializer):
@@ -292,3 +303,10 @@ class UpdateFileSerializer(serializers.Serializer):
                 metadata.save()
         instance.save()
         return instance
+
+
+class SampleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Sample
+        fields = ('tag', 'redact')
