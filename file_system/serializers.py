@@ -143,7 +143,9 @@ class FileSerializer(serializers.ModelSerializer):
         return obj.file.checksum
 
     def get_redacted(self, obj):
-        return obj.file.sample.redact
+        if obj.file.sample:
+            return obj.file.sample.redact
+        return "No sample associated with file"
 
     class Meta:
         model = FileMetadata
