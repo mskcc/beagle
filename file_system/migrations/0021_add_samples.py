@@ -17,12 +17,13 @@ def add_samples(apps, schema_editor):
     for f in files:
         metadata = f.filemetadata_set.order_by('-created_date').first().metadata
         igo_id = metadata.get('sampleId')
-        try:
-            sample = Sample.objects.get(sample_id=igo_id)
-        except Sample.DoesNotExist:
-            sample = Sample.objects.create(sample_id=igo_id)
-        f.sample = sample
-        f.save()
+        if igo_id:
+            try:
+                sample = Sample.objects.get(sample_id=igo_id)
+            except Sample.DoesNotExist:
+                sample = Sample.objects.create(sample_id=igo_id)
+            f.sample = sample
+            f.save()
 
 
 class Migration(migrations.Migration):
