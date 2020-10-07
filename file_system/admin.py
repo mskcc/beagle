@@ -10,8 +10,8 @@ class FileAdmin(admin.ModelAdmin):
 
 
 class SampleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tag', 'redact')
-    search_fields = ['tag']
+    list_display = ('id', 'sample_id', 'redact')
+    search_fields = ['sample_id']
 
 
 class FileRunMapAdmin(admin.ModelAdmin):

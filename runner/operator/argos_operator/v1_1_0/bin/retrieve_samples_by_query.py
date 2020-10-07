@@ -20,7 +20,7 @@ def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id})
+    files = FileRepository.filter(metadata={"patientId": patient_id}, filter_redact=True)
     data = list()
     for current_file in files:
         sample = dict()

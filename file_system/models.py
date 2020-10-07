@@ -42,7 +42,7 @@ class FileType(models.Model):
 
 
 class Sample(BaseModel):
-    tag = models.CharField(max_length=20, null=False, blank=False)
+    sample_id = models.CharField(max_length=20, unique=True, null=False, blank=False)
     redact = models.BooleanField(default=False, null=False)
 
 
@@ -99,14 +99,24 @@ class ImportMetadata(BaseModel):
 class FileMetadata(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     version = models.IntegerField()
+    latest = models.BooleanField()
     metadata = JSONField(default=dict)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
-        versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
-        version = max(versions) + 1 if versions else 0
-        self.version = version
-        super(FileMetadata, self).save(*args, **kwargs)
+        do_not_version = kwargs.pop('do_not_version', False)
+        if do_not_version:
+            super(FileMetadata, self).save(*args, **kwargs)
+        else:
+            versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
+            version = max(versions) + 1 if versions else 0
+            self.version = version
+            self.latest = True
+            old = FileMetadata.objects.filter(file_id=self.file.id).order_by('-created_date').first()
+            if old:
+                old.latest = False
+                old.save(do_not_version=True)
+            super(FileMetadata, self).save(*args, **kwargs)
 
     class Meta:
         indexes = [
