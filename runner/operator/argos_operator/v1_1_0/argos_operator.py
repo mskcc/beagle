@@ -198,9 +198,9 @@ class ArgosOperator(Operator):
             normals = FileRepository.filter(queryset=self.files,
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True})
-            patient_id = tumors[0].metadata['patientId']
-            bait_set = tumors[0].metadata['baitSet']
-            if not normals: # get from DMP bams
+            if not normals and cnt_tumors > 0: # get from DMP bams
+                patient_id = tumors[0].metadata['patientId']
+                bait_set = tumors[0].metadata['baitSet']
                 dmp_bam_id = pair['normal']
                 dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
                 data = FileRepository.filter(queryset=self.files,
@@ -213,17 +213,6 @@ class ArgosOperator(Operator):
                     normals.append(sample)
             all_files.extend(list(tumors))
             all_files.extend(list(normals))
-            print(all_files)
-
-        data = list()
-
-        for f in all_files:
-            sample = dict()
-            sample['id'] = f.file.id
-            sample['path'] = f.file.path
-            sample['file_name'] = f.file.file_name
-            sample['metadata'] = f.metadata
-            data.append(sample)
 
         return all_files, cnt_tumors
 
