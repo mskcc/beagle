@@ -28,7 +28,7 @@ class BeaglePagination(PageNumberPagination):
         return self.page_size
 
 
-def time_filter(model, query_params,time_modal='created_date', previous_queryset=None):
+def time_filter(model, query_params, time_modal='created_date', previous_queryset=None):
     timedelta_query = '%s_timedelta' % time_modal
     gt_query = '%s_gt' % time_modal
     gt_query_filter = '%s__gt' % time_modal
@@ -37,14 +37,14 @@ def time_filter(model, query_params,time_modal='created_date', previous_queryset
     order_by = '-%s' % time_modal
     if query_params.get(timedelta_query):
         time_threshold = datetime.now() - timedelta(hours=int(query_params[timedelta_query]))
-        queryset = model.objects.filter(**{gt_query_filter:time_threshold}).order_by(order_by)
+        queryset = model.objects.filter(**{gt_query_filter: time_threshold}).order_by(order_by)
     elif query_params.get(gt_query) or query_params.get(lt_query):
         if query_params.get(gt_query):
             time_gt = query_params[gt_query]
-            queryset = model.objects.filter(**{gt_query_filter:time_gt}).order_by(order_by)
+            queryset = model.objects.filter(**{gt_query_filter: time_gt}).order_by(order_by)
         if query_params.get(lt_query):
             time_lt = query_params[lt_query]
-            queryset = model.objects.filter(**{lt_query_filter:time_lt}).order_by(order_by)
+            queryset = model.objects.filter(**{lt_query_filter: time_lt}).order_by(order_by)
 
     else:
         if previous_queryset != None:

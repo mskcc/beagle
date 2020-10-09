@@ -26,5 +26,6 @@ from .etl_import_partially_complete_event import ETLImportPartiallyCompleteEvent
 from .set_run_ticket_in_import_event import SetRunTicketInImportEvent
 from .etl_import_no_samples_event import ETLImportNoSamplesEvent
 from .run_started_event import RunStartedEvent
+from .input_creation_failed_event import InputCreationFailedEvent
 from .local_store_file_event import LocalStoreFileEvent
 from .external_email_event import ExternalEmailEvent
