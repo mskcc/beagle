@@ -113,6 +113,7 @@ def construct_sample_inputs(samples, request_id, group_id):
         title_file_content = generate_title_file_content(sample_group)
         fastq1_files = []
         fastq2_files = []
+        sample_sheets = []
 
         for sample_pair in sample_group:
             meta = sample_pair[0]["metadata"]
@@ -120,7 +121,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             missing_fields = get_missing_fields(meta, REQUIRED_META_FIELDS)
             if missing_fields:
                 ic_error = InputCreationFailedEvent(
-                    "The follwing fields are missing from the input: {}".format(",".join(missing_fields)),
+                    "The following fields are missing from the input: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
                     meta["sampleId"]
@@ -134,14 +135,24 @@ def construct_sample_inputs(samples, request_id, group_id):
             tumor_or_normals.append(meta["tumorOrNormal"])
             patient_ids.append(meta["patientId"])
 
+            # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
+            r1_fastq = sample_pair[0] if '_R1_' in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if '_R2_' in sample_pair[0]["path"] else sample_pair[1]
+
             fastq1_files.append({
                 "class": "File",
-                "path": "juno://" + sample_pair[0]["path"]
+                "path": "juno://" + r1_fastq["path"]
             })
 
             fastq2_files.append({
                 "class": "File",
-                "path": "juno://" + sample_pair[1]["path"]
+                "path": "juno://" + r2_fastq["path"]
+            })
+
+            # Todo: Using dummy sample sheets until this requirement is removed from the pipeline
+            sample_sheets.append({
+                "class": "File",
+                "path": "juno://" + sample_pair[0]["path"]
             })
 
         input_file = template.render(
@@ -153,6 +164,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             adapters2=json.dumps(adapters2),
             fastq1_files=json.dumps(fastq1_files),
             fastq2_files=json.dumps(fastq2_files),
+            sample_sheets=json.dumps(sample_sheets),
             patient_ids=json.dumps(patient_ids),
             title_file_content=json.dumps(title_file_content),
             request_id=json.dumps(request_id),
@@ -193,6 +205,7 @@ class AccessLegacyOperator(Operator):
         ]
 
         (sample_inputs, no_of_errors) = construct_sample_inputs(data, self.request_id, self.job_group_id)
+
         if no_of_errors:
             return
 
