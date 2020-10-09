@@ -141,18 +141,18 @@ def construct_sample_inputs(samples, request_id, group_id):
 
             fastq1_files.append({
                 "class": "File",
-                "path": "juno://" + r1_fastq["path"]
+                "location": "juno://" + r1_fastq["path"]
             })
 
             fastq2_files.append({
                 "class": "File",
-                "path": "juno://" + r2_fastq["path"]
+                "location": "juno://" + r2_fastq["path"]
             })
 
             # Todo: Using dummy sample sheets until this requirement is removed from the pipeline
             sample_sheets.append({
                 "class": "File",
-                "path": "juno://" + sample_pair[0]["path"]
+                "location": "juno://" + sample_pair[0]["path"]
             })
 
         input_file = template.render(
