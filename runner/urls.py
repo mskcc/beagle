@@ -4,7 +4,7 @@ from rest_framework import routers
 from runner.views.run_view import RunViewSet, StartRunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
 from runner.views.operator_run_view import OperatorRunViews
-from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet, RequestOperatorViewSet, RunOperatorViewSet, AionViewSet, TempoMPGenViewSet, CWLJsonViewSet, PairsOperatorViewSet
+from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet, RequestOperatorViewSet, RunOperatorViewSet, AionViewSet, TempoMPGenViewSet, CWLJsonViewSet, PairsOperatorViewSet, RunApiRestartViewSet
 from runner.views.pipeline_view import PipelineViewSet, PipelineResolveViewSet, PipelineDownloadViewSet
 
 
@@ -23,6 +23,7 @@ urlpatterns = [
     path('pipeline/download/<uuid:pk>', PipelineDownloadViewSet.as_view(), name='resolve-download'),
     path('run/start/<uuid:pk>', StartRunViewSet.as_view()),
     path('run/update/<uuid:pk>', UpdateJob.as_view()),
+    path('restart/', RunApiRestartViewSet.as_view()),
     path('request/', OperatorViewSet.as_view()),
     path('operator/request/', RequestOperatorViewSet.as_view()),
     path('operator/runs/', RunOperatorViewSet.as_view()),

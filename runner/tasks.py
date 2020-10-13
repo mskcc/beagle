@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
@@ -308,15 +309,22 @@ def submit_job(run_id, output_directory=None):
         inputs[port.name] = port.value
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = {
-        'app': app,
-        'inputs': inputs,
-        'root_dir': output_directory
-    }
     logger.info("Job %s ready for submitting" % run_id)
-    url = settings.RIDGEBACK_URL + '/v0/jobs/' if not resume else settings.RIDGEBACK_URL + '/v0/jobs/{id}/resume'.format(
-        id=resume)
-    response = requests.post(url, json=job)
+    if resume:
+        url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
+            id=resume))
+        job = {
+            'root_dir': output_directory
+        }
+        response = requests.post(url, json=job)
+    else:
+        url = settings.RIDGEBACK_URL + '/v0/jobs/'
+        job = {
+            'app': app,
+            'inputs': inputs,
+            'root_dir': output_directory
+        }
+        response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
         run.status = RunStatus.RUNNING
