@@ -2,6 +2,7 @@ import logging
 from runner.run.objects.port_object import PortObject
 from runner.pipeline.pipeline_cache import PipelineCache
 from runner.models import PortType, RunStatus, Run, Port
+from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException, RunCreateException, RunObjectConstructException
 
 
@@ -92,6 +93,32 @@ class RunObject(object):
         self.run_obj.job_group_notifier = self.job_group_notifier
         self.run_obj.notify_for_outputs = self.notify_for_outputs
         self.run_obj.save()
+
+    def equal(self, run):
+        if self.run_obj.app != run.run_obj.app:
+            self.logger.debug("Apps not same")
+            self.logger.debug("App 1: %s" % self.run_obj.app)
+            self.logger.debug("App 2: %s" % run.run_obj.app)
+            return False
+        run_1_inputs = set()
+        run_2_inputs = set()
+        for input1 in self.inputs:
+            run_1_inputs.add(input1.name)
+        for input2 in run.inputs:
+            run_2_inputs.add(input2.name)
+        if run_1_inputs != run_2_inputs:
+            return False
+        for input1 in self.inputs:
+            for input2 in run.inputs:
+                if input1.name == input2.name:
+                    self.logger.debug("Compare input name %s" % input1.name)
+                    value1 = PortProcessor.process_files(input1.db_value, PortAction.CONVERT_TO_CWL_FORMAT)
+                    value2 = PortProcessor.process_files(input2.db_value, PortAction.CONVERT_TO_CWL_FORMAT)
+                    self.logger.debug("Value 1: %s" % value1)
+                    self.logger.debug("Value 2: %s" % value2)
+                    if value1 != value2:
+                        return False
+        return True
 
     def fail(self, error_message):
         self.status = RunStatus.FAILED

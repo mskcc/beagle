@@ -281,10 +281,21 @@ def create_run_task(run_id, inputs, output_directory=None):
 
 @shared_task
 def submit_job(run_id, output_directory=None):
+    resume = None
     try:
         run = Run.objects.get(id=run_id)
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
+
+    if run.resume:
+        run1 = RunObject.from_db(run_id)
+        run2 = RunObject.from_db(run.resume)
+
+        if run1.equal(run2):
+            logger.info("Resuming run: %s with execution id: %s" % (str(run.resume), str(run2.run_obj.execution_id)))
+            resume = str(run2.run_obj.execution_id)
+        else:
+            logger.info("Failed to resume runs not equal")
     app = {
         "github": {
             "repository": run.app.github,
@@ -303,7 +314,9 @@ def submit_job(run_id, output_directory=None):
         'root_dir': output_directory
     }
     logger.info("Job %s ready for submitting" % run_id)
-    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
+    url = settings.RIDGEBACK_URL + '/v0/jobs/' if not resume else settings.RIDGEBACK_URL + '/v0/jobs/{id}/resume'.format(
+        id=resume)
+    response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
         run.status = RunStatus.RUNNING
