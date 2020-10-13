@@ -260,6 +260,10 @@ class RunStatusUpdateSerializer(serializers.Serializer):
         instance.save()
 
 
+class RestartRunSerializer(serializers.Serializer):
+    run = serializers.UUIDField(required=True)
+
+
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
