@@ -22,13 +22,13 @@ def construct_sample_inputs(ports, request_id, group_id):
         for row in port.db_value():
             sample_names.append(row["sample_name"])
             tumor_bams.append(row["tumor"])
-            tumor_bams.append(row["normal"])
+            normal_bams.append(row["normal"])
 
     sample_input = [
         json.loads(
             template.render(
                 sample_names=json.dumps(sample_names),
-                tumor_bams=json.dumps(tumor_Bams),
+                tumor_bams=json.dumps(tumor_bams),
                 normal_Bams=json.dumps(normal_bams)
             )
         )
@@ -42,7 +42,7 @@ class AccessLegacyOperator(Operator):
     def get_jobs(self):
         # Not sure what the output of initial ACCESS will look like in Ports.
         # TODO short-circuit if normal doesn't exist
-        ports = Port.objects.filter(run_id__in=run_ids)
+        ports = Port.objects.filter(run_id__in=self.run_ids)
 
         sample_inputs = construct_sample_inputs(ports, self.request_id, self.job_group_id)
 
