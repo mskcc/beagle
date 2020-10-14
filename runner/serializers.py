@@ -7,9 +7,11 @@ from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEve
 from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException
 
+
 def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
 
 def format_port_data(port_data):
     port_dict = {}
@@ -21,6 +23,7 @@ def format_port_data(port_data):
             raise serializers.ValidationError(e)
         port_dict[port_name] = port_value
     return port_dict
+
 
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
@@ -126,7 +129,7 @@ class CreateRunSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
         run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
-                  status=RunStatus.CREATING, job_statuses=dict())
+                  status=RunStatus.CREATING, job_statuses=dict(), resume=validated_data.get('resume'))
         run.save()
         return run
 
@@ -257,6 +260,10 @@ class RunStatusUpdateSerializer(serializers.Serializer):
         instance.save()
 
 
+class RestartRunSerializer(serializers.Serializer):
+    run = serializers.UUIDField(required=True)
+
+
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
@@ -269,6 +276,7 @@ class APIRunCreateSerializer(serializers.Serializer):
     job_group_id = serializers.UUIDField(required=False)
     job_group_notifier_id = serializers.UUIDField(required=False)
     notify_for_outputs = serializers.ListField(allow_null=True, required=False)
+    resume = serializers.UUIDField(allow_null=True, required=False)
 
     def create(self, validated_data):
         try:
@@ -285,7 +293,8 @@ class APIRunCreateSerializer(serializers.Serializer):
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
                   output_metadata=validated_data.get('output_metadata', {}),
-                  tags=tags)
+                  tags=tags,
+                  resume=validated_data.get('resume'))
         if validated_data.get('output_directory'):
             run.output_directory=validated_data.get('output_directory')
         try:
