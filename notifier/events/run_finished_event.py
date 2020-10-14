@@ -40,7 +40,7 @@ class RunFinishedEvent(Event):
         
         _____________________________________________
         
-        OperatorRun {operator_run} status
+        {run_status}
         
         Running: {running}
         Completed: {completed}
@@ -50,6 +50,10 @@ class RunFinishedEvent(Event):
 
         """
         link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', self.run_id)
+        if self.operator_run_id:
+            status = "OperatorRun {operator_run} status"
+        else:
+            status = "Run status"
         tags = ""
         for k, v in self.tags.items():
             tags += "%s: %s\n" % (k, str(v))
@@ -63,6 +67,6 @@ class RunFinishedEvent(Event):
                                    failed=str(self.failed),
                                    total=str(self.total),
                                    tags=tags,
-                                   operator_run=self.operator_run_id,
+                                   run_status=status,
                                    output_directory=self.output_directory
                                    )
