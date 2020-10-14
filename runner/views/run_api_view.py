@@ -3,17 +3,17 @@ from distutils.util import strtobool
 import datetime
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
-from django.db import models
 from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
+from runner.run.objects.run_object import RunObject
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
-    TempoMPGenOperatorSerializer, PairOperatorSerializer
+    TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
@@ -150,7 +150,52 @@ class RunApiViewSet(mixins.ListModelMixin,
             response = RunSerializerFull(run)
             create_run_task.delay(response.data['id'], request.data['inputs'])
             job_group_notifier_id = str(run.job_group_notifier_id)
-            self._send_notifications(job_group_notifier_id, run)
+            if job_group_notifier_id:
+                self._send_notifications(job_group_notifier_id, run)
+            return Response(response.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def _send_notifications(self, job_group_notifier_id, run):
+        pipeline_name = run.app.name
+        pipeline_version = run.app.version
+        pipeline_link = run.app.pipeline_link
+
+        pipeline_description_event = AddPipelineToDescriptionEvent(job_group_notifier_id, pipeline_name,
+                                                                   pipeline_version,
+                                                                   pipeline_link).to_dict()
+        send_notification.delay(pipeline_description_event)
+
+        run_event = RunStartedEvent(job_group_notifier_id, str(run.id), run.app.name, run.app.pipeline_link,
+                                    run.output_directory, run.tags).to_dict()
+        send_notification.delay(run_event)
+
+
+class RunApiRestartViewSet(GenericAPIView):
+    serializer_class = RestartRunSerializer
+
+    logger = logging.getLogger(__name__)
+
+    def post(self, request):
+        run_id = request.data.get('run')
+        run = RunObject.from_db(run_id)
+        inputs = dict()
+        for port in run.inputs:
+            inputs[port.name] = port.db_value
+        data = dict(
+            app=str(run.run_obj.app.id),
+            inputs=inputs,
+            tags=run.tags,
+            job_group_id=run.job_group.id,
+            job_group_notifier_id=run.job_group_notifier.id,
+            resume=run_id
+        )
+        serializer = APIRunCreateSerializer(data=data, context={'request': request})
+        if serializer.is_valid():
+            new_run = serializer.save()
+            response = RunSerializerFull(new_run)
+            create_run_task.delay(response.data['id'], data['inputs'])
+            job_group_notifier_id = str(new_run.job_group_notifier_id)
+            self._send_notifications(job_group_notifier_id, new_run)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -368,8 +413,8 @@ class CWLJsonViewSet(GenericAPIView):
 
     @swagger_auto_schema(query_serializer=CWLJsonSerializer)
     def get(self, request):
-        query_list_types = ['job_groups','jira_ids','request_ids','runs']
-        fixed_query_params = fix_query_list(request.query_params,query_list_types)
+        query_list_types = ['job_groups', 'jira_ids', 'request_ids', 'runs']
+        fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = CWLJsonSerializer(data=fixed_query_params)
         show_inputs = False
         if serializer.is_valid():
