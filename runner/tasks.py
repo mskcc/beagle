@@ -382,15 +382,24 @@ def _job_finished_notify(run):
     job_group = run.job_group
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
-    job_group_id = str(job_group.id) if job_group else None
 
     pipeline_name = run.run_obj.app.name
     pipeline_link = run.run_obj.app.pipeline_link
 
-    total_runs = run.run_obj.operator_run.total_runs
-    completed_runs = run.run_obj.operator_run.completed_runs
-    failed_runs = run.run_obj.operator_run.failed_runs
-    running_runs = run.run_obj.operator_run.running_runs
+    if run.run_obj.operator_run:
+        operator_run_id = str(run.run_obj.operator_run.id)
+        total_runs = run.run_obj.operator_run.total_runs
+        completed_runs = run.run_obj.operator_run.completed_runs
+        failed_runs = run.run_obj.operator_run.failed_runs
+        running_runs = run.run_obj.operator_run.running_runs
+    else:
+        operator_run_id = None
+        total_runs = 1
+        if run.status == RunStatus.COMPLETED:
+            completed_runs, failed_runs = 1, 0
+        else:
+            completed_runs, failed_runs = 0, 1
+        running_runs = 0
 
     event = RunFinishedEvent(job_group_notifier_id,
                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
@@ -404,7 +413,7 @@ def _job_finished_notify(run):
                              completed_runs,
                              failed_runs,
                              total_runs,
-                             str(run.run_obj.operator_run.id)
+                             operator_run_id
                              )
     e = event.to_dict()
     send_notification.delay(e)
