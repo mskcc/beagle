@@ -29,3 +29,4 @@ from .run_started_event import RunStartedEvent
 from .input_creation_failed_event import InputCreationFailedEvent
 from .local_store_file_event import LocalStoreFileEvent
 from .external_email_event import ExternalEmailEvent
+from .only_normal_samples_event import OnlyNormalSamplesEvent
