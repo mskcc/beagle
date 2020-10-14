@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
@@ -281,10 +282,21 @@ def create_run_task(run_id, inputs, output_directory=None):
 
 @shared_task
 def submit_job(run_id, output_directory=None):
+    resume = None
     try:
         run = Run.objects.get(id=run_id)
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
+
+    if run.resume:
+        run1 = RunObject.from_db(run_id)
+        run2 = RunObject.from_db(run.resume)
+
+        if run1.equal(run2):
+            logger.info("Resuming run: %s with execution id: %s" % (str(run.resume), str(run2.run_obj.execution_id)))
+            resume = str(run2.run_obj.execution_id)
+        else:
+            logger.info("Failed to resume runs not equal")
     app = {
         "github": {
             "repository": run.app.github,
@@ -297,13 +309,22 @@ def submit_job(run_id, output_directory=None):
         inputs[port.name] = port.value
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = {
-        'app': app,
-        'inputs': inputs,
-        'root_dir': output_directory
-    }
     logger.info("Job %s ready for submitting" % run_id)
-    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/', json=job)
+    if resume:
+        url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
+            id=resume))
+        job = {
+            'root_dir': output_directory
+        }
+        response = requests.post(url, json=job)
+    else:
+        url = settings.RIDGEBACK_URL + '/v0/jobs/'
+        job = {
+            'app': app,
+            'inputs': inputs,
+            'root_dir': output_directory
+        }
+        response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
         run.status = RunStatus.RUNNING
@@ -361,15 +382,24 @@ def _job_finished_notify(run):
     job_group = run.job_group
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
-    job_group_id = str(job_group.id) if job_group else None
 
     pipeline_name = run.run_obj.app.name
     pipeline_link = run.run_obj.app.pipeline_link
 
-    total_runs = run.run_obj.operator_run.total_runs
-    completed_runs = run.run_obj.operator_run.completed_runs
-    failed_runs = run.run_obj.operator_run.failed_runs
-    running_runs = run.run_obj.operator_run.running_runs
+    if run.run_obj.operator_run:
+        operator_run_id = str(run.run_obj.operator_run.id)
+        total_runs = run.run_obj.operator_run.total_runs
+        completed_runs = run.run_obj.operator_run.completed_runs
+        failed_runs = run.run_obj.operator_run.failed_runs
+        running_runs = run.run_obj.operator_run.running_runs
+    else:
+        operator_run_id = None
+        total_runs = 1
+        if run.status == RunStatus.COMPLETED:
+            completed_runs, failed_runs = 1, 0
+        else:
+            completed_runs, failed_runs = 0, 1
+        running_runs = 0
 
     event = RunFinishedEvent(job_group_notifier_id,
                              run.tags.get('requestId', 'UNKNOWN REQUEST'),
@@ -383,7 +413,7 @@ def _job_finished_notify(run):
                              completed_runs,
                              failed_runs,
                              total_runs,
-                             str(run.run_obj.operator_run.id)
+                             operator_run_id
                              )
     e = event.to_dict()
     send_notification.delay(e)

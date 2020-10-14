@@ -163,6 +163,7 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+    resume = models.UUIDField(blank=True, null=True)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
