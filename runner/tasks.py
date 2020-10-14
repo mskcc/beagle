@@ -387,11 +387,13 @@ def _job_finished_notify(run):
     pipeline_link = run.run_obj.app.pipeline_link
 
     if run.run_obj.operator_run:
+        operator_run_id = str(run.run_obj.operator_run.id)
         total_runs = run.run_obj.operator_run.total_runs
         completed_runs = run.run_obj.operator_run.completed_runs
         failed_runs = run.run_obj.operator_run.failed_runs
         running_runs = run.run_obj.operator_run.running_runs
     else:
+        operator_run_id = None
         total_runs = 1
         if run.status == RunStatus.COMPLETED:
             completed_runs, failed_runs = 1, 0
@@ -411,7 +413,7 @@ def _job_finished_notify(run):
                              completed_runs,
                              failed_runs,
                              total_runs,
-                             str(run.run_obj.operator_run.id)
+                             operator_run_id
                              )
     e = event.to_dict()
     send_notification.delay(e)
