@@ -101,6 +101,10 @@ def construct_sample_inputs(samples, request_id, group_id):
     # Pair FASTQs
     sample_pairs = list(group_by_sample_id(samples).values())
 
+    # ABRA will run out of memory if it receives a batch of samples
+    # all with the same patient id, so we'll append a count
+    # to each sample's patient id
+    patient_id_count = defaultdict(int)
     # A sample group is a group of 20 PAIRS of samples.
     for sample_group in chunks(sample_pairs, SAMPLE_GROUP_SIZE):
         barcode_ids = []
@@ -130,10 +134,11 @@ def construct_sample_inputs(samples, request_id, group_id):
                 errors += 1
                 continue
 
+            patient_id_count[meta["patientId"]] += 1
             cmo_sample_names.append(meta["cmoSampleName"])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
-            patient_ids.append(meta["patientId"])
+            patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
             r1_fastq = sample_pair[0] if '_R1_' in sample_pair[0]["path"] else sample_pair[1]
@@ -215,7 +220,7 @@ class AccessLegacyOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {'requestId': self.request_id, 'cmoSampleIds': job["add_rg_ID"]}
