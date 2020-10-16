@@ -12,6 +12,20 @@ from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
 
+def get_curated_normals():
+    """
+    Return curated normal bams as yaml file objects
+
+    :return: (list, list)
+    """
+    normal_paths = open('runner/operator/access/v1_0_0/snps_and_indels/DMP_curated_bams.txt').read().split('\n')
+    normal_ids = open('runner/operator/access/v1_0_0/snps_and_indels/DMP_curated_bam_ids.txt').read().split('\n')
+
+    normal_files = [{"class": "File", "location": p} for p in normal_paths]
+
+    return normal_files, normal_ids
+
+
 def construct_sample_inputs(tumor_bam, sample_id, matched_normal_bam, normal_sample_id):
     with open('runner/operator/access/v1_0_0/snps_and_indels/input_template.json.jinja2') as file:
         template = Template(file.read())
@@ -37,9 +51,9 @@ def construct_sample_inputs(tumor_bam, sample_id, matched_normal_bam, normal_sam
         }]
         genotyping_bams_ids = [normal_sample_id]
 
-        # todo:
-        genotyping_bams += get_curated_normals()
-        genotyping_bams_ids += get_curated_normal_ids()
+        curated_normal_bams, curated_normal_ids = get_curated_normals()
+        genotyping_bams += curated_normal_bams
+        genotyping_bams_ids += curated_normal_ids
 
         input_file = template.render(
             tumor_bams=json.dumps(tumor_bams),
@@ -68,6 +82,7 @@ class AccessLegacySNVOperator(Operator):
 
             # for b in port_list.bam_dirs:
             for b in port_list.bam_dirs:
+                print(b)
 
                 # todo: this is brittle
                 sample_id = b['metadata']['path'].split('/')[-1].split('__')[0]
@@ -85,7 +100,7 @@ class AccessLegacySNVOperator(Operator):
                     }
                 )
 
-                assert len(files) == 1, 'Found incorrect matching file found for sample {}'.format(sample_id)
+                assert len(files) == 1, 'Found incorrect number ({}) of matching files for sample {}'.format(str(len(files)), sample_id)
 
                 if files[0]['metadata']['tumorOrNormal'] == 'Tumor':
 
@@ -99,7 +114,7 @@ class AccessLegacySNVOperator(Operator):
                         }
                     )
 
-                    tumor_bams.append(get_file_obj(files[0]))
+                    tumor_bams.append(files[0])
                     sample_ids.append(sample_id)
                     matched_normals.append(matched_normal)
                     matched_normal_ids.append(matched_normal['metadata']['cmoSampleId'])
@@ -112,19 +127,17 @@ class AccessLegacySNVOperator(Operator):
                 "metadata": f.metadata
             } for f in files
         ]
- 
+
         sample_inputs = []
         for i, b in enumerate(tumor_bams):
 
-            (sample_input, no_of_errors) = construct_sample_inputs(
+            sample_input = construct_sample_inputs(
                 b,
                 sample_ids[i],
                 matched_normals[i],
                 matched_normal_ids[i]
             )
 
-            if no_of_errors:
-                return
             sample_inputs.append(sample_input)
 
         number_of_inputs = len(sample_inputs)
