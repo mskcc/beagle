@@ -1,0 +1,13 @@
+[
+  {
+    "Name": "ACCESS LEGACY M1: 06302_AB, 1 of 1 (10/16/2020, 11:43:42)",
+    "App": "access legacy",
+    "Status": "COMPLETED",
+    "Output directory": "/juno/work/ci/voyager-output/access/02c82bc4-2575-4f0d-8b2d-55acb4988381",
+    "Tags": {
+      "requestId": "06302_AB",
+      "cmoSampleIds": ["s_C_J72REA_N004_d", "s_C_PTDL8E_N003_d"]
+    },
+    "Operator run": "bc23076e-f477-4578-943c-1fbf6f1fca44"
+  }
+]
