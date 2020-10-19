@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 import django_auth_ldap.backend
 from django.dispatch import receiver
@@ -5,9 +6,25 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
 
+class BaseModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
 class MskUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     groups = models.CharField(max_length=500)
+
+
+class UserRegistrationRequest(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
+    approved = models.BooleanField(default=None, null=True, blank=True)
 
 
 @receiver(post_save, sender=User)
