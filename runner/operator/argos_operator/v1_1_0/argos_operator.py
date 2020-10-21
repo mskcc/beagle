@@ -213,8 +213,12 @@ class ArgosOperator(Operator):
                     metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
                     sample.metadata = metadata
                     normals.append(sample)
-            all_files.extend(list(tumors))
-            all_files.extend(list(normals))
+            for file in list(tumors):
+                if file not in all_files:
+                    all_files.append(file)
+            for file in list(normals):
+                if file not in all_files:
+                    all_files.append(file)
 
         return all_files, cnt_tumors
 
