@@ -1,9 +1,13 @@
+from rest_framework import mixins
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer, TokenVerifySerializer
-from .serializers import BeagleTokenObtainPairSerializer, TokenResponsePairSerializer, TokenResponseRefreshSerializer
+from .models import UserRegistrationRequest
+from .serializers import BeagleTokenObtainPairSerializer, TokenResponsePairSerializer, TokenResponseRefreshSerializer, \
+    UserRegistrationRequestSerializer
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, status
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 
 class BeagleTokenObtainPairView(TokenObtainPairView):
@@ -37,6 +41,7 @@ class BeagleTokenRefreshView(TokenRefreshView):
             error_message = {'detail': 'Unable to connect to authentication server'}
             return Response(error_message, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
+
 class BeagleTokenVerifyView(TokenVerifyView):
     """
     Takes a token and indicates if it is valid.  This view provides no
@@ -51,3 +56,8 @@ class BeagleTokenVerifyView(TokenVerifyView):
         except Exception as auth_exception:
             error_message = {'detail': 'Unable to connect to authentication server'}
             return Response(error_message, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+
+class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
+    serializer_class = UserRegistrationRequestSerializer
+    queryset = UserRegistrationRequest.objects.order_by('created_date').all()
