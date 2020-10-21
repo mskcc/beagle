@@ -12,19 +12,25 @@ from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
 
-def get_curated_normals():
+def get_curated_normals(patient_id):
     """
     Return curated normal bams as yaml file objects
 
     :return: (list, list)
     """
-    normal_paths = open('runner/operator/access/v1_0_0/snps_and_indels/DMP_curated_bams.txt').read().split('\n')
-    normal_ids = open('runner/operator/access/v1_0_0/snps_and_indels/DMP_curated_bam_ids.txt').read().split('\n')
-    normal_files = [{"class": "File", "location": p} for p in normal_paths]
-    return normal_files, normal_ids
+    normal_bams = FileRepository.filter(
+        metadata={
+            'patientId': patient_id,
+            'tumorOrNormal': 'Normal',
+            'igocomplete': True
+        }
+    )
+    normal_bams = [{'class': 'File', 'location': b.path} for b in normal_bams]
+    normal_ids = [n['metadata']['cmoSampleId'] for n in normal_bams]
+    return normal_bams, normal_ids
 
 
-def construct_sample_inputs(tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
+def construct_sample_inputs(patient_id, tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
     with open('runner/operator/access/v1_0_0/snps_and_indels/input_template.json.jinja2') as file:
         template = Template(file.read())
 
@@ -59,7 +65,7 @@ def construct_sample_inputs(tumor_bam, tumor_simplex_bam, tumor_sample_id, match
         ]
         genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX', normal_sample_id]
 
-        curated_normal_bams, curated_normal_ids = get_curated_normals()
+        curated_normal_bams, curated_normal_ids = get_curated_normals(patient_id=patient_id)
         genotyping_bams += curated_normal_bams
         genotyping_bams_ids += curated_normal_ids
 
@@ -82,6 +88,7 @@ class AccessLegacySNVOperator(Operator):
 
         run_ids = self.run_ids
         tumor_bams = []
+        patient_ids = []
         tumor_simplex_bams = []
         sample_ids = []
         matched_normals = []
@@ -95,6 +102,7 @@ class AccessLegacySNVOperator(Operator):
 
                 sample_id = b['metadata']['cmoSampleId']
                 patient_id = b['metadata']['patientId']
+                patient_id.append(patient_id)
 
                 # todo: brittle, need a new field for bam type (or use new FileType?)
                 duplex_bam = b
@@ -134,6 +142,7 @@ class AccessLegacySNVOperator(Operator):
         for i, b in enumerate(tumor_bams):
 
             sample_input = construct_sample_inputs(
+                patient_ids[i],
                 b,
                 tumor_simplex_bams[i],
                 sample_ids[i],
