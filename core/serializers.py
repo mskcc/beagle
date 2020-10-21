@@ -1,3 +1,4 @@
+from core.models import UserRegistrationRequest
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
 from rest_framework import serializers
 from drf_yasg import openapi
@@ -26,10 +27,12 @@ class BeagleTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
 
+
 class BeagleTokenRefreshSerializer(TokenRefreshSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
+
 
 class UserField(serializers.JSONField):
 
@@ -61,5 +64,13 @@ class TokenResponsePairSerializer(serializers.Serializer):
     token = serializers.CharField()
     user = UserField()
 
+
 class TokenResponseRefreshSerializer(serializers.Serializer):
     access = serializers.CharField()
+
+
+class UserRegistrationRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserRegistrationRequest
+        fields = ('username', 'first_name', 'last_name')

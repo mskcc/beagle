@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path, include
 from beagle import __version__
-from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, BeagleTokenVerifyView
+from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, BeagleTokenVerifyView, UserRequestViewSet
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from rest_framework import routers
 
 
 schema_view = get_schema_view(
@@ -34,9 +35,14 @@ schema_view = get_schema_view(
 )
 
 
+router = routers.DefaultRouter()
+router.register('register', UserRequestViewSet)
+
+
 urlpatterns = [
     url(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('', include(router.urls)),
     path('v0/fs/', include('file_system.urls')),
     path('v0/run/', include('runner.urls')),
     path('v0/etl/', include('beagle_etl.urls')),
@@ -44,5 +50,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-token-auth/', BeagleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api-token-refresh/', BeagleTokenRefreshView.as_view(), name='token_refresh'),
-    path('api-token-verify/', BeagleTokenVerifyView.as_view(), name='token_verify'),
+    path('api-token-verify/', BeagleTokenVerifyView.as_view(), name='token_verify')
 ]
