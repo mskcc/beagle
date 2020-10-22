@@ -25,16 +25,17 @@ def get_curated_normals(patient_id):
 
     :return: (list, list)
     """
-    normal_bams = FileRepository.filter(
+    curated_normal_bams = FileRepository.filter(
         metadata={
-            'patientId': patient_id,
-            'tumorOrNormal': 'Normal',
-            'igocomplete': True,
             'fileGroup': ACCESS_CURATED_BAMS_FILE_GROUP
         }
     )
-    normal_bams = [{'class': 'File', 'location': b.path} for b in normal_bams]
+    normal_bams = [{'class': 'File', 'location': b.path} for b in curated_normal_bams]
+
+    # Todo: need to confirm that -CURATED and -CURATED-SIMPLEX suffixes are added here
+    # Should that suffix be added here or saved as metadata in the DB?
     normal_ids = [n['metadata']['cmoSampleId'] for n in normal_bams]
+
     return normal_bams, normal_ids
 
 
@@ -101,56 +102,50 @@ class AccessLegacySNVOperator(Operator):
         sample_ids = []
         matched_normals = []
         matched_normal_ids = []
+
         for run_id in run_ids:
             port_list = Port.objects.filter(run=run_id)
-            for port in port_list:
-                if port.name == 'duplex_bams':
 
-                    print(port)
-                    print(port.value)
-                    print(port.files)
-                    print(dir(port))
+            duplex_bam_port = [p for p in port_list if p.name == 'duplex_bams'][0]
 
-                    for i, b in enumerate(port.files):
-                        print(b)
+            for i, b in enumerate(duplex_bam_port.files):
+                sample_id = b['metadata']['cmoSampleId']
+                patient_id = b['metadata']['patientId']
+                patient_ids.append(patient_id)
 
-                        sample_id = b['metadata']['cmoSampleId']
-                        patient_id = b['metadata']['patientId']
-                        patient_ids.append(patient_id)
+                # todo: brittle, need a new field for bam type (or use new FileType?)
+                duplex_bam = b
+                simplex_bam = port_list.simplex_bams[i]
 
-                        # todo: brittle, need a new field for bam type (or use new FileType?)
-                        duplex_bam = b
-                        simplex_bam = port_list.simplex_bams[i]
+                if duplex_bam[0]['metadata']['tumorOrNormal'] == 'Tumor':
 
-                        if duplex_bam[0]['metadata']['tumorOrNormal'] == 'Tumor':
+                    tumor_bams.append(duplex_bam)
+                    tumor_simplex_bams.append(simplex_bam)
+                    sample_ids.append(sample_id)
 
-                            tumor_bams.append(duplex_bam)
-                            tumor_simplex_bams.append(simplex_bam)
-                            sample_ids.append(sample_id)
+                    matched_normal_bams = FileRepository.filter(
+                        queryset=self.files,
+                        metadata={
+                            'patientId': patient_id,
+                            'tumorOrNormal': 'Normal',
+                            'igocomplete': True
+                        }
+                    )
 
-                            matched_normal_bams = FileRepository.filter(
-                                queryset=self.files,
-                                metadata={
-                                    'patientId': patient_id,
-                                    'tumorOrNormal': 'Normal',
-                                    'igocomplete': True
-                                }
-                            )
+                    if not len(matched_normal_bams) > 0:
+                        msg = 'No matching normals found for patient {}'.format(patient_id)
+                        raise Exception(msg)
 
-                            if not len(matched_normal_bams) > 0:
-                                msg = 'No matching normals found for patient {}'.format(patient_id)
-                                raise Exception(msg)
+                    unfiltered_matched_normals = [b for b in matched_normal_bams if b['file_name'].endswith('__aln_srt_IR_FX.bam')]
 
-                            unfiltered_matched_normals = [b for b in matched_normal_bams if b['file_name'].endswith('__aln_srt_IR_FX.bam')]
+                    if not len(unfiltered_matched_normals) > 0:
+                        msg = 'No unfiltered normals found for patient {}'.format(patient_id)
+                        raise Exception(msg)
 
-                            if not len(unfiltered_matched_normals) > 0:
-                                msg = 'No unfiltered normals found for patient {}'.format(patient_id)
-                                raise Exception(msg)
-
-                            # Todo: use the most recent normal
-                            unfiltered_matched_normal = unfiltered_matched_normals[0]
-                            matched_normals.append(unfiltered_matched_normal)
-                            matched_normal_ids.append(unfiltered_matched_normal['metadata']['cmoSampleId'])
+                    # Todo: use the most recent normal
+                    unfiltered_matched_normal = unfiltered_matched_normals[0]
+                    matched_normals.append(unfiltered_matched_normal)
+                    matched_normal_ids.append(unfiltered_matched_normal['metadata']['cmoSampleId'])
 
         sample_inputs = []
         for i, b in enumerate(tumor_bams):
