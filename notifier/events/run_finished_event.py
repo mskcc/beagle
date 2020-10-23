@@ -51,7 +51,7 @@ class RunFinishedEvent(Event):
         """
         link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', self.run_id)
         if self.operator_run_id:
-            status = "OperatorRun {operator_run} status"
+            status = "OperatorRun {operator_run} status".format(operator_run=self.operator_run_id)
         else:
             status = "Run status"
         tags = ""
