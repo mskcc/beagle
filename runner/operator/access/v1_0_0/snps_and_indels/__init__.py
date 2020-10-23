@@ -107,24 +107,26 @@ class AccessLegacySNVOperator(Operator):
             port_list = Port.objects.filter(run=run_id)
 
             duplex_bam_port = [p for p in port_list if p.name == 'duplex_bams'][0]
+            simplex_bam_port = [p for p in port_list if p.name == 'simplex_bams'][0]
+            patient_id_port = [p for p in port_list if p.name == 'patient_id'][0]
+            sample_id_port = [p for p in port_list if p.name == 'add_rg_ID'][0]
+            t_n_port = [p for p in port_list if p.name == 'sample_class'][0]
 
             for i, b in enumerate(duplex_bam_port.files):
-                sample_id = b['metadata']['cmoSampleId']
-                patient_id = b['metadata']['patientId']
+                sample_id = sample_id_port[i]
+                patient_id = patient_id_port[i]
                 patient_ids.append(patient_id)
 
                 # todo: brittle, need a new field for bam type (or use new FileType?)
                 duplex_bam = b
-                simplex_bam = port_list.simplex_bams[i]
+                simplex_bam = simplex_bam_port.files[i]
 
-                if duplex_bam[0]['metadata']['tumorOrNormal'] == 'Tumor':
-
+                if t_n_port[i] == 'Tumor':
                     tumor_bams.append(duplex_bam)
                     tumor_simplex_bams.append(simplex_bam)
                     sample_ids.append(sample_id)
 
                     matched_normal_bams = FileRepository.filter(
-                        queryset=self.files,
                         metadata={
                             'patientId': patient_id,
                             'tumorOrNormal': 'Normal',
@@ -136,6 +138,7 @@ class AccessLegacySNVOperator(Operator):
                         msg = 'No matching normals found for patient {}'.format(patient_id)
                         raise Exception(msg)
 
+                    # Todo: instead of looking at the file name, how to query for Bam files only? use fileType: 'bam'?
                     unfiltered_matched_normals = [b for b in matched_normal_bams if b['file_name'].endswith('__aln_srt_IR_FX.bam')]
 
                     if not len(unfiltered_matched_normals) > 0:
@@ -145,6 +148,7 @@ class AccessLegacySNVOperator(Operator):
                     # Todo: use the most recent normal
                     unfiltered_matched_normal = unfiltered_matched_normals[0]
                     matched_normals.append(unfiltered_matched_normal)
+                    # Todo: this won't work, how to get sample ID from file?
                     matched_normal_ids.append(unfiltered_matched_normal['metadata']['cmoSampleId'])
 
         sample_inputs = []
