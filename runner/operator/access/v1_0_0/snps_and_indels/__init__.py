@@ -35,7 +35,7 @@ def get_curated_normals(patient_id):
 
     # Todo: Should we add the ID suffix here or save it as metadata in the DB?
     # For now we are saving it as a metadata field "snv_pipeline_id"
-    normal_ids = [n['metadata']['snv_pipeline_id'] for n in normal_bams]
+    normal_ids = [n['metadata']['snv_pipeline_id'] for n in curated_normal_bams]
 
     return normal_bams, normal_ids
 
