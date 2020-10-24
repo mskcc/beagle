@@ -14,8 +14,9 @@ from file_system.repository.file_repository import FileRepository
 
 
 
-# Todo: create FileGroup for access curated bams and use ID here
-ACCESS_CURATED_BAMS_FILE_GROUP = ''
+# Todo: Change this ID in staging when running tests
+ACCESS_CURATED_BAMS_FILE_GROUP = '1a1b29cf-3bc2-4f6c-b376-d4c5d70116aa'
+ACCESS_DEFAULT_NORMAL_BAM_FILE_ID = '2f77f3ac-ab25-4a02-90bd-86542401ac82'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -32,9 +33,9 @@ def get_curated_normals(patient_id):
     )
     normal_bams = [{'class': 'File', 'location': b.path} for b in curated_normal_bams]
 
-    # Todo: need to confirm that -CURATED and -CURATED-SIMPLEX suffixes are added here
-    # Should that suffix be added here or saved as metadata in the DB?
-    normal_ids = [n['metadata']['cmoSampleId'] for n in normal_bams]
+    # Todo: Should we add the ID suffix here or save it as metadata in the DB?
+    # For now we are saving it as a metadata field "snv_pipeline_id"
+    normal_ids = [n['metadata']['snv_pipeline_id'] for n in normal_bams]
 
     return normal_bams, normal_ids
 
@@ -53,9 +54,17 @@ def construct_sample_inputs(patient_id, tumor_bam, tumor_simplex_bam, tumor_samp
         matched_normal_ids = [normal_sample_id]
 
         # Todo: how to know which sequencer's default normal to use?
+        normal_bam = FileRepository.filter(
+            metadata={
+                'pk': ACCESS_DEFAULT_NORMAL_BAM_FILE_ID
+            }
+        )
+        if not len(normal_bam) == 0:
+            msg = "Incorrect number of normal bams found"
+            raise Exception(msg)
         normal_bams = [{
             "class": "File",
-            "location": "/ifs/work/bergerm1/ACCESS-Projects/hiseq_curated_duplex/F22_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+            "location": normal_bam.path
         }]
 
         genotyping_bams = [
@@ -112,13 +121,10 @@ class AccessLegacySNVOperator(Operator):
             sample_id_port = [p for p in port_list if p.name == 'add_rg_ID'][0]
             t_n_port = [p for p in port_list if p.name == 'sample_class'][0]
 
-            for i, b in enumerate(duplex_bam_port.files):
+            for i, duplex_bam in enumerate(duplex_bam_port.files):
                 sample_id = sample_id_port[i]
                 patient_id = patient_id_port[i]
                 patient_ids.append(patient_id)
-
-                # todo: brittle, need a new field for bam type (or use new FileType?)
-                duplex_bam = b
                 simplex_bam = simplex_bam_port.files[i]
 
                 if t_n_port[i] == 'Tumor':
@@ -148,7 +154,7 @@ class AccessLegacySNVOperator(Operator):
                     # Todo: use the most recent normal
                     unfiltered_matched_normal = unfiltered_matched_normals[0]
                     matched_normals.append(unfiltered_matched_normal)
-                    # Todo: this won't work, how to get sample ID from file?
+                    # Todo: will this work to get sample ID from file?
                     matched_normal_ids.append(unfiltered_matched_normal['metadata']['cmoSampleId'])
 
         sample_inputs = []
