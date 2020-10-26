@@ -5,9 +5,9 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
-            "operator": 1,
-            "num_total_runs": 10,
-            "num_completed_runs": 7,
+            "operator": 5,
+            "num_total_runs": 1,
+            "num_completed_runs": 0,
             "num_failed_runs": 0,
             "status": 0,
             "job_group": null
