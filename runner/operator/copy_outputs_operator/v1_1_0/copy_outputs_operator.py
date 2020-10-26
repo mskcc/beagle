@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import uuid
+from pathlib import Path
 from notifier.models import JobGroup
 from file_system.models import File, FileGroup, FileType
 from runner.operator.operator import Operator
@@ -86,6 +87,7 @@ class CopyOutputsOperator(Operator):
         Writes file to temporary location, then registers it to the temp file group
         """
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
+        Path(tmpdir).mkdir(parents=True, exist_ok=True)
         output = os.path.join(tmpdir, fname)
         with open(output, "w+") as fh:
             fh.write(s)
