@@ -60,5 +60,68 @@
                 "2f77f3ac-ab25-4a02-90bd-86542401ac82"
             ]
         }
+    },
+    {
+        "model": "runner.port",
+        "pk": "52e17010-65a2-4e7d-a699-03bfa8c75433",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.831Z",
+            "modified_date": "2020-02-04T15:29:30.750Z",
+            "run": "bc23076e-f477-4578-943c-1fbf6f1fca44",
+            "name": "patient_id",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "db_value": ["C-000884"],
+            "value": ["C-000884"],
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "52e17010-65a2-4e7d-a699-03bfa8c75411",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.831Z",
+            "modified_date": "2020-02-04T15:29:30.750Z",
+            "run": "bc23076e-f477-4578-943c-1fbf6f1fca44",
+            "name": "add_rg_ID",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "db_value": ["C-000884-L011-d"],
+            "value": ["C-000884-L011-d"],
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "52e17010-65a2-4e7d-a699-03bfa8c75422",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.831Z",
+            "modified_date": "2020-02-04T15:29:30.750Z",
+            "run": "bc23076e-f477-4578-943c-1fbf6f1fca44",
+            "name": "sample_class",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "db_value": ["Tumor"],
+            "value": ["Tumor"],
+            "files": []
+        }
     }
 ]
