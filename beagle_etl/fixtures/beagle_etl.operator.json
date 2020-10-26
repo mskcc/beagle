@@ -42,5 +42,16 @@
             "version": "v1.0.0",
             "slug": "CopyOutputsOperator"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 5,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.snps_and_indels.AccessLegacySNVOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacySNVOperator"
+        }
     }
 ]

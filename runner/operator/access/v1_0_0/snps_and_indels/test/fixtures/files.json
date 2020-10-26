@@ -7,7 +7,7 @@
             "modified_date": "2020-01-06T19:59:50.579Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
             "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
-            "file_type": 1,
+            "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
@@ -20,7 +20,7 @@
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
             "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_simplex_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
-            "file_type": 1,
+            "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
@@ -33,7 +33,7 @@
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
             "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_normal_bams/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
-            "file_type": 1,
+            "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
@@ -46,7 +46,7 @@
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
             "path": "/work/access/production/resources/msk-access/current/novaseq_unmatched_normal_plasma_duplex_bams_dmp/current/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
-            "file_type": 1,
+            "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }

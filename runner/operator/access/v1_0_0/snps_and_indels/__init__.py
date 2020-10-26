@@ -17,7 +17,7 @@ from file_system.repository.file_repository import File, FileRepository
 ACCESS_CURATED_BAMS_FILE_GROUP = '1a1b29cf-3bc2-4f6c-b376-d4c5d70116aa'
 ACCESS_DEFAULT_NORMAL_BAM_FILE_ID = '2f77f3ac-ab25-4a02-90bd-86542401ac82'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-
+BAM_FILE_TYPE = 3 # todo: put in better location
 
 class AccessLegacySNVOperator(Operator):
 
@@ -48,6 +48,9 @@ class AccessLegacySNVOperator(Operator):
             for i, duplex_bam in enumerate(duplex_bam_port):
                 sample_id = sample_id_port[i]
                 patient_id = patient_id_port[i]
+
+                print(simplex_bam_port)
+
                 simplex_bam = simplex_bam_port[i]
 
                 if t_n_port[i] == 'Tumor':
@@ -70,7 +73,7 @@ class AccessLegacySNVOperator(Operator):
                         raise Exception(msg)
 
                     # Todo: instead of looking at the file name, how to query for Unfiltered Bam files only? use fileType: 'unfiltered_bam'?
-                    unfiltered_matched_normals = [b for b in matched_normal_bams if b['file_name'].endswith('__aln_srt_IR_FX.bam')]
+                    unfiltered_matched_normals = [b for b in matched_normal_bams if b.file.file_name.endswith('__aln_srt_IR_FX.bam')]
 
                     if not len(unfiltered_matched_normals) > 0:
                         msg = 'No unfiltered normals found for patient {}'.format(patient_id)
@@ -80,7 +83,7 @@ class AccessLegacySNVOperator(Operator):
                     unfiltered_matched_normal = unfiltered_matched_normals[0]
                     matched_normals.append(unfiltered_matched_normal)
                     # Todo: will this work to get sample ID from file?
-                    matched_normal_ids.append(unfiltered_matched_normal['metadata']['cmoSampleId'])
+                    matched_normal_ids.append(unfiltered_matched_normal.metadata['sampleName'])
 
         sample_inputs = []
         for i, b in enumerate(tumor_bams):
@@ -166,15 +169,15 @@ class AccessLegacySNVOperator(Operator):
             genotyping_bams = [
                 {
                     "class": "File",
-                    "location": tumor_bam['metadata']['path']
+                    "location": tumor_bam['path']
                 },
                 {
                     "class": "File",
-                    "location": tumor_simplex_bam['metadata']['path']
+                    "location": tumor_simplex_bam['path']
                 },
                 {
                     "class": "File",
-                    "location": matched_normal_bam['metadata']['path']
+                    "location": matched_normal_bam.file.path
                 }
             ]
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX', normal_sample_id]
