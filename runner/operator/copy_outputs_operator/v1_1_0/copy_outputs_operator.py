@@ -5,10 +5,14 @@ Constructs input JSON for the copy outputs pipeline and then
 submits them as runs
 """
 import os
+import uuid
+from pathlib import Path
 from notifier.models import JobGroup
+from file_system.models import File, FileGroup, FileType
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
+from django.conf import settings
 from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files
 
 
@@ -28,23 +32,14 @@ class CopyOutputsOperator(Operator):
 
         mapping_file_content, pairing_file_content, data_clinical_content = generate_sample_pairing_and_mapping_files(
             run_ids)
+        mapping_file = self.write_to_file("sample_mapping.txt", mapping_file_content)
+        pairing_file = self.write_to_file("sample_pairing.txt", pairing_file_content)
+        data_clinical_file = self.write_to_file("sample_data_clinical.txt", data_clinical_content)
 
         input_json['meta'] = [
-            {
-                "class": "File",
-                "basename": "sample_mapping.txt",
-                "contents": mapping_file_content
-            },
-            {
-                "class": "File",
-                "basename": "sample_pairing.txt",
-                "contents": pairing_file_content
-            },
-            {
-                "class": "File",
-                "basename": "sample_data_clinical.txt",
-                "contents": data_clinical_content
-            }
+                mapping_file,
+                pairing_file,
+                data_clinical_file
         ]
 
         number_of_runs = len(run_ids)
@@ -85,3 +80,32 @@ class CopyOutputsOperator(Operator):
             data=copy_outputs_job_data), input_json)]
 
         return copy_outputs_job
+
+
+    def write_to_file(self,fname,s):
+        """
+        Writes file to temporary location, then registers it to the temp file group
+        """
+        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
+        Path(tmpdir).mkdir(parents=True, exist_ok=True)
+        output = os.path.join(tmpdir, fname)
+        with open(output, "w+") as fh:
+            fh.write(s)
+        os.chmod(output, 0o777)
+        self.register_tmp_file(output)
+        return {'class': 'File', 'location': "juno://" + output }
+
+
+    def register_tmp_file(self, path):
+        fname = os.path.basename(path)
+        temp_file_group = FileGroup.objects.get(slug="temp")
+        file_type = FileType.objects.get(name="txt")
+        try:
+            File.objects.get(path=path)
+        except:
+            print("Registering temp file %s" % path)
+            f = File(file_name=fname,
+                    path=path,
+                    file_type=file_type,
+                    file_group=temp_file_group)
+            f.save()
