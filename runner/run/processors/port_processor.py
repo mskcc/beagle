@@ -200,9 +200,10 @@ class PortProcessor(object):
             file_obj_db = FileProcessor.create_file_obj(uri, size, checksum, group_id, metadata)
         except FileConflictException as e:
             logger.warning(str(e))
+            # TODO: Check what to do in case file already exist in DB.
             file_obj_db = FileProcessor.get_file_obj(uri)
-            # TODO: Check what to do in case file already exist in DB. Note: This should never happen
-            # raise PortProcessorException(e)
+            FileProcessor.update_file(file_obj_db, file_obj_db.path, metadata)
+
         secondary_files = file_obj.pop('secondaryFiles', [])
         secondary_file_list = []
         secondary_files_obj = PortProcessor.process_files(secondary_files,
