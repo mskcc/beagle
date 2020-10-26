@@ -50,7 +50,8 @@ class RunApiViewSet(mixins.ListModelMixin,
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
-        query_list_types = ['job_groups','request_ids','inputs','tags','jira_ids','run_ids','apps','run','values_run','ports']
+        query_list_types = ['job_groups', 'request_ids', 'inputs', 'tags', 'jira_ids', 'run_ids', 'apps', 'run',
+                            'values_run', 'ports']
         fixed_query_params = fix_query_list(request.query_params,query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
