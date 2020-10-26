@@ -361,9 +361,16 @@ def fail_job(run_id, error_message):
 
 def complete_job(run_id, outputs):
     run = RunObject.from_db(run_id)
-    run.complete(outputs)
-    run.to_db()
+    if run.run_obj.is_completed:
+        return
 
+    try:
+        run.complete(outputs)
+    except Exception as e:
+        fail_job(run_id, str(e))
+        return
+
+    run.to_db()
     job_group = run.job_group
     job_group_id = str(job_group.id) if job_group else None
 
