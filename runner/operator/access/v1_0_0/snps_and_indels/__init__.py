@@ -8,16 +8,17 @@ import json
 from jinja2 import Template
 
 from runner.models import Port
+from file_system.models import FileGroup, FileMetadata
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File, FileRepository
 
 
 # Todo: Change this ID in staging when running tests
-ACCESS_CURATED_BAMS_FILE_GROUP = '1a1b29cf-3bc2-4f6c-b376-d4c5d70116aa'
+ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 ACCESS_DEFAULT_NORMAL_BAM_FILE_ID = '2f77f3ac-ab25-4a02-90bd-86542401ac82'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-BAM_FILE_TYPE = 3 # todo: put in better location
+
 
 class AccessLegacySNVOperator(Operator):
 
@@ -26,11 +27,14 @@ class AccessLegacySNVOperator(Operator):
     number_of_inputs = None
 
     def get_sample_inputs(self):
+        """
+        Create all sample inputs for all runs triggered in this instance of the operator
 
+        :return: list of json_objects
+        """
         run_ids = self.run_ids
 
         tumor_bams = []
-        patient_ids = []
         tumor_simplex_bams = []
         sample_ids = []
         matched_normals = []
@@ -48,48 +52,35 @@ class AccessLegacySNVOperator(Operator):
             for i, duplex_bam in enumerate(duplex_bam_port):
                 sample_id = sample_id_port[i]
                 patient_id = patient_id_port[i]
-
-                print(simplex_bam_port)
-
                 simplex_bam = simplex_bam_port[i]
 
                 if t_n_port[i] == 'Tumor':
-                    patient_ids.append(patient_id)
                     tumor_bams.append(duplex_bam)
                     tumor_simplex_bams.append(simplex_bam)
                     sample_ids.append(sample_id)
 
-                    matched_normal_bams = FileRepository.filter(
+                    # Use the suffix for access unfiltered bams to get only those bams
+                    unfiltered_matched_normal_bam = FileRepository.filter(
                         file_type='bam',
+                        path_regex='__aln_srt_IR_FX.bam',
                         metadata={
                             'patientId': patient_id,
                             'tumorOrNormal': 'Normal',
                             'igocomplete': True
                         }
-                    )
+                    ).latest('created_date')
 
-                    if not len(matched_normal_bams) > 0:
-                        msg = 'No matching normals found for patient {}'.format(patient_id)
+                    if not unfiltered_matched_normal_bam:
+                        msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
                         raise Exception(msg)
 
-                    # Todo: instead of looking at the file name, how to query for Unfiltered Bam files only? use fileType: 'unfiltered_bam'?
-                    unfiltered_matched_normals = [b for b in matched_normal_bams if b.file.file_name.endswith('__aln_srt_IR_FX.bam')]
-
-                    if not len(unfiltered_matched_normals) > 0:
-                        msg = 'No unfiltered normals found for patient {}'.format(patient_id)
-                        raise Exception(msg)
-
-                    # Todo: use the most recent normal
-                    unfiltered_matched_normal = unfiltered_matched_normals[0]
-                    matched_normals.append(unfiltered_matched_normal)
-                    # Todo: will this work to get sample ID from file?
-                    matched_normal_ids.append(unfiltered_matched_normal.metadata['sampleName'])
+                    matched_normals.append(unfiltered_matched_normal_bam)
+                    matched_normal_ids.append(unfiltered_matched_normal_bam.metadata['sampleName'])
 
         sample_inputs = []
         for i, b in enumerate(tumor_bams):
 
             sample_input = self.construct_sample_inputs(
-                patient_ids[i],
                 b,
                 tumor_simplex_bams[i],
                 sample_ids[i],
@@ -106,9 +97,8 @@ class AccessLegacySNVOperator(Operator):
         """
         Convert job inputs into serialized jobs
 
-        :return:
+        :return: list[(serialized job info, Job)]
         """
-
         return [
             (
                 APIRunCreateSerializer(
@@ -124,37 +114,37 @@ class AccessLegacySNVOperator(Operator):
                 ),
                 job
              )
-
             for i, job in enumerate(self.sample_inputs)
         ]
 
-    def get_curated_normals(self, patient_id):
+    def get_curated_normals(self):
         """
-        Return curated normal bams as yaml file objects
+        Return ACCESS curated normal bams as yaml file objects
 
         :return: (list, list)
         """
-        curated_normal_bams = FileRepository.filter(
-            metadata={
-                'fileGroup': ACCESS_CURATED_BAMS_FILE_GROUP
-            }
+        curated_normals_metadata = FileMetadata.objects.filter(
+            file__file_group__slug=ACCESS_CURATED_BAMS_FILE_GROUP_SLUG
         )
+        curated_normal_bams = [f.file for f in curated_normals_metadata]
+        # Todo: Should we add the -CURATED and -CURATED-SIMPLEX suffixes here or save them as metadata in the DB?
+        curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
         normal_bams = [{'class': 'File', 'location': b.path} for b in curated_normal_bams]
+        return normal_bams, curated_normal_ids
 
-        # Todo: Should we add the ID suffix here or save it as metadata in the DB?
-        # For now we are saving it as a metadata field "snv_pipeline_id"
-        normal_ids = [n['metadata']['snv_pipeline_id'] for n in curated_normal_bams]
+    def construct_sample_inputs(self, tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
+        """
+        Use sample metadata and json template to create inputs for the CWL run
 
-        return normal_bams, normal_ids
-
-    def construct_sample_inputs(self, patient_id, tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
+        :return: JSON format sample inputs
+        """
         with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
             template = Template(file.read())
 
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": "juno://" + tumor_bam['path']
+                "location": tumor_bam['path']
             }]
             normal_sample_names = ['']
             matched_normal_ids = [normal_sample_id]
@@ -181,8 +171,7 @@ class AccessLegacySNVOperator(Operator):
                 }
             ]
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX', normal_sample_id]
-
-            curated_normal_bams, curated_normal_ids = self.get_curated_normals(patient_id=patient_id)
+            curated_normal_bams, curated_normal_ids = self.get_curated_normals()
             genotyping_bams += curated_normal_bams
             genotyping_bams_ids += curated_normal_ids
 
