@@ -53,7 +53,6 @@ class TestAccessSNVOperator(TestCase):
         # Load fixtures
         for f in self.fixtures:
             test_files_fixture = os.path.join(TEST_FIXTURE_DIR, f)
-            print(test_files_fixture)
             call_command('loaddata', test_files_fixture, verbosity=0)
 
         # Todo: should have s/d T bams, s/d N bams, s/d curated N bams, so total == 6?
@@ -92,7 +91,6 @@ class TestAccessSNVOperator(TestCase):
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
 
-        print(len(input_data))
         print(input_data)
 
         required_input_fields = [
@@ -108,16 +106,15 @@ class TestAccessSNVOperator(TestCase):
             for field in required_input_fields:
                 self.assertIn(field, inputs)
 
-        # Should only be one? run at first (upstream pipeline run from fixture)
-        # todo: why is this 9?
+        # Should only show runs from fixtures at first
         self.assertEqual(len(Run.objects.all()), 9)
 
-        # create and validate the jobs then use them to create Runs
+        # Create and validate the jobs then use them to create Runs
         jobs = operator.get_jobs()
         for job in jobs:
             if job[0].is_valid():
                 run = job[0].save()
                 create_run_task(str(run.id), job[1], None)
 
-        # make sure that a Run was made
-        self.assertEqual(len(Run.objects.all()), 2)
+        # Make sure that a Run was made
+        self.assertEqual(len(Run.objects.all()), 10)
