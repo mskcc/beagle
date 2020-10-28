@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
 from file_system.metadata.validator import MetadataValidator
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample
 
 
 class FileTest(APITestCase):
@@ -80,12 +80,17 @@ class FileTest(APITestCase):
                                         "file_type": self.file_type_fasta.name,
                                         "metadata": {
                                             "requestId": "Request_001",
-                                            "igoSampleId": "igoSampleId_001"
+                                            "sampleId": "igoSampleId_001"
                                         }
                                     },
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['file_name'], "file.fasta")
+        try:
+            sample = Sample.objects.get(sample_id="igoSampleId_001")
+        except Sample.DoesNotExist:
+            sample = None
+        self.assertIsNotNone(sample)
 
     def test_create_file_unknown_file_type(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
