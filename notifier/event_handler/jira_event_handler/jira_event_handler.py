@@ -91,8 +91,17 @@ class JiraEventHandler(EventHandler):
         if not pipeline:
             self.client.update_pipeline(job_notifier.jira_id, str(event))
 
-    def process_transition_event(self, event):
+    def process_transition_event(self, event, through_ci_review=False):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        response = self.client.get_status_transitions(job_notifier.jira_id)
+
+        # Hack because there is no other way to retry transition and also change resolution.
+        if through_ci_review:
+            for transition in response.json().get('transitions', []):
+                if transition.get('name') == 'CI Review Needed':
+                    self.client.update_status(job_notifier.jira_id, transition['id'])
+        # end of hack
+
         response = self.client.get_status_transitions(job_notifier.jira_id)
         for transition in response.json().get('transitions', []):
             if transition.get('name') == str(event):
@@ -106,7 +115,7 @@ class JiraEventHandler(EventHandler):
         status = response.json()['fields']['status']['name']
         if status == expected_status:
             return
-        self.process_transition_event(event)
+        self.process_transition_event(event, through_ci_review=True)
 
     def process_upload_attachment_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
