@@ -14,9 +14,7 @@ from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File, FileRepository
 
 
-# Todo: Change this ID in staging when running tests
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
-ACCESS_DEFAULT_NORMAL_BAM_FILE_ID = '2f77f3ac-ab25-4a02-90bd-86542401ac82'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -66,7 +64,6 @@ class AccessLegacySNVOperator(Operator):
                         metadata={
                             'patientId': patient_id,
                             'tumorOrNormal': 'Normal',
-                            'igocomplete': True
                         }
                     ).latest('created_date')
 
@@ -149,7 +146,10 @@ class AccessLegacySNVOperator(Operator):
             matched_normal_ids = [normal_sample_id]
 
             # Todo: how to know which sequencer's default normal to use?
-            normal_bam = File.objects.get(pk=ACCESS_DEFAULT_NORMAL_BAM_FILE_ID)
+            normal_bam = FileRepository.filter(
+                file_type='bam',
+                path_regex='DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
+            )[0].file
             normal_bams = [{
                 "class": "File",
                 "location": normal_bam.path
