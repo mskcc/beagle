@@ -127,7 +127,6 @@ class AccessLegacySNVOperator(Operator):
             file__file_group__slug=ACCESS_CURATED_BAMS_FILE_GROUP_SLUG
         )
         curated_normal_bams = [f.file for f in curated_normals_metadata]
-        # Todo: Should we add the -CURATED and -CURATED-SIMPLEX suffixes here or save them as metadata in the DB?
         curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
         normal_bams = [{'class': 'File', 'location': b.path} for b in curated_normal_bams]
         return normal_bams, curated_normal_ids

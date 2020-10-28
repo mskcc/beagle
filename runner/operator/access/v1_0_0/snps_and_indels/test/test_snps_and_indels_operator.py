@@ -1,12 +1,10 @@
 import os
-from mock import patch
 
-from django.conf import settings
 from django.test import TestCase
 from django.core.management import call_command
 
 from beagle_etl.models import Operator
-from file_system.models import File, FileMetadata, FileGroup, FileType
+from file_system.models import File, FileMetadata
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 from runner.models import Run
 from runner.tasks import create_run_task
@@ -55,7 +53,11 @@ class TestAccessSNVOperator(TestCase):
             test_files_fixture = os.path.join(TEST_FIXTURE_DIR, f)
             call_command('loaddata', test_files_fixture, verbosity=0)
 
-        # Todo: should have s/d T bams, s/d N bams, s/d curated N bams, so total == 6?
+        # Should have:
+        # simplex / duplex T bams
+        # simplex / duplex N bams
+        # simplex / duplex curated N bams
+        # so total == 6
         self.assertEqual(len(File.objects.all()), 6)
         self.assertEqual(len(FileMetadata.objects.all()), 6)
 
@@ -81,10 +83,6 @@ class TestAccessSNVOperator(TestCase):
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
         self.assertTrue(operator.request_id == "access_legacy_snv_test_request")
         self.assertTrue(operator._jobs == [])
-
-        # Todo: redundant
-        self.assertTrue(len(operator.files) == 6)
-        # Todo: why isn't this working:
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
 
