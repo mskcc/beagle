@@ -2,6 +2,8 @@ import os
 import uuid
 from enum import IntEnum
 from django.db import models
+from django.conf import settings
+from django.db import transaction
 from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
@@ -105,6 +107,15 @@ class FileMetadata(BaseModel):
 
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop('do_not_version', False)
+        sample_id = self.metadata.get(settings.SAMPLE_ID_METADATA_KEY)
+        if sample_id:
+            with transaction.atomic():
+                try:
+                    sample = Sample.objects.get(sample_id=sample_id)
+                except Sample.DoesNotExist:
+                    sample = Sample.objects.create(sample_id=sample_id)
+                self.file.sample = sample
+                self.file.save(update_fields=('sample',))
         if do_not_version:
             super(FileMetadata, self).save(*args, **kwargs)
         else:
