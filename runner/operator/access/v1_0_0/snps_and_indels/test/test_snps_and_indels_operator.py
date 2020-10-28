@@ -15,7 +15,6 @@ from beagle.settings import ROOT_DIR
 CURDIR = os.path.dirname(os.path.realpath(__file__))
 TEST_FIXTURE_DIR = os.path.join(CURDIR, 'fixtures')
 FIXTURES = [
-    "curated_normals_file_storage.json",
     "curated_normal_files.json",
     "curated_normals_file_group.json",
     "curated_normals_file_metadata.json",
