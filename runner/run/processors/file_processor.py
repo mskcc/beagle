@@ -1,9 +1,10 @@
 import os
 from django.db import IntegrityError
 from file_system.models import File, FileType, FileGroup, FileMetadata
-from beagle_etl.models import JobStatus, Job
-from beagle_etl.jobs import TYPES
-from runner.exceptions import FileHelperException, FileConflictException
+from file_system.serializers import UpdateFileSerializer
+from django.conf import settings
+from runner.exceptions import FileHelperException, FileConflictException, FileUpdateException
+from django.contrib.auth.models import User
 
 
 class FileProcessor(object):
@@ -109,3 +110,21 @@ class FileProcessor(object):
                 if filename.endswith(ext.extension):
                     return file_type
         return FileType.objects.get(name='unknown')
+
+    @staticmethod
+    def update_file(file_object, path, metadata, user=None):
+        data = {
+            "path": path,
+            "metadata": metadata,
+        }
+        try:
+            user = User.objects.get(username=user)
+            data['user'] = user.id
+        except User.DoesNotExist:
+            pass
+        serializer = UpdateFileSerializer(file_object, data=data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            raise FileUpdateException(
+                "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
