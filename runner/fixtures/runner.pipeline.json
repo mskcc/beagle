@@ -82,13 +82,29 @@
         "fields": {
             "created_date": "2019-11-18T17:46:45.118Z",
             "modified_date": "2019-12-05T01:12:39.854Z",
-            "name": "access_legacy_snv",
+            "name": "access legacy snv",
             "github": "https://github.com/mskcc/access-pipeline",
             "version": "master",
             "entrypoint": "workflows/subworkflows/snps_and_indels.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/juno/work/pi/beagle/output/access_snv",
             "operator": 5,
+            "default": true
+        }
+    },
+    {
+        "model": "runner.pipeline",
+        "pk": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
+        "fields": {
+            "created_date": "2019-11-18T17:46:45.118Z",
+            "modified_date": "2019-12-05T01:12:39.854Z",
+            "name": "access legacy",
+            "github": "https://github.com/mskcc/access-pipeline",
+            "version": "master",
+            "entrypoint": "workflows/ACCESS-pipeline.cwl",
+            "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+            "output_directory": "/juno/work/pi/beagle/output/access_legacy",
+            "operator": 6,
             "default": true
         }
     }
