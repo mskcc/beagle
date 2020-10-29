@@ -87,9 +87,6 @@ class TestAccessSNVOperator(TestCase):
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
-
-        print(input_data)
-
         required_input_fields = [
             'tumor_bams',
             'normal_bams',

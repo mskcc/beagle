@@ -7,15 +7,17 @@ import os
 import json
 from jinja2 import Template
 
-from runner.models import Port
-from file_system.models import FileGroup, FileMetadata
+from runner.models import Port, Run, RunStatus
+from file_system.models import FileMetadata
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File, FileRepository
 
 
-ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
+
+ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
+ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
 
 
 class AccessLegacySNVOperator(Operator):
@@ -30,52 +32,81 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids
+        access_duplex_output_ports = Port.objects.filter(
+            name='duplex_bams',
+            run__app__name='access legacy',
+            run__status=RunStatus.COMPLETED
+        )
+        # Each port is a list, so need a double list comprehension here
+        all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
+        # these are port objects, they dont have metadata field
+        all_access_completed_samples = [r['sampleId'] for r in all_access_output_records]
 
-        tumor_bams = []
-        tumor_simplex_bams = []
+        access_snv_runs = Run.objects.filter(status=RunStatus.COMPLETED, app__name='access_legacy_snv')
+        already_ran_tumors = [r['tags']['cmoSampleIds'] for r in access_snv_runs]
+        already_ran_tumors = [item for sublist in already_ran_tumors for item in sublist]
+
+        tumors_to_run = set(all_access_completed_samples) - set(already_ran_tumors)
+
         sample_ids = []
+        tumor_duplex_bams = []
+        tumor_simplex_bams = []
         matched_normals = []
         matched_normal_ids = []
 
-        for run_id in run_ids:
-            port_list = Port.objects.filter(run=run_id)
+        for i, tumor_sample_id in enumerate(tumors_to_run):
 
-            duplex_bam_port = [p for p in port_list if p.name == 'duplex_bams'][0].value
-            simplex_bam_port = [p for p in port_list if p.name == 'simplex_bams'][0].value
-            patient_id_port = [p for p in port_list if p.name == 'patient_id'][0].value
-            sample_id_port = [p for p in port_list if p.name == 'add_rg_ID'][0].value
-            t_n_port = [p for p in port_list if p.name == 'sample_class'][0].value
+            tumor_duplex_bam = FileRepository.filter(
+                file_type='bam',
+                path_regex='__aln_srt_IR_FX-duplex.bam',
+                metadata={
+                    'tumorOrNormal': 'Tumor',
+                    'sampleName': tumor_sample_id
+                }
+            )
+            if not len(tumor_duplex_bam) == 1:
+                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
+                msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+                raise Exception(msg)
+            tumor_duplex_bam = tumor_duplex_bam[0]
 
-            for i, duplex_bam in enumerate(duplex_bam_port):
-                sample_id = sample_id_port[i]
-                patient_id = patient_id_port[i]
-                simplex_bam = simplex_bam_port[i]
+            tumor_simplex_bam = FileRepository.filter(
+                file_type='bam',
+                path_regex='__aln_srt_IR_FX-simplex.bam',
+                metadata={
+                    'tumorOrNormal': 'Tumor',
+                    'sampleName': tumor_sample_id
+                }
+            )
+            if not len(tumor_simplex_bam) == 1:
+                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
+                msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+                raise Exception(msg)
+            tumor_simplex_bam = tumor_simplex_bam[0]
 
-                if t_n_port[i] == 'Tumor':
-                    tumor_bams.append(duplex_bam)
-                    tumor_simplex_bams.append(simplex_bam)
-                    sample_ids.append(sample_id)
+            patient_id = tumor_duplex_bam.metadata['patientId']
+            # Use the path regex suffix to get only access unfiltered bams
+            unfiltered_matched_normal_bam = FileRepository.filter(
+                file_type='bam',
+                path_regex='__aln_srt_IR_FX.bam',
+                metadata={
+                    'patientId': patient_id,
+                    'tumorOrNormal': 'Normal',
+                }
+            ).latest('created_date')
 
-                    # Use the suffix for access unfiltered bams to get only those bams
-                    unfiltered_matched_normal_bam = FileRepository.filter(
-                        file_type='bam',
-                        path_regex='__aln_srt_IR_FX.bam',
-                        metadata={
-                            'patientId': patient_id,
-                            'tumorOrNormal': 'Normal',
-                        }
-                    ).latest('created_date')
+            if not unfiltered_matched_normal_bam:
+                msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
+                raise Exception(msg)
 
-                    if not unfiltered_matched_normal_bam:
-                        msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
-                        raise Exception(msg)
-
-                    matched_normals.append(unfiltered_matched_normal_bam)
-                    matched_normal_ids.append(unfiltered_matched_normal_bam.metadata['sampleName'])
+            sample_ids.append(tumor_sample_id)
+            tumor_duplex_bams.append(tumor_duplex_bam)
+            tumor_simplex_bams.append(tumor_simplex_bam)
+            matched_normals.append(unfiltered_matched_normal_bam)
+            matched_normal_ids.append(unfiltered_matched_normal_bam.metadata['sampleName'])
 
         sample_inputs = []
-        for i, b in enumerate(tumor_bams):
+        for i, b in enumerate(tumor_duplex_bams):
 
             sample_input = self.construct_sample_inputs(
                 b,
@@ -140,7 +171,7 @@ class AccessLegacySNVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": tumor_bam['path']
+                "location": tumor_bam.file.path
             }]
             normal_sample_names = ['']
             matched_normal_ids = [normal_sample_id]
@@ -148,7 +179,7 @@ class AccessLegacySNVOperator(Operator):
             # Todo: how to know which sequencer's default normal to use?
             normal_bam = FileRepository.filter(
                 file_type='bam',
-                path_regex='DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
+                path_regex=ACCESS_DEFAULT_NORMAL_FILENAME
             )[0].file
             normal_bams = [{
                 "class": "File",
@@ -158,11 +189,11 @@ class AccessLegacySNVOperator(Operator):
             genotyping_bams = [
                 {
                     "class": "File",
-                    "location": tumor_bam['path']
+                    "location": tumor_bam.file.path
                 },
                 {
                     "class": "File",
-                    "location": tumor_simplex_bam['path']
+                    "location": tumor_simplex_bam.file.path
                 },
                 {
                     "class": "File",
