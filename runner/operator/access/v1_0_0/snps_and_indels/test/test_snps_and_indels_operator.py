@@ -3,13 +3,11 @@ import os
 from django.test import TestCase
 from django.core.management import call_command
 
+from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
-from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
-from runner.models import Run
-from runner.tasks import create_run_task
 from runner.operator.operator_factory import OperatorFactory
-from beagle.settings import ROOT_DIR
+from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
 
 CURDIR = os.path.dirname(os.path.realpath(__file__))
@@ -99,16 +97,3 @@ class TestAccessSNVOperator(TestCase):
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
-
-        # Should only show runs from fixtures at first
-        self.assertEqual(len(Run.objects.all()), 9)
-
-        # Create and validate the jobs then use them to create Runs
-        jobs = operator.get_jobs()
-        for job in jobs:
-            if job[0].is_valid():
-                run = job[0].save()
-                create_run_task(str(run.id), job[1], None)
-
-        # Make sure that a Run was made
-        self.assertEqual(len(Run.objects.all()), 10)
