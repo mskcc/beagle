@@ -1,0 +1,522 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "583cc81d-ed20-4360-89c5-1ca39d4c883c",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.344Z",
+            "modified_date": "2020-03-23T22:04:01.606Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S145_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S145_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "583cc81d-ed20-4360-89c5-1ca39d4c883c",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.344Z",
+            "modified_date": "2020-03-23T22:04:01.606Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S145_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S145_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "bafa1e08-d712-4e80-a84a-9f77ef8b0389",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.363Z",
+            "modified_date": "2020-03-23T22:04:01.627Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S145_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S145_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "bafa1e08-d712-4e80-a84a-9f77ef8b0389",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.363Z",
+            "modified_date": "2020-03-23T22:04:01.627Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S145_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S145_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5981f3df-0466-4212-8150-ce996d69e3f1",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.377Z",
+            "modified_date": "2020-03-23T22:04:01.648Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S65_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S65_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5981f3df-0466-4212-8150-ce996d69e3f1",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.377Z",
+            "modified_date": "2020-03-23T22:04:01.648Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S65_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S65_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9746da6d-fafe-4858-8355-d671bbf90f07",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.392Z",
+            "modified_date": "2020-03-23T22:04:01.667Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S65_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S65_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9746da6d-fafe-4858-8355-d671bbf90f07",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.392Z",
+            "modified_date": "2020-03-23T22:04:01.667Z",
+            "file_name": "ABCDEF22_IGO_Sample8_S65_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF22_IGO_Sample8/ABCDEF22_IGO_Sample8_S65_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "2c0d8e42-9152-46ad-abbc-17be12195892",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.839Z",
+            "modified_date": "2020-03-23T22:04:01.661Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S143_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S143_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "2c0d8e42-9152-46ad-abbc-17be12195892",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.839Z",
+            "modified_date": "2020-03-23T22:04:01.661Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S143_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S143_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fa822f2f-9a30-4965-947f-b3b8fa2911d9",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.819Z",
+            "modified_date": "2020-03-23T22:04:01.637Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S143_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S143_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fa822f2f-9a30-4965-947f-b3b8fa2911d9",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.819Z",
+            "modified_date": "2020-03-23T22:04:01.637Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S143_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S143_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "17eb86e2-a03d-4e0e-b2a9-78b79353a633",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.853Z",
+            "modified_date": "2020-03-23T22:04:01.681Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S63_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S63_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "17eb86e2-a03d-4e0e-b2a9-78b79353a633",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.853Z",
+            "modified_date": "2020-03-23T22:04:01.681Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S63_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S63_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "330b5ec7-baa8-4afc-8a02-dbd8459954a6",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.867Z",
+            "modified_date": "2020-03-23T22:04:01.713Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S63_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S63_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "330b5ec7-baa8-4afc-8a02-dbd8459954a6",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.867Z",
+            "modified_date": "2020-03-23T22:04:01.713Z",
+            "file_name": "ABCDEF24_IGO_Sample4_S63_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF24_IGO_Sample4/ABCDEF24_IGO_Sample4_S63_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "52533fde-320e-4df9-adcc-22c403338466",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.885Z",
+            "modified_date": "2020-03-23T22:04:01.517Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S144_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S144_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "52533fde-320e-4df9-adcc-22c403338466",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.885Z",
+            "modified_date": "2020-03-23T22:04:01.517Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S144_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S144_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "609bdcbd-b536-4ee6-9a06-2fb6e8b8db1e",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.904Z",
+            "modified_date": "2020-03-23T22:04:01.532Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S144_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S144_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "609bdcbd-b536-4ee6-9a06-2fb6e8b8db1e",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.904Z",
+            "modified_date": "2020-03-23T22:04:01.532Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S144_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S144_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "86c8948e-421e-4de6-81ff-4bba88cccc08",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.918Z",
+            "modified_date": "2020-03-23T22:04:01.558Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S64_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S64_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "86c8948e-421e-4de6-81ff-4bba88cccc08",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.918Z",
+            "modified_date": "2020-03-23T22:04:01.558Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S64_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S64_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "6e6e0a14-c681-4d01-8d67-2d70625a9e20",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.934Z",
+            "modified_date": "2020-03-23T22:04:01.572Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S64_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S64_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "6e6e0a14-c681-4d01-8d67-2d70625a9e20",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.934Z",
+            "modified_date": "2020-03-23T22:04:01.572Z",
+            "file_name": "ABCDEF26_IGO_Sample5_S64_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF26_IGO_Sample5/ABCDEF26_IGO_Sample5_S64_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "36b440a0-a63f-4ea2-9b47-02528bd1e6fd",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.465Z",
+            "modified_date": "2020-03-23T22:04:01.669Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S146_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S146_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "36b440a0-a63f-4ea2-9b47-02528bd1e6fd",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.465Z",
+            "modified_date": "2020-03-23T22:04:01.669Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S146_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S146_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8d907916-05a1-484c-b110-f52ecb46575d",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.483Z",
+            "modified_date": "2020-03-23T22:04:01.713Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S146_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S146_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8d907916-05a1-484c-b110-f52ecb46575d",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.483Z",
+            "modified_date": "2020-03-23T22:04:01.713Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S146_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S146_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8de32670-7c8a-42f6-b78b-1f310a721be1",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.497Z",
+            "modified_date": "2020-03-23T22:04:01.735Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S66_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S66_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "8de32670-7c8a-42f6-b78b-1f310a721be1",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.497Z",
+            "modified_date": "2020-03-23T22:04:01.735Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S66_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S66_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "0f5a8142-adc3-4501-9c7f-f7e976efc6c6",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.511Z",
+            "modified_date": "2020-03-23T22:04:01.756Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S66_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S66_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "0f5a8142-adc3-4501-9c7f-f7e976efc6c6",
+        "fields": {
+            "created_date": "2020-01-18T17:14:42.511Z",
+            "modified_date": "2020-03-23T22:04:01.756Z",
+            "file_name": "ABCDEF29_IGO_Sample2_S66_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF29_IGO_Sample2/ABCDEF29_IGO_Sample2_S66_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "dbecb97d-eabc-452d-a733-32a9532184e3",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.750Z",
+            "modified_date": "2020-03-23T22:04:01.527Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S142_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S142_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "dbecb97d-eabc-452d-a733-32a9532184e3",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.750Z",
+            "modified_date": "2020-03-23T22:04:01.527Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S142_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S142_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d036f8e2-efe9-4e4a-896e-bb601811d252",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.773Z",
+            "modified_date": "2020-03-23T22:04:01.544Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S142_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S142_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d036f8e2-efe9-4e4a-896e-bb601811d252",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.773Z",
+            "modified_date": "2020-03-23T22:04:01.544Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S142_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/JAX_0408_AHG2WCBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S142_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "efff075f-0fb4-4c7d-8a99-5e81c35c6666",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.788Z",
+            "modified_date": "2020-03-23T22:04:01.560Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S62_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S62_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "efff075f-0fb4-4c7d-8a99-5e81c35c6666",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.788Z",
+            "modified_date": "2020-03-23T22:04:01.560Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S62_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S62_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a5a623a7-e928-4dca-ad62-f7c83a83deee",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.815Z",
+            "modified_date": "2020-03-23T22:04:01.575Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S62_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S62_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "a5a623a7-e928-4dca-ad62-f7c83a83deee",
+        "fields": {
+            "created_date": "2020-01-18T17:14:40.815Z",
+            "modified_date": "2020-03-23T22:04:01.575Z",
+            "file_name": "ABCDEF30_IGO_Sample3_S62_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/PITT_0447_BHG2GTBBXY/Project_09603_I/Sample_ABCDEF30_IGO_Sample3/ABCDEF30_IGO_Sample3_S62_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
