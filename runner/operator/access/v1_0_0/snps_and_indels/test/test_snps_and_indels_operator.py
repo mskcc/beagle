@@ -1,7 +1,7 @@
 import os
 
 from django.test import TestCase
-from django.core.management import call_command
+# from django.core.management import call_command
 
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
@@ -10,20 +10,16 @@ from runner.operator.operator_factory import OperatorFactory
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
 
-CURDIR = os.path.dirname(os.path.realpath(__file__))
-TEST_FIXTURE_DIR = os.path.join(CURDIR, 'fixtures')
 FIXTURES = [
-    "curated_normal_files.json",
-    "curated_normals_file_group.json",
-    "curated_normals_file_metadata.json",
-    "files.json",
-    "files_metadata.json",
-    "operator_run.json",
-    "ports.json",
-    "runs.json",
+    "fixtures/tests/access_snv/curated_normal_files.json",
+    "fixtures/tests/access_snv/curated_normals_file_metadata.json",
+    "fixtures/tests/access_snv/files.json",
+    "fixtures/tests/access_snv/files_metadata.json",
+    "fixtures/tests/access_snv/operator_run.json",
+    "fixtures/tests/access_snv/ports.json",
+    "fixtures/tests/access_snv/runs.json",
 ]
 
-# Todo: how to shorten these to remove folder names like other tests have it?
 common_fixtures = [
     'runner/fixtures/runner.pipeline.json',
     'runner/fixtures/runner.run.json',
@@ -38,19 +34,14 @@ common_fixtures = [os.path.join(ROOT_DIR, f) for f in common_fixtures]
 
 class TestAccessSNVOperator(TestCase):
 
-    fixtures = [os.path.join(TEST_FIXTURE_DIR, f) for f in FIXTURES] + common_fixtures
+    fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES] + common_fixtures
 
     def test_access_legacy_snv_operator(self):
         """
-        Test that an Access legacy SNV operator instance can be created and used
+        Test that an Access legacy SNV operator instance can be created and validated
         """
 
-        # Load fixtures
-        for f in self.fixtures:
-            test_files_fixture = os.path.join(TEST_FIXTURE_DIR, f)
-            call_command('loaddata', test_files_fixture, verbosity=0)
-
-        # Should have:
+        # Test should have:
         # simplex / duplex T bams
         # simplex / duplex N bams
         # simplex / duplex curated N bams
