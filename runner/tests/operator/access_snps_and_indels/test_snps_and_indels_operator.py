@@ -1,7 +1,6 @@
 import os
 
 from django.test import TestCase
-# from django.core.management import call_command
 
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
@@ -20,7 +19,7 @@ FIXTURES = [
     "fixtures/tests/access_snv/runs.json",
 ]
 
-common_fixtures = [
+COMMON_FIXTURES = [
     'runner/fixtures/runner.pipeline.json',
     'runner/fixtures/runner.run.json',
     'runner/fixtures/runner.operator_run.json',
@@ -29,18 +28,17 @@ common_fixtures = [
     'file_system/fixtures/file_system.storage.json',
     'beagle_etl/fixtures/beagle_etl.operator.json',
 ]
-common_fixtures = [os.path.join(ROOT_DIR, f) for f in common_fixtures]
 
 
 class TestAccessSNVOperator(TestCase):
 
-    fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES] + common_fixtures
+    fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_legacy_snv_operator(self):
         """
         Test that an Access legacy SNV operator instance can be created and validated
         """
-        
+
         # Test should have:
         # simplex / duplex T bams
         # simplex / duplex N bams
