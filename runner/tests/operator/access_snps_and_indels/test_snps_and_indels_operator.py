@@ -40,7 +40,7 @@ class TestAccessSNVOperator(TestCase):
         """
         Test that an Access legacy SNV operator instance can be created and validated
         """
-
+        
         # Test should have:
         # simplex / duplex T bams
         # simplex / duplex N bams
