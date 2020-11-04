@@ -13,8 +13,13 @@ Basic dev instance setup instructions:
 1. install dependencies in the current directory with:
 make install
 
-2. initialize the database with:
+2a. initialize the database with:
 make db-init
+
+- NOTE: you might need to adjust the PostgreSQL port variable BEAGLE_DB_PORT to avoid conflicts on a shared server
+
+2b. run the test suite with:
+make test
 
 3. initialize the Django database and set a admin (superuser) account with:
 make django-init
@@ -104,10 +109,10 @@ install: conda
 	conda-forge::python-ldap=3.2.0 \
 	bioconda::rabix-bunny=1.0.4 \
 	conda-forge::jq
-	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
 	pip install -r requirements-dev.txt
-	# pip install git+https://github.com/mskcc/beagle_cli.git@develop
+# pip install git+https://github.com/mskcc/beagle_cli.git@develop
+# pip install -r requirements-cli.txt # <- what happened to this file?
 
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
@@ -517,5 +522,3 @@ PORT=
 port-check:
 	ss -lntup | grep ':$(PORT)'
 endif
-
-

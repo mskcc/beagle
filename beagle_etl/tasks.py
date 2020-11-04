@@ -195,6 +195,7 @@ class JobObject(object):
             lab_head_name = metadata['labHeadName']
             pi_email = metadata['piEmail']
             project_manager_name = metadata['projectManagerName']
+            qc_access_emails = metadata['qcAccessEmails']
 
         event = ETLImportEvent(str(self.job.job_group_notifier.id),
                                str(self.job.job_group.id),
@@ -210,6 +211,7 @@ class JobObject(object):
                                lab_head_name,
                                pi_email,
                                project_manager_name,
+                               qc_access_emails,
                                number_of_tumors,
                                number_of_normals,
                                len(pooled_normal_jobs)
