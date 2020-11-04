@@ -559,7 +559,9 @@ class TestImportSample(APITestCase):
         self.assertEqual(count_files, 1)
 
     @patch('runner.tasks.create_jobs_from_request.delay')
-    def test_request_callback(self, mock_create_jobs_from_request):
+    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
+    def test_request_callback(self, mock_get_request_samples, mock_create_jobs_from_request):
+        # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -569,7 +571,8 @@ class TestImportSample(APITestCase):
                                                     version=1,
                                                     metadata={
                                                         'requestId': 'test1',
-                                                        'recipe': 'TestAssay'
+                                                        'recipe': 'TestAssay',
+                                                        'labHeadEmail': 'test@email.com'
                                                     })
         operator1 = Operator.objects.create(slug="Operator1",
                                             class_name="Operator",
@@ -580,7 +583,9 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_called_once_with('test1', operator1.id, None)
 
     @patch('runner.tasks.create_jobs_from_request.delay')
-    def test_request_callback_two_operators(self, mock_create_jobs_from_request):
+    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
+    def test_request_callback_two_operators(self, mock_get_request_samples, mock_create_jobs_from_request):
+        # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -590,7 +595,8 @@ class TestImportSample(APITestCase):
                                                     version=1,
                                                     metadata={
                                                         'requestId': 'test1',
-                                                        'recipe': 'TestAssay'
+                                                        'recipe': 'TestAssay',
+                                                        'labHeadEmail': 'test@email.com'
                                                     })
         operator1 = Operator.objects.create(slug="Operator1",
                                             class_name="Operator",
@@ -610,7 +616,9 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
     @patch('notifier.tasks.send_notification.delay')
-    def test_request_callback_unknown_assay(self, mock_send_notification):
+    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'UnknownAssay'})
+    def test_request_callback_unknown_assay(self, mock_get_request_samples, mock_send_notification):
+        # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
@@ -623,7 +631,8 @@ class TestImportSample(APITestCase):
                                                     version=1,
                                                     metadata={
                                                         'requestId': 'test1',
-                                                        'recipe': 'UnknownAssay'
+                                                        'recipe': 'UnknownAssay',
+                                                        'labHeadEmail': 'test@email.com'
                                                     })
         request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
@@ -647,7 +656,9 @@ class TestImportSample(APITestCase):
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
     @patch('notifier.tasks.send_notification.delay')
-    def test_request_callback_disabled_assay(self, mock_send_notification):
+    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'DisabledAssay1'})
+    def test_request_callback_disabled_assay(self, mock_get_request_samples, mock_send_notification):
+        # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
@@ -660,7 +671,8 @@ class TestImportSample(APITestCase):
                                                     version=1,
                                                     metadata={
                                                         'requestId': 'test1',
-                                                        'recipe': 'DisabledAssay1'
+                                                        'recipe': 'DisabledAssay1',
+                                                        'labHeadEmail': 'test@email.com'
                                                     })
         request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
