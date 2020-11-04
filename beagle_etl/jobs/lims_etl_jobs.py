@@ -91,41 +91,43 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_notifier_id = str(jgn.id) if jgn else None
     assays = ETLConfiguration.objects.first()
-    recipes = list(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all())
-    if not recipes:
+
+    recipe = LIMSClient.get_request_samples(request_id).get("recipe", None)
+
+    if not recipe:
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
+
+    if not all(item in assays.all_recipes for item in [recipe]):
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(ci_review_e)
+        set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, 'unrecognized_assay').to_dict()
+        send_notification.delay(set_unknown_assay_label)
+        unknown_assay_event = UnknownAssayEvent(job_group_notifier_id, recipe).to_dict()
+        send_notification.delay(unknown_assay_event)
+        return []
+
+    if any(item in assays.hold_recipes for item in [recipe,]):
+        admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(admin_hold_event)
+        custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipe).to_dict()
+        send_notification.delay(custom_capture_event)
+        return []
+
+    if any(item in assays.disabled_recipes for item in [recipe,]):
+        not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
+        send_notification.delay(not_for_ci)
+        disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipe).to_dict()
+        send_notification.delay(disabled_assay_event)
+        return []
 
     if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
         no_samples_event = ETLImportNoSamplesEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
-    if not all(item in assays.all_recipes for item in recipes):
-        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
-        send_notification.delay(ci_review_e)
-        set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, 'unrecognized_assay').to_dict()
-        send_notification.delay(set_unknown_assay_label)
-        unknown_assay_event = UnknownAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
-        send_notification.delay(unknown_assay_event)
-        return []
-
-    if any(item in assays.hold_recipes for item in recipes):
-        admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
-        send_notification.delay(admin_hold_event)
-        custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipes[0]).to_dict()
-        send_notification.delay(custom_capture_event)
-        return []
-
-    if any(item in assays.disabled_recipes for item in recipes):
-        not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
-        send_notification.delay(not_for_ci)
-        disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipes[0]).to_dict()
-        send_notification.delay(disabled_assay_event)
-        return []
-
     if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
-        Job.objects.filter(job_group=job_group).values("status")]):
+                Job.objects.filter(job_group=job_group).values("status")]):
         ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
 
@@ -141,11 +143,11 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
 
-    operators = Operator.objects.filter(recipes__overlap=recipes)
+    operators = Operator.objects.filter(recipes__overlap=[recipe])
 
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
-        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipes)
+        msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
         logger.error(msg)
         e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
@@ -372,11 +374,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
-    try:
-        sample = Sample.objects.get(sample_id=sample_id)
-    except Sample.DoesNotExist:
-        sample = Sample.objects.create(sample_id=sample_id)
-
     validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
 
     libraries = data.pop('libraries')
@@ -391,7 +388,7 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
-                                      library, run, sample,
+                                      library, run,
                                       request_metadata, R1_or_R2(fastq), update=redelivery,
                                       job_group_notifier=job_group_notifier)
 
@@ -498,7 +495,7 @@ def convert_to_dict(runs):
     return run_dict
 
 
-def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, sample,
+def create_or_update_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run,
                           request_metadata, r, update=False, job_group_notifier=None):
     logger.info("Creating file %s " % path)
     try:
@@ -529,7 +526,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
     else:
         f = FileRepository.filter(path=path).first()
         if not f:
-            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj, sample)
+            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
 
             if update:
                 message = "File registered: %s" % path
@@ -581,10 +578,10 @@ def format_metadata(original_metadata):
     return metadata
 
 
-def create_file_object(path, file_group, lims_metadata, metadata, file_type, sample):
+def create_file_object(path, file_group, lims_metadata, metadata, file_type):
     try:
         f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group,
-                                file_type=file_type, sample=sample)
+                                file_type=file_type)
         f.save()
 
         fm = FileMetadata(file=f, metadata=metadata)

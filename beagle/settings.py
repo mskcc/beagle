@@ -32,9 +32,6 @@ ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-# CORS_ORIGIN_WHITELIST = (
-#     'http//:localhost:8000',
-# )
 
 # Application definition
 
@@ -343,3 +340,5 @@ TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
 
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+SAMPLE_ID_METADATA_KEY = 'sampleId'
