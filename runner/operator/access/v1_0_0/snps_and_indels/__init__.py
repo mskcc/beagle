@@ -22,10 +22,6 @@ ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_
 
 class AccessLegacySNVOperator(Operator):
 
-    # Will be populated after get_sample_inputs()
-    sample_inputs = None
-    number_of_inputs = None
-
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator
@@ -116,9 +112,6 @@ class AccessLegacySNVOperator(Operator):
                 matched_normal_ids[i]
             )
             sample_inputs.append(sample_input)
-
-        self.number_of_inputs = len(sample_inputs)
-        self.sample_inputs = sample_inputs
         return sample_inputs
 
     def get_jobs(self):
@@ -127,6 +120,8 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        sample_inputs = self.get_sample_inputs()
+
         return [
             (
                 APIRunCreateSerializer(
@@ -142,7 +137,7 @@ class AccessLegacySNVOperator(Operator):
                 ),
                 job
              )
-            for i, job in enumerate(self.sample_inputs)
+            for i, job in enumerate(sample_inputs)
         ]
 
     def get_curated_normals(self):
