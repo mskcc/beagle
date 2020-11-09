@@ -69,7 +69,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "captureConcentrationNm": "8.333333333333334",
-                "libraryConcentrationNgul": 13.2
+                "libraryConcentrationNgul": 13.2,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -144,7 +145,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "captureConcentrationNm": "8.333333333333334",
-                "libraryConcentrationNgul": 13.2
+                "libraryConcentrationNgul": 13.2,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -220,7 +222,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "JW_MEL_007_NORM",
                 "captureConcentrationNm": "10.377358490566039",
-                "libraryConcentrationNgul": 10.6
+                "libraryConcentrationNgul": 10.6,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -296,7 +299,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "JW_MEL_007_NORM",
                 "captureConcentrationNm": "10.377358490566039",
-                "libraryConcentrationNgul": 10.6
+                "libraryConcentrationNgul": 10.6,
+                "qcAccessEmails": ""
             },
             "user": null
         }
