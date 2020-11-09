@@ -10,8 +10,7 @@ from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline, Run
-from file_system.repository.file_repository import FileRepository
-from .construct_helix_filters_input import construct_helix_filters_input
+from .construct_helix_filters_input import construct_helix_filters_input, get_output_directory_prefix
 LOGGER = logging.getLogger(__name__)
 
 
@@ -37,6 +36,7 @@ class HelixFiltersOperator(Operator):
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
         lab_head_email = input_json['lab_head_email']
+        output_directory_prefix = get_output_directory_prefix(self.run_ids)
         input_json['helix_filter_version'] = pipeline_version
         input_json = self.add_output_file_names(input_json, pipeline_version)
         tags = { "project_prefix": project_prefix, "argos_run_ids": argos_run_ids,
@@ -60,19 +60,20 @@ class HelixFiltersOperator(Operator):
         output_directory = None
         if project_prefix:
             tags["project_prefix"] = project_prefix
+
+            output_prefix = output_directory_prefix if output_directory_prefix else project_prefix
             if self.job_group_id:
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
-                                                project_prefix,
+                                                output_prefix,
                                                 argos_pipeline.version,
                                                 jg_created_date)
             helix_filters_outputs_job_data['output_directory'] = output_directory
         helix_filters_outputs_job = [(APIRunCreateSerializer(
             data=helix_filters_outputs_job_data), input_json)]
         return helix_filters_outputs_job
-
 
     def add_output_file_names(self, json_data, pipeline_version):
         """
