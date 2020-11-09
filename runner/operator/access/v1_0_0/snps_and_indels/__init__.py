@@ -126,7 +126,7 @@ class AccessLegacySNVOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY SNV M1: %s, %i of %i" % (self.request_id, i + 1, self.number_of_inputs),
+                        'name': "ACCESS LEGACY SNV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
