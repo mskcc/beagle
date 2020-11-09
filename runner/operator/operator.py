@@ -10,7 +10,7 @@ class Operator(object):
     logger = logging.getLogger(__name__)
 
     def __init__(self, model, job_group_id=None, job_group_notifier_id=None, request_id=None, run_ids=[], pipeline=None,
-                 pairing=None):
+                 pairing=None, output_directory_prefix=None):
         if not isinstance(model, OperatorModel):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
 
@@ -22,6 +22,7 @@ class Operator(object):
         self.files = FileRepository.all()
         self.pairing = pairing
         # {"pairs": [{"tumor": "tumorSampleName", "normal": "normalSampleName"}]}
+        self.output_directory_prefix = output_directory_prefix
         self._jobs = []
         self._pipeline = pipeline
 

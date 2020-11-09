@@ -102,7 +102,7 @@ def construct_copy_outputs_input(run_id_list):
                     else:
                         input_json[port_type] = input_json[port_type] + \
                             list_file_paths(port_files)
-    input_json["project_prefix"] = "_".join(project_prefix)
+    input_json["project_prefix"] = "_".join(sorted(project_prefix))
     return input_json
 
 
@@ -171,6 +171,11 @@ def generate_sample_pairing_and_mapping_files(run_ids):
                                                      pipeline_version=pipeline.version)
 
     return sample_mapping, sample_pairing, data_clinical
+
+
+def get_output_directory_prefix(run_id_list):
+    run = Run.objects.get(id=run_id_list[0])
+    return run.tags.get('output_directory_prefix', None)
 
 
 if __name__ == '__main__':
