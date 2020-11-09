@@ -9,7 +9,7 @@ from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
-from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files
+from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files, get_output_directory_prefix
 
 
 class CopyOutputsOperator(Operator):
@@ -55,6 +55,7 @@ class CopyOutputsOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
+        output_directory_prefix = get_output_directory_prefix(self.run_ids)
 
         tags = {"run_ids": run_ids}
 
@@ -73,11 +74,12 @@ class CopyOutputsOperator(Operator):
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
+                output_prefix = output_directory_prefix if output_directory_prefix else project_prefix
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
-                                                project_prefix,
+                                                output_prefix,
                                                 pipeline_version,
                                                 jg_created_date)
             copy_outputs_job_data['output_directory'] = output_directory
