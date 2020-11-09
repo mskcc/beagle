@@ -22,7 +22,7 @@
             }],
             "value": [{
                 "file": {
-                    "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_simplex_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
+                    "location": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_simplex_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
                     "size": 7313069069,
                     "class": "File"
                 },
@@ -64,7 +64,7 @@
             "value": [{
                 "file": {
                     "class": "File",
-                    "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+                    "location": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
                     "size": 7313069069
                 },
                 "sampleId": "C-000884-L011-d",
