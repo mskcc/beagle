@@ -309,4 +309,4 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ('tag', 'redact')
+        fields = ('id', 'sample_id', 'redact')

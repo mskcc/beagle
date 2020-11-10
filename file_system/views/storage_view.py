@@ -1,7 +1,7 @@
 from file_system.models import Storage
 from file_system.serializers import StorageSerializer, CreateStorageSerializer
 from rest_framework.viewsets import GenericViewSet
-from rest_framework import mixins, permissions
+from rest_framework import mixins
 
 
 class StorageViewSet(mixins.ListModelMixin,
