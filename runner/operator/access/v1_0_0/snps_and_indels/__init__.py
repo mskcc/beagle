@@ -151,7 +151,12 @@ class AccessLegacySNVOperator(Operator):
         )
         curated_normal_bams = [f.file for f in curated_normals_metadata]
         curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
-        normal_bams = [{'class': 'File', 'location': b.path} for b in curated_normal_bams]
+        normal_bams = [
+            {
+                'class': 'File',
+                'location': 'juno://' + b.path
+            } for b in curated_normal_bams
+        ]
         return normal_bams, curated_normal_ids
 
     def construct_sample_inputs(self, tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
@@ -166,7 +171,7 @@ class AccessLegacySNVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": tumor_bam.file.path
+                "location": 'juno://' + tumor_bam.file.path
             }]
             normal_sample_names = ['']
             matched_normal_ids = [normal_sample_id]
@@ -178,21 +183,21 @@ class AccessLegacySNVOperator(Operator):
             )[0].file
             normal_bams = [{
                 "class": "File",
-                "location": normal_bam.path
+                "location": 'juno://' + normal_bam.path
             }]
 
             genotyping_bams = [
                 {
                     "class": "File",
-                    "location": tumor_bam.file.path
+                    "location": 'juno://' + tumor_bam.file.path
                 },
                 {
                     "class": "File",
-                    "location": tumor_simplex_bam.file.path
+                    "location": 'juno://' + tumor_simplex_bam.file.path
                 },
                 {
                     "class": "File",
-                    "location": matched_normal_bam.file.path
+                    "location": 'juno://' + matched_normal_bam.file.path
                 }
             ]
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX', normal_sample_id]
