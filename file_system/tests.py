@@ -459,6 +459,36 @@ class FileTest(APITestCase):
                                    )
         self.assertEqual(len(response.json()['results']), 5)
 
+    def test_sample_list(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/sample/',
+                                   format='json'
+                                   )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()['results']), 1)
 
+    def test_sample_update(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.patch('/v0/fs/sample/%s/' % str(sample.id),
+                                     {
+                                         "redact": True,
+                                     },
+                                     format='json'
+                                     )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get('redact'), True)
 
-
+    def test_sample_create(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.post('/v0/fs/sample/',
+                                    {
+                                        "sample_id": "TEST_001",
+                                        "redact": False
+                                    },
+                                    format='json'
+                                    )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get('redact'), True)
