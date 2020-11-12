@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import json
-from runner.models import Port,Run
+from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
@@ -111,7 +111,7 @@ def single_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a single of values in the JSON
     """
-    keys = ['assay', 'project_prefix', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
+    keys = ['assay', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
     return set(keys)
 
 
@@ -149,8 +149,6 @@ def construct_helix_filters_input(argos_run_id_list):
                 input_json["mutation_svs_maf_files"].append(get_file_obj(value))
             if name == "portal_file":
                 input_json["mutation_svs_txt_files"].append(get_file_obj(value))
-            if name == "project_prefix":
-                input_json[name] = single_port.value
             if name == "assay":
                 if "impact" in single_port.value.lower():
                     input_json["is_impact"] = True
@@ -163,12 +161,13 @@ def construct_helix_filters_input(argos_run_id_list):
     input_json.update(references)
 
     # some default values
-    project_prefix = input_json['project_prefix']
+    project_prefix = get_project_prefix(argos_run_id_list)
     input_json['project_id'] = project_prefix
     input_json['project_short_name'] = project_prefix
     input_json['project_name'] = project_prefix
     input_json['project_description'] = project_prefix
     input_json['cancer_study_identifier'] = project_prefix
+    input_json['project_prefix'] = project_prefix
 
     # Gotta retrieve extra info that's not in the run porto have to query the database
     #
@@ -264,6 +263,16 @@ def get_lab_head_email(run_id_list):
     return ','.join(list(sorted(lab_head_emails)))
 
 
+def get_project_prefix(run_id_list):
+    project_prefix = set()
+    for single_run_id in run_id_list:
+        port_list = Port.objects.filter(run=single_run_id)
+        for single_port in port_list:
+            if single_port.name == "project_prefix":
+                project_prefix.add(single_port.value)
+    return "_".join(sorted(project_prefix))
+
+
 def get_request_pi(run_id_list):
     request_pis = set()
     files = FileRepository.all()
@@ -322,6 +331,12 @@ def get_oncotree_codes(request_id):
     if common_anc.code.lower() == "tissue":
         common_anc.code = 'mixed'
     return common_anc.code.lower()
+
+
+def get_output_directory_prefix(run_id_list):
+    run = Run.objects.get(id=run_id_list[0])
+    return run.tags.get('output_directory_prefix', None)
+
 
 if __name__ == '__main__':
     RUN_ID_LIST = []

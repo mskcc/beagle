@@ -168,12 +168,13 @@ def generate_description(job_group, job_group_notifier, request):
         l_email = data['labHeadEmail']
         p_email = data['piEmail']
         pm_name = data['projectManagerName']
+        qc_emails = data['qcAccessEmails']
         num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
         num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
                 'metadata__cmoSampleName').annotate(n=Count("pk")))
         num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
                 'metadata__cmoSampleName').annotate(n=Count("pk")))
-        operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, num_tumors, num_normals).to_dict()
+        operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, qc_emails, num_tumors, num_normals).to_dict()
         send_notification.delay(operator_start_event)
 
 

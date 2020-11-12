@@ -163,13 +163,16 @@ class ArgosOperator(Operator):
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
+            tags = {'requestId': self.request_id,
+                    'sampleNameTumor': tumor_sample_name,
+                    'sampleNameNormal': normal_sample_name,
+                    'labHeadName': pi,
+                    'labHeadEmail': pi_email}
+            if self.output_directory_prefix:
+                tags['output_directory_prefix'] = self.output_directory_prefix
             argos_jobs.append((APIRunCreateSerializer(
                 data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id,
-                          'sampleNameTumor': tumor_sample_name,
-                          'sampleNameNormal': normal_sample_name,
-                          'labHeadName': pi,
-                          'labHeadEmail': pi_email}}), job))
+                      'tags': tags}), job))
 
         operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)

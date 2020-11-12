@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.permissions import AllowAny
 
 
 class BeagleTokenObtainPairView(TokenObtainPairView):
@@ -61,3 +62,4 @@ class BeagleTokenVerifyView(TokenVerifyView):
 class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = UserRegistrationRequestSerializer
     queryset = UserRegistrationRequest.objects.order_by('created_date').all()
+    permission_classes = (AllowAny,)

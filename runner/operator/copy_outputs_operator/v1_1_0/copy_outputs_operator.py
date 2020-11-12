@@ -7,13 +7,14 @@ submits them as runs
 import os
 import uuid
 from pathlib import Path
+from django.conf import settings
 from notifier.models import JobGroup
 from file_system.models import File, FileGroup, FileType
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
-from django.conf import settings
-from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files
+from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files, \
+    get_output_directory_prefix
 
 
 class CopyOutputsOperator(Operator):
@@ -50,6 +51,7 @@ class CopyOutputsOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         project_prefix = input_json['project_prefix']
+        output_directory_prefix = get_output_directory_prefix(self.run_ids)
 
         tags = {"run_ids": run_ids}
 
@@ -68,11 +70,12 @@ class CopyOutputsOperator(Operator):
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
+                output_prefix = output_directory_prefix if output_directory_prefix else project_prefix
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
-                                                project_prefix,
+                                                output_prefix,
                                                 pipeline_version,
                                                 jg_created_date)
             copy_outputs_job_data['output_directory'] = output_directory
@@ -80,7 +83,6 @@ class CopyOutputsOperator(Operator):
             data=copy_outputs_job_data), input_json)]
 
         return copy_outputs_job
-
 
     def write_to_file(self,fname,s):
         """
@@ -94,7 +96,6 @@ class CopyOutputsOperator(Operator):
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
         return {'class': 'File', 'location': "juno://" + output }
-
 
     def register_tmp_file(self, path):
         fname = os.path.basename(path)

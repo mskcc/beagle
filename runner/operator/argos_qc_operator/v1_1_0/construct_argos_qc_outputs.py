@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import json
-from runner.models import Port
+from runner.models import Port, Run
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
@@ -108,7 +108,7 @@ def single_keys_for_qc():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have one value in the JSON
     """
-    keys = ["project_prefix", "genome", "assay", "pi", "pi_email"]
+    keys = ["genome", "assay", "pi", "pi_email"]
     return keys
 
 
@@ -127,12 +127,14 @@ def construct_argos_qc_input(run_id_list):
     for key in single_keys:
         input_json[key] = ""
 
+    project_prefix = set()
+
     for single_run_id in run_id_list:
         port_list = Port.objects.filter(run=single_run_id)
         for single_port in port_list:
             name = single_port.name
             value = single_port.value
-            # Assign genome, assay, pi, pi_email, project_prefix, ref_fasta here
+            # Assign genome, assay, pi, pi_email, ref_fasta here
             if name in single_keys:
                 if not input_json[name]:
                     input_json[name] = value
@@ -160,6 +162,10 @@ def construct_argos_qc_input(run_id_list):
                 input_json[name].append(get_files_from_port(value))
             if name == "conpair_pileups":
                 input_json[name].append(get_files_from_port(value))
+            if name == "project_prefix":
+                project_prefix.add(value)
+
+    input_json["project_prefix"] = "_".join(sorted(project_prefix))
 
     references = convert_references(input_json['assay'])
     input_json.update(references)
@@ -181,6 +187,11 @@ def convert_references(assay):
     references['hotspot_list_maf'] = {'class': 'File',
                                       'location': qc_resources['hotspot_list_maf']}
     return references
+
+
+def get_output_directory_prefix(run_id_list):
+    run = Run.objects.get(id=run_id_list[0])
+    return run.tags.get('output_directory_prefix', None)
 
 
 if __name__ == '__main__':
