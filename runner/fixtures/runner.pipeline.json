@@ -87,7 +87,7 @@
             "version": "master",
             "entrypoint": "workflows/subworkflows/snps_and_indels.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/access_snv",
+            "output_directory": "/work/access/production/runs/voyager",
             "operator": 5,
             "default": true
         }
