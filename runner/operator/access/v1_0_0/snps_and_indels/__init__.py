@@ -17,6 +17,7 @@ from file_system.repository.file_repository import File, FileRepository
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
+ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
 ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
 
 
@@ -173,7 +174,6 @@ class AccessLegacySNVOperator(Operator):
                 "class": "File",
                 "location": 'juno://' + tumor_bam.file.path
             }]
-            normal_sample_names = ['']
             matched_normal_ids = [normal_sample_id]
 
             # Todo: how to know which sequencer's default normal to use?
@@ -185,6 +185,7 @@ class AccessLegacySNVOperator(Operator):
                 "class": "File",
                 "location": 'juno://' + normal_bam.path
             }]
+            normal_sample_names = [ACCESS_DEFAULT_NORMAL_ID]
 
             genotyping_bams = [
                 {
