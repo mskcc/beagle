@@ -372,6 +372,7 @@ class PairsOperatorViewSet(GenericAPIView):
         pipeline_names = request.data.get('pipelines')
         name = request.data.get('name')
         job_group_id = request.data.get('job_group_id', None)
+        output_directory_prefix = request.data.get('output_directory_prefix', None)
 
         if not job_group_id:
             job_group = JobGroup()
@@ -390,7 +391,8 @@ class PairsOperatorViewSet(GenericAPIView):
 
             operator_model = Operator.objects.get(id=pipeline.operator_id)
             operator = OperatorFactory.get_by_model(operator_model, pairing={'pairs': pairs}, job_group_id=job_group_id,
-                                                    job_group_notifier_id=job_group_notifier_id)
+                                                    job_group_notifier_id=job_group_notifier_id,
+                                                    output_directory_prefix=output_directory_prefix)
             create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
 
         body = {"details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s" % (

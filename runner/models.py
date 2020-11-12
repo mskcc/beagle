@@ -81,7 +81,8 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING, db_index=True)
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus],
+                                 default=RunStatus.CREATING, db_index=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
