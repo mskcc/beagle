@@ -5,6 +5,7 @@
 
 import os
 import json
+import logging
 from jinja2 import Template
 
 from runner.models import Port, Run, RunStatus
@@ -13,6 +14,8 @@ from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File, FileRepository
 
+
+logger = logging.getLogger(__name__)
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -94,7 +97,9 @@ class AccessLegacySNVOperator(Operator):
 
             if not unfiltered_matched_normal_bam:
                 msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
-                raise Exception(msg)
+                logger.warning(msg)
+                # Skip running this sample
+                continue
 
             sample_ids.append(tumor_sample_id)
             tumor_duplex_bams.append(tumor_duplex_bam)
