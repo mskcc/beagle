@@ -165,3 +165,6 @@ class JiraEventHandler(EventHandler):
         labels = ticket.json()['fields'].get('labels', [])
         labels.append(str(event))
         self.client.update_labels(job_notifier.jira_id, labels)
+
+    def process_send_email_event(self, event):
+        pass
