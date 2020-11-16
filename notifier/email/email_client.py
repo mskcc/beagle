@@ -6,23 +6,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-class MailContent(object):
-
-    def __init__(self, template_path, arguments):
-        self.template_path = template_path
-        self.arguments = arguments
-
-    def format(self):
-        try:
-            f = codecs.open(self.template_path, 'r')
-            content = f.read()
-            mail_template = Template(content)
-            mail_content = str(mail_template.substitute(**self.arguments))
-            return mail_content
-        except Exception as e:
-            raise InvalidMailTemplateException(e)
-
-
 class EmailClient(object):
     logger = logging.getLogger(__name__)
 
@@ -54,10 +37,3 @@ class EmailClient(object):
         finally:
             if server:
                 server.quit()
-
-
-
-if __name__ == '__main__':
-    print("Test")
-    email = EmailClient('sinisa.ivkovic@gmail.com', 'TEST 1', "SOME CONTENT", "ivkovics@mskcc.org")
-    email.send()
