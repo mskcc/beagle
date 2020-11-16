@@ -148,7 +148,4 @@ class AccessLegacySVOperator(Operator):
             )
 
             sample_input = json.loads(input_file)
-
-            print(sample_input)
-
             return sample_input
