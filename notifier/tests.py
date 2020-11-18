@@ -27,7 +27,8 @@ class JobGroupAPITest(APITestCase):
     def test_list_job_groups(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.get('/v0/notifier/job-groups/', format='json')
-        self.assertEqual(len(response.data['results']), 2)
+        # Migration creates email job_group
+        self.assertEqual(len(response.data['results']), 3)
 
     def test_list_job_groups_by_jira_id(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
