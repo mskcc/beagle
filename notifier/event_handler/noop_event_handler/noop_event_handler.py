@@ -75,3 +75,6 @@ class NoOpEventHandler(EventHandler):
 
     def process_set_run_ticket_in_import_event(self, event):
         pass
+
+    def process_wes_job_failed_event(self, event):
+        pass

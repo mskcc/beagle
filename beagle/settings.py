@@ -342,3 +342,8 @@ STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 SAMPLE_ID_METADATA_KEY = 'sampleId'
+
+## Tempo
+
+WHOLE_EXOME_SEQUENCING = 'WholeExomeSequencing'
+NOTIFIER_WES_CC = os.environ.get('BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC', '')
