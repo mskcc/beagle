@@ -17,4 +17,3 @@ class EmailEventHandler(EventHandler):
         self.logger.info("Email sent")
         client = EmailClient(event.email_to, event.email_from, event.subject, event.content)
         client.send()
-
