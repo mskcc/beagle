@@ -8,7 +8,7 @@ from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
     RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent
+    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
@@ -93,6 +93,11 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     assays = ETLConfiguration.objects.first()
 
     recipe = LIMSClient.get_request_samples(request_id).get("recipe", None)
+
+    if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
+                Job.objects.filter(job_group=job_group).values("status")]) and recipe == settings.WHOLE_EXOME_SEQUENCING:
+        wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
+        send_notification.delay(wes_job_failed.to_dict())
 
     if not recipe:
         raise FailedToSubmitToOperatorException(
