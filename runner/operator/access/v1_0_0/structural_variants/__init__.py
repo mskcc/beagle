@@ -40,7 +40,7 @@ class AccessLegacySVOperator(Operator):
         # these are port objects, they dont have metadata field
         all_access_completed_samples = [r['sampleId'] for r in all_access_output_records]
 
-        access_snv_runs = Run.objects.filter(status=RunStatus.COMPLETED, app__name='access_legacy_snv')
+        access_snv_runs = Run.objects.filter(status=RunStatus.COMPLETED, app__name='access_legacy_sv')
         already_ran_tumors = [r['tags']['cmoSampleIds'] for r in access_snv_runs]
         already_ran_tumors = [item for sublist in already_ran_tumors for item in sublist]
 
@@ -102,7 +102,7 @@ class AccessLegacySVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["tumor_sample_names"]
+                            'cmoSampleIds': job["sv_sample_id"]
                         }
                     }
                 ),
