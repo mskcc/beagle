@@ -78,3 +78,7 @@ class NoOpEventHandler(EventHandler):
 
     def process_wes_job_failed_event(self, event):
         pass
+
+    def process_send_email_event(self, event):
+        pass
+
