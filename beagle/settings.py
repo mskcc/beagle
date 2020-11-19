@@ -349,6 +349,6 @@ BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get('BEAGLE_NOTIFIER_EMAIL_FROM')
 
 ## Tempo
 
-WHOLE_EXOME_SEQUENCING = 'WholeExomeSequencing'
+WES_ASSAYS = os.environ.get('BEAGLE_NOTIFIER_WES_ASSAYS', 'WholeExomeSequencing').split(',')
 NOTIFIER_WES_CC = os.environ.get('BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC', '')
 
