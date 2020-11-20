@@ -87,7 +87,7 @@
             "version": "master",
             "entrypoint": "workflows/subworkflows/snps_and_indels.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/access_snv",
+            "output_directory": "/work/access/production/runs/voyager/small_variants",
             "operator": 5,
             "default": true
         }
@@ -103,7 +103,7 @@
             "version": "ij/output_bam_files_instead_of_directory",
             "entrypoint": "workflows/ACCESS-pipeline.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-            "output_directory": "/juno/work/pi/beagle/output/access_legacy",
+            "output_directory": "/work/access/production/runs/voyager/bam_qc",
             "operator": 3,
             "default": true
         }
