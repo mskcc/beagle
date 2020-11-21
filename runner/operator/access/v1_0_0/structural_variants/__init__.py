@@ -1,28 +1,26 @@
-"""""""""""""""""""""""""""""
-" ACCESS-Pipeline SNV workflow operator
-" http://www.github.com/mskcc/access-pipeline/workflows/snps_and_indels.cwl
-"""""""""""""""""""""""""""""
-
 import os
 import json
 import logging
 from jinja2 import Template
 
-from runner.models import Port, Run, RunStatus
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
-
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-
 ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
 ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
 
 
 class AccessLegacySVOperator(Operator):
+    """
+    Operator for the ACCESS Legacy Structural Variants workflow:
+    http://www.github.com/mskcc/access-pipeline/workflows/snps_and_indels.cwl
+
+    This Operator will search for Standard Bam files based on an IGO Request ID
+    """
 
     def get_sample_inputs(self):
         """
@@ -43,12 +41,12 @@ class AccessLegacySVOperator(Operator):
 
         sample_inputs = []
         for i, b in enumerate(tumor_standard_bams):
-
             sample_input = self.construct_sample_inputs(
                 sample_ids[i],
                 b
             )
             sample_inputs.append(sample_input)
+
         return sample_inputs
 
     def get_jobs(self):
