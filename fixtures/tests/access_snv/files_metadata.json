@@ -13,11 +13,22 @@
                 "patientId": "C-000884",
                 "requestId": "06302_AB",
                 "sampleName": "C-000884-L011-d",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Tumor"
+                "tumorOrNormal": "Tumor",
+                "igocomplete": true
             },
             "user": null
         }
@@ -35,11 +46,23 @@
                 "sampleId": "06302_AB_1",
                 "patientId": "C-000884",
                 "sampleName": "C-000884-L011-d",
+                "requestId": "06302_AB",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Tumor"
+                "tumorOrNormal": "Tumor",
+                "igocomplete": true
             },
             "user": null
         }
@@ -57,11 +80,22 @@
                 "patientId": "C-000884",
                 "requestId": "06302_AB",
                 "sampleName": "C-000884-L011-d",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Tumor"
+                "tumorOrNormal": "Tumor",
+                "igocomplete": true
             },
             "user": null
         }
@@ -79,11 +113,23 @@
                 "sampleId": "06302_AB_1",
                 "patientId": "C-000884",
                 "sampleName": "C-000884-L011-d",
+                "requestId": "06302_AB",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Tumor"
+                "tumorOrNormal": "Tumor",
+                "igocomplete": true
             },
             "user": null
         }
@@ -101,11 +147,22 @@
                 "patientId": "C-000884",
                 "requestId": "06302_AB",
                 "sampleName": "C-000884-N004-d",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Normal"
+                "tumorOrNormal": "Normal",
+                "igocomplete": true
             },
             "user": null
         }
@@ -120,15 +177,26 @@
             "file": "2f77f3ac-ab25-4a02-90bd-86542401ac82",
             "version": 0,
             "metadata": {
-                "sampleId": "06302_AB_2",
+                "sampleId": "06302_AG_2",
                 "patientId": "DONOR22-TP",
                 "requestId": "06302_AB",
                 "sampleName": "DONOR22-TP",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Normal"
+                "tumorOrNormal": "Normal",
+                "igocomplete": true
             },
             "user": null
         }
@@ -143,15 +211,26 @@
             "file": "2f77f3ac-ab25-4a02-90bd-86542401ac99",
             "version": 0,
             "metadata": {
-                "sampleId": "06302_AB_2",
+                "sampleId": "06302_AG_2",
                 "patientId": "DONOR22-TP",
                 "requestId": "06302_AB",
                 "sampleName": "DONOR22-TP",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
                 "flowCellLanes": [
                     3,
                     4
                 ],
-                "tumorOrNormal": "Normal"
+                "tumorOrNormal": "Normal",
+                "igocomplete": true
             },
             "user": null
         }

@@ -16,6 +16,8 @@ FIXTURES = [
     "fixtures/tests/access_snv/operator_run.json",
     "fixtures/tests/access_snv/ports.json",
     "fixtures/tests/access_snv/runs.json",
+    "fixtures/tests/access_snv/sv_bams/files.json",
+    "fixtures/tests/access_snv/sv_bams/files_metadata.json",
 ]
 
 COMMON_FIXTURES = [
