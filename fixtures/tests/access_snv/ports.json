@@ -37,6 +37,38 @@
     },
     {
         "model": "runner.port",
+        "pk": "52e17010-65a2-4e7d-a699-03bfa8c71255",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.831Z",
+            "modified_date": "2020-02-04T15:29:30.750Z",
+            "run": "bc23076e-f477-4578-943c-1fbf6f1fca44",
+            "name": "standard_bams",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [{
+                "class": "File",
+                "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44aaa"
+            }],
+            "value": [{
+                    "path": "/juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
+                    "size": 7313069069,
+                    "class": "File"
+                }
+            ],
+            "files": [
+                "fffff52a-0696-48d4-9ca5-6580daa44aaa"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
         "pk": "52e17010-65a2-4e7d-a699-03bfa8c75454",
         "fields": {
             "created_date": "2019-12-11T22:53:17.831Z",
