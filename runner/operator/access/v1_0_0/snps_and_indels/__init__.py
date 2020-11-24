@@ -35,18 +35,13 @@ class AccessLegacySNVOperator(Operator):
         access_duplex_output_ports = Port.objects.filter(
             name='duplex_bams',
             run__app__name='access legacy',
+            run__tags__requestId=self.request_id,
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here
         all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
         # these are port objects, they dont have metadata field
-        all_access_completed_samples = [r['sampleId'] for r in all_access_output_records]
-
-        access_snv_runs = Run.objects.filter(status=RunStatus.COMPLETED, app__name='access_legacy_snv')
-        already_ran_tumors = [r['tags']['cmoSampleIds'] for r in access_snv_runs]
-        already_ran_tumors = [item for sublist in already_ran_tumors for item in sublist]
-
-        tumors_to_run = set(all_access_completed_samples) - set(already_ran_tumors)
+        tumors_to_run = [r['sampleId'] for r in all_access_output_records if r['tumorOrNormal'] == 'Tumor']
 
         sample_ids = []
         tumor_duplex_bams = []
