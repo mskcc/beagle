@@ -183,6 +183,7 @@ class JobObject(object):
         pi_email = ""
         project_manager_name = ""
         recipe = ""
+        qc_access_emails = ""
 
         if request_metadata:
             metadata = request_metadata.args.get('request_metadata', {})
