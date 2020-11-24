@@ -12,6 +12,8 @@ from runner.models import Run, Port
 
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
+TUMOR_OR_NORMAL_SEARCH = '-L0'
+SAMPLE_ID_SEP = '_cl_aln'
 ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
 ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
 
@@ -42,8 +44,8 @@ class AccessLegacySVOperator(Operator):
 
         # Filter to only tumor bam files
         # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if '-L0' in f['path'].split('/')[-1]]
-        sample_ids = [f['path'].split('/')[-1].split('_cl_aln')[0] for f in standard_tumor_bam_files]
+        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['path'].split('/')[-1]]
+        sample_ids = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_inputs = []
         for i, b in enumerate(standard_tumor_bam_files):
