@@ -6,7 +6,7 @@ from jinja2 import Template
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
-from runner.models import Run, Port
+from runner.models import Run, Port, RunStatus
 
 
 
@@ -33,8 +33,11 @@ class AccessLegacySVOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get all runs for the given request ID
-        request_id_runs = Run.objects.filter(tags__requestId=self.request_id)
+        # Get all completed runs for the given request ID
+        request_id_runs = Run.objects.filter(
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
+        )
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
