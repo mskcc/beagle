@@ -101,7 +101,7 @@
             "name": "access legacy",
             "github": "git@github.com:mskcc/ACCESS-Pipeline",
             "version": "ij/output_bam_files_instead_of_directory",
-            "entrypoint": "workflows/ACCESS-pipeline.cwl",
+            "entrypoint": "workflows/ACCESS_pipeline.cwl",
             "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
             "output_directory": "/work/access/production/runs/voyager/bam_qc",
             "operator": 3,
