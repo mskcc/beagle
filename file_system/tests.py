@@ -70,6 +70,22 @@ class FileTest(APITestCase):
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_create_file_too_long_sample_name(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.post('/v0/fs/files/',
+                                    {
+                                        "path": "/path/to/file.fasta",
+                                        "size": 1234,
+                                        "file_group": str(self.file_group.id),
+                                        "file_type": self.file_type_fasta.name,
+                                        "metadata": {
+                                            "requestId": "Request_001",
+                                            "sampleId": "igoSampleId_001_length_too_long_123"
+                                        }
+                                    },
+                                    format='json')
+        self.assertContains(response, 'too long', status_code=status.HTTP_400_BAD_REQUEST)
+
     def test_create_file_successful(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.post('/v0/fs/files/',

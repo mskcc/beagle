@@ -135,6 +135,9 @@ class JiraEventHandler(EventHandler):
             f.write(event.get_content())
         self._register_as_file(file_path, metadata)
 
+    def process_wes_job_failed_event(self, event):
+        self._add_comment_event(event)
+
     def _register_as_file(self, path, metadata):
         print("Registering file")
         try:
@@ -165,3 +168,6 @@ class JiraEventHandler(EventHandler):
         labels = ticket.json()['fields'].get('labels', [])
         labels.append(str(event))
         self.client.update_labels(job_notifier.jira_id, labels)
+
+    def process_send_email_event(self, event):
+        pass
