@@ -60,8 +60,9 @@ class AccessLegacySNVOperator(Operator):
                 }
             )
             if not len(tumor_duplex_bam) == 1:
-                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
+                msg = 'Found incorrect number of matching duplex bam files ({}) for sample {}'
                 msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+                logger.exception(msg)
                 raise Exception(msg)
             tumor_duplex_bam = tumor_duplex_bam[0]
 
@@ -74,8 +75,9 @@ class AccessLegacySNVOperator(Operator):
                 }
             )
             if not len(tumor_simplex_bam) == 1:
-                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
+                msg = 'Found incorrect number of matching simplex bam files ({}) for sample {}'
                 msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+                logger.exception(msg)
                 raise Exception(msg)
             tumor_simplex_bam = tumor_simplex_bam[0]
 
