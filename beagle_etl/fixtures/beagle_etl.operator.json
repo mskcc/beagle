@@ -53,5 +53,16 @@
             "version": "v1.0.0",
             "slug": "AccessLegacySNVOperator"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 6,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.structural_variants.AccessLegacySVOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacySVOperator"
+        }
     }
 ]
