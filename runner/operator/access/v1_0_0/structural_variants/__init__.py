@@ -108,6 +108,7 @@ class AccessLegacySVOperator(Operator):
 
             if not len(normal_bam) == 1:
                 msg = "Incorrect number of files ({}) found for ACCESS SV Default Normal".format(len(normal_bam))
+                logger.exception(msg)
                 raise Exception(msg)
 
             normal_bam = normal_bam[0].file
