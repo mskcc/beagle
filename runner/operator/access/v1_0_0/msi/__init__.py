@@ -7,88 +7,97 @@ import os
 import json
 from jinja2 import Template
 
-from runner.models import Port, Run, RunStatus
-from file_system.models import FileMetadata
 from runner.operator.operator import Operator
+from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import File, FileRepository
+from file_system.repository.file_repository import FileRepository
 
-
+SAMPLE_ID_SEP = '_cl_aln'
+TUMOR_SEARCH = '-L0'
+NORMAL_SEARCH = '-N0'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 class AccessLegacyMSIOperator(Operator):
+    """
+    Operator for the ACCESS Legacy Microsatellite Instability workflow:
 
-    # Will be populated after get_sample_inputs()
-    sample_inputs = None
-    number_of_inputs = None
+    http://www.github.com/mskcc/access-pipeline/workflows/subworkflows/msi.cwl
+
+    This Operator will search for ACCESS Standard Bam files based on an IGO Request ID. It will
+    also find the matched normals based on the patient ID.
+    """
 
     def get_sample_inputs(self):
         """
-        Create all sample inputs for all runs triggered in this instance of the operator
+        Create all sample inputs for all runs triggered in this instance of the operator.
 
         :return: list of json_objects
         """
-        access_duplex_output_ports = Port.objects.filter(
-            name='duplex_bams',
-            run__app__name='access legacy',
-            run__status=RunStatus.COMPLETED
+        # Get all completed runs for the given request ID
+        request_id_runs = Run.objects.filter(
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
         )
-        # Each port is a list, so need a double list comprehension here
-        all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
-        # these are port objects, they dont have metadata field
-        all_access_completed_samples = [r['sampleId'] for r in all_access_output_records]
 
-        access_snv_runs = Run.objects.filter(status=RunStatus.COMPLETED, app__name='access_legacy_snv')
-        already_ran_tumors = [r['tags']['cmoSampleIds'] for r in access_snv_runs]
-        already_ran_tumors = [item for sublist in already_ran_tumors for item in sublist]
+        # Get all standard bam ports for these runs
+        standard_bam_ports = Port.objects.filter(
+            name='standard_bams',
+            run__id__in=[r.id for r in request_id_runs]
+        )
 
-        tumors_to_run = set(all_access_completed_samples) - set(already_ran_tumors)
+        # Filter to only tumor bam files
+        # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
+        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_SEARCH in f['path'].split('/')[-1]]
+        sample_ids_to_run = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_ids = []
         tumor_bams = []
         matched_normal_bams = []
 
-        for i, tumor_sample_id in enumerate(tumors_to_run):
+        for i, tumor_sample_id in enumerate(sample_ids_to_run):
+            # Find the Tumor Standard bam
             tumor_bam = FileRepository.filter(
                 file_type='bam',
-                path_regex='__cl_aln_srt_MD_IR_FX_BR.bam',
+                path_regex='_cl_aln_srt_MD_IR_FX_BR.bam',
                 metadata={
                     'tumorOrNormal': 'Tumor',
                     'sampleName': tumor_sample_id
                 }
             )
-            if not len(tumor_bams) == 1:
+            if not len(tumor_bam) == 1:
                 msg = 'Found incorrect number of matching bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+                msg = msg.format(len(tumor_bam), tumor_sample_id)
                 raise Exception(msg)
 
-            patient_id = tumor_bams.metadata['patientId']
+            tumor_bam = tumor_bam[0]
+            patient_id = tumor_bam.metadata['patientId']
 
+            # Find the matched Normal Standard bam (which could be associated with a different request_id)
+            # Todo: we need to make sure that "-N0" is an acceptable way to find normal samples
+            # Todo: use tumorOrNormal field for this once this is solved:
+            # https://cwl.discourse.group/t/expressiontool-with-record-output/239/2
             matched_normal_bam = FileRepository.filter(
                 file_type='bam',
-                path_regex='__cl_aln_srt_MD_IR_FX_BR.bam',
+                path_regex=NORMAL_SEARCH + '.*_cl_aln_srt_MD_IR_FX_BR.bam',
                 metadata={
-                    'tumorOrNormal': 'Normal',
                     'patientId': patient_id,
                 }
             ).latest('created_date')
 
-            if not matched_normal_bams:
+            if not matched_normal_bam:
                 msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
                 raise Exception(msg)
 
             sample_ids.append(tumor_sample_id)
-            tumor_bam.append(tumor_bam)
-            matched_normal_bam.append(matched_normal_bam)
+            tumor_bams.append(tumor_bam)
+            matched_normal_bams.append(matched_normal_bam)
 
         sample_inputs = [self.construct_sample_inputs(
             sample_ids[i],
             tumor_bams[i],
             matched_normal_bams[i]
-        ) for i in range(0, len(sample_ids))
+        ) for i in range(0, len(sample_ids))]
 
-        self.number_of_inputs = len(sample_inputs)
-        self.sample_inputs = sample_inputs
         return sample_inputs
 
     def get_jobs(self):
@@ -97,22 +106,24 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        inputs = self.get_sample_inputs()
+
         return [
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, self.number_of_inputs),
+                        'name': "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["tumor_sample_names"]
+                            'cmoSampleIds': job["sample_name"]
                         }
                     }
                 ),
                 job
              )
-            for i, job in enumerate(self.sample_inputs)
+            for i, job in enumerate(inputs)
         ]
 
     def construct_sample_inputs(self, sample_name, tumor_bam, matched_normal_bam):
@@ -127,17 +138,17 @@ class AccessLegacyMSIOperator(Operator):
         sample_names = [sample_name]
         matched_normal_bams = [{
             "class": "File",
-            "location": matched_normal_bam.file.path
+            "location": 'juno://' + matched_normal_bam.file.path
         }]
 
         tumor_bams = [{
             "class": "File",
-            "location": tumor_bam.file.path
+            "location": 'juno://' + tumor_bam.file.path
         }]
 
         input_file = template.render(
             tumor_bams=json.dumps(tumor_bams),
-            matched_normal_bams=json.dumps(normal_bams),
+            normal_bams=json.dumps(matched_normal_bams),
             sample_names=json.dumps(sample_names),
         )
 
