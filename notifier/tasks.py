@@ -4,6 +4,7 @@ from django.conf import settings
 from notifier.models import JobGroupNotifier, Notifier
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 from notifier.event_handler.noop_event_handler.noop_event_handler import NoOpEventHandler
+from notifier.event_handler.email_event_handler.email_event_handler import EmailEventHandler
 
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,9 @@ def event_handler(job_group_notifier):
         if jgn.notifier_type.notifier_type == "JIRA":
             logger.info("Notifier type JIRA created")
             return JiraEventHandler(jgn.notifier_type.board)
+        elif jgn.notifier_type.notifier_type == "EMAIL":
+            logger.info("Notifier type EMAIL created")
+            return EmailEventHandler()
         else:
             return NoOpEventHandler()
     except JobGroupNotifier.DoesNotExist:

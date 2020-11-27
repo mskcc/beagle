@@ -44,7 +44,7 @@ class FileType(models.Model):
 
 
 class Sample(BaseModel):
-    sample_id = models.CharField(max_length=20, unique=True, null=False, blank=False)
+    sample_id = models.CharField(max_length=32, unique=True, null=False, blank=False)
     redact = models.BooleanField(default=False, null=False)
 
 

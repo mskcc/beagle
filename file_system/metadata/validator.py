@@ -17,6 +17,10 @@ METADATA_SCHEMA = {
         "requestId": {
             "type": "string"
         },
+        "sampleId": {
+            "type": "string",
+            "maxLength": 32
+        },
         "investigatorSampleId": {
             "type": "string"
         },
