@@ -15,7 +15,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 ACCESS_DEFAULT_CNV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam'
 
 
-class AccessLegacyMSIOperator(Operator):
+class AccessLegacyCNVOperator(Operator):
     """
     Operator for the ACCESS Legacy Copy Number Variants workflow:
 
@@ -44,8 +44,8 @@ class AccessLegacyMSIOperator(Operator):
 
         # Filter to only tumor bam files
         # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        unfiltered_tumor_bam_files = [f for p in unfiltered_bam_ports for f in p.value if TUMOR_SEARCH in f['path'].split('/')[-1]]
-        sample_ids_to_run = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in unfiltered_tumor_bam_files]
+        unfiltered_tumor_bam_files = [f for p in unfiltered_bam_ports for f in p.value if TUMOR_SEARCH in f['location'].split('/')[-1]]
+        sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in unfiltered_tumor_bam_files]
 
         tumor_bams = []
         sample_sexes = []
