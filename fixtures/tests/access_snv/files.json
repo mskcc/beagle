@@ -66,6 +66,19 @@
     },
     {
         "model": "file_system.file",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acda",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/juno/work/access/production/runs/Project_06302_AC/bam_qc/TDM/TDM1-1.2.9/C-000884-N004-d/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
         "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac82",
         "fields": {
             "created_date": "2020-01-06T19:59:50.591Z",
