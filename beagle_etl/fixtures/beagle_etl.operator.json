@@ -56,6 +56,17 @@
     },
     {
         "model": "beagle_etl.operator",
+        "pk": 7,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.msi.AccessLegacyMSIOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacyMSIOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
         "pk": 6,
         "fields": {
             "active": true,
