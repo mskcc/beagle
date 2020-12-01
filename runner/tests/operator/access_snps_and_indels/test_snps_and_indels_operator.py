@@ -39,7 +39,7 @@ class TestAccessSNVOperator(TestCase):
         Test that an Access legacy SNV operator instance can be created and validated
         """
         # Test should have all Files / FileMetadata from fixtures
-        operator_files_count = 9
+        operator_files_count = 10
         self.assertEqual(len(File.objects.all()), operator_files_count)
         self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
 
