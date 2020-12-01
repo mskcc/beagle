@@ -216,6 +216,7 @@ class ArgosOperator(Operator):
                 preservation_types = tumors[0].metadata['preservation']
                 normal_sample_id = pair['normal']
                 if "poolednormal" in normal_sample_id.lower(): # get pooled normal
+                    normals = list()
                     sample = get_pooled_normals(run_ids, preservation_types, bait_set)
                     normals.append(sample)
                 else: # get dmp normal
