@@ -142,10 +142,10 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
     else:
         return None
 
-    return pooled_normals, descriptor
+    return pooled_normals, descriptor, sample_name
 
 
-def build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, bait_set):
+def build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, bait_set, sample_name):
     specimen_type = 'Pooled Normal'
 
     sample_files = list()
