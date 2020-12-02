@@ -217,10 +217,11 @@ class ArgosOperator(Operator):
                 normal_sample_id = pair['normal']
                 if "poolednormal" in normal_sample_id.lower(): # get pooled normal
                     normals = list()
-                    sample_metadata, pooled_normal_files = get_pooled_normals(run_ids, preservation_types, bait_set)
-                    for pn_file in pooled_normal_files:
-                        sample = pn_file
-                        sample.metadata = sample_metadata
+                    pooled_normal_files, bait_set_reformatted = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+                    metadata = build_pooled_normal_sample(pooled_normal_files, run_ids, prservation, bait_set_reformatted)
+                    for f in pooled_normal_files:
+                        sample = f
+                        sample.metadata = metadata
                         normals.append(sample)
                 else: # get dmp normal
                     dmp_bam_id = normal_sample_id
