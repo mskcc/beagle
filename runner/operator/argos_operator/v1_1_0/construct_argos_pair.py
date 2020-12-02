@@ -45,7 +45,7 @@ def format_sample(data):
 
     r1 = 'R1'
     r2 = 'R2'
-    if 'pdx' in specimen_type.lower() or 'xenografts' in specimen_type.lower():
+    if 'pdx' in specimen_type.lower() or 'xenograft' in specimen_type.lower():
         r1 = 'zR1'
         r2 = 'zR2'
 
