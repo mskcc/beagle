@@ -145,7 +145,7 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
     return pooled_normals, descriptor
 
 
-def build_pooled_normal_sample(pooled_normal_files, run_ids, preservation_types, bait_set):
+def build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, bait_set):
     specimen_type = 'Pooled Normal'
 
     sample_files = list()
