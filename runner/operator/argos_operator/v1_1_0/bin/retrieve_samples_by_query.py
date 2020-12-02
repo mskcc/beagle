@@ -167,7 +167,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             sample['metadata'] = metadata
             sample_files.append(sample)
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
-        return pooled_normal
+        return pooled_normal, sample_files
     return None
 
 
