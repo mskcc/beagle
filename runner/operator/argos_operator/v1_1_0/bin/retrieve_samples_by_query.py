@@ -98,7 +98,11 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
     pooled_normals, descriptor = get_pooled_normal_files(run_ids, preservation_types, bait_set)
-    pooled_normal = build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, descriptor)
+    sample_files = list()
+    for pooled_normal_file in pooled_normals:
+        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor)
+        sample_files.append(sample_file)
+    pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
 
     return pooled_normal
 
@@ -145,43 +149,34 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
     return pooled_normals, descriptor, sample_name
 
 
-def build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, bait_set, sample_name):
+def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_name):
     specimen_type = 'Pooled Normal'
-
-    sample_files = list()
-
-    if len(pooled_normals) > 0:
-        for pooled_normal in pooled_normals:
-            sample = dict()
-            sample['id'] = pooled_normal.file.id
-            sample['path'] = pooled_normal.file.path
-            sample['file_name'] = pooled_normal.file.file_name
-            metadata = init_metadata()
-            metadata['sampleId'] = sample_name
-            metadata['sampleName'] = sample_name
-            metadata['requestId'] = sample_name
-            metadata['sequencingCenter'] = "MSKCC"
-            metadata['platform'] = "Illumina"
-            metadata['baitSet'] = bait_set 
-            metadata['recipe'] = bait_set
-            metadata['run_id'] = run_ids
-            metadata['preservation'] = preservation_types
-            metadata['libraryId'] = sample_name + "_1"
-            # because rgid depends on flowCellId and barcodeIndex, we will
-            # spoof barcodeIndex so that pairing can work properly; see
-            # build_sample in runner.operator.argos_operator.bin
-            metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
-            metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
-            metadata['flowCellId'] = 'PN_FCID'
-            metadata['tumorOrNormal'] = 'Normal'
-            metadata['patientId'] = 'PN_PATIENT_ID'
-            metadata['specimenType'] = specimen_type
-            sample['metadata'] = metadata
-            sample_files.append(sample)
-        pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
-        return pooled_normal
-    else:
-        return None
+    sample = dict()
+    sample['id'] = pooled_normal.file.id
+    sample['path'] = pooled_normal.file.path
+    sample['file_name'] = pooled_normal.file.file_name
+    metadata = init_metadata()
+    metadata['sampleId'] = sample_name
+    metadata['sampleName'] = sample_name
+    metadata['requestId'] = sample_name
+    metadata['sequencingCenter'] = "MSKCC"
+    metadata['platform'] = "Illumina"
+    metadata['baitSet'] = bait_set 
+    metadata['recipe'] = bait_set
+    metadata['run_id'] = run_ids
+    metadata['preservation'] = preservation_types
+    metadata['libraryId'] = sample_name + "_1"
+    # because rgid depends on flowCellId and barcodeIndex, we will
+    # spoof barcodeIndex so that pairing can work properly; see
+    # build_sample in runner.operator.argos_operator.bin
+    metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
+    metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
+    metadata['flowCellId'] = 'PN_FCID'
+    metadata['tumorOrNormal'] = 'Normal'
+    metadata['patientId'] = 'PN_PATIENT_ID'
+    metadata['specimenType'] = specimen_type
+    sample['metadata'] = metadata
+    return sample
 
 
 def get_dmp_normal(patient_id, bait_set):
