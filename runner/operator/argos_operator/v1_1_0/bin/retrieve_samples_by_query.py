@@ -162,8 +162,8 @@ def build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, bait
             metadata['requestId'] = sample_name
             metadata['sequencingCenter'] = "MSKCC"
             metadata['platform'] = "Illumina"
-            metadata['baitSet'] = descriptor
-            metadata['recipe'] = descriptor
+            metadata['baitSet'] = bait_set 
+            metadata['recipe'] = bait_set
             metadata['run_id'] = run_ids
             metadata['preservation'] = preservation_types
             metadata['libraryId'] = sample_name + "_1"
