@@ -61,7 +61,12 @@ class ArgosOperator(Operator):
             igo_id_group[igo_id].append(sample)
 
         for igo_id in igo_id_group:
-            samples.append(build_sample(igo_id_group[igo_id]))
+            sample = igo_id_group[igo_id][0]
+            sample_name = sample['metadata']['sampleName']
+            if "poolednormal" in sample_name.lower():
+                samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
+            else:
+                samples.append(build_sample(igo_id_group[igo_id]))
 
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
@@ -219,7 +224,7 @@ class ArgosOperator(Operator):
                     normals = list()
                     pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
                     for f in pooled_normal_files:
-                        metadata = build_pooled_normal_sample_by_file(f, run_ids, preservation_types, bait_set_reformatted, sample_name)
+                        metadata = build_pooled_normal_sample_by_file(f, run_ids, preservation_types, bait_set_reformatted, sample_name)['metadata']
                         sample = f
                         sample.metadata = metadata
                         normals.append(sample)

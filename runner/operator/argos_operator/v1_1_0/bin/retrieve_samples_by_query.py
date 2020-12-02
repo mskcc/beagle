@@ -128,7 +128,7 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
         # in preservation_types
         preservations_lower_case = set([x.lower() for x in preservation_types])
         run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
-        run_ids_suffix = "_".join(run_ids_suffix_list)
+        run_ids_suffix = "_".join(set(run_ids_suffix_list))
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
         if "ffpe" in preservations_lower_case:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
@@ -163,7 +163,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['platform'] = "Illumina"
     metadata['baitSet'] = bait_set 
     metadata['recipe'] = bait_set
-    metadata['run_id'] = run_ids
+    metadata['runId'] = "_".join(set(run_ids))
     metadata['preservation'] = preservation_types
     metadata['libraryId'] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will

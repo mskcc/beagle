@@ -86,7 +86,26 @@ def compile_pairs(samples, pairing_info=None):
             for pair in pairing_info['pairs']:
                 if tumor['SM'] == pair['tumor']:
                     for normal in normals:
-                        if normal['SM'] == pair['normal']:
+                        if 'poolednormal' in pair['normal'].lower():
+                            print('pool normal sample') 
+                            normal_run_ids = normal['run_id']
+                            normal_bait_set = normal['bait_set']
+                            normal_preservation = [x.lower() for x in normal['preservation_type']]
+                            if all(elem in normal_run_ids for elem in tumor['run_id']):
+                                print('found run ids in tumor')
+                                if normal_bait_set.lower() in tumor['bait_set'].lower():
+                                    tumor_preservations = [x.lower() for x in tumor['preservation_type']]
+                                    if 'ffpe' in normal_preservation:
+                                        if 'ffpe' in tumor_preservations:
+                                            pairs['tumor'].append(tumor)
+                                            pairs['normal'].append(normal)
+                                            break
+                                    else:
+                                        if 'ffpe' not in tumor_preservations:
+                                            pairs['tumor'].append(tumor)
+                                            pairs['normal'].append(normal)
+                                            break
+                        elif normal['SM'] == pair['normal']:
                             pairs['tumor'].append(tumor)
                             pairs['normal'].append(normal)
                             break
