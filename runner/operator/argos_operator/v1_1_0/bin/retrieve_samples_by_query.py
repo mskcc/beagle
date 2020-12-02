@@ -97,6 +97,14 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
+    pooled_normals, descriptor = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    pooled_normal = build_pooled_normal_sample(pooled_normals, run_ids, preservation_types, descriptor)
+
+    return pooled_normal
+
+
+def get_pooled_normal_files(run_ids, preservation_types, bait_set):
+
     pooled_normals = FileRepository.all()
 
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
@@ -134,6 +142,10 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     else:
         return None
 
+    return pooled_normals, descriptor
+
+
+def build_pooled_normal_sample(pooled_normal_files, run_ids, preservation_types, bait_set):
     specimen_type = 'Pooled Normal'
 
     sample_files = list()
@@ -167,8 +179,9 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             sample['metadata'] = metadata
             sample_files.append(sample)
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
-        return pooled_normal, sample_files
-    return None
+        return pooled_normal
+    else:
+        return None
 
 
 def get_dmp_normal(patient_id, bait_set):
