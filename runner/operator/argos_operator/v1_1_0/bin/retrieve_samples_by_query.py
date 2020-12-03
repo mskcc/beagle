@@ -49,15 +49,44 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_descriptor(bait_set, pooled_normals):
+def get_descriptor(bait_set, pooled_normals, preservation_types):
     """
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
+
+    Adding correction for IMPACT505 pooled normals
     """
+    query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
+
+    descriptor = None
     for pooled_normal in pooled_normals:
-        descriptor = pooled_normal.metadata['recipe']
-        if descriptor.lower() in bait_set.lower():
-            return descriptor
-    return None
+        bset_data = pooled_normal.metadata['recipe']
+        if bset_data.lower() in bait_set.lower():
+            descriptor = bset_data
+
+    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+
+        # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
+        # in preservation_types
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+        run_ids_suffix = "_".join(set(run_ids_suffix_list))
+        sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
+    elif "impact505" in bait_set.lower():
+        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
+        descriptor = "IMPACT505"
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        q = query & Q(metadata__sampleName=sample_name)
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+        if not pooled_normals:
+            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+
+    return pooled_normals, descriptor, sample_name
 
 
 def build_run_id_query(data):
@@ -119,32 +148,7 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    descriptor = get_descriptor(bait_set, pooled_normals)
-
-    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
-
-        # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
-        # in preservation_types
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
-        run_ids_suffix = "_".join(set(run_ids_suffix_list))
-        sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
-    elif "impact505" in bait_set.lower():
-        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
-        q = query & Q(metadata__sampleName=sample_name)
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
-        if not pooled_normals:
-            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
-            return None
-    else:
-        return None
+    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types)
 
     return pooled_normals, descriptor, sample_name
 
