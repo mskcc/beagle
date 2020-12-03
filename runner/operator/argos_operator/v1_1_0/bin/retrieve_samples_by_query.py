@@ -97,10 +97,10 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
-        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor)
+        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor, sample_name)
         sample_files.append(sample_file)
     pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
 
