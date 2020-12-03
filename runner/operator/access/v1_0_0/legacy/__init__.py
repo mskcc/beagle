@@ -16,7 +16,7 @@ import json
 from jinja2 import Template
 
 REQUIRED_META_FIELDS = [
-    "cmoSampleName",
+    "sampleName",
     "requestId",
     "tumorOrNormal",
     "sampleId"
@@ -73,7 +73,7 @@ def generate_title_file_content(sample_group):
         title_file_content += line_content.format(
             meta['barcodeId'] if meta['barcodeId'] else '-',
             pool_info,
-            meta['cmoSampleName'],
+            meta['sampleName'],
             meta['investigatorSampleId'],
             meta['patientId'],
             meta['tumorOrNormal'],
@@ -135,7 +135,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                 continue
 
             patient_id_count[meta["patientId"]] += 1
-            cmo_sample_names.append(meta["cmoSampleName"])
+            cmo_sample_names.append(meta["sampleName"])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
             patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
