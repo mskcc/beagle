@@ -83,7 +83,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             if ports:
                 queryset = self.query_from_dict("port__%s__exact",queryset,ports)
             if tags:
-                queryset = self.query_from_dict("tags__%s__exact",queryset,tags)
+                queryset = self.query_from_dict("tags__%s__contains",queryset,tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if apps:
