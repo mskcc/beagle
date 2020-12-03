@@ -50,7 +50,13 @@ class ArgosQcOperator(Operator):
         """
         If project_prefix and job_group_id, write output to a directory
         that uses both
+
+        Also use argos version number for output instead of pipeline version
+        that's listed in Beagle
         """
+        argos_run = Run.objects.get(id=run_ids[0])
+        argos_pipeline = argos_run.app
+
         output_directory = None
         if self.output_directory_prefix:
             project_prefix = self.output_directory_prefix
@@ -64,7 +70,7 @@ class ArgosQcOperator(Operator):
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 output_prefix,
-                                                pipeline_version,
+                                                argos_pipeline.version,
                                                 jg_created_date)
             argos_qc_outputs_job_data['output_directory'] = output_directory
 
