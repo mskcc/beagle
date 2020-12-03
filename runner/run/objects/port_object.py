@@ -126,4 +126,4 @@ class PortObject(object):
             self.port_object = new_port
 
     def __repr__(self):
-        return "(PORT) %s: Name: %s Type: %s" % (self.run_id, self.name, PortType(self.port_type).name)
+        return "(PORT) %s: Name: %s Type: %s" % (self.port_object.id, self.name, PortType(self.port_type).name)
