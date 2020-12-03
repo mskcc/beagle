@@ -1,6 +1,8 @@
 import logging
 from distutils.util import strtobool
+from django.db.models import Q
 import datetime
+from functools import reduce
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
 from django.db.models import Prefetch, Count
@@ -9,11 +11,12 @@ from rest_framework import status
 from rest_framework import mixins
 from runner.run.objects.run_object import RunObject
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job
-from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator
+from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
-    TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer
+    TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
+    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.response import Response
@@ -503,3 +506,67 @@ class TempoMPGenViewSet(GenericAPIView):
             body = {"details": "TempoMPGen Job submitted."}
         create_tempo_mpgen_job(operator, pairing_override, job_group_id, job_group_notifier_id)
         return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class RunSamplesViewSet(mixins.ListModelMixin,
+                        GenericViewSet):
+    queryset = Run.objects.prefetch_related(Prefetch('port_set', queryset=
+    Port.objects.select_related('run'))).order_by('-created_date').all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RunApiListSerializer
+        else:
+            return RunSerializerFull
+
+    @swagger_auto_schema(query_serializer=RunSamplesSerializer)
+    def list(self, request, *args, **kwargs):
+        job_group = request.query_params.get('job_group')
+        samples = request.query_params.get('samples').split(',')
+        results = Run.objects.filter(reduce(lambda x, y: x | y, [Q(samples__sample_id__contains=sample) for sample in
+                                                                 samples])).distinct()
+        if job_group:
+            results = results.filter(job_group=job_group)
+        page = self.paginate_queryset(results)
+        serializer = RunSerializerPartial(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class OperatorSamplesLatestViewSet(mixins.ListModelMixin,
+                                   GenericViewSet):
+    queryset = OperatorRun.objects.all()
+    serializer_class = OperatorRunSerializer
+
+    @swagger_auto_schema(query_serializer=OperatorLatestSamplesQuerySerializer)
+    def list(self, request, *args, **kwargs):
+        samples = request.query_params.get('samples').split()
+        response = dict()
+        for sample in samples:
+            latest_operator_run = OperatorRun.objects.filter(
+                reduce(lambda x, y: x | y,
+                       [Q(runs__samples__sample_id__contains=sample) for sample in [sample]])).order_by(
+                '-created_date').first()
+            operator_runs = OperatorRun.objects.filter(job_group=latest_operator_run.job_group).all()
+            serializer = OperatorRunSerializer(operator_runs, many=True)
+            response[sample] = serializer.data
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class OperatorSamplesAllViewSet(mixins.ListModelMixin,
+                                GenericViewSet):
+    queryset = OperatorRun.objects.all()
+    serializer_class = OperatorRunSerializer
+
+    @swagger_auto_schema(query_serializer=OperatorSampleQuerySerializer)
+    def list(self, request, *args, **kwargs):
+        sample = request.query_params.get('sample')
+        response = []
+        operator_runs = OperatorRun.objects.filter(
+            reduce(lambda x, y: x | y, [Q(runs__samples__sample_id__contains=sample) for sample in [sample]])).order_by(
+            '-created_date')
+        job_groups = [operator_run.job_group for operator_run in operator_runs]
+        for job_group in job_groups:
+            operators = OperatorRun.objects.filter(job_group=job_group)
+            serializer = OperatorRunSerializer(operators, many=True)
+            response.append(serializer.data)
+        return Response(response, status=status.HTTP_200_OK)
