@@ -1,4 +1,5 @@
 import logging
+from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.port_object import PortObject
 from runner.pipeline.pipeline_cache import PipelineCache
 from runner.models import PortType, RunStatus, Run, Port
@@ -9,7 +10,8 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class RunObject(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, run_id, run_obj, inputs, outputs, status, job_statuses=None, message={}, output_metadata={},
+    def __init__(self, run_id, run_obj, inputs, outputs, status, samples=[], job_statuses=None, message={},
+                 output_metadata={},
                  execution_id=None, tags={}, job_group=None, job_group_notifier=None, notify_for_outputs=[]):
         self.run_id = run_id
         self.run_obj = run_obj
@@ -17,6 +19,7 @@ class RunObject(object):
         self.inputs = inputs
         self.outputs = outputs
         self.status = status
+        self.samples = samples
         self.job_statuses = job_statuses
         self.message = message
         self.output_metadata = output_metadata
@@ -55,6 +58,7 @@ class RunObject(object):
                    input_ports,
                    output_ports,
                    run.status,
+                   samples=[],
                    job_statuses=run.job_statuses,
                    message=run.message,
                    output_metadata=run.output_metadata,
@@ -64,6 +68,13 @@ class RunObject(object):
 
     def ready(self):
         [PortObject.ready(p) for p in self.inputs]
+        samples = set()
+        for p in self.inputs:
+            for f in p.files:
+                file_obj = FileProcessor.get_file_obj(f)
+                if file_obj.sample:
+                    samples.add(file_obj.sample)
+        self.samples = list(samples)
         [PortObject.ready(p) for p in self.outputs]
         self.status = RunStatus.READY
 
@@ -78,12 +89,13 @@ class RunObject(object):
         return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, message=run.message,
                    output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
                    job_group=run.job_group, job_group_notifier=run.job_group_notifier,
-                   notify_for_outputs=run.notify_for_outputs)
+                   notify_for_outputs=run.notify_for_outputs, samples=list(run.samples.all()))
 
     def to_db(self):
         [PortObject.to_db(p) for p in self.inputs]
         [PortObject.to_db(p) for p in self.outputs]
         self.run_obj.status = self.status
+        self.run_obj.samples.set(self.samples)
         self.run_obj.job_statuses = self.job_statuses
         self.run_obj.message = self.message
         self.run_obj.output_metadata = self.output_metadata
