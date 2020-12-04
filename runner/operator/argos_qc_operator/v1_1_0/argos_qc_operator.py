@@ -9,7 +9,7 @@ import logging
 from notifier.models import JobGroup
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
+from runner.models import Pipeline, Run
 from .construct_argos_qc_outputs import construct_argos_qc_input, get_output_directory_prefix
 LOGGER = logging.getLogger(__name__)
 
