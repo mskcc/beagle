@@ -391,7 +391,7 @@ def complete_job(run_id, outputs):
             trigger.from_operator_id,
             [run_id],
             job_group_id=job_group_id,
-            parent=run.run_obj.operator_run
+            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
         )
 
 
