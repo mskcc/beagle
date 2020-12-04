@@ -12,7 +12,7 @@ from notifier.models import JobGroup
 from file_system.models import File, FileGroup, FileType
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
+from runner.models import Pipeline, Run
 from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files, \
     get_output_directory_prefix
 
