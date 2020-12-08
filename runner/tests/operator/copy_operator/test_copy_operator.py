@@ -122,7 +122,7 @@ class TestCopyOperator(TestCase):
         expected_input = {
                 'input_file': {
                     'class': 'File',
-                    'path': self.file1.path
+                    'location': 'juno://' + self.file1.path
                 }
             }
         self.assertDictEqual(run_input, expected_input)
@@ -139,13 +139,13 @@ class TestCopyOperator(TestCase):
         jobs = operator.get_jobs()
         self.assertEqual(len(jobs), 1)
 
-        serialized_job, job_meta = jobs[0]
-        initial_data = serialized_job.initial_data
+        serialized_run, job = jobs[0]
+        initial_data = serialized_run.initial_data
 
         expected_input = {
                 'input_file': {
                     'class': 'File',
-                    'path': self.file1.path
+                    'location': 'juno://' + self.file1.path
                 }
             }
         expected_initial_data = {
@@ -153,10 +153,10 @@ class TestCopyOperator(TestCase):
             'inputs': expected_input,
             'name': 'COPY JOB',
             'tags': {}}
-        expected_job_meta = {}
+        expected_job = expected_input
 
         self.assertDictEqual(initial_data, expected_initial_data)
-        self.assertDictEqual(job_meta, expected_job_meta)
+        self.assertDictEqual(job, expected_job)
 
     # disable job submission to Ridgeback
     @patch('runner.tasks.submit_job')
@@ -185,7 +185,6 @@ class TestCopyOperator(TestCase):
         self.assertEqual(len(Port.objects.all()), 3)
         self.assertEqual(len(File.objects.all()), 2)
         self.assertEqual(len(FileMetadata.objects.all()), 2)
-
 
     def test_live_copy_operator_run(self):
         """

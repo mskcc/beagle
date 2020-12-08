@@ -19,7 +19,7 @@ class CopyOperator(Operator):
         data = {
             'input_file':{
                 'class': 'File',
-                'path': file.path
+                'location': 'juno://' + file.path # NOTE: hard coded juno location here
             }
         }
         return(data)
@@ -39,10 +39,10 @@ class CopyOperator(Operator):
         pipeline_obj = Pipeline.objects.get(id=self.get_pipeline_id())
         inputs = self.create_input()
         name = "COPY JOB"
-        serialized_job = APIRunCreateSerializer(
+        serialized_run = APIRunCreateSerializer(
             data = dict(app = pipeline_obj.id, inputs = inputs, name = name, tags = {})
         )
-        job_meta = {}
-        job = (serialized_job, job_meta)
+        job = inputs
+        job = (serialized_run, job)
         jobs = [job]
         return(jobs)
