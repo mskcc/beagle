@@ -32,10 +32,21 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
+        # Get the latest completed runs for the given request ID
+        group_id = Run.objects.filter(
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
+        ).order_by('-finished_date').first().job_group
+
+        request_id_runs = Run.objects.filter(
+            job_group=group_id,
+            status=RunStatus.COMPLETED
+        )
+
+        # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
             name='duplex_bams',
-            run__app__name='access legacy',
-            run__tags__requestId=self.request_id,
+            run__id__in=[r.id for r in request_id_runs],
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here

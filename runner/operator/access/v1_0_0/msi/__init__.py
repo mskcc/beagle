@@ -33,16 +33,22 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get all completed runs for the given request ID
-        request_id_runs = Run.objects.filter(
+        # Get the latest completed runs for the given request ID
+        group_id = Run.objects.filter(
             tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
+        ).order_by('-finished_date').first().job_group
+
+        request_id_runs = Run.objects.filter(
+            job_group=group_id,
             status=RunStatus.COMPLETED
         )
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
             name='standard_bams',
-            run__id__in=[r.id for r in request_id_runs]
+            run__id__in=[r.id for r in request_id_runs],
+            run__status=RunStatus.COMPLETED
         )
 
         # Filter to only tumor bam files
