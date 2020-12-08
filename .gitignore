@@ -9,3 +9,4 @@ conda*
 input.json
 *.swp
 beagle-server.log
+runner/tests/operator/copy_operator/tmp*
