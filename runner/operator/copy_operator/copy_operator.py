@@ -17,8 +17,10 @@ class CopyOperator(Operator):
         """
         file = FileMetadata.objects.filter(metadata__requestId = self.request_id).first().file
         data = {
-            'class': 'File',
-            'path': file.path
+            'input_file':{
+                'class': 'File',
+                'path': file.path
+            }
         }
         return(data)
 
@@ -38,7 +40,7 @@ class CopyOperator(Operator):
         inputs = self.create_input()
         name = "COPY JOB"
         serialized_job = APIRunCreateSerializer(
-            data = dict(app = pipeline_obj.id, inputs = inputs, name = name)
+            data = dict(app = pipeline_obj.id, inputs = inputs, name = name, tags = {})
         )
         job_meta = {}
         job = (serialized_job, job_meta)
