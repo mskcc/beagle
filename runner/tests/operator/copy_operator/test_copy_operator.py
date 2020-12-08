@@ -5,7 +5,8 @@ import os
 from django.test import TestCase
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata, FileGroup
-from runner.models import Run, Pipeline, OperatorRun
+from runner.serializers import APIRunCreateSerializer
+from runner.models import Run, Pipeline, OperatorRun, Port
 from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.copy_operator.copy_operator import CopyOperator
@@ -32,6 +33,7 @@ class MockRequest(object):
 
 class TestCopyOperator(TestCase):
     def setUp(self):
+        self.preserve = False # save the tmpdir
         settings.NOTIFIER_ACTIVE = False
 
         # needed for making File entries in the db
@@ -97,8 +99,9 @@ class TestCopyOperator(TestCase):
 
 
     def tearDown(self):
-        # remove the tmpdir upon test completion
-        shutil.rmtree(self.tmpdir)
+        if not self.preserve:
+            # remove the tmpdir upon test completion
+            shutil.rmtree(self.tmpdir)
 
     def test_get_copy_operator(self):
         """
@@ -117,10 +120,43 @@ class TestCopyOperator(TestCase):
         operator = OperatorFactory.get_by_model(operator_instance, request_id = request_id)
         run_input = operator.create_input()
         expected_input = {
-            'class': 'File',
-            'path': self.file1.path
+                'input_file': {
+                    'class': 'File',
+                    'path': self.file1.path
+                }
             }
         self.assertDictEqual(run_input, expected_input)
+
+    def test_get_copy_operator_jobs(self):
+        """
+        Test case for getting jobs from Copy Operator
+        """
+        request_id = '1'
+        operator_instance = self.operator
+        operator = OperatorFactory.get_by_model(operator_instance, request_id = request_id)
+        pipeline_instance = Pipeline.objects.get(id=operator.get_pipeline_id())
+
+        jobs = operator.get_jobs()
+        self.assertEqual(len(jobs), 1)
+
+        serialized_job, job_meta = jobs[0]
+        initial_data = serialized_job.initial_data
+
+        expected_input = {
+                'input_file': {
+                    'class': 'File',
+                    'path': self.file1.path
+                }
+            }
+        expected_initial_data = {
+            'app': pipeline_instance.id,
+            'inputs': expected_input,
+            'name': 'COPY JOB',
+            'tags': {}}
+        expected_job_meta = {}
+
+        self.assertDictEqual(initial_data, expected_initial_data)
+        self.assertDictEqual(job_meta, expected_job_meta)
 
     # disable job submission to Ridgeback
     @patch('runner.tasks.submit_job')
@@ -129,8 +165,10 @@ class TestCopyOperator(TestCase):
         Test case for creating a Copy Operator run
         """
         # there should be no Runs
-        number_of_runs = len(Run.objects.all())
-        self.assertEqual(number_of_runs, 0)
+        self.assertEqual(len(Run.objects.all()), 0)
+        self.assertEqual(len(Port.objects.all()), 0)
+        self.assertEqual(len(File.objects.all()), 2)
+        self.assertEqual(len(FileMetadata.objects.all()), 2)
 
         # make a fake http request with some data
         # and send it to the API endpoint for starting a run
@@ -143,8 +181,10 @@ class TestCopyOperator(TestCase):
         response = view.post(request)
 
         # there should be 1 run now
-        number_of_runs = len(Run.objects.all())
-        self.assertEqual(number_of_runs, 1)
+        self.assertEqual(len(Run.objects.all()), 1)
+        self.assertEqual(len(Port.objects.all()), 3)
+        self.assertEqual(len(File.objects.all()), 2)
+        self.assertEqual(len(FileMetadata.objects.all()), 2)
 
 
     def test_live_copy_operator_run(self):
@@ -153,16 +193,19 @@ class TestCopyOperator(TestCase):
 
         Need to enable a specific env var to run this test since it should submit a job to Ridgeback
 
+        Make sure that a Ridgeback instance is running! Set with env var BEAGLE_RIDGEBACK_URL
+
         Usage
         ------
 
-            $ COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
+            $ BEAGLE_RIDGEBACK_URL=http://silo:5003 COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
         """
         enable_testcase = os.environ.get('COPY_FILE')
         request_id = 'test_live_copy_operator_run'
 
         if enable_testcase:
             print(">>> running TestCopyOperator.test_live_copy_operator_run")
+            print(">>> using RIDGEBACK_URL: ", settings.RIDGEBACK_URL)
             self.assertEqual(len(OperatorRun.objects.all()), 0)
             self.assertEqual(len(Run.objects.all()), 0)
 
@@ -200,24 +243,22 @@ class TestCopyOperator(TestCase):
 
             run_instance = Run.objects.all().first()
             operator_run_instance = OperatorRun.objects.all().first()
-            output_directory = run_instance.output_directory
-
 
             count = 0
             while True:
                 count += 1
                 print('>>> checking job status ({})'.format(count))
+                time.sleep(5)
                 # process_triggers() # ??
                 check_jobs_status() # TODO: it gets stuck here, jobs never progress, how to make jobs run?
-                print(">>> output_directory: ", output_directory)
                 pprint(run_instance.__dict__, indent = 4)
                 pprint(operator_run_instance.__dict__, indent = 4)
-                status = operator_run_instance.status
-                if status == 3:
-                    print(">>> its done")
-                    break
-                elif status == 4:
-                    print(">>> it broke")
-                    break
-                else:
-                    time.sleep(5)
+                # status = operator_run_instance.status
+                # if status == 3:
+                #     print(">>> its done")
+                #     break
+                # elif status == 4:
+                #     print(">>> it broke")
+                #     break
+                # else:
+                #     time.sleep(5)
