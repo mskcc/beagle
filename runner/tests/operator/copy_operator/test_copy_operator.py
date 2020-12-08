@@ -5,11 +5,11 @@ import os
 from django.test import TestCase
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata, FileGroup
-from runner.models import Run, Pipeline
+from runner.models import Run, Pipeline, OperatorRun
 from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.copy_operator.copy_operator import CopyOperator
-from runner.tasks import check_jobs_status
+from runner.tasks import check_jobs_status, process_triggers
 from tempfile import mkdtemp
 import shutil
 from mock import patch
@@ -21,6 +21,8 @@ from pprint import pprint
 import beagle_etl.celery
 if beagle_etl.celery.app.conf['task_always_eager'] == False:
     beagle_etl.celery.app.conf['task_always_eager'] = True
+
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class MockRequest(object):
     """
@@ -49,7 +51,8 @@ class TestCopyOperator(TestCase):
         )
 
         # make a tmpdir and put a file in it
-        self.tmpdir = mkdtemp()
+        # use this local dir so that its accessible across the HPC
+        self.tmpdir = mkdtemp(dir = THIS_DIR)
         self.tmp_path = os.path.join(self.tmpdir, "foo.txt")
         self.output_dir = os.path.join(self.tmpdir, "output")
         os.mkdir(self.output_dir)
@@ -146,15 +149,22 @@ class TestCopyOperator(TestCase):
 
     def test_live_copy_operator_run(self):
         """
-        A test case for submitting a job to Ridgeback for a custom file that is passed from the environment
+        A test case for submitting a job to Ridgeback for the Copy Operator
 
-        $ COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
+        Need to enable a specific env var to run this test since it should submit a job to Ridgeback
+
+        Usage
+        ------
+
+            $ COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
         """
         enable_testcase = os.environ.get('COPY_FILE')
         request_id = 'test_live_copy_operator_run'
 
         if enable_testcase:
             print(">>> running TestCopyOperator.test_live_copy_operator_run")
+            self.assertEqual(len(OperatorRun.objects.all()), 0)
+            self.assertEqual(len(Run.objects.all()), 0)
 
             # make a file
             path = os.path.join(self.tmpdir, "file.txt")
@@ -186,12 +196,28 @@ class TestCopyOperator(TestCase):
 
             # there should be 1 run now
             self.assertEqual(len(Run.objects.all()), 1)
+            self.assertEqual(len(OperatorRun.objects.all()), 1)
+
             run_instance = Run.objects.all().first()
+            operator_run_instance = OperatorRun.objects.all().first()
+            output_directory = run_instance.output_directory
+
 
             count = 0
             while True:
                 count += 1
                 print('>>> checking job status ({})'.format(count))
-                check_jobs_status()
+                # process_triggers() # ??
+                check_jobs_status() # TODO: it gets stuck here, jobs never progress, how to make jobs run?
+                print(">>> output_directory: ", output_directory)
                 pprint(run_instance.__dict__, indent = 4)
-                time.sleep(5)
+                pprint(operator_run_instance.__dict__, indent = 4)
+                status = operator_run_instance.status
+                if status == 3:
+                    print(">>> its done")
+                    break
+                elif status == 4:
+                    print(">>> it broke")
+                    break
+                else:
+                    time.sleep(5)
