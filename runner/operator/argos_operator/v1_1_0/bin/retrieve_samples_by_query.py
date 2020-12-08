@@ -56,6 +56,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     Adding correction for IMPACT505 pooled normals
     """
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    sample_name = None
 
     descriptor = None
     for pooled_normal in pooled_normals:
