@@ -9,10 +9,13 @@ from runner.models import Run, Pipeline
 from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.copy_operator.copy_operator import CopyOperator
+from runner.tasks import check_jobs_status
 from tempfile import mkdtemp
 import shutil
 from mock import patch
 from django.conf import settings
+import time
+from pprint import pprint
 
 # Run Celery tasks synchronously for testing, no async
 import beagle_etl.celery
@@ -81,7 +84,7 @@ class TestCopyOperator(TestCase):
         # Pipeline entry for the Operator
         self.pipeline = Pipeline.objects.create(
             name = CopyOperator._pipeline_name,
-            github = "https://github.com/stevekm/copy-cwl.git",
+            github = "git@github.com:stevekm/copy-cwl",
             version = "master",
             entrypoint = "copy.cwl",
             output_file_group = self.filegroup,
@@ -177,7 +180,7 @@ class TestCopyOperator(TestCase):
                 }
             view = OperatorViewSet()
             response = view.post(request)
-            print(response, response.data)
+            print(">>> response: ", response, response.data)
 
             self.assertEqual(response.status_code, 200)
 
@@ -185,5 +188,10 @@ class TestCopyOperator(TestCase):
             self.assertEqual(len(Run.objects.all()), 1)
             run_instance = Run.objects.all().first()
 
-            for key, value in run_instance.__dict__.items():
-                print(key, value)
+            count = 0
+            while True:
+                count += 1
+                print('>>> checking job status ({})'.format(count))
+                check_jobs_status()
+                pprint(run_instance.__dict__, indent = 4)
+                time.sleep(5)
