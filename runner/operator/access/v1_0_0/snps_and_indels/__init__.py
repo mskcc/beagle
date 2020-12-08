@@ -36,7 +36,7 @@ class AccessLegacySNVOperator(Operator):
         group_id = Run.objects.filter(
             tags__requestId=self.request_id,
             status=RunStatus.COMPLETED
-        ).latest().job_group
+        ).order_by('-finished_date').first().job_group
 
         request_id_runs = Run.objects.filter(
             job_group=group_id,

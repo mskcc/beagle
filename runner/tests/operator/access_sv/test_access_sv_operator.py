@@ -40,23 +40,22 @@ class TestAccessSVOperator(TestCase):
         Test that an Access legacy SV operator instance can be created and validated
         """
         # create access SV operator
-        request_id = "bar"
+        request_id = "access_legacy_test_request"
 
         # todo: avoid the magic number here:
         operator_model = Operator.objects.get(id=6)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbead")
         self.assertEqual(str(operator.model), "AccessLegacySVOperator")
-        self.assertEqual(operator.request_id, "bar")
+        self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
         pipeline_slug = "AccessLegacySVOperator"
-        request_id = "access_legacy_sv_test_request"
         access_legacy_sv_model = Operator.objects.get(slug=pipeline_slug)
         operator = AccessLegacySVOperator(access_legacy_sv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca42'])
 
         self.assertTrue(isinstance(operator, AccessLegacySVOperator))
-        self.assertTrue(operator.request_id == "access_legacy_sv_test_request")
+        self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca42'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbead")

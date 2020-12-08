@@ -44,26 +44,25 @@ class TestAccessSNVOperator(TestCase):
         self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
 
         # create access SNV operator
-        request_id = "bar"
+        request_id = "access_legacy_test_request"
 
         # todo: avoid the magic number here:
         operator_model = Operator.objects.get(id=5)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
         self.assertEqual(str(operator.model), "AccessLegacySNVOperator")
-        self.assertEqual(operator.request_id, "bar")
+        self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
         # todo: why should this be 6?
         self.assertEqual(len(operator.files), operator_files_count)
 
         pipeline_slug = "AccessLegacySNVOperator"
-        request_id = "access_legacy_snv_test_request"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
         operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
-        self.assertTrue(operator.request_id == "access_legacy_snv_test_request")
+        self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
