@@ -11,7 +11,7 @@ from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
-from .bin.retrieve_samples_by_query import build_dmp_sample
+from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
 from .bin.make_sample import format_sample_name
 
 
@@ -61,7 +61,12 @@ class ArgosOperator(Operator):
             igo_id_group[igo_id].append(sample)
 
         for igo_id in igo_id_group:
-            samples.append(build_sample(igo_id_group[igo_id]))
+            sample = igo_id_group[igo_id][0]
+            sample_name = sample['metadata']['sampleName']
+            if "poolednormal" in sample_name.lower():
+                samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
+            else:
+                samples.append(build_sample(igo_id_group[igo_id]))
 
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
@@ -205,19 +210,35 @@ class ArgosOperator(Operator):
                                             metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True},
                                             filter_redact=True)
-            if not normals and cnt_tumors > 0: # get from DMP bams
+            if not normals and cnt_tumors > 0: # get from DMP bams or pooled normal
                 patient_id = tumors[0].metadata['patientId']
                 bait_set = tumors[0].metadata['baitSet']
-                dmp_bam_id = pair['normal']
-                dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
-                data = FileRepository.filter(queryset=self.files,
-                                                metadata={'external_id': dmp_bam_id})
-                normals = list()
-                for i in data:
-                    sample = i
-                    metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
-                    sample.metadata = metadata
-                    normals.append(sample)
+                run_ids = list()
+                for tumor in tumors:
+                    run_id = tumor.metadata['runId']
+                    if run_id:
+                        run_ids.append(run_id)
+                preservation_types = tumors[0].metadata['preservation']
+                normal_sample_id = pair['normal']
+                if "poolednormal" in normal_sample_id.lower(): # get pooled normal
+                    normals = list()
+                    pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+                    for f in pooled_normal_files:
+                        metadata = build_pooled_normal_sample_by_file(f, run_ids, preservation_types, bait_set_reformatted, sample_name)['metadata']
+                        sample = f
+                        sample.metadata = metadata
+                        normals.append(sample)
+                else: # get dmp normal
+                    dmp_bam_id = normal_sample_id
+                    dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
+                    data = FileRepository.filter(queryset=self.files,
+                                                    metadata={'external_id': dmp_bam_id})
+                    normals = list()
+                    for i in data:
+                        sample = i
+                        metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
+                        sample.metadata = metadata
+                        normals.append(sample)
             for file in list(tumors):
                 if file not in all_files:
                     all_files.append(file)

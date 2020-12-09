@@ -83,10 +83,41 @@ def compile_pairs(samples, pairing_info=None):
     for tumor in tumors:
         LOGGER.info("Pairing tumor sample %s", tumor['sample_id'])
         if pairing_info:
+            """
+            Creating samples, based on predefined pairing list
+            """
             for pair in pairing_info['pairs']:
                 if tumor['SM'] == pair['tumor']:
                     for normal in normals:
-                        if normal['SM'] == pair['normal']:
+                        if 'poolednormal' in pair['normal'].lower():
+                            """
+                            We should have a pool normal to pair with here
+                            """
+                            normal_run_ids = normal['run_id']
+                            normal_bait_set = normal['bait_set']
+                            normal_preservation = [x.lower() for x in normal['preservation_type']]
+                            if all(elem in normal_run_ids for elem in tumor['run_id']):
+                                """
+                                Checks if any of the run ids in the pre-created normal samples
+                                are also all in the tumor sample
+                                """
+                                if normal_bait_set.lower() in tumor['bait_set'].lower():
+                                    tumor_preservations = [x.lower() for x in tumor['preservation_type']]
+                                    # Must check if FFPE or other
+                                    if 'ffpe' in normal_preservation:
+                                        if 'ffpe' in tumor_preservations:
+                                            pairs['tumor'].append(tumor)
+                                            pairs['normal'].append(normal)
+                                            break
+                                    else:
+                                        if 'ffpe' not in tumor_preservations:
+                                            pairs['tumor'].append(tumor)
+                                            pairs['normal'].append(normal)
+                                            break
+                        elif normal['SM'] == pair['normal']:
+                            """
+                            This pairs with a dmp normal
+                            """
                             pairs['tumor'].append(tumor)
                             pairs['normal'].append(normal)
                             break

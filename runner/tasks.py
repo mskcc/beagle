@@ -22,12 +22,12 @@ from file_system.repository import FileRepository
 logger = logging.getLogger(__name__)
 
 
-def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None):
+def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent)
 
 
-def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None):
+def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None):
     jg = None
     jgn = None
     try:
@@ -43,10 +43,16 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
+    try:
+        operator_run_parent = OperatorRun.objects.get(id=parent)
+    except OperatorRun.DoesNotExist:
+        operator_run_parent = None
+
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg,
-                                              job_group_notifier=jgn)
+                                              job_group_notifier=jgn,
+                                              parent=operator_run_parent)
     run_ids = []
     pipeline_id = None
 
@@ -189,12 +195,12 @@ def generate_label(job_group_id, request):
 
 @shared_task
 def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None,
-                              job_group_notifier_id=None):
+                              job_group_notifier_id=None, parent=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
     operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
                                             job_group_notifier_id=job_group_notifier_id, run_ids=run_ids)
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, parent)
 
 
 @shared_task
@@ -223,7 +229,8 @@ def process_triggers():
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
-                                job_group_notifier_id=job_group_notifier_id
+                                job_group_notifier_id=job_group_notifier_id,
+                                parent=str(operator_run.id)
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -234,7 +241,8 @@ def process_triggers():
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
-                                job_group_notifier_id=job_group_notifier_id
+                                job_group_notifier_id=job_group_notifier_id,
+                                parent=str(operator_run.id)
                             )
                             continue
 
@@ -382,7 +390,8 @@ def complete_job(run_id, outputs):
             trigger.to_operator_id,
             trigger.from_operator_id,
             [run_id],
-            job_group_id=job_group_id
+            job_group_id=job_group_id,
+            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
         )
 
 
