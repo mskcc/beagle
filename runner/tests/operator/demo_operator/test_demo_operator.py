@@ -1,5 +1,5 @@
 """
-Test cases for Copy Operator
+Test cases for Demo Operator
 """
 import os
 from django.test import TestCase
@@ -9,7 +9,7 @@ from runner.serializers import APIRunCreateSerializer
 from runner.models import Run, Pipeline, OperatorRun, Port
 from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory
-from runner.operator.copy_operator.copy_operator import CopyOperator
+from runner.operator.demo_operator.demo_operator import DemoOperator
 from runner.tasks import check_jobs_status, process_triggers
 from tempfile import mkdtemp
 import shutil
@@ -40,7 +40,7 @@ def get_job(id):
     data = res.json()
     return(res, status_code, data)
 
-class TestCopyOperator(TestCase):
+class TestDemoOperator(TestCase):
     def setUp(self):
         self.preserve = False # save the tmpdir
         settings.NOTIFIER_ACTIVE = False
@@ -54,8 +54,8 @@ class TestCopyOperator(TestCase):
 
         # db entry for the Operator we want to test
         self.operator = Operator.objects.create(
-            slug = 'CopyOperator',
-            class_name = 'runner.operator.copy_operator.copy_operator.CopyOperator',
+            slug = 'DemoOperator',
+            class_name = 'runner.operator.demo_operator.demo_operator.DemoOperator',
             version = "1",
             active = True,
             recipes = []
@@ -99,7 +99,7 @@ class TestCopyOperator(TestCase):
 
         # Pipeline entry for the Operator
         self.pipeline = Pipeline.objects.create(
-            name = CopyOperator._pipeline_name,
+            name = DemoOperator._pipeline_name,
             github = "git@github.com:stevekm/copy-cwl",
             version = "master",
             entrypoint = "copy.cwl",
@@ -114,17 +114,17 @@ class TestCopyOperator(TestCase):
             # remove the tmpdir upon test completion
             shutil.rmtree(self.tmpdir)
 
-    def test_get_copy_operator(self):
+    def test_get_demo_operator(self):
         """
-        Test that CopyOperator can be initialized
+        Test that DemoOperator can be initialized
         """
         operator_instance = self.operator
         operator = OperatorFactory.get_by_model(operator_instance)
-        self.assertEqual(str(operator.model), "CopyOperator")
+        self.assertEqual(str(operator.model), "DemoOperator")
 
-    def test_copy_operator_input(self):
+    def test_demo_operator_input(self):
         """
-        Test that input data can be generated from Copy Operator
+        Test that input data can be generated from Demo Operator
         """
         request_id = '1'
         operator_instance = self.operator
@@ -138,9 +138,9 @@ class TestCopyOperator(TestCase):
             }
         self.assertDictEqual(run_input, expected_input)
 
-    def test_get_copy_operator_jobs(self):
+    def test_get_demo_operator_jobs(self):
         """
-        Test case for getting jobs from Copy Operator
+        Test case for getting jobs from Demo Operator
         """
         request_id = '1'
         operator_instance = self.operator
@@ -162,7 +162,7 @@ class TestCopyOperator(TestCase):
         expected_initial_data = {
             'app': pipeline_instance.id,
             'inputs': expected_input,
-            'name': 'COPY JOB',
+            'name': 'DEMO JOB',
             'tags': {}}
         expected_job = expected_input
 
@@ -171,9 +171,9 @@ class TestCopyOperator(TestCase):
 
     # disable job submission to Ridgeback
     @patch('runner.tasks.submit_job')
-    def test_create_copy_operator_run(self, submit_job):
+    def test_create_demo_operator_run(self, submit_job):
         """
-        Test case for creating a Copy Operator run
+        Test case for creating a Demo Operator run
         """
         # there should be no Runs
         self.assertEqual(len(Run.objects.all()), 0)
@@ -186,7 +186,7 @@ class TestCopyOperator(TestCase):
         request = MockRequest()
         request.data = {
             'request_ids': ['1'],
-            'pipeline_name': CopyOperator._pipeline_name
+            'pipeline_name': DemoOperator._pipeline_name
             }
         view = OperatorViewSet()
         response = view.post(request)
@@ -197,25 +197,27 @@ class TestCopyOperator(TestCase):
         self.assertEqual(len(File.objects.all()), 2)
         self.assertEqual(len(FileMetadata.objects.all()), 2)
 
-    def test_live_copy_operator_run(self):
+    def test_live_demo_operator_run(self):
         """
-        A test case for submitting a job to Ridgeback for the Copy Operator
+        A test case for submitting a job to Ridgeback for the Demo Operator
 
         Need to enable a specific env var to run this test since it should submit a job to Ridgeback
 
         Make sure that a Ridgeback instance is running! Set with env var BEAGLE_RIDGEBACK_URL
 
+        This one takes up to ~6min to run on LSF with Ridgeback
+
         Usage
         ------
 
-            $ BEAGLE_RIDGEBACK_URL=http://silo:5003 COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
+            $ BEAGLE_RIDGEBACK_URL=http://silo:5003 LIVE_DEMO=1 python manage.py test runner.tests.operator.demo_operator.test_demo_operator.TestDemoOperator.test_live_demo_operator_run
         """
         self.preserve = True
-        enable_testcase = os.environ.get('COPY_FILE')
-        request_id = 'test_live_copy_operator_run'
+        enable_testcase = os.environ.get('LIVE_DEMO')
+        request_id = 'test_live_demo_operator_run'
 
         if enable_testcase:
-            print(">>> running TestCopyOperator.test_live_copy_operator_run")
+            print(">>> running TestDemoOperator.test_live_demo_operator_run")
             print(">>> using RIDGEBACK_URL: ", settings.RIDGEBACK_URL)
             self.assertEqual(len(OperatorRun.objects.all()), 0)
             self.assertEqual(len(Run.objects.all()), 0)
@@ -240,44 +242,62 @@ class TestCopyOperator(TestCase):
             request = MockRequest()
             request.data = {
                 'request_ids': [request_id],
-                'pipeline_name': CopyOperator._pipeline_name
+                'pipeline_name': DemoOperator._pipeline_name
                 }
             view = OperatorViewSet()
             response = view.post(request)
             print(">>> response: ", response, response.data)
 
+            # check the Beagle response code for the submitted run
             self.assertEqual(response.status_code, 200)
 
-            # there should be 1 run now
+            # there should be 1 run now in the Beagle db
             self.assertEqual(len(Run.objects.all()), 1)
             self.assertEqual(len(OperatorRun.objects.all()), 1)
 
+            # get the Run and OperatorRun instances for this run
             run_instance = Run.objects.all().first()
             operator_run_instance = OperatorRun.objects.all().first()
 
+            # wait for the run to finish
             count = 0
             while True:
                 count += 1
                 print('>>> ~~~~~ Checking Job Status ({}) ~~~~~'.format(count))
-                # process_triggers() # ??
-                check_jobs_status() # TODO: it gets stuck here, jobs never progress, how to make jobs run?
+                check_jobs_status()
                 job_id = run_instance.execution_id
+
+                # check for Ridgeback job
                 if job_id:
                     res, status_code, data = get_job(job_id)
                     job_status = data['status']
                     print(">>> Ridgeback job:")
                     pprint(data, indent = 4)
+
                 print(">>> Run:")
                 pprint(run_instance.__dict__, indent = 4)
+
                 print(">>> OperatorRun:")
                 pprint(operator_run_instance.__dict__, indent = 4)
+
                 run_status = operator_run_instance.status
-                if run_status == 3 or job_status == 'COMPLETED':
+
+                # check if it finished
+                # TODO: This never finishes because Run status never changes to complete even though Ridgeback job finishes
+                if run_status == 3: # or job_status == 'COMPLETED'
                     print(">>> its done")
                     break
-                elif run_status == 4 or job_status == 'FAILED':
+                elif run_status == 4: #  or job_status == 'FAILED'
                     print(">>> it broke")
                     break
                 else:
                     time.sleep(5)
+
+            # check for the output from the Run
             print(">>> operator run located at; ", self.tmpdir)
+            for port in Port.objects.all():
+                pprint(port.__dict__)
+
+            # get the output file
+            output_port = Port.objects.get(name = "output_file")
+            print(output_port.files.all())

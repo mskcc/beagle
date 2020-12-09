@@ -1,13 +1,13 @@
 """
-Demo opertor for running a simple copy workflow
+Example Operator implementation
 """
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
 from file_system.models import FileMetadata
 
-class CopyOperator(Operator):
-    _pipeline_name = "copy" # use this to set as the Pipeline.name attribute in the db
+class DemoOperator(Operator):
+    _pipeline_name = "demo" # use this to set as the Pipeline.name attribute in the db
 
     def create_input(self):
         """
@@ -38,7 +38,7 @@ class CopyOperator(Operator):
         """
         pipeline_obj = Pipeline.objects.get(id=self.get_pipeline_id())
         inputs = self.create_input()
-        name = "COPY JOB"
+        name = "DEMO JOB"
         serialized_run = APIRunCreateSerializer(
             data = dict(app = pipeline_obj.id, inputs = inputs, name = name, tags = {})
         )
