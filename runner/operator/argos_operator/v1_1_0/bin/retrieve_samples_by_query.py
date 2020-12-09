@@ -49,15 +49,45 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_descriptor(bait_set, pooled_normals):
+def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     """
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
+
+    Adding correction for IMPACT505 pooled normals
     """
+    query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    sample_name = None
+
+    descriptor = None
     for pooled_normal in pooled_normals:
-        descriptor = pooled_normal.metadata['recipe']
-        if descriptor.lower() in bait_set.lower():
-            return descriptor
-    return None
+        bset_data = pooled_normal.metadata['recipe']
+        if bset_data.lower() in bait_set.lower():
+            descriptor = bset_data
+
+    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+
+        # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
+        # in preservation_types
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+        run_ids_suffix = "_".join(set(run_ids_suffix_list))
+        sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
+    elif "impact505" in bait_set.lower():
+        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
+        descriptor = "IMPACT505"
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        q = query & Q(metadata__sampleName=sample_name)
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+        if not pooled_normals:
+            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+
+    return pooled_normals, descriptor, sample_name
 
 
 def build_run_id_query(data):
@@ -97,6 +127,18 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    sample_files = list()
+    for pooled_normal_file in pooled_normals:
+        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor, sample_name)
+        sample_files.append(sample_file)
+    pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
+
+    return pooled_normal
+
+
+def get_pooled_normal_files(run_ids, preservation_types, bait_set):
+
     pooled_normals = FileRepository.all()
 
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
@@ -107,68 +149,39 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    descriptor = get_descriptor(bait_set, pooled_normals)
+    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids)
 
-    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+    return pooled_normals, descriptor, sample_name
 
-        # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
-        # in preservation_types
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
-        run_ids_suffix = "_".join(run_ids_suffix_list)
-        sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
-    elif "impact505" in bait_set.lower():
-        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
-        q = query & Q(metadata__sampleName=sample_name)
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
-        if not pooled_normals:
-            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
-            return None
-    else:
-        return None
 
+def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_name):
     specimen_type = 'Pooled Normal'
-
-    sample_files = list()
-
-    if len(pooled_normals) > 0:
-        for pooled_normal in pooled_normals:
-            sample = dict()
-            sample['id'] = pooled_normal.file.id
-            sample['path'] = pooled_normal.file.path
-            sample['file_name'] = pooled_normal.file.file_name
-            metadata = init_metadata()
-            metadata['sampleId'] = sample_name
-            metadata['sampleName'] = sample_name
-            metadata['requestId'] = sample_name
-            metadata['sequencingCenter'] = "MSKCC"
-            metadata['platform'] = "Illumina"
-            metadata['baitSet'] = descriptor
-            metadata['recipe'] = descriptor
-            metadata['run_id'] = run_ids
-            metadata['preservation'] = preservation_types
-            metadata['libraryId'] = sample_name + "_1"
-            # because rgid depends on flowCellId and barcodeIndex, we will
-            # spoof barcodeIndex so that pairing can work properly; see
-            # build_sample in runner.operator.argos_operator.bin
-            metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
-            metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
-            metadata['flowCellId'] = 'PN_FCID'
-            metadata['tumorOrNormal'] = 'Normal'
-            metadata['patientId'] = 'PN_PATIENT_ID'
-            metadata['specimenType'] = specimen_type
-            sample['metadata'] = metadata
-            sample_files.append(sample)
-        pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
-        return pooled_normal
-    return None
+    sample = dict()
+    sample['id'] = pooled_normal.file.id
+    sample['path'] = pooled_normal.file.path
+    sample['file_name'] = pooled_normal.file.file_name
+    metadata = init_metadata()
+    metadata['sampleId'] = sample_name
+    metadata['sampleName'] = sample_name
+    metadata['requestId'] = sample_name
+    metadata['sequencingCenter'] = "MSKCC"
+    metadata['platform'] = "Illumina"
+    metadata['baitSet'] = bait_set 
+    metadata['recipe'] = bait_set
+    metadata['runId'] = "_".join(set(run_ids))
+    metadata['preservation'] = preservation_types
+    metadata['libraryId'] = sample_name + "_1"
+    # because rgid depends on flowCellId and barcodeIndex, we will
+    # spoof barcodeIndex so that pairing can work properly; see
+    # build_sample in runner.operator.argos_operator.bin
+    metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
+    metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
+    metadata['flowCellId'] = 'PN_FCID'
+    metadata['tumorOrNormal'] = 'Normal'
+    metadata['patientId'] = 'PN_PATIENT_ID'
+    metadata['specimenType'] = specimen_type
+    sample['metadata'] = metadata
+    return sample
 
 
 def get_dmp_normal(patient_id, bait_set):

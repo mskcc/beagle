@@ -393,3 +393,28 @@ class TempoMPGenOperatorSerializer(serializers.Serializer):
     tumors_override = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
+
+
+class RunSamplesSerializer(serializers.Serializer):
+    job_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    ),
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorLatestSamplesQuerySerializer(serializers.Serializer):
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorSampleQuerySerializer(serializers.Serializer):
+    sample = serializers.CharField(required=True, allow_blank=False)

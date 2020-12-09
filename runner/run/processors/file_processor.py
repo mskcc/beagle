@@ -10,6 +10,10 @@ from django.contrib.auth.models import User
 class FileProcessor(object):
 
     @staticmethod
+    def get_sample(file):
+        return file.sample
+
+    @staticmethod
     def get_file_id(uri):
         file_obj = FileProcessor.get_file_obj(uri)
         return str(file_obj.id)
