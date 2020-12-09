@@ -16,6 +16,7 @@ import shutil
 from mock import patch
 from django.conf import settings
 import time
+import requests
 from pprint import pprint
 
 # Run Celery tasks synchronously for testing, no async
@@ -30,6 +31,14 @@ class MockRequest(object):
     empty object to simulate a 'request' object; apply a 'data' attribute to this later
     """
     pass
+
+def get_job(id):
+    """get job details from Ridgeback"""
+    url = settings.RIDGEBACK_URL + '/v0/jobs/{}/'.format(id)
+    res = requests.get(url)
+    status_code = res.status_code
+    data = res.json()
+    return(res, status_code, data)
 
 class TestCopyOperator(TestCase):
     def setUp(self):
@@ -55,9 +64,11 @@ class TestCopyOperator(TestCase):
         # make a tmpdir and put a file in it
         # use this local dir so that its accessible across the HPC
         self.tmpdir = mkdtemp(dir = THIS_DIR)
+        os.chmod(self.tmpdir, 0o770) # need permissions for voyager user to access
         self.tmp_path = os.path.join(self.tmpdir, "foo.txt")
         self.output_dir = os.path.join(self.tmpdir, "output")
         os.mkdir(self.output_dir)
+        os.chmod(self.output_dir, 0o770)
         with open(self.tmp_path, "w") as f:
             f.write("some data\n")
 
@@ -199,6 +210,7 @@ class TestCopyOperator(TestCase):
 
             $ BEAGLE_RIDGEBACK_URL=http://silo:5003 COPY_FILE=1 python manage.py test runner.tests.operator.copy_operator.test_copy_operator.TestCopyOperator.test_live_copy_operator_run
         """
+        self.preserve = True
         enable_testcase = os.environ.get('COPY_FILE')
         request_id = 'test_live_copy_operator_run'
 
@@ -246,18 +258,26 @@ class TestCopyOperator(TestCase):
             count = 0
             while True:
                 count += 1
-                print('>>> checking job status ({})'.format(count))
-                time.sleep(5)
+                print('>>> ~~~~~ Checking Job Status ({}) ~~~~~'.format(count))
                 # process_triggers() # ??
                 check_jobs_status() # TODO: it gets stuck here, jobs never progress, how to make jobs run?
+                job_id = run_instance.execution_id
+                if job_id:
+                    res, status_code, data = get_job(job_id)
+                    job_status = data['status']
+                    print(">>> Ridgeback job:")
+                    pprint(data, indent = 4)
+                print(">>> Run:")
                 pprint(run_instance.__dict__, indent = 4)
+                print(">>> OperatorRun:")
                 pprint(operator_run_instance.__dict__, indent = 4)
-                # status = operator_run_instance.status
-                # if status == 3:
-                #     print(">>> its done")
-                #     break
-                # elif status == 4:
-                #     print(">>> it broke")
-                #     break
-                # else:
-                #     time.sleep(5)
+                run_status = operator_run_instance.status
+                if run_status == 3 or job_status == 'COMPLETED':
+                    print(">>> its done")
+                    break
+                elif run_status == 4 or job_status == 'FAILED':
+                    print(">>> it broke")
+                    break
+                else:
+                    time.sleep(5)
+            print(">>> operator run located at; ", self.tmpdir)
