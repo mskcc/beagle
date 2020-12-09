@@ -202,12 +202,12 @@ class ArgosOperator(Operator):
         cnt_tumors = 0
         for pair in self.pairing.get('pairs'):
             tumors = FileRepository.filter(queryset=self.files,
-                                           metadata={'sampleId': pair['tumor'],
+                                           metadata={'cmoSampleName': pair['tumor'],
                                                      'igocomplete': True},
                                            filter_redact=True)
             cnt_tumors += len(tumors)
             normals = FileRepository.filter(queryset=self.files,
-                                            metadata={'sampleId': pair['normal'],
+                                            metadata={'cmoSampleName': pair['normal'],
                                                       'igocomplete': True},
                                             filter_redact=True)
             if not normals and cnt_tumors > 0: # get from DMP bams or pooled normal
