@@ -20,7 +20,6 @@ class Command(BaseCommand):
         print(filepath)
         filename = os.path.basename(filepath)
         print(filename)
-        """MSK-AB-0003-T37-7_IGO_06302_B_18_S13_L004_R2_001.fastq.gz"""
         filename = filename.replace('_metadata_update.json', '')
         f = FileRepository.filter(file_name=filename).first()
         print(f)
