@@ -8,4 +8,4 @@ from .helix_filters.v20_07_1 import HelixFiltersOperator as HelixFiltersOperator
 from .helix_filters.v20_08_1 import HelixFiltersOperator as HelixFiltersOperator_v20_08_1
 from .aion.v1_0_0 import AionOperator as AionOperator_v1_0_0
 from .operator_factory import OperatorFactory
-from .copy_operator.copy_operator import CopyOperator
+from .demo_operator.demo_operator import DemoOperator
