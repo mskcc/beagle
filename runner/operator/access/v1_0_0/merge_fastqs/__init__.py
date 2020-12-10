@@ -10,16 +10,33 @@ from jinja2 import Template
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
+
+METADATA_OUTPUT_FIELDS = [
+    'barcodeId',
+    'sampleName',
+    'investigatorSampleId',
+    'patientId',
+    'tumorOrNormal',
+    'sampleOrigin',
+    'dnaInputNg',
+    'captureInputNg',
+    'baitSet',
+    'sex',
+    'barcodeIndex',
+    'libraryVolume',
+    'captureName',
+    'libraryConcentrationNgul'
+]
 def construct_inputs(samples):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
         template = Template(file.read())
 
 
-    sample_files = list(group_by_sample_id(samples).values())
+    samples = list(group_by_sample_id(samples).values())
 
     inputs = list()
-    for sample_file in sample_files:
-        fastqs = group_by_fastq(sample_file)
+    for sample_files in samples:
+        fastqs = group_by_fastq(sample_files)
 
         fastq1s = [{
             "class": "File",
@@ -36,9 +53,9 @@ def construct_inputs(samples):
             fastq2_files=json.dumps(fastq2s),
         )
 
-        inputs.append(json.loads(input_file))
+        inputs.append((json.loads(input_file), sample_files[0]["metadata"]))
 
-    return inputs 
+    return inputs
 
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
@@ -64,16 +81,15 @@ class AccessLegacyFastqMergeOperator(Operator):
                     data={
                         'name': "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
-                        'output_metadata': {
-
-                        },
+                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
+                                            key in metadata},
                         'inputs': job,
-                        'tags': {'requestId': self.request_id}}
+                        'tags': {'requestId': self.request_id, 'sampleId': metadata["sampleId"]}}
                 ),
                 job
              )
 
-            for i, job in enumerate(inputs)
+            for i, (job, metadata) in enumerate(inputs)
         ]
 
 def group_by_sample_id(samples):

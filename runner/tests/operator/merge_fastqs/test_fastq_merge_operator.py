@@ -51,6 +51,10 @@ class TestAccessFastqMergeOperator(TestCase):
         self.assertEqual(len(jobs) > 0, True)
         for job in jobs:
             self.assertEqual(job[0].is_valid(), True)
+            # Ensure at least 3 of the metadata fields are set, as not all of them are request.
+            self.assertEqual(len(job[0].initial_data["output_metadata"].keys()) > 3, True)
+            job[0].initial_data["output_metadata"]["sampleOrigin"] = "Tissue"
+
             input_json = job[0].initial_data['inputs']
             self.assertEqual(len(input_json["fastq1"]), 2)
             self.assertEqual(len(input_json["fastq2"]), 2)
