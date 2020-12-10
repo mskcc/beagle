@@ -60,7 +60,7 @@ class TestOperatorTriggers(TestCase):
                                                                 run_ids,
                                                                 job_group_id=None,
                                                                 job_group_notifier_id=None,
-                                                                parent=operator_run)
+                                                                parent=str(operator_run.id))
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
 
 
@@ -104,17 +104,17 @@ class TestOperatorTriggers(TestCase):
             call(trigger.to_operator.pk,
                  trigger.from_operator.pk,
                  [run_ids[0]], job_group_id=None,
-                 parent=operator_run
+                 parent=str(operator_run.id)
                  ),
             call(trigger.to_operator.pk,
                  trigger.from_operator.pk,
                  [run_ids[1]], job_group_id=None,
-                 parent=operator_run
+                 parent=str(operator_run.id)
                  ),
             call(trigger.to_operator.pk,
                  trigger.from_operator.pk,
                  [run_ids[2]], job_group_id=None,
-                 parent=operator_run
+                 parent=str(operator_run.id)
                  )
         ]
 

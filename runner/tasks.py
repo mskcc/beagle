@@ -43,11 +43,16 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
+    try:
+        operator_run_parent = OperatorRun.objects.get(id=parent)
+    except OperatorRun.DoesNotExist:
+        operator_run_parent = None
+
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg,
                                               job_group_notifier=jgn,
-                                              parent=parent)
+                                              parent=operator_run_parent)
     run_ids = []
     pipeline_id = None
 
@@ -225,7 +230,7 @@ def process_triggers():
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=operator_run
+                                parent=str(operator_run.id)
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -237,7 +242,7 @@ def process_triggers():
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=operator_run
+                                parent=str(operator_run.id)
                             )
                             continue
 
@@ -386,7 +391,7 @@ def complete_job(run_id, outputs):
             trigger.from_operator_id,
             [run_id],
             job_group_id=job_group_id,
-            parent=run.run_obj.operator_run
+            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
         )
 
 
