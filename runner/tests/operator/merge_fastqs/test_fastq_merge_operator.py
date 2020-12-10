@@ -10,14 +10,8 @@ from runner.operator.access.v1_0_0.merge_fastqs import AccessLegacyFastqMergeOpe
 
 
 FIXTURES = [
-    #"fixtures/tests/merge_fastqs/curated_normal_files.json",
-    #"fixtures/tests/access_fastq_merge/curated_normals_file_metadata.json",
     "fixtures/tests/merge_fastqs/10151_F_13.file.json",
     "fixtures/tests/merge_fastqs/10151_F_13.filemetadata.json",
-    #"fixtures/tests/access_fastq_merge/files_metadata.json",
-    #"fixtures/tests/access_fastq_merge/operator_run.json",
-    #"fixtures/tests/access_fastq_merge/ports.json",
-    #"fixtures/tests/access_fastq_merge/runs.json",
 ]
 
 COMMON_FIXTURES = [
@@ -39,15 +33,12 @@ class TestAccessFastqMergeOperator(TestCase):
         """
         Test that an Access legacy FastqMerge operator instance can be created and validated
         """
-        # Test should have all Files / FileMetadata from fixtures
         operator_files_count = 4
         self.assertEqual(len(File.objects.all()), operator_files_count)
         self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
 
-        # create access FastqMerge operator
         request_id = "10151_F"
 
-        # todo: avoid the magic number here:
         operator_model = Operator.objects.get(id=8)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cdffffff")
