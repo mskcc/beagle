@@ -40,6 +40,48 @@ def get_job(id):
     data = res.json()
     return(res, status_code, data)
 
+def wait_on_runs(run_instance, operator_run_instance, interval = 5):
+    """ wait on the runs to finish """
+    count = 0
+    while True:
+        count += 1
+        # check on the status of the job and reload the Run and OperatorRun entries from the db
+        print('>>> ~~~~~ Checking Job Status ({}) ~~~~~'.format(count))
+        check_jobs_status()
+        run_instance.refresh_from_db()
+        operator_run_instance.refresh_from_db()
+
+        job_id = run_instance.execution_id
+
+        # check for Ridgeback job
+        if job_id:
+            res, status_code, data = get_job(job_id)
+            job_status = data['status']
+            print(">>> Ridgeback job:")
+            pprint(data, indent = 4)
+
+        print(">>> Run:")
+        pprint(run_instance.__dict__, indent = 4)
+
+        print(">>> OperatorRun:")
+        pprint(operator_run_instance.__dict__, indent = 4)
+
+        run_status = run_instance.status
+        operator_run_status = operator_run_instance.status
+
+        # check if it finished
+        # TODO: This never finishes because Run status never changes to complete even though Ridgeback job finishes
+        if run_status == 3: # or job_status == 'COMPLETED'
+            print(">>> its done")
+            check_jobs_status()
+            break
+        elif run_status == 4: #  or job_status == 'FAILED'
+            print(">>> it broke")
+            check_jobs_status()
+            break
+        else:
+            time.sleep(interval)
+
 class TestDemoOperator(TestCase):
     def setUp(self):
         self.preserve = False # save the tmpdir
@@ -205,20 +247,21 @@ class TestDemoOperator(TestCase):
 
         Make sure that a Ridgeback instance is running! Set with env var BEAGLE_RIDGEBACK_URL
 
-        This one takes up to ~6min to run on LSF with Ridgeback
+        This one takes about 3-6min to run on LSF with Ridgeback
 
         Usage
         ------
 
-            $ BEAGLE_RIDGEBACK_URL=http://silo:5003 LIVE_DEMO=1 python manage.py test runner.tests.operator.demo_operator.test_demo_operator.TestDemoOperator.test_live_demo_operator_run
+            $ BEAGLE_RIDGEBACK_URL=http://silo:5003 LIVE_DEMO=1 PRESERVE=1 python manage.py test runner.tests.operator.demo_operator.test_demo_operator.TestDemoOperator.test_live_demo_operator_run
         """
-        self.preserve = True
+        self.preserve = os.environ.get('PRESERVE')
         enable_testcase = os.environ.get('LIVE_DEMO')
         request_id = 'test_live_demo_operator_run'
 
         if enable_testcase:
             print(">>> running TestDemoOperator.test_live_demo_operator_run")
             print(">>> using RIDGEBACK_URL: ", settings.RIDGEBACK_URL)
+            # sanity check: there are no runs to start with
             self.assertEqual(len(OperatorRun.objects.all()), 0)
             self.assertEqual(len(Run.objects.all()), 0)
 
@@ -259,39 +302,8 @@ class TestDemoOperator(TestCase):
             run_instance = Run.objects.all().first()
             operator_run_instance = OperatorRun.objects.all().first()
 
-            # wait for the run to finish
-            count = 0
-            while True:
-                count += 1
-                print('>>> ~~~~~ Checking Job Status ({}) ~~~~~'.format(count))
-                check_jobs_status()
-                job_id = run_instance.execution_id
-
-                # check for Ridgeback job
-                if job_id:
-                    res, status_code, data = get_job(job_id)
-                    job_status = data['status']
-                    print(">>> Ridgeback job:")
-                    pprint(data, indent = 4)
-
-                print(">>> Run:")
-                pprint(run_instance.__dict__, indent = 4)
-
-                print(">>> OperatorRun:")
-                pprint(operator_run_instance.__dict__, indent = 4)
-
-                run_status = operator_run_instance.status
-
-                # check if it finished
-                # TODO: This never finishes because Run status never changes to complete even though Ridgeback job finishes
-                if run_status == 3: # or job_status == 'COMPLETED'
-                    print(">>> its done")
-                    break
-                elif run_status == 4: #  or job_status == 'FAILED'
-                    print(">>> it broke")
-                    break
-                else:
-                    time.sleep(5)
+            # wait for the run to finish in Ridgeback
+            wait_on_runs(run_instance, operator_run_instance)
 
             # check for the output from the Run
             print(">>> operator run located at; ", self.tmpdir)
@@ -301,3 +313,6 @@ class TestDemoOperator(TestCase):
             # get the output file
             output_port = Port.objects.get(name = "output_file")
             print(output_port.files.all())
+
+            for file_instance in File.objects.all():
+                pprint(file_instance.__dict__, indent = 4)
