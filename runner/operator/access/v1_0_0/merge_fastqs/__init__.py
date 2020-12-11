@@ -103,7 +103,12 @@ class AccessLegacyFastqMergeOperator(Operator):
         ]
 
 def calc_avg(sample_files, field):
-    return sum([float(s["metadata"][field] or 0) for s in sample_files if field in s["metadata"]])/float(len(sample_files))
+    fields = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
+    field_count = len(fields)
+    if field_count == 0:
+        return 0
+
+    return sum([float(s["metadata"][field]) for s in fields])/field_count
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
