@@ -119,6 +119,7 @@ def group_by_sample_id(samples):
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
+    samples.sort(key = lambda s: s["path"].split("/")[-1])
     for sample in samples:
         if '_R2_' in sample["path"]:
             fastqs["R2"].append(sample)
