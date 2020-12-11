@@ -25,7 +25,8 @@ METADATA_OUTPUT_FIELDS = [
     'barcodeIndex',
     'libraryVolume',
     'captureName',
-    'libraryConcentrationNgul'
+    'libraryConcentrationNgul',
+    'captureConcentrationNm'
 ]
 def construct_inputs(samples):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
@@ -37,6 +38,15 @@ def construct_inputs(samples):
     inputs = list()
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
+        metadata = sample_files[0]["metadata"]
+        metadata.update({
+            "dnaInputNg": calc_avg(sample_files, "dnaInputNg"),
+            "captureInputNg": calc_avg(sample_files, "captureInputNg"),
+            "libraryVolume": calc_avg(sample_files, "libraryVolume"),
+            "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
+            "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm")
+
+        })
 
         fastq1s = [{
             "class": "File",
@@ -53,7 +63,7 @@ def construct_inputs(samples):
             fastq2_files=json.dumps(fastq2s),
         )
 
-        inputs.append((json.loads(input_file), sample_files[0]["metadata"]))
+        inputs.append((json.loads(input_file), metadata))
 
     return inputs
 
@@ -92,6 +102,9 @@ class AccessLegacyFastqMergeOperator(Operator):
             for i, (job, metadata) in enumerate(inputs)
         ]
 
+def calc_avg(sample_files, field):
+    return sum([float(s["metadata"][field] or 0) for s in sample_files if field in s["metadata"]])/float(len(sample_files))
+
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
@@ -108,4 +121,3 @@ def group_by_fastq(samples):
             fastqs["R1"].append(sample)
 
     return fastqs
-

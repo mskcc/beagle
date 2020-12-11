@@ -54,6 +54,11 @@ class TestAccessFastqMergeOperator(TestCase):
             # Ensure at least 3 of the metadata fields are set, as not all of them are request.
             self.assertEqual(len(job[0].initial_data["output_metadata"].keys()) > 3, True)
             job[0].initial_data["output_metadata"]["sampleOrigin"] = "Tissue"
+            self.assertEqual(float(job[0].initial_data["output_metadata"]["captureConcentrationNm"])
+                             > 0, True)
+            self.assertEqual(job[0].initial_data["output_metadata"]["captureConcentrationNm"],
+                             sum([float(f.metadata["captureConcentrationNm"]) for f in list(FileMetadata.objects.all())]) /
+                                 operator_files_count)
 
             input_json = job[0].initial_data['inputs']
             self.assertEqual(len(input_json["fastq1"]), 2)
