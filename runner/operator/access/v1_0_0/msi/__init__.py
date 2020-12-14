@@ -62,7 +62,7 @@ class AccessLegacyMSIOperator(Operator):
 
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
             # Find the Tumor Standard bam
-            sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam'.format(tumor_sample_id)
+            sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam$'.format(tumor_sample_id)
             tumor_bam = FileRepository.filter(file_name_regex=sample_regex)
 
             if not len(tumor_bam) == 1:
@@ -75,7 +75,7 @@ class AccessLegacyMSIOperator(Operator):
             patient_id = tumor_sample_id.split('-')[0:2]
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
-            sample_regex = r'{}.*{}.*_cl_aln_srt_MD_IR_FX_BR.bam'.format(patient_id, NORMAL_SEARCH)
+            sample_regex = r'{}.*{}.*_cl_aln_srt_MD_IR_FX_BR.bam$'.format(patient_id, NORMAL_SEARCH)
             matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
 
             if not len(matched_normal_bam) > 0:
