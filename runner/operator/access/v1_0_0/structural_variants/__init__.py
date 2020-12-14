@@ -36,7 +36,7 @@ class AccessLegacySVOperator(Operator):
         # Get the latest completed bam generation run for the given request ID
         group_id = Run.objects.filter(
             tags__requestId=self.request_id,
-            app='access legacy',
+            app__name='access legacy',
             status=RunStatus.COMPLETED
         ).order_by('-finished_date').first().job_group
 
