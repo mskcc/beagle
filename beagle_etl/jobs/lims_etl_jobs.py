@@ -95,7 +95,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     recipe = LIMSClient.get_request_samples(request_id).get("recipe", None)
 
     if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
-                Job.objects.filter(job_group=job_group).values("status")]) and recipe in settings.WES_ASSAYS:
+                Job.objects.filter(job_group=job_group, run=TYPES['SAMPLE']).values("status")]) and recipe in settings.WES_ASSAYS:
         wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
         send_notification.delay(wes_job_failed.to_dict())
 
