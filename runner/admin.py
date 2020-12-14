@@ -16,6 +16,7 @@ class PipelineAdmin(admin.ModelAdmin):
 class RunAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', link_relation("app"), link_relation("operator_run"), 'tags', 'status', 'execution_id', 'created_date', 'notify_for_outputs')
     ordering = ('-created_date',)
+    readonly_fields = ('samples', 'job_group', 'job_group_notifier', 'operator_run', 'app')
 
 
 class OperatorRunAdmin(admin.ModelAdmin):
