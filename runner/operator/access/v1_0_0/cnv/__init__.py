@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
@@ -7,6 +8,8 @@ from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
+
+logger = logging.getLogger(__name__)
 
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
@@ -36,7 +39,7 @@ class AccessLegacyCNVOperator(Operator):
             status=RunStatus.COMPLETED
         )
 
-        # Get all standard bam ports for these runs
+        # Get all unfiltered bam ports for these runs
         unfiltered_bam_ports = Port.objects.filter(
             name='unfiltered_bams',
             run__id__in=[r.id for r in request_id_runs]
@@ -51,21 +54,23 @@ class AccessLegacyCNVOperator(Operator):
         sample_sexes = []
 
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
-            # Find the Tumor Unfiltered bam
-            tumor_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex='_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam',
-                metadata={
-                    'tumorOrNormal': 'Tumor',
-                    'sampleName': tumor_sample_id
-                }
-            )
-            if not len(tumor_bam) == 1:
-                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_bam), tumor_sample_id)
-                raise Exception(msg)
 
-            tumor_bam = tumor_bam[0]
+            # Locate the Unfiltered Tumor BAM
+            sample_regex = r'{}.*_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam'.format(tumor_sample_id)
+            unfiltered_tumor_bam = FileRepository.filter(path_regex=sample_regex)
+            if len(unfiltered_tumor_bam) < 1:
+                msg = 'WARNING: Could not find unfiltered tumor bam file for sample {}' \
+                      'We will skip running this sample.'
+                msg = msg.format(tumor_sample_id)
+                logger.warning(msg)
+                raise Exception(msg)
+            if len(unfiltered_tumor_bam) > 1:
+                msg = 'WARNING: Found more than one unfiltered bam file for tumor sample {}. ' \
+                      'We will choose the most recently-created one for this run.'
+                msg = msg.format(tumor_sample_id)
+                logger.warning(msg)
+            # Take the latest one
+            unfiltered_tumor_bam = unfiltered_tumor_bam.order_by('-created_date').first()
 
             # Use the initial fastq metadata to get the sex of the sample
             tumor_fastqs = FileRepository.filter(
@@ -76,8 +81,7 @@ class AccessLegacyCNVOperator(Operator):
                 }
             )
             sample_sex = tumor_fastqs[0].metadata['sex']
-
-            tumor_bams.append(tumor_bam)
+            tumor_bams.append(unfiltered_tumor_bam)
             sample_sexes.append(sample_sex)
 
         sample_inputs = [self.construct_sample_inputs(
@@ -99,7 +103,7 @@ class AccessLegacyCNVOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                        'name': "ACCESS LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {

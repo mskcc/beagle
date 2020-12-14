@@ -38,11 +38,6 @@ class TestAccessSNVOperator(TestCase):
         """
         Test that an Access legacy SNV operator instance can be created and validated
         """
-        # Test should have all Files / FileMetadata from fixtures
-        operator_files_count = 10
-        self.assertEqual(len(File.objects.all()), operator_files_count)
-        self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
-
         # create access SNV operator
         request_id = "bar"
 
@@ -53,9 +48,6 @@ class TestAccessSNVOperator(TestCase):
         self.assertEqual(str(operator.model), "AccessLegacySNVOperator")
         self.assertEqual(operator.request_id, "bar")
         self.assertEqual(operator._jobs, [])
-
-        # todo: why should this be 6?
-        self.assertEqual(len(operator.files), operator_files_count)
 
         pipeline_slug = "AccessLegacySNVOperator"
         request_id = "access_legacy_snv_test_request"
