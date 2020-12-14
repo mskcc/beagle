@@ -547,7 +547,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                     ddiff = DeepDiff(all_metadata[1].metadata,
                                      all_metadata[0].metadata,
                                      ignore_order=True)
-                    diff_file_name = "%s_metadata_update.json" % f.file.file_name
+                    diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, all_metadata[0].version)
                     message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
                     update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
                     diff_details_event = LocalStoreFileEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
