@@ -69,15 +69,22 @@ class TestAccessSNVOperator(TestCase):
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
+
         required_input_fields = [
             'tumor_bams',
             'normal_bams',
             'tumor_sample_names',
             'normal_sample_names',
             'matched_normal_ids',
+        ]
+        required_input_fields_length_3 = [
             'genotyping_bams',
             'genotyping_bams_ids',
         ]
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 1)
+            for field in required_input_fields_length_3:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 5)
