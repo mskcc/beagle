@@ -53,8 +53,8 @@ class AccessLegacyMSIOperator(Operator):
 
         # Filter to only tumor bam files
         # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_SEARCH in f['path'].split('/')[-1]]
-        sample_ids_to_run = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
+        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_SEARCH in f['location'].split('/')[-1]]
+        sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_ids = []
         tumor_bams = []

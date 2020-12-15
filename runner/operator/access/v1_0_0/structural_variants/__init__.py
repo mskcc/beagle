@@ -105,7 +105,7 @@ class AccessLegacySVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": tumor_bam['location']
+                "location": 'juno://' + tumor_bam['location']
             }]
 
             normal_bam = FileRepository.filter(
