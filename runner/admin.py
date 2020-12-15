@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
+from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger
 from lib.admin import link_relation, progress_bar, pretty_python_exception
 
 class PipelineAdmin(admin.ModelAdmin):
@@ -34,6 +34,7 @@ class RunAdmin(admin.ModelAdmin):
     ordering = ('-created_date',)
     list_filter = (AppFilter,)
     search_fields = ('tags__sampleId', 'tags__requestId', 'tags__cmoSampleIds__contains')
+    readonly_fields = ('samples', 'job_group', 'job_group_notifier', 'operator_run', 'app')
 
 
 class OperatorRunAdmin(admin.ModelAdmin):

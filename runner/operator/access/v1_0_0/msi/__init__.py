@@ -62,37 +62,27 @@ class AccessLegacyMSIOperator(Operator):
 
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
             # Find the Tumor Standard bam
-            tumor_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex='_cl_aln_srt_MD_IR_FX_BR.bam',
-                metadata={
-                    'tumorOrNormal': 'Tumor',
-                    'sampleName': tumor_sample_id
-                }
-            )
+            sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam'.format(tumor_sample_id)
+            tumor_bam = FileRepository.filter(file_name_regex=sample_regex)
+
             if not len(tumor_bam) == 1:
                 msg = 'Found incorrect number of matching bam files ({}) for sample {}'
                 msg = msg.format(len(tumor_bam), tumor_sample_id)
                 raise Exception(msg)
+                # Todo: if > 1, choose based on run ID
 
             tumor_bam = tumor_bam[0]
-            patient_id = tumor_bam.metadata['patientId']
+            patient_id = tumor_sample_id.split('-')[0:2]
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
-            # Todo: we need to make sure that "-N0" is an acceptable way to find normal samples
-            # Todo: use tumorOrNormal field for this once this is solved:
-            # https://cwl.discourse.group/t/expressiontool-with-record-output/239/2
-            matched_normal_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex=NORMAL_SEARCH + '.*_cl_aln_srt_MD_IR_FX_BR.bam',
-                metadata={
-                    'patientId': patient_id,
-                }
-            ).latest('created_date')
+            sample_regex = r'{}.*{}.*_cl_aln_srt_MD_IR_FX_BR.bam'.format(patient_id, NORMAL_SEARCH)
+            matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
 
-            if not matched_normal_bam:
-                msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
+            if not len(matched_normal_bam) > 0:
+                msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
                 raise Exception(msg)
+
+            matched_normal_bam = matched_normal_bam.order_by('-created_date').first()
 
             sample_ids.append(tumor_sample_id)
             tumor_bams.append(tumor_bam)
