@@ -35,7 +35,6 @@ class AccessLegacySNVOperator(Operator):
         # Get the latest completed runs for the given request ID
         group_id = Run.objects.filter(
             tags__requestId=self.request_id,
-            app__name='access legacy',
             status=RunStatus.COMPLETED
         ).order_by('-finished_date').first().job_group
 
