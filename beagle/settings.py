@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
