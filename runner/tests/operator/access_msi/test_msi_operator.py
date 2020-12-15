@@ -5,7 +5,7 @@ from django.test import TestCase
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
-from runner.operator.access.v1_0_0.structural_variants import AccessLegacySVOperator
+from runner.operator.access.v1_0_0.msi import AccessLegacyMSIOperator
 
 
 FIXTURES = [
@@ -16,8 +16,6 @@ FIXTURES = [
     "fixtures/tests/access_snv/operator_run.json",
     "fixtures/tests/access_snv/ports.json",
     "fixtures/tests/access_snv/runs.json",
-    "fixtures/tests/access_snv/sv_bams/files.json",
-    "fixtures/tests/access_snv/sv_bams/files_metadata.json",
 ]
 
 COMMON_FIXTURES = [
@@ -31,44 +29,43 @@ COMMON_FIXTURES = [
 ]
 
 
-class TestAccessSVOperator(TestCase):
+class TestAccessMSIOperator(TestCase):
 
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
-    def test_access_legacy_sv_operator(self):
+    def test_access_legacy_msi_operator(self):
         """
-        Test that an Access legacy SV operator instance can be created and validated
+        Test that an Access legacy MSI operator instance can be created and validated
         """
-        # create access SV operator
+        # create access MSI operator
         request_id = "access_legacy_test_request"
 
         # todo: avoid the magic number here:
-        operator_model = Operator.objects.get(id=6)
+        operator_model = Operator.objects.get(id=7)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-        self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbead")
-        self.assertEqual(str(operator.model), "AccessLegacySVOperator")
+        self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeee")
+        self.assertEqual(str(operator.model), "AccessLegacyMSIOperator")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
-        pipeline_slug = "AccessLegacySVOperator"
-        access_legacy_sv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySVOperator(access_legacy_sv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca42'])
+        pipeline_slug = "AccessLegacyMSIOperator"
+        access_legacy_msi_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacyMSIOperator(access_legacy_msi_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca42'])
 
-        self.assertTrue(isinstance(operator, AccessLegacySVOperator))
+        self.assertTrue(isinstance(operator, AccessLegacyMSIOperator))
         self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca42'])
-        self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbead")
+        self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeee")
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
-
         required_input_fields = [
-            'sv_sample_id',
-            'sv_tumor_bams',
+            'tumor_bam',
+            'normal_bam',
+            'sample_name',
         ]
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 1)
-            self.assertIn('sv_normal_bam', inputs)
