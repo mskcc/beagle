@@ -197,9 +197,7 @@ def construct_sample_inputs(samples, request_id, group_id):
 
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
-                                                'igocomplete': True})
+        files = FileRepository.filter(queryset=self.files)
         data = [
             {
                 "id": f.file.id,
