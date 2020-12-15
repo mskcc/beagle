@@ -77,7 +77,7 @@ def generate_title_file_content(sample_group):
             meta['investigatorSampleId'],
             meta['patientId'],
             meta['tumorOrNormal'],
-            meta['sampleOrigin'],
+            'Plasma' if meta['tumorOrNormal'] == 'Tumor' else 'Buffy Coat',
             meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
             library_yield,
             meta['captureInputNg'] if meta['captureInputNg'] else '-',
