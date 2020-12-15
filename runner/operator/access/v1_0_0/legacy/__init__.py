@@ -223,7 +223,11 @@ class AccessLegacyOperator(Operator):
                         'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'tags': {'requestId': self.request_id, 'cmoSampleIds': job["add_rg_ID"]}
+                        'tags': {
+                            'requestId': self.request_id,
+                            'cmoSampleIds': job["add_rg_ID"],
+                            'reference_version': 'HG19'
+                        }
                     }
                 ),
                 job
