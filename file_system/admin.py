@@ -1,10 +1,11 @@
 from django.contrib import admin
+from import_export.admin import ExportActionMixin
 from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, Sample
 
 # Register your models here.
 
 
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('id', 'file_name', 'file_group', 'size')
     search_fields = ['file_name']
 
@@ -18,13 +19,13 @@ class FileRunMapAdmin(admin.ModelAdmin):
     list_display = ('file', 'run')
 
 
-class FileMetadataAdmin(admin.ModelAdmin):
+class FileMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('file', 'version', 'metadata')
     autocomplete_fields = ['file']
     search_fields = ('id', 'metadata__requestId')
 
 
-class ImportMetadataAdmin(admin.ModelAdmin):
+class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('file',)
     search_fields = ('file__id',)
 
