@@ -17,7 +17,6 @@ from jinja2 import Template
 
 REQUIRED_META_FIELDS = [
     "sampleName",
-    "requestId",
     "tumorOrNormal",
     "sampleId"
 ]
