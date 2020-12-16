@@ -200,10 +200,7 @@ def construct_sample_inputs(samples, request_id, group_id):
 
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
-        
-        logger.info("Access Legacy Pipeline runs: %s", str(self.run_ids))
         ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
-        logger.info("Access Legacy Pipeline ports: %s", str(ports))
 
         data = [
             {
@@ -212,10 +209,9 @@ class AccessLegacyOperator(Operator):
                 "file_name": f.file_name,
                 "metadata": f.filemetadata_set.first().metadata
             }
-            for f in p.files
             for p in ports
+            for f in p.files.all()
         ]
-        logger.info("Access Legacy Pipeline data: %s", str(data))
 
         (sample_inputs, no_of_errors) = construct_sample_inputs(data, self.request_id, self.job_group_id)
 
