@@ -6,7 +6,7 @@ from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupM
 
 
 class FileAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'file_group', 'size')
+    list_display = ('id', 'file_name', 'file_group', 'size', 'created_date')
     search_fields = ['file_name']
 
 
@@ -20,9 +20,9 @@ class FileRunMapAdmin(admin.ModelAdmin):
 
 
 class FileMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('file', 'version', 'metadata')
+    list_display = ('file', 'version', 'metadata','created_date')
     autocomplete_fields = ['file']
-    search_fields = ('id', 'metadata__requestId')
+    search_fields = ('id', 'metadata__requestId', 'metadata__sampleName')
 
 
 class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
