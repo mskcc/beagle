@@ -29,7 +29,7 @@ METADATA_OUTPUT_FIELDS = [
     'captureConcentrationNm',
     'sampleId'
 ]
-def construct_inputs(samples):
+def construct_inputs(samples, request_id):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
         template = Template(file.read())
 
@@ -46,7 +46,7 @@ def construct_inputs(samples):
             "libraryVolume": calc_avg(sample_files, "libraryVolume"),
             "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
             "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm")
-
+            "requestId": request_id
         })
 
         fastq1s = [{
@@ -82,7 +82,7 @@ class AccessLegacyFastqMergeOperator(Operator):
             } for f in files
         ]
 
-        inputs = construct_inputs(data)
+        inputs = construct_inputs(data, self.request_id)
 
         number_of_inputs = len(inputs)
 

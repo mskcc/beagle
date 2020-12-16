@@ -213,7 +213,8 @@ class AccessLegacyOperator(Operator):
             for f in p.files.all()
         ]
 
-        (sample_inputs, no_of_errors) = construct_sample_inputs(data, self.request_id, self.job_group_id)
+        request_id = data[0].metadata["requestId"]
+        (sample_inputs, no_of_errors) = construct_sample_inputs(data, request_id, self.job_group_id)
 
         if no_of_errors:
             return
@@ -224,11 +225,11 @@ class AccessLegacyOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': self.request_id,
+                            'requestId': request_id,
                             'cmoSampleIds': job["add_rg_ID"],
                             'reference_version': 'HG19'
                         }
