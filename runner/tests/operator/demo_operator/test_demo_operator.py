@@ -105,6 +105,7 @@ class TestDemoOperator(TestCase):
 
         # make a tmpdir and put a file in it
         # use this local dir so that its accessible across the HPC
+        os.umask(0o000) # make sure newly created files and dirs are accessible
         self.tmpdir = mkdtemp(dir = THIS_DIR)
         os.chmod(self.tmpdir, 0o770) # need permissions for voyager user to access
         self.tmp_path = os.path.join(self.tmpdir, "foo.txt")
@@ -249,6 +250,8 @@ class TestDemoOperator(TestCase):
 
         This one takes about 3-6min to run on LSF with Ridgeback
 
+        NOTE: see this one also; https://github.com/mskcc/beagle/blob/master/runner/tests/run/test_run.py#L291 RunObjectTest.test_run_complete_job
+
         Usage
         ------
 
@@ -280,6 +283,9 @@ class TestDemoOperator(TestCase):
                 file = file_instance,
                 metadata = {'requestId' : request_id}
             )
+
+            # check the number of files present, there should be two from setUp and a third from this test
+            self.assertEqual(len(File.objects.all()), 3)
 
             # make a request to start the run
             request = MockRequest()
@@ -313,6 +319,10 @@ class TestDemoOperator(TestCase):
             # get the output file
             output_port = Port.objects.get(name = "output_file")
             print(output_port.files.all())
+
+            # there should be an extra File object for the output
+            self.assertEqual(len(File.objects.all()), 4)
+            self.assertEqual(len(output_port.files.all()), 1)
 
             for file_instance in File.objects.all():
                 pprint(file_instance.__dict__, indent = 4)
