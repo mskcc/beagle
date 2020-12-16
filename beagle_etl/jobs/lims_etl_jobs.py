@@ -330,8 +330,12 @@ def create_pooled_normal(filepath, file_group_id):
     recipe = None
     try:
         parts = filepath.split('/')
-        run_id = get_run_id_from_string(parts[6])
-        pooled_normal_folder = parts[8]
+        path_shift = 0
+        # path_shift needed for /ifs/archive/GCL/hiseq/ -> /igo/delivery/ transition
+        if 'igo' in parts[1]:
+            path_shift = 2
+        run_id = get_run_id_from_string(parts[6-path_shift])
+        pooled_normal_folder = parts[8-path_shift]
         preservation_type = pooled_normal_folder
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
