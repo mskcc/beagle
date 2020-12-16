@@ -76,7 +76,7 @@ def generate_title_file_content(sample_group):
             meta['investigatorSampleId'],
             meta['patientId'],
             meta['tumorOrNormal'],
-            meta['sampleOrigin'],
+            'Plasma' if meta['tumorOrNormal'] == 'Tumor' else 'Buffy Coat',
             meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
             library_yield,
             meta['captureInputNg'] if meta['captureInputNg'] else '-',
@@ -140,8 +140,8 @@ def construct_sample_inputs(samples, request_id, group_id):
             patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
-            r1_fastq = sample_pair[0] if '_R1_' in sample_pair[0]["path"] else sample_pair[1]
-            r2_fastq = sample_pair[0] if '_R2_' in sample_pair[0]["path"] else sample_pair[1]
+            r1_fastq = sample_pair[0] if '_R1.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if '_R2.fastz.gz' in sample_pair[0]["path"] else sample_pair[1]
 
             fastq1_files.append({
                 "class": "File",
@@ -220,7 +220,11 @@ class AccessLegacyOperator(Operator):
                         'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'tags': {'requestId': self.request_id, 'cmoSampleIds': job["add_rg_ID"]}
+                        'tags': {
+                            'requestId': self.request_id,
+                            'cmoSampleIds': job["add_rg_ID"],
+                            'reference_version': 'HG19'
+                        }
                     }
                 ),
                 job
