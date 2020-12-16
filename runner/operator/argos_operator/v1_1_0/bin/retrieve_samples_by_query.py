@@ -257,7 +257,10 @@ def build_dmp_query(patient_id, bait_set):
     if "impact505" in bait_set.lower():
         value = "IMPACT505"
     assay = Q(metadata__cmo_assay=value)
-    patient = Q(metadata__patient__cmo=patient_id.lstrip('C-'))
+    # formatting to look like CMO patient IDs in dmp2cmo
+    if "C-" in patient_id[:2]:
+      patient_id = patient_id[2:]
+    patient = Q(metadata__patient__cmo=patient_id)
     normal = Q(metadata__type='N')
     query = assay & patient & normal
     return query
