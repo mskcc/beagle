@@ -45,7 +45,7 @@ def construct_inputs(samples, request_id):
             "captureInputNg": calc_avg(sample_files, "captureInputNg"),
             "libraryVolume": calc_avg(sample_files, "libraryVolume"),
             "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
-            "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm")
+            "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
             "requestId": request_id
         })
 
