@@ -95,7 +95,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     recipe = LIMSClient.get_request_samples(request_id).get("recipe", None)
 
     if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
-                Job.objects.filter(job_group=job_group).values("status")]) and recipe in settings.WES_ASSAYS:
+                Job.objects.filter(job_group=job_group, run=TYPES['SAMPLE']).values("status")]) and recipe in settings.WES_ASSAYS:
         wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
         send_notification.delay(wes_job_failed.to_dict())
 
@@ -330,8 +330,12 @@ def create_pooled_normal(filepath, file_group_id):
     recipe = None
     try:
         parts = filepath.split('/')
-        run_id = get_run_id_from_string(parts[6])
-        pooled_normal_folder = parts[8]
+        path_shift = 0
+        # path_shift needed for /ifs/archive/GCL/hiseq/ -> /igo/delivery/ transition
+        if 'igo' in parts[1]:
+            path_shift = 2
+        run_id = get_run_id_from_string(parts[6-path_shift])
+        pooled_normal_folder = parts[8-path_shift]
         preservation_type = pooled_normal_folder
         preservation_type = preservation_type.split('Sample_')[1]
         preservation_type = preservation_type.split('POOLEDNORMAL')[0]
@@ -547,7 +551,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                     ddiff = DeepDiff(all_metadata[1].metadata,
                                      all_metadata[0].metadata,
                                      ignore_order=True)
-                    diff_file_name = "%s_metadata_update.json" % f.file.file_name
+                    diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, all_metadata[0].version)
                     message = "Updating file metadata: %s, details in file %s\n" % (path, diff_file_name)
                     update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
                     diff_details_event = LocalStoreFileEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
