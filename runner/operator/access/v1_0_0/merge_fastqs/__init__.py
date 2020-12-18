@@ -27,7 +27,8 @@ METADATA_OUTPUT_FIELDS = [
     'captureName',
     'libraryConcentrationNgul',
     'captureConcentrationNm',
-    'sampleId'
+    'sampleId',
+    'requestId'
 ]
 def construct_inputs(samples, request_id):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
