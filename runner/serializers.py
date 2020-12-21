@@ -418,3 +418,29 @@ class OperatorLatestSamplesQuerySerializer(serializers.Serializer):
 
 class OperatorSampleQuerySerializer(serializers.Serializer):
     sample = serializers.CharField(required=True, allow_blank=False)
+
+
+class AbortRunSerializer(serializers.Serializer):
+    job_group_id = serializers.UUIDField(required=False)
+    runs = serializers.ListField(
+        child=serializers.UUIDField()
+    )
+
+    def validate(self, attrs):
+        if attrs.get('job_group_id'):
+            try:
+                JobGroup.objects.get(id=attrs['job_group_id'])
+            except JobGroup.DoesNotExist:
+                raise serializers.ValidationError("JobGroup with id: %s doesn't exist." % attrs['job_group_id'])
+        if attrs.get('runs', []):
+            run_missing = []
+            for run in attrs['runs']:
+                try:
+                    Run.objects.get(id=run)
+                except Run.DoesNotExist:
+                    run_missing.append(str(run))
+            if run_missing:
+                raise serializers.ValidationError("Runs with id(s): %s doesn't exist." % ', '.join(run_missing))
+        if not attrs.get('job_group_id') and not attrs.get('runs'):
+            raise serializers.ValidationError("Either job_group_id or runs needs to be specified.")
+        return attrs

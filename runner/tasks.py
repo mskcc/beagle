@@ -345,6 +345,33 @@ def submit_job(run_id, output_directory=None):
         run.save()
 
 
+@shared_task
+def abort_job_task(job_group_id=None, jobs=[]):
+    successful = []
+    unsuccessful = []
+    runs = []
+    if job_group_id:
+        runs = list(Run.objects.filter(job_group_id=job_group_id).all())
+        runs = [str(run.id) for run in runs]
+    if jobs:
+        runs.extend(jobs)
+    for run in runs:
+        if abort_job_on_ridgeback(run):
+            successful.append(run)
+        else:
+            unsuccessful.append(run)
+    logger.error("Failed to abort %s" % ', '.join(unsuccessful))
+
+
+def abort_job_on_ridgeback(job_id):
+    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/abort/' % job_id)
+    if response.status_code == 200:
+        logger.info("Job %s aborted" % job_id)
+        return True
+    logger.error("Failed to abort job: %s" % job_id)
+    return None
+
+
 def check_status_on_ridgeback(job_id):
     response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/' % job_id)
     if response.status_code == 200:
@@ -396,7 +423,6 @@ def complete_job(run_id, outputs):
 
 
 def _job_finished_notify(run):
-    job_group = run.job_group
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
@@ -441,6 +467,11 @@ def running_job(run):
     run.save()
 
 
+def abort_job(run):
+    run.status = RunStatus.ABORTED
+    run.save()
+
+
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
@@ -463,6 +494,9 @@ def check_jobs_status():
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
                     running_job(run)
                     continue
+                if remote_status['status'] == 'ABORTED':
+                    logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
+                    abort_job(run)
             else:
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
