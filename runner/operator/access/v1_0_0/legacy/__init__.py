@@ -144,8 +144,8 @@ def construct_sample_inputs(samples, request_id, group_id):
             patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
-            r1_fastq = sample_pair[0] if '_R1.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
-            r2_fastq = sample_pair[0] if '_R2.fastz.gz' in sample_pair[0]["path"] else sample_pair[1]
+            r1_fastq = sample_pair[0] if '_R1_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if '_R2_.fastz.gz' in sample_pair[0]["path"] else sample_pair[1]
 
             fastq1_files.append({
                 "class": "File",
