@@ -352,9 +352,11 @@ def abort_job_task(job_group_id=None, jobs=[]):
     runs = []
     if job_group_id:
         runs = list(Run.objects.filter(job_group_id=job_group_id).all())
-        runs = [str(run.id) for run in runs]
-    if jobs:
-        runs.extend(jobs)
+        runs = [str(run.execution_id) for run in runs]
+    for j in jobs:
+        run_obj = Run.objects.get(id=j)
+        if str(run_obj.execution_id) not in runs:
+            runs.append(str(run_obj.execution_id))
     for run in runs:
         if abort_job_on_ridgeback(run):
             successful.append(run)
