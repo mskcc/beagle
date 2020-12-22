@@ -2,22 +2,21 @@
 Tests for Run API View
 """
 import os
-from mock import patch
-from unittest.mock import Mock
+from mock import patch, call
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from runner.views.run_api_view import OperatorViewSet
 from beagle_etl.models import JobGroup
-from runner.models import Run, RunStatus
+from file_system.models import FileGroup
+from runner.models import Run, RunStatus, Pipeline
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.management import call_command
 from django.urls import reverse
-from pprint import pprint
-
 import beagle_etl.celery
-if beagle_etl.celery.app.conf['task_always_eager'] == False:
+
+if not beagle_etl.celery.app.conf['task_always_eager']:
     beagle_etl.celery.app.conf['task_always_eager'] = True
 
 
@@ -27,16 +26,17 @@ class MockRequest(object):
     """
     pass
 
+
 class TestRunAPIList(APITestCase):
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json",
-    "runner.pipeline.json",
-    "beagle_etl.operator.json",
-    "runner.operator_run.json",
-    "runner.run.json",
-    "runner.operator_trigger.json",]
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "runner.pipeline.json",
+        "beagle_etl.operator.json",
+        "runner.operator_run.json",
+        "runner.run.json",
+        "runner.operator_trigger.json", ]
 
     def setUp(self):
         self.api_root = reverse('run-list')
@@ -80,17 +80,19 @@ class TestRunAPIList(APITestCase):
         self.assertEqual(response.json()['count'], 8)
 
 
-class TestRunAPIView(TestCase):
+class TestRunAPIView(APITestCase):
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json",
-    "beagle_etl.operator.json",
-    "runner.pipeline.json"
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "beagle_etl.operator.json",
+        "runner.pipeline.json"
     ]
 
     def setUp(self):
         settings.NOTIFIER_ACTIVE = False
+        admin_user = User.objects.create_superuser('admin', 'sample_email', 'password')
+        self.client.force_authenticate(user=admin_user)
 
     def tearDown(self):
         settings.NOTIFIER_ACTIVE = True
@@ -135,7 +137,7 @@ class TestRunAPIView(TestCase):
         request_ids = ['10075_D']
 
         request = MockRequest()
-        request.data = {}
+        request.data = dict()
         request.data['request_ids'] = request_ids
         request.data['pipeline_name'] = pipeline_name
 
@@ -145,16 +147,55 @@ class TestRunAPIView(TestCase):
         number_of_runs = len(Run.objects.all())
         self.assertEqual(number_of_runs, 1)
 
+    @patch('runner.tasks.abort_job_task.delay')
+    def test_abort_job_group(self, abort_job_task):
+        fg = FileGroup.objects.create(name='test', slug='test')
+        pipeline = Pipeline.objects.create(name='pipeline', output_directory='/tmp', output_file_group=fg)
+        job_group = JobGroup.objects.create()
+        run1 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
+        run2 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
+        response = self.client.post('/v0/run/api/abort/',
+                                    {'job_group_id': str(job_group.id),
+                                     'runs': []},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        calls = [
+            call(str(job_group.id), [])
+        ]
+
+        abort_job_task.assert_has_calls(calls, any_order=True)
+
+    @patch('runner.tasks.abort_job_task.delay')
+    def test_abort_runs(self, abort_job_task):
+        fg = FileGroup.objects.create(name='test', slug='test')
+        pipeline = Pipeline.objects.create(name='pipeline', output_directory='/tmp', output_file_group=fg)
+        job_group = JobGroup.objects.create()
+        run1 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
+        run2 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
+        response = self.client.post('/v0/run/api/abort/',
+                                    {'job_group_id': None,
+                                     'runs': [str(run1.id), str(run2.id)]},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        calls = [
+            call(None, [str(run1.id), str(run2.id)])
+        ]
+
+        abort_job_task.assert_has_calls(calls, any_order=True)
+
+
 class TestCWLJsonView(APITestCase):
     fixtures = [
-    "file_system.filegroup.json",
-    "file_system.filetype.json",
-    "file_system.storage.json",
-    "runner.pipeline.json",
-    "beagle_etl.operator.json",
-    "runner.operator_run.json",
-    "runner.run.json",
-    "runner.operator_trigger.json",]
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "runner.pipeline.json",
+        "beagle_etl.operator.json",
+        "runner.operator_run.json",
+        "runner.run.json",
+        "runner.operator_trigger.json", ]
 
     def setUp(self):
         admin_user = User.objects.create_superuser('admin', 'sample_email', 'password')
