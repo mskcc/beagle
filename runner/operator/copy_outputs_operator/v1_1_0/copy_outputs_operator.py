@@ -12,7 +12,7 @@ from notifier.models import JobGroup
 from file_system.models import File, FileGroup, FileType
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
+from runner.models import Pipeline, Run
 from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files, \
     get_output_directory_prefix
 
@@ -65,7 +65,14 @@ class CopyOutputsOperator(Operator):
         """
         If project_prefix and job_group_id, write output to a directory
         that uses both
+
+        Also use argos version number for output instead of pipeline version
+        that's listed in Beagle
         """
+
+        argos_run = Run.objects.get(id=run_ids[0])
+        argos_pipeline = argos_run.app
+
         output_directory = None
         if project_prefix:
             tags["project_prefix"] = project_prefix
@@ -76,7 +83,7 @@ class CopyOutputsOperator(Operator):
                 output_directory = os.path.join(pipeline.output_directory,
                                                 "argos",
                                                 output_prefix,
-                                                pipeline_version,
+                                                argos_pipeline.version,
                                                 jg_created_date)
             copy_outputs_job_data['output_directory'] = output_directory
         copy_outputs_job = [(APIRunCreateSerializer(

@@ -393,3 +393,54 @@ class TempoMPGenOperatorSerializer(serializers.Serializer):
     tumors_override = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
+
+
+class RunSamplesSerializer(serializers.Serializer):
+    job_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    ),
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorLatestSamplesQuerySerializer(serializers.Serializer):
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorSampleQuerySerializer(serializers.Serializer):
+    sample = serializers.CharField(required=True, allow_blank=False)
+
+
+class AbortRunSerializer(serializers.Serializer):
+    job_group_id = serializers.UUIDField(required=False, allow_null=True)
+    runs = serializers.ListField(
+        child=serializers.UUIDField()
+    )
+
+    def validate(self, attrs):
+        if attrs.get('job_group_id'):
+            try:
+                JobGroup.objects.get(id=attrs['job_group_id'])
+            except JobGroup.DoesNotExist:
+                raise serializers.ValidationError("JobGroup with id: %s doesn't exist." % attrs['job_group_id'])
+        if attrs.get('runs', []):
+            run_missing = []
+            for run in attrs['runs']:
+                try:
+                    Run.objects.get(id=run)
+                except Run.DoesNotExist:
+                    run_missing.append(str(run))
+            if run_missing:
+                raise serializers.ValidationError("Runs with id(s): %s doesn't exist." % ', '.join(run_missing))
+        if not attrs.get('job_group_id') and not attrs.get('runs'):
+            raise serializers.ValidationError("Either job_group_id or runs needs to be specified.")
+        return attrs

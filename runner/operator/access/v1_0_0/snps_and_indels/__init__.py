@@ -22,7 +22,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
 ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
-
+NORMAL_SAMPLE_SEARCH = '-N0'
 
 class AccessLegacySNVOperator(Operator):
 
@@ -32,10 +32,21 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
+        # Get the latest completed runs for the given request ID
+        group_id = Run.objects.filter(
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
+        ).order_by('-finished_date').first().job_group
+
+        request_id_runs = Run.objects.filter(
+            job_group=group_id,
+            status=RunStatus.COMPLETED
+        )
+
+        # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
             name='duplex_bams',
-            run__app__name='access legacy',
-            run__tags__requestId=self.request_id,
+            run__id__in=[r.id for r in request_id_runs],
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here
@@ -51,58 +62,68 @@ class AccessLegacySNVOperator(Operator):
 
         for i, tumor_sample_id in enumerate(tumors_to_run):
 
-            tumor_duplex_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex='__aln_srt_IR_FX-duplex.bam',
-                metadata={
-                    'tumorOrNormal': 'Tumor',
-                    'sampleName': tumor_sample_id
-                }
-            )
-            if not len(tumor_duplex_bam) == 1:
-                msg = 'Found incorrect number of matching duplex bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
+            # Locate the Duplex BAM
+            sample_regex = r'{}.*__aln_srt_IR_FX-duplex.bam'.format(tumor_sample_id)
+
+            tumor_duplex_bam = FileRepository.filter(path_regex=sample_regex)
+            if len(tumor_duplex_bam) < 1:
+                msg = 'ERROR: Could not find matching duplex bam file for sample {}'
+                msg = msg.format(tumor_sample_id)
                 logger.exception(msg)
                 raise Exception(msg)
-            tumor_duplex_bam = tumor_duplex_bam[0]
-
-            tumor_simplex_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex='__aln_srt_IR_FX-simplex.bam',
-                metadata={
-                    'tumorOrNormal': 'Tumor',
-                    'sampleName': tumor_sample_id
-                }
-            )
-            if not len(tumor_simplex_bam) == 1:
-                msg = 'Found incorrect number of matching simplex bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_duplex_bam), tumor_sample_id)
-                logger.exception(msg)
-                raise Exception(msg)
-            tumor_simplex_bam = tumor_simplex_bam[0]
-
-            patient_id = tumor_duplex_bam.metadata['patientId']
-            # Use the path regex suffix to get only access unfiltered bams
-            unfiltered_matched_normal_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex='__aln_srt_IR_FX.bam',
-                metadata={
-                    'patientId': patient_id,
-                    'tumorOrNormal': 'Normal',
-                }
-            ).latest('created_date')
-
-            if not unfiltered_matched_normal_bam:
-                msg = 'No matching unfiltered normals Bam found for patient {}'.format(patient_id)
+            if len(tumor_duplex_bam) > 1:
+                msg = 'WARNING: Found more than one matching duplex bam file for sample {}. \
+                We will choose the most recently-created one for this run.'
+                msg = msg.format(tumor_sample_id)
                 logger.warning(msg)
-                # Skip running this sample
-                continue
+            # Take the latest one
+            tumor_duplex_bam = tumor_duplex_bam.order_by('-created_date').first()
+
+            # Locate the Simplex BAM
+            sample_regex = r'{}.*__aln_srt_IR_FX-simplex.bam'.format(tumor_sample_id)
+            tumor_simplex_bam = FileRepository.filter(path_regex=sample_regex)
+            if len(tumor_simplex_bam) < 1:
+                msg = 'ERROR: Could not find matching simplex bam file for sample {}'
+                msg = msg.format(tumor_sample_id)
+                logger.exception(msg)
+                raise Exception(msg)
+            if len(tumor_simplex_bam) > 1:
+                msg = 'WARNING: Found more than one matching simplex bam file for sample {}. ' \
+                      'We will choose the most recently-created one for this run.'
+                msg = msg.format(tumor_sample_id)
+                logger.warning(msg)
+            # Take the latest one
+            tumor_simplex_bam = tumor_simplex_bam.order_by('-created_date').first()
+
+            patient_id = tumor_sample_id.split('-')[0:2]
+
+            # Locate the Matched, Unfiltered, Normal BAM
+            sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam'.format(patient_id, NORMAL_SAMPLE_SEARCH)
+            unfiltered_matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
+            if len(unfiltered_matched_normal_bam) < 1:
+                msg = 'WARNING: Could not find matching unfiltered normal bam file for sample {}' \
+                      'We will skip running this sample.'
+                msg = msg.format(tumor_sample_id)
+                logger.warning(msg)
+                raise Exception(msg)
+            if len(unfiltered_matched_normal_bam) > 1:
+                msg = 'WARNING: Found more than one matching unfiltered normal bam file for tumor sample {}. ' \
+                      'We will choose the most recently-created one for this run.'
+                msg = msg.format(tumor_sample_id)
+                logger.warning(msg)
+            # Take the latest one
+            unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-created_date').first()
+
+            # Parse the Normal Sample ID from the file name
+            # Todo: Stop using file path for this, once output_metadata is being supplied in access legacy operator
+            unfiltered_matched_normal_file_base = unfiltered_matched_normal_bam.file.path.split('/')[-1]
+            unfiltered_matched_normal_sample_id = '-'.join(unfiltered_matched_normal_file_base.split('-')[0:3])
 
             sample_ids.append(tumor_sample_id)
             tumor_duplex_bams.append(tumor_duplex_bam)
             tumor_simplex_bams.append(tumor_simplex_bam)
             matched_normals.append(unfiltered_matched_normal_bam)
-            matched_normal_ids.append(unfiltered_matched_normal_bam.metadata['sampleName'])
+            matched_normal_ids.append(unfiltered_matched_normal_sample_id)
 
         sample_inputs = []
         for i, b in enumerate(tumor_duplex_bams):

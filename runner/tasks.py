@@ -22,12 +22,12 @@ from file_system.repository import FileRepository
 logger = logging.getLogger(__name__)
 
 
-def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None):
+def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent)
 
 
-def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None):
+def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None):
     jg = None
     jgn = None
     try:
@@ -43,10 +43,16 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
+    try:
+        operator_run_parent = OperatorRun.objects.get(id=parent)
+    except OperatorRun.DoesNotExist:
+        operator_run_parent = None
+
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg,
-                                              job_group_notifier=jgn)
+                                              job_group_notifier=jgn,
+                                              parent=operator_run_parent)
     run_ids = []
     pipeline_id = None
 
@@ -189,12 +195,12 @@ def generate_label(job_group_id, request):
 
 @shared_task
 def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None,
-                              job_group_notifier_id=None):
+                              job_group_notifier_id=None, parent=None):
     logger.info("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id))
     operator_model = Operator.objects.get(id=to_operator_id)
     operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
                                             job_group_notifier_id=job_group_notifier_id, run_ids=run_ids)
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, parent)
 
 
 @shared_task
@@ -223,7 +229,8 @@ def process_triggers():
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
-                                job_group_notifier_id=job_group_notifier_id
+                                job_group_notifier_id=job_group_notifier_id,
+                                parent=str(operator_run.id)
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -234,7 +241,8 @@ def process_triggers():
                                 trigger.from_operator_id,
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
-                                job_group_notifier_id=job_group_notifier_id
+                                job_group_notifier_id=job_group_notifier_id,
+                                parent=str(operator_run.id)
                             )
                             continue
 
@@ -337,6 +345,33 @@ def submit_job(run_id, output_directory=None):
         run.save()
 
 
+@shared_task
+def abort_job_task(job_group_id=None, jobs=[]):
+    successful = []
+    unsuccessful = []
+    runs = []
+    if job_group_id:
+        runs = list(Run.objects.filter(job_group_id=job_group_id).all())
+        runs = [str(run.id) for run in runs]
+    if jobs:
+        runs.extend(jobs)
+    for run in runs:
+        if abort_job_on_ridgeback(run):
+            successful.append(run)
+        else:
+            unsuccessful.append(run)
+    logger.error("Failed to abort %s" % ', '.join(unsuccessful))
+
+
+def abort_job_on_ridgeback(job_id):
+    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/abort/' % job_id)
+    if response.status_code == 200:
+        logger.info("Job %s aborted" % job_id)
+        return True
+    logger.error("Failed to abort job: %s" % job_id)
+    return None
+
+
 def check_status_on_ridgeback(job_id):
     response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/' % job_id)
     if response.status_code == 200:
@@ -382,12 +417,12 @@ def complete_job(run_id, outputs):
             trigger.to_operator_id,
             trigger.from_operator_id,
             [run_id],
-            job_group_id=job_group_id
+            job_group_id=job_group_id,
+            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
         )
 
 
 def _job_finished_notify(run):
-    job_group = run.job_group
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
@@ -432,6 +467,11 @@ def running_job(run):
     run.save()
 
 
+def abort_job(run):
+    run.status = RunStatus.ABORTED
+    run.save()
+
+
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
@@ -454,6 +494,9 @@ def check_jobs_status():
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
                     running_job(run)
                     continue
+                if remote_status['status'] == 'ABORTED':
+                    logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
+                    abort_job(run)
             else:
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:

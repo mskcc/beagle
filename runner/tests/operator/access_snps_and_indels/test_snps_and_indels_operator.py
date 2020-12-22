@@ -39,38 +39,44 @@ class TestAccessSNVOperator(TestCase):
         Test that an Access legacy SNV operator instance can be created and validated
         """
         # create access SNV operator
-        request_id = "bar"
+        request_id = "access_legacy_test_request"
 
         # todo: avoid the magic number here:
         operator_model = Operator.objects.get(id=5)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
         self.assertEqual(str(operator.model), "AccessLegacySNVOperator")
-        self.assertEqual(operator.request_id, "bar")
+        self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
         pipeline_slug = "AccessLegacySNVOperator"
-        request_id = "access_legacy_snv_test_request"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
         operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
-        self.assertTrue(operator.request_id == "access_legacy_snv_test_request")
+        self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
+
         required_input_fields = [
             'tumor_bams',
             'normal_bams',
             'tumor_sample_names',
             'normal_sample_names',
             'matched_normal_ids',
+        ]
+        required_input_fields_length_3 = [
             'genotyping_bams',
             'genotyping_bams_ids',
         ]
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 1)
+            for field in required_input_fields_length_3:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 5)

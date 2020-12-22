@@ -3,7 +3,7 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.db.models import F
-from file_system.models import File, FileGroup
+from file_system.models import File, FileGroup, Sample
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
@@ -16,6 +16,7 @@ class RunStatus(IntEnum):
     RUNNING = 2
     FAILED = 3
     COMPLETED = 4
+    ABORTED = 5
 
 
 class PortType(IntEnum):
@@ -90,6 +91,7 @@ class OperatorRun(BaseModel):
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+    parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
@@ -163,6 +165,7 @@ class Run(BaseModel):
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
+    samples = models.ManyToManyField(Sample)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
 
