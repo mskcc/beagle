@@ -56,6 +56,8 @@ class FileTest(APITestCase):
         response = self.client.post('/api-token-auth/', {'username': username,
                                                          'password': password},
                                     format='json')
+        print(response.status_code)
+        print(response.data)
         return response.data['access']
 
     def test_create_file_unauthorized(self):
