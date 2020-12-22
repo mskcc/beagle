@@ -1,3 +1,4 @@
+import traceback
 from rest_framework import mixins
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer, TokenVerifySerializer
@@ -27,7 +28,7 @@ class BeagleTokenObtainPairView(TokenObtainPairView):
             error_message = {'detail': 'Invalid username or password'}
             return Response(error_message, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as auth_exception:
-            print(auth_exception)
+            traceback.print_tb(auth_exception.__traceback__)
             error_message = {'detail': 'Unable to connect to authentication server'}
             return Response(error_message, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
