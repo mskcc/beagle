@@ -362,7 +362,8 @@ def abort_job_task(job_group_id=None, jobs=[]):
             successful.append(run)
         else:
             unsuccessful.append(run)
-    logger.error("Failed to abort %s" % ', '.join(unsuccessful))
+    if unsuccessful:
+        logger.error("Failed to abort %s" % ', '.join(unsuccessful))
 
 
 def abort_job_on_ridgeback(job_id):
