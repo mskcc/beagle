@@ -27,6 +27,7 @@ class BeagleTokenObtainPairView(TokenObtainPairView):
             error_message = {'detail': 'Invalid username or password'}
             return Response(error_message, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as auth_exception:
+            print(str(auth_exception))
             error_message = {'detail': 'Unable to connect to authentication server'}
             return Response(error_message, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
