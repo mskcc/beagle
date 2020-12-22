@@ -95,6 +95,7 @@ class TestRunAPIView(APITestCase):
         self.client.force_authenticate(user=admin_user)
 
     def tearDown(self):
+        User.objecs.filter(username='admin').delete()
         settings.NOTIFIER_ACTIVE = True
 
     def test_post_to_view1(self):
