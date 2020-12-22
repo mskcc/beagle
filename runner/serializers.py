@@ -421,7 +421,7 @@ class OperatorSampleQuerySerializer(serializers.Serializer):
 
 
 class AbortRunSerializer(serializers.Serializer):
-    job_group_id = serializers.UUIDField(required=False)
+    job_group_id = serializers.UUIDField(required=False, allow_null=True)
     runs = serializers.ListField(
         child=serializers.UUIDField()
     )
