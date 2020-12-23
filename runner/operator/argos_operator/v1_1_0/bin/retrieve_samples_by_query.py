@@ -168,7 +168,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['platform'] = "Illumina"
     metadata['baitSet'] = bait_set 
     metadata['recipe'] = bait_set
-    metadata['runId'] = "_".join(set(run_ids))
+    metadata['runId'] = run_ids
     metadata['preservation'] = preservation_types
     metadata['libraryId'] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
