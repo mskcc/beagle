@@ -289,7 +289,23 @@ def create_run_task(run_id, inputs, output_directory=None):
         logger.info("Run %s Ready" % run_id)
 
 
-@shared_task
+def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
+    run_id = args[0]
+
+    try:
+        run = Run.objects.get(id=run_id)
+    except Run.DoesNotExist:
+        raise Exception("Could not find run_id %s" % run_id)
+
+    logger.error("Failed to submit job to Ridgeback %s" % run_id)
+    run.status = RunStatus.FAILED
+    run.save()
+
+@shared_task(autoretry_for=(Exception,),
+             retry_jitter=True,
+             retry_backoff=60,
+             retry_kwargs={"max_retries": 4},
+             on_failure=on_failure_to_submit_job)
 def submit_job(run_id, output_directory=None):
     resume = None
     try:
@@ -340,10 +356,7 @@ def submit_job(run_id, output_directory=None):
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
     else:
-        logger.info("Failed to submit job %s" % run_id)
-        run.status = RunStatus.FAILED
-        run.save()
-
+        raise Exception("Failed to submit job %s" % run_id)
 
 @shared_task
 def abort_job_task(job_group_id=None, jobs=[]):
