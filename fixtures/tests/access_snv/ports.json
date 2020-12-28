@@ -57,7 +57,7 @@
                 "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44aaa"
             }],
             "value": [{
-                    "path": "/juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
+                    "location": "/juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
                     "size": 7313069069,
                     "class": "File"
                 }
