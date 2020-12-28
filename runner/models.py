@@ -16,6 +16,7 @@ class RunStatus(IntEnum):
     RUNNING = 2
     FAILED = 3
     COMPLETED = 4
+    ABORTED = 5
 
 
 class PortType(IntEnum):
