@@ -15,7 +15,7 @@ SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
 NORMAL_SEARCH = '-N0'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-ACCESS_DEFAULT_CNV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam'
+ACCESS_DEFAULT_CNV_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$'
 
 
 class AccessLegacyCNVOperator(Operator):
@@ -34,8 +34,14 @@ class AccessLegacyCNVOperator(Operator):
         :return: list of json_objects
         """
         # Get all completed runs for the given request ID
-        request_id_runs = Run.objects.filter(
+        job_group_id = Run.objects.filter(
             tags__requestId=self.request_id,
+            app__name='access legacy',
+            status=RunStatus.COMPLETED
+        ).order_by('-finished_date').first().job_group
+
+        request_id_runs = Run.objects.filter(
+            job_group=job_group_id,
             status=RunStatus.COMPLETED
         )
 
@@ -56,7 +62,7 @@ class AccessLegacyCNVOperator(Operator):
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
 
             # Locate the Unfiltered Tumor BAM
-            sample_regex = r'{}.*_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam'.format(tumor_sample_id)
+            sample_regex = r'{}.*_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$'.format(tumor_sample_id)
             unfiltered_tumor_bam = FileRepository.filter(path_regex=sample_regex)
             if len(unfiltered_tumor_bam) < 1:
                 msg = 'WARNING: Could not find unfiltered tumor bam file for sample {}' \
