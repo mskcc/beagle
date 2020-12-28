@@ -21,7 +21,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
+ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam$'
 NORMAL_SAMPLE_SEARCH = '-N0'
 
 class AccessLegacySNVOperator(Operator):
@@ -63,7 +63,7 @@ class AccessLegacySNVOperator(Operator):
         for i, tumor_sample_id in enumerate(tumors_to_run):
 
             # Locate the Duplex BAM
-            sample_regex = r'{}.*__aln_srt_IR_FX-duplex.bam'.format(tumor_sample_id)
+            sample_regex = r'{}.*__aln_srt_IR_FX-duplex.bam$'.format(tumor_sample_id)
 
             tumor_duplex_bam = FileRepository.filter(path_regex=sample_regex)
             if len(tumor_duplex_bam) < 1:
@@ -80,7 +80,7 @@ class AccessLegacySNVOperator(Operator):
             tumor_duplex_bam = tumor_duplex_bam.order_by('-created_date').first()
 
             # Locate the Simplex BAM
-            sample_regex = r'{}.*__aln_srt_IR_FX-simplex.bam'.format(tumor_sample_id)
+            sample_regex = r'{}.*__aln_srt_IR_FX-simplex.bam$'.format(tumor_sample_id)
             tumor_simplex_bam = FileRepository.filter(path_regex=sample_regex)
             if len(tumor_simplex_bam) < 1:
                 msg = 'ERROR: Could not find matching simplex bam file for sample {}'
@@ -98,7 +98,7 @@ class AccessLegacySNVOperator(Operator):
             patient_id = tumor_sample_id.split('-')[0:2]
 
             # Locate the Matched, Unfiltered, Normal BAM
-            sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam'.format(patient_id, NORMAL_SAMPLE_SEARCH)
+            sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam$'.format(patient_id, NORMAL_SAMPLE_SEARCH)
             unfiltered_matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
             if len(unfiltered_matched_normal_bam) < 1:
                 msg = 'WARNING: Could not find matching unfiltered normal bam file for sample {}' \
