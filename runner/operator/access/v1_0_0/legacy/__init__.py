@@ -3,10 +3,12 @@
 " github.com/mskcc/access-pipeline
 """""""""""""""""""""""""""""
 
+import logging
 from collections import defaultdict
 from itertools import groupby
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
+from runner.models import Port, PortType
 from file_system.repository.file_repository import FileRepository
 
 from notifier.events import InputCreationFailedEvent
@@ -15,9 +17,10 @@ from notifier.tasks import send_notification
 import json
 from jinja2 import Template
 
+logger = logging.getLogger(__name__)
+
 REQUIRED_META_FIELDS = [
     "sampleName",
-    "requestId",
     "tumorOrNormal",
     "sampleId"
 ]
@@ -77,7 +80,7 @@ def generate_title_file_content(sample_group):
             meta['investigatorSampleId'],
             meta['patientId'],
             meta['tumorOrNormal'],
-            meta['sampleOrigin'],
+            'Plasma' if meta['tumorOrNormal'] == 'Tumor' else 'Buffy Coat',
             meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
             library_yield,
             meta['captureInputNg'] if meta['captureInputNg'] else '-',
@@ -141,8 +144,8 @@ def construct_sample_inputs(samples, request_id, group_id):
             patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
-            r1_fastq = sample_pair[0] if '_R1_' in sample_pair[0]["path"] else sample_pair[1]
-            r2_fastq = sample_pair[0] if '_R2_' in sample_pair[0]["path"] else sample_pair[1]
+            r1_fastq = sample_pair[0] if '_R1_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if '_R2_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
 
             fastq1_files.append({
                 "class": "File",
@@ -197,19 +200,21 @@ def construct_sample_inputs(samples, request_id, group_id):
 
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
-                                                'igocomplete': True})
+        ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
+
         data = [
             {
-                "id": f.file.id,
-                "path": f.file.path,
-                "file_name": f.file.file_name,
-                "metadata": f.metadata
-            } for f in files
+                "id": f.id,
+                "path": f.path,
+                "file_name": f.file_name,
+                "metadata": f.filemetadata_set.first().metadata
+            }
+            for p in ports
+            for f in p.files.all()
         ]
 
-        (sample_inputs, no_of_errors) = construct_sample_inputs(data, self.request_id, self.job_group_id)
+        request_id = data[0]["metadata"]["requestId"]
+        (sample_inputs, no_of_errors) = construct_sample_inputs(data, request_id, self.job_group_id)
 
         if no_of_errors:
             return
@@ -220,10 +225,14 @@ class AccessLegacyOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'tags': {'requestId': self.request_id, 'cmoSampleIds': job["add_rg_ID"]}
+                        'tags': {
+                            'requestId': request_id,
+                            'cmoSampleIds': job["add_rg_ID"],
+                            'reference_version': 'HG19'
+                        }
                     }
                 ),
                 job

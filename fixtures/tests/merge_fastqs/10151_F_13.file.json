@@ -1,0 +1,54 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "ce629c4c-8783-42ea-9a26-3cb41f4bbf9b",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.582Z",
+            "modified_date": "2020-01-07T19:59:50.585Z",
+            "file_name": "JAR34-Buffy_IGO_10151_F_13_S54_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/DIANA_0162_AH3LNKDSXY/Project_10151_F/Sample_JAR34-Buffy_IGO_10151_F_13/JAR34-Buffy_IGO_10151_F_13_S54_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "61422946-ccbb-47ed-a6e6-bf8502a0a1b5",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.597Z",
+            "modified_date": "2020-01-07T19:59:50.598Z",
+            "file_name": "JAR34-Buffy_IGO_10151_F_13_S298_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/MICHELLE_0201_BH5LKKDSXY/Project_10151_F/Sample_JAR34-Buffy_IGO_10151_F_13/JAR34-Buffy_IGO_10151_F_13_S298_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "590e1308-82ed-4dcb-bc1a-1abe5697e3b9",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.597Z",
+            "modified_date": "2020-01-07T19:59:50.598Z",
+            "file_name": "JAR34-Buffy_IGO_10151_F_13_S298_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/MICHELLE_0201_BH5LKKDSXY/Project_10151_F/Sample_JAR34-Buffy_IGO_10151_F_13/JAR34-Buffy_IGO_10151_F_13_S298_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "e94f2078-8997-462e-8232-e603d9dec1ef",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.597Z",
+            "modified_date": "2020-01-07T19:59:50.598Z",
+            "file_name": "JAR34-Buffy_IGO_10151_F_13_S54_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/DIANA_0162_AH3LNKDSXY/Project_10151_F/Sample_JAR34-Buffy_IGO_10151_F_13/JAR34-Buffy_IGO_10151_F_13_S54_R2_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
