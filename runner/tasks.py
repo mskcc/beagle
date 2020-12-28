@@ -272,9 +272,17 @@ def process_triggers():
             operator_run.fail()
 
 
-@shared_task
+def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
+    run_id = args[0]
+    fail_job(run_id, "Could not create run task")
+
+@shared_task(autoretry_for=(Exception,),
+             retry_jitter=True,
+             retry_backoff=60,
+             retry_kwargs={"max_retries": 4},
+             on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
-    logger.info("Creating and validating Run")
+    logger.info("Creating and validating Run for %s" % run_id)
     try:
         run = RunObject.from_cwl_definition(run_id, inputs)
         run.ready()
@@ -289,7 +297,16 @@ def create_run_task(run_id, inputs, output_directory=None):
         logger.info("Run %s Ready" % run_id)
 
 
-@shared_task
+def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
+    run_id = args[0]
+
+    fail_job(run_id, "Failed to submit job to Ridgeback")
+
+@shared_task(autoretry_for=(Exception,),
+             retry_jitter=True,
+             retry_backoff=60,
+             retry_kwargs={"max_retries": 4},
+             on_failure=on_failure_to_submit_job)
 def submit_job(run_id, output_directory=None):
     resume = None
     try:
@@ -340,10 +357,7 @@ def submit_job(run_id, output_directory=None):
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
     else:
-        logger.info("Failed to submit job %s" % run_id)
-        run.status = RunStatus.FAILED
-        run.save()
-
+        raise Exception("Failed to submit job %s" % run_id)
 
 @shared_task
 def abort_job_task(job_group_id=None, jobs=[]):
