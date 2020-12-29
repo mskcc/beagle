@@ -15,7 +15,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 TUMOR_OR_NORMAL_SEARCH = '-L0'
 SAMPLE_ID_SEP = '_cl_aln'
 ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
+ACCESS_DEFAULT_SV_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam$'
 
 
 class AccessLegacySVOperator(Operator):
@@ -33,9 +33,10 @@ class AccessLegacySVOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get the latest completed runs for the given request ID
+        # Get the latest completed bam generation run for the given request ID
         group_id = Run.objects.filter(
             tags__requestId=self.request_id,
+            app__name='access legacy',
             status=RunStatus.COMPLETED
         ).order_by('-finished_date').first().job_group
 
