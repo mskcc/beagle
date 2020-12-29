@@ -109,7 +109,9 @@ def construct_sample_inputs(samples, request_id, group_id):
     # to each sample's patient id
     patient_id_count = defaultdict(int)
     # A sample group is a group of 20 PAIRS of samples.
+    group_index = 0
     for sample_group in chunks(sample_pairs, SAMPLE_GROUP_SIZE):
+        group_index = group_index + 1
         barcode_ids = []
         tumor_or_normals = []
         cmo_sample_names = []
@@ -175,7 +177,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             sample_sheets=json.dumps(sample_sheets),
             patient_ids=json.dumps(patient_ids),
             title_file_content=json.dumps(title_file_content),
-            request_id=json.dumps(request_id),
+            request_id=json.dumps(request_id + "_group_" + str(group_index)),
         )
 
         sample_input = json.loads(input_file)
