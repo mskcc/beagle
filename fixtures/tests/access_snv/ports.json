@@ -57,10 +57,22 @@
                 "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44aaa"
             }],
             "value": [{
-                    "path": "/juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
-                    "size": 7313069069,
-                    "class": "File"
-                }
+                "size": 8308038181,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
+                "checksum": "sha1$a39f15ee6ee1d35b7ea24a0431597f4279e152bb",
+                "location": "file:///juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
+                "nameroot": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR",
+                "secondaryFiles": [{
+                    "size": 6151720,
+                    "class": "File",
+                    "nameext": ".bai",
+                    "basename": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bai",
+                    "checksum": "sha1$4d222b65996d1c0841333f75f942717fce96f7bd",
+                    "location": "file:///juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bai",
+                    "nameroot": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR"}
+                ]}
             ],
             "files": [
                 "fffff52a-0696-48d4-9ca5-6580daa44aaa"

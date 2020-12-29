@@ -53,8 +53,8 @@ class AccessLegacySVOperator(Operator):
 
         # Filter to only tumor bam files
         # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['path'].split('/')[-1]]
-        sample_ids = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
+        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['location'].split('/')[-1]]
+        sample_ids = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_inputs = []
         for i, b in enumerate(standard_tumor_bam_files):
@@ -104,7 +104,7 @@ class AccessLegacySVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": 'juno://' + tumor_bam['path']
+                "location": tumor_bam['location'].replace('file://', 'juno://')
             }]
 
             normal_bam = FileRepository.filter(
