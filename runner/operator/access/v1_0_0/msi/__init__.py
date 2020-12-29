@@ -73,7 +73,7 @@ class AccessLegacyMSIOperator(Operator):
                 # Todo: if > 1, choose based on run ID
 
             tumor_bam = tumor_bam[0]
-            patient_id = tumor_sample_id.split('-')[0:2]
+            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
             sample_regex = r'{}.*{}.*_cl_aln_srt_MD_IR_FX_BR.bam$'.format(patient_id, NORMAL_SEARCH)
