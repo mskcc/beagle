@@ -19,18 +19,13 @@ class PipelineViewSet(mixins.ListModelMixin,
                       GenericViewSet):
     queryset = Pipeline.objects.all()
     serializer_class = PipelineSerializer
-    lookup_fields = ['pk', 'name']
 
-    def get_object(self):
-        queryset = self.get_queryset()  # Get the base queryset
-        queryset = self.filter_queryset(queryset)
-        filter = {}
-        for field in self.lookup_fields:
-            if field in self.kwargs and self.kwargs[field]:  # Ignore empty fields.
-                filter[field] = self.kwargs[field]
-        obj = get_object_or_404(queryset, **filter)
-        self.check_object_permissions(self.request, obj)
-        return obj
+    def get_queryset(self):
+        name = self.request.query_params.get('name', None)
+        if name:
+            return self.queryset.filter(name=name)
+        else:
+            return self.queryset
 
 
 class PipelineResolveViewSet(GenericAPIView):
