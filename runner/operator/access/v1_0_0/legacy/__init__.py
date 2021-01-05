@@ -162,7 +162,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             # Todo: Using dummy sample sheets until this requirement is removed from the pipeline
             sample_sheets.append({
                 "class": "File",
-                "location": "juno://" + "/home/johnsoni/vendor_tools/SampleSheet.csv"
+                "location": "juno://" + "/juno/work/access/production/resources/tools/voyager_resources/SampleSheet.csv"
             })
 
         input_file = template.render(
