@@ -4,6 +4,7 @@ import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
+from runner.operator.access import get_request_id_runs
 from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
@@ -33,17 +34,7 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get all completed runs for the given request ID
-        job_group_id = Run.objects.filter(
-            tags__requestId=self.request_id,
-            app__name='access legacy',
-            status=RunStatus.COMPLETED
-        ).order_by('-finished_date').first().job_group
-
-        request_id_runs = Run.objects.filter(
-            job_group=job_group_id,
-            status=RunStatus.COMPLETED
-        )
+        request_id_runs = get_request_id_runs(self.request_id)
 
         # Get all unfiltered bam ports for these runs
         unfiltered_bam_ports = Port.objects.filter(
