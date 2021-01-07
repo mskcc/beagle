@@ -369,7 +369,8 @@ class RunOperatorViewSet(GenericAPIView):
 
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
-                                                        job_group_notifier_id=job_group_notifier_id)
+                                                        job_group_notifier_id=job_group_notifier_id,
+                                                        pipeline=str(pipeline.id))
                 create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
