@@ -161,7 +161,8 @@ class RunSerializerPartial(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url', 'created_date')
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url',
+                  'created_date', 'job_group')
 
 
 class RunSerializerFull(serializers.ModelSerializer):
