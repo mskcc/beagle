@@ -66,13 +66,13 @@ class AccessLegacyMSIOperator(Operator):
             sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam$'.format(tumor_sample_id)
             tumor_bam = FileRepository.filter(file_name_regex=sample_regex)
 
-            if not len(tumor_bam) == 1:
-                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_bam), tumor_sample_id)
+            if not len(tumor_bam) > 0:
+                msg = 'No matching standard tumor Bam found for sample {}'
+                msg = msg.format(tumor_sample_id)
                 raise Exception(msg)
-                # Todo: if > 1, choose based on run ID
 
-            tumor_bam = tumor_bam[0]
+            tumor_bam = tumor_bam.order_by('-created_date').first()
+
             patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
