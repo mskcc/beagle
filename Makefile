@@ -254,27 +254,23 @@ celery-start:
 	-l info \
 	-Q "$(BEAGLE_DEFAULT_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_LOGFILE)" \
-	--detach && \
+	--logfile "$(CELERY_WORKER_LOGFILE)" &
 	celery -A beagle_etl beat \
 	-l info \
 	--pidfile "$(CELERY_BEAT_PID_FILE)" \
 	--logfile "$(CELERY_BEAT_LOGFILE)" \
-	--schedule "$(CELERY_BEAT_SCHEDULE)" \
-	--detach && \
+	--schedule "$(CELERY_BEAT_SCHEDULE)" &
 	celery -A beagle_etl worker \
 	--concurrency 1 \
 	-l info \
 	-Q "$(BEAGLE_JOB_SCHEDULER_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_JOB_SCHEDULER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_JOB_SCHEDULER_LOGFILE)" \
-	--detach && \
+	--logfile "$(CELERY_WORKER_JOB_SCHEDULER_LOGFILE)" &
 	celery -A beagle_etl worker \
 	-l info \
 	-Q "$(BEAGLE_RUNNER_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_RUNNER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" \
-	--detach
+	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" &
 
 # check that the Celery processes are running
 celery-check:
