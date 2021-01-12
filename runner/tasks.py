@@ -496,9 +496,7 @@ def update_commandline_job_status(run, commandline_tool_job_set):
         if status not in job_status_obj:
             job_status_obj[status] = []
         job_status_obj[status].append(single_commandline_job)
-
     run.job_statuses = job_status_obj
-    run.save()
 
 
 @shared_task
