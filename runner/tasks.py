@@ -507,6 +507,10 @@ def check_jobs_status():
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
             remote_status = check_status_on_ridgeback(run.execution_id)
             if remote_status:
+                if remote_status['started'] and not run.started:
+                    run.started = remote_status['started']
+                if remote_status['submitted'] and not run.submitted:
+                    run.submitted = remote_status['submitted']
                 if remote_status['commandlinetooljob_set']:
                     update_commandline_job_status(run, remote_status['commandlinetooljob_set'])
                 if remote_status['status'] == 'FAILED':
