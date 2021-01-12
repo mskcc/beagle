@@ -342,6 +342,10 @@ TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    )
+
 SAMPLE_ID_METADATA_KEY = 'sampleId'
 
 BEAGLE_NOTIFIER_EMAIL_GROUP=os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')

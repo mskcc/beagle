@@ -321,8 +321,10 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 # initialize the Django app in the database
 # do this after setting up the db above
 django-init:
+	mkdir static
 	python manage.py makemigrations --merge
 	python manage.py migrate
+	python manage.py collectstatic
 	python manage.py createsuperuser
 	python manage.py loaddata \
 	file_system.filegroup.json \
