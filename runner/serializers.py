@@ -185,7 +185,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'started', 'submitted', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
 
 
 class RunSerializerCWLInput(RunSerializerPartial):

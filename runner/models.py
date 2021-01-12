@@ -166,6 +166,8 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
     samples = models.ManyToManyField(Sample)
+    started = models.DateTimeField(blank=True, null=True)
+    submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
 
