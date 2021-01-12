@@ -325,6 +325,7 @@ django-init:
 	python manage.py migrate
 	python manage.py createsuperuser
 	python manage.py loaddata \
+	beagle_etl.operator.json \
 	file_system.filegroup.json \
 	file_system.filetype.json \
 	file_system.storage.json \
