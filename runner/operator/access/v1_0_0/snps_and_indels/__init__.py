@@ -72,7 +72,7 @@ class AccessLegacySNVOperator(Operator):
                 msg = msg.format(tumor_sample_id)
                 logger.exception(msg)
                 raise Exception(msg)
-            if len(tumor_duplex_bam) > 1:
+            elif len(tumor_duplex_bam) > 1:
                 msg = 'WARNING: Found more than one matching duplex bam file for sample {}. \
                 We will choose the most recently-created one for this run.'
                 msg = msg.format(tumor_sample_id)
@@ -88,7 +88,7 @@ class AccessLegacySNVOperator(Operator):
                 msg = msg.format(tumor_sample_id)
                 logger.exception(msg)
                 raise Exception(msg)
-            if len(tumor_simplex_bam) > 1:
+            elif len(tumor_simplex_bam) > 1:
                 msg = 'WARNING: Found more than one matching simplex bam file for sample {}. ' \
                       'We will choose the most recently-created one for this run.'
                 msg = msg.format(tumor_sample_id)
@@ -101,24 +101,30 @@ class AccessLegacySNVOperator(Operator):
             # Locate the Matched, Unfiltered, Normal BAM
             sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam$'.format(patient_id, NORMAL_SAMPLE_SEARCH)
             unfiltered_matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
-            if len(unfiltered_matched_normal_bam) < 1:
+            if len(unfiltered_matched_normal_bam) == 0:
                 msg = 'WARNING: Could not find matching unfiltered normal bam file for sample {}' \
                       'We will skip running this sample.'
                 msg = msg.format(tumor_sample_id)
                 logger.warning(msg)
-                raise Exception(msg)
-            if len(unfiltered_matched_normal_bam) > 1:
+                unfiltered_matched_normal_bam = None
+                unfiltered_matched_normal_sample_id = None
+
+            elif len(unfiltered_matched_normal_bam) > 1:
                 msg = 'WARNING: Found more than one matching unfiltered normal bam file for tumor sample {}. ' \
                       'We will choose the most recently-created one for this run.'
                 msg = msg.format(tumor_sample_id)
                 logger.warning(msg)
-            # Take the latest one
-            unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-created_date').first()
+                # Take the latest one
+                unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-created_date').first()
+
+            else:
+                unfiltered_matched_normal_bam = unfiltered_matched_normal_bam[0]
 
             # Parse the Normal Sample ID from the file name
             # Todo: Stop using file path for this, once output_metadata is being supplied in access legacy operator
-            unfiltered_matched_normal_file_base = unfiltered_matched_normal_bam.file.path.split('/')[-1]
-            unfiltered_matched_normal_sample_id = '-'.join(unfiltered_matched_normal_file_base.split('-')[0:3])
+            if unfiltered_matched_normal_bam:
+                unfiltered_matched_normal_file_base = unfiltered_matched_normal_bam.file.path.split('/')[-1]
+                unfiltered_matched_normal_sample_id = '-'.join(unfiltered_matched_normal_file_base.split('-')[0:3])
 
             sample_ids.append(tumor_sample_id)
             tumor_duplex_bams.append(tumor_duplex_bam)
@@ -219,13 +225,19 @@ class AccessLegacySNVOperator(Operator):
                 {
                     "class": "File",
                     "location": 'juno://' + tumor_simplex_bam.file.path
-                },
-                {
-                    "class": "File",
-                    "location": 'juno://' + matched_normal_bam.file.path
                 }
             ]
-            genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX', normal_sample_id]
+
+            genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX']
+
+            # Matched Normal may or may not be available for genotyping
+            if matched_normal_bam:
+                genotyping_bams += [{
+                    "class": "File",
+                    "location": 'juno://' + matched_normal_bam.file.path
+                }]
+                genotyping_bams_ids += [normal_sample_id]
+
             curated_normal_bams, curated_normal_ids = self.get_curated_normals()
             genotyping_bams += curated_normal_bams
             genotyping_bams_ids += curated_normal_ids
