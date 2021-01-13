@@ -107,7 +107,7 @@ class AccessLegacySNVOperator(Operator):
                 msg = msg.format(tumor_sample_id)
                 logger.warning(msg)
                 unfiltered_matched_normal_bam = None
-                unfiltered_matched_normal_sample_id = None
+                unfiltered_matched_normal_sample_id = ''
 
             elif len(unfiltered_matched_normal_bam) > 1:
                 msg = 'WARNING: Found more than one matching unfiltered normal bam file for tumor sample {}. ' \
