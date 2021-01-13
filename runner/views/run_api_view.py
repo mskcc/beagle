@@ -329,23 +329,27 @@ class RequestOperatorViewSet(GenericAPIView):
 
 class RunOperatorViewSet(GenericAPIView):
     serializer_class = RunIdsOperatorSerializer
+    logger = logging.getLogger(__name__)
 
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
         job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
+        logging.info("=====: About to create operator")
 
         if not for_each:
             for pipeline_name in pipeline_names:
                 get_object_or_404(Pipeline, name=pipeline_name)
 
+            logging.info("=====: Found pipeline")
             try:
                 run = Run.objects.get(id=run_ids[0])
                 req = run.tags.get('requestId', 'Unknown')
             except Run.DoesNotExist:
                 req = 'Unknown'
 
+            logging.info("=====: Found run {} ".format(str(run)))
             if not job_group_id:
                 job_group = JobGroup()
                 job_group.save()
@@ -358,6 +362,7 @@ class RunOperatorViewSet(GenericAPIView):
                     return Response({'details': 'Invalid JobGroup: %s' % job_group_id},
                                     status=status.HTTP_400_BAD_REQUEST)
 
+            logging.info("=====: Found job group {} ".format(str(job_group)))
             for pipeline_name in pipeline_names:
                 pipeline = get_object_or_404(Pipeline, name=pipeline_name)
                 try:
@@ -367,10 +372,12 @@ class RunOperatorViewSet(GenericAPIView):
                 except JobGroupNotifier.DoesNotExist:
                     job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
+                logging.info("=====: Found job_group_notifier {} ".format(str(job_group_notifier_id)))
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
                                                         job_group_notifier_id=job_group_notifier_id,
                                                         pipeline=str(pipeline.id))
+                logging.info("=====: Creating jobs from operator {} ".format(str(operator_model)))
                 create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)
