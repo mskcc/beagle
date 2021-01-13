@@ -96,7 +96,7 @@ class AccessLegacySNVOperator(Operator):
             # Take the latest one
             tumor_simplex_bam = tumor_simplex_bam.order_by('-created_date').first()
 
-            patient_id = tumor_sample_id.split('-')[0:2]
+            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Locate the Matched, Unfiltered, Normal BAM
             sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam$'.format(patient_id, NORMAL_SAMPLE_SEARCH)
