@@ -34,7 +34,13 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        request_id_runs = get_request_id_runs(self.request_id)
+        if self.request_id:
+            request_id_runs = get_request_id_runs(self.request_id)
+        else:
+            request_id_runs = Run.objects.filter(
+                pk__in=self.run_ids
+            )
+
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
