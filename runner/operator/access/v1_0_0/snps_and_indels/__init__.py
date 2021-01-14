@@ -8,12 +8,12 @@ import json
 import logging
 from jinja2 import Template
 
-from runner.models import Port, Run, RunStatus
+from runner.models import Port, RunStatus
 from file_system.models import FileMetadata
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs
+from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal
 from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import File, FileRepository
+from file_system.repository.file_repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
@@ -90,32 +90,7 @@ class AccessLegacySNVOperator(Operator):
             patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Locate the Matched, Unfiltered, Normal BAM
-            sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam$'.format(patient_id, NORMAL_SAMPLE_SEARCH)
-            unfiltered_matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
-            if len(unfiltered_matched_normal_bam) == 0:
-                msg = 'WARNING: Could not find matching unfiltered normal bam file for sample {}' \
-                      'We will skip running this sample.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-                unfiltered_matched_normal_bam = None
-                unfiltered_matched_normal_sample_id = ''
-
-            elif len(unfiltered_matched_normal_bam) > 1:
-                msg = 'WARNING: Found more than one matching unfiltered normal bam file for tumor sample {}. ' \
-                      'We will choose the most recently-created one for this run.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-                # Take the latest one
-                unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-created_date').first()
-
-            else:
-                unfiltered_matched_normal_bam = unfiltered_matched_normal_bam[0]
-
-            # Parse the Normal Sample ID from the file name
-            # Todo: Stop using file path for this, once output_metadata is being supplied in access legacy operator
-            if unfiltered_matched_normal_bam:
-                unfiltered_matched_normal_file_base = unfiltered_matched_normal_bam.file.path.split('/')[-1]
-                unfiltered_matched_normal_sample_id = '-'.join(unfiltered_matched_normal_file_base.split('-')[0:3])
+            unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id = get_unfiltered_matched_normal(patient_id)
 
             sample_ids.append(tumor_sample_id)
             tumor_duplex_bams.append(tumor_duplex_bam)
