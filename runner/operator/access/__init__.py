@@ -39,6 +39,7 @@ def get_unfiltered_matched_normal(patient_id):
 
     1. Latest Matched Normal from IGO ACCESS samples
     2. Latest Matched Normal from DMP ACCESS samples
+    3. Return (None, ''), which will be used as a placeholder for skipping genotyping in the SNV pipeline
 
     :return: (file_system.models.File - bam, str - sample_id)
     """
