@@ -8,6 +8,7 @@ import json
 from jinja2 import Template
 
 from runner.operator.operator import Operator
+from runner.operator.access import get_request_id_runs
 from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
@@ -33,17 +34,7 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get the latest completed runs for the given request ID
-        group_id = Run.objects.filter(
-            tags__requestId=self.request_id,
-            app__name='access legacy',
-            status=RunStatus.COMPLETED
-        ).order_by('-finished_date').first().job_group
-
-        request_id_runs = Run.objects.filter(
-            job_group=group_id,
-            status=RunStatus.COMPLETED
-        )
+        request_id_runs = get_request_id_runs(self.request_id)
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
@@ -66,13 +57,13 @@ class AccessLegacyMSIOperator(Operator):
             sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam$'.format(tumor_sample_id)
             tumor_bam = FileRepository.filter(file_name_regex=sample_regex)
 
-            if not len(tumor_bam) == 1:
-                msg = 'Found incorrect number of matching bam files ({}) for sample {}'
-                msg = msg.format(len(tumor_bam), tumor_sample_id)
+            if not len(tumor_bam) > 0:
+                msg = 'No matching standard tumor Bam found for sample {}'
+                msg = msg.format(tumor_sample_id)
                 raise Exception(msg)
-                # Todo: if > 1, choose based on run ID
 
-            tumor_bam = tumor_bam[0]
+            tumor_bam = tumor_bam.order_by('-created_date').first()
+
             patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
