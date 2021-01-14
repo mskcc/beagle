@@ -2,7 +2,7 @@ import logging
 
 from runner.models import Run, RunStatus
 from django.db.models import Prefetch, Q
-from file_system.repository.file_repository import File, FileRepository
+from file_system.repository.file_repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,7 @@ ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
 ACCESS_DEFAULT_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam$'
 NORMAL_SAMPLE_SEARCH = '-N0'
 DMP_UNFILTERED_BAM_REGEX = r'-unfilter.bam$'
+
 
 def get_request_id_runs(request_id):
     """
