@@ -110,7 +110,8 @@ class RunApiViewSet(mixins.ListModelMixin,
                 else:
                     values_run_query_list = [single_run for single_run in values_run ]
                     values_run_query_set = set(values_run_query_list)
-                    queryset = queryset.values_list(*values_run_query_set).distinct()
+                    sorted_query_list = sorted(values_run_query_set)
+                    queryset = queryset.values_list(*sorted_query_list).distinct()
             if run_distribution:
                 distribution_dict = {}
                 run_query = run_distribution
