@@ -11,6 +11,7 @@ from jinja2 import Template
 from runner.models import Port, Run, RunStatus
 from file_system.models import FileMetadata
 from runner.operator.operator import Operator
+from runner.operator.access import get_request_id_runs
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File, FileRepository
 
@@ -32,17 +33,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get the latest completed runs for the given request ID
-        group_id = Run.objects.filter(
-            tags__requestId=self.request_id,
-            app__name='access legacy',
-            status=RunStatus.COMPLETED
-        ).order_by('-finished_date').first().job_group
-
-        request_id_runs = Run.objects.filter(
-            job_group=group_id,
-            status=RunStatus.COMPLETED
-        )
+        request_id_runs = get_request_id_runs(self.request_id)
 
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
