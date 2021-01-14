@@ -97,4 +97,4 @@ class TestAccessSNVOperator(TestCase):
         input_data = operator.get_sample_inputs()
 
         geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
-        self.assertTrue(any('NL070239-N.bam' in b for b in geno_bams))
+        self.assertTrue(any('AA037277-T-unfilter.bam' in b for b in geno_bams))

@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam$'
+ACCESS_DEFAULT_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam$'
 NORMAL_SAMPLE_SEARCH = '-N0'
-
+DMP_UNFILTERED_BAM_REGEX = r'-unfilter.bam$'
 
 def get_request_id_runs(request_id):
     """
@@ -57,7 +57,7 @@ def get_unfiltered_matched_normal(patient_id):
         query = patient & normal
 
         # Unfiltered bams only
-        file_objs = FileRepository.filter(path_regex=r'__aln_srt_IR_FX.bam$')
+        file_objs = FileRepository.filter(path_regex=DMP_UNFILTERED_BAM_REGEX)
         unfiltered_matched_normal_bam = FileRepository.filter(queryset=file_objs, q=query)
 
         if len(unfiltered_matched_normal_bam) == 0:
