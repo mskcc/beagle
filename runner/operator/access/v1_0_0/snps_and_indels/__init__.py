@@ -33,12 +33,16 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        request_id_runs = get_request_id_runs(self.request_id)
+        if self.request_id:
+            run_ids = get_request_id_runs(self.request_id)
+            run_ids = [r.id for r in run_ids]
+        else:
+            run_ids = self.run_ids
 
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
             name='duplex_bams',
-            run__id__in=[r.id for r in request_id_runs],
+            run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here
