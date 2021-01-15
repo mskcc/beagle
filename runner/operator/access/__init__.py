@@ -42,6 +42,8 @@ def get_unfiltered_matched_normal(patient_id):
     2. Latest Matched Normal from DMP ACCESS samples
     3. Return (None, ''), which will be used as a placeholder for skipping genotyping in the SNV pipeline
 
+    Todo: generalize to work for duplex / simplex / standard, and use in MSI operator
+
     :return: (file_system.models.File - bam, str - sample_id)
     """
     sample_regex = r'{}.*{}.*__aln_srt_IR_FX.bam$'.format(patient_id, NORMAL_SAMPLE_SEARCH)
