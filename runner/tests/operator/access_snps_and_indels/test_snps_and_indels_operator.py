@@ -4,11 +4,13 @@ from django.test import TestCase
 
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
-from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
+from file_system.repository.file_repository import FileRepository
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
 
+
+REQUEST_ID = "access_legacy_test_request"
 FIXTURES = [
     "fixtures/tests/access_snv/curated_normal_files.json",
     "fixtures/tests/access_snv/curated_normals_file_metadata.json",
@@ -39,22 +41,20 @@ class TestAccessSNVOperator(TestCase):
         Test that an Access legacy SNV operator instance can be created and validated
         """
         # create access SNV operator
-        request_id = "access_legacy_test_request"
-
         # todo: avoid the magic number here:
         operator_model = Operator.objects.get(id=5)
-        operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
+        operator = OperatorFactory.get_by_model(operator_model, request_id=REQUEST_ID)
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
         self.assertEqual(str(operator.model), "AccessLegacySNVOperator")
-        self.assertEqual(operator.request_id, request_id)
+        self.assertEqual(operator.request_id, REQUEST_ID)
         self.assertEqual(operator._jobs, [])
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
-        self.assertTrue(operator.request_id == request_id)
+        self.assertTrue(operator.request_id == REQUEST_ID)
         self.assertTrue(operator._jobs == [])
         self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeaa")
@@ -80,3 +80,21 @@ class TestAccessSNVOperator(TestCase):
             for field in required_input_fields_length_3:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 5)
+
+    def test_dmp_normal(self):
+        """
+        Test that DMP normal can be found and used for an SNV Request ID
+
+        :return:
+        """
+        # Delete the IGO test samples, so DMP normal must be used
+        metadatas = FileRepository.filter(path_regex='C-000884', metadata={"tumorOrNormal": "Normal"})
+        [f.file.delete() for f in metadatas]
+
+        pipeline_slug = "AccessLegacySNVOperator"
+        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        input_data = operator.get_sample_inputs()
+
+        geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
+        self.assertTrue(any('AA037277-T-unfilter.bam' in b for b in geno_bams))
