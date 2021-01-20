@@ -62,6 +62,7 @@ class TestAccessSNVOperator(TestCase):
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
 
+        # Only a single entry is required in these fields, as we are running in single-sample mode
         required_input_fields = [
             'tumor_bams',
             'normal_bams',
@@ -69,17 +70,27 @@ class TestAccessSNVOperator(TestCase):
             'normal_sample_names',
             'matched_normal_ids',
         ]
-        required_input_fields_length_3 = [
+
+        # We should have 7 bams for genotyping:
+        # - Main Tumor Bam Duplex
+        # - Main Tumor Bam Simplex
+        # - Default Variant Calling Normal Duplex
+        # - Matched Normal Duplex
+        # - Matched Normal Simplex
+        # - Matched Tumor Duplex
+        # - Matched Tumor Simplex
+        required_input_fields_length_7 = [
             'genotyping_bams',
             'genotyping_bams_ids',
         ]
+
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 1)
-            for field in required_input_fields_length_3:
+            for field in required_input_fields_length_7:
                 self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 5)
+                self.assertEqual(len(inputs[field]), 7)
 
     def test_dmp_normal(self):
         """
