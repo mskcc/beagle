@@ -281,7 +281,6 @@ class RestartRunSerializer(serializers.Serializer):
 
 
 class APIRunCreateSerializer(serializers.Serializer):
-    id = serializers.UUIDField(required=True)
     app = serializers.UUIDField()
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
     inputs = serializers.JSONField(allow_null=True, required=True)

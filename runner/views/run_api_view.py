@@ -201,7 +201,7 @@ class RunApiRestartViewSet(GenericAPIView):
         group_id = serializer.validated_data.get('group_id')
         if run_id:
             run = get_object_or_404(Run, pk=run_id)
-            runs = RunObject.from_db(run_id)
+            runs = [RunObject.from_db(run_id)]
         elif group_id:
             runs = [RunObject.from_db(r.id) for r in Run.objects.filter(job_group_id=group_id).all()]
             if not runs:
@@ -217,7 +217,7 @@ class RunApiRestartViewSet(GenericAPIView):
                 inputs=inputs,
                 tags=run.tags,
                 job_group_id=run.job_group.id,
-                job_group_notifier_id=run.job_group_notifier.id,
+                #job_group_notifier_id=run.job_group_notifier.id,
                 resume=run_id
             ))
 
@@ -225,8 +225,10 @@ class RunApiRestartViewSet(GenericAPIView):
         if serializer.is_valid():
             new_runs = serializer.save()
 
-            for run in serializer.validated_data:
-                create_run_task.delay(run['id'], run['inputs'])
+            for run, data in zip(new_runs, serializer.validated_data):
+                print(run.tags)
+                print(data)
+                create_run_task.delay(run.id, data['inputs'])
                 job_group_notifier_id = str(run.job_group_notifier_id)
                 self._send_notifications(job_group_notifier_id, run)
 
