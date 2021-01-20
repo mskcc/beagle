@@ -115,5 +115,18 @@
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5614f268-b9aa-46a2-9a57-3ddb24be6380",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "AA037277-T-unfilter.bam",
+            "path": "/juno/res/dmpcollab/dmpshare/share/access_12_245/A/A/AA037277-T-unfilter.bam",
+            "file_type": 3,
+            "size": 2773109557,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
     }
 ]
