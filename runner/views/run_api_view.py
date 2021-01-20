@@ -199,11 +199,13 @@ class RunApiRestartViewSet(GenericAPIView):
 
         run_id = serializer.validated_data.get('run_id')
         group_id = serializer.validated_data.get('group_id')
+        pipeline_names = serializer.validated_data.get('pipeline_names')
         if run_id:
             run = get_object_or_404(Run, pk=run_id)
             runs = [RunObject.from_db(run_id)]
         elif group_id:
-            runs = [RunObject.from_db(r.id) for r in Run.objects.filter(job_group_id=group_id).all()]
+            runs = [RunObject.from_db(r.id) for r in Run.objects.filter(job_group_id=group_id,
+                                                                        app__name__in=pipeline_names).all()]
             if not runs:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -217,7 +219,7 @@ class RunApiRestartViewSet(GenericAPIView):
                 inputs=inputs,
                 tags=run.tags,
                 job_group_id=run.job_group.id,
-                #job_group_notifier_id=run.job_group_notifier.id,
+                job_group_notifier_id=run.job_group_notifier.id,
                 resume=run_id
             ))
 
@@ -226,8 +228,6 @@ class RunApiRestartViewSet(GenericAPIView):
             new_runs = serializer.save()
 
             for run, data in zip(new_runs, serializer.validated_data):
-                print(run.tags)
-                print(data)
                 create_run_task.delay(run.id, data['inputs'])
                 job_group_notifier_id = str(run.job_group_notifier_id)
                 self._send_notifications(job_group_notifier_id, run)
