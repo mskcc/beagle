@@ -262,7 +262,22 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 
 
 class RestartRunSerializer(serializers.Serializer):
-    run = serializers.UUIDField(required=True)
+    run_id = serializers.UUIDField(required=False)
+    group_id = serializers.UUIDField(required=False)
+
+    def validate(self, data):
+        """
+        Check that start is before finish.
+        """
+
+        run_id = data.get("run_id", None)
+        group_id = data.get("group_id", None)
+        if run_id and group_id:
+            raise serializers.ValidationError("Expecting either a run_id OR a group_id, not both")
+        if not run_id and not group_id:
+            raise serializers.ValidationError("Expecting either a run_id OR a group_id")
+
+        return data
 
 
 class APIRunCreateSerializer(serializers.Serializer):
