@@ -264,6 +264,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 class RestartRunSerializer(serializers.Serializer):
     run_id = serializers.UUIDField(required=False)
     group_id = serializers.UUIDField(required=False)
+    pipeline_names = serializers.ListField(child=serializers.CharField())
 
     def validate(self, data):
         """
@@ -272,10 +273,15 @@ class RestartRunSerializer(serializers.Serializer):
 
         run_id = data.get("run_id", None)
         group_id = data.get("group_id", None)
+        pipeline_names = data.get("pipeline_names", None)
         if run_id and group_id:
             raise serializers.ValidationError("Expecting either a run_id OR a group_id, not both")
         if not run_id and not group_id:
             raise serializers.ValidationError("Expecting either a run_id OR a group_id")
+        if run_id and pipeline_names:
+            raise serializers.ValidationError("Not expecting pipeline_names when restarting with run_id")
+        if group_id and not pipeline_names:
+            raise serializers.ValidationError("Expecting pipeline_names when restarting with group_id")
 
         return data
 
