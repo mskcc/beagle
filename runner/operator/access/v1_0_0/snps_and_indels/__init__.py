@@ -87,8 +87,6 @@ class AccessLegacySNVOperator(Operator):
         # C-000884-L0011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
         #
         # What if the -d isn't present? Will sample IDs always have these terminators?
-        print(tumor_sample_id)
-        print(DUPLEX_BAM_SEARCH)
         tumor_duplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=DUPLEX_BAM_SEARCH)
         if len(tumor_duplex_bam) < 1:
             msg = 'ERROR: Could not find matching duplex bam file for sample {}'
@@ -123,8 +121,17 @@ class AccessLegacySNVOperator(Operator):
 
         # Locate any Matched Tumor bams for genotyping
         normal_search = patient_id + TUMOR_SAMPLE_SEARCH
-        matched_duplex_tumors = File.objects.filter(file_name__startswith=normal_search, file_name__endswith=DUPLEX_BAM_SEARCH)
-        matched_simplex_tumors = File.objects.filter(file_name__startswith=normal_search, file_name__endswith=SIMPLEX_BAM_SEARCH)
+
+        matched_duplex_tumors = File.objects.filter(
+            file_name__startswith=normal_search,
+            file_name__endswith=DUPLEX_BAM_SEARCH
+        ).order_by('file_name', '-created_date').distinct('file_name')
+
+        matched_simplex_tumors = File.objects.filter(
+            file_name__startswith=normal_search,
+            file_name__endswith=SIMPLEX_BAM_SEARCH
+        ).order_by('file_name', '-created_date').distinct('file_name')
+
         # Remove the main tumor being run
         matched_duplex_tumors = matched_duplex_tumors.exclude(file_name=tumor_duplex_bam.file_name)
         matched_simplex_tumors = matched_simplex_tumors.exclude(file_name=tumor_simplex_bam.file_name)
