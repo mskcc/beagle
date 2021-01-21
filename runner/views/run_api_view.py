@@ -10,15 +10,16 @@ from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
 from runner.run.objects.run_object import RunObject
-from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job
+from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, abort_job_task
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
     TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
-    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer
+    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from runner.tasks import create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
@@ -109,7 +110,8 @@ class RunApiViewSet(mixins.ListModelMixin,
                 else:
                     values_run_query_list = [single_run for single_run in values_run ]
                     values_run_query_set = set(values_run_query_list)
-                    queryset = queryset.values_list(*values_run_query_set).distinct()
+                    sorted_query_list = sorted(values_run_query_set)
+                    queryset = queryset.values_list(*sorted_query_list).distinct()
             if run_distribution:
                 distribution_dict = {}
                 run_query = run_distribution
@@ -158,6 +160,17 @@ class RunApiViewSet(mixins.ListModelMixin,
                 self._send_notifications(job_group_notifier_id, run)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=AbortRunSerializer)
+    @action(detail=False, methods=['post'])
+    def abort(self, request, *args, **kwargs):
+        serializer = AbortRunSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        job_group_id = request.data['job_group_id']
+        runs = request.data.get('runs', [])
+        abort_job_task.delay(job_group_id, runs)
+        return Response("Abort task submitted", status=status.HTTP_202_ACCEPTED)
 
     def _send_notifications(self, job_group_notifier_id, run):
         pipeline_name = run.app.name
@@ -357,7 +370,8 @@ class RunOperatorViewSet(GenericAPIView):
 
                 operator_model = Operator.objects.get(id=pipeline.operator_id)
                 operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id,
-                                                        job_group_notifier_id=job_group_notifier_id)
+                                                        job_group_notifier_id=job_group_notifier_id,
+                                                        pipeline=str(pipeline.id))
                 create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({'details': 'Not Implemented'}, status=status.HTTP_400_BAD_REQUEST)

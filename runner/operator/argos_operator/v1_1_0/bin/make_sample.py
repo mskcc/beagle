@@ -92,6 +92,13 @@ def check_and_return_single_values(data):
         data['LB'] = '_and_'.join(library_id)
     else:
         data['LB'] = data['SM'] + "_1"
+
+
+    # run_ids need to be one list
+    run_ids = data['run_id']
+    if any(isinstance(run_id, list) for run_id in run_ids):
+        run_ids = [item for sublist in run_ids for item in sublist]
+        data['run_id'] = list(set(run_ids))
     return data
 
 

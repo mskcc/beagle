@@ -16,7 +16,7 @@ class BeagleTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
         return token
 
-    def validate(self,attrs):
+    def validate(self, attrs):
         data = super().validate(attrs)
         email = self.user.email
         groups = self.user.mskuser.groups.split(',')
@@ -24,7 +24,6 @@ class BeagleTokenObtainPairSerializer(TokenObtainPairSerializer):
             'email': email,
             'groups': groups
         }
-
         return data
 
 

@@ -43,11 +43,16 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
+    try:
+        operator_run_parent = OperatorRun.objects.get(id=parent)
+    except OperatorRun.DoesNotExist:
+        operator_run_parent = None
+
     operator_run = OperatorRun.objects.create(operator=operator.model,
                                               num_total_runs=len(valid_jobs),
                                               job_group=jg,
                                               job_group_notifier=jgn,
-                                              parent=parent)
+                                              parent=operator_run_parent)
     run_ids = []
     pipeline_id = None
 
@@ -225,7 +230,7 @@ def process_triggers():
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=operator_run
+                                parent=str(operator_run.id)
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -237,7 +242,7 @@ def process_triggers():
                                 list(operator_run.runs.order_by('id').values_list('id', flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=operator_run
+                                parent=str(operator_run.id)
                             )
                             continue
 
@@ -267,9 +272,17 @@ def process_triggers():
             operator_run.fail()
 
 
-@shared_task
+def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
+    run_id = args[0]
+    fail_job(run_id, "Could not create run task")
+
+@shared_task(autoretry_for=(Exception,),
+             retry_jitter=True,
+             retry_backoff=60,
+             retry_kwargs={"max_retries": 4},
+             on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
-    logger.info("Creating and validating Run")
+    logger.info("Creating and validating Run for %s" % run_id)
     try:
         run = RunObject.from_cwl_definition(run_id, inputs)
         run.ready()
@@ -284,7 +297,16 @@ def create_run_task(run_id, inputs, output_directory=None):
         logger.info("Run %s Ready" % run_id)
 
 
-@shared_task
+def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
+    run_id = args[0]
+
+    fail_job(run_id, "Failed to submit job to Ridgeback")
+
+@shared_task(autoretry_for=(Exception,),
+             retry_jitter=True,
+             retry_backoff=60,
+             retry_kwargs={"max_retries": 4},
+             on_failure=on_failure_to_submit_job)
 def submit_job(run_id, output_directory=None):
     resume = None
     try:
@@ -335,9 +357,36 @@ def submit_job(run_id, output_directory=None):
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
     else:
-        logger.info("Failed to submit job %s" % run_id)
-        run.status = RunStatus.FAILED
-        run.save()
+        raise Exception("Failed to submit job %s" % run_id)
+
+@shared_task
+def abort_job_task(job_group_id=None, jobs=[]):
+    successful = []
+    unsuccessful = []
+    runs = []
+    if job_group_id:
+        runs = list(Run.objects.filter(job_group_id=job_group_id).all())
+        runs = [str(run.execution_id) for run in runs]
+    for j in jobs:
+        run_obj = Run.objects.get(id=j)
+        if str(run_obj.execution_id) not in runs:
+            runs.append(str(run_obj.execution_id))
+    for run in runs:
+        if abort_job_on_ridgeback(run):
+            successful.append(run)
+        else:
+            unsuccessful.append(run)
+    if unsuccessful:
+        logger.error("Failed to abort %s" % ', '.join(unsuccessful))
+
+
+def abort_job_on_ridgeback(job_id):
+    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/abort/' % job_id)
+    if response.status_code == 200:
+        logger.info("Job %s aborted" % job_id)
+        return True
+    logger.error("Failed to abort job: %s" % job_id)
+    return None
 
 
 def check_status_on_ridgeback(job_id):
@@ -386,12 +435,11 @@ def complete_job(run_id, outputs):
             trigger.from_operator_id,
             [run_id],
             job_group_id=job_group_id,
-            parent=run.run_obj.operator_run
+            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
         )
 
 
 def _job_finished_notify(run):
-    job_group = run.job_group
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
@@ -436,6 +484,11 @@ def running_job(run):
     run.save()
 
 
+def abort_job(run):
+    run.status = RunStatus.ABORTED
+    run.save()
+
+
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
@@ -458,6 +511,9 @@ def check_jobs_status():
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
                     running_job(run)
                     continue
+                if remote_status['status'] == 'ABORTED':
+                    logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
+                    abort_job(run)
             else:
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:

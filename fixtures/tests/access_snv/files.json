@@ -45,7 +45,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_simplex_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
+            "path": "/juno/work/access/production/runs/Project_06302_AD/metadata/TDM_vc_bam_links/unfiltered_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -100,6 +100,32 @@
             "path": "/juno/work/access/production/resources/msk-access/v1.0/novaseq_curated_standard_bams_dmp/versions/v2.0/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
             "file_type": 3,
             "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac2d",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-000884-L011-d.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/DIANA_0162_AH3LNKDSXY/Project_10151_F/Sample_JAR31-Buffy_IGO_10151_F_10/JAR31-Buffy_IGO_10151_F_10_S21_R1_001.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5614f268-b9aa-46a2-9a57-3ddb24be6380",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "AA037277-T-unfilter.bam",
+            "path": "/juno/res/dmpcollab/dmpshare/share/access_12_245/A/A/AA037277-T-unfilter.bam",
+            "file_type": 3,
+            "size": 2773109557,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
     }

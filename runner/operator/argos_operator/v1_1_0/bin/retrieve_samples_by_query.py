@@ -49,13 +49,14 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_descriptor(bait_set, pooled_normals, preservation_types):
+def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     """
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
 
     Adding correction for IMPACT505 pooled normals
     """
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    sample_name = None
 
     descriptor = None
     for pooled_normal in pooled_normals:
@@ -148,7 +149,7 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types)
+    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids)
 
     return pooled_normals, descriptor, sample_name
 
@@ -167,7 +168,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['platform'] = "Illumina"
     metadata['baitSet'] = bait_set 
     metadata['recipe'] = bait_set
-    metadata['runId'] = "_".join(set(run_ids))
+    metadata['runId'] = run_ids
     metadata['preservation'] = preservation_types
     metadata['libraryId'] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
@@ -256,7 +257,10 @@ def build_dmp_query(patient_id, bait_set):
     if "impact505" in bait_set.lower():
         value = "IMPACT505"
     assay = Q(metadata__cmo_assay=value)
-    patient = Q(metadata__patient__cmo=patient_id.lstrip('C-'))
+    # formatting to look like CMO patient IDs in dmp2cmo
+    if "C-" in patient_id[:2]:
+      patient_id = patient_id[2:]
+    patient = Q(metadata__patient__cmo=patient_id)
     normal = Q(metadata__type='N')
     query = assay & patient & normal
     return query

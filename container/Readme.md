@@ -17,6 +17,20 @@ If you do not have a singularity installed locally but you have docker you can u
 
 ``
 
+Building Pooling Service
+
+export SINGULARITYENV_DB_NAME=<db_name>
+export SINGULARITYENV_DB_HOST=<db_host>
+export SINGULARITYENV_DB_USER=<db_user>
+export SINGULARITYENV_DB_PASSWORD=<db_password>
+export SINGULARITYENV_DB_PORT=<db_port>
+export SINGULARITYENV_LISTEN_PORT=<db_listen_port>
+export SINGULARITYENV_MAX_DB_CONNECTIONS=<db_max_connections>
+export SINGULARITYENV_DEFAULT_POOL_SIZE=<db_default_pool_size>
+export SINGULARITYENV_MAX_CLIENT_CONN=<db_max_client_connections>
+
+`singularity build pooling_service.sif pooling_service.def`
+
 #### Expected Instance Run Variables
 
 The following prepended singularity environment variables must be set so that the instance can run properly.

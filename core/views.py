@@ -1,6 +1,7 @@
 from rest_framework import mixins
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer, TokenVerifySerializer
+from rest_framework.exceptions import AuthenticationFailed
 from .models import UserRegistrationRequest
 from .serializers import BeagleTokenObtainPairSerializer, TokenResponsePairSerializer, TokenResponseRefreshSerializer, \
     UserRegistrationRequestSerializer
@@ -22,6 +23,9 @@ class BeagleTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         try:
             return super().post(request, *args, **kwargs)
+        except AuthenticationFailed as auth_failed:
+            error_message = {'detail': 'Invalid username or password'}
+            return Response(error_message, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as auth_exception:
             error_message = {'detail': 'Unable to connect to authentication server'}
             return Response(error_message, status=status.HTTP_503_SERVICE_UNAVAILABLE)
