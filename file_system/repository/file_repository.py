@@ -76,6 +76,7 @@ class FileRepository(object):
         if values_metadata_list:
             values_metadata_query_list = ['metadata__%s' % single_metadata for single_metadata in values_metadata_list]
             values_metadata_query_set = set(values_metadata_query_list)
-            return queryset.values_list(*values_metadata_query_set).order_by(values_metadata_query_list[0]).distinct()
+            sorted_metadata_query_list = sorted(values_metadata_query_set)
+            return queryset.values_list(*sorted_metadata_query_list).order_by(sorted_metadata_query_list[0]).distinct()
 
         return queryset

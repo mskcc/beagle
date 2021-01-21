@@ -4,6 +4,7 @@ import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
+from runner.operator.access import get_request_id_runs
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 from runner.models import Run, Port, RunStatus
@@ -15,7 +16,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 TUMOR_OR_NORMAL_SEARCH = '-L0'
 SAMPLE_ID_SEP = '_cl_aln'
 ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
+ACCESS_DEFAULT_SV_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam$'
 
 
 class AccessLegacySVOperator(Operator):
@@ -33,22 +34,23 @@ class AccessLegacySVOperator(Operator):
 
         :return: list of json_objects
         """
-        # Get all completed runs for the given request ID
-        request_id_runs = Run.objects.filter(
-            tags__requestId=self.request_id,
-            status=RunStatus.COMPLETED
-        )
+        if self.request_id:
+            run_ids = get_request_id_runs(self.request_id)
+            run_ids = [r.id for r in run_ids]
+        else:
+            run_ids = self.run_ids
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
             name='standard_bams',
-            run__id__in=[r.id for r in request_id_runs]
+            run__id__in=run_ids,
+            run__status=RunStatus.COMPLETED
         )
 
         # Filter to only tumor bam files
         # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['path'].split('/')[-1]]
-        sample_ids = [f['path'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
+        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['location'].split('/')[-1]]
+        sample_ids = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_inputs = []
         for i, b in enumerate(standard_tumor_bam_files):
@@ -98,7 +100,7 @@ class AccessLegacySVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": 'juno://' + tumor_bam['path']
+                "location": tumor_bam['location'].replace('file://', 'juno://')
             }]
 
             normal_bam = FileRepository.filter(
