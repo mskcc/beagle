@@ -120,6 +120,7 @@ class AccessLegacySVOperator(Operator):
             }
 
             input_file = template.render(
+                tumor_sample_id=tumor_sample_id,
                 tumor_sample_names=json.dumps(tumor_sample_names),
                 tumor_bams=json.dumps(tumor_bams),
                 normal_bam=json.dumps(normal_bam)

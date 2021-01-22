@@ -46,7 +46,9 @@
             "modified_date": "2020-01-06T19:59:50.596Z",
             "file": "2f77f3ac-ab25-4a02-90bd-86542401acbb",
             "version": 0,
-            "metadata": {},
+            "metadata": {
+                "sampleName": "C-000884-L011-d"
+            },
             "user": null
         }
     },{
