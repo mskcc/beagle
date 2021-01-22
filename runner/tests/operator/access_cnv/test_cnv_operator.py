@@ -64,6 +64,9 @@ class TestAccessCNVOperator(TestCase):
         required_input_fields = [
             'tumor_sample_list',
         ]
+
+        print(input_data)
+
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
