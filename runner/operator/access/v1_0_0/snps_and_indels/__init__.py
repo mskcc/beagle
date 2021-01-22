@@ -27,6 +27,8 @@ NORMAL_SAMPLE_SEARCH = '-N0'
 TUMOR_SAMPLE_SEARCH = '-L0'
 DUPLEX_BAM_SEARCH = '__aln_srt_IR_FX-duplex.bam'
 SIMPLEX_BAM_SEARCH = '__aln_srt_IR_FX-simplex.bam'
+DMP_DUPLEX_REGEX = '-duplex.bam'
+DMP_SIMPLEX_REGEX = '-simplex.bam'
 
 
 class AccessLegacySNVOperator(Operator):
@@ -119,26 +121,52 @@ class AccessLegacySNVOperator(Operator):
         # Locate the Matched, Unfiltered, Normal BAM
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
 
-        # Locate any Matched Tumor bams for genotyping
-        normal_search = patient_id + TUMOR_SAMPLE_SEARCH
+        # Locate any IGO Matched Tumor bams for genotyping
+        matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
 
         matched_duplex_tumors = File.objects.filter(
-            file_name__startswith=normal_search,
+            file_name__startswith=matched_tumor_search,
             file_name__endswith=DUPLEX_BAM_SEARCH
         ).order_by('file_name', '-created_date').distinct('file_name')
 
         matched_simplex_tumors = File.objects.filter(
-            file_name__startswith=normal_search,
+            file_name__startswith=matched_tumor_search,
             file_name__endswith=SIMPLEX_BAM_SEARCH
         ).order_by('file_name', '-created_date').distinct('file_name')
 
         # Remove the main tumor being run
         matched_duplex_tumors = matched_duplex_tumors.exclude(file_name=tumor_duplex_bam.file_name)
+        matched_duplex_tumors = list(matched_duplex_tumors)
         matched_simplex_tumors = matched_simplex_tumors.exclude(file_name=tumor_simplex_bam.file_name)
+        matched_simplex_tumors = list(matched_simplex_tumors)
         matched_duplex_sample_ids = ['-'.join(b.path.split('/')[-1].split('-')[0:3]) for b in
                                      matched_duplex_tumors]
         matched_simplex_sample_ids = ['-'.join(b.path.split('/')[-1].split('-')[0:3]) for b in
                                       matched_simplex_tumors]
+
+        # Find matched Tumors from DMP as well
+        matched_duplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_DUPLEX_REGEX
+        )
+        matched_duplex_tumors_dmp = [b.file for b in matched_duplex_tumors_dmp]
+        matched_duplex_sample_ids_dmp = [b.file_name.replace('-duplex.bam', '') for b in matched_duplex_tumors_dmp]
+
+        matched_simplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_SIMPLEX_REGEX
+        )
+        matched_simplex_tumors_dmp = [b.file for b in matched_simplex_tumors_dmp]
+        matched_simplex_sample_ids_dmp = [b.file_name.replace('-simplex.bam', '') for b in matched_simplex_tumors_dmp]
+
+        matched_duplex_tumors += matched_duplex_tumors_dmp
+        matched_simplex_tumors += matched_simplex_tumors_dmp
+        matched_duplex_sample_ids += matched_duplex_sample_ids_dmp
+        matched_simplex_sample_ids += matched_simplex_sample_ids_dmp
 
         sample_info = {
             'tumor_sample_id': tumor_sample_id,

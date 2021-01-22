@@ -1,9 +1,7 @@
 import logging
 
 from runner.models import Run, RunStatus
-from django.db.models import Prefetch, Q
-from file_system.models import File
-from file_system.repository.file_repository import FileRepository
+from file_system.models import File, FileMetadata
 
 
 logger = logging.getLogger(__name__)
@@ -56,15 +54,12 @@ def get_unfiltered_matched_normal(patient_id):
         msg = msg.format(patient_id)
         logger.warning(msg)
 
-        # Todo: need to specify ACCESS as assay?
-        # assay = Q(metadata__cmo_assay=value)
-        patient = Q(metadata__patient__cmo=patient_id.replace('C-', ''))
-        normal = Q(metadata__type='N')
-        query = patient & normal
-
-        # Unfiltered bams only
-        file_objs = FileRepository.filter(path_regex=DMP_UNFILTERED_REGEX)
-        unfiltered_matched_normal_bam = FileRepository.filter(queryset=file_objs, q=query)
+        unfiltered_matched_normal_bam = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='N',
+            file__path__endswith=DMP_UNFILTERED_REGEX
+        )
 
         if len(unfiltered_matched_normal_bam) == 0:
             msg = 'WARNING: Could not find DMP or IGO matching unfiltered normal bam file for patient {}. ' \

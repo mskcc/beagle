@@ -77,9 +77,11 @@ class TestAccessSNVOperator(TestCase):
         # - Default Variant Calling Normal Duplex
         # - Matched Normal Duplex
         # - Matched Normal Simplex
-        # - Matched Tumor Duplex
-        # - Matched Tumor Simplex
-        required_input_fields_length_7 = [
+        # - Matched Tumor Duplex IGO
+        # - Matched Tumor Simplex IGO
+        # - Matched Tumor Duplex DMP
+        # - Matched Tumor Simplex DMP
+        required_input_fields_length_9 = [
             'genotyping_bams',
             'genotyping_bams_ids',
         ]
@@ -88,9 +90,9 @@ class TestAccessSNVOperator(TestCase):
             for field in required_input_fields:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 1)
-            for field in required_input_fields_length_7:
+            for field in required_input_fields_length_9:
                 self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 7)
+                self.assertEqual(len(inputs[field]), 9)
 
     def test_dmp_normal(self):
         """
@@ -108,4 +110,4 @@ class TestAccessSNVOperator(TestCase):
         input_data = operator.get_sample_inputs()
 
         geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
-        self.assertTrue(any('AA037277-T-unfilter.bam' in b for b in geno_bams))
+        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))
