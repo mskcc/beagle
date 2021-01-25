@@ -110,7 +110,8 @@ class AccessLegacyCNVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': sample_ids[i]
+                            'cmoSampleIds': sample_ids[i],
+                            'patientId': '-'.join(sample_ids[i].split('-')[0:2])
                         }
                     }
                 ),
