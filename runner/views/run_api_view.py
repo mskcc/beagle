@@ -288,7 +288,7 @@ class RequestOperatorViewSet(GenericAPIView):
         if pipeline_version:
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
         else:
-            pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
 
         errors = []
         if not request_ids:
