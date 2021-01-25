@@ -55,9 +55,9 @@
     },
    "IMPACT_gene_list": "juno:///juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
    "assay_tmb_coverage_values": {
-        "IMPACT341_b37": 896637,
-        "IMPACT410_b37": 1016335,
-        "IMPACT468_b37": 1139294,
-        "IMPACT505_b37": 1213770
+        "IMPACT341": 896637,
+        "IMPACT410": 1016335,
+        "IMPACT468": 1139294,
+        "IMPACT505": 1213770
    }
 }
