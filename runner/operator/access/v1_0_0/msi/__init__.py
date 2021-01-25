@@ -5,6 +5,7 @@
 
 import os
 import json
+import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
@@ -12,6 +13,9 @@ from runner.operator.access import get_request_id_runs
 from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
+
+
+logger = logging.getLogger(__name__)
 
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
@@ -76,7 +80,8 @@ class AccessLegacyMSIOperator(Operator):
 
             if not len(matched_normal_bam) > 0:
                 msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
-                raise Exception(msg)
+                logger.warning(msg)
+                continue
 
             matched_normal_bam = matched_normal_bam.order_by('-created_date').first()
 
