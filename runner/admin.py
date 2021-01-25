@@ -19,7 +19,7 @@ class AppFilter(admin.SimpleListFilter):
         options = set()
 
         for o in Pipeline.objects.values("id", "name", "version"):
-            options.add((o["id"], "%s %s" % (o["name"] o["version"])))
+            options.add((o["id"], "%s %s" % (o["name"], o["version"])))
         return options
 
     def queryset(self, request, queryset):
