@@ -18,9 +18,8 @@ class AppFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         options = set()
 
-        for o in Pipeline.objects.values("id", "name"):
-            print(o)
-            options.add((o["id"], o["name"]))
+        for o in Pipeline.objects.values("id", "name", "version"):
+            options.add((o["id"], o["name"], o["version"]))
         return options
 
     def queryset(self, request, queryset):
