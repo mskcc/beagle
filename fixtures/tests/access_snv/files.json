@@ -6,7 +6,7 @@
             "created_date": "2020-01-06T19:59:50.576Z",
             "modified_date": "2020-01-06T19:59:50.579Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "path": "/test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -19,7 +19,33 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_simplex_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
+            "path": "/test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44a42",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.576Z",
+            "modified_date": "2020-01-06T19:59:50.579Z",
+            "file_name": "C-000884-L010-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "path": "/test/path/C-000884-L010-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac35",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-000884-L010-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
+            "path": "/test/path/C-000884-L010-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -32,7 +58,7 @@
             "created_date": "2020-01-06T19:59:50.576Z",
             "modified_date": "2020-01-06T19:59:50.579Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/bam_qc/TDM/06302_AD_group_3-1.2.9/C-000884-L011-d/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -45,7 +71,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/metadata/TDM_vc_bam_links/unfiltered_tumor_bams/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
+            "path": "/test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -58,7 +84,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AD/small_variants/linked_bams/linked_normal_bams/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
+            "path": "/test/path/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -71,7 +97,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR.bam",
-            "path": "/juno/work/access/production/runs/Project_06302_AC/bam_qc/TDM/TDM1-1.2.9/C-000884-N004-d/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/test/path/C-000884-N004-d_cl_aln_srt_MD_IR_FX_BR.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -84,7 +110,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
-            "path": "/work/access/production/resources/msk-access/current/novaseq_unmatched_normal_plasma_duplex_bams_dmp/current/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "path": "/test/path/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -97,7 +123,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
-            "path": "/juno/work/access/production/resources/msk-access/v1.0/novaseq_curated_standard_bams_dmp/versions/v2.0/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/test/path/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -110,9 +136,35 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "C-000884-L011-d.fastq.gz",
-            "path": "/ifs/archive/GCL/hiseq/FASTQ/DIANA_0162_AH3LNKDSXY/Project_10151_F/Sample_JAR31-Buffy_IGO_10151_F_10/JAR31-Buffy_IGO_10151_F_10_S21_R1_001.fastq.gz",
+            "path": "/test/path/JAR31-Buffy_IGO_10151_F_10_S21_R1_001.fastq.gz",
             "file_type": 1,
             "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5614f268-b9aa-46a2-9a57-3ddb24be63d8",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "AA037277-T-duplex.bam",
+            "path": "/test/path/AA037277-T-duplex.bam",
+            "file_type": 3,
+            "size": 2773109557,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "5614f268-b9aa-46a2-9a57-3ddb24be63f9",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "AA037277-T-simplex.bam",
+            "path": "/test/path/AA037277-T-simplex.bam",
+            "file_type": 3,
+            "size": 2773109557,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         }
     },
@@ -122,8 +174,8 @@
         "fields": {
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
-            "file_name": "AA037277-T-unfilter.bam",
-            "path": "/juno/res/dmpcollab/dmpshare/share/access_12_245/A/A/AA037277-T-unfilter.bam",
+            "file_name": "AA037277-N-unfilter.bam",
+            "path": "/test/path/AA037277-N-unfilter.bam",
             "file_type": 3,
             "size": 2773109557,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
