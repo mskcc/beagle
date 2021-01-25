@@ -63,7 +63,7 @@ def get_unfiltered_matched_normal(patient_id):
 
         if len(unfiltered_matched_normal_bam) == 0:
             msg = 'WARNING: Could not find DMP or IGO matching unfiltered normal bam file for patient {}. ' \
-                  'We will skip running this sample.'
+                  'We will skip matched normal genotyping for this sample.'
             msg = msg.format(patient_id)
             logger.warning(msg)
             unfiltered_matched_normal_bam = None
