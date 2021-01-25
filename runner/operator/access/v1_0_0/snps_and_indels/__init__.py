@@ -132,7 +132,8 @@ class AccessLegacySNVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["tumor_sample_names"]
+                            'cmoSampleIds': job["tumor_sample_names"],
+                            'patientId': '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
                         }
                     }
                 ),
