@@ -315,7 +315,6 @@ def get_assay_coverage(assay, helix_filters_resources):
     if assay in assay_coverages_list.keys():
         assay_coverage = assay_coverages_list[assay]
     return assay_coverage
-    }
 
 
 def get_oncotree_codes(request_id):
