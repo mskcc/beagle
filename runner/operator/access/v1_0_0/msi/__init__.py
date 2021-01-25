@@ -109,7 +109,8 @@ class AccessLegacyMSIOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["sample_name"]
+                            'cmoSampleIds': job["sample_name"],
+                            'patientId': '-'.join(job["sample_name"][0].split('-')[0:2])
                         }
                     }
                 ),

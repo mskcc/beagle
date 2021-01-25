@@ -79,7 +79,8 @@ class AccessLegacySVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["sv_sample_id"]
+                            'cmoSampleIds': job["sv_sample_id"],
+                            'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
                         }
                     }
                 ),
