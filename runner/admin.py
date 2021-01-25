@@ -3,7 +3,7 @@ from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorT
 from lib.admin import link_relation, progress_bar, pretty_python_exception
 
 class PipelineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'output_directory', link_relation("operator"))
+    list_display = ('id', 'name', 'version', 'default', 'output_directory', link_relation("operator"))
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
