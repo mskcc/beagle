@@ -29,20 +29,11 @@ app.conf.task_routes = {
     'runner.tasks.create_jobs_from_chaining': {'queue': settings.BEAGLE_RUNNER_QUEUE},
     'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE}
+    'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
+    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_DEFAULT_QUEUE} # TODO: Move to another queue
 }
 
 app.conf.beat_schedule = {
-    "fetch_requests_from_lims": {
-        "task": "beagle_etl.tasks.fetch_requests_lims",
-        "schedule": 900.0,
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
-    },
-    "check_missing_requests": {
-        "task": "beagle_etl.tasks.check_missing_requests",
-        "schedule": 22800.0,
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
-    },
     "scheduler_tick": {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0,

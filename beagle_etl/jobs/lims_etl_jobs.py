@@ -1,6 +1,7 @@
 import os
 import copy
 import logging
+import asyncio
 from deepdiff import DeepDiff
 from django.conf import settings
 from beagle_etl.jobs import TYPES
@@ -21,31 +22,14 @@ from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitTo
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
-from beagle_etl.lims_client import LIMSClient
 from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_new_requests_lims(timestamp, redelivery=True):
-    logger.info("Fetching requestIds")
-    children = set()
-    request_ids = LIMSClient.get_deliveries(timestamp)
-    if not request_ids:
-        logger.info("There is no new RequestIDs")
-        return []
-    for request in request_ids:
-        job, message = create_request_job(request['request'], redelivery=redelivery)
-        if job:
-            if job.status == JobStatus.CREATED:
-                children.add(str(job.id))
-        else:
-            logger.info("Job for requestId: %s not completed. %s", request['request'], message)
-    return list(children)
-
-
-def create_request_job(request_id, redelivery=False):
+def parse_new_request_job(request):
+    request_id = request['requestId']
     logger.info(
         "Searching for job: %s for request_id: %s" % (TYPES['REQUEST'], request_id))
     count = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id,
@@ -55,7 +39,7 @@ def create_request_job(request_id, redelivery=False):
 
     assays = ETLConfiguration.objects.first()
 
-    if request_redelivered and not (assays.redelivery and redelivery):
+    if request_redelivered and not assays.redelivery:
         return None, "Request is redelivered, but redelivery deactivated"
 
     if count == 0:
@@ -63,14 +47,16 @@ def create_request_job(request_id, redelivery=False):
         job_group.save()
         job_group_notifier_id = notifier_start(job_group, request_id)
         job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-        job = Job(run=TYPES['REQUEST'],
-                  args={'request_id': request_id, 'job_group': str(job_group.id),
-                        'job_group_notifier': job_group_notifier_id, 'redelivery': request_redelivered},
+        job = Job(run=TYPES['PARSE_SAMPLE_JOB'],
+                  args={'request': request, 'job_group': str(job_group.id),
+                        'job_group_notifier': str(job_group_notifier.id), 'redelivery': request_redelivered},
                   status=JobStatus.CREATED,
                   max_retry=1,
                   children=[],
                   callback=TYPES['REQUEST_CALLBACK'],
-                  callback_args={'request_id': request_id, 'job_group': str(job_group.id),
+                  callback_args={'request_id': request_id,
+                                 'recipe': request['recipe'],
+                                 'job_group': str(job_group.id),
                                  'job_group_notifier': job_group_notifier_id},
                   job_group=job_group,
                   job_group_notifier=job_group_notifier)
@@ -78,10 +64,10 @@ def create_request_job(request_id, redelivery=False):
         if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
-        return job, "Job Created"
+        return [str(job.id)]
 
 
-def request_callback(request_id, job_group=None, job_group_notifier=None):
+def request_callback(request_id, recipe, job_group=None, job_group_notifier=None):
     jg = None
     jgn = None
     try:
@@ -91,8 +77,6 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         logger.debug("[RequestCallback] JobGroup not set")
     job_group_notifier_id = str(jgn.id) if jgn else None
     assays = ETLConfiguration.objects.first()
-
-    recipe = LIMSClient.get_request_samples(request_id).get("recipe", None)
 
     if not all([JobStatus(job['status']) == JobStatus.COMPLETED for job in
                 Job.objects.filter(job_group=job_group, run=TYPES['SAMPLE'], args__igocomplete=True).values(
@@ -104,7 +88,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         raise FailedToSubmitToOperatorException(
            "Not enough metadata to choose the operator for requestId:%s" % request_id)
 
-    if not all(item in assays.all_recipes for item in [recipe]):
+    if not all(item in assays.all_recipes for item in (recipe,)):
         ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
         set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, 'unrecognized_assay').to_dict()
@@ -113,7 +97,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         send_notification.delay(unknown_assay_event)
         return []
 
-    if any(item in assays.hold_recipes for item in [recipe,]):
+    if any(item in assays.hold_recipes for item in (recipe,)):
         admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(admin_hold_event)
         custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipe).to_dict()
@@ -184,8 +168,9 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     return []
 
 
-def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, job_group=None, job_group_notifier=None,
-                  redelivery=False):
+def parse_samples_job(request, import_pooled_normals=True, import_samples=True, job_group=None,
+                      job_group_notifier=None, redelivery=False):
+    request_id = request['requestId']
     logger.info("Fetching sampleIds for requestId:%s" % request_id)
     jg = None
     jgn = None
@@ -200,45 +185,34 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     except JobGroupNotifier.DoesNotExist:
         logger.debug("No JobGroup Found")
     children = set()
-    sample_ids = LIMSClient.get_request_samples(request_id)
-    if sample_ids['requestId'] != request_id:
-        raise ErrorInconsistentDataException(
-            "LIMS returned wrong response for request %s. Got %s instead" % (request_id, sample_ids['requestId']))
-    request_metadata = {
-        "dataAnalystEmail": sample_ids['dataAnalystEmail'],
-        "dataAnalystName": sample_ids['dataAnalystName'],
-        "investigatorEmail": sample_ids['investigatorEmail'],
-        "investigatorName": sample_ids['investigatorName'],
-        "labHeadEmail": sample_ids['labHeadEmail'],
-        "labHeadName": sample_ids['labHeadName'],
-        "otherContactEmails": sample_ids['otherContactEmails'],
-        "dataAccessEmails": sample_ids['dataAccessEmails'],
-        "qcAccessEmails": sample_ids['qcAccessEmails'],
-        "projectManagerName": sample_ids['projectManagerName'],
-        "recipe": sample_ids['recipe'],
-        "piEmail": sample_ids["piEmail"],
-    }
+
+    samples_list = request.pop('samples')
+    sample_data = _convert_to_dict(request.pop('sampleManifestList'))
+    print(sample_data)
+    pooled_normals = request.pop('pooledNormals')
+    request_metadata = request
+
     set_recipe_event = ETLSetRecipeEvent(job_group_notifier, request_metadata['recipe']).to_dict()
     send_notification.delay(set_recipe_event)
-    pooled_normals = sample_ids.get("pooledNormals", [])
+
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
             job = get_or_create_pooled_normal_job(f, jg)
             children.add(str(job.id))
-    if import_samples:
-        if not sample_ids.get('samples', False):
-            raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
 
-        for sample in sample_ids.get('samples', []):
-            job = create_sample_job(sample['igoSampleId'],
-                                    sample['igocomplete'],
-                                    request_id,
-                                    request_metadata,
-                                    redelivery,
-                                    jg,
-                                    jgn)
+    if import_samples:
+        for sample in samples_list:
+            job = create_parse_sample_job(sample_data[sample['igoSampleId']], sample['igocomplete'], request_metadata,
+                                          redelivery, jg, jgn)
             children.add(str(job.id))
     return list(children)
+
+
+def _convert_to_dict(sample_list):
+    sample_dict = dict()
+    for sample in sample_list:
+        sample_dict[sample['igoId']] = sample
+    return sample_dict
 
 
 def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None):
@@ -259,12 +233,11 @@ def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier
     return job
 
 
-def create_sample_job(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group=None,
-                      job_group_notifier=None):
-    job = Job(run=TYPES['SAMPLE'],
-              args={'sample_id': sample_id, 'igocomplete': igocomplete, 'request_id': request_id,
-                    'request_metadata': request_metadata, 'redelivery': redelivery,
-                    'job_group_notifier': str(job_group_notifier.id)},
+def create_parse_sample_job(sample_data, igocomplete, request_metadata, redelivery=False, job_group=None,
+                            job_group_notifier=None):
+    job = Job(run=TYPES['PARSE_SAMPLE_METADATA'],
+              args={'sample_data': sample_data, 'igocomplete': igocomplete, 'request_metadata': request_metadata,
+                    'redelivery': redelivery, 'job_group_notifier': str(job_group_notifier.id)},
               status=JobStatus.CREATED,
               max_retry=1, children=[],
               job_group=job_group,
@@ -370,23 +343,9 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("File already exist %s." % (filepath))
 
 
-def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, redelivery=False, job_group_notifier=None):
-    logger.info("Fetch sample metadata for sampleId:%s" % sample_id)
-    sampleMetadata = LIMSClient.get_sample_manifest(sample_id)
-    try:
-        data = sampleMetadata[0]
-    except Exception as e:
-        raise FailedToFetchSampleException(
-            "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
-    if data['igoId'] != sample_id:
-        # logger.info(data)
-        logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
-        raise FailedToFetchSampleException(
-            "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
-
-    validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
-
-    libraries = data.pop('libraries')
+def parse_sample_metadata(sample_data, igocomplete, request_metadata, redelivery=False, job_group_notifier=None):
+    validate_sample(sample_data, sample_data.get('libraries', []), igocomplete, redelivery)
+    libraries = sample_data.pop('libraries')
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop('runs')
@@ -397,10 +356,9 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
             fastqs = run.pop('fastqs')
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
-                create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, data,
-                                      library, run,
-                                      request_metadata, R1_or_R2(fastq), update=redelivery,
-                                      job_group_notifier=job_group_notifier)
+                create_or_update_file(fastq, request_metadata['requestId'], settings.IMPORT_FILE_GROUP, 'fastq',
+                                      igocomplete, sample_data, library, run, request_metadata, R1_or_R2(fastq),
+                                      update=redelivery, job_group_notifier=job_group_notifier)
 
 
 def validate_sample(sample_id, libraries, igocomplete, redelivery=False):

@@ -10,7 +10,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
 from beagle_etl.models import JobStatus, Job, ETLConfiguration
 from drf_yasg.utils import swagger_auto_schema
-from .jobs.lims_etl_jobs import create_request_job
+# from .jobs.lims_etl_jobs import create_request_job
 from .serializers import JobSerializer, CreateJobSerializier, RequestIdLimsPullSerializer, JobQuerySerializer, AssaySerializer, AssayElementSerializer, AssayUpdateSerializer, JobsTypesSerializer
 from beagle.common import fix_query_list
 
@@ -173,9 +173,9 @@ class RequestIdLimsPullViewSet(GenericAPIView):
         request_ids = request.data['request_ids']
         redelivery = request.data['redelivery']
         created_jobs = []
-        for request_id in request_ids:
-            job = create_request_job(request_id, redelivery)
-            created_jobs.append(job)
+        # for request_id in request_ids:
+            # job = create_request_job(request_id, redelivery)
+            # created_jobs.append(job)
         return Response({"details": "Import requests from LIMS jobs submitted %s" % str(request_ids)},
                         status=status.HTTP_201_CREATED)
 
