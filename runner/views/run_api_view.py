@@ -281,10 +281,14 @@ class RequestOperatorViewSet(GenericAPIView):
     def post(self, request):
         request_ids = request.data.get('request_ids')
         pipeline_name = request.data.get('pipeline')
+        pipeline_version = request.data.get('pipeline_version', None)
         job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', True)
 
-        pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+        if pipeline_version:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
+        else:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
 
         errors = []
         if not request_ids:
