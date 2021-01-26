@@ -193,26 +193,46 @@ class RunApiRestartViewSet(GenericAPIView):
     logger = logging.getLogger(__name__)
 
     def post(self, request):
-        run_id = request.data.get('run')
-        run = RunObject.from_db(run_id)
-        inputs = dict()
-        for port in run.inputs:
-            inputs[port.name] = port.db_value
-        data = dict(
-            app=str(run.run_obj.app.id),
-            inputs=inputs,
-            tags=run.tags,
-            job_group_id=run.job_group.id,
-            job_group_notifier_id=run.job_group_notifier.id,
-            resume=run_id
-        )
-        serializer = APIRunCreateSerializer(data=data, context={'request': request})
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        run_id = serializer.validated_data.get('run_id')
+        group_id = serializer.validated_data.get('group_id')
+        pipeline_names = serializer.validated_data.get('pipeline_names')
+        if run_id:
+            run = get_object_or_404(Run, pk=run_id)
+            runs = [RunObject.from_db(run_id)]
+        elif group_id:
+            runs = [RunObject.from_db(r.id) for r in Run.objects.filter(job_group_id=group_id,
+                                                                        app__name__in=pipeline_names).all()]
+            if not runs:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        data = []
+        for run in runs:
+            inputs = dict()
+            for port in run.inputs:
+                inputs[port.name] = port.db_value
+            data.append(dict(
+                app=str(run.run_obj.app.id),
+                inputs=inputs,
+                tags=run.tags,
+                job_group_id=run.job_group.id,
+                job_group_notifier_id=run.job_group_notifier.id,
+                resume=run_id
+            ))
+
+        serializer = APIRunCreateSerializer(data=data, context={'request': request}, many=True)
         if serializer.is_valid():
-            new_run = serializer.save()
-            response = RunSerializerFull(new_run)
-            create_run_task.delay(response.data['id'], data['inputs'])
-            job_group_notifier_id = str(new_run.job_group_notifier_id)
-            self._send_notifications(job_group_notifier_id, new_run)
+            new_runs = serializer.save()
+
+            for run, data in zip(new_runs, serializer.validated_data):
+                create_run_task.delay(run.id, data['inputs'])
+                job_group_notifier_id = str(run.job_group_notifier_id)
+                self._send_notifications(job_group_notifier_id, run)
+
+            response = RunSerializerFull(new_runs, many=True)
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
