@@ -488,6 +488,16 @@ def abort_job(run):
     run.status = RunStatus.ABORTED
     run.save()
 
+def update_commandline_job_status(run, commandline_tool_job_set):
+    job_status_obj = {}
+    for single_commandline_job in commandline_tool_job_set:
+        status = single_commandline_job.pop('status')
+        root = single_commandline_job.pop('root')
+        if status not in job_status_obj:
+            job_status_obj[status] = []
+        job_status_obj[status].append(single_commandline_job)
+    run.job_statuses = job_status_obj
+
 
 @shared_task
 def check_jobs_status():
@@ -497,6 +507,12 @@ def check_jobs_status():
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
             remote_status = check_status_on_ridgeback(run.execution_id)
             if remote_status:
+                if remote_status['started'] and not run.started:
+                    run.started = remote_status['started']
+                if remote_status['submitted'] and not run.submitted:
+                    run.submitted = remote_status['submitted']
+                if remote_status['commandlinetooljob_set']:
+                    update_commandline_job_status(run, remote_status['commandlinetooljob_set'])
                 if remote_status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
                     message = dict(details=remote_status.get('message'))
