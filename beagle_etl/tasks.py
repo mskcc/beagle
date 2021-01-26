@@ -2,6 +2,7 @@ import logging
 import importlib
 import datetime
 import traceback
+import asyncio
 from celery import shared_task
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs import TYPES
@@ -11,6 +12,7 @@ from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 # from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
+from beagle_etl.nats_client.nats_client import run
 
 
 logger = logging.getLogger(__name__)
@@ -35,6 +37,13 @@ def fetch_requests_lims():
               max_retry=3, children=[])
     job.save()
     logger.info("Fetching fetch_new_requests_lims job created")
+
+
+@shared_task
+def fetch_request_nats():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(run(loop))
+    loop.run_forever()
 
 
 @shared_task
