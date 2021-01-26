@@ -302,7 +302,7 @@ def convert_references(assay):
     helix_filters_resources = load_references()
     references = dict()
     targets_list = get_baits_and_targets(assay, helix_filters_resources)
-    references['assay_coverage'] = get_assay_coverage(assay, helix_filters_resources)
+    references['assay_coverage'] = str(get_assay_coverage(assay, helix_filters_resources))
     references['targets_list'] = targets_list
     references['known_fusions_file'] = {'class': 'File', 'location': str(helix_filters_resources['known_fusions_file']) }
     references['IMPACT_gene_list'] = {'class': 'File', 'location': str(helix_filters_resources['IMPACT_gene_list']) }
