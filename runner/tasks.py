@@ -389,12 +389,14 @@ def abort_job_on_ridgeback(job_id):
     return None
 
 
-def check_status_on_ridgeback(job_id):
-    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/' % job_id)
+def check_statuses_on_ridgeback(execution_ids):
+    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/statuses', data={
+        "job_ids": execution_ids
+    })
     if response.status_code == 200:
-        logger.info("Job %s in status: %s" % (job_id, response.json()['status']))
+        logger.info("Job statuses checked")
         return response.json()
-    logger.error("Failed to fetch job status for: %s" % job_id)
+    logger.error("Failed to fetch job statuses)
     return None
 
 
@@ -501,40 +503,40 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 @shared_task
 def check_jobs_status():
-    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
+                              execution_id__is_null=False)
+    remote_statuses = check_statuses_on_ridgeback(list(runs.values("execution_id")))
+
     for run in runs:
-        if run.execution_id:
-            logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
-            remote_status = check_status_on_ridgeback(run.execution_id)
-            if remote_status:
-                if remote_status['started'] and not run.started:
-                    run.started = remote_status['started']
-                if remote_status['submitted'] and not run.submitted:
-                    run.submitted = remote_status['submitted']
-                if remote_status['commandlinetooljob_set']:
-                    update_commandline_job_status(run, remote_status['commandlinetooljob_set'])
-                if remote_status['status'] == 'FAILED':
+        logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
+        if run.execution_id not in remote_statuses:
+            logger.info("Requested job status from Ridgeback that was not returned: %s [%s]" % (run.id, run.execution_id))
+            continue
+
+        status = remote_statuses[run.execution_id]
+        if status['started'] and not run.started:
+            run.started = remote_status['started']
+            if status['submitted'] and not run.submitted:
+                run.submitted = remote_status['submitted']
+                if rstatus['commandlinetooljob_set']:
+                    update_commandline_job_status(run, status['commandlinetooljob_set'])
+                if status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    message = dict(details=remote_status.get('message'))
+                    message = dict(details=status.get('message'))
                     fail_job(str(run.id),
                              message)
                     continue
-                if remote_status['status'] == 'COMPLETED':
+                if status['status'] == 'COMPLETED':
                     logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                    complete_job(str(run.id), remote_status['outputs'])
+                    complete_job(str(run.id), status['outputs'])
                     continue
-                if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
+                if status['status'] == 'CREATED' or status['status'] == 'PENDING' or status['status'] == 'RUNNING':
                     logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
                     running_job(run)
                     continue
-                if remote_status['status'] == 'ABORTED':
+                if status['status'] == 'ABORTED':
                     logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
                     abort_job(run)
-            else:
-                logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
-        else:
-            logger.error("Job %s not submitted" % str(run.id))
-
 
 def run_routine_operator_job(operator, job_group_id=None):
     """
