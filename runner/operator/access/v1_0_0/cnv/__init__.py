@@ -110,7 +110,8 @@ class AccessLegacyCNVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': sample_ids[i]
+                            'cmoSampleIds': sample_ids[i],
+                            'patientId': '-'.join(sample_ids[i].split('-')[0:2])
                         }
                     }
                 ),
@@ -131,6 +132,7 @@ class AccessLegacyCNVOperator(Operator):
             tumor_sample_list = tumor_bam.file.path + '\t' + sample_sex
 
             input_file = template.render(
+                tumor_sample_id=tumor_bam.metadata['sampleName'],
                 tumor_sample_list_content=json.dumps(tumor_sample_list),
             )
 

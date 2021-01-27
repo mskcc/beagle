@@ -79,7 +79,8 @@ class AccessLegacySVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["sv_sample_id"]
+                            'cmoSampleIds': job["sv_sample_id"],
+                            'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
                         }
                     }
                 ),
@@ -120,6 +121,7 @@ class AccessLegacySVOperator(Operator):
             }
 
             input_file = template.render(
+                tumor_sample_id=tumor_sample_id,
                 tumor_sample_names=json.dumps(tumor_sample_names),
                 tumor_bams=json.dumps(tumor_bams),
                 normal_bam=json.dumps(normal_bam)

@@ -21,11 +21,19 @@ class PipelineViewSet(mixins.ListModelMixin,
     serializer_class = PipelineSerializer
 
     def get_queryset(self):
+        queryset = self.queryset
         name = self.request.query_params.get('name', None)
+        default = self.request.query_params.get('default', None)
+        version = self.request.query_params.get('version', None)
+
         if name:
-            return self.queryset.filter(name=name)
-        else:
-            return self.queryset
+            queryset = queryset.filter(name=name)
+        if default:
+            queryset = queryset.filter(default=True)
+        if version:
+            queryset = queryset.filter(version=version)
+
+        return queryset
 
 
 class PipelineResolveViewSet(GenericAPIView):
