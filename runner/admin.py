@@ -3,7 +3,7 @@ from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorT
 from lib.admin import link_relation, progress_bar, pretty_python_exception
 
 class PipelineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'output_directory', link_relation("operator"))
+    list_display = ('id', 'name', 'version', 'default', 'output_directory', link_relation("operator"))
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -18,9 +18,8 @@ class AppFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         options = set()
 
-        for o in Pipeline.objects.values("id", "name"):
-            print(o)
-            options.add((o["id"], o["name"]))
+        for o in Pipeline.objects.values("id", "name", "version"):
+            options.add((o["id"], "%s %s" % (o["name"], o["version"])))
         return options
 
     def queryset(self, request, queryset):
