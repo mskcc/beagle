@@ -130,7 +130,7 @@ class AccessLegacyCNVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_list = tumor_bam.file.path + '\t' + sample_sex
-            tumor_sample_id = tumor_bam.file.path.split('/')[-1].split('_cl_aln_srt_MD_IR_FX_BR')[0]
+            tumor_sample_id = tumor_bam.file.file_name.split('_cl_aln_srt_MD_IR_FX_BR')[0]
 
             input_file = template.render(
                 tumor_sample_id=tumor_sample_id,
