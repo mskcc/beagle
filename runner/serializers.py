@@ -264,7 +264,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 class RestartRunSerializer(serializers.Serializer):
     run_id = serializers.UUIDField(required=False)
     group_id = serializers.UUIDField(required=False)
-    pipeline_names = serializers.ListField(child=serializers.CharField())
+    pipeline_names = serializers.ListField(child=serializers.CharField(), required=False)
 
     def validate(self, data):
         """
