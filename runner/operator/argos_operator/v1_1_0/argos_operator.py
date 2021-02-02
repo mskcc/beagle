@@ -203,10 +203,10 @@ class ArgosOperator(Operator):
         for pair in self.pairing.get('pairs'):
             tumor_sample = pair['tumor']
             normal_sample = pair['normal']
-            tumors = self.get_regular_sample(tumor_sample)
+            tumors = self.get_regular_sample(tumor_sample, "Tumor")
             current_cnt_tumors = len(tumors)
             cnt_tumors += current_cnt_tumors
-            normals = self.get_regular_sample(normal_sample)
+            normals = self.get_regular_sample(normal_sample, "Normal")
             if not normals and current_cnt_tumors  > 0: # get from pooled normal
                 bait_set = tumors[0].metadata['baitSet']
                 run_ids = list()
@@ -232,7 +232,7 @@ class ArgosOperator(Operator):
                     all_files.append(file)
         return all_files, cnt_tumors
 
-    def get_regular_sample(self, sample_data):
+    def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data['sample_id']
         sample = FileRepository.filter(queryset=self.files,
                                        metadata={'cmoSampleName': sample_id,
@@ -249,7 +249,7 @@ class ArgosOperator(Operator):
             sample = list()
             for i in data:
                 s = i
-                metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
+                metadata = build_dmp_sample(i, patient_id, bait_set, tumor_type)['metadata']
                 s.metadata = metadata
                 sample.append(i)
         return sample
