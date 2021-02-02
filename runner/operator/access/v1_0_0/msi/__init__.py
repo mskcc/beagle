@@ -5,6 +5,7 @@
 
 import os
 import json
+import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
@@ -12,6 +13,9 @@ from runner.operator.access import get_request_id_runs
 from runner.models import Port, Run, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
+
+
+logger = logging.getLogger(__name__)
 
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
@@ -34,12 +38,16 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        request_id_runs = get_request_id_runs(self.request_id)
+        if self.request_id:
+            run_ids = get_request_id_runs(self.request_id)
+            run_ids = [r.id for r in run_ids]
+        else:
+            run_ids = self.run_ids
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
             name='standard_bams',
-            run__id__in=[r.id for r in request_id_runs],
+            run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
 
@@ -72,7 +80,8 @@ class AccessLegacyMSIOperator(Operator):
 
             if not len(matched_normal_bam) > 0:
                 msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
-                raise Exception(msg)
+                logger.warning(msg)
+                continue
 
             matched_normal_bam = matched_normal_bam.order_by('-created_date').first()
 
@@ -105,7 +114,8 @@ class AccessLegacyMSIOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["sample_name"]
+                            'cmoSampleIds': job["sample_name"],
+                            'patientId': '-'.join(job["sample_name"][0].split('-')[0:2])
                         }
                     }
                 ),

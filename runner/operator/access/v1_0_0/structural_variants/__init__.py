@@ -34,12 +34,16 @@ class AccessLegacySVOperator(Operator):
 
         :return: list of json_objects
         """
-        request_id_runs = get_request_id_runs(self.request_id)
+        if self.request_id:
+            run_ids = get_request_id_runs(self.request_id)
+            run_ids = [r.id for r in run_ids]
+        else:
+            run_ids = self.run_ids
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
             name='standard_bams',
-            run__id__in=[r.id for r in request_id_runs],
+            run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
 
@@ -75,7 +79,8 @@ class AccessLegacySVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["sv_sample_id"]
+                            'cmoSampleIds': job["sv_sample_id"],
+                            'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
                         }
                     }
                 ),
@@ -116,6 +121,7 @@ class AccessLegacySVOperator(Operator):
             }
 
             input_file = template.render(
+                tumor_sample_id=tumor_sample_id,
                 tumor_sample_names=json.dumps(tumor_sample_names),
                 tumor_bams=json.dumps(tumor_bams),
                 normal_bam=json.dumps(normal_bam)
