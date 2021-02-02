@@ -357,6 +357,7 @@ class RequestIdsOperatorSerializer(serializers.Serializer):
         child=serializers.CharField(max_length=30), allow_empty=True
     )
     pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    pipeline_version = serializers.CharField(max_length=30, allow_null=True, allow_blank=True)
     job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(required=False, default=True)
 
