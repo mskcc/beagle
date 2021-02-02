@@ -26,6 +26,31 @@
         }
     },{
         "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44a2f",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "fffff52a-0696-48d4-9ca5-6580daa44a42",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acf1",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac35",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },{
+        "model": "file_system.filemetadata",
         "pk": "fffff52a-0696-48d4-9ca5-6580daa44adf",
         "fields": {
             "latest": true,
@@ -58,7 +83,9 @@
             "modified_date": "2020-01-06T19:59:50.583Z",
             "file": "2f77f3ac-ab25-4a02-90bd-86542401ac80",
             "version": 0,
-            "metadata": {},
+            "metadata": {
+                "tumorOrNormal": "Normal"
+            },
             "user": null
         }
     },{
@@ -173,6 +200,66 @@
                 ],
                 "tumorOrNormal": "Tumor",
                 "igocomplete": true
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acb3",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be63d8",
+            "version": 0,
+            "metadata": {
+                "type": "T",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acc7",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be63f9",
+            "version": 0,
+            "metadata": {
+                "type": "T",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac34",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be6380",
+            "version": 0,
+            "metadata": {
+                "type": "N",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
             },
             "user": null
         }

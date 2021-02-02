@@ -183,7 +183,6 @@ DB_USERNAME = os.environ['BEAGLE_DB_USERNAME']
 DB_PASSWORD = os.environ['BEAGLE_DB_PASSWORD']
 DB_HOST = os.environ.get('BEAGLE_DB_URL', 'localhost')
 DB_PORT = os.environ.get('BEAGLE_DB_PORT', 5432)
-DB_CONN_MAX_AGE = os.environ.get('BEAGLE_DB_CONN_MAX_AGE', 60)
 
 DATABASES = {
     'default': {
@@ -193,7 +192,7 @@ DATABASES = {
         'PASSWORD': DB_PASSWORD,
         'HOST': DB_HOST,
         'PORT': DB_PORT,
-        'CONN_MAX_AGE': DB_CONN_MAX_AGE
+        'DISABLE_SERVER_SIDE_CURSORS': True
     }
 }
 
