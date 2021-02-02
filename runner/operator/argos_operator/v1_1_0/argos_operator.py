@@ -201,52 +201,58 @@ class ArgosOperator(Operator):
         all_files = []
         cnt_tumors = 0
         for pair in self.pairing.get('pairs'):
-            tumors = FileRepository.filter(queryset=self.files,
-                                           metadata={'cmoSampleName': pair['tumor'],
-                                                     'igocomplete': True},
-                                           filter_redact=True)
-            cnt_tumors += len(tumors)
-            normals = FileRepository.filter(queryset=self.files,
-                                            metadata={'cmoSampleName': pair['normal'],
-                                                      'igocomplete': True},
-                                            filter_redact=True)
-            if not normals and cnt_tumors > 0: # get from DMP bams or pooled normal
-                patient_id = tumors[0].metadata['patientId']
+            tumor_sample = pair['tumor']
+            normal_sample = pair['normal']
+            tumors = self.get_regular_sample(tumor_sample)
+            current_cnt_tumors = len(tumors)
+            cnt_tumors += current_cnt_tumors
+            normals = self.get_regular_sample(normal_sample)
+            if not normals and current_cnt_tumors  > 0: # get from pooled normal
                 bait_set = tumors[0].metadata['baitSet']
                 run_ids = list()
                 for tumor in tumors:
                     run_id = tumor.metadata['runId']
                     if run_id:
                         run_ids.append(run_id)
+                run_ids.sort()
                 preservation_types = tumors[0].metadata['preservation']
-                normal_sample_id = pair['normal']
-                if "poolednormal" in normal_sample_id.lower(): # get pooled normal
-                    normals = list()
-                    pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
-                    for f in pooled_normal_files:
-                        metadata = build_pooled_normal_sample_by_file(f, run_ids, preservation_types, bait_set_reformatted, sample_name)['metadata']
-                        sample = f
-                        sample.metadata = metadata
-                        normals.append(sample)
-                else: # get dmp normal
-                    dmp_bam_id = normal_sample_id
-                    dmp_bam_id = dmp_bam_id.replace('s_', '').replace('_', '-')
-                    data = FileRepository.filter(queryset=self.files,
-                                                    metadata={'external_id': dmp_bam_id})
-                    normals = list()
-                    for i in data:
-                        sample = i
-                        metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
-                        sample.metadata = metadata
-                        normals.append(sample)
+                normal_sample_id = normal_sample['sample_id']
+                normals = list()
+                pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+                for f in pooled_normal_files:
+                    metadata = build_pooled_normal_sample_by_file(f, run_ids, preservation_types, bait_set_reformatted, sample_name)['metadata']
+                    sample = f
+                    sample.metadata = metadata
+                    normals.append(sample)
             for file in list(tumors):
                 if file not in all_files:
                     all_files.append(file)
             for file in list(normals):
                 if file not in all_files:
                     all_files.append(file)
-
         return all_files, cnt_tumors
+
+    def get_regular_sample(self, sample_data):
+        sample_id = sample_data['sample_id']
+        sample = FileRepository.filter(queryset=self.files,
+                                       metadata={'cmoSampleName': sample_id,
+                                                 'igocomplete': True},
+                                       filter_redact=True)
+        if not sample: # try dmp sample
+            if 'patient_id' in sample_data:
+                patient_id = sample_data['patient_id']
+            if 'bait_set' in sample_data:
+                bait_set = sample_data['bait_set']
+            dmp_bam_id = sample_id.replace('s_', '').replace('_', '-')
+            data = FileRepository.filter(queryset=self.files,
+                                         metadata={'external_id': dmp_bam_id})
+            sample = list()
+            for i in data:
+                s = i
+                metadata = build_dmp_sample(i, patient_id, bait_set)['metadata']
+                s.metadata = metadata
+                sample.append(i)
+        return sample
 
     def summarize_pairing_info(self, argos_inputs):
         num_pairs = len(argos_inputs)
