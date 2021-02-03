@@ -9,7 +9,11 @@ from runner.tasks import check_statuses_on_ridgeback, update_commandline_job_sta
 
 def populate_job_info(apps, _):
     run_list = Run.objects.all().filter(execution_id__isnull=False).filter(Q(job_statuses__isnull=True) | Q(job_statuses__exact='') | Q(job_statuses__exact={}))
-    remote_statuses = check_statuses_on_ridgeback(list(run_list.values_list("execution_id")))
+    try:
+        remote_statuses = check_statuses_on_ridgeback(list(run_list.values_list("execution_id")))
+    except Exception as e:
+        print("Could not pull remote statuses")
+        run_list=[]
     for single_run in run_list:
         try:
             if single_run.execution_id:
@@ -22,7 +26,6 @@ def populate_job_info(apps, _):
                     single_run.submitted = status['submitted']
                 single_run.save()
         except Exception as e:
-            print(traceback.format_exc())
             print("Run %s could not update job statuses"  % str(single_run.id))
 
 
