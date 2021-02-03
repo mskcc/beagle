@@ -396,7 +396,7 @@ def check_statuses_on_ridgeback(execution_ids):
     if response.status_code == 200:
         logger.info("Job statuses checked")
         return response.json()["jobs"]
-    logger.error("Failed to fetch job statuses)
+    logger.error("Failed to fetch job statuses")
     return None
 
 
