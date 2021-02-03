@@ -513,7 +513,7 @@ def check_jobs_status():
             logger.info("Requested job status from Ridgeback that was not returned: %s [%s]" % (run.id, run.execution_id))
             continue
 
-        status = remote_statuses[run.execution_id]
+        status = remote_statuses[str(run.execution_id)]
         if status['started'] and not run.started:
             run.started = status['started']
             if status['submitted'] and not run.submitted:
