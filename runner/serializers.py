@@ -374,7 +374,9 @@ class RunIdsOperatorSerializer(serializers.Serializer):
 
 
 class PairOperatorSerializer(serializers.Serializer):
-    pairs = serializers.JSONField()
+    pairs = serializers.ListField(
+            child=serializers.JSONField(),allow_empty=True
+    )
     pipelines = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
