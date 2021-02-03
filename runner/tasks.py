@@ -390,7 +390,7 @@ def abort_job_on_ridgeback(job_id):
 
 
 def check_statuses_on_ridgeback(execution_ids):
-    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/statuses', data={
+    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/statuses/', data={
         "job_ids": execution_ids
     })
     if response.status_code == 200:
@@ -504,8 +504,8 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                              execution_id__is_null=False)
-    remote_statuses = check_statuses_on_ridgeback(list(runs.values("execution_id")))
+                              execution_id__isnull=False)
+    remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
 
     for run in runs:
         logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
@@ -515,10 +515,10 @@ def check_jobs_status():
 
         status = remote_statuses[run.execution_id]
         if status['started'] and not run.started:
-            run.started = remote_status['started']
+            run.started = status['started']
             if status['submitted'] and not run.submitted:
-                run.submitted = remote_status['submitted']
-                if rstatus['commandlinetooljob_set']:
+                run.submitted = status['submitted']
+                if status['commandlinetooljob_set']:
                     update_commandline_job_status(run, status['commandlinetooljob_set'])
                 if status['status'] == 'FAILED':
                     logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
