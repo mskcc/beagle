@@ -86,8 +86,6 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    state = models.IntegerField(choices=[(s.value, s.name) for s in RunState],
-                                 default=RunState.OPEN, db_index=True)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus],
                                  default=RunStatus.CREATING, db_index=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
@@ -158,6 +156,8 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
+    state = models.IntegerField(choices=[(s.value, s.name) for s in RunState],
+                                 default=RunState.OPEN, db_index=True)
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
