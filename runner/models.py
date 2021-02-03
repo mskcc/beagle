@@ -10,6 +10,10 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
+class RunState(IntEnum):
+    OPEN = 0
+    LOCKED = 1
+
 class RunStatus(IntEnum):
     CREATING = 0
     READY = 1
@@ -82,6 +86,8 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
+    state = models.IntegerField(choices=[(s.value, s.name) for s in RunState],
+                                 default=RunState.OPEN, db_index=True)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus],
                                  default=RunStatus.CREATING, db_index=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)

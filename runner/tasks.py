@@ -7,7 +7,7 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from .models import Run, RunState, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
     SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, SetLabelEvent, SetRunTicketInImportEvent
 from notifier.tasks import send_notification, notifier_start
@@ -222,7 +222,7 @@ def process_triggers():
                 if trigger_type == TriggerRunType.AGGREGATE:
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
-                        if operator_run.percent_runs_succeeded == 100.0:
+                        if operator_run.percent_runs_succeeded >= 100.0:
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
@@ -246,15 +246,15 @@ def process_triggers():
                             )
                             continue
 
-                    if operator_run.percent_runs_finished == 100.0:
+                    if operator_run.percent_runs_finished >= 100.0:
                         logger.info("Condition never met for operator run %s" % operator_run.id)
 
                 elif trigger_type == TriggerRunType.INDIVIDUAL:
-                    if operator_run.percent_runs_finished == 100.0:
+                    if operator_run.percent_runs_finished >= 100.0:
                         operator_run.complete()
 
             if operator_run.percent_runs_finished == 100.0:
-                if operator_run.percent_runs_succeeded == 100.0:
+                if operator_run.percent_runs_succeeded >= 100.0:
                     operator_run.complete()
                     if not created_chained_job and job_group_notifier_id:
                         completed_event = SetPipelineCompletedEvent(job_group_notifier_id).to_dict()
@@ -501,7 +501,9 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 @shared_task
 def check_jobs_status():
-    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+    runs = Run.objects.filter(state=RunState.OPEN, status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+    runs.update(state=RunState.LOCKED)
+
     for run in runs:
         if run.execution_id:
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
@@ -534,6 +536,8 @@ def check_jobs_status():
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
             logger.error("Job %s not submitted" % str(run.id))
+
+    runs.update(state=RunState.OPEN)
 
 
 def run_routine_operator_job(operator, job_group_id=None):
