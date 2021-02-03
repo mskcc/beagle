@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
@@ -222,7 +223,7 @@ def process_triggers():
                 if trigger_type == TriggerRunType.AGGREGATE:
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
-                        if operator_run.percent_runs_succeeded == 100.0:
+                        if operator_run.percent_runs_succeeded >= 100.0:
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
@@ -246,15 +247,15 @@ def process_triggers():
                             )
                             continue
 
-                    if operator_run.percent_runs_finished == 100.0:
+                    if operator_run.percent_runs_finished >= 100.0:
                         logger.info("Condition never met for operator run %s" % operator_run.id)
 
                 elif trigger_type == TriggerRunType.INDIVIDUAL:
-                    if operator_run.percent_runs_finished == 100.0:
+                    if operator_run.percent_runs_finished >= 100.0:
                         operator_run.complete()
 
             if operator_run.percent_runs_finished == 100.0:
-                if operator_run.percent_runs_succeeded == 100.0:
+                if operator_run.percent_runs_succeeded >= 100.0:
                     operator_run.complete()
                     if not created_chained_job and job_group_notifier_id:
                         completed_event = SetPipelineCompletedEvent(job_group_notifier_id).to_dict()
@@ -500,8 +501,10 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 
 @shared_task
+@memcache_lock("check_jobs_status")
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+
     for run in runs:
         if run.execution_id:
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))

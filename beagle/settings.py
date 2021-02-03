@@ -25,8 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'prod')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = ENVIRONMENT == 'dev'
 
 ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
@@ -256,12 +258,25 @@ SWAGGER_SETTINGS = {
 RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'beagle-cache',
+MEMCACHED_PORT = os.environ.get('BEAGLE_MEMCACHED_PORT', 11211)
+
+if ENVIRONMENT == "dev":
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'beagle-cache',
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
+            'LOCATION': '127.0.0.1:%s' % MEMCACHED_PORT,
+            'OPTIONS': {# see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
+                'default_noreply': False
+            }
+        }
+    }
 
 RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
 RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')
