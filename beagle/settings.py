@@ -270,7 +270,7 @@ if ENVIRONMENT == "dev":
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
             'LOCATION': '127.0.0.1:%s' % MEMCACHED_PORT,
         }
     }
