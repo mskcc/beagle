@@ -258,12 +258,22 @@ SWAGGER_SETTINGS = {
 RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'beagle-cache',
+MEMCACHED_PORT = os.environ.get('BEAGLE_MEMCACHED_PORT', 11211)
+
+if ENVIRONMENT == "dev":
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'beagle-cache',
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:%s' % MEMCACHED_PORT,
+        }
+    }
 
 RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
 RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')

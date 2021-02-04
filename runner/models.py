@@ -156,8 +156,6 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
-    state = models.IntegerField(choices=[(s.value, s.name) for s in RunState],
-                                 default=RunState.OPEN, db_index=True)
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)

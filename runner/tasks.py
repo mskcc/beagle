@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
@@ -500,6 +501,7 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 
 @shared_task
+@memcache_lock("check_jobs_status)
 def check_jobs_status():
     runs = Run.objects.filter(state=RunState.OPEN, status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
     runs.update(state=RunState.LOCKED)
