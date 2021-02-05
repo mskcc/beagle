@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import ldap
+import json
 import datetime
 from django_auth_ldap.config import LDAPSearch
 
@@ -373,3 +374,4 @@ BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get('BEAGLE_NOTIFIER_EMAIL_FROM')
 WES_ASSAYS = os.environ.get('BEAGLE_NOTIFIER_WES_ASSAYS', 'WholeExomeSequencing').split(',')
 NOTIFIER_WES_CC = os.environ.get('BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC', '')
 
+DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))

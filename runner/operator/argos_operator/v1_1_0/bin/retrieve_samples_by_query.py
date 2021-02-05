@@ -163,6 +163,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata = init_metadata()
     metadata['sampleId'] = sample_name
     metadata['sampleName'] = sample_name
+    metadata['cmoSampleName'] = sample_name
     metadata['requestId'] = sample_name
     metadata['sequencingCenter'] = "MSKCC"
     metadata['platform'] = "Illumina"
@@ -180,11 +181,13 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['tumorOrNormal'] = 'Normal'
     metadata['patientId'] = 'PN_PATIENT_ID'
     metadata['specimenType'] = specimen_type
+    metadata['runMode'] = ""
+    metadata['sampleClass'] = ""
     sample['metadata'] = metadata
     return sample
 
 
-def get_dmp_normal(patient_id, bait_set):
+def get_dmp_bam(patient_id, bait_set, tumor_type):
     """
     From a patient id and bait set, get matching dmp bam normal
     """
@@ -195,15 +198,16 @@ def get_dmp_normal(patient_id, bait_set):
     dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
 
     if dmp_bam:
-        sample = build_dmp_sample(dmp_bam, patient_id, bait_set)
+        sample = build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type)
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample
     return None
 
 
-def build_dmp_sample(dmp_bam, patient_id, bait_set):
+def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
+    
     dmp_metadata = dmp_bam.metadata
-    specimen_type = "DMP Normal"
+    specimen_type = "DMP"
     sample_name = dmp_metadata['external_id']
     sequencingCenter = "MSKCC"
     platform = "Illumina"
@@ -215,6 +219,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set):
     metadata = init_metadata()
     metadata['sampleId'] = sample_name
     metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
+    metadata['cmoSampleName'] = metadata['sampleName']
     metadata['requestId'] = sample_name
     metadata['sequencingCenter'] = sequencingCenter
     metadata['platform'] = platform
@@ -229,9 +234,11 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set):
     # build_sample in runner.operator.argos_operator.bin
     metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
     metadata['flowCellId'] = 'DMP_FCID'
-    metadata['tumorOrNormal'] = 'Normal'
+    metadata['tumorOrNormal'] = tumor_type
     metadata['patientId'] = patient_id
     metadata['specimenType'] = specimen_type
+    metadata['runMode'] = ""
+    metadata['sampleClass'] = ""
     sample['metadata'] = metadata
     return sample
 

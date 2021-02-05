@@ -22,6 +22,7 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.lims_client import LIMSClient
+from beagle_etl.copy_service import CopyService
 from django.contrib.auth.models import User
 
 
@@ -361,6 +362,14 @@ def create_pooled_normal(filepath, file_group_id):
         "recipe": recipe
     }
     try:
+        new_path = CopyService.remap(filepath)
+        if new_path != filepath:
+            CopyService.copy(filepath, new_path)
+    except Exception as e:
+        logger.error("Failed to copy file %s." % (filepath,))
+        raise FailedToFetchPoolNormalException("Failed to copy file %s. Error %s" % (filepath, str(e)))
+
+    try:
         f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
                                 file_type=file_type_obj)
         f.save()
@@ -590,14 +599,20 @@ def format_metadata(original_metadata):
 
 def create_file_object(path, file_group, lims_metadata, metadata, file_type):
     try:
-        f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group,
+        new_path = CopyService.remap(path)
+        if path != new_path:
+            CopyService.copy(path, new_path)
+    except Exception as e:
+        raise FailedToFetchSampleException("Failed to copy file %s. Error %s" % (path, str(e)))
+    try:
+        f = File.objects.create(file_name=os.path.basename(new_path), path=new_path, file_group=file_group,
                                 file_type=file_type)
         f.save()
 
         fm = FileMetadata(file=f, metadata=metadata)
         fm.save()
         Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                           args={'file_id': str(f.id), 'path': path},
+                           args={'file_id': str(f.id), 'path': new_path},
                            status=JobStatus.CREATED, max_retry=3, children=[])
         import_metadata = ImportMetadata.objects.create(file=f, metadata=lims_metadata)
     except Exception as e:
