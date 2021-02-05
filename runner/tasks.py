@@ -223,7 +223,7 @@ def process_triggers():
                 if trigger_type == TriggerRunType.AGGREGATE:
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
-                        if operator_run.percent_runs_succeeded >= 100.0:
+                        if operator_run.percent_runs_succeeded == 100.0:
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
@@ -247,15 +247,15 @@ def process_triggers():
                             )
                             continue
 
-                    if operator_run.percent_runs_finished >= 100.0:
+                    if operator_run.percent_runs_finished == 100.0:
                         logger.info("Condition never met for operator run %s" % operator_run.id)
 
                 elif trigger_type == TriggerRunType.INDIVIDUAL:
-                    if operator_run.percent_runs_finished >= 100.0:
+                    if operator_run.percent_runs_finished == 100.0:
                         operator_run.complete()
 
             if operator_run.percent_runs_finished == 100.0:
-                if operator_run.percent_runs_succeeded >= 100.0:
+                if operator_run.percent_runs_succeeded == 100.0:
                     operator_run.complete()
                     if not created_chained_job and job_group_notifier_id:
                         completed_event = SetPipelineCompletedEvent(job_group_notifier_id).to_dict()
