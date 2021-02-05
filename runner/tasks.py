@@ -396,7 +396,7 @@ def check_statuses_on_ridgeback(execution_ids):
     if response.status_code == 200:
         logger.info("Job statuses checked")
         return response.json()["jobs"]
-    logger.error("Failed to fetch job statuses")
+    logger.error("Failed to fetch job statuses with status code: %s" % response.status_code)
     return None
 
 
@@ -504,8 +504,10 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                              execution_id__isnull=False)
+                              execution_id__isnull=False).order_by('created_date').limit(500)
     remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
+    if not remote_status:
+        return
 
     for run in runs:
         logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
