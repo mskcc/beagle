@@ -506,7 +506,7 @@ def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
                               execution_id__isnull=False).order_by('created_date')[:500]
     remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
-    if not remote_status:
+    if not remote_statuses:
         return
 
     for run in runs:
