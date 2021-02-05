@@ -511,7 +511,7 @@ def check_jobs_status():
 
     for run in runs:
         logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
-        if run.execution_id not in remote_statuses:
+        if str(run.execution_id) not in remote_statuses:
             logger.info("Requested job status from Ridgeback that was not returned: %s [%s]" % (run.id, run.execution_id))
             continue
 
