@@ -10,10 +10,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
-class RunState(IntEnum):
-    OPEN = 0
-    LOCKED = 1
-
 class RunStatus(IntEnum):
     CREATING = 0
     READY = 1

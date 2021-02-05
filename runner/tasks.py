@@ -8,7 +8,7 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object import RunObject
-from .models import Run, RunState, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
     SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, SetLabelEvent, SetRunTicketInImportEvent
 from notifier.tasks import send_notification, notifier_start
@@ -503,8 +503,7 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 @shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
-    runs = Run.objects.filter(state=RunState.OPEN, status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
-    runs.update(state=RunState.LOCKED)
+    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
 
     for run in runs:
         if run.execution_id:
@@ -538,8 +537,6 @@ def check_jobs_status():
                 logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
         else:
             logger.error("Job %s not submitted" % str(run.id))
-
-    runs.update(state=RunState.OPEN)
 
 
 def run_routine_operator_job(operator, job_group_id=None):
