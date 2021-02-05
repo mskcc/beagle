@@ -504,7 +504,7 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 @shared_task
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                              execution_id__isnull=False).order_by('created_date').limit(500)
+                              execution_id__isnull=False).order_by('created_date')[:500]
     remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
     if not remote_status:
         return
