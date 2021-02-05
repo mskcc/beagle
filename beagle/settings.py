@@ -272,6 +272,9 @@ else:
         'default': {
             'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
             'LOCATION': '127.0.0.1:%s' % MEMCACHED_PORT,
+            'OPTIONS': {# see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
+                'default_noreply': False
+            }
         }
     }
 
