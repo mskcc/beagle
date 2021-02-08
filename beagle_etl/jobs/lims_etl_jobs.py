@@ -362,7 +362,7 @@ def create_pooled_normal(filepath, file_group_id):
         "recipe": recipe
     }
     try:
-        new_path = CopyService.remap(filepath)
+        new_path = CopyService.remap(recipe, filepath)
         if new_path != filepath:
             CopyService.copy(filepath, new_path)
     except Exception as e:
@@ -598,8 +598,9 @@ def format_metadata(original_metadata):
 
 
 def create_file_object(path, file_group, lims_metadata, metadata, file_type):
+    recipe = metadata['recipe']
     try:
-        new_path = CopyService.remap(path)
+        new_path = CopyService.remap(recipe, path)
         if path != new_path:
             CopyService.copy(path, new_path)
     except Exception as e:
