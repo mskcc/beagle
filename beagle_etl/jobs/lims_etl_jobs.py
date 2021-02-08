@@ -598,7 +598,7 @@ def format_metadata(original_metadata):
 
 
 def create_file_object(path, file_group, lims_metadata, metadata, file_type):
-    recipe = metadata['recipe']
+    recipe = metadata.get('recipe', '')
     try:
         new_path = CopyService.remap(recipe, path)
         if path != new_path:
