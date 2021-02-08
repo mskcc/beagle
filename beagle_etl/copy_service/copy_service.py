@@ -20,7 +20,7 @@ class CopyService(object):
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
-        recipe_mapping = mapping.get(recipe)
+        recipe_mapping = mapping.get(recipe, {})
         for prefix, dst in recipe_mapping.items():
             if path.startswith(prefix):
                 path = path.replace(prefix, dst)
