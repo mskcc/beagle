@@ -17,11 +17,11 @@ class AppFilter(admin.SimpleListFilter):
     parameter_name = 'app'
 
     def lookups(self, request, model_admin):
-        options = set()
+        options = list()
 
         for o in Pipeline.objects.order_by("-default", "name").values("id", "name", "version", "default"):
             check = " ✓" if o["default"] else ""
-            options.add((o["id"], "%s %s%s" % (o["name"], o["version"], check)))
+            options.append((o["id"], "%s %s%s" % (o["name"], o["version"], check)))
         return options
 
     def queryset(self, request, queryset):
@@ -35,8 +35,7 @@ class StatusFilter(admin.SimpleListFilter):
     parameter_name = 'status'
 
     def lookups(self, request, model_admin):
-        filters = {k:v for (k, v) in request.GET.items() if "range" not in k}
-        del filters["status"]
+        filters = {k:v for (k, v) in request.GET.items() if "range" not in k and "status" not in k}
         qs = model_admin.get_queryset(request).filter(**filters)
         return [(status.value, "%s (%s)" % (status.name, qs.filter(status=status.value).count())) for status in RunStatus]
 
