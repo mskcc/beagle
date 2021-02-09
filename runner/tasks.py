@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
@@ -174,7 +175,8 @@ def generate_description(job_group, job_group_notifier, request):
         l_email = data['labHeadEmail']
         p_email = data['piEmail']
         pm_name = data['projectManagerName']
-        qc_emails = data['qcAccessEmails']
+        qc_emails = data['qcAccessEmails'] if 'qcAccessEmails' in data else ""
+
         num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
         num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
                 'metadata__cmoSampleName').annotate(n=Count("pk")))
@@ -500,8 +502,10 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 
 @shared_task
+@memcache_lock("check_jobs_status")
 def check_jobs_status():
     runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
+
     for run in runs:
         if run.execution_id:
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
