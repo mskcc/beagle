@@ -508,13 +508,15 @@ def check_jobs_status():
 
     limit = 800
     i = 0
-
-    while runs = runs_queryset[i:i+limit]:
+    while True:
+        runs = runs_queryset[i:i+limit]
         i += limit
+        if not runs:
+            return
 
         remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
         if not remote_statuses:
-            return
+            continue
 
         for run in runs:
             logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
