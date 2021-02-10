@@ -1,0 +1,8 @@
+BootStrap:docker
+From:bitnami/memcached:latest
+Includecmd: no
+
+%startscript
+	/opt/bitnami/scripts/memcached/run.sh
+%post
+	groupadd -r -g 999 memcached && useradd -r -g memcached -u 999 memcached

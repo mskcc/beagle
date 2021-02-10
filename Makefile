@@ -114,6 +114,7 @@ install: conda
 # pip install git+https://github.com/mskcc/beagle_cli.git@develop
 # pip install -r requirements-cli.txt # <- what happened to this file?
 
+export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
 export BEAGLE_DB_USERNAME=$(shell whoami)
