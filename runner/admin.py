@@ -35,7 +35,9 @@ class StatusFilter(admin.SimpleListFilter):
     parameter_name = 'status'
 
     def lookups(self, request, model_admin):
-        filters = {k:v for (k, v) in request.GET.items() if "range" not in k and "status" not in k}
+        # TODO support range/q
+        filters = {k:v for (k, v) in request.GET.items() if "range" not in k and "status" not in k
+                   and "q" not in k and "p" not in k}
         qs = model_admin.get_queryset(request).filter(**filters)
         return [(status.value, "%s (%s)" % (status.name, qs.filter(status=status.value).count())) for status in RunStatus]
 
