@@ -185,7 +185,7 @@ class Run(BaseModel):
             setattr(self, f, None)
 
         self.job_statuses = {}
-        self.status = RunStatus.CREATING
+        self.status = RunStatus.READY
         return self
 
     @property

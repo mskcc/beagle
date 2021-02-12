@@ -11,8 +11,9 @@ from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
 from runner.run.objects.run_object import RunObject
-from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, abort_job_task
-from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
+from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, \
+abort_job_task, submit_job, create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
+from runner.models import Run, Port, PortType, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
@@ -23,7 +24,6 @@ from runner.operator.operator_factory import OperatorFactory
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from runner.tasks import create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
@@ -221,15 +221,17 @@ class RunApiRestartViewSet(GenericAPIView):
         o.pk = None
         o.status = RunStatus.RUNNING if len(runs_to_copy_over) > 0 else RunStatus.CREATING
         o.num_failed_runs = 0
-        o.num_completed_runs = 0
+        o.num_completed_runs = len(runs_to_copy_over)
         o.finished_date = None
         o.save()
 
         for r in runs_to_copy_over:
             ports = r.port_set.all()
+            samples = r.samples.all()
             r.pk = None
             r.operator_run_id = o.pk
             r.save()
+            r.samples.add(*samples)
 
             for p in ports:
                 files = p.files.all()
@@ -240,11 +242,24 @@ class RunApiRestartViewSet(GenericAPIView):
 
         request_id = None
         for r in runs_to_restart:
-            samples = r.samples.all()
+            samples = r.samples.filter(type=PortType.INPUT)
+            ports = r.port_set.all()
             r.pk = None
             r.operator_run_id = o.pk
             r.clear().save()
             r.samples.add(*samples)
+
+            r.save()
+
+            for p in ports:
+                files = p.files.all()
+                p.pk = None
+                p.run_id = r.pk
+                p.save()
+                p.files.add(*files)
+
+
+            submit_job.delay(r.pk, r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
 
         return Response({
