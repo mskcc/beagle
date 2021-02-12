@@ -213,7 +213,11 @@ class RunApiRestartViewSet(GenericAPIView):
         if runs_in_progress:
             return Response("There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_to_restart = o.runs.filter(status=RunStatus.FAILED)
+        runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
+
+        if not runs_to_restart:
+            return Response("There are no runs to restart", status=status.HTTP_400_BAD_REQUEST)
+
         runs_to_copy_over = o.runs.filter(status=RunStatus.COMPLETED)
 
         o.pk = None
