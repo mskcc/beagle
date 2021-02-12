@@ -229,7 +229,7 @@ class RunApiRestartViewSet(GenericAPIView):
             r.operator_run_id = o.pk
             r.save()
 
-            for p in r.port_set:
+            for p in r.port_set.all():
                 p.pk = None
                 p.run_id = r.pk
                 p.save()
