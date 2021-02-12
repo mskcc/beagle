@@ -240,7 +240,7 @@ class RunApiRestartViewSet(GenericAPIView):
             r.pk = None
             r.operator_run_id = o.pk
             r.clear().save()
-            r.samples.add(samples)
+            r.samples.add(*samples)
             self._send_notifications(o.job_group_notifier_id, r)
 
         return Response({
