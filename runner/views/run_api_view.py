@@ -203,7 +203,7 @@ class RunApiRestartViewSet(GenericAPIView):
 
         o = OperatorRun.objects.select_related(
             'operator',
-        ).prefetch_related('runs', 'run'runs__port_set').get(pk=operator_run_id)
+        ).prefetch_related('runs', 'run__port_set').get(pk=operator_run_id)
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
