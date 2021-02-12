@@ -201,8 +201,6 @@ class RunApiRestartViewSet(GenericAPIView):
 
         operator_run_id = serializer.validated_data.get('operator_run_id')
 
-        return Response([], status=status.HTTP_200_OK)
-
         o = OperatorRun.objects.select_related(
             'operator',
         ).prefetch_related('runs', 'runs__port_set').get(pk=operator_run_id)
