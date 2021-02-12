@@ -221,18 +221,22 @@ class RunApiRestartViewSet(GenericAPIView):
         o.pk = None
         o.status = RunStatus.RUNNING if len(runs_to_copy_over) > 0 else RunStatus.CREATING
         o.num_failed_runs = 0
+        o.num_completed_runs = 0
         o.finished_date = None
         o.save()
 
         for r in runs_to_copy_over:
+            ports = r.port_set.all()
             r.pk = None
             r.operator_run_id = o.pk
             r.save()
 
-            for p in r.port_set.all():
+            for p in ports:
+                files = p.files.all()
                 p.pk = None
                 p.run_id = r.pk
                 p.save()
+                p.files.add(*files)
 
         request_id = None
         for r in runs_to_restart:
