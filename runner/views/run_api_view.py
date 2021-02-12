@@ -239,7 +239,10 @@ class RunApiRestartViewSet(GenericAPIView):
             r.clear().save()
             self._send_notifications(o.job_group_notifier_id, r)
 
-        return Response(None, status=status.HTTP_201_CREATED)
+        return Response({
+            "runs_restarted": [r.pk for r in runs_to_restart],
+            "runs_copied": [r.pk for r in runs_to_copy_over]
+        }, status=status.HTTP_201_CREATED)
 
     def _send_notifications(self, job_group_notifier_id, run):
         pipeline_name = run.app.name
