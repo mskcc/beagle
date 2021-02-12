@@ -174,7 +174,8 @@ def generate_description(job_group, job_group_notifier, request):
         l_email = data['labHeadEmail']
         p_email = data['piEmail']
         pm_name = data['projectManagerName']
-        qc_emails = data['qcAccessEmails']
+        qc_emails = data['qcAccessEmails'] if 'qcAccessEmails' in data else ""
+
         num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
         num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
                 'metadata__cmoSampleName').annotate(n=Count("pk")))
