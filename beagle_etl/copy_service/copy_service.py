@@ -19,9 +19,11 @@ class CopyService(object):
         copyfile(path_from, path_to)
 
     @staticmethod
-    def remap(path, mapping=settings.DEFAULT_MAPPING):
-        for prefix, dst in mapping.items():
+    def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
+        recipe_mapping = mapping.get(recipe, {})
+        for prefix, dst in recipe_mapping.items():
             if path.startswith(prefix):
                 path = path.replace(prefix, dst)
+                break
         logger.info('New path {path}'.format(path=path))
         return path
