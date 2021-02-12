@@ -242,7 +242,7 @@ class RunApiRestartViewSet(GenericAPIView):
 
         request_id = None
         for r in runs_to_restart:
-            samples = r.samples
+            samples = r.samples.all()
             ports = r.port_set.filter(port_type=PortType.INPUT)
             r.pk = None
             r.operator_run_id = o.pk
