@@ -5,6 +5,7 @@ import datetime
 from functools import reduce
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
+from django.db import transaction
 from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
@@ -192,49 +193,53 @@ class RunApiRestartViewSet(GenericAPIView):
 
     logger = logging.getLogger(__name__)
 
+    @transaction.atomic
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        run_id = serializer.validated_data.get('run_id')
-        group_id = serializer.validated_data.get('group_id')
-        pipeline_names = serializer.validated_data.get('pipeline_names')
-        if run_id:
-            run = get_object_or_404(Run, pk=run_id)
-            runs = [RunObject.from_db(run_id)]
-        elif group_id:
-            runs = [RunObject.from_db(r.id) for r in Run.objects.filter(job_group_id=group_id,
-                                                                        app__name__in=pipeline_names).all()]
-            if not runs:
-                return Response(status=status.HTTP_404_NOT_FOUND)
+        operator_run_id = serializer.validated_data.get('operator_run_id')
 
-        data = []
-        for run in runs:
-            inputs = dict()
-            for port in run.inputs:
-                inputs[port.name] = port.db_value
-            data.append(dict(
-                app=str(run.run_obj.app.id),
-                inputs=inputs,
-                tags=run.tags,
-                job_group_id=run.job_group.id,
-                job_group_notifier_id=run.job_group_notifier.id,
-                resume=run_id
-            ))
+        return Response([], status=status.HTTP_200_OK)
 
-        serializer = APIRunCreateSerializer(data=data, context={'request': request}, many=True)
-        if serializer.is_valid():
-            new_runs = serializer.save()
+        o = OperatorRun.objects.select_related(
+            'operator',
+        ).prefetch_related('runs', 'runs__port_set').get(pk=operator_run_id)
+        if not o:
+            return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-            for run, data in zip(new_runs, serializer.validated_data):
-                create_run_task.delay(run.id, data['inputs'])
-                job_group_notifier_id = str(run.job_group_notifier_id)
-                self._send_notifications(job_group_notifier_id, run)
+        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED]))
+        if runs_in_progress:
+            return Response("There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST)
 
-            response = RunSerializerFull(new_runs, many=True)
-            return Response(response.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        runs_to_restart = o.runs.filter(status=RunStatus.FAILED)
+        runs_to_copy_over = o.runs.filter(status=RunStatus.COMPLETED)
+
+        o.pk = None
+        o.status = RunStatus.RUNNING if len(runs_to_copy_over) > 0 else RunStatus.CREATING
+        o.num_failed_runs = 0
+        o.finished_date = None
+        o.save()
+
+        for r in runs_to_copy_over:
+            r.pk = None
+            r.operator_run_id = o.pk
+            r.save()
+
+            for p in r.ports:
+                p.pk = None
+                p.run_id = r.pk
+                p.save()
+
+        request_id = None
+        for r in runs_to_restart:
+            r.pk = None
+            r.operator_run_id = o.pk
+            r.clear().save()
+            self._send_notifications(o.job_group_notifier_id, r)
+
+        return Response(None, status=status.HTTP_201_CREATED)
 
     def _send_notifications(self, job_group_notifier_id, run):
         pipeline_name = run.app.name

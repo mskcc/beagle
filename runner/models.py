@@ -178,6 +178,16 @@ class Run(BaseModel):
             "status": self.status
         }
 
+    def clear(self):
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
+                           "execution_id"]
+        for f in fields_to_clear:
+            setattr(self, f, None)
+
+        self.job_statuses = {}
+        self.status = RunStatus.CREATING
+        return self
+
     @property
     def is_completed(self):
         self.refresh_from_db()

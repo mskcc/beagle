@@ -22,7 +22,6 @@ from file_system.repository import FileRepository
 
 logger = logging.getLogger(__name__)
 
-
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent)
