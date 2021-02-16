@@ -1,13 +1,12 @@
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
-from lib.admin import link_relation
 from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, Sample
 
 # Register your models here.
 
 
 class FileAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'file_group', link_relation("metadata"), 'size', 'created_date')
+    list_display = ('id', 'file_name', 'file_group', 'size', 'created_date')
     search_fields = ['file_name']
 
 
