@@ -271,7 +271,7 @@ celery-start:
 	-l info \
 	-Q "$(BEAGLE_RUNNER_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_RUNNER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)"
+	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" &
 
 flower:
 	flower -A beagle_etl --port=5555 -logLevel=debug --broker=$(CELERY_BROKER_URL)
