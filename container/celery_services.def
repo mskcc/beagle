@@ -32,6 +32,8 @@ Includecmd: no
 
     nohup celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner &
 
+    nohup celery flower -A beagle_etl --port=5555 --broker=$CELERY_BROKER_URL// &
+
 %post
     export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean && apt-get update -qq \

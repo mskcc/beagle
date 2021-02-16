@@ -273,6 +273,8 @@ celery-start:
 	--pidfile "$(CELERY_WORKER_RUNNER_PID_FILE)" \
 	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" &
 
+flower:
+	flower -A beagle_etl --port=5555 -logLevel=debug --broker=$(CELERY_BROKER_URL)
 # check that the Celery processes are running
 celery-check:
 	-ps auxww | grep 'celery' | grep -v 'grep' | grep -v 'make' | grep '$(CURDIR)'
