@@ -10,6 +10,7 @@ BEAGLE_DB_USERNAME | PostgreSQL user | example_user
 BEAGLE_DB_PASSWORD | password for PostgreSQL user | example_password
 BEAGLE_DB_PORT | PostgreSQL port | 3333
 BEAGLE_PORT | Beagle port ( only for container use) | 4444
+FLOWER_PORT | Flower port ( only for container use) | 5555
 BEAGLE_LOG_PATH | log file | /example/path/logs/beagle-server.log
 BEAGLE_PATH | Path to Beagle repo ( only for container use) | /srv/services/staging_voyager/beagle/
 BEAGLE_URL | Url for beagle | http://your_server:4444

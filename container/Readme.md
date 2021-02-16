@@ -15,10 +15,10 @@ If you do not have a singularity installed locally but you have docker you can u
 
 `docker run --privileged -it -v /path/to/beagle:/beagle:rw  --entrypoint "/bin/bash" singularityware/singularity:v3.3.0`
 
-``
 
 Building Pooling Service
 
+```
 export SINGULARITYENV_DB_NAME=<db_name>
 export SINGULARITYENV_DB_HOST=<db_host>
 export SINGULARITYENV_DB_USER=<db_user>
@@ -28,6 +28,7 @@ export SINGULARITYENV_LISTEN_PORT=<db_listen_port>
 export SINGULARITYENV_MAX_DB_CONNECTIONS=<db_max_connections>
 export SINGULARITYENV_DEFAULT_POOL_SIZE=<db_default_pool_size>
 export SINGULARITYENV_MAX_CLIENT_CONN=<db_max_client_connections>
+```
 
 `singularity build pooling_service.sif pooling_service.def`
 
@@ -41,6 +42,7 @@ SINGULARITYENV_BEAGLE_DB_NAME
 SINGULARITYENV_BEAGLE_DB_USERNAME
 SINGULARITYENV_BEAGLE_DB_PASSWORD
 SINGULARITYENV_BEAGLE_DB_PORT
+SINGULARITYENV_FLOWER_PORT
 SINGULARITYENV_BEAGLE_PORT
 SINGULARITYENV_BEAGLE_LOG_PATH
 SINGULARITYENV_BEAGLE_PATH
