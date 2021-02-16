@@ -347,7 +347,7 @@ MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
 shell : check-env
-	python manage.py shell_plus --notebook
+	python manage.py shell_plus --print-sql
 
 
 dumpdata: check-env
