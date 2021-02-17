@@ -529,27 +529,27 @@ def check_jobs_status():
             status = remote_statuses[str(run.execution_id)]
             if status['started'] and not run.started:
                 run.started = status['started']
-                if status['submitted'] and not run.submitted:
-                    run.submitted = status['submitted']
-                    if status['commandlinetooljob_set']:
-                        update_commandline_job_status(run, status['commandlinetooljob_set'])
-                    if status['status'] == 'FAILED':
-                        logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                        message = dict(details=status.get('message'))
-                        fail_job(str(run.id),
-                                 message)
-                        continue
-                    if status['status'] == 'COMPLETED':
-                        logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                        complete_job(str(run.id), status['outputs'])
-                        continue
-                    if status['status'] == 'CREATED' or status['status'] == 'PENDING' or status['status'] == 'RUNNING':
-                        logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
-                        running_job(run)
-                        continue
-                    if status['status'] == 'ABORTED':
-                        logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
-                        abort_job(run)
+            if status['submitted'] and not run.submitted:
+                run.submitted = status['submitted']
+            if status['commandlinetooljob_set']:
+                update_commandline_job_status(run, status['commandlinetooljob_set'])
+            if status['status'] == 'FAILED':
+                logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
+                message = dict(details=status.get('message'))
+                fail_job(str(run.id),
+                         message)
+                continue
+            if status['status'] == 'COMPLETED':
+                logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
+                complete_job(str(run.id), status['outputs'])
+                continue
+            if status['status'] == 'CREATED' or status['status'] == 'PENDING' or status['status'] == 'RUNNING':
+                logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
+                running_job(run)
+                continue
+            if status['status'] == 'ABORTED':
+                logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
+                abort_job(run)
 
 def run_routine_operator_job(operator, job_group_id=None):
     """
