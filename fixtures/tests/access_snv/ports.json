@@ -109,6 +109,7 @@
                 "file": {
                     "class": "File",
                     "location": "juno:///test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+                    "basename": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
                     "size": 7313069069
                 },
                 "sampleId": "C-000884-L011-d",
