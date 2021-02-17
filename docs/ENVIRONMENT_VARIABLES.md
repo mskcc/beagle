@@ -38,6 +38,7 @@ BEAGLE_DEFAULT_QUEUE | Rabbitmq default queue | example.runner.queue
 BEAGLE_JOB_SCHEDULER_QUEUE | Rabbitmq scheduler queue | example.runner.queue
 CELERY_EVENT_QUEUE_PREFIX | Prefix for Celery event | beagle.celery
 CELERY_LOG_PATH | Log path for Celery | /path/to/celey.log
+CELERY_BROKER_URL | URL to Celery broker | amqp://[RABBITMQ_USERNAME]:[RABBITMQ_PASSWORD]@localhost:5672
 JIRA_USERNAME | JIRA username | example_username
 JIRA_PASSWORD | JIRA password | example_password
 JIRA_URL | JIRA URL | http://jira.example.org:5000
