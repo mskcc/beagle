@@ -24,7 +24,8 @@ def get_request_id_runs(request_id):
     group_id = Run.objects.filter(
         tags__requestId=request_id,
         app__name='access legacy',
-        status=RunStatus.COMPLETED
+        status=RunStatus.COMPLETED,
+        operator_run__status=RunStatus.COMPLETED
     ).order_by('-finished_date').first().job_group
 
     request_id_runs = Run.objects.filter(
