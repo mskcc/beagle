@@ -62,38 +62,7 @@ class TestAccessSNVOperator(TestCase):
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
-
-        # Only a single entry is required in these fields, as we are running in single-sample mode
-        required_input_fields = [
-            'tumor_bams',
-            'normal_bams',
-            'tumor_sample_names',
-            'normal_sample_names',
-            'matched_normal_ids',
-        ]
-
-        # We should have 9 bams for genotyping:
-        # - Main Tumor Bam Duplex
-        # - Main Tumor Bam Simplex
-        # - Default Variant Calling Normal Duplex
-        # - Matched Normal Duplex
-        # - Matched Normal Simplex
-        # - Matched Tumor Duplex IGO
-        # - Matched Tumor Simplex IGO
-        # - Matched Tumor Duplex DMP
-        # - Matched Tumor Simplex DMP
-        required_input_fields_length_9 = [
-            'genotyping_bams',
-            'genotyping_bams_ids',
-        ]
-
-        for inputs in input_data:
-            for field in required_input_fields:
-                self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 1)
-            for field in required_input_fields_length_9:
-                self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 9)
+        self.validate(input_data)
 
     def test_dmp_normal(self):
         """
@@ -125,3 +94,37 @@ class TestAccessSNVOperator(TestCase):
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
         operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=[test_run_id])
         input_data = operator.get_sample_inputs()
+        self.validate(input_data)
+
+    def validate(self, input_data):
+        # Only a single entry is required in these fields, as we are running in single-sample mode
+        required_input_fields = [
+            'tumor_bams',
+            'normal_bams',
+            'tumor_sample_names',
+            'normal_sample_names',
+            'matched_normal_ids',
+        ]
+
+        # We should have 9 bams for genotyping:
+        # - Main Tumor Bam Duplex
+        # - Main Tumor Bam Simplex
+        # - Default Variant Calling Normal Duplex
+        # - Matched Normal Duplex
+        # - Matched Normal Simplex
+        # - Matched Tumor Duplex IGO
+        # - Matched Tumor Simplex IGO
+        # - Matched Tumor Duplex DMP
+        # - Matched Tumor Simplex DMP
+        required_input_fields_length_9 = [
+            'genotyping_bams',
+            'genotyping_bams_ids',
+        ]
+
+        for inputs in input_data:
+            for field in required_input_fields:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 1)
+            for field in required_input_fields_length_9:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 9)
