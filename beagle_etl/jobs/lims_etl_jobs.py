@@ -543,10 +543,16 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        f = FileRepository.filter(path=path).first()
+        recipe = metadata.get('recipe', '')
+        new_path = CopyService.remap(recipe, path) # Get copied file path
+        f = FileRepository.filter(path=new_path).first()
         if not f:
-            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
-
+            try:
+                if path != new_path:
+                    CopyService.copy(path, new_path)
+            except Exception as e:
+                raise FailedToFetchSampleException("Failed to copy file %s. Error %s" % (path, str(e)))
+            create_file_object(new_path, file_group_obj, lims_metadata, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -554,7 +560,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         else:
             if update:
                 before = f.file.filemetadata_set.order_by('-created_date').count()
-                update_file_object(f.file, path, metadata)
+                update_file_object(f.file, f.file.path, metadata)
                 after = f.file.filemetadata_set.order_by('-created_date').count()
                 if after != before:
                     all_metadata = f.file.filemetadata_set.order_by('-created_date')
@@ -598,22 +604,15 @@ def format_metadata(original_metadata):
 
 
 def create_file_object(path, file_group, lims_metadata, metadata, file_type):
-    recipe = metadata.get('recipe', '')
     try:
-        new_path = CopyService.remap(recipe, path)
-        if path != new_path:
-            CopyService.copy(path, new_path)
-    except Exception as e:
-        raise FailedToFetchSampleException("Failed to copy file %s. Error %s" % (path, str(e)))
-    try:
-        f = File.objects.create(file_name=os.path.basename(new_path), path=new_path, file_group=file_group,
+        f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group,
                                 file_type=file_type)
         f.save()
 
         fm = FileMetadata(file=f, metadata=metadata)
         fm.save()
         Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                           args={'file_id': str(f.id), 'path': new_path},
+                           args={'file_id': str(f.id), 'path': path},
                            status=JobStatus.CREATED, max_retry=3, children=[])
         import_metadata = ImportMetadata.objects.create(file=f, metadata=lims_metadata)
     except Exception as e:

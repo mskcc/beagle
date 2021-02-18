@@ -109,12 +109,47 @@
                 "file": {
                     "class": "File",
                     "location": "juno:///test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+                    "basename": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
                     "size": 7313069069
                 },
                 "sampleId": "C-000884-L011-d",
                 "patientId": "C-000884",
                 "tumorOrNormal": "Tumor"
             }],
+            "files": [
+                "2f77f3ac-ab25-4a02-90bd-86542401ac82"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "52e17010-65a2-4e7d-a699-03bfa8c7545c",
+        "fields": {
+            "created_date": "2019-12-11T22:53:17.831Z",
+            "modified_date": "2020-02-04T15:29:30.750Z",
+            "run": "bc23076e-f477-4578-943c-1fbf6f1fca42",
+            "name": "duplex_bams",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "secondary_files": [],
+            "db_value": [{
+                "class": "File",
+                "location": "bid://2f77f3ac-ab25-4a02-90bd-86542401ac82"
+            }],
+            "value": [
+                {
+                    "class": "File",
+                    "location": "juno:///test/path/C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+                    "basename": "C-000884-L011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+                    "size": 7313069069
+                }
+            ],
             "files": [
                 "2f77f3ac-ab25-4a02-90bd-86542401ac82"
             ]
