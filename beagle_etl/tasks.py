@@ -4,7 +4,6 @@ import datetime
 import traceback
 from celery import shared_task
 from beagle_etl.models import JobStatus, Job
-from beagle_etl.jobs import TYPES
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from file_system.repository import FileRepository
@@ -167,7 +166,8 @@ class JobObject(object):
         all_jobs.extend(sample_jobs)
         all_jobs.extend(pooled_normal_jobs)
 
-        request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
+        request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'],
+                                              run=TYPES['SAMPLE']).order_by('-created_date').first()
 
         number_of_tumors = FileRepository.filter(
             metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata='sampleId').count()
