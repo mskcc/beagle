@@ -560,7 +560,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         else:
             if update:
                 before = f.file.filemetadata_set.order_by('-created_date').count()
-                update_file_object(f.file, path, metadata)
+                update_file_object(f.file, f.file.path, metadata)
                 after = f.file.filemetadata_set.order_by('-created_date').count()
                 if after != before:
                     all_metadata = f.file.filemetadata_set.order_by('-created_date')
