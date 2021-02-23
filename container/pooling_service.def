@@ -8,18 +8,25 @@ Includecmd: no
 %post
     export PG_CONFIG_DIR="/etc/pgbouncer"
 
-    if [ -z ${DB_HOST} ]; then echo "Setup pgbouncer config error! You must set DB_HOST env"; fi
-    if [ -z ${DB_USER} ]; then echo "Setup pgbouncer config error! You must set DB_USER env"; fi
-    if [ -z ${DB_PASS} ]; then echo "Setup pgbouncer config error! You must set DB_PASS env"; fi
-    if [ -z ${DB_PORT} ]; then echo "Setup pgbouncer config error! You must set DB_PORT env"; fi
-    if [ -z ${DB_NAME} ]; then echo "Setup pgbouncer config error! You must set DB_NAME env"; fi
-    echo "\"$DB_USER\" \"$DB_PASS\"" >> ${PG_CONFIG_DIR}/userlist.txt
+    if [ -z ${DB_BEAGLE_HOST} ]; then echo "Setup pgbouncer config error! You must set DB_BEAGLE_HOST env"; fi
+    if [ -z ${DB_BEAGLE_USER} ]; then echo "Setup pgbouncer config error! You must set DB_BEAGLE_USER env"; fi
+    if [ -z ${DB_BEAGLE_PASS} ]; then echo "Setup pgbouncer config error! You must set DB_BEAGLE_PASS env"; fi
+    if [ -z ${DB_BEAGLE_PORT} ]; then echo "Setup pgbouncer config error! You must set DB_BEAGLE_PORT env"; fi
+    if [ -z ${DB_BEAGLE_NAME} ]; then echo "Setup pgbouncer config error! You must set DB_BEAGLE_NAME env"; fi
+    echo "\"$DB_BEAGLE_USER\" \"$DB_BEAGLE_PASS\"" >> ${PG_CONFIG_DIR}/userlist.txt
+
+    if [ -z ${DB_RIDGEBACK_HOST} ]; then echo "Setup pgbouncer config error! You must set DB_RIDGEBACK_HOST env"; fi
+    if [ -z ${DB_RIDGEBACK_USER} ]; then echo "Setup pgbouncer config error! You must set DB_RIDGEBACK_USER env"; fi
+    if [ -z ${DB_RIDGEBACK_PASS} ]; then echo "Setup pgbouncer config error! You must set DB_RIDGEBACK_PASS env"; fi
+    if [ -z ${DB_RIDGEBACK_PORT} ]; then echo "Setup pgbouncer config error! You must set DB_RIDGEBACK_PORT env"; fi
+    if [ -z ${DB_RIDGEBACK_NAME} ]; then echo "Setup pgbouncer config error! You must set DB_RIDGEBACK_NAME env"; fi
+    echo "\"$DB_RIDGEBACK_USER\" \"$DB_RIDGEBACK_PASS\"" >> ${PG_CONFIG_DIR}/userlist.txt
 
     printf "\
 ################## Auto generated ##################
 [databases]
-${DB_NAME:-*} = host=${DB_HOST} \
-port=${DB_PORT:-5432} user=${DB_USER:-voyager}
+${DB_BEAGLE_NAME:-*} = host=${DB_BEAGLE_HOST} port=${DB_BEAGLE_PORT:-5432} user=${DB_BEAGLE_USER:-voyager}
+${DB_RIDGEBACK_NAME:-*} = host=${DB_RIDGEBACK_HOST} port=${DB_RIDGEBACK_PORT:-5432} user=${DB_RIDGEBACK_USER:-voyager}
 ${CLIENT_ENCODING:+client_encoding = ${CLIENT_ENCODING}\n}\
 [pgbouncer]
 listen_addr = ${LISTEN_ADDR:-0.0.0.0}
