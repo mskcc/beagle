@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import datetime
+from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
@@ -20,7 +21,6 @@ from file_system.repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
-
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
@@ -174,7 +174,8 @@ def generate_description(job_group, job_group_notifier, request):
         l_email = data['labHeadEmail']
         p_email = data['piEmail']
         pm_name = data['projectManagerName']
-        qc_emails = data['qcAccessEmails']
+        qc_emails = data['qcAccessEmails'] if 'qcAccessEmails' in data else ""
+
         num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
         num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
                 'metadata__cmoSampleName').annotate(n=Count("pk")))
@@ -389,12 +390,14 @@ def abort_job_on_ridgeback(job_id):
     return None
 
 
-def check_status_on_ridgeback(job_id):
-    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/' % job_id)
+def check_statuses_on_ridgeback(execution_ids):
+    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/statuses/', data={
+        "job_ids": execution_ids
+    })
     if response.status_code == 200:
-        logger.info("Job %s in status: %s" % (job_id, response.json()['status']))
-        return response.json()
-    logger.error("Failed to fetch job status for: %s" % job_id)
+        logger.info("Job statuses checked")
+        return response.json()["jobs"]
+    logger.error("Failed to fetch job statuses with status code: %s" % response.status_code)
     return None
 
 
@@ -488,37 +491,65 @@ def abort_job(run):
     run.status = RunStatus.ABORTED
     run.save()
 
+def update_commandline_job_status(run, commandline_tool_job_set):
+    job_status_obj = {}
+    for single_commandline_job in commandline_tool_job_set:
+        status = single_commandline_job.pop('status')
+        root = single_commandline_job.pop('root')
+        if status not in job_status_obj:
+            job_status_obj[status] = []
+        job_status_obj[status].append(single_commandline_job)
+    run.job_statuses = job_status_obj
+
 
 @shared_task
+@memcache_lock("check_jobs_status")
 def check_jobs_status():
-    runs = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY)).all()
-    for run in runs:
-        if run.execution_id:
-            logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
-            remote_status = check_status_on_ridgeback(run.execution_id)
-            if remote_status:
-                if remote_status['status'] == 'FAILED':
-                    logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
-                    message = dict(details=remote_status.get('message'))
-                    fail_job(str(run.id),
-                             message)
-                    continue
-                if remote_status['status'] == 'COMPLETED':
-                    logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
-                    complete_job(str(run.id), remote_status['outputs'])
-                    continue
-                if remote_status['status'] == 'CREATED' or remote_status['status'] == 'PENDING' or remote_status['status'] == 'RUNNING':
-                    logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
-                    running_job(run)
-                    continue
-                if remote_status['status'] == 'ABORTED':
-                    logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
-                    abort_job(run)
-            else:
-                logger.error("Failed to check status for job: %s [%s]" % (run.id, run.execution_id))
-        else:
-            logger.error("Job %s not submitted" % str(run.id))
+    runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
+                              execution_id__isnull=False).order_by('created_date')
 
+    limit = 800
+    i = 0
+    while True:
+        runs = runs_queryset[i:i+limit]
+        i += limit
+        if not runs:
+            return
+
+        remote_statuses = check_statuses_on_ridgeback(list(runs.values_list("execution_id")))
+        if not remote_statuses:
+            continue
+
+        for run in runs:
+            logger.info("Checking status for job: %s [%s]" % (run.id, run.execution_id))
+            if str(run.execution_id) not in remote_statuses:
+                logger.info("Requested job status from Ridgeback that was not returned: %s [%s]" % (run.id, run.execution_id))
+                continue
+
+            status = remote_statuses[str(run.execution_id)]
+            if status['started'] and not run.started:
+                run.started = status['started']
+            if status['submitted'] and not run.submitted:
+                run.submitted = status['submitted']
+            if status['commandlinetooljob_set']:
+                update_commandline_job_status(run, status['commandlinetooljob_set'])
+            if status['status'] == 'FAILED':
+                logger.info("Job %s [%s] FAILED" % (run.id, run.execution_id))
+                message = dict(details=status.get('message'))
+                fail_job(str(run.id),
+                         message)
+                continue
+            if status['status'] == 'COMPLETED':
+                logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
+                complete_job(str(run.id), status['outputs'])
+                continue
+            if status['status'] == 'CREATED' or status['status'] == 'PENDING' or status['status'] == 'RUNNING':
+                logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
+                running_job(run)
+                continue
+            if status['status'] == 'ABORTED':
+                logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
+                abort_job(run)
 
 def run_routine_operator_job(operator, job_group_id=None):
     """

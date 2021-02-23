@@ -22,6 +22,7 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.lims_client import LIMSClient
+from beagle_etl.copy_service import CopyService
 from django.contrib.auth.models import User
 
 
@@ -361,6 +362,14 @@ def create_pooled_normal(filepath, file_group_id):
         "recipe": recipe
     }
     try:
+        new_path = CopyService.remap(recipe, filepath)
+        if new_path != filepath:
+            CopyService.copy(filepath, new_path)
+    except Exception as e:
+        logger.error("Failed to copy file %s." % (filepath,))
+        raise FailedToFetchPoolNormalException("Failed to copy file %s. Error %s" % (filepath, str(e)))
+
+    try:
         f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
                                 file_type=file_type_obj)
         f.save()
@@ -534,10 +543,16 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        f = FileRepository.filter(path=path).first()
+        recipe = metadata.get('recipe', '')
+        new_path = CopyService.remap(recipe, path) # Get copied file path
+        f = FileRepository.filter(path=new_path).first()
         if not f:
-            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
-
+            try:
+                if path != new_path:
+                    CopyService.copy(path, new_path)
+            except Exception as e:
+                raise FailedToFetchSampleException("Failed to copy file %s. Error %s" % (path, str(e)))
+            create_file_object(new_path, file_group_obj, lims_metadata, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -545,7 +560,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         else:
             if update:
                 before = f.file.filemetadata_set.order_by('-created_date').count()
-                update_file_object(f.file, path, metadata)
+                update_file_object(f.file, f.file.path, metadata)
                 after = f.file.filemetadata_set.order_by('-created_date').count()
                 if after != before:
                     all_metadata = f.file.filemetadata_set.order_by('-created_date')

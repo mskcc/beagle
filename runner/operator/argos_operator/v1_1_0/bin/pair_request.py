@@ -12,7 +12,7 @@ Normals will have to have the same patient and bait set in order to be considere
 """
 import logging
 from datetime import datetime as dt
-from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals, get_dmp_normal
+from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals, get_dmp_bam
 LOGGER = logging.getLogger(__name__)
 
 
@@ -87,9 +87,11 @@ def compile_pairs(samples, pairing_info=None):
             Creating samples, based on predefined pairing list
             """
             for pair in pairing_info['pairs']:
-                if tumor['SM'] == pair['tumor']:
+                tumor_sample = pair['tumor']
+                if tumor['SM'] == tumor_sample['sample_id']:
                     for normal in normals:
-                        if 'poolednormal' in pair['normal'].lower():
+                        normal_sample = pair['normal']
+                        if 'poolednormal' in normal_sample['sample_id'].lower():
                             """
                             We should have a pool normal to pair with here
                             """
@@ -114,7 +116,7 @@ def compile_pairs(samples, pairing_info=None):
                                             pairs['tumor'].append(tumor)
                                             pairs['normal'].append(normal)
                                             break
-                        elif normal['SM'] == pair['normal']:
+                        elif normal['SM'] == normal_sample['sample_id']:
                             """
                             This pairs with a dmp normal
                             """
@@ -154,7 +156,7 @@ def compile_pairs(samples, pairing_info=None):
                         pairs['normal'].append(new_normal)
                     else:
                         LOGGER.info("No normal found for patient %s; checking for DMP Normal", patient_id)
-                        dmp_normal = get_dmp_normal(patient_id, bait_set)
+                        dmp_normal = get_dmp_bam(patient_id, bait_set, "Normal")
                         if dmp_normal:
                             LOGGER.info("Pairing %s (%s) with %s (%s)",
                                         tumor['sample_id'],

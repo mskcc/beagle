@@ -13,5 +13,20 @@
             "execution_id": null,
             "notify_for_outputs": "[]"
         }
+    },
+    {
+        "model": "runner.run",
+        "pk": "bc23076e-f477-4578-943c-1fbf6f1fca42",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "name": "access legacy fake run (to simulate imported bams)",
+            "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
+            "operator_run": 5,
+            "tags": {"requestId": "access_legacy_test_request_imported_bams"},
+            "status": 4,
+            "execution_id": null,
+            "notify_for_outputs": "[]"
+        }
     }
 ]

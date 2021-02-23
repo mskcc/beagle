@@ -5,8 +5,9 @@ from jinja2 import Template
 
 from runner.operator.operator import Operator
 from runner.operator.access import get_request_id_runs
-from runner.models import Port, Run, RunStatus
+from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
+from file_system.models import File
 from file_system.repository.file_repository import FileRepository
 
 
@@ -17,6 +18,7 @@ TUMOR_SEARCH = '-L0'
 NORMAL_SEARCH = '-N0'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 ACCESS_DEFAULT_CNV_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$'
+UNFILTERED_BAM_SEARCH = '_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam'
 
 
 class AccessLegacyCNVOperator(Operator):
@@ -58,8 +60,7 @@ class AccessLegacyCNVOperator(Operator):
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
 
             # Locate the Unfiltered Tumor BAM
-            sample_regex = r'{}.*_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$'.format(tumor_sample_id)
-            unfiltered_tumor_bam = FileRepository.filter(path_regex=sample_regex)
+            unfiltered_tumor_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=UNFILTERED_BAM_SEARCH)
             if len(unfiltered_tumor_bam) < 1:
                 msg = 'WARNING: Could not find unfiltered tumor bam file for sample {}' \
                       'We will skip running this sample.'
@@ -75,6 +76,7 @@ class AccessLegacyCNVOperator(Operator):
             unfiltered_tumor_bam = unfiltered_tumor_bam.order_by('-created_date').first()
 
             # Use the initial fastq metadata to get the sex of the sample
+            # Todo: Need to store this info on the bams themselves
             tumor_fastqs = FileRepository.filter(
                 file_type='fastq',
                 metadata={
@@ -110,7 +112,8 @@ class AccessLegacyCNVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': sample_ids[i]
+                            'cmoSampleIds': sample_ids[i],
+                            'patientId': '-'.join(sample_ids[i].split('-')[0:2])
                         }
                     }
                 ),
@@ -128,9 +131,11 @@ class AccessLegacyCNVOperator(Operator):
         with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
             template = Template(file.read())
 
-            tumor_sample_list = tumor_bam.file.path + '\t' + sample_sex
+            tumor_sample_list = tumor_bam.path + '\t' + sample_sex
+            tumor_sample_id = tumor_bam.file_name.split('_cl_aln_srt_MD_IR_FX_BR')[0]
 
             input_file = template.render(
+                tumor_sample_id=tumor_sample_id,
                 tumor_sample_list_content=json.dumps(tumor_sample_list),
             )
 

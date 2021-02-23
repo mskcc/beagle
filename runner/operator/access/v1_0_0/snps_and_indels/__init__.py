@@ -8,12 +8,12 @@ import json
 import logging
 from jinja2 import Template
 
+from file_system.models import File
 from runner.models import Port, RunStatus
 from file_system.models import FileMetadata
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal
 from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import FileRepository
+from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal
 
 
 logger = logging.getLogger(__name__)
@@ -22,8 +22,14 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = 'access_curated_normals'
 ACCESS_DEFAULT_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam$'
+ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam'
 NORMAL_SAMPLE_SEARCH = '-N0'
+TUMOR_SAMPLE_SEARCH = '-L0'
+DUPLEX_BAM_SEARCH = '__aln_srt_IR_FX-duplex.bam'
+SIMPLEX_BAM_SEARCH = '__aln_srt_IR_FX-simplex.bam'
+DMP_DUPLEX_REGEX = '-duplex.bam'
+DMP_SIMPLEX_REGEX = '-simplex.bam'
+
 
 class AccessLegacySNVOperator(Operator):
 
@@ -47,73 +53,160 @@ class AccessLegacySNVOperator(Operator):
         )
         # Each port is a list, so need a double list comprehension here
         all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
-        # these are port objects, they dont have metadata field
-        tumors_to_run = [r['sampleId'] for r in all_access_output_records if r['tumorOrNormal'] == 'Tumor']
+        # These are port objects, they don't have a metadata field
+        tumors_to_run = self.parse_tumors_to_run(all_access_output_records)
 
-        sample_ids = []
-        tumor_duplex_bams = []
-        tumor_simplex_bams = []
-        matched_normals = []
-        matched_normal_ids = []
+        # Gather input Files / Metadata
+        sample_infos = []
+        for tumor_sample_id in tumors_to_run:
+            sample_info = self.create_sample_info(tumor_sample_id)
+            sample_infos.append(sample_info)
 
-        for i, tumor_sample_id in enumerate(tumors_to_run):
-
-            # Locate the Duplex BAM
-            sample_regex = r'{}.*__aln_srt_IR_FX-duplex.bam$'.format(tumor_sample_id)
-
-            tumor_duplex_bam = FileRepository.filter(path_regex=sample_regex)
-            if len(tumor_duplex_bam) < 1:
-                msg = 'ERROR: Could not find matching duplex bam file for sample {}'
-                msg = msg.format(tumor_sample_id)
-                logger.exception(msg)
-                raise Exception(msg)
-            elif len(tumor_duplex_bam) > 1:
-                msg = 'WARNING: Found more than one matching duplex bam file for sample {}. \
-                We will choose the most recently-created one for this run.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-            # Take the latest one
-            tumor_duplex_bam = tumor_duplex_bam.order_by('-created_date').first()
-
-            # Locate the Simplex BAM
-            sample_regex = r'{}.*__aln_srt_IR_FX-simplex.bam$'.format(tumor_sample_id)
-            tumor_simplex_bam = FileRepository.filter(path_regex=sample_regex)
-            if len(tumor_simplex_bam) < 1:
-                msg = 'ERROR: Could not find matching simplex bam file for sample {}'
-                msg = msg.format(tumor_sample_id)
-                logger.exception(msg)
-                raise Exception(msg)
-            elif len(tumor_simplex_bam) > 1:
-                msg = 'WARNING: Found more than one matching simplex bam file for sample {}. ' \
-                      'We will choose the most recently-created one for this run.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-            # Take the latest one
-            tumor_simplex_bam = tumor_simplex_bam.order_by('-created_date').first()
-
-            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
-
-            # Locate the Matched, Unfiltered, Normal BAM
-            unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id = get_unfiltered_matched_normal(patient_id)
-
-            sample_ids.append(tumor_sample_id)
-            tumor_duplex_bams.append(tumor_duplex_bam)
-            tumor_simplex_bams.append(tumor_simplex_bam)
-            matched_normals.append(unfiltered_matched_normal_bam)
-            matched_normal_ids.append(unfiltered_matched_normal_sample_id)
-
+        # Format input templates
         sample_inputs = []
-        for i, b in enumerate(tumor_duplex_bams):
-
-            sample_input = self.construct_sample_inputs(
-                b,
-                tumor_simplex_bams[i],
-                sample_ids[i],
-                matched_normals[i],
-                matched_normal_ids[i]
-            )
+        for sample_info in sample_infos:
+            sample_input = self.construct_sample_inputs(**sample_info)
             sample_inputs.append(sample_input)
+
         return sample_inputs
+
+    def parse_tumors_to_run(self, duplex_file_output_records):
+        """
+        Extract the sample ID from a file's path in the output port
+
+        Needs to support parsing from Record Ports generated by ACCESS_pipeline.cwl,
+        as well as simple File Ports created manually through register_local_files.py
+
+        :param duplex_file_output_records:
+        :return:
+        """
+        tumor_sample_ids = []
+
+        for r in duplex_file_output_records:
+            if 'file' in r:
+                basename = r['file']['basename']
+            else:
+                basename = r['basename']
+
+            # Skip normal samples
+            if NORMAL_SAMPLE_SEARCH in basename:
+                continue
+            sample_id = basename.split('/')[-1].split('_cl_aln_srt')[0]
+            tumor_sample_ids.append(sample_id)
+
+        return tumor_sample_ids
+
+    def create_sample_info(self, tumor_sample_id):
+        """
+        Query DB for all relevant files / metadata necessary for SNV pipeline input:
+
+        - Tumor Duplex Bam
+        - Tumor Simplex Bam
+        - Matched Normal Unfiltered bam (from IGO / DMP or None) (external code)
+        - Other Tumor Duplex bams from same patient (for genotyping)
+        - Other Tumor Simplex bams from same patient (for genotyping)
+
+        :return:
+        """
+        # Locate the most recent Duplex BAM
+        #
+        # Todo: Does this fail in the following case?
+        # C-000884-L001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
+        # C-000884-L0011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
+        #
+        # What if the -d isn't present? Will sample IDs always have these terminators?
+        tumor_duplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=DUPLEX_BAM_SEARCH)
+        if len(tumor_duplex_bam) < 1:
+            msg = 'ERROR: Could not find matching duplex bam file for sample {}'
+            msg = msg.format(tumor_sample_id)
+            logger.exception(msg)
+            raise Exception(msg)
+        elif len(tumor_duplex_bam) > 1:
+            msg = 'WARNING: Found more than one matching duplex bam file for sample {}. ' \
+                  'We will choose the most recently-created one for this run.'
+            msg = msg.format(tumor_sample_id)
+            logger.warning(msg)
+        tumor_duplex_bam = tumor_duplex_bam.order_by('-created_date').first()
+
+        # Locate the most recent Simplex BAM
+        tumor_simplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=SIMPLEX_BAM_SEARCH)
+        if len(tumor_simplex_bam) < 1:
+            msg = 'ERROR: Could not find matching simplex bam file for sample {}'
+            msg = msg.format(tumor_sample_id)
+            logger.exception(msg)
+            raise Exception(msg)
+        elif len(tumor_simplex_bam) > 1:
+            msg = 'WARNING: Found more than one matching simplex bam file for sample {}. ' \
+                  'We will choose the most recently-created one for this run.'
+            msg = msg.format(tumor_sample_id)
+            logger.warning(msg)
+        tumor_simplex_bam = tumor_simplex_bam.order_by('-created_date').first()
+
+        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+
+        # Locate the Matched, Unfiltered, Normal BAM
+        matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
+
+        # Locate any IGO Matched Tumor bams for genotyping
+        matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
+
+        matched_duplex_tumors = File.objects.filter(
+            file_name__startswith=matched_tumor_search,
+            file_name__endswith=DUPLEX_BAM_SEARCH
+        ).order_by('file_name', '-created_date').distinct('file_name')
+
+        matched_simplex_tumors = File.objects.filter(
+            file_name__startswith=matched_tumor_search,
+            file_name__endswith=SIMPLEX_BAM_SEARCH
+        ).order_by('file_name', '-created_date').distinct('file_name')
+
+        # Remove the main tumor being run
+        matched_duplex_tumors = matched_duplex_tumors.exclude(file_name=tumor_duplex_bam.file_name)
+        matched_duplex_tumors = list(matched_duplex_tumors)
+        matched_simplex_tumors = matched_simplex_tumors.exclude(file_name=tumor_simplex_bam.file_name)
+        matched_simplex_tumors = list(matched_simplex_tumors)
+        matched_duplex_sample_ids = ['-'.join(b.path.split('/')[-1].split('-')[0:3]) for b in
+                                     matched_duplex_tumors]
+        matched_simplex_sample_ids = ['-'.join(b.path.split('/')[-1].split('-')[0:3]) for b in
+                                      matched_simplex_tumors]
+
+        # Find matched Tumors from DMP as well
+        matched_duplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_DUPLEX_REGEX
+        )
+        matched_duplex_tumors_dmp = [b.file for b in matched_duplex_tumors_dmp]
+        matched_duplex_sample_ids_dmp = [b.file_name.replace('-duplex.bam', '') for b in matched_duplex_tumors_dmp]
+
+        matched_simplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_SIMPLEX_REGEX
+        )
+        matched_simplex_tumors_dmp = [b.file for b in matched_simplex_tumors_dmp]
+        matched_simplex_sample_ids_dmp = [b.file_name.replace('-simplex.bam', '') for b in matched_simplex_tumors_dmp]
+
+        matched_duplex_tumors += matched_duplex_tumors_dmp
+        matched_simplex_tumors += matched_simplex_tumors_dmp
+        matched_duplex_sample_ids += matched_duplex_sample_ids_dmp
+        matched_simplex_sample_ids += matched_simplex_sample_ids_dmp
+
+        sample_info = {
+            'tumor_sample_id': tumor_sample_id,
+            'tumor_duplex_bam': tumor_duplex_bam,
+            'tumor_simplex_bam': tumor_simplex_bam,
+            'matched_normal_unfiltered': matched_normal_unfiltered_bam,
+            'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
+            'matched_tumors_duplex': matched_duplex_tumors,
+            'matched_tumors_simplex': matched_simplex_tumors,
+            'matched_tumors_duplex_sample_ids': matched_duplex_sample_ids,
+            'matched_tumors_simplex_sample_ids': matched_simplex_sample_ids
+        }
+
+        return sample_info
 
     def get_jobs(self):
         """
@@ -132,7 +225,8 @@ class AccessLegacySNVOperator(Operator):
                         'inputs': job,
                         'tags': {
                             'requestId': self.request_id,
-                            'cmoSampleIds': job["tumor_sample_names"]
+                            'cmoSampleIds': job["tumor_sample_names"],
+                            'patientId': '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
                         }
                     }
                 ),
@@ -150,17 +244,19 @@ class AccessLegacySNVOperator(Operator):
         curated_normals_metadata = FileMetadata.objects.filter(
             file__file_group__slug=ACCESS_CURATED_BAMS_FILE_GROUP_SLUG
         )
-        curated_normal_bams = [f.file for f in curated_normals_metadata]
+        curated_normal_bams = [f for f in curated_normals_metadata]
         curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
         normal_bams = [
             {
                 'class': 'File',
-                'location': 'juno://' + b.path
+                'location': 'juno://' + b.file.path
             } for b in curated_normal_bams
         ]
         return normal_bams, curated_normal_ids
 
-    def construct_sample_inputs(self, tumor_bam, tumor_simplex_bam, tumor_sample_id, matched_normal_bam, normal_sample_id):
+    def construct_sample_inputs(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
+                                matched_normal_unfiltered_id, matched_tumors_duplex, matched_tumors_simplex,
+                                matched_tumors_duplex_sample_ids, matched_tumors_simplex_sample_ids):
         """
         Use sample metadata and json template to create inputs for the CWL run
 
@@ -172,15 +268,15 @@ class AccessLegacySNVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": 'juno://' + tumor_bam.file.path
+                "location": 'juno://' + tumor_duplex_bam.path
             }]
-            matched_normal_ids = [normal_sample_id]
+            matched_normal_ids = [matched_normal_unfiltered_id]
 
             # Todo: how to know which sequencer's default normal to use?
-            normal_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex=ACCESS_DEFAULT_NORMAL_FILENAME
-            )[0].file
+            normal_bam = File.objects.filter(
+                file_type__name='bam',
+                file_name=ACCESS_DEFAULT_NORMAL_FILENAME
+            )[0]
             normal_bams = [{
                 "class": "File",
                 "location": 'juno://' + normal_bam.path
@@ -190,23 +286,41 @@ class AccessLegacySNVOperator(Operator):
             genotyping_bams = [
                 {
                     "class": "File",
-                    "location": 'juno://' + tumor_bam.file.path
+                    "location": 'juno://' + tumor_duplex_bam.path
                 },
                 {
                     "class": "File",
-                    "location": 'juno://' + tumor_simplex_bam.file.path
+                    "location": 'juno://' + tumor_simplex_bam.path
                 }
             ]
 
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX']
 
             # Matched Normal may or may not be available for genotyping
-            if matched_normal_bam:
+            if matched_normal_unfiltered:
                 genotyping_bams += [{
                     "class": "File",
-                    "location": 'juno://' + matched_normal_bam.file.path
+                    "location": 'juno://' + matched_normal_unfiltered.path
                 }]
-                genotyping_bams_ids += [normal_sample_id]
+                genotyping_bams_ids += [matched_normal_unfiltered_id]
+
+            # Additional matched Tumors may be available
+            if len(matched_tumors_duplex) > 0:
+                genotyping_bams += [
+                    {
+                        "class": "File",
+                        "location": 'juno://' + b.path
+                    } for b in matched_tumors_duplex
+                ]
+                genotyping_bams_ids += matched_tumors_duplex_sample_ids
+
+                genotyping_bams += [
+                    {
+                        "class": "File",
+                        "location": 'juno://' + b.path
+                    } for b in matched_tumors_simplex
+                ]
+                genotyping_bams_ids += [i + '-SIMPLEX' for i in matched_tumors_simplex_sample_ids]
 
             curated_normal_bams, curated_normal_ids = self.get_curated_normals()
             genotyping_bams += curated_normal_bams
