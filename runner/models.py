@@ -166,6 +166,8 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
     samples = models.ManyToManyField(Sample)
+    started = models.DateTimeField(blank=True, null=True)
+    submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
 
@@ -175,6 +177,16 @@ class Run(BaseModel):
         self.original = {
             "status": self.status
         }
+
+    def clear(self):
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
+                           "execution_id"]
+        for f in fields_to_clear:
+            setattr(self, f, None)
+
+        self.job_statuses = {}
+        self.status = RunStatus.READY
+        return self
 
     @property
     def is_completed(self):

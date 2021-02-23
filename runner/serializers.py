@@ -185,7 +185,7 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'started', 'submitted', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
 
 
 class RunSerializerCWLInput(RunSerializerPartial):
@@ -262,8 +262,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 
 
 class RestartRunSerializer(serializers.Serializer):
-    run = serializers.UUIDField(required=True)
-
+    operator_run_id = serializers.UUIDField(required=True)
 
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
@@ -336,6 +335,7 @@ class RequestIdsOperatorSerializer(serializers.Serializer):
         child=serializers.CharField(max_length=30), allow_empty=True
     )
     pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    pipeline_version = serializers.CharField(max_length=30, allow_null=True, allow_blank=True)
     job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(required=False, default=True)
 
@@ -352,7 +352,9 @@ class RunIdsOperatorSerializer(serializers.Serializer):
 
 
 class PairOperatorSerializer(serializers.Serializer):
-    pairs = serializers.JSONField()
+    pairs = serializers.ListField(
+            child=serializers.JSONField(),allow_empty=True
+    )
     pipelines = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )

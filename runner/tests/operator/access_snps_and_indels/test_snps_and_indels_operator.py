@@ -11,6 +11,7 @@ from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperato
 
 
 REQUEST_ID = "access_legacy_test_request"
+TEST_RUN_ID = 'bc23076e-f477-4578-943c-1fbf6f1fca44'
 FIXTURES = [
     "fixtures/tests/access_snv/curated_normal_files.json",
     "fixtures/tests/access_snv/curated_normals_file_metadata.json",
@@ -61,25 +62,7 @@ class TestAccessSNVOperator(TestCase):
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
-
-        required_input_fields = [
-            'tumor_bams',
-            'normal_bams',
-            'tumor_sample_names',
-            'normal_sample_names',
-            'matched_normal_ids',
-        ]
-        required_input_fields_length_3 = [
-            'genotyping_bams',
-            'genotyping_bams_ids',
-        ]
-        for inputs in input_data:
-            for field in required_input_fields:
-                self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 1)
-            for field in required_input_fields_length_3:
-                self.assertIn(field, inputs)
-                self.assertEqual(len(inputs[field]), 5)
+        self.validate(input_data)
 
     def test_dmp_normal(self):
         """
@@ -93,8 +76,55 @@ class TestAccessSNVOperator(TestCase):
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=[TEST_RUN_ID])
         input_data = operator.get_sample_inputs()
 
         geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
-        self.assertTrue(any('AA037277-T-unfilter.bam' in b for b in geno_bams))
+        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))
+
+    def test_run_on_imported_bams(self):
+        """
+        Test that the inputs are generated for a set of bams that was manually imported
+
+        :return:
+        """
+        pipeline_slug = "AccessLegacySNVOperator"
+        request_id = 'access_legacy_test_request_imported_bams'
+        test_run_id = 'bc23076e-f477-4578-943c-1fbf6f1fca42'
+        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=[test_run_id])
+        input_data = operator.get_sample_inputs()
+        self.validate(input_data)
+
+    def validate(self, input_data):
+        # Only a single entry is required in these fields, as we are running in single-sample mode
+        required_input_fields = [
+            'tumor_bams',
+            'normal_bams',
+            'tumor_sample_names',
+            'normal_sample_names',
+            'matched_normal_ids',
+        ]
+
+        # We should have 9 bams for genotyping:
+        # - Main Tumor Bam Duplex
+        # - Main Tumor Bam Simplex
+        # - Default Variant Calling Normal Duplex
+        # - Matched Normal Duplex
+        # - Matched Normal Simplex
+        # - Matched Tumor Duplex IGO
+        # - Matched Tumor Simplex IGO
+        # - Matched Tumor Duplex DMP
+        # - Matched Tumor Simplex DMP
+        required_input_fields_length_9 = [
+            'genotyping_bams',
+            'genotyping_bams_ids',
+        ]
+
+        for inputs in input_data:
+            for field in required_input_fields:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 1)
+            for field in required_input_fields_length_9:
+                self.assertIn(field, inputs)
+                self.assertEqual(len(inputs[field]), 9)
