@@ -122,8 +122,35 @@ class AccessLegacySNVOperator(Operator):
         # Locate the Matched, Unfiltered, Normal BAM
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
 
-        # Use the initial fastq metadata to get the capture of the sample
-        # Todo: put metadata on the Bams themselves
+        (capture_samples_duplex,
+         capture_samples_simplex,
+         capture_samples_duplex_sample_ids,
+         capture_samples_simplex_sample_ids) = self.get_pool_genotyping_samples(tumor_sample_id)
+
+        sample_info = {
+            'tumor_sample_id': tumor_sample_id,
+            'tumor_duplex_bam': tumor_duplex_bam,
+            'tumor_simplex_bam': tumor_simplex_bam,
+            'matched_normal_unfiltered': matched_normal_unfiltered_bam,
+            'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
+            'capture_samples_duplex': capture_samples_duplex,
+            'capture_samples_simplex': capture_samples_simplex,
+            'capture_samples_duplex_sample_ids': capture_samples_duplex_sample_ids,
+            'capture_samples_simplex_sample_ids': capture_samples_simplex_sample_ids
+        }
+
+        return sample_info
+
+    def get_pool_genotyping_samples(self, tumor_sample_id):
+        """
+        Use the initial fastq metadata to get the capture of the sample,
+        then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
+
+        Todo: put metadata on the Bams themselves
+
+        :param tumor_sample_id: str
+        :return:
+        """
         capture_id = FileRepository.filter(
             file_type='fastq',
             metadata={
@@ -185,19 +212,7 @@ class AccessLegacySNVOperator(Operator):
         capture_samples_duplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
         capture_samples_simplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
-        sample_info = {
-            'tumor_sample_id': tumor_sample_id,
-            'tumor_duplex_bam': tumor_duplex_bam,
-            'tumor_simplex_bam': tumor_simplex_bam,
-            'matched_normal_unfiltered': matched_normal_unfiltered_bam,
-            'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
-            'capture_samples_duplex': capture_samples_duplex,
-            'capture_samples_simplex': capture_samples_simplex,
-            'capture_samples_duplex_sample_ids': capture_samples_duplex_sample_ids,
-            'capture_samples_simplex_sample_ids': capture_samples_simplex_sample_ids
-        }
-
-        return sample_info
+        return capture_samples_duplex, capture_samples_simplex, capture_samples_duplex_sample_ids, capture_samples_simplex_sample_ids
 
     def get_jobs(self):
         """
