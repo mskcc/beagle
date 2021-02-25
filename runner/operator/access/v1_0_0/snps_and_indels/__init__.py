@@ -157,57 +157,54 @@ class AccessLegacySNVOperator(Operator):
                 'tumorOrNormal': 'Tumor',
                 'sampleName': tumor_sample_id
             }
-        )[0].metadata['libraries']['captureName']
+        )[0].metadata['captureName']
 
-        capture_samples_duplex = File.objects.filter(
-            file_type='bam',
+        sample_id_fastqs = FileRepository.filter(
+            file_type='fastq',
             metadata={
                 'captureName': capture_id,
-                'tumorOrNormal': 'Tumor',
-            },
-            file_name__endswith=DUPLEX_BAM_SEARCH
-        )[0:20]
+                'tumorOrNormal': 'Tumor'
+            }
+        )
+        sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))[0:20]
 
-        normal_capture_samples_duplex = []
+        capture_samples_duplex = File.objects.filter(
+            file_type__name='bam',
+            filemetadata__metadata__sampleName__in=sample_ids,
+            filemetadata__metadata__tumorOrNormal='Tumor',
+            file_name__endswith=DUPLEX_BAM_SEARCH
+        )
+
         for s in capture_samples_duplex:
             patient_id = s.path.split('_cl_aln_srt')[0].split('-')[0:2]
             normal_capture_sample_duplex = File.objects.filter(
-                file_type='bam',
-                metadata={
-                    'captureName': capture_id,
-                    'tumorOrNormal': 'Normal',
-                },
+                file_type__name='bam',
                 file_name__startswith=patient_id,
-                file_name__endswith=DUPLEX_BAM_SEARCH
+                file_name__endswith=DUPLEX_BAM_SEARCH,
+                filemetadata__metadata__sampleName__in=sample_ids,
+                filemetadata__metadata__tumorOrNormal='Normal'
             )
             if len(normal_capture_sample_duplex) > 0:
-                normal_capture_samples_duplex.append(normal_capture_sample_duplex).order_by('-created_date').first()
-        capture_samples_duplex += normal_capture_samples_duplex
+                capture_samples_duplex |= normal_capture_sample_duplex.order_by('-created_date').first()
 
         capture_samples_simplex = File.objects.filter(
-            file_type='bam',
-            metadata={
-                'captureName': capture_id,
-                'tumorOrNormal': 'Tumor',
-            },
+            file_type__name='bam',
+            filemetadata__metadata__sampleName__in=sample_ids,
+            filemetadata__metadata__tumorOrNormal='Tumor',
             file_name__endswith=SIMPLEX_BAM_SEARCH
-        )[0:20]
+        )
 
-        normal_capture_samples_simplex = []
         for s in capture_samples_simplex:
             patient_id = s.path.split('_cl_aln_srt')[0].split('-')[0:2]
             normal_capture_sample_simplex = File.objects.filter(
-                file_type='bam',
-                metadata={
-                    'captureName': capture_id,
-                    'tumorOrNormal': 'Normal',
-                },
+                file_type__name='bam',
                 file_name__startswith=patient_id,
-                file_name__endswith=SIMPLEX_BAM_SEARCH
+                file_name__endswith=SIMPLEX_BAM_SEARCH,
+                filemetadata__metadata__sampleName__in=sample_ids,
+                filemetadata__metadata__tumorOrNormal='Normal'
             )
             if len(normal_capture_sample_simplex) > 0:
-                normal_capture_samples_simplex.append(normal_capture_sample_simplex).order_by('-created_date').first()
-        capture_samples_simplex += normal_capture_samples_simplex
+                capture_samples_simplex |= normal_capture_sample_simplex.order_by('-created_date').first()
 
         capture_samples_duplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
         capture_samples_simplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
