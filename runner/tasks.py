@@ -509,7 +509,6 @@ def check_job_timeouts():
     runs = Run.objects.filter(status__in=(RunStatus.CREATING, RunStatus.READY),
                               created_date__lte=diff).all()
 
-    print(runs)
     for run in runs:
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
