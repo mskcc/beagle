@@ -210,7 +210,7 @@ class AccessLegacySNVOperator(Operator):
             if len(normal_capture_sample_simplex) > 0:
                 capture_samples_simplex |= normal_capture_sample_simplex.order_by('-created_date')[:1]
 
-        # Limit to 20 samples, and sort by patient ID to ensure each of T and N matching samples are found
+        # Limit to 40 samples, and sort by patient ID to ensure each of T and N matching samples are found
         capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s.file_name)[0:40]
         capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s.file_name)[0:40]
 

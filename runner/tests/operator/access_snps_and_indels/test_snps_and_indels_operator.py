@@ -2,10 +2,10 @@ import os
 
 from django.test import TestCase
 
+from file_system.models import File
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
-from file_system.repository.file_repository import FileRepository
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
 
@@ -101,8 +101,8 @@ class TestAccessSNVOperator(TestCase):
         :return:
         """
         # Delete the IGO test samples, so DMP normal must be used
-        metadatas = FileRepository.filter(path_regex='C-000884', metadata={"tumorOrNormal": "Normal"})
-        [f.file.delete() for f in metadatas]
+        igo_normals = File.objects.filter(path__regex='C-000884-N0')
+        [f.delete() for f in igo_normals]
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
