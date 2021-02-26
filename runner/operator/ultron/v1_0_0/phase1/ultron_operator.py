@@ -31,29 +31,24 @@ class UltronOperator(Operator):
             output_job = self._build_job(input_json)
             ultron_output_jobs.append(output_job)
 
-        return ultron_outputs_jobs
+        print(len(ultron_output_jobs))
+        return ultron_output_jobs
 
 
     def _build_inputs(self, run_ids):
         run_jsons = list() 
-#        for rid in set(run_ids):
-#            run = Run.objects.filter(id=rid)[0]
-#            run_jsons[rid] = RunPatients(rid)
-#            samples = run.samples.all()
-#            for sample in samples:
-#                patients = self._get_patient_from_sample(sample.sample_id)
-#                for p in patients:
-#                    run_jsons[rid].add_patient(p)
+        for rid in set(run_ids):
+            run = Run.objects.filter(id=rid)[0]
+            inputs_data = InputsObj(run)
+            run_jsons.append(inputs_data.inputs_json)
         return run_jsons
 
 
     def _build_job(self, input_json):
 #        app = self.get_pipeline_id()
-#        pipeline = Pipeline.objects.get(id=app)
-#        pipeline_version = pipeline.version
-        app = "test_pipeline_app_id"
-
-
+        app = "d9c8606b-f596-43b8-9cfc-5d83af4edf2d" # reassign this
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_version = pipeline.version
         # add tags, name
         output_job_data = {
             'app': app,
@@ -129,14 +124,13 @@ class InputsObj:
         inputs_json['maf_file'] = self.maf_file
         inputs_json['maf'] = self.maf
         inputs_json['dmp_bams_tumor'] = list()
-        inputs_json['dmp_bams_normal'] = list()
+        inputs_json['dmp_bams_tumor_muts'] = list()
         for sample in self.samples:
             if sample.dmp_bams_tumor:
                 for f in sample.dmp_bams_tumor:
-                    inputs_json['dmp_bams_tumor'].append(self._create_cwl_file_obj(f))
-            if sample.dmp_bams_normal:
-                for f in sample.dmp_bams_normal:
-                    inputs_json['dmp_bams_normal'].append(self._create_cwl_file_obj(f))
+                    inputs_json['dmp_bams_tumor'].append(self._create_cwl_file_obj(f.bam_path))
+                    if f.mutations_extended:
+                        inputs_json['dmp_bams_tumor_muts'].append(self._create_cwl_file_obj(f.mutations_extended))
         return inputs_json
 
 
@@ -176,7 +170,8 @@ class SampleData:
                     metadata={'patient__cmo': self.dmp_patient_id, "type": tumor_type})
             if files:
                 for f in files:
-                    file_list.append(f.file.path)
+#                    file_list.append(f.file.path)
+                    file_list.append(BamData(f))
                 return file_list
         return None
 
@@ -184,3 +179,31 @@ class SampleData:
         return "Sample ID: %s ; Patient ID: %s ;\
                 DMP Patient ID: %s" % (self.sample_id,
                         self.patient_id, self.dmp_patient_id)
+
+
+class BamData:
+    def __init__(self, voyager_file):
+        self.files = FileRepository.all()
+        self.voyager_file = voyager_file
+        self.bam_path = voyager_file.file.path
+        self.metadata = voyager_file.metadata
+        self.mutations_extended = self._set_data_muts_txt()
+
+    def _set_data_muts_txt(self):
+        meta = self.metadata
+        external_id = None
+        investigator_sample_id = None
+        dmp_key = "sample"
+        results = self._get_muts(dmp_key, meta)
+        if results:
+            return results
+        return None
+
+    def _get_muts(self, key, meta):
+        data_id = meta[key]
+        query_results = FileRepository.filter(queryset=self.files, metadata={'dmp_link_id':data_id})
+        results = list()
+        if query_results:
+            for item in query_results:
+                results.append(item.file.path)
+        return results
