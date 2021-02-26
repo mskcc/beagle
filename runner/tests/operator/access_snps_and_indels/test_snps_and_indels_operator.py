@@ -77,10 +77,10 @@ class TestAccessSNVOperator(TestCase):
         # - Default Variant Calling Normal Duplex
         # - Matched Normal Duplex
         # - Matched Normal Simplex
-        # - Matched Tumor Duplex IGO
-        # - Matched Tumor Simplex IGO
-        # - Matched Tumor Duplex DMP
-        # - Matched Tumor Simplex DMP
+        # - Pool Tumor Duplex
+        # - Pool Tumor Simplex
+        # - Pool Normal Duplex
+        # - Pool Normal Simplex
         required_input_fields_length_9 = [
             'genotyping_bams',
             'genotyping_bams_ids',

@@ -7,6 +7,7 @@ import os
 import json
 import logging
 from jinja2 import Template
+from django.db.models import Q
 
 from file_system.models import File
 from runner.models import Port, RunStatus
@@ -146,6 +147,8 @@ class AccessLegacySNVOperator(Operator):
         Use the initial fastq metadata to get the capture of the sample,
         then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
 
+        Limits to 40 samples (or 80 bams, because each has Simplex and Duplex)
+
         Todo: put metadata on the Bams themselves
 
         :param tumor_sample_id: str
@@ -153,58 +156,63 @@ class AccessLegacySNVOperator(Operator):
         """
         capture_id = FileRepository.filter(
             file_type='fastq',
-            metadata={
-                'tumorOrNormal': 'Tumor',
-                'sampleName': tumor_sample_id
-            }
+            metadata={'sampleName': tumor_sample_id}
         )[0].metadata['captureName']
 
         sample_id_fastqs = FileRepository.filter(
             file_type='fastq',
-            metadata={
-                'captureName': capture_id,
-                'tumorOrNormal': 'Tumor'
-            }
+            metadata={'captureName': capture_id}
         )
-        sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))[0:20]
+        sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
 
-        capture_samples_duplex = File.objects.filter(
-            file_type__name='bam',
-            filemetadata__metadata__sampleName__in=sample_ids,
-            filemetadata__metadata__tumorOrNormal='Tumor',
-            file_name__endswith=DUPLEX_BAM_SEARCH
+        tumor_capture_sample_ids = [i for i in sample_ids if TUMOR_SAMPLE_SEARCH in i]
+        normal_capture_sample_ids = [i for i in sample_ids if NORMAL_SAMPLE_SEARCH in i]
+
+        tumor_capture_q = Q(
+            *[('file_name__startswith', id) for id in tumor_capture_sample_ids],
+            _connector=Q.OR
         )
 
-        for s in capture_samples_duplex:
-            patient_id = s.path.split('_cl_aln_srt')[0].split('-')[0:2]
-            normal_capture_sample_duplex = File.objects.filter(
-                file_type__name='bam',
-                file_name__startswith=patient_id,
-                file_name__endswith=DUPLEX_BAM_SEARCH,
-                filemetadata__metadata__sampleName__in=sample_ids,
-                filemetadata__metadata__tumorOrNormal='Normal'
-            )
+        normal_capture_q = Q(
+            *[('file_name__startswith', id) for id in normal_capture_sample_ids],
+            _connector=Q.OR
+        )
+
+        q = tumor_capture_q & Q(path__endswith=DUPLEX_BAM_SEARCH)
+        capture_samples_duplex = File.objects.filter(q)
+        sids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+
+        for sid in sids:
+            patient_id = '-'.join(sid.split('-')[0:2])
+
+            q = normal_capture_q & \
+                Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
+                Q(file_name__endswith=DUPLEX_BAM_SEARCH)
+
+            normal_capture_sample_duplex = File.objects.filter(q)
+
             if len(normal_capture_sample_duplex) > 0:
-                capture_samples_duplex |= normal_capture_sample_duplex.order_by('-created_date').first()
+                capture_samples_duplex |= normal_capture_sample_duplex.order_by('-created_date')[:1]
 
-        capture_samples_simplex = File.objects.filter(
-            file_type__name='bam',
-            filemetadata__metadata__sampleName__in=sample_ids,
-            filemetadata__metadata__tumorOrNormal='Tumor',
-            file_name__endswith=SIMPLEX_BAM_SEARCH
-        )
+        q = tumor_capture_q & Q(path__endswith=SIMPLEX_BAM_SEARCH)
+        capture_samples_simplex = File.objects.filter(q)
+        sids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
-        for s in capture_samples_simplex:
-            patient_id = s.path.split('_cl_aln_srt')[0].split('-')[0:2]
-            normal_capture_sample_simplex = File.objects.filter(
-                file_type__name='bam',
-                file_name__startswith=patient_id,
-                file_name__endswith=SIMPLEX_BAM_SEARCH,
-                filemetadata__metadata__sampleName__in=sample_ids,
-                filemetadata__metadata__tumorOrNormal='Normal'
-            )
+        for sid in sids:
+            patient_id = '-'.join(sid.split('-')[0:2])
+
+            q = normal_capture_q & \
+                Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
+                Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
+
+            normal_capture_sample_simplex = File.objects.filter(q)
+
             if len(normal_capture_sample_simplex) > 0:
-                capture_samples_simplex |= normal_capture_sample_simplex.order_by('-created_date').first()
+                capture_samples_simplex |= normal_capture_sample_simplex.order_by('-created_date')[:1]
+
+        # Limit to 20 samples, and sort by patient ID to ensure each of T and N matching samples are found
+        capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s.file_name)[0:40]
+        capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s.file_name)[0:40]
 
         capture_samples_duplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
         capture_samples_simplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
