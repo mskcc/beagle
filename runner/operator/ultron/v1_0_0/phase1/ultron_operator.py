@@ -89,7 +89,7 @@ class InputsObj:
         for single_port in self.port_list:
             current_port = single_port.name
             if current_port == port_name:
-                return self._get_files_from_port(single_port.value)
+                 return self._get_files_from_port(single_port.value)
         return None
 
 
@@ -103,12 +103,14 @@ class InputsObj:
         return file_list
 
 
-    def _get_file_obj(self, file_obj):
-        file_list = []
+    def _get_file_obj(self,file_obj):
+        """
+        Given file_obj, construct a dictionary of class File, that file's
+        JUNO-specific URI file path, and a list of secondary files with
+        JUNO-specific URI file paths
+        """
         secondary_file_list = []
         file_location = file_obj['location'].replace('file://', '')
-        file_cwl_obj = self._create_cwl_file_obj(file_location)
-        file_list.append(file_cwl_obj)
         if 'secondaryFiles' in file_obj:
             for single_secondary_file in file_obj['secondaryFiles']:
                 secondary_file_location = single_secondary_file['location'].replace(
@@ -116,7 +118,10 @@ class InputsObj:
                 secondary_file_cwl_obj = self._create_cwl_file_obj(
                     secondary_file_location)
                 secondary_file_list.append(secondary_file_cwl_obj)
-        return {'files': file_list, 'secondary_files': secondary_file_list}
+        file_cwl_obj = self._create_cwl_file_obj(file_location)
+        if secondary_file_list:
+            file_cwl_obj['secondaryFiles'] = secondary_file_list
+        return file_cwl_obj
 
 
     def _create_cwl_file_obj(self, file_path):
