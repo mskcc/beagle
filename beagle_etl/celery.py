@@ -58,4 +58,10 @@ app.conf.beat_schedule = {
         "schedule": 120.0,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
     },
+    "timeout_runs": {
+        "task": "runner.tasks.check_job_timeouts",
+        "schedule": 86400.0, # 1 day
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+    },
+
 }
