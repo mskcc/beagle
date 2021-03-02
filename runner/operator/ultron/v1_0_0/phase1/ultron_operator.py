@@ -163,7 +163,7 @@ class InputsObj:
 
     def load_reference_fasta(self):
         ref_fasta_path = json.load(open(os.path.join(WORKDIR, "reference_json/genomic_resources.json"), 'rb'))
-        ref_fasta = { "ref_fasta": {"class": "File", "location": str(ref_fasta_path['ref_fasta']) }}
+        ref_fasta = {"class": "File", "location": str(ref_fasta_path['ref_fasta']) }
         return ref_fasta
 
 
