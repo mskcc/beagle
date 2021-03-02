@@ -10,7 +10,8 @@ from django.db.models import Count
 from runner.run.objects.run_object import RunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
-    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, SetLabelEvent, SetRunTicketInImportEvent
+    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, \
+    SetLabelEvent, SetRunTicketInImportEvent
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
@@ -21,6 +22,7 @@ from file_system.repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
+
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
@@ -277,6 +279,7 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
     run_id = args[0]
     fail_job(run_id, "Could not create run task")
 
+
 @shared_task(autoretry_for=(Exception,),
              retry_jitter=True,
              retry_backoff=60,
@@ -284,24 +287,17 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
              on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run for %s" % run_id)
-    try:
-        run = RunObject.from_cwl_definition(run_id, inputs)
-        run.ready()
-    except RunCreateException as e:
-        run = RunObject.from_db(run_id)
-        run.fail({'details': str(e)})
-        RunObject.to_db(run)
-        logger.info("Run %s Failed" % run_id)
-    else:
-        RunObject.to_db(run)
-        submit_job.delay(run_id, output_directory)
-        logger.info("Run %s Ready" % run_id)
+    run = RunObject.from_cwl_definition(run_id, inputs)
+    run.ready()
+    RunObject.to_db(run)
+    submit_job.delay(run_id, output_directory)
+    logger.info("Run %s Ready" % run_id)
 
 
 def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     run_id = args[0]
-
     fail_job(run_id, "Failed to submit job to Ridgeback")
+
 
 @shared_task(autoretry_for=(Exception,),
              retry_jitter=True,
@@ -359,6 +355,7 @@ def submit_job(run_id, output_directory=None):
         run.save()
     else:
         raise Exception("Failed to submit job %s" % run_id)
+
 
 @shared_task
 def abort_job_task(job_group_id=None, jobs=[]):
@@ -491,6 +488,7 @@ def abort_job(run):
     run.status = RunStatus.ABORTED
     run.save()
 
+
 def update_commandline_job_status(run, commandline_tool_job_set):
     job_status_obj = {}
     for single_commandline_job in commandline_tool_job_set:
@@ -560,6 +558,7 @@ def check_jobs_status():
             if status['status'] == 'ABORTED':
                 logger.info("Job %s [%s] ABORTED" % (run.id, run.execution_id))
                 abort_job(run)
+
 
 def run_routine_operator_job(operator, job_group_id=None):
     """
