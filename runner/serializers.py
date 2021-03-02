@@ -2,8 +2,91 @@ import os
 import datetime
 from django.conf import settings
 from rest_framework import serializers
-from notifier.models import JobGroup
+from notifier.models import JobGroup, JobGroupNotifier
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
+from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.exceptions import PortProcessorException
+
+
+def ValidateDict(value):
+    if len(value.split(":")) !=2:
+        raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
+
+def format_port_data(port_data):
+    port_dict = {}
+    for single_port in port_data:
+        port_name = single_port['name']
+        try:
+            port_value = PortProcessor.process_files(single_port['db_value'],PortAction.CONVERT_TO_CWL_FORMAT)
+        except PortProcessorException as e:
+            raise serializers.ValidationError(e)
+        port_dict[port_name] = port_value
+    return port_dict
+
+
+class RunApiListSerializer(serializers.Serializer):
+    status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
+    job_groups = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    apps = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    ports = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    tags = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    request_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    jira_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    run_ids = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+
+    values_run = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    run_distribution = serializers.CharField(required=False)
+
+    run = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+
+    full = serializers.BooleanField(required=False)
+    count = serializers.BooleanField(required=False)
+
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
 
 class PipelineResolvedSerializer(serializers.Serializer):
@@ -14,14 +97,14 @@ class PipelineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pipeline
-        fields = ('id', 'name', 'github', 'version', 'entrypoint', 'output_file_group', 'output_directory')
+        fields = '__all__'
 
 
 class PortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Port
-        fields = ('id', 'name', 'schema', 'secondary_files', 'value', 'db_value')
+        fields = '__all__'
 
 
 class UpdatePortSerializer(serializers.Serializer):
@@ -46,7 +129,7 @@ class CreateRunSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
         run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
-                  status=RunStatus.CREATING, job_statuses=dict())
+                  status=RunStatus.CREATING, job_statuses=dict(), resume=validated_data.get('resume'))
         run.save()
         return run
 
@@ -78,7 +161,8 @@ class RunSerializerPartial(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'status', 'request_id', 'app', 'status_url', 'created_date')
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app', 'status_url',
+                  'created_date', 'job_group')
 
 
 class RunSerializerFull(serializers.ModelSerializer):
@@ -101,8 +185,55 @@ class RunSerializerFull(serializers.ModelSerializer):
 
     class Meta:
         model = Run
-        fields = (
-        'id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'job_statuses')
+        fields = ('id', 'name', 'status', 'tags', 'app', 'inputs', 'outputs', 'status_url', 'created_date', 'started', 'submitted', 'job_statuses','execution_id','output_metadata','output_directory','operator_run','job_group','notify_for_outputs','finished_date','message')
+
+
+class RunSerializerCWLInput(RunSerializerPartial):
+
+    inputs = serializers.SerializerMethodField()
+
+    def get_inputs(self, obj):
+        input_data = PortSerializer(obj.port_set.filter(port_type=PortType.INPUT).all(), many=True).data
+        return format_port_data(input_data)
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'inputs')
+
+class RunSerializerCWLOutput(RunSerializerPartial):
+
+    outputs = serializers.SerializerMethodField()
+
+    def get_outputs(self, obj):
+        output_data = PortSerializer(obj.port_set.filter(port_type=PortType.OUTPUT).all(), many=True).data
+        return format_port_data(output_data)
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'outputs')
+
+class CWLJsonSerializer(serializers.Serializer):
+    cwl_inputs = serializers.BooleanField(required=False)
+    runs = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    job_groups = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    jira_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    request_ids = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
 
 
 class RunStatusUpdateSerializer(serializers.Serializer):
@@ -130,6 +261,9 @@ class RunStatusUpdateSerializer(serializers.Serializer):
         instance.save()
 
 
+class RestartRunSerializer(serializers.Serializer):
+    operator_run_id = serializers.UUIDField(required=True)
+
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
@@ -140,7 +274,9 @@ class APIRunCreateSerializer(serializers.Serializer):
     output_metadata = serializers.JSONField(required=False, default=dict)
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
+    job_group_notifier_id = serializers.UUIDField(required=False)
     notify_for_outputs = serializers.ListField(allow_null=True, required=False)
+    resume = serializers.UUIDField(allow_null=True, required=False)
 
     def create(self, validated_data):
         try:
@@ -157,7 +293,8 @@ class APIRunCreateSerializer(serializers.Serializer):
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
                   output_metadata=validated_data.get('output_metadata', {}),
-                  tags=tags)
+                  tags=tags,
+                  resume=validated_data.get('resume'))
         if validated_data.get('output_directory'):
             run.output_directory=validated_data.get('output_directory')
         try:
@@ -167,7 +304,17 @@ class APIRunCreateSerializer(serializers.Serializer):
         try:
             run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
         except JobGroup.DoesNotExist:
-            print("[JobGroup] %s" % run.job_group)
+            print("[JobGroup] %s" % validated_data.get('job_group_id'))
+        try:
+            run.job_group_notifier = JobGroupNotifier.objects.get(id=validated_data.get('job_group_notifier_id'))
+        except JobGroupNotifier.DoesNotExist:
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
+        # Try to find JobGroupNotifier using app and job_group_id
+        try:
+            run.job_group_notifier = JobGroupNotifier.objects.get(job_group_id=validated_data.get('job_group_id'),
+                                                                  notifier_type_id=run.app.operator.notifier_id)
+        except JobGroupNotifier.DoesNotExist:
+            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
         run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
         run.save()
         return run
@@ -183,11 +330,44 @@ class RequestIdOperatorSerializer(serializers.Serializer):
     pipeline_name = serializers.CharField(max_length=100)
 
 
+class RequestIdsOperatorSerializer(serializers.Serializer):
+    request_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    pipeline_version = serializers.CharField(max_length=30, allow_null=True, allow_blank=True)
+    job_group_id = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(required=False, default=True)
+
+
+class RunIdsOperatorSerializer(serializers.Serializer):
+    run_ids = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    job_group_id = serializers.UUIDField(required=False)
+    for_each = serializers.BooleanField(default=False)
+
+
+class PairOperatorSerializer(serializers.Serializer):
+    pairs = serializers.ListField(
+            child=serializers.JSONField(),allow_empty=True
+    )
+    pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    name = serializers.CharField(allow_blank=False, allow_null=False)
+    output_directory_prefix = serializers.CharField(max_length=50, allow_blank=True, allow_null=True)
+    job_group_id = serializers.UUIDField(required=False)
+
+
 class OperatorErrorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorErrors
-        fields = ('operator_name', 'request_id', 'error')
+        fields = '__all__'
 
 
 class OperatorRunSerializer(serializers.ModelSerializer):
@@ -202,4 +382,68 @@ class OperatorRunSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OperatorRun
-        fields = ('id', 'operator', 'operator_class', 'status', 'num_total_runs', 'num_completed_runs', 'num_failed_runs', 'job_group')
+        fields = '__all__'
+
+
+class AionOperatorSerializer(serializers.Serializer):
+    lab_head_email = serializers.CharField(max_length=100)
+
+
+class TempoMPGenOperatorSerializer(serializers.Serializer):
+    normals_override = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    tumors_override = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+
+
+class RunSamplesSerializer(serializers.Serializer):
+    job_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    ),
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorLatestSamplesQuerySerializer(serializers.Serializer):
+    samples = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False,
+        required=True
+    )
+
+
+class OperatorSampleQuerySerializer(serializers.Serializer):
+    sample = serializers.CharField(required=True, allow_blank=False)
+
+
+class AbortRunSerializer(serializers.Serializer):
+    job_group_id = serializers.UUIDField(required=False, allow_null=True)
+    runs = serializers.ListField(
+        child=serializers.UUIDField()
+    )
+
+    def validate(self, attrs):
+        if attrs.get('job_group_id'):
+            try:
+                JobGroup.objects.get(id=attrs['job_group_id'])
+            except JobGroup.DoesNotExist:
+                raise serializers.ValidationError("JobGroup with id: %s doesn't exist." % attrs['job_group_id'])
+        if attrs.get('runs', []):
+            run_missing = []
+            for run in attrs['runs']:
+                try:
+                    Run.objects.get(id=run)
+                except Run.DoesNotExist:
+                    run_missing.append(str(run))
+            if run_missing:
+                raise serializers.ValidationError("Runs with id(s): %s doesn't exist." % ', '.join(run_missing))
+        if not attrs.get('job_group_id') and not attrs.get('runs'):
+            raise serializers.ValidationError("Either job_group_id or runs needs to be specified.")
+        return attrs

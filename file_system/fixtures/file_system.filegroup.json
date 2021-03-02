@@ -71,8 +71,8 @@
     "fields": {
         "created_date": "2019-11-18T17:44:56.345Z",
         "modified_date": "2019-11-18T17:44:56.345Z",
-        "name": "roslin_pair_sv_outputs",
-        "slug": "roslin_pair_sv_outputs",
+        "name": "argos_pair_sv_outputs",
+        "slug": "argos_pair_sv_outputs",
         "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
     }
 },
@@ -97,5 +97,16 @@
         "slug": "dmp-bams",
         "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
     }
+},
+{
+  "model": "file_system.filegroup",
+  "pk": "a66f03b4-ce43-40d0-9134-d5a3575cabcc",
+  "fields": {
+      "created_date": "2019-11-05T20:13:29.923Z",
+      "modified_date": "2019-11-05T20:13:29.923Z",
+      "name": "access_curated_normals",
+      "slug": "access_curated_normals",
+      "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+  }
 }
 ]

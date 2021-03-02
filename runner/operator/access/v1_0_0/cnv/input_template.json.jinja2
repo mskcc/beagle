@@ -1,0 +1,27 @@
+{
+   "project_name": "{{ tumor_sample_id }}",
+    "tumor_sample_list": {
+        "contents": {{ tumor_sample_list_content }},
+        "basename": "tumor_manifest.txt",
+        "class": "File"
+    },
+    "normal_sample_list": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/curated_normal_manifest.txt"
+    },
+    "threads": 8,
+    "tmp_dir": "/scratch",
+    "targets_coverage_bed": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/ACCESS_targets_coverage.bed"
+    },
+    "targets_coverage_annotation": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/ACCESS_targets_coverage.txt"
+    },
+    "reference_fasta": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta"
+    },
+    "version": "1.3.40"
+}

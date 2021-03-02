@@ -13,8 +13,13 @@ Basic dev instance setup instructions:
 1. install dependencies in the current directory with:
 make install
 
-2. initialize the database with:
+2a. initialize the database with:
 make db-init
+
+- NOTE: you might need to adjust the PostgreSQL port variable BEAGLE_DB_PORT to avoid conflicts on a shared server
+
+2b. run the test suite with:
+make test
 
 3. initialize the Django database and set a admin (superuser) account with:
 make django-init
@@ -104,11 +109,12 @@ install: conda
 	conda-forge::python-ldap=3.2.0 \
 	bioconda::rabix-bunny=1.0.4 \
 	conda-forge::jq
-	pip install -r requirements-cli.txt
 	pip install -r requirements.txt
 	pip install -r requirements-dev.txt
-	# pip install git+https://github.com/mskcc/beagle_cli.git@develop
+# pip install git+https://github.com/mskcc/beagle_cli.git@develop
+# pip install -r requirements-cli.txt # <- what happened to this file?
 
+export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
 export BEAGLE_DB_USERNAME=$(shell whoami)
@@ -249,28 +255,26 @@ celery-start:
 	-l info \
 	-Q "$(BEAGLE_DEFAULT_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_LOGFILE)" \
-	--detach && \
+	--logfile "$(CELERY_WORKER_LOGFILE)" &
 	celery -A beagle_etl beat \
 	-l info \
 	--pidfile "$(CELERY_BEAT_PID_FILE)" \
 	--logfile "$(CELERY_BEAT_LOGFILE)" \
-	--schedule "$(CELERY_BEAT_SCHEDULE)" \
-	--detach && \
+	--schedule "$(CELERY_BEAT_SCHEDULE)" &
 	celery -A beagle_etl worker \
 	--concurrency 1 \
 	-l info \
 	-Q "$(BEAGLE_JOB_SCHEDULER_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_JOB_SCHEDULER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_JOB_SCHEDULER_LOGFILE)" \
-	--detach && \
+	--logfile "$(CELERY_WORKER_JOB_SCHEDULER_LOGFILE)" &
 	celery -A beagle_etl worker \
 	-l info \
 	-Q "$(BEAGLE_RUNNER_QUEUE)" \
 	--pidfile "$(CELERY_WORKER_RUNNER_PID_FILE)" \
-	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" \
-	--detach
+	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" &
 
+flower:
+	flower -A beagle_etl --port=5555 -logLevel=debug --broker=$(CELERY_BROKER_URL)
 # check that the Celery processes are running
 celery-check:
 	-ps auxww | grep 'celery' | grep -v 'grep' | grep -v 'make' | grep '$(CURDIR)'
@@ -316,8 +320,10 @@ export DJ_DEBUG_LOG:=$(LOG_DIR_ABS)/dj.debug.log
 # initialize the Django app in the database
 # do this after setting up the db above
 django-init:
+	if [ ! -d "static" ]; then mkdir static; fi
 	python manage.py makemigrations --merge
 	python manage.py migrate
+	python manage.py collectstatic
 	python manage.py createsuperuser
 	python manage.py loaddata \
 	beagle_etl.operator.json \
@@ -344,8 +350,7 @@ migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
 
 shell : check-env
-	python manage.py shell_plus
-
+	python manage.py shell_plus --print-sql
 
 dumpdata: check-env
 	python manage.py dumpdata
@@ -389,12 +394,12 @@ import:
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/etl/import-requests/
 
 
-# create a dev instance of the Roslin pipeline
-DEVNAME:=roslin-dev
-DEVURL:=https://github.com/mskcc/roslin-cwl
+# create a dev instance of the Argos pipeline
+DEVNAME:=argos-dev
+DEVURL:=https://github.com/mskcc/argos-cwl
 DEVVER:=1.0.0-rc5
 DEVENTRY:=workflows/pair-workflow-sv.cwl
-DEVOUTPUT:=$(CURDIR)/output/roslin-dev
+DEVOUTPUT:=$(CURDIR)/output/argos-dev
 DEVGROUP:=1a1b29cf-3bc2-4f6c-b376-d4c5d701166a
 
 $(DEVOUTPUT):
@@ -444,16 +449,16 @@ file-get:
 	-H "Authorization: Bearer $(TOKEN)" \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/fs/files/?filename=$(REQFILE)
 
-# start a Roslin run for a given request in the Beagle db
+# start a Argos run for a given request in the Beagle db
 run-request:
 	curl -H "Content-Type: application/json" \
 	-X POST \
 	-H "Authorization: Bearer $(TOKEN)" \
-	--data '{"request_ids":["$(REQID)"], "pipeline_name": "roslin"}' \
+	--data '{"request_ids":["$(REQID)"], "pipeline_name": "argos"}' \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/request/
 
 # send a pipeline input to the API to start running
-REQJSON:=fixtures/tests/run_roslin.json
+REQJSON:=fixtures/tests/run_argos.json
 run-request-api: $(AUTH_FILE)
 	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	curl -H "Content-Type: application/json" \
@@ -462,24 +467,24 @@ run-request-api: $(AUTH_FILE)
 	--data @$(REQJSON) \
 	http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/api/
 
-# make a demo Roslin input.json file from the template fixture;
+# make a demo Argos input.json file from the template fixture;
 # need to update the fixture with the app ID of the demo pipeline that was loaded in the database
-INPUT_TEMPLATE:=fixtures/tests/juno_roslin_demo2.pipeline_input.json
+INPUT_TEMPLATE:=fixtures/tests/juno_argos_demo2.pipeline_input.json
 DEMO_INPUT:=input.json
 $(DEMO_INPUT): $(INPUT_TEMPLATE) $(AUTH_FILE)
 	@token=$$( jq -r '.token' "$(AUTH_FILE)" ) && \
 	$(MAKE) check-dev-pipeline-registered && \
 	{ \
 	appid=$$(curl --silent -H "Content-Type: application/json" -X GET -H "Authorization: Bearer $$token" http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)/v0/run/pipelines/ | jq -r --exit-status '.results | .[] | select(.name | contains("$(DEVNAME)")) | .id' ) && \
-	jq --arg appid "$$appid" '.app = $$appid' fixtures/tests/juno_roslin_demo2.pipeline_input.json > $(DEMO_INPUT) ; \
+	jq --arg appid "$$appid" '.app = $$appid' fixtures/tests/juno_argos_demo2.pipeline_input.json > $(DEMO_INPUT) ; \
 	} || { echo ">>> input didnt work" ; exit 1; }
 .PHONY: $(DEMO_INPUT)
 
-# submit a demo Roslin run using the dev Roslin pipeline entry in the database
+# submit a demo Argos run using the dev Argos pipeline entry in the database
 demo-run: register-dev-pipeline $(DEMO_INPUT)
-	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.file.json
-	@python manage.py loaddata fixtures/tests/juno_roslin_demo2.filemetadata.json
-	@python manage.py loaddata fixtures/tests/roslin_reference_files.json
+	@python manage.py loaddata fixtures/tests/juno_argos_demo2.file.json
+	@python manage.py loaddata fixtures/tests/juno_argos_demo2.filemetadata.json
+	@python manage.py loaddata fixtures/tests/argos_reference_files.json
 	@$(MAKE) run-request-api REQID=DemoRequest1 REQJSON=$(DEMO_INPUT)
 
 # check if the ports needed for services and servers are already in use on this system
@@ -519,5 +524,3 @@ PORT=
 port-check:
 	ss -lntup | grep ':$(PORT)'
 endif
-
-

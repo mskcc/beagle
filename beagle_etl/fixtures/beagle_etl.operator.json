@@ -5,8 +5,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "RoslinOperator",
-            "slug": "roslin"
+            "class_name": "runner.operator.argos_operator.v1_0_0.argos_operator.ArgosOperator",
+            "version": "v1.0.0",
+            "slug": "ArgosOperator"
         }
     },
     {
@@ -15,8 +16,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"IMPACT410\", \"IMPACT468\"]",
-            "class_name": "AccessOperator",
-            "slug": "access"
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
+            "version": "v1.0.0",
+            "slug": "AccessOperator"
         }
     },
     {
@@ -25,8 +27,9 @@
         "fields": {
             "active": true,
             "recipes": "[\"400FAKESOMETHING\"]",
-            "class_name": "AccessOperator",
-            "slug": "access"
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
+            "version": "v1.0.0",
+            "slug": "AccessOperator"
         }
     },
     {
@@ -35,8 +38,64 @@
         "fields": {
             "active": true,
             "recipes": "[\"None\"]",
-            "class_name": "CopyOutputsOperator",
-            "slug": "copyOutputs"
+            "class_name": "runner.operator.copy_outputs_operator.v1_0_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v1.0.0",
+            "slug": "CopyOutputsOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 5,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.snps_and_indels.AccessLegacySNVOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacySNVOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 7,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.msi.AccessLegacyMSIOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacyMSIOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 6,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.structural_variants.AccessLegacySVOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacySVOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 8,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.merge_fastqs.AccessLegacyFastqMergeOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacyFastqMergeOperator"
+        }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 9,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.cnv.AccessLegacyCNVOperator",
+            "version": "v1.0.0",
+            "slug": "AccessLegacyCNVOperator"
         }
     }
 ]

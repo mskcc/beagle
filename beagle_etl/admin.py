@@ -2,8 +2,8 @@ import os
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator
-from lib.admin import pretty_python_exception, pretty_json
+from .models import Job, JobStatus, Operator, ETLConfiguration
+from lib.admin import pretty_json
 
 
 def restart(modeladmin, request, queryset):
@@ -19,6 +19,7 @@ def restart(modeladmin, request, queryset):
         job.save()
 
 restart.short_description = "Restart"
+
 
 class RecipeFilter(SimpleListFilter):
     title = 'Recipe'
@@ -61,9 +62,21 @@ class JobAdmin(ModelAdmin):
 
     get_short_run.short_description = 'Run'
 
+
 class OperatorAdmin(ModelAdmin):
-    list_display = ('id', 'class_name', 'recipes', 'active')
+    list_display = ('id', 'slug', 'class_name', 'version', 'recipes', 'active')
+
+
+class AssayAdmin(ModelAdmin):
+    list_display = ('redelivery', 'all_recipes', 'disabled_recipes')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
+admin.site.register(ETLConfiguration, AssayAdmin)

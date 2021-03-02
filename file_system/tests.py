@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata
+from file_system.metadata.validator import MetadataValidator
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample
 
 
 class FileTest(APITestCase):
@@ -69,6 +70,22 @@ class FileTest(APITestCase):
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_create_file_too_long_sample_name(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.post('/v0/fs/files/',
+                                    {
+                                        "path": "/path/to/file.fasta",
+                                        "size": 1234,
+                                        "file_group": str(self.file_group.id),
+                                        "file_type": self.file_type_fasta.name,
+                                        "metadata": {
+                                            "requestId": "Request_001",
+                                            "sampleId": "igoSampleId_001_length_too_long_123"
+                                        }
+                                    },
+                                    format='json')
+        self.assertContains(response, 'too long', status_code=status.HTTP_400_BAD_REQUEST)
+
     def test_create_file_successful(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.post('/v0/fs/files/',
@@ -79,12 +96,17 @@ class FileTest(APITestCase):
                                         "file_type": self.file_type_fasta.name,
                                         "metadata": {
                                             "requestId": "Request_001",
-                                            "igoSampleId": "igoSampleId_001"
+                                            "sampleId": "igoSampleId_001"
                                         }
                                     },
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['file_name'], "file.fasta")
+        try:
+            sample = Sample.objects.get(sample_id="igoSampleId_001")
+        except Sample.DoesNotExist:
+            sample = None
+        self.assertIsNotNone(sample)
 
     def test_create_file_unknown_file_type(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
@@ -172,6 +194,135 @@ class FileTest(APITestCase):
         self.assertEqual(response.data['metadata']['requestId'], "Request_001")
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
+
+    def test_patch_file_metadata(self):
+        _file = self._create_single_file('/path/to/sample_file.bam', 'bam', str(self.file_group.id), 'request_id', 'sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
+                                   {
+                                       "metadata": {
+                                           "requestId": "Request_001",
+                                       }
+                                   },
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['metadata']['requestId'], "Request_001")
+        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
+        self.assertEqual(file_metadata_count, 2)
+        response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
+                                     {
+                                         "metadata": {
+                                             "requestId": "Request_002",
+                                         }
+                                     },
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['metadata']['requestId'], "Request_002")
+        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
+        self.assertEqual(file_metadata_count, 3)
+
+    def test_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": first_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": second_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        first_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(first_file.id)).first()
+        second_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(second_file.id)).first()
+        self.assertEqual(first_file_metadata.metadata['requestId'], "Request_001")
+        self.assertEqual(second_file_metadata.metadata['requestId'], "Request_002")
+
+    def test_fail_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_partial_fail_batch_patch_file_metadata(self):
+        first_file = self._create_single_file('/path/to/first_file.bam', 'bam', str(self.file_group.id), 'first_request_id', 'first_sample_id')
+        second_file = self._create_single_file('/path/to/second_file.bam', 'bam', str(self.file_group.id), 'second_request_id', 'second_sample_id')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        patch_json = {
+        "patch_files":[
+            {
+                "id": first_file.id,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_001"
+                            }
+                }
+
+            },
+            {
+                "id": None,
+                "patch": {
+                    "metadata": {
+                            "requestId": "Request_002"
+                            }
+                }
+
+            }
+
+
+        ]
+        }
+        response = self.client.post('/v0/fs/batch-patch-files',patch_json,format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        first_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(first_file.id)).first()
+        second_file_metadata = FileMetadata.objects.order_by('file', '-version').distinct('file').filter(file=str(second_file.id)).first()
+        self.assertEqual(first_file_metadata.metadata['requestId'], "first_request_id")
+        self.assertEqual(second_file_metadata.metadata['requestId'], "second_request_id")
 
     def test_update_file_metadata_users_update(self):
         _file = self._create_single_file('/path/to/sample_file.bam',
@@ -295,11 +446,65 @@ class FileTest(APITestCase):
                                    )
         self.assertEqual(len(response.json()['results']), 1)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
-        response = self.client.get('/v0/fs/files/?path=/path/to/file1_R1.fastq&return=requestId',
+        response = self.client.get('/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata=requestId',
                                    format='json'
                                    )
         self.assertEqual(response.json()['results'][0], '1')
 
+    def test_metadata_clean_function(self):
+        test1 = "abc\tdef2"
+        test2 = """
+            abc\tdef!
+            """
+        self.assertEqual(MetadataValidator.clean_value(test1), "abc def2")
+        self.assertEqual(MetadataValidator.clean_value(test2), "abc def")
 
+    def test_query_files(self):
+        self._create_single_file('/path/to/file1.fastq', 'fastq', str(self.file_group.id), '1', '3')
+        self._create_single_file('/path/to/file2.fastq', 'fastq', str(self.file_group.id), '1', '2')
+        self._create_single_file('/path/to/file3.fastq', 'fastq', str(self.file_group.id), '2', '1')
+        self._create_single_file('/path/to/file4.fastq', 'fastq', str(self.file_group.id), '3', '4')
+        self._create_single_file('/path/to/file5.fastq', 'fastq', str(self.file_group.id), '4', '3')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/files/?metadata=requestId:1&values_metadata=requestId,igoSampleId',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 2)
+        response = self.client.get('/v0/fs/files/?values_metadata=requestId,igoSampleId',
+                                   format='json'
+                                   )
+        self.assertEqual(len(response.json()['results']), 5)
 
+    def test_sample_list(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.get('/v0/fs/sample/',
+                                   format='json'
+                                   )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()['results']), 1)
 
+    def test_sample_update(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.patch('/v0/fs/sample/%s/' % str(sample.id),
+                                     {
+                                         "redact": True,
+                                     },
+                                     format='json'
+                                     )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get('redact'), True)
+
+    def test_sample_create(self):
+        sample = Sample.objects.create(sample_id='08944_B')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
+        response = self.client.post('/v0/fs/sample/',
+                                    {
+                                        "sample_id": "TEST_001",
+                                        "redact": False
+                                    },
+                                    format='json'
+                                    )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.json().get('redact'), False)

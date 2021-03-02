@@ -4,6 +4,7 @@ Tests for Operator class
 from django.test import TestCase
 from runner.operator.operator import Operator
 
+
 class TestOperator(TestCase):
     def test_operator_instance(self):
         """

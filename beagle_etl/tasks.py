@@ -3,15 +3,13 @@ import importlib
 import datetime
 import traceback
 from celery import shared_task
-from django.db import transaction
-from django.db.models import Prefetch
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
-from file_system.repository.file_repository import FileRepository
+from beagle_etl.exceptions import ETLExceptions
+from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
-# TODO: Consider moving `format_sample_name` to some other place
-from runner.operator.roslin_operator.bin.make_sample import format_sample_name
+# from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
 
 
 logger = logging.getLogger(__name__)
@@ -20,6 +18,11 @@ logger = logging.getLogger(__name__)
 @shared_task
 def fetch_requests_lims():
     logger.info("Fetching requestIDs")
+    running = Job.objects.filter(run=TYPES['DELIVERY'],
+                                 status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
+    if len(running) > 0:
+        logger.info("Job already in progress %s" % running.first())
+        return
     latest = Job.objects.filter(run=TYPES['DELIVERY']).order_by('-created_date').first()
     timestamp = None
     if latest:
@@ -27,6 +30,22 @@ def fetch_requests_lims():
     else:
         timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=120)).timestamp()) * 1000
     job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims', args={'timestamp': timestamp},
+              status=JobStatus.CREATED,
+              max_retry=3, children=[])
+    job.save()
+    logger.info("Fetching fetch_new_requests_lims job created")
+
+
+@shared_task
+def check_missing_requests():
+    """
+    Method implemented because some requests on LIMS can show up with the date from the past
+    """
+    logger.info("Check for missing requests")
+    timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=12)).timestamp()) * 1000
+
+    job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims',
+              args={'timestamp': timestamp, 'redelivery': False},
               status=JobStatus.CREATED,
               max_retry=3, children=[])
     job.save()
@@ -46,19 +65,18 @@ def scheduler():
     jobs = get_pending_jobs()
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
-        with transaction.atomic():
-            j = Job.objects.get(id=job.id)
-            if not j.lock:
-                logger.info("Submitting job: %s" % str(job.id))
-                j.lock = True
-                j.save()
-                job_processor.delay(j.id)
-            else:
-                logger.info("Job already locked: %s" % str(job.id))
+        j = Job.objects.get(id=job.id)
+        if not j.is_locked:
+            j.lock_job()
+            logger.info("Submitting job: %s" % str(job.id))
+            job_processor.delay(j.id)
+        else:
+            logger.info("Job already locked: %s" % str(job.id))
 
 
 def get_pending_jobs():
-    jobs = Job.objects.filter(status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
+    jobs = Job.objects.filter(
+        status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN), lock=False).iterator()
     return jobs
 
 
@@ -78,21 +96,27 @@ class JobObject(object):
                 self._process()
                 self.job.status = JobStatus.WAITING_FOR_CHILDREN
             except Exception as e:
+                print(e)
+                if isinstance(e, ETLExceptions):
+                    print("Is this correct exception")
+                    message = {"message": str(e), "code": e.code}
+                else:
+                    message = {'message': str(e)}
                 if self.job.retry_count == self.job.max_retry:
                     self.job.status = JobStatus.FAILED
-                    self.job.message = {"details": "Error: %s" % traceback.format_tb(e.__traceback__)}
+                    self.job.message = message
                     self._job_failed()
                     traceback.print_tb(e.__traceback__)
 
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
 
-        with transaction.atomic():
-            self.job.lock = False
-            self.job.save()
-
         logger.info("Job %s in status: %s" % (str(self.job.id), JobStatus(self.job.status).name))
+        self._unlock()
         self._save()
+
+    def _unlock(self):
+        self.job.unlock_job()
 
     def _save(self):
         self.job.save()
@@ -104,10 +128,19 @@ class JobObject(object):
         children = func(**self.job.args)
         self.job.children = children or []
 
+    def get_key(self, val):
+        for key, value in TYPES.items():
+            if val == value:
+                return key
+        return None
+
     def _generate_ticket_decription(self):
         samples_completed = set()
         samples_failed = set()
         all_jobs = []
+        request_jobs = []
+        sample_jobs = []
+        pooled_normal_jobs = []
 
         jobs = Job.objects.filter(job_group=self.job.job_group.id).all()
 
@@ -117,9 +150,29 @@ class JobObject(object):
                     samples_completed.add(job.args['sample_id'])
                 elif job.status == JobStatus.FAILED:
                     samples_failed.add(job.args['sample_id'])
-            all_jobs.append(str(job.id))
 
-        request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'], run=TYPES['SAMPLE']).first()
+            if job.run == TYPES['SAMPLE']:
+                sample_jobs.append((str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                                   job.args.get('sample_id', '')))
+            elif job.run == TYPES['REQUEST']:
+                request_jobs.append(
+                    (str(job.id), '', self.get_key(job.run), job.message or "", ''))
+            elif job.run == TYPES['POOLED_NORMAL']:
+                pooled_normal_jobs.append(
+                    (str(job.id), JobStatus(job.status).name, self.get_key(job.run), job.message or "",
+                     job.args.get('sample_id', '')))
+
+        all_jobs.extend(request_jobs)
+        all_jobs.extend(sample_jobs)
+        all_jobs.extend(pooled_normal_jobs)
+
+        request_metadata = Job.objects.filter(args__request_id=self.job.args['request_id'],
+                                              run=TYPES['SAMPLE']).order_by('-created_date').first()
+
+        number_of_tumors = FileRepository.filter(
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata='sampleId').count()
+        number_of_normals = FileRepository.filter(
+            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, values_metadata='sampleId').count()
 
         data_analyst_email = ""
         data_analyst_name = ""
@@ -130,6 +183,7 @@ class JobObject(object):
         pi_email = ""
         project_manager_name = ""
         recipe = ""
+        qc_access_emails = ""
 
         if request_metadata:
             metadata = request_metadata.args.get('request_metadata', {})
@@ -142,8 +196,10 @@ class JobObject(object):
             lab_head_name = metadata['labHeadName']
             pi_email = metadata['piEmail']
             project_manager_name = metadata['projectManagerName']
+            qc_access_emails = metadata['qcAccessEmails']
 
-        event = ETLImportEvent(str(self.job.job_group.id),
+        event = ETLImportEvent(str(self.job.job_group_notifier.id),
+                               str(self.job.job_group.id),
                                self.job.args['request_id'],
                                list(samples_completed),
                                list(samples_failed),
@@ -155,60 +211,31 @@ class JobObject(object):
                                lab_head_email,
                                lab_head_name,
                                pi_email,
-                               project_manager_name
+                               project_manager_name,
+                               qc_access_emails,
+                               number_of_tumors,
+                               number_of_normals,
+                               len(pooled_normal_jobs)
                                )
         e = event.to_dict()
         send_notification.delay(e)
 
-        etl_event = ETLJobsLinksEvent(str(self.job.job_group.id),
+        etl_event = ETLJobsLinksEvent(str(self.job.job_group_notifier.id),
                                       self.job.args['request_id'],
                                       all_jobs)
         etl_e = etl_event.to_dict()
         send_notification.delay(etl_e)
 
-    def _generate_sample_data_file(self):
-        result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
-        ret_str = 'metadata__sampleId'
-        samples = FileRepository.filter(metadata={"requestId": self.job.args['request_id']}).order_by(ret_str).distinct(
-            ret_str).all()
-        for sample in samples:
-            metadata = sample.metadata
-            print(metadata)
-            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'])),
-                metadata['patientId'],
-                metadata['investigatorSampleId'],
-                metadata['sampleClass'],
-                metadata['recipe'],
-                metadata['oncoTreeCode'],
-                metadata['specimenType'],
-                metadata['preservation'],
-                metadata['sex'],
-                metadata['tissueLocation'],
-                metadata['sampleId']
-            )
-        e = UploadAttachmentEvent(str(self.job.job_group.id),
-                                  '%s_sample_data_clinical.txt' % self.job.args['request_id'],
-                                  result).to_dict()
-        send_notification.delay(e)
-
     def _job_failed(self):
-        # TODO: Hack remove this ASAP
         if self.job.run == TYPES['REQUEST']:
-            import time
-            time.sleep(5)
-            ci_review = SetCIReviewEvent(str(self.job.job_group.id)).to_dict()
-            send_notification.delay(ci_review)
+            e = ETLJobFailedEvent(self.job.job_group_notifier.id,
+                                  "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
+            send_notification.delay(e)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _job_successful(self):
         if self.job.run == TYPES['REQUEST']:
-            # TODO: Hack remove this ASAP
-            import time
-            time.sleep(5)
             self._generate_ticket_decription()
-            self._generate_sample_data_file()
 
     def _check_children(self):
         finished = True
@@ -221,7 +248,7 @@ class JobObject(object):
                 continue
             if child_job.status == JobStatus.FAILED:
                 failed.append(child_id)
-            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED):
+            if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False
                 break
         if finished:

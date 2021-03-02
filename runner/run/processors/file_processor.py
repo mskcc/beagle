@@ -1,10 +1,17 @@
 import os
 from django.db import IntegrityError
 from file_system.models import File, FileType, FileGroup, FileMetadata
-from runner.exceptions import FileHelperException, FileConflictException
+from file_system.serializers import UpdateFileSerializer
+from django.conf import settings
+from runner.exceptions import FileHelperException, FileConflictException, FileUpdateException
+from django.contrib.auth.models import User
 
 
 class FileProcessor(object):
+
+    @staticmethod
+    def get_sample(file):
+        return file.sample
 
     @staticmethod
     def get_file_id(uri):
@@ -19,6 +26,14 @@ class FileProcessor(object):
     @staticmethod
     def get_juno_uri_from_file(file):
         return 'juno://%s' % file.path
+
+    @staticmethod
+    def get_file_size(file):
+        return file.size
+
+    @staticmethod
+    def get_file_checksum(file):
+        return file.checksum
 
     @staticmethod
     def get_bid_from_file(file):
@@ -64,7 +79,7 @@ class FileProcessor(object):
             raise FileHelperException("Unknown uri schema %s" % uri)
 
     @staticmethod
-    def create_file_obj(uri, size, group_id, metadata):
+    def create_file_obj(uri, size, checksum, group_id, metadata):
         file_path = FileProcessor.parse_path_from_uri(uri)
         basename = os.path.basename(file_path)
         file_type = FileProcessor.get_file_ext(basename)
@@ -74,6 +89,7 @@ class FileProcessor(object):
             raise FileHelperException('Invalid FileGroup id: %s' % group_id)
         file_object = File(path=file_path,
                            file_name=os.path.basename(file_path),
+                           checksum=checksum,
                            file_type=file_type,
                            file_group=group_id_obj,
                            size=size)
@@ -98,3 +114,21 @@ class FileProcessor(object):
                 if filename.endswith(ext.extension):
                     return file_type
         return FileType.objects.get(name='unknown')
+
+    @staticmethod
+    def update_file(file_object, path, metadata, user=None):
+        data = {
+            "path": path,
+            "metadata": metadata,
+        }
+        try:
+            user = User.objects.get(username=user)
+            data['user'] = user.id
+        except User.DoesNotExist:
+            pass
+        serializer = UpdateFileSerializer(file_object, data=data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            raise FileUpdateException(
+                "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
