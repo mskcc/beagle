@@ -277,6 +277,7 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
     run_id = args[0]
     fail_job(run_id, "Could not create run task")
 
+
 @shared_task(autoretry_for=(Exception,),
              retry_jitter=True,
              retry_backoff=60,
@@ -288,10 +289,7 @@ def create_run_task(run_id, inputs, output_directory=None):
         run = RunObject.from_cwl_definition(run_id, inputs)
         run.ready()
     except RunCreateException as e:
-        run = RunObject.from_db(run_id)
-        run.fail({'details': str(e)})
-        RunObject.to_db(run)
-        logger.info("Run %s Failed" % run_id)
+        fail_job(run_id, str(e))
     else:
         RunObject.to_db(run)
         submit_job.delay(run_id, output_directory)
@@ -300,8 +298,8 @@ def create_run_task(run_id, inputs, output_directory=None):
 
 def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     run_id = args[0]
-
     fail_job(run_id, "Failed to submit job to Ridgeback")
+
 
 @shared_task(autoretry_for=(Exception,),
              retry_jitter=True,
@@ -490,6 +488,7 @@ def running_job(run):
 def abort_job(run):
     run.status = RunStatus.ABORTED
     run.save()
+
 
 def update_commandline_job_status(run, commandline_tool_job_set):
     job_status_obj = {}
