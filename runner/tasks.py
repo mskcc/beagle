@@ -1,7 +1,7 @@
 import os
 import logging
 import requests
-import datetime
+from datetime import datetime, timedelta
 from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
@@ -155,7 +155,7 @@ def _set_link_to_run_ticket(request_id, job_group_notifier_id):
 
 
 def _generate_summary(req):
-    approx_create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    approx_create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     summary = req + " [%s]" % approx_create_time
     return summary
 
@@ -503,10 +503,20 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 
 
 @shared_task
+def check_job_timeouts():
+    TIMEOUT_BY_DAYS = 3
+    diff = datetime.now()-timedelta(days=TIMEOUT_BY_DAYS)
+    runs = Run.objects.filter(status__in=(RunStatus.CREATING, RunStatus.READY),
+                              created_date__lte=diff).all()
+
+    for run in runs:
+        fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
+
+@shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
     runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                              execution_id__isnull=False).order_by('created_date')
+                              execution_id__isnull=False)
 
     limit = 800
     i = 0
