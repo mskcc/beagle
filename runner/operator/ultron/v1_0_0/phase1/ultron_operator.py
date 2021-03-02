@@ -46,8 +46,7 @@ class UltronOperator(Operator):
 
 
     def _build_job(self, input_json):
-#        app = self.get_pipeline_id()
-        app = "d9c8606b-f596-43b8-9cfc-5d83af4edf2d" # reassign this
+        app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         # add tags, name
