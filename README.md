@@ -34,37 +34,6 @@ Beagle is a backend service for managing files, pipelines and runs.
 
 - Command line utility which helps handles authentication and accessing beagle endpoints.
 
-#### Setup
-- Requirements
-  - python 3
-
-- Instructions
-  - pip install -r requirements-cli.txt
-
-- Run  
-  - python beagle_cli.py
-
-
-Usage:
-
-  `beagle_cli.py files create <file_path> <file_type> <file_group_id> [--metadata-path=<metadata_path>] [--size=<size>]`
-
-  `beagle_cli.py files list [--page-size=<page_size>] [--metadata=<metadata>]... [--file-group=<file_group>]... [--file-name=<file_name>]... [--filename-regex=<filename_regex>]`
-
-  `beagle_cli.py storage create <storage_name>`
-
-  `beagle_cli.py storage list`
-
-  `beagle_cli.py file-types create <file_type>`
-
-  `beagle_cli.py file-types list`
-
-  `beagle_cli.py --version`
-
- Examples:
-- List files by the igoId
-  `python beagle_cli.py files list --metadata igoId:07973_BO_6`
-
 ## Setup
 
 - Requirements
@@ -75,18 +44,8 @@ Usage:
 - Instructions
   - virtualenv beagle
   - pip install -r requirements.txt
-  - export BEAGLE_DB_NAME=<beagle_db_name>
-  - export BEAGLE_DB_USERNAME=<beagle_db_username>
-  - export BEAGLE_DB_PASSWORD=<beagle_db_password>
-  - export BEAGLE_AUTH_LDAP_SERVER_URI=<ldap_server_uri>
-  - export BEAGLE_RABIX_PATH=<rabix_cli_path>
-  - export BEAGLE_RABIX_URL=<rabix_url>
-  - export BEAGLE_RUNNER_QUEUE=<beagle_runner_queue>
-  - export BEAGLE_JOB_SCHEDULER_QUEUE=<beagle_job_scheduler_queue>
-  - export BEAGLE_DEFAULT_QUEUE=<beagle_default_queue>
-  - export BEAGLE_RABBITMQ_USERNAME=<rabbitmq_username>
-  - export BEAGLE_RABBITMQ_PASSWORD=<rabbitmq_password>
-  - export BEAGLE_RABBITMQ_URL=<rabbitmq_url>
+  - setup your environment using the [environment page](docs/ENVIRONMENT_VARIABLES.md)
+
   - python manage.py migrate
   - python manage.py runserver
 
@@ -155,4 +114,4 @@ BEAGLE_LIMS_URL
 BEAGLE_AUTH_LDAP_SERVER_URI
 ```
 
-Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication. 
+Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication.

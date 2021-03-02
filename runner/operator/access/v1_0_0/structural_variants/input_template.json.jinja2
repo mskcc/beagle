@@ -1,0 +1,20 @@
+{
+    "version": "1.3.40",
+    "project_name": "{{ tumor_sample_id }}",
+    "ref_fasta": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta"
+    },
+
+    "sv_sample_id": {{ tumor_sample_names }},
+    "sv_tumor_bams": {{ tumor_bams }},
+    "sv_normal_bam": {{ normal_bam }},
+
+    "sv_run_tools": {
+        "java_8": "/opt/common/CentOS_6/java/jdk1.8.0_31/bin/java",
+        "r_path": "/opt/common/CentOS_6-dev/R/R-3.5.0/bin/Rscript",
+        "manta_python": "/home/accessbot/miniconda3/envs/ACCESS_1.3.36/bin/python2",
+        "manta": "/opt/common/CentOS_6-dev/manta/1.5.0",
+        "sv_repo": "/work/access/production/resources/tools/ACCESS-SV/versions/ACCESS_SV"
+    }
+}

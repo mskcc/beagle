@@ -22,6 +22,8 @@
                 "libraryId": "10075_D_5_1_1_1",
                 "patientId": "C-8VK0V7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-8VK0V7-R001-d",
@@ -66,7 +68,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "captureConcentrationNm": "8.333333333333334",
-                "libraryConcentrationNgul": 13.2
+                "libraryConcentrationNgul": 13.2,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -94,6 +97,8 @@
                 "libraryId": "10075_D_4_1_1_1",
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-M002-d",
@@ -138,7 +143,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_919B_T",
                 "captureConcentrationNm": "8.870967741935484",
-                "libraryConcentrationNgul": 12.4
+                "libraryConcentrationNgul": 12.4,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -166,6 +172,8 @@
                 "libraryId": "10075_D_2",
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-N001-d",
@@ -211,7 +219,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "31-N",
                 "captureConcentrationNm": "16.23815967523681",
-                "libraryConcentrationNgul": 7.39
+                "libraryConcentrationNgul": 7.39,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -239,6 +248,8 @@
                 "libraryId": "10075_D_3",
                 "patientId": "C-8VK0V7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-8VK0V7-N001-d",
@@ -284,7 +295,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "JW_MEL_007_NORM",
                 "captureConcentrationNm": "10.377358490566039",
-                "libraryConcentrationNgul": 10.6
+                "libraryConcentrationNgul": 10.6,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -312,6 +324,8 @@
                 "libraryId": null,
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-M002-d",
@@ -356,7 +370,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_919B_T",
                 "captureConcentrationNm": "8.870967741935484",
-                "libraryConcentrationNgul": 12.4
+                "libraryConcentrationNgul": 12.4,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -384,6 +399,8 @@
                 "libraryId": null,
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-N001-d",
@@ -429,7 +446,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "31-N",
                 "captureConcentrationNm": "16.23815967523681",
-                "libraryConcentrationNgul": 7.39
+                "libraryConcentrationNgul": 7.39,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -457,6 +475,8 @@
                 "libraryId": null,
                 "patientId": "C-8VK0V7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-8VK0V7-N001-d",
@@ -502,7 +522,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "JW_MEL_007_NORM",
                 "captureConcentrationNm": "10.377358490566039",
-                "libraryConcentrationNgul": 10.6
+                "libraryConcentrationNgul": 10.6,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -530,6 +551,8 @@
                 "libraryId": null,
                 "patientId": "C-8VK0V7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-8VK0V7-R001-d",
@@ -574,7 +597,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "captureConcentrationNm": "8.333333333333334",
-                "libraryConcentrationNgul": 13.2
+                "libraryConcentrationNgul": 13.2,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -602,6 +626,8 @@
                 "libraryId": "10075_D_1_1_1_1",
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-M001-d",
@@ -646,7 +672,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK-MEL-919",
                 "captureConcentrationNm": "10.344827586206897",
-                "libraryConcentrationNgul": 14.5
+                "libraryConcentrationNgul": 14.5,
+                "qcAccessEmails": ""
             },
             "user": null
         }
@@ -674,6 +701,8 @@
                 "libraryId": null,
                 "patientId": "C-DRKHP7",
                 "requestId": "10075_D",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
                 "sampleName": "C-DRKHP7-M001-d",
@@ -718,7 +747,8 @@
                 "projectManagerName": "",
                 "investigatorSampleId": "SK-MEL-919",
                 "captureConcentrationNm": "10.344827586206897",
-                "libraryConcentrationNgul": 14.5
+                "libraryConcentrationNgul": 14.5,
+                "qcAccessEmails": ""
             },
             "user": null
         }

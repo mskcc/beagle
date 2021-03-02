@@ -1,5 +1,6 @@
 import json
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework.response import Response
@@ -16,8 +17,23 @@ class PipelineViewSet(mixins.ListModelMixin,
                       mixins.CreateModelMixin,
                       mixins.RetrieveModelMixin,
                       GenericViewSet):
-    queryset = Pipeline.objects.order_by('id').all()
+    queryset = Pipeline.objects.all()
     serializer_class = PipelineSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name', None)
+        default = self.request.query_params.get('default', None)
+        version = self.request.query_params.get('version', None)
+
+        if name:
+            queryset = queryset.filter(name=name)
+        if default:
+            queryset = queryset.filter(default=True)
+        if version:
+            queryset = queryset.filter(version=version)
+
+        return queryset
 
 
 class PipelineResolveViewSet(GenericAPIView):

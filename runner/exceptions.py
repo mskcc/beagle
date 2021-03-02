@@ -24,3 +24,7 @@ class FileHelperException(Exception):
 
 class FileConflictException(Exception):
     pass
+
+
+class FileUpdateException(Exception):
+    pass

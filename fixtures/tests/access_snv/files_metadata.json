@@ -1,0 +1,267 @@
+[
+    {
+        "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44ab2",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "fffff52a-0696-48d4-9ca5-6580daa44ab3",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac53",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac81",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },{
+        "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44a2f",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "fffff52a-0696-48d4-9ca5-6580daa44a42",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acf1",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac35",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },{
+        "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44adf",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "fffff52a-0696-48d4-9ca5-6580daa44aaa",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401aaab",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401acbb",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },{
+        "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44ab3",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac80",
+            "version": 0,
+            "metadata": {
+                "tumorOrNormal": "Normal"
+            },
+            "user": null
+        }
+    },{
+        "model": "file_system.filemetadata",
+        "pk": "fffff52a-0696-48d4-9ca5-6580daa44acf",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.583Z",
+            "modified_date": "2020-01-06T19:59:50.583Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401acda",
+            "version": 0,
+            "metadata": {},
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac32",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac82",
+            "version": 0,
+            "metadata": {
+                "sampleId": "06302_AG_2",
+                "patientId": "DONOR22-TP",
+                "requestId": "06302_AB",
+                "sampleName": "DONOR22-TP",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
+                "flowCellLanes": [
+                    3,
+                    4
+                ],
+                "tumorOrNormal": "Normal",
+                "igocomplete": true
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac44",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac99",
+            "version": 0,
+            "metadata": {
+                "sampleId": "06302_AG_2",
+                "patientId": "DONOR22-TP",
+                "requestId": "06302_AB",
+                "sampleName": "DONOR22-TP",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
+                "flowCellLanes": [
+                    3,
+                    4
+                ],
+                "tumorOrNormal": "Normal",
+                "igocomplete": true
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acc3",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "2f77f3ac-ab25-4a02-90bd-86542401ac2d",
+            "version": 0,
+            "metadata": {
+                "sampleId": "06302_AB_1",
+                "patientId": "C-000884",
+                "sampleName": "C-000884-L011-d",
+                "requestId": "06302_AB",
+                "recipe": "-",
+                "dataAnalystName": "-",
+                "dataAnalystEmail": "-",
+                "investigatorName": "-",
+                "investigatorEmail": "-",
+                "labHeadName": "-",
+                "labHeadEmail": "-",
+                "piEmail": "-",
+                "sex": "M",
+                "projectManagerName": "-",
+                "qcAccessEmails": "-",
+                "flowCellLanes": [
+                    3,
+                    4
+                ],
+                "tumorOrNormal": "Tumor",
+                "igocomplete": true
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acb3",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be63d8",
+            "version": 0,
+            "metadata": {
+                "type": "T",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401acc7",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be63f9",
+            "version": 0,
+            "metadata": {
+                "type": "T",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac34",
+        "fields": {
+            "latest": true,
+            "created_date": "2020-01-06T19:59:50.596Z",
+            "modified_date": "2020-01-06T19:59:50.596Z",
+            "file": "5614f268-b9aa-46a2-9a57-3ddb24be6380",
+            "version": 0,
+            "metadata": {
+                "type": "N",
+                "patient": {
+                    "cmo": "000884",
+                    "dmp": "P-0021500"
+                },
+                "cmo_assay": "ACCESS_V1_0"
+            },
+            "user": null
+        }
+    }
+]

@@ -3,10 +3,11 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.db.models import F
-from file_system.models import File, FileGroup
-from beagle_etl.models import Operator, JobGroup
+from file_system.models import File, FileGroup, Sample
+from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
+from django.utils.timezone import now
 
 
 class RunStatus(IntEnum):
@@ -15,6 +16,7 @@ class RunStatus(IntEnum):
     RUNNING = 2
     FAILED = 3
     COMPLETED = 4
+    ABORTED = 5
 
 
 class PortType(IntEnum):
@@ -36,7 +38,7 @@ class TriggerAggregateConditionType(IntEnum):
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -51,6 +53,7 @@ class Pipeline(BaseModel):
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
+    default = models.BooleanField(default=False)
 
     @property
     def pipeline_link(self):
@@ -70,7 +73,8 @@ class OperatorTrigger(BaseModel):
 
     def __str__(self):
         if self.run_type == TriggerRunType.AGGREGATE:
-            return u"{} -> {} when {}".format(self.from_operator, self.to_operator, TriggerAggregateConditionType(self.aggregate_condition).name.title())
+            return u"{} -> {} when {}".format(self.from_operator, self.to_operator,
+                                              TriggerAggregateConditionType(self.aggregate_condition).name.title())
         elif self.run_type == TriggerRunType.INDIVIDUAL:
             return u"{} -> {} on each run".format(self.from_operator, self.to_operator)
         else:
@@ -78,12 +82,22 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING)
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus],
+                                 default=RunStatus.CREATING, db_index=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
+    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+    parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
+            if not self.finished_date:
+                self.finished_date = now()
+        super().save(*args, **kwargs)
 
     def complete(self):
         self.status = RunStatus.COMPLETED
@@ -140,15 +154,22 @@ class OperatorRun(BaseModel):
 class Run(BaseModel):
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus])
+    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
     execution_id = models.UUIDField(null=True, blank=True)
     job_statuses = JSONField(default=dict, blank=True)
+    message = JSONField(default=dict, blank=True, null=True)
     output_metadata = JSONField(default=dict, blank=True, null=True)
     output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
     tags = JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
+    samples = models.ManyToManyField(Sample)
+    started = models.DateTimeField(blank=True, null=True)
+    submitted = models.DateTimeField(blank=True, null=True)
+    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
+    resume = models.UUIDField(blank=True, null=True)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -157,12 +178,27 @@ class Run(BaseModel):
             "status": self.status
         }
 
+    def clear(self):
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
+                           "execution_id"]
+        for f in fields_to_clear:
+            setattr(self, f, None)
+
+        self.job_statuses = {}
+        self.status = RunStatus.READY
+        return self
+
+    @property
+    def is_completed(self):
+        self.refresh_from_db()
+        return self.status == RunStatus.COMPLETED
+
     def save(self, *args, **kwargs):
         """
         If output directory is set to None, by default assign it to the pipeline output directory
         plus the run id
         """
-        if not self.output_directory:
+        if not self.output_directory and self.id:
             pipeline = self.app
             pipeline_output_directory = pipeline.output_directory
             self.output_directory = os.path.join(pipeline_output_directory, str(self.id))
@@ -172,10 +208,11 @@ class Run(BaseModel):
             if self.status == RunStatus.COMPLETED:
                 self.operator_run.increment_completed_run()
                 self.original["status"] = RunStatus.COMPLETED
+                self.finished_date = now()
             elif self.status == RunStatus.FAILED:
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
-
+                self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 
 

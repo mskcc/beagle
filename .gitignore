@@ -8,3 +8,4 @@ scripts/*.json
 conda*
 input.json
 *.swp
+beagle-server.log

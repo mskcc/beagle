@@ -1,24 +1,29 @@
-from .tempo_operator import TempoOperator
-from .roslin_operator import RoslinOperator
-from .access_operator import AccessOperator
-from .roslin_qc_operator import RoslinQcOperator
-from .copy_outputs_operator import CopyOutputsOperator
+import importlib
+from beagle_etl.models import Operator
 
 
 class OperatorFactory(object):
 
-    operators = {
-        "TempoOperator": TempoOperator,
-        "RoslinOperator": RoslinOperator,
-        "AccessOperator": AccessOperator,
-        "RoslinQcOperator": RoslinQcOperator,
-        "CopyOutputsOperator": CopyOutputsOperator
-    }
+    @classmethod
+    def get_operators(cls):
+        operators = Operator.objects.all()
+        all_operators = dict()
+        for operator in operators:
+            if operator.slug not in all_operators:
+                all_operators[operator.slug] = []
+            mod_name, func_name = operator.class_name.rsplit('.', 1)
+            mod = importlib.import_module(mod_name)
+            func = getattr(mod, func_name)
+            operator_value = {
+                "version": operator.version,
+                "operator": func
+            }
+            all_operators[operator.slug].append(operator_value)
+        return all_operators
 
+    @staticmethod
     def get_by_model(model, **kwargs):
-        if model.class_name not in OperatorFactory.operators:
-            raise Exception("No operator matching {}" % model.class_name)
-
-        return OperatorFactory.operators[model.class_name](model, **kwargs)
-
-    get_by_model = staticmethod(get_by_model)
+        mod_name, func_name = model.class_name.rsplit('.', 1)
+        mod = importlib.import_module(mod_name)
+        operator_class = getattr(mod, func_name)
+        return operator_class(model, **kwargs)

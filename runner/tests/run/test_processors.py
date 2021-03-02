@@ -290,6 +290,7 @@ class ProcessorTest(APITestCase):
         file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.fastq.gz',
             123345,
+            'sha1$calculated checksum',
             str(self.file_group.id),
             {})
         self.assertEqual(file_obj.file_type, self.file_type_fastq)
@@ -298,6 +299,7 @@ class ProcessorTest(APITestCase):
         file_obj = FileProcessor.create_file_obj(
             'file:///path/to/file.unknown_data_type',
             123345,
+            'sha1$calculated checksum',
             str(self.file_group.id),
             {})
         self.assertEqual(file_obj.file_type, self.file_type_unknown)
@@ -308,6 +310,43 @@ class ProcessorTest(APITestCase):
             file_obj = FileProcessor.create_file_obj(
                 'file:///path/to/file.unknown_data_type',
                 123345,
+                'sha1$calculated checksum',
                 file_group_id,
                 {})
             self.assertTrue('Invalid FileGroup id: %s' % file_group_id in context.exception)
+
+    def test_cwl_format(self):
+        refseq_port = {
+            "refseq": {
+                "location": "juno:///path/to/file/refGene_b37.sorted.txt",
+                "class": "File",
+                "secondaryFiles": [
+                    {
+                        "class": "File",
+                        "location": "juno:///path/to/file/refGene_b37.sorted.txt.sec"
+                    }
+                ]
+            }
+        }
+        refseq_port_cwl_format = {
+            "refseq": {
+                "class": "File",
+                "size": 359229,
+                "basename": "refGene_b37.sorted.txt",
+                "nameext": ".txt",
+                "nameroot": "refGene_b37.sorted",
+                "path": "/path/to/file/refGene_b37.sorted.txt",
+                "secondaryFiles":[
+                    {
+                        "class": "File",
+                        "size": 359228,
+                        "basename": "refGene_b37.sorted.txt.sec",
+                        "nameext": ".sec",
+                        "nameroot": "refGene_b37.sorted.txt",
+                        "path": "/path/to/file/refGene_b37.sorted.txt.sec"
+                    }
+                ]
+            }
+        }
+        cwl_format_port = PortProcessor.process_files(refseq_port, PortAction.CONVERT_TO_CWL_FORMAT)
+        self.assertEqual(cwl_format_port, refseq_port_cwl_format)

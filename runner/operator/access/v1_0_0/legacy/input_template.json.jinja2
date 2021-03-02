@@ -1,0 +1,166 @@
+{
+  "version": "1.3.40-b",
+  "fastq1": {{fastq1_files}},
+  "fastq2": {{fastq2_files}},
+  "project_name": {{request_id}},
+  "adapter": {{adapters}},
+  "adapter2": {{adapters2}},
+  "add_rg_ID": {{cmo_sample_names}},
+  "add_rg_LB": {{add_rg_LBs}},
+  "add_rg_PU": {{barcode_ids}},
+  "add_rg_SM": {{cmo_sample_names}},
+  "sample_class": {{tumor_or_normals}},
+  "patient_id": {{patient_ids}},
+  "title_file": {
+    "contents": {{title_file_content}},
+    "basename": "title_file.txt",
+    "class": "File"
+  },
+  "gene_list": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/juber-hg19-gene-list.bed",
+    "class": "File"
+  },
+  "hotspots": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.txt",
+    "class": "File"
+  },
+  "run_tools": {
+    "java_7": "/opt/common/CentOS_6/java/jdk1.7.0_75/bin/java",
+    "java_8": "/opt/common/CentOS_6/java/jdk1.8.0_31/bin/java",
+    "perl_5": "/opt/common/CentOS_6/perl/perl-5.20.2/bin/perl",
+    "fx_path": "/opt/common/CentOS_6/picard/picard-tools-1.96/FixMateInformation.jar",
+    "bwa_path": "/opt/common/CentOS_6/bwa/bwa-0.7.5a/bwa",
+    "abra_path": "/opt/common/CentOS_6/abra2/abra2-2.17/abra2-2.17.jar",
+    "arrg_path": "/home/johnsoni/vendor_tools/AddOrReplaceReadGroups-1.96.jar",
+    "gatk_path": "/opt/common/CentOS_6/gatk/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar",
+    "waltz_path": "/home/johnsoni/vendor_tools/Waltz-2.0.jar",
+    "picard_path": "/home/johnsoni/vendor_tools/picard-2.8.1.jar",
+    "bioinfo_utils": {
+      "location": "juno:///juno/work/access/production/resources/tools/voyager_resources/BioinfoUtils-1.0.2.jar",
+      "class": "File"
+    },
+    "marianas_path": "/home/johnsoni/vendor_tools/Marianas-1.8.0.jar",
+    "trimgalore_path": "/opt/common/CentOS_6/trim_galore/Trim_Galore_v0.2.5/trim_galore"
+  },
+  "inputs_yaml": {
+    "location": "juno:///juno/work/access/production/resources/tools/voyager_resources/inputs_group_0.yaml",
+    "class": "File"
+  },
+  "abra__params": {
+    "ca": "10,1",
+    "sc": "100,30,80,15",
+    "ws": "800,700",
+    "mad": 1000,
+    "mmr": 0.1,
+    "sga": "8,32,48,1",
+    "cons": true,
+    "index": true,
+    "ram_min": 60000,
+    "threads": 12,
+    "cores_min": 12
+  },
+  "sample_sheet": {{sample_sheets}},
+  "waltz__params": {
+    "coverage_threshold": 50,
+    "min_mapping_quality": 20
+  },
+  "FP_config_file": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-TilingaAndFpSNPs.txt",
+    "class": "File"
+  },
+  "fci_2__basq_fix": true,
+  "pool_a_bed_file": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-A.sorted.bed",
+    "class": "File"
+  },
+  "pool_b_bed_file": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-B.sorted.bed",
+    "class": "File"
+  },
+  "reference_fasta": "/juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+  "trimgalore__params": {
+    "gzip": true,
+    "length": 25,
+    "paired": true,
+    "quality": 1,
+    "stringency": 3,
+    "suppress_warn": false
+  },
+  "print_reads__params": {
+    "EOQ": true,
+    "baq": "RECALCULATE",
+    "nct": 8
+  },
+  "reference_fasta_fai": "/juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta.fai",
+  "A_on_target_positions": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-A-on-target-positions.txt",
+    "class": "File"
+  },
+  "B_on_target_positions": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-B-on-target-positions.txt",
+    "class": "File"
+  },
+  "bqsr__knownSites_dbSNP": {
+    "location": "juno:///juno/work/access/production/resources/dbSNP/versions/b37/dbsnp_137.b37.vcf",
+    "class": "File"
+  },
+  "bqsr__knownSites_millis": {
+    "location": "juno:///juno/work/access/production/resources/mills-and-1000g/versions/b37/Mills_and_1000G_gold_standard.indels.b37.vcf",
+    "class": "File"
+  },
+  "mark_duplicates__params": {
+    "create_index": true,
+    "assume_sorted": true,
+    "compression_level": 0,
+    "validation_stringency": "LENIENT",
+    "duplicate_scoring_strategy": "SUM_OF_BASE_QUALITIES"
+  },
+  "noise__good_positions_A": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-A-good-positions.txt",
+    "class": "File"
+  },
+  "base_recalibrator__params": {
+    "rf": "BadCigar",
+    "nct": 3
+  },
+  "pool_a_bed_file_exonlevel": {
+    "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0_panelA_canonicaltargets.bed",
+    "class": "File"
+  },
+  "marianas_collapsing__params": {
+    "wobble": 2,
+    "mismatches": 0,
+    "min_base_quality": 20,
+    "min_mapping_quality": 1,
+    "min_consensus_percent": 90
+  },
+  "fix_mate_information__params": {
+    "sort_order": "coordinate",
+    "create_index": true,
+    "compression_level": 0,
+    "validation_stringency": "LENIENT"
+  },
+  "find_covered_intervals__params": {
+    "rf": [
+      "FailsVendorQualityCheck",
+      "BadMate",
+      "UnmappedRead",
+      "BadCigar"
+    ],
+    "cov": 20,
+    "minbq": 20,
+    "minmq": 20
+  },
+  "process_loop_umi_fastq__params": {
+    "umi_length": 3,
+    "output_project_folder": "."
+  },
+  "add_or_replace_read_groups__params": {
+    "add_rg_CN": "MSKCC",
+    "add_rg_PL": "Illumina",
+    "sort_order": "coordinate",
+    "create_index": true,
+    "compression_level": 0,
+    "validation_stringency": "LENIENT"
+  }
+}
