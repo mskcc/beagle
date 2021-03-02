@@ -49,9 +49,13 @@ class UltronOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
+        sample_name = input_json['sample_names'][0] # should only be one
+        tags = { 'sampleNameTumor': sample_name }
         # add tags, name
         output_job_data = {
             'app': app,
+            'tags': tags,
+            'name': "Sample %s ULTRON PHASE1 run" % sample_name,
             'inputs': input_json}
         output_job = (APIRunCreateSerializer(
             data=output_job_data),
