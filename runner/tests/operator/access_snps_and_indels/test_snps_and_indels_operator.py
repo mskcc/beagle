@@ -11,6 +11,7 @@ from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperato
 
 
 REQUEST_ID = "access_legacy_test_request"
+TEST_RUN_ID = 'bc23076e-f477-4578-943c-1fbf6f1fca44'
 FIXTURES = [
     "fixtures/tests/access_snv/curated_normal_files.json",
     "fixtures/tests/access_snv/curated_normals_file_metadata.json",
@@ -61,7 +62,41 @@ class TestAccessSNVOperator(TestCase):
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
+        self.validate(input_data)
 
+    def test_dmp_normal(self):
+        """
+        Test that DMP normal can be found and used for an SNV Request ID
+
+        :return:
+        """
+        # Delete the IGO test samples, so DMP normal must be used
+        metadatas = FileRepository.filter(path_regex='C-000884', metadata={"tumorOrNormal": "Normal"})
+        [f.file.delete() for f in metadatas]
+
+        pipeline_slug = "AccessLegacySNVOperator"
+        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=[TEST_RUN_ID])
+        input_data = operator.get_sample_inputs()
+
+        geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
+        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))
+
+    def test_run_on_imported_bams(self):
+        """
+        Test that the inputs are generated for a set of bams that was manually imported
+
+        :return:
+        """
+        pipeline_slug = "AccessLegacySNVOperator"
+        request_id = 'access_legacy_test_request_imported_bams'
+        test_run_id = 'bc23076e-f477-4578-943c-1fbf6f1fca42'
+        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=[test_run_id])
+        input_data = operator.get_sample_inputs()
+        self.validate(input_data)
+
+    def validate(self, input_data):
         # Only a single entry is required in these fields, as we are running in single-sample mode
         required_input_fields = [
             'tumor_bams',
@@ -93,21 +128,3 @@ class TestAccessSNVOperator(TestCase):
             for field in required_input_fields_length_9:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 9)
-
-    def test_dmp_normal(self):
-        """
-        Test that DMP normal can be found and used for an SNV Request ID
-
-        :return:
-        """
-        # Delete the IGO test samples, so DMP normal must be used
-        metadatas = FileRepository.filter(path_regex='C-000884', metadata={"tumorOrNormal": "Normal"})
-        [f.file.delete() for f in metadatas]
-
-        pipeline_slug = "AccessLegacySNVOperator"
-        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
-        input_data = operator.get_sample_inputs()
-
-        geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
-        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))

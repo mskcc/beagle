@@ -168,7 +168,7 @@ class RunApiViewSet(mixins.ListModelMixin,
         serializer = AbortRunSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        job_group_id = request.data['job_group_id']
+        job_group_id = request.data.get('job_group_id', None)
         runs = request.data.get('runs', [])
         abort_job_task.delay(job_group_id, runs)
         return Response("Abort task submitted", status=status.HTTP_202_ACCEPTED)
