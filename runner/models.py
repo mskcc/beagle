@@ -178,6 +178,16 @@ class Run(BaseModel):
             "status": self.status
         }
 
+    def clear(self):
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
+                           "execution_id"]
+        for f in fields_to_clear:
+            setattr(self, f, None)
+
+        self.job_statuses = {}
+        self.status = RunStatus.READY
+        return self
+
     @property
     def is_completed(self):
         self.refresh_from_db()
@@ -188,7 +198,7 @@ class Run(BaseModel):
         If output directory is set to None, by default assign it to the pipeline output directory
         plus the run id
         """
-        if not self.output_directory:
+        if not self.output_directory and self.id:
             pipeline = self.app
             pipeline_output_directory = pipeline.output_directory
             self.output_directory = os.path.join(pipeline_output_directory, str(self.id))

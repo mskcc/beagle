@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'import_export',
+    'rangefilter',
     'rest_framework',
     'corsheaders',
     'drf_multiple_model',

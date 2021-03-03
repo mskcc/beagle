@@ -1,11 +1,15 @@
 Bootstrap: docker
-From: ubuntu:19.10
+From: ubuntu:18.04
 Includecmd: no
 
 %startscript
 
     if [ -z "$BEAGLE_PATH" ]; then
     export BEAGLE_PATH=/usr/bin/beagle
+    fi
+
+    if [ -z "$FLOWER_PORT" ]; then
+    export FLOWER_PORT=5555
     fi
 
     if [ -z "$CELERY_LOG_PATH" ]; then
@@ -31,6 +35,8 @@ Includecmd: no
     nohup celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler &
 
     nohup celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner &
+
+    nohup celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${CELERY_LOG_PATH}/beagle_flower.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid --port=${FLOWER_PORT} --broker=$CELERY_BROKER_URL// &
 
 %post
     export DEBIAN_FRONTEND=noninteractive \
