@@ -240,8 +240,8 @@ class AccessLegacySNVOperator(Operator):
         capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s.file_name)[0:40]
         capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s.file_name)[0:40]
 
-        capture_samples_duplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-        capture_samples_simplex_sample_ids = [s.path.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
+        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
         return capture_samples_duplex, capture_samples_simplex, capture_samples_duplex_sample_ids, capture_samples_simplex_sample_ids
 
