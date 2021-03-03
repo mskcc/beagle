@@ -10,6 +10,7 @@ BEAGLE_DB_USERNAME | PostgreSQL user | example_user
 BEAGLE_DB_PASSWORD | password for PostgreSQL user | example_password
 BEAGLE_DB_PORT | PostgreSQL port | 3333
 BEAGLE_PORT | Beagle port ( only for container use) | 4444
+FLOWER_PORT | Flower port ( only for container use) | 5555
 BEAGLE_LOG_PATH | log file | /example/path/logs/beagle-server.log
 BEAGLE_PATH | Path to Beagle repo ( only for container use) | /srv/services/staging_voyager/beagle/
 BEAGLE_URL | Url for beagle | http://your_server:4444
@@ -37,6 +38,7 @@ BEAGLE_DEFAULT_QUEUE | Rabbitmq default queue | example.runner.queue
 BEAGLE_JOB_SCHEDULER_QUEUE | Rabbitmq scheduler queue | example.runner.queue
 CELERY_EVENT_QUEUE_PREFIX | Prefix for Celery event | beagle.celery
 CELERY_LOG_PATH | Log path for Celery | /path/to/celey.log
+CELERY_BROKER_URL | URL to Celery broker | amqp://[RABBITMQ_USERNAME]:[RABBITMQ_PASSWORD]@localhost:5672
 JIRA_USERNAME | JIRA username | example_username
 JIRA_PASSWORD | JIRA password | example_password
 JIRA_URL | JIRA URL | http://jira.example.org:5000
