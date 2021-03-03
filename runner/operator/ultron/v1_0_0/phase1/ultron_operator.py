@@ -224,30 +224,30 @@ class SampleData:
         return "Sample ID: %s ; Patient ID: %s ;\
                 DMP Patient ID: %s" % (self.sample_id,
                         self.patient_id, self.dmp_patient_id)
-
+        return results
 
 class BamData:
-    def __init__(self, voyager_file):
+    def __init__(self, dmp_file):
         self.files = FileRepository.all()
-        self.voyager_file = voyager_file
-        self.bam_path = voyager_file.file.path
-        self.metadata = voyager_file.metadata
+        self.dmp_file = dmp_file
+        self.bam_path = dmp_file.file.path
+        self.metadata = dmp_file.metadata
         self.mutations_extended = self._set_data_muts_txt()
         self.dmp_sample_name = self._set_dmp_sample_name()
 
     def _set_data_muts_txt(self):
-        meta = self.metadata
-        external_id = None
-        investigator_sample_id = None
-        dmp_key = "sample"
-        results = self._get_muts(dmp_key, meta)
-        if results:
-            return results
-        return None
+        dmp_data_id = self._get_dmp_sample_id()
+        results = self._get_muts(dmp_data_id)
+        return results
 
-    def _get_muts(self, key, meta):
+    def _get_dmp_sample_id(self):
+        meta = self.metadata
+        dmp_key = "sample"
+        data_id = meta[dmp_key]
+        return data_id
+
+    def _get_muts(self, data_id):
         # There should only be one mutations file returned here, one per dmp sample
-        data_id = meta[key]
         query_results = FileRepository.filter(queryset=self.files, metadata={'dmp_link_id':data_id})
         results = list()
         if query_results:
@@ -265,4 +265,4 @@ class BamData:
             if "s_" not in dmp_sample_name[:2]:
                 dmp_sample_name = "s_" + dmp_sample_name.replace("-", "_")
             return dmp_sample_name
-        return None
+        return "missingDMPSampleName"
