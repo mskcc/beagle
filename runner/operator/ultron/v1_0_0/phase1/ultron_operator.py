@@ -64,12 +64,16 @@ class UltronOperator(Operator):
 
 
 class InputsObj:
+    # This inputs object will represent the input json used for the pipeline
+    #
+    # There should only be a single tumor sample, mathced against DMP bam tumors
+    # provided they exist
     def __init__(self, run):
         self.run = run
         self.port_list = Port.objects.filter(run = run.id)
-        self.samples = self._get_samples_data()
-        self.tumor_bam = self._get_port("tumor_bam")
         self.tumor_sample_name = run.tags['sampleNameTumor']
+        self.sample = self._get_samples_data()
+        self.tumor_bam = self._get_port("tumor_bam")
         self.normal_bam = self._get_port("normal_bam")
         self.normal_sample_name = run.tags['sampleNameNormal']
         self.maf_file = self._get_port("maf_file")
@@ -79,10 +83,18 @@ class InputsObj:
 
 
     def _get_samples_data(self):
-        samples = list()
-        for sample in self.run.samples.all():
-            samples.append(SampleData(sample.sample_id))
-        return samples
+        files = FileRepository.all()
+        f = FileRepository.filter(queryset=files,
+                metadata={'cmoSampleName': self.tumor_sample_name,
+                    'igocomplete': True},
+                filter_redact=True)
+        sample = None
+        if f:
+            # retrieve metadata from first record (should only be one)
+            meta = f[0].metadata
+            sample_id = meta['sampleId']
+            sample = SampleData(sample_id)
+        return sample
 
 
     def _get_port(self, port_name):
@@ -130,6 +142,7 @@ class InputsObj:
 
 
     def _set_inputs_data(self):
+        sample = self.sample
         inputs_data = dict()
         inputs_data['tumor_bam'] = self.tumor_bam
         inputs_data['normal_bam'] = self.normal_bam
@@ -138,14 +151,13 @@ class InputsObj:
         inputs_data['dmp_bams_tumor_muts'] = list()
         inputs_data['dmp_bams_tumor_sample_name'] = list()
         inputs_data['tumor_sample_name'] = list()
-        for sample in self.samples:
-            inputs_data['tumor_sample_name'].append(sample.cmo_sample_name)
-            if sample.dmp_bams_tumor:
-                for f in sample.dmp_bams_tumor:
-                    inputs_data['dmp_bams_tumor'].append(self._create_cwl_file_obj(f.bam_path))
-                    inputs_data['dmp_bams_tumor_sample_name'].append(f.dmp_sample_name)
-                    if f.mutations_extended:
-                        inputs_data['dmp_bams_tumor_muts'].append(self._create_cwl_file_obj(f.mutations_extended))
+        inputs_data['tumor_sample_name'].append(sample.cmo_sample_name)
+        if sample.dmp_bams_tumor:
+            for f in sample.dmp_bams_tumor:
+                inputs_data['dmp_bams_tumor'].append(self._create_cwl_file_obj(f.bam_path))
+                inputs_data['dmp_bams_tumor_sample_name'].append(f.dmp_sample_name)
+                if f.mutations_extended:
+                    inputs_data['dmp_bams_tumor_muts'].append(self._create_cwl_file_obj(f.mutations_extended))
         return inputs_data
 
 
