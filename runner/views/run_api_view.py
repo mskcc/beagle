@@ -240,11 +240,9 @@ class RunApiRestartViewSet(GenericAPIView):
                 p.save()
                 p.files.add(*files)
 
-        request_id = None
         for r in runs_to_restart:
             original_run_id = r.id
             samples = r.samples.all()
-            ports = r.port_set.filter(port_type=PortType.INPUT)
             r.pk = None
             r.operator_run_id = o.pk
             r.clear().save()
@@ -253,13 +251,19 @@ class RunApiRestartViewSet(GenericAPIView):
 
             r.save()
 
+            # Copy over the input / output ports from the original Run
+            ports = r.port_set.filter(port_type=PortType.INPUT)
             for p in ports:
                 files = p.files.all()
                 p.pk = None
                 p.run_id = r.pk
                 p.save()
                 p.files.add(*files)
-
+            ports = r.port_set.filter(port_type=PortType.OUTPUT)
+            for p in ports:
+                p.pk = None
+                p.run_id = r.pk
+                p.save()
 
             submit_job.delay(r.pk, r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
