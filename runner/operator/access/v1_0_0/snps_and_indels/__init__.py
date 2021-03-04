@@ -180,34 +180,37 @@ class AccessLegacySNVOperator(Operator):
         :param tumor_sample_id: str
         :return:
         """
+        # Get capture ID
         capture_id = FileRepository.filter(
             file_type='fastq',
             metadata={'sampleName': tumor_sample_id}
         )[0].metadata['captureName']
 
+        # Get samples IDs from this capture from fastqs with this capture ID
         sample_id_fastqs = FileRepository.filter(
             file_type='fastq',
             metadata={'captureName': capture_id}
         )
         sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
+        # don't double-genotype the query sample
+        sample_ids.remove(tumor_sample_id)
 
+        # Split into T/N
         tumor_capture_sample_ids = [i for i in sample_ids if TUMOR_SAMPLE_SEARCH in i]
         normal_capture_sample_ids = [i for i in sample_ids if NORMAL_SAMPLE_SEARCH in i]
-
         tumor_capture_q = Q(
             *[('file_name__startswith', id) for id in tumor_capture_sample_ids],
             _connector=Q.OR
         )
-
         normal_capture_q = Q(
             *[('file_name__startswith', id) for id in normal_capture_sample_ids],
             _connector=Q.OR
         )
 
-        q = tumor_capture_q & Q(path__endswith=DUPLEX_BAM_SEARCH)
+        # Find a single matching N for each T, also from the same capture (Duplex)
+        q = tumor_capture_q & Q(file_name__endswith=DUPLEX_BAM_SEARCH)
         capture_samples_duplex = list(File.objects.filter(q).distinct('file_name').values())
         sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-
         for sid in sids:
             patient_id = '-'.join(sid.split('-')[0:2])
 
@@ -215,15 +218,18 @@ class AccessLegacySNVOperator(Operator):
                 Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
                 Q(file_name__endswith=DUPLEX_BAM_SEARCH)
 
-            normal_capture_sample_duplex = File.objects.filter(q).distinct('file_name')
+            normal_capture_sample_duplex = File.objects.filter(q)\
+                .distinct('file_name')\
+                .order_by('file_name', '-created_date')\
+                .values()
 
             if len(normal_capture_sample_duplex) > 0:
-                capture_samples_duplex += [list(normal_capture_sample_duplex.order_by('file_name', '-created_date').values())[0]]
+                capture_samples_duplex.append(list(normal_capture_sample_duplex)[0])
 
-        q = tumor_capture_q & Q(path__endswith=SIMPLEX_BAM_SEARCH)
+        # Find a single matching N for each T, also from the same capture (Simplex)
+        q = tumor_capture_q & Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
         capture_samples_simplex = list(File.objects.filter(q).distinct('file_name').values())
         sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_simplex]
-
         for sid in sids:
             patient_id = '-'.join(sid.split('-')[0:2])
 
@@ -231,10 +237,13 @@ class AccessLegacySNVOperator(Operator):
                 Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
                 Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
 
-            normal_capture_sample_simplex = File.objects.filter(q).distinct('file_name')
+            normal_capture_sample_simplex = File.objects.filter(q)\
+                .distinct('file_name')\
+                .order_by('file_name', '-created_date')\
+                .values()
 
             if len(normal_capture_sample_simplex) > 0:
-                capture_samples_simplex += [list(normal_capture_sample_simplex.order_by('file_name', '-created_date').values())[0]]
+                capture_samples_simplex.append(list(normal_capture_sample_simplex)[0])
 
         # Limit to 40 samples, and sort by patient ID to ensure each of T and N matching samples are found
         capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s['file_name'])[0:40]
