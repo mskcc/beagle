@@ -205,8 +205,8 @@ class AccessLegacySNVOperator(Operator):
         )
 
         q = tumor_capture_q & Q(path__endswith=DUPLEX_BAM_SEARCH)
-        capture_samples_duplex = File.objects.filter(q)
-        sids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+        capture_samples_duplex = list(File.objects.filter(q).distinct('file_name').values())
+        sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_duplex]
 
         for sid in sids:
             patient_id = '-'.join(sid.split('-')[0:2])
@@ -215,14 +215,14 @@ class AccessLegacySNVOperator(Operator):
                 Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
                 Q(file_name__endswith=DUPLEX_BAM_SEARCH)
 
-            normal_capture_sample_duplex = File.objects.filter(q)
+            normal_capture_sample_duplex = File.objects.filter(q).distinct('file_name')
 
             if len(normal_capture_sample_duplex) > 0:
-                capture_samples_duplex |= normal_capture_sample_duplex.order_by('-created_date')[:1]
+                capture_samples_duplex += [list(normal_capture_sample_duplex.order_by('file_name', '-created_date').values())[0]]
 
         q = tumor_capture_q & Q(path__endswith=SIMPLEX_BAM_SEARCH)
-        capture_samples_simplex = File.objects.filter(q)
-        sids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
+        capture_samples_simplex = list(File.objects.filter(q).distinct('file_name').values())
+        sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
         for sid in sids:
             patient_id = '-'.join(sid.split('-')[0:2])
@@ -231,17 +231,17 @@ class AccessLegacySNVOperator(Operator):
                 Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
                 Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
 
-            normal_capture_sample_simplex = File.objects.filter(q)
+            normal_capture_sample_simplex = File.objects.filter(q).distinct('file_name')
 
             if len(normal_capture_sample_simplex) > 0:
-                capture_samples_simplex |= normal_capture_sample_simplex.order_by('-created_date')[:1]
+                capture_samples_simplex += [list(normal_capture_sample_simplex.order_by('file_name', '-created_date').values())[0]]
 
         # Limit to 40 samples, and sort by patient ID to ensure each of T and N matching samples are found
-        capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s.file_name)[0:40]
-        capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s.file_name)[0:40]
+        capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s['file_name'])[0:40]
+        capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s['file_name'])[0:40]
 
-        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
+        capture_samples_duplex_sample_ids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+        capture_samples_simplex_sample_ids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
         return capture_samples_duplex, capture_samples_simplex, capture_samples_duplex_sample_ids, capture_samples_simplex_sample_ids
 
@@ -346,7 +346,7 @@ class AccessLegacySNVOperator(Operator):
                 genotyping_bams += [
                     {
                         "class": "File",
-                        "location": 'juno://' + b.path
+                        "location": 'juno://' + b['path']
                     } for b in capture_samples_duplex
                 ]
                 genotyping_bams_ids += capture_samples_duplex_sample_ids
@@ -354,7 +354,7 @@ class AccessLegacySNVOperator(Operator):
                 genotyping_bams += [
                     {
                         "class": "File",
-                        "location": 'juno://' + b.path
+                        "location": 'juno://' + b['path']
                     } for b in capture_samples_simplex
                 ]
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in capture_samples_simplex_sample_ids]
