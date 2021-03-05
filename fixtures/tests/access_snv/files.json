@@ -53,6 +53,19 @@
     },
     {
         "model": "file_system.file",
+        "pk": "2f77f3ac-ab25-4a02-90bd-86542401ac37",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-000884-L010-d.fastq.gz",
+            "path": "/test/path/C-000884-L010-d.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
         "pk": "fffff52a-0696-48d4-9ca5-6580daa44aaa",
         "fields": {
             "created_date": "2020-01-06T19:59:50.576Z",

@@ -198,6 +198,11 @@ class AccessLegacySNVOperator(Operator):
         # Split into T/N
         tumor_capture_sample_ids = [i for i in sample_ids if TUMOR_SAMPLE_SEARCH in i]
         normal_capture_sample_ids = [i for i in sample_ids if NORMAL_SAMPLE_SEARCH in i]
+
+        # Skip Pool genotyping if no tumors or normals from pool found
+        if len(tumor_capture_sample_ids) == 0 or len(normal_capture_sample_ids) == 0:
+            return [], [], [], []
+
         tumor_capture_q = Q(
             *[('file_name__startswith', id) for id in tumor_capture_sample_ids],
             _connector=Q.OR
