@@ -27,7 +27,7 @@ class ConcatMafsOperator(Operator):
         name = "ULTRON PHASE1 run, CONCAT MAFs"
         inputs = self._build_inputs(run_ids)
         inputs_json = inputs.inputs_json
-        ultron_output_job = self._build_job(inputs_json)
+        ultron_output_job = [self._build_job(inputs_json)]
         return ultron_output_job
 
 
