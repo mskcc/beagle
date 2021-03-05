@@ -150,9 +150,7 @@ class AccessLegacySNVOperator(Operator):
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
 
         (capture_samples_duplex,
-         capture_samples_simplex,
-         capture_samples_duplex_sample_ids,
-         capture_samples_simplex_sample_ids) = self.get_pool_genotyping_samples(tumor_sample_id)
+         capture_samples_simplex) = self.get_pool_genotyping_samples(tumor_sample_id)
 
         sample_info = {
             'tumor_sample_id': tumor_sample_id,
@@ -162,8 +160,6 @@ class AccessLegacySNVOperator(Operator):
             'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
             'capture_samples_duplex': capture_samples_duplex,
             'capture_samples_simplex': capture_samples_simplex,
-            'capture_samples_duplex_sample_ids': capture_samples_duplex_sample_ids,
-            'capture_samples_simplex_sample_ids': capture_samples_simplex_sample_ids
         }
 
         return sample_info
@@ -195,69 +191,25 @@ class AccessLegacySNVOperator(Operator):
         # don't double-genotype the query sample
         sample_ids.remove(tumor_sample_id)
 
-        # Split into T/N
-        tumor_capture_sample_ids = [i for i in sample_ids if TUMOR_SAMPLE_SEARCH in i]
-        normal_capture_sample_ids = [i for i in sample_ids if NORMAL_SAMPLE_SEARCH in i]
+        # Skip Pool genotyping if no other samples from pool found
+        if len(sample_ids) == 0:
+            return [], []
 
-        # Skip Pool genotyping if no tumors or normals from pool found
-        if len(tumor_capture_sample_ids) == 0 or len(normal_capture_sample_ids) == 0:
-            return [], [], [], []
-
-        tumor_capture_q = Q(
-            *[('file_name__startswith', id) for id in tumor_capture_sample_ids],
-            _connector=Q.OR
-        )
-        normal_capture_q = Q(
-            *[('file_name__startswith', id) for id in normal_capture_sample_ids],
+        capture_q = Q(  
+            *[('file_name__startswith', id) for id in sample_ids],
             _connector=Q.OR
         )
 
-        # Find a single matching N for each T, also from the same capture (Duplex)
-        q = tumor_capture_q & Q(file_name__endswith=DUPLEX_BAM_SEARCH)
-        capture_samples_duplex = list(File.objects.filter(q).distinct('file_name').values())
-        sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-        for sid in sids:
-            patient_id = '-'.join(sid.split('-')[0:2])
+        q = capture_q & Q(file_name__endswith=DUPLEX_BAM_SEARCH)
+        duplex_capture_samples = File.objects.filter(q).distinct('file_name').order_by('file_name', '-created_date')
+        q = capture_q & Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
+        simplex_capture_samples = File.objects.filter(q).distinct('file_name').order_by('file_name', '-created_date')
 
-            q = normal_capture_q & \
-                Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
-                Q(file_name__endswith=DUPLEX_BAM_SEARCH)
+        # Limit to 40 samples
+        capture_samples_duplex = duplex_capture_samples[0:40]
+        capture_samples_simplex = simplex_capture_samples[0:40]
 
-            normal_capture_sample_duplex = File.objects.filter(q)\
-                .distinct('file_name')\
-                .order_by('file_name', '-created_date')\
-                .values()
-
-            if len(normal_capture_sample_duplex) > 0:
-                capture_samples_duplex.append(list(normal_capture_sample_duplex)[0])
-
-        # Find a single matching N for each T, also from the same capture (Simplex)
-        q = tumor_capture_q & Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
-        capture_samples_simplex = list(File.objects.filter(q).distinct('file_name').values())
-        sids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_simplex]
-        for sid in sids:
-            patient_id = '-'.join(sid.split('-')[0:2])
-
-            q = normal_capture_q & \
-                Q(file_name__startswith=patient_id + NORMAL_SAMPLE_SEARCH) & \
-                Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
-
-            normal_capture_sample_simplex = File.objects.filter(q)\
-                .distinct('file_name')\
-                .order_by('file_name', '-created_date')\
-                .values()
-
-            if len(normal_capture_sample_simplex) > 0:
-                capture_samples_simplex.append(list(normal_capture_sample_simplex)[0])
-
-        # Limit to 40 samples, and sort by patient ID to ensure each of T and N matching samples are found
-        capture_samples_duplex = sorted(capture_samples_duplex, key=lambda s: s['file_name'])[0:40]
-        capture_samples_simplex = sorted(capture_samples_simplex, key=lambda s: s['file_name'])[0:40]
-
-        capture_samples_duplex_sample_ids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-        capture_samples_simplex_sample_ids = [s['file_name'].split('_cl_aln_srt')[0] for s in capture_samples_simplex]
-
-        return capture_samples_duplex, capture_samples_simplex, capture_samples_duplex_sample_ids, capture_samples_simplex_sample_ids
+        return capture_samples_duplex, capture_samples_simplex
 
     def get_jobs(self):
         """
@@ -306,8 +258,7 @@ class AccessLegacySNVOperator(Operator):
         return normal_bams, curated_normal_ids
 
     def construct_sample_inputs(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
-                                matched_normal_unfiltered_id, capture_samples_duplex,
-                                capture_samples_simplex, capture_samples_duplex_sample_ids, capture_samples_simplex_sample_ids):
+                                matched_normal_unfiltered_id, capture_samples_duplex, capture_samples_simplex):
         """
         Use sample metadata and json template to create inputs for the CWL run
 
@@ -360,17 +311,20 @@ class AccessLegacySNVOperator(Operator):
                 genotyping_bams += [
                     {
                         "class": "File",
-                        "location": 'juno://' + b['path']
+                        "location": 'juno://' + b.path
                     } for b in capture_samples_duplex
                 ]
-                genotyping_bams_ids += capture_samples_duplex_sample_ids
 
                 genotyping_bams += [
                     {
                         "class": "File",
-                        "location": 'juno://' + b['path']
+                        "location": 'juno://' + b.path
                     } for b in capture_samples_simplex
                 ]
+
+                capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+                capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
+                genotyping_bams_ids += capture_samples_duplex_sample_ids
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in capture_samples_simplex_sample_ids]
 
             curated_normal_bams, curated_normal_ids = self.get_curated_normals()
