@@ -70,7 +70,13 @@ class PortAdmin(admin.ModelAdmin):
     raw_id_fields = ("run",)
     ordering = ('run',)
     search_fields = ('run__id',)
-    readonly_fields = ('run', 'port_type', 'secondary_files', 'db_value', 'value', 'files', 'schema', 'notify')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 
 
 
