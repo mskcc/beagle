@@ -70,6 +70,8 @@ class PortAdmin(admin.ModelAdmin):
     raw_id_fields = ("run",)
     ordering = ('run',)
     search_fields = ('run__id',)
+    readonly_fields = ('run', 'port_type', 'secondary_files', 'db_value', 'value', 'files', 'schema', 'notify')
+
 
 
 admin.site.register(Run, RunAdmin)
