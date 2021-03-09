@@ -25,7 +25,7 @@ def get_request_id_runs(request_id):
         tags__requestId=request_id,
         app__name='access legacy',
         operator_run__status=RunStatus.COMPLETED
-    ).order_by('finished_date').first().operator_run_id
+    ).exclude(finished_date__isnull=True).order_by('-finished_date').first().operator_run_id
 
     request_id_runs = Run.objects.filter(
         operator_run_id=operator_run_id,
