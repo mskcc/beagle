@@ -21,15 +21,14 @@ def get_request_id_runs(request_id):
     :param request_id: str - IGO request ID
     :return: List[str] - List of most recent runs from given request ID
     """
-    group_id = Run.objects.filter(
+    operator_run_id = Run.objects.filter(
         tags__requestId=request_id,
         app__name='access legacy',
-        status=RunStatus.COMPLETED,
         operator_run__status=RunStatus.COMPLETED
-    ).order_by('finished_date').first().job_group
+    ).exclude(finished_date__isnull=True).order_by('-finished_date').first().operator_run_id
 
     request_id_runs = Run.objects.filter(
-        job_group=group_id,
+        operator_run_id=operator_run_id,
         app__name='access legacy',
         status=RunStatus.COMPLETED
     )
