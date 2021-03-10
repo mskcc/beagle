@@ -124,9 +124,6 @@ def compile_pairs(samples, pairing_info=None):
                             pairs['normal'].append(normal)
                             break
         else:
-            from pprint import pprint
-            print("Pairing tumor below...")
-            pprint(tumor)
             patient_id = tumor['patient_id']
             if patient_id:
                 bait_set = tumor['bait_set']
