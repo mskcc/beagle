@@ -102,6 +102,15 @@ def check_and_return_single_values(data):
     return data
 
 
+def get_platform_unit(platform_unit_list):
+    pus = set(platform_unit_list)
+
+    if len(pus) > 1:
+        LOGGER.error("Multiple Platform Units found for one fastq pair; shouldn't happen")
+    else:
+        return pus.pop()
+
+
 def build_sample(data, ignore_sample_formatting=False):
     """
     Given some data - which is a list of samples originally from the LIMS, split up into one file
@@ -180,7 +189,8 @@ def build_sample(data, ignore_sample_formatting=False):
         # PU is used for scattering along with the files; with the updates to lane splitting,
         # this needs to be added each time a file is added, instead of originally being only added
         # at sample creation
-        sample['PU'].append(platform_unit)
+        pu = get_platform_unit(platform_unit)
+        sample['PU'].append(pu)
 
         # fastq pairing assumes flowcell id + barcode index are unique per run
         if 'R1' in r_orientation:
