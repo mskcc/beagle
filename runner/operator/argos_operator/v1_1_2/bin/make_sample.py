@@ -168,12 +168,16 @@ def build_sample(data, ignore_sample_formatting=False):
         else:
             sample = samples[sample_id]
 
-        # fastq pairing assumes flowcell id + barcode index are unique per run
+        # Queueing up fastqs for pairing later; RG ID and PU
+        # will be assigned based on Fastqs object
         if 'R1' in r_orientation or 'R2' in r_orientation:
             sample['fastqs'].append(curr_file)
         else:
+        # DMP bams found; assigning RG ID and PU here
             sample['bam'] = fpath
             sample['bam_bid'] = bid
+            sample['PU'].append(platform_unit)
+            sample['ID'].append(rg_id)
         samples[sample_id] = sample
 
     result = dict()
