@@ -174,10 +174,11 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['fastqs'].append(curr_file)
         else:
         # DMP bams found; assigning RG ID and PU here
+        # There will always be only one DMP bam, so assign explicitly
             sample['bam'] = fpath
             sample['bam_bid'] = bid
-            sample['PU'].append(platform_unit)
-            sample['ID'].append(rg_id)
+            sample['PU'] = (platform_unit)
+            sample['ID'] = (rg_id)
         samples[sample_id] = sample
 
     result = dict()
@@ -210,13 +211,14 @@ def build_sample(data, ignore_sample_formatting=False):
         sample = samples[sample_id]
         for key in sample:
             if key == 'fastqs':
-                fastqs = Fastqs(sample['SM'],sample['fastqs'])
-                result['R1'] = fastqs.r1
-                result['R1_bid'] = fastqs.r1_bids
-                result['R2'] = fastqs.r2
-                result['R2_bid'] = fastqs.r2_bids
-                result['PU'] = fastqs.pu
-                result['ID'] = fastqs.rg_id
+                if samples['fastqs']:
+                    fastqs = Fastqs(sample['SM'],sample['fastqs'])
+                    result['R1'] = fastqs.r1
+                    result['R1_bid'] = fastqs.r1_bids
+                    result['R2'] = fastqs.r2
+                    result['R2_bid'] = fastqs.r2_bids
+                    result['PU'] = fastqs.pu
+                    result['ID'] = fastqs.rg_id
             else:
                 result[key].append(sample[key])
 #    pprint(result)
