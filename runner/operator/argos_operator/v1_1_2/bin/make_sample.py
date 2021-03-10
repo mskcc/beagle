@@ -2,11 +2,13 @@
 This constructs a sample dictionary from the metadata in the Voyager/Beagle database
 """
 import logging
+import os
 import re
-from runner.operator.helper import format_sample_name
+from runner.operator.helper import format_sample_name, get_r_orientation, spoof_barcode
+from file_system.repository.file_repository import FileRepository
+from pprint import pprint
 
 LOGGER = logging.getLogger(__name__)
-
 
 
 def remove_with_caveats(samples):
@@ -37,26 +39,6 @@ def remove_with_caveats(samples):
         else:
             error_data.append(sample)
     return data, error_data
-
-
-def check_samples(samples):
-    """
-    Makes sure the R1 and R2 pairing matches
-
-    We are assuming the fastq data from the LIMS only differs in the 'R1'/'R2' string
-    """
-    for rg_id in samples:
-        r1 = samples[rg_id]['R1']
-        r2 = samples[rg_id]['R2']
-        num_fastqs = len(r1)
-
-        for index,fastq in enumerate(r1):
-            expected_r2 = 'R2'.join(fastq.rsplit('R1', 1))
-            if expected_r2 != r2[index]:
-                LOGGER.error("Mismatched fastqs! Check data:")
-                LOGGER.error("R1: %s" % fastq)
-                LOGGER.error("Expected R2: %s" % expected_r2)
-                LOGGER.error("Actual R2: %s" % r2[index])
 
 
 def check_and_return_single_values(data):
@@ -102,6 +84,14 @@ def check_and_return_single_values(data):
     return data
 
 
+def get_file(fpath):
+    files = FileRepository.all()
+    data = FileRepository.filter(queryset=files, path=fpath)
+    if data:
+        return data[0]
+    return None
+
+
 def build_sample(data, ignore_sample_formatting=False):
     """
     Given some data - which is a list of samples originally from the LIMS, split up into one file
@@ -115,12 +105,13 @@ def build_sample(data, ignore_sample_formatting=False):
     samples = dict()
 
     for value in data:
+        fpath = value['path']
+        curr_file = get_file(fpath)
         meta = value['metadata']
         bid = value['id']
         sequencing_center = meta['sequencingCenter']
         platform = meta['platform']
         request_id = meta['requestId']
-        fpath = value['path']
         sample_id = meta['sampleId']
         library_id = meta['libraryId']
         bait_set = meta['baitSet']
@@ -149,15 +140,14 @@ def build_sample(data, ignore_sample_formatting=False):
             LOGGER.info("RG ID couldn't be set.")
             LOGGER.info("Sample ID %s; patient ID %s", sample_id, cmo_patient_id)
             LOGGER.info("SampleName %s; platform unit %s", cmo_sample_name, platform_unit)
-        if rg_id not in samples:
-            samples[rg_id] = dict()
+        if sample_id not in samples:
+            samples[sample_id] = dict()
             sample = dict()
             sample['CN'] = (sequencing_center)
             sample['PL'] = (platform)
-            sample['PU'] = (platform_unit)
+            sample['PU'] = list()
             sample['LB'] = (library_id)
             sample['tumor_type'] = (tumor_type)
-            sample['ID'] = (rg_id)
             sample['SM'] = (cmo_sample_name)
             sample['species'] = (species)
             sample['patient_id'] = cmo_patient_id
@@ -170,25 +160,27 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['pi_email'] = pi_email
             sample['run_id'] = run_id
             sample['preservation_type'] = preservation_type
+            sample['ID'] = list()
             sample['R1'] = list()
             sample['R1_bid'] = list()
             sample['R2'] = list()
             sample['R2_bid'] = list()
+            sample['fastqs'] = list()
         else:
-            sample = samples[rg_id]
+            sample = samples[sample_id]
 
-        # fastq pairing assumes flowcell id + barcode index are unique per run
-        if 'R1' in r_orientation:
-            sample['R1'].append(fpath)
-            sample['R1_bid'].append(bid)
-        elif 'R2' in r_orientation:
-            sample['R2'].append(fpath)
-            sample['R2_bid'].append(bid)
+        # Queueing up fastqs for pairing later; RG ID and PU
+        # will be assigned based on Fastqs object
+        if 'R1' in r_orientation or 'R2' in r_orientation:
+            sample['fastqs'].append(curr_file)
         else:
+        # DMP bams found; assigning RG ID and PU here
+        # There will always be only one DMP bam, so assign explicitly
             sample['bam'] = fpath
             sample['bam_bid'] = bid
-        samples[rg_id] = sample
-    check_samples(samples)
+            sample['PU'] = (platform_unit)
+            sample['ID'] = (rg_id)
+        samples[sample_id] = sample
 
     result = dict()
     result['CN'] = list()
@@ -216,14 +208,138 @@ def build_sample(data, ignore_sample_formatting=False):
     result['run_id'] = list()
     result['preservation_type'] = list()
 
-    for rg_id in samples:
-        sample = samples[rg_id]
+    for sample_id in samples:
+        sample = samples[sample_id]
         for key in sample:
-            if 'R1' in key or 'R2' in key:
-                for i in sample[key]:
-                    result[key].append(i)
+            if key == 'fastqs':
+                if sample['fastqs']:
+                    fastqs = Fastqs(sample['SM'],sample['fastqs'])
+                    result['R1'] = fastqs.r1
+                    result['R1_bid'] = fastqs.r1_bids
+                    result['R2'] = fastqs.r2
+                    result['R2_bid'] = fastqs.r2_bids
+                    result['PU'] = fastqs.pu
+                    result['ID'] = fastqs.rg_id
             else:
                 result[key].append(sample[key])
     result = check_and_return_single_values(result)
-
     return result
+
+
+class Fastqs:
+    """
+    Fastqs class to hold pairs of fastqs
+
+    Does the pairing from a list of files
+
+    The paired bool is True if all of the R1s in file list find a matching R2
+    """
+    def __init__(self, sample_name, file_list):
+        self.sample_name = sample_name
+        self.fastqs = dict()
+        self.r1 = list()
+        self.r2 = list()
+        self.r2_bids = list()
+        self.paired = True
+        self._set_R(file_list)
+        self.r1_bids = self._set_bids(self.r1)
+        self.r2_bids = self._set_bids(self.r2)
+        self.pu = self._set_pu()
+        self.rg_id = self._set_rg_id()
+
+
+    def _set_bids(self, r):
+        r_bids = list()
+        for f in r:
+            r_file = get_file(f)
+            r_bids.append(r_file.id)
+        return r_bids
+
+
+    def _set_pu(self):
+        """
+        Creating a list of PU values; used by argos pipeline as scatter input
+
+        Only iterating across r1s since r1 and r2 should have the same metadata
+        """
+        pu = list()
+        for f in self.r1:
+            metadata = get_file(f).metadata
+            if 'poolednormal' in self.sample_name.lower():
+                flowcell_id = 'PN_FCID'
+                r = get_r_orientation(f)
+                barcode_index = spoof_barcode(os.path.basename(f),r)
+            else:
+                flowcell_id = metadata['flowCellId']
+                barcode_index = metadata['barcodeIndex']
+            platform_unit = flowcell_id
+            if barcode_index:
+                platform_unit = '_'.join([flowcell_id, barcode_index])
+            pu.append(platform_unit)
+        return pu
+
+
+    def _set_rg_id(self):
+        """
+        Creating a list of RG_ID values; used by argos pipeline as scatter input
+
+        Only iterating across r1s since r1 and r2 should have the same metadata
+        """
+        rg_ids = list()
+        for i,f in enumerate(self.r1):
+            metadata = get_file(f).metadata
+            sample_name = self.sample_name
+            pu = self.pu[i]
+            rg_id = '_'.join([sample_name, pu])
+            rg_ids.append(rg_id)
+        return rg_ids
+
+
+    def _set_R(self, file_list):
+        """
+        From the file list, retrieve R1 and R2 fastq files
+
+        Sets PU and bids, as well
+
+        Uses _get_fastq_from_list() to find R2 pair.
+        """
+        r1s = list()
+        r2s = list()
+        for i in file_list:
+            f = i.file
+            r = get_r_orientation(f.path)
+            if r == "R1":
+                r1s.append(f)
+            if r == "R2":
+                r2s.append(f)
+        for f in r1s:
+            self.r1.append(f.path)
+            fastq1 = f.path
+            expected_r2 = 'R2'.join(fastq1.rsplit('R1', 1))
+            fastq2 = self._get_fastq_from_list(expected_r2, r2s)
+            if fastq2:
+                self.r2.append(fastq2.path)
+            else:
+                print("No fastq R2 found for %s" % f.path)
+                self.paired = False
+
+
+    def __str__(self):
+        s = "R1:\n"
+        for i in self.r1:
+            s += i.path +"\n"
+        s += "\nR2:\n"
+        for i in self.r2:
+            s += i.path + "\n"
+        return s
+
+
+    def _get_fastq_from_list(self, fastq_path, fastq_files):
+        """
+        Given fastq_path, find it in the list of fastq_files and return
+        that File object
+        """
+        for f in fastq_files:
+            fpath = f.path
+            if fastq_path == fpath:
+                return f
