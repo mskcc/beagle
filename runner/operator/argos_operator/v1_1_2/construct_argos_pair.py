@@ -50,12 +50,14 @@ def format_sample(data):
         r2 = 'zR2'
 
     for i in data['R1']:
-        sample[r1].append({'class': 'File', 'location': 'juno://' + i})
+        if i:
+            sample[r1].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['R2']:
-        sample[r2].append({'class': 'File', 'location': 'juno://' + i})
+        if i:
+            sample[r2].append({'class': 'File', 'location': 'juno://' + i})
     for i in data['bam']:
-        sample['bam'].append({'class': 'File', 'location': 'juno://' + i})
-
+        if i:
+            sample['bam'].append({'class': 'File', 'location': 'juno://' + i})
     return sample
 
 
