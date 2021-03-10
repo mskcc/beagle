@@ -211,7 +211,7 @@ def build_sample(data, ignore_sample_formatting=False):
         sample = samples[sample_id]
         for key in sample:
             if key == 'fastqs':
-                if samples['fastqs']:
+                if sample['fastqs']:
                     fastqs = Fastqs(sample['SM'],sample['fastqs'])
                     result['R1'] = fastqs.r1
                     result['R1_bid'] = fastqs.r1_bids
