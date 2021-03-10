@@ -102,13 +102,15 @@ def check_and_return_single_values(data):
     return data
 
 
-def get_platform_unit(platform_unit_list):
-    pus = set(platform_unit_list)
-
-    if len(pus) > 1:
-        LOGGER.error("Multiple Platform Units found for one fastq pair; shouldn't happen")
-    else:
-        return pus.pop()
+def get_platform_unit(platform_units):
+    if isinstance(platform_unit, list):
+        pus = set(platform_units)
+        if len(pus) > 1:
+            LOGGER.error("Multiple Platform Units found for one fastq pair; shouldn't happen")
+        else:
+            return pus.pop()
+    elif isinstance(platform_unit, str):
+        return platform_unit
 
 
 def build_sample(data, ignore_sample_formatting=False):
