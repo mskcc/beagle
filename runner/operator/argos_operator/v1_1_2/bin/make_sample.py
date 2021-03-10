@@ -2,13 +2,13 @@
 This constructs a sample dictionary from the metadata in the Voyager/Beagle database
 """
 import logging
+import os
 import re
-from runner.operator.helper import format_sample_name
+from runner.operator.helper import format_sample_name, get_r_orientation, spoof_barcode
 from file_system.repository.file_repository import FileRepository
 from pprint import pprint
 
 LOGGER = logging.getLogger(__name__)
-
 
 
 def remove_with_caveats(samples):
@@ -260,9 +260,14 @@ class Fastqs:
         pu = list()
         for f in self.r1:
             metadata = get_file(f).metadata
-            flowcell_id = metadata['flowCellId']
+            if 'poolednormal' in self.sample_name.lower():
+                flowcell_id = 'PN_FCID'
+                r = get_r_orientation(f)
+                barcode_index = spoof_barcode(os.path.basename(f),r)
+            else:
+                flowcell_id = metadata['flowCellId']
+                barcode_index = metadata['barcodeIndex']
             platform_unit = flowcell_id
-            barcode_index = metadata['barcodeIndex']
             if barcode_index:
                 platform_unit = '_'.join([flowcell_id, barcode_index])
             pu.append(platform_unit)
@@ -297,7 +302,7 @@ class Fastqs:
         r2s = list()
         for i in file_list:
             f = i.file
-            r = i.metadata['R']
+            r = get_r_orientation(f.path)
             if r == "R1":
                 r1s.append(f)
             if r == "R2":
