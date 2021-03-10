@@ -91,6 +91,7 @@ def get_file(fpath):
         return data[0]
     return None
 
+
 def build_sample(data, ignore_sample_formatting=False):
     """
     Given some data - which is a list of samples originally from the LIMS, split up into one file
@@ -221,9 +222,7 @@ def build_sample(data, ignore_sample_formatting=False):
                     result['ID'] = fastqs.rg_id
             else:
                 result[key].append(sample[key])
-#    pprint(result)
     result = check_and_return_single_values(result)
-#    pprint(set(result['PU']))
     return result
 
 

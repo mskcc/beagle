@@ -58,7 +58,6 @@ def format_sample(data):
     for i in data['bam']:
         if i:
             sample['bam'].append({'class': 'File', 'location': 'juno://' + i})
-
     return sample
 
 
