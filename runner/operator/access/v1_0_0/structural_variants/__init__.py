@@ -6,8 +6,8 @@ from jinja2 import Template
 from runner.operator.operator import Operator
 from runner.operator.access import get_request_id_runs
 from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import FileRepository
-from runner.models import Run, Port, RunStatus
+from file_system.repository.file_repository import File
+from runner.models import Port, RunStatus
 
 
 
@@ -16,7 +16,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 TUMOR_OR_NORMAL_SEARCH = '-L0'
 SAMPLE_ID_SEP = '_cl_aln'
 ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_SV_NORMAL_FILENAME = r'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam$'
+ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
 
 
 class AccessLegacySVOperator(Operator):
@@ -52,11 +52,19 @@ class AccessLegacySVOperator(Operator):
         standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_OR_NORMAL_SEARCH in f['location'].split('/')[-1]]
         sample_ids = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
+        normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_SV_NORMAL_FILENAME)
+        if not len(normal_bam) == 1:
+            msg = "Incorrect number of files ({}) found for ACCESS SV Default Normal".format(len(normal_bam))
+            logger.exception(msg)
+            raise Exception(msg)
+        normal_bam = normal_bam[0]
+
         sample_inputs = []
         for i, b in enumerate(standard_tumor_bam_files):
             sample_input = self.construct_sample_inputs(
                 sample_ids[i],
-                b
+                b,
+                normal_bam
             )
             sample_inputs.append(sample_input)
 
@@ -89,7 +97,7 @@ class AccessLegacySVOperator(Operator):
             for i, job in enumerate(sample_inputs)
         ]
 
-    def construct_sample_inputs(self, tumor_sample_id, tumor_bam):
+    def construct_sample_inputs(self, tumor_sample_id, tumor_bam, normal_bam):
         """
         Use sample metadata and json template to create inputs for the CWL run
 
@@ -104,17 +112,6 @@ class AccessLegacySVOperator(Operator):
                 "location": tumor_bam['location'].replace('file://', 'juno://')
             }]
 
-            normal_bam = FileRepository.filter(
-                file_type='bam',
-                path_regex=ACCESS_DEFAULT_SV_NORMAL_FILENAME
-            )
-
-            if not len(normal_bam) == 1:
-                msg = "Incorrect number of files ({}) found for ACCESS SV Default Normal".format(len(normal_bam))
-                logger.exception(msg)
-                raise Exception(msg)
-
-            normal_bam = normal_bam[0].file
             normal_bam = {
                 "class": "File",
                 "location": 'juno://' + normal_bam.path
