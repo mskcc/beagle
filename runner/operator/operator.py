@@ -1,5 +1,6 @@
 import logging
 from file_system.models import File, FileMetadata
+from runner.models import Run
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer, APIRunCreateSerializer
 from django.db.models import Prefetch
@@ -15,7 +16,6 @@ class Operator(object):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
 
         self.model = model
-        self.request_id = request_id
         self.job_group_id = job_group_id
         self.job_group_notifier_id = job_group_notifier_id
         self.run_ids = run_ids
@@ -25,6 +25,12 @@ class Operator(object):
         self.output_directory_prefix = output_directory_prefix
         self._jobs = []
         self._pipeline = pipeline
+        self.request_id = request_id
+
+        if not request_id and self.run_ids:
+            run = Run.objects.get(pk=self.run_ids[0])
+            if run.tags.get('requestId'):
+                self.request_id = run.tags.get('requestId')
 
     def get_pipeline_id(self):
         if self._pipeline:
