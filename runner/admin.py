@@ -71,6 +71,14 @@ class PortAdmin(admin.ModelAdmin):
     ordering = ('run',)
     search_fields = ('run__id',)
 
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+
+
 
 admin.site.register(Run, RunAdmin)
 admin.site.register(Port, PortAdmin)

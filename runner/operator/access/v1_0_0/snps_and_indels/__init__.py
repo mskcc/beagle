@@ -58,10 +58,14 @@ class AccessLegacySNVOperator(Operator):
         # These are port objects, they don't have a metadata field
         tumors_to_run = self.parse_tumors_to_run(all_access_output_records)
 
+        # Todo: how to know which sequencer's default normal to use?
+        normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME)[0]
+
         # Gather input Files / Metadata
         sample_infos = []
         for tumor_sample_id in tumors_to_run:
             sample_info = self.create_sample_info(tumor_sample_id)
+            sample_info['normal_bam'] = normal_bam
             sample_infos.append(sample_info)
 
         # Format input templates
@@ -257,7 +261,7 @@ class AccessLegacySNVOperator(Operator):
         ]
         return normal_bams, curated_normal_ids
 
-    def construct_sample_inputs(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
+    def construct_sample_inputs(self, normal_bam, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
                                 matched_normal_unfiltered_id, capture_samples_duplex, capture_samples_simplex):
         """
         Use sample metadata and json template to create inputs for the CWL run
@@ -274,11 +278,6 @@ class AccessLegacySNVOperator(Operator):
             }]
             matched_normal_ids = [matched_normal_unfiltered_id]
 
-            # Todo: how to know which sequencer's default normal to use?
-            normal_bam = File.objects.filter(
-                file_type__name='bam',
-                file_name=ACCESS_DEFAULT_NORMAL_FILENAME
-            )[0]
             normal_bams = [{
                 "class": "File",
                 "location": 'juno://' + normal_bam.path
