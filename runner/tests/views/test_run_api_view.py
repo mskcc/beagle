@@ -71,7 +71,7 @@ class TestRunAPIList(APITestCase):
         url = self.api_root + '?tags=tag:value'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['count'], 3)
+        self.assertEqual(response.json()['count'], 8)
 
     def test_date(self):
         url = self.api_root + '?created_date_gt=2019-10-08T00:00'
