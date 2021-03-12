@@ -6,7 +6,7 @@ import uuid
 from mock import patch, call
 from django.test import TestCase
 from runner.models import OperatorRun, RunStatus, TriggerRunType, OperatorTrigger, Run
-from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator
+from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator, create_jobs_from_chaining
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.serializers import APIRunCreateSerializer
@@ -115,9 +115,29 @@ class TestOperatorTriggers(TestCase):
                  parent=str(operator_run.id)
                  )
         ]
-
         create_jobs_from_chaining.delay.assert_has_calls(calls, any_order=True)
         process_triggers()
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
+
+    @patch('runner.tasks.create_jobs_from_operator')
+    def test_operator_trigger_passes_request_id_tag_if_one_is_not_provided(self, create_jobs_from_operator):
+        for op_run in OperatorRun.objects.prefetch_related("runs").all():
+            for t in op_run.operator.from_triggers.all():
+                if t.run_type == TriggerRunType.INDIVIDUAL:
+                    operator_run = op_run
+                    trigger = t
+                    break
+
+        run_ids = [run.id for run in operator_run.runs.all()]
+        create_jobs_from_chaining(trigger.to_operator.pk, trigger.from_operator.pk, run_ids,
+                                  job_group_id=None, parent=str(operator_run.id))
+        operator, *_ = create_jobs_from_operator.call_args[0]
+        self.assertEqual(operator.request_id, operator_run.runs.first().tags.get("requestId"))
+
+        create_jobs_from_chaining(trigger.to_operator.pk, trigger.from_operator.pk, [run_ids[1]],
+                                  job_group_id=None, parent=str(operator_run.id))
+
+        operator, *_ = create_jobs_from_operator.call_args[0]
+        self.assertEqual(operator.request_id, None)
 
