@@ -187,7 +187,7 @@ class AccessLegacySNVOperator(Operator):
 
         return sample_info
 
-    def get_genotyping_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id, request_id):
+    def get_genotyping_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id):
         """
         Use the initial fastq metadata to get the capture of the sample,
         then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
@@ -252,7 +252,7 @@ class AccessLegacySNVOperator(Operator):
             additional_duplex_normals = File.objects.filter(
                 file_name__regex=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=DUPLEX_BAM_SEARCH,
-                port__run__tags__request_id__startswith=request_id.split('_')[0]
+                port__run__tags__request_id__startswith=self.request_id.split('_')[0]
             )\
             .distinct('file_name')\
             .order_by('file_name', '-created_date')[:num_normals_to_add]
@@ -260,7 +260,7 @@ class AccessLegacySNVOperator(Operator):
             additional_simplex_normals = File.objects.filter(
                 file_name__regex=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=SIMPLEX_BAM_SEARCH,
-                port__run__tags__request_id__startswith=request_id.split('_')[0]
+                port__run__tags__request_id__startswith=self.request_id.split('_')[0]
             )\
             .distinct('file_name')\
             .order_by('file_name', '-created_date')[:num_normals_to_add]
