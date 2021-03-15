@@ -32,3 +32,4 @@ from .external_email_event import ExternalEmailEvent
 from .only_normal_samples_event import OnlyNormalSamplesEvent
 from .wes_job_failed_event import WESJobFailedEvent
 from .send_email_event import SendEmailEvent
+from .permission_denied_event import PermissionDeniedEvent
