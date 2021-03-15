@@ -72,6 +72,9 @@ class JiraEventHandler(EventHandler):
     def process_redelivery_update_event(self, event):
         self._add_comment_event(event)
 
+    def process_permission_denied_event(self, event):
+        self._add_comment_event(event)
+
     def process_set_label_event(self, event):
         self._set_label(event)
 
