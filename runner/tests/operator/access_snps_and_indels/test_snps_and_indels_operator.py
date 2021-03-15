@@ -88,12 +88,16 @@ class TestAccessSNVOperator(TestCase):
             'matched_normal_ids',
         ]
 
-        # We should have 9 bams for genotyping:
+        # We should have 11 bams for genotyping:
         # - Main Tumor Bam Duplex
         # - Main Tumor Bam Simplex
         # - Default Variant Calling Normal Duplex
+        #
         # - Matched Normal Duplex
         # - Matched Normal Simplex
+        # - Matched Tumor Duplex
+        # - Matched Tumor Simplex
+        #
         # - Pool Tumor Duplex
         # - Pool Tumor Simplex
         # - Pool Normal Duplex

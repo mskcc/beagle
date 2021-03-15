@@ -83,9 +83,8 @@ def get_unfiltered_matched_normal(patient_id):
         unfiltered_matched_normal_bam = unfiltered_matched_normal_bam[0]
 
     # Parse the Normal Sample ID from the file name
-    # Todo: Stop using file path for this, once output_metadata is being supplied in access legacy operator
+    # Todo: Stop using file name for this, once output_metadata is being supplied in access legacy operator
     if unfiltered_matched_normal_bam:
-        unfiltered_matched_normal_file_base = unfiltered_matched_normal_bam.path.split('/')[-1]
-        unfiltered_matched_normal_sample_id = '-'.join(unfiltered_matched_normal_file_base.split('-')[0:3])
+        unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.split('_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam')[0]
 
     return unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id

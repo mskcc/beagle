@@ -153,8 +153,25 @@ class AccessLegacySNVOperator(Operator):
         # Locate the Matched, Unfiltered, Normal BAM
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
 
-        (capture_samples_duplex,
-         capture_samples_simplex) = self.get_pool_genotyping_samples(tumor_sample_id)
+        capture_samples_duplex, capture_samples_simplex = self.get_genotyping_samples(
+            tumor_sample_id,
+            tumor_duplex_bam,
+            tumor_simplex_bam,
+            matched_normal_unfiltered_id,
+            self.request_id
+        )
+        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
+        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
+
+        matched_duplex_tumors,\
+        matched_simplex_tumors,\
+        matched_duplex_sample_ids,\
+        matched_simplex_sample_ids = self.get_dmp_matched_patient_geno_samples(tumor_sample_id)
+
+        geno_samples_duplex = capture_samples_duplex + matched_duplex_tumors
+        geno_samples_simplex = capture_samples_simplex + matched_simplex_tumors
+        geno_samples_duplex_sample_ids = capture_samples_duplex_sample_ids + matched_duplex_sample_ids
+        geno_samples_simplex_sample_ids = capture_samples_simplex_sample_ids + matched_simplex_sample_ids
 
         sample_info = {
             'tumor_sample_id': tumor_sample_id,
@@ -162,16 +179,20 @@ class AccessLegacySNVOperator(Operator):
             'tumor_simplex_bam': tumor_simplex_bam,
             'matched_normal_unfiltered': matched_normal_unfiltered_bam,
             'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
-            'capture_samples_duplex': capture_samples_duplex,
-            'capture_samples_simplex': capture_samples_simplex,
+            'geno_samples_duplex': geno_samples_duplex,
+            'geno_samples_simplex': geno_samples_simplex,
+            'geno_samples_duplex_sample_ids': geno_samples_duplex_sample_ids,
+            'geno_samples_simplex_sample_ids': geno_samples_simplex_sample_ids,
         }
 
         return sample_info
 
-    def get_pool_genotyping_samples(self, tumor_sample_id):
+    def get_genotyping_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id, request_id):
         """
         Use the initial fastq metadata to get the capture of the sample,
         then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
+
+        Also include any tumor samples from the same patie4nt
 
         Limits to 40 samples (or 80 bams, because each has Simplex and Duplex)
 
@@ -192,7 +213,7 @@ class AccessLegacySNVOperator(Operator):
             metadata={'captureName': capture_id}
         )
         sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
-        # don't double-genotype the query sample
+        # Don't double-genotype the main sample
         sample_ids.remove(tumor_sample_id)
 
         # Skip Pool genotyping if no other samples from pool found
@@ -204,16 +225,88 @@ class AccessLegacySNVOperator(Operator):
             _connector=Q.OR
         )
 
-        q = capture_q & Q(file_name__endswith=DUPLEX_BAM_SEARCH)
-        duplex_capture_samples = File.objects.filter(q).distinct('file_name').order_by('file_name', '-created_date')
-        q = capture_q & Q(file_name__endswith=SIMPLEX_BAM_SEARCH)
-        simplex_capture_samples = File.objects.filter(q).distinct('file_name').order_by('file_name', '-created_date')
+        # Include IGO Matched Tumor bams
+        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+        matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
+
+        duplex_capture_q = (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & capture_q) | \
+                           (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
+        simplex_capture_q = (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & capture_q) | \
+                            (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
+
+        duplex_geno_samples = File.objects.filter(duplex_capture_q)\
+            .distinct('file_name')\
+            .order_by('file_name', '-created_date')\
+            .exclude(file_name=tumor_duplex_bam.file_name)\
+            .exclude(file_name__startswith=matched_normal_id)
+        simplex_geno_samples = File.objects.filter(simplex_capture_q)\
+            .distinct('file_name')\
+            .order_by('file_name', '-created_date')\
+            .exclude(file_name=tumor_simplex_bam.file_name)\
+            .exclude(file_name__startswith=matched_normal_id)
+
+        # If we have less than 40 samples from both the capture and the patient, add more normals from the same request
+        if (duplex_geno_samples.count() < 4) and self.request_id:
+            num_normals_to_add = 40 - duplex_geno_samples.count()
+
+            additional_duplex_normals = File.objects.filter(
+                file_name__regex=NORMAL_SAMPLE_SEARCH,
+                file_name__endswith=DUPLEX_BAM_SEARCH,
+                port__run__tags__request_id__startswith=request_id.split('_')[0]
+            )\
+            .distinct('file_name')\
+            .order_by('file_name', '-created_date')[:num_normals_to_add]
+
+            additional_simplex_normals = File.objects.filter(
+                file_name__regex=NORMAL_SAMPLE_SEARCH,
+                file_name__endswith=SIMPLEX_BAM_SEARCH,
+                port__run__tags__request_id__startswith=request_id.split('_')[0]
+            )\
+            .distinct('file_name')\
+            .order_by('file_name', '-created_date')[:num_normals_to_add]
+
+            duplex_geno_samples = duplex_geno_samples.union(additional_duplex_normals)
+            simplex_geno_samples = simplex_geno_samples.union(additional_simplex_normals)
 
         # Limit to 40 samples
-        capture_samples_duplex = duplex_capture_samples[0:40]
-        capture_samples_simplex = simplex_capture_samples[0:40]
+        capture_samples_duplex = list(duplex_geno_samples\
+            .exclude(file_name=tumor_duplex_bam.file_name)\
+            .exclude(file_name__startswith=matched_normal_id)[0:40])
+        capture_samples_simplex = list(simplex_geno_samples\
+            .exclude(file_name=tumor_simplex_bam.file_name)\
+            .exclude(file_name__startswith=matched_normal_id)[0:40])
 
         return capture_samples_duplex, capture_samples_simplex
+
+    def get_dmp_matched_patient_geno_samples(self, tumor_sample_id):
+        """
+
+
+        :param tumor_sample_id:
+        :return:
+        """
+        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+
+        # Find matched Tumors from DMP as well
+        matched_duplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_DUPLEX_REGEX
+        )
+        matched_duplex_tumors_dmp = [b.file for b in matched_duplex_tumors_dmp]
+        matched_duplex_sample_ids_dmp = [b.file_name.replace('-duplex.bam', '') for b in matched_duplex_tumors_dmp]
+
+        matched_simplex_tumors_dmp = FileMetadata.objects.filter(
+            metadata__cmo_assay='ACCESS_V1_0',
+            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__type='T',
+            file__path__endswith=DMP_SIMPLEX_REGEX
+        )
+        matched_simplex_tumors_dmp = [b.file for b in matched_simplex_tumors_dmp]
+        matched_simplex_sample_ids_dmp = [b.file_name.replace('-simplex.bam', '') for b in matched_simplex_tumors_dmp]
+
+        return matched_duplex_tumors_dmp, matched_simplex_tumors_dmp, matched_duplex_sample_ids_dmp, matched_simplex_sample_ids_dmp
 
     def get_jobs(self):
         """
@@ -262,7 +355,8 @@ class AccessLegacySNVOperator(Operator):
         return normal_bams, curated_normal_ids
 
     def construct_sample_inputs(self, normal_bam, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
-                                matched_normal_unfiltered_id, capture_samples_duplex, capture_samples_simplex):
+                                matched_normal_unfiltered_id, geno_samples_duplex, geno_samples_simplex, geno_samples_duplex_sample_ids,
+                                geno_samples_simplex_sample_ids):
         """
         Use sample metadata and json template to create inputs for the CWL run
 
@@ -306,25 +400,23 @@ class AccessLegacySNVOperator(Operator):
                 genotyping_bams_ids += [matched_normal_unfiltered_id]
 
             # Additional matched Tumors may be available
-            if len(capture_samples_duplex) > 0:
+            if len(geno_samples_duplex) > 0:
                 genotyping_bams += [
                     {
                         "class": "File",
                         "location": 'juno://' + b.path
-                    } for b in capture_samples_duplex
+                    } for b in geno_samples_duplex
                 ]
 
                 genotyping_bams += [
                     {
                         "class": "File",
                         "location": 'juno://' + b.path
-                    } for b in capture_samples_simplex
+                    } for b in geno_samples_simplex
                 ]
 
-                capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
-                capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
-                genotyping_bams_ids += capture_samples_duplex_sample_ids
-                genotyping_bams_ids += [i + '-SIMPLEX' for i in capture_samples_simplex_sample_ids]
+                genotyping_bams_ids += geno_samples_duplex_sample_ids
+                genotyping_bams_ids += [i + '-SIMPLEX' for i in geno_samples_simplex_sample_ids]
 
             curated_normal_bams, curated_normal_ids = self.get_curated_normals()
             genotyping_bams += curated_normal_bams
