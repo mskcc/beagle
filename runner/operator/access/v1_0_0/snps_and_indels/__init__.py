@@ -151,7 +151,7 @@ class AccessLegacySNVOperator(Operator):
         patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
         # Locate the Matched, Unfiltered, Normal BAM
-        matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id)
+        matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id, self.request_id)
 
         capture_samples_duplex, capture_samples_simplex = self.get_genotyping_samples(
             tumor_sample_id,
