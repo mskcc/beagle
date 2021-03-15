@@ -224,9 +224,6 @@ class JobObject(object):
 
     def _job_failed(self, permission_denied=False, recipe=None):
         if self.job.run == TYPES['REQUEST']:
-            e = ETLJobFailedEvent(self.job.job_group_notifier.id,
-                                  "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
-            send_notification.delay(e)
             if permission_denied:
                 cc = settings.PERMISSION_DENIED_CC.get(recipe, '')
                 permission_denied_event = PermissionDeniedEvent(self.job.job_group_notifier.id,
