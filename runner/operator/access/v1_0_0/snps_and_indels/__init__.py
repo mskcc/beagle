@@ -166,7 +166,7 @@ class AccessLegacySNVOperator(Operator):
         matched_duplex_tumors,\
         matched_simplex_tumors,\
         matched_duplex_sample_ids,\
-        matched_simplex_sample_ids = self.get_dmp_matched_patient_geno_samples(tumor_sample_id)
+        matched_simplex_sample_ids = self.get_dmp_matched_patient_geno_samples(patient_id)
 
         geno_samples_duplex = capture_samples_duplex + matched_duplex_tumors
         geno_samples_simplex = capture_samples_simplex + matched_simplex_tumors
@@ -278,16 +278,14 @@ class AccessLegacySNVOperator(Operator):
 
         return capture_samples_duplex, capture_samples_simplex
 
-    def get_dmp_matched_patient_geno_samples(self, tumor_sample_id):
+    def get_dmp_matched_patient_geno_samples(self, patient_id):
         """
+        Find DMP ACCESS samples for genotyping
 
-
-        :param tumor_sample_id:
-        :return:
+        :param patient_id: str - CMO sample ID (C-123ABC)
+        :return: (QuerySet<File> - Duplex Bams, QuerySet<File> - Simplex Bams, str[] duplex samples IDs,
+            str[] simplex sample IDs)
         """
-        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
-
-        # Find matched Tumors from DMP as well
         matched_duplex_tumors_dmp = FileMetadata.objects.filter(
             metadata__cmo_assay='ACCESS_V1_0',
             metadata__patient__cmo=patient_id.replace('C-', ''),
