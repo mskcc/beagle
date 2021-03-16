@@ -157,8 +157,7 @@ class AccessLegacySNVOperator(Operator):
             tumor_sample_id,
             tumor_duplex_bam,
             tumor_simplex_bam,
-            matched_normal_unfiltered_id,
-            self.request_id
+            matched_normal_unfiltered_id
         )
         capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
         capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
