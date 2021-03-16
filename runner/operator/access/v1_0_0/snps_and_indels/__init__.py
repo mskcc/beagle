@@ -221,10 +221,6 @@ class AccessLegacySNVOperator(Operator):
         # Don't double-genotype the main sample
         sample_ids.remove(tumor_sample_id)
 
-        # Skip Pool genotyping if no other samples from pool found
-        if len(sample_ids) == 0:
-            return [], []
-
         capture_q = Q(  
             *[('file_name__startswith', id) for id in sample_ids],
             _connector=Q.OR
