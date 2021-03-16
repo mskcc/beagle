@@ -57,17 +57,6 @@ class StatusFilter(admin.SimpleListFilter):
             return queryset.filter(status=self.value())
         return queryset
 
-def restart_operator_run(modeladmin, request, queryset):
-    operator_run_groups = set()
-    for run in queryset:
-        operator_run_groups.add(run.operator_run_id)
-
-    #RunApiRestartViewSet(GenericAPIView):
-
-
-
-restart_operator_run.short_description = "Restart Operator Run"
-
 def abort_run(modeladmin, request, queryset):
     jobs = list(queryset.values_list("id"))
     updated = len(jobs)
@@ -85,7 +74,8 @@ class RunAdmin(admin.ModelAdmin):
                     'status', 'link_to_ridgeback', 'created_date', 'finished_date')
     ordering = ('-created_date',)
     list_filter = (('created_date', DateTimeRangeFilter), StatusFilter, AppFilter,)
-    search_fields = ('tags__sampleId', 'tags__requestId', 'tags__cmoSampleIds__contains')
+    search_fields = ('tags__sampleId', 'tags__requestId', 'tags__cmoSampleIds__contains',
+                     'operator_run_id')
     readonly_fields = ('samples', 'job_group', 'job_group_notifier', link_relation('operator_run'),
                        link_relation('app'))
 
