@@ -343,6 +343,7 @@ def submit_job(run_id, output_directory=None):
     else:
         url = settings.RIDGEBACK_URL + '/v0/jobs/'
         job = {
+            'type': run.run_type,
             'app': app,
             'inputs': inputs,
             'root_dir': output_directory
