@@ -162,6 +162,12 @@ class AccessLegacySNVOperator(Operator):
         capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_duplex]
         capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in capture_samples_simplex]
 
+        # SNV pipeline requires that all samples have simplex and duplex bams,
+        # and the IDs should be ordered in matching order
+        if capture_samples_duplex_sample_ids != capture_samples_simplex_sample_ids:
+            msg = 'ACCESS SNV Operator Error: Duplex sample IDs not matched to Simplex sample IDs'
+            raise Exception(msg)
+
         matched_duplex_tumors,\
         matched_simplex_tumors,\
         matched_duplex_sample_ids,\
@@ -244,9 +250,9 @@ class AccessLegacySNVOperator(Operator):
             .exclude(file_name=tumor_simplex_bam.file_name)\
             .exclude(file_name__startswith=matched_normal_id)
 
-        # If we have less than 40 samples from both the capture and the patient, add more normals from the same request
-        if (duplex_geno_samples.count() < 4) and self.request_id:
-            num_normals_to_add = 40 - duplex_geno_samples.count()
+        # If we have less than 20 samples from both the capture and the patient, add more normals from the same request
+        if (duplex_geno_samples.count() < 20) and self.request_id:
+            num_normals_to_add = 20 - duplex_geno_samples.count()
 
             additional_duplex_normals = File.objects.filter(
                 file_name__regex=NORMAL_SAMPLE_SEARCH,
@@ -267,13 +273,22 @@ class AccessLegacySNVOperator(Operator):
             duplex_geno_samples = duplex_geno_samples.union(additional_duplex_normals)
             simplex_geno_samples = simplex_geno_samples.union(additional_simplex_normals)
 
-        # Limit to 40 samples
-        capture_samples_duplex = list(duplex_geno_samples\
-            .exclude(file_name=tumor_duplex_bam.file_name)\
-            .exclude(file_name__startswith=matched_normal_id)[0:40])
-        capture_samples_simplex = list(simplex_geno_samples\
-            .exclude(file_name=tumor_simplex_bam.file_name)\
-            .exclude(file_name__startswith=matched_normal_id)[0:40])
+        # Exclude main tumor bam and matched normal bam
+        capture_samples_duplex = duplex_geno_samples \
+            .exclude(file_name=tumor_duplex_bam.file_name) \
+            .exclude(file_name__startswith=matched_normal_id)
+        capture_samples_simplex = simplex_geno_samples \
+            .exclude(file_name=tumor_simplex_bam.file_name) \
+            .exclude(file_name__startswith=matched_normal_id)
+
+        if len(capture_samples_duplex) != len(capture_samples_simplex):
+            msg = 'Found inconsistent number of simplex and duplex bam files for genotyping sample {}'\
+                .format(tumor_sample_id)
+            raise Exception(msg)
+
+        # Limit to 40 samples due to GBCMS command length restriction
+        capture_samples_duplex = list(capture_samples_duplex[0:40])
+        capture_samples_simplex = list(capture_samples_simplex[0:40])
 
         return capture_samples_duplex, capture_samples_simplex
 
