@@ -164,7 +164,7 @@ class AccessLegacySNVOperator(Operator):
 
         # SNV pipeline requires that all samples have simplex and duplex bams,
         # and the IDs should be ordered in matching order
-        if capture_samples_duplex_sample_ids != capture_samples_simplex_sample_ids:
+        if set(capture_samples_duplex_sample_ids) != set(capture_samples_simplex_sample_ids):
             msg = 'ACCESS SNV Operator Error: Duplex sample IDs not matched to Simplex sample IDs'
             raise Exception(msg)
 
