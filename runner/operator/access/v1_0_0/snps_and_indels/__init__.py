@@ -251,7 +251,7 @@ class AccessLegacySNVOperator(Operator):
             num_normals_to_add = 20 - duplex_geno_samples.count()
 
             additional_duplex_normals = File.objects.filter(
-                file_name__regex=NORMAL_SAMPLE_SEARCH,
+                file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=DUPLEX_BAM_SEARCH,
                 port__run__tags__requestId__startswith=self.request_id.split('_')[0]
             )\
@@ -259,7 +259,7 @@ class AccessLegacySNVOperator(Operator):
             .order_by('file_name', '-created_date')[:num_normals_to_add]
 
             additional_simplex_normals = File.objects.filter(
-                file_name__regex=NORMAL_SAMPLE_SEARCH,
+                file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=SIMPLEX_BAM_SEARCH,
                 port__run__tags__requestId__startswith=self.request_id.split('_')[0]
             )\
