@@ -82,8 +82,8 @@ class AccessLegacySNVOperator(Operator):
             .order_by('file_name', '-created_date')
             # Evaluate the queryset so that the cache is populated for later queries which use slicing / LIMIT
             # https://docs.djangoproject.com/en/3.1/topics/db/queries/#when-querysets-are-not-cached
-            bool(self.fillout_duplex_normals)
-            bool(self.fillout_simplex_normals)
+            list(self.fillout_duplex_normals)
+            list(self.fillout_simplex_normals)
 
         # Gather input Files / Metadata
         sample_infos = []
@@ -185,32 +185,30 @@ class AccessLegacySNVOperator(Operator):
         )
 
         # If we have less than 20 samples from both the capture and the patient, add more fillout normals
-        if (geno_samples_duplex.count() < 20) and self.request_id:
-            num_normals_to_add = 20 - geno_samples_duplex.count()
+        if (len(geno_samples_duplex) < 20) and self.request_id:
+            num_normals_to_add = 20 - len(geno_samples_duplex)
 
             print("Adding {} fillout samples to SNV run for sample {}:".format(num_normals_to_add, tumor_sample_id))
             print("Geno samples before fillout:")
             print([s.file_name for s in geno_samples_duplex])
             print([s.file_name for s in geno_samples_simplex])
 
-            geno_samples_duplex = geno_samples_duplex.union(self.fillout_duplex_normals[:num_normals_to_add])
-            geno_samples_simplex = geno_samples_simplex.union(self.fillout_simplex_normals[:num_normals_to_add])
+            geno_samples_duplex = geno_samples_duplex + self.fillout_duplex_normals[:num_normals_to_add]
+            geno_samples_simplex = geno_samples_simplex + self.fillout_simplex_normals[:num_normals_to_add]
 
             print("Geno samples after fillout:")
             print([s.file_name for s in geno_samples_duplex])
             print([s.file_name for s in geno_samples_simplex])
 
             # Exclude main tumor bam and matched normal bam
-            geno_samples_duplex = geno_samples_duplex \
-                .exclude(file_name=tumor_duplex_bam.file_name) \
-                .exclude(file_name__startswith=matched_normal_unfiltered_id)
-            geno_samples_simplex = geno_samples_simplex \
-                .exclude(file_name=tumor_simplex_bam.file_name) \
-                .exclude(file_name__startswith=matched_normal_unfiltered_id)
+            geno_samples_duplex = [s for s in geno_samples_duplex if s.file_name != tumor_duplex_bam.file_name]
+            geno_samples_duplex = [s for s in geno_samples_duplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
+            geno_samples_simplex = [s for s in geno_samples_simplex if s.file_name != tumor_duplex_bam.file_name]
+            geno_samples_simplex = [s for s in geno_samples_simplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
 
         # Limit to 40 samples due to GBCMS command length restriction
-        geno_samples_duplex = list(geno_samples_duplex[0:40])
-        geno_samples_simplex = list(geno_samples_simplex[0:40])
+        geno_samples_duplex = geno_samples_duplex[0:40]
+        geno_samples_simplex = geno_samples_simplex[0:40]
 
         if len(geno_samples_duplex) != len(geno_samples_simplex):
             msg = 'Found inconsistent number of simplex and duplex bam files for genotyping sample {}' \
@@ -305,7 +303,7 @@ class AccessLegacySNVOperator(Operator):
             .exclude(file_name=tumor_simplex_bam.file_name)\
             .exclude(file_name__startswith=matched_normal_id)
 
-        return duplex_geno_samples, simplex_geno_samples
+        return list(duplex_geno_samples), list(simplex_geno_samples)
 
     def get_dmp_matched_patient_geno_samples(self, patient_id):
         """
