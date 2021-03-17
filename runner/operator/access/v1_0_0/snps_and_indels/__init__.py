@@ -70,16 +70,20 @@ class AccessLegacySNVOperator(Operator):
                 file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=DUPLEX_BAM_SEARCH,
                 port__run__tags__requestId__startswith=self.request_id.split('_')[0]
-            )\
-            .distinct('file_name')\
+            ) \
+            .distinct('file_name') \
             .order_by('file_name', '-created_date')
             self.fillout_simplex_normals = File.objects.filter(
                 file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=SIMPLEX_BAM_SEARCH,
                 port__run__tags__requestId__startswith=self.request_id.split('_')[0]
-            )\
-            .distinct('file_name')\
+            ) \
+            .distinct('file_name') \
             .order_by('file_name', '-created_date')
+            # Evaluate the queryset so that the cache is populated for later queries which use slicing / LIMIT
+            # https://docs.djangoproject.com/en/3.1/topics/db/queries/#when-querysets-are-not-cached
+            bool(self.fillout_duplex_normals)
+            bool(self.fillout_simplex_normals)
 
         # Gather input Files / Metadata
         sample_infos = []
@@ -204,9 +208,9 @@ class AccessLegacySNVOperator(Operator):
                 .exclude(file_name=tumor_simplex_bam.file_name) \
                 .exclude(file_name__startswith=matched_normal_unfiltered_id)
 
-            # Limit to 40 samples due to GBCMS command length restriction
-            geno_samples_duplex = list(geno_samples_duplex[0:40])
-            geno_samples_simplex = list(geno_samples_simplex[0:40])
+        # Limit to 40 samples due to GBCMS command length restriction
+        geno_samples_duplex = list(geno_samples_duplex[0:40])
+        geno_samples_simplex = list(geno_samples_simplex[0:40])
 
         if len(geno_samples_duplex) != len(geno_samples_simplex):
             msg = 'Found inconsistent number of simplex and duplex bam files for genotyping sample {}' \
