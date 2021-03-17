@@ -1,15 +1,14 @@
 import logging
 import importlib
 import datetime
-import traceback
 from celery import shared_task
+from django.conf import settings
 from beagle_etl.models import JobStatus, Job
 from beagle_etl.jobs.lims_etl_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-# from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, SetCIReviewEvent
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, PermissionDeniedEvent, SendEmailEvent
 
 
 logger = logging.getLogger(__name__)
@@ -96,9 +95,7 @@ class JobObject(object):
                 self._process()
                 self.job.status = JobStatus.WAITING_FOR_CHILDREN
             except Exception as e:
-                print(e)
                 if isinstance(e, ETLExceptions):
-                    print("Is this correct exception")
                     message = {"message": str(e), "code": e.code}
                 else:
                     message = {'message': str(e)}
@@ -106,7 +103,6 @@ class JobObject(object):
                     self.job.status = JobStatus.FAILED
                     self.job.message = message
                     self._job_failed()
-                    traceback.print_tb(e.__traceback__)
 
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
@@ -226,11 +222,23 @@ class JobObject(object):
         etl_e = etl_event.to_dict()
         send_notification.delay(etl_e)
 
-    def _job_failed(self):
+    def _job_failed(self, permission_denied=False, recipe=None):
         if self.job.run == TYPES['REQUEST']:
-            e = ETLJobFailedEvent(self.job.job_group_notifier.id,
-                                  "[CIReviewEvent] ETL Job failed, likely child job import. Check pooled normal import, might already exist in database.").to_dict()
-            send_notification.delay(e)
+            if permission_denied:
+                cc = settings.PERMISSION_DENIED_CC.get(recipe, '')
+                permission_denied_event = PermissionDeniedEvent(self.job.job_group_notifier.id,
+                                                                "Failed to copy files because of the Permission denied issue", cc).to_dict()
+                send_notification.delay(permission_denied_event)
+                emails = settings.PERMISSION_DENIED_EMAILS.get(recipe, '').split(',')
+                for email in emails:
+                    content = "Request failed to be imported because some files don't have proper permissions. " \
+                              "Check more details on %s/v0/etl/jobs/%s/" % (settings.BEAGLE_URL, str(self.job.id))
+                    email = SendEmailEvent(job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP, email_to=email,
+                                           email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                                           subject='Permission Denied for request_id: %s' % self.job.args.get(
+                                               'request_id'),
+                                           content=content)
+                    send_notification.delay(email.to_dict())
             self._generate_ticket_decription()
 
     def _job_successful(self):
@@ -240,6 +248,8 @@ class JobObject(object):
     def _check_children(self):
         finished = True
         failed = []
+        permission_denied = False
+        recipe = None
         for child_id in self.job.children:
             try:
                 child_job = Job.objects.get(id=child_id)
@@ -248,6 +258,10 @@ class JobObject(object):
                 continue
             if child_job.status == JobStatus.FAILED:
                 failed.append(child_id)
+                if isinstance(child_job.message, dict) and child_job.message.get("code", 0) == 108:
+                    logger.error("Job failed because of the permission denied error")
+                    recipe = child_job.args.get('request_metadata', {}).get('recipe')
+                    permission_denied = True
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False
                 break
@@ -255,7 +269,7 @@ class JobObject(object):
             if failed:
                 self.job.status = JobStatus.FAILED
                 self.job.message = {"details": "Child jobs %s failed" % ', '.join(failed)}
-                self._job_failed()
+                self._job_failed(permission_denied, recipe)
             else:
                 self.job.status = JobStatus.COMPLETED
                 self._job_successful()

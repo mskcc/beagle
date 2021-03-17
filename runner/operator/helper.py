@@ -1,3 +1,4 @@
+import os
 import re
 import logging
 from file_system.repository.file_repository import FileRepository
@@ -69,3 +70,67 @@ def generate_sample_data_content(request_ids):
                 metadata['sampleId']
             )
     return result
+
+
+def get_r_orientation(fastq_filename):
+    """
+    Retrieve R orientation of fastq filename
+    """
+    reversed_filename = ''.join(reversed(fastq_filename))
+    r1_idx = reversed_filename.find('1R')
+    r2_idx = reversed_filename.find('2R')
+    if r1_idx == -1 and r2_idx == -1:
+        return "ERROR"
+    elif r1_idx > 0 and r2_idx == -1:
+        return "R1"
+    elif r2_idx > 0 and r1_idx == -1:
+        return 'R2'
+    elif r1_idx > 0 and r2_idx > 0:
+        if r1_idx < r2_idx:
+            return 'R1'
+        return 'R2'
+    return 'ERROR'
+
+
+def spoof_barcode(sample_file_name, r_orientation):
+    """
+    Spoof barcode by removing 'R1' or 'R2' from the filename; paired fastqs
+    are assumed to have only these two values as different
+
+    We are also assuming there are no periods in the file names other than extensions
+    """
+    reversed_str = ''.join(reversed(sample_file_name))
+    if r_orientation == 'R1':
+        reversed_str = reversed_str.replace('1R', '')
+    else:
+        reversed_str = reversed_str.replace('2R', '')
+    reversed_str = ''.join(reversed(reversed_str))
+    spoofed_barcode = reversed_str.split(os.extsep)[0]
+    return spoofed_barcode
+
+
+def init_metadata():
+    """
+    Build a fastq dictionary containing expected metadata for a sample
+
+    This just instantiates it.
+    """
+    metadata = dict()
+    metadata['requestId'] = ""
+    metadata['sampleId'] = ""
+    metadata['libraryId'] = ""
+    metadata['baitSet'] = ""
+    metadata['tumorOrNormal'] = ""
+    metadata['specimenType'] = ""
+    metadata['species'] = ""
+    metadata['sampleName'] = ""
+    metadata['flowCellId'] = ""
+    metadata['barcodeIndex'] = ""
+    metadata['patientId'] = ""
+    metadata['runDate'] = ""
+    metadata['R'] = ""
+    metadata['labHeadName'] = ""
+    metadata['labHeadEmail'] = ""
+    metadata['runId'] = ""
+    metadata['preservation'] = ""
+    return metadata
