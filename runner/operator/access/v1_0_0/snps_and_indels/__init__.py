@@ -202,9 +202,10 @@ class AccessLegacySNVOperator(Operator):
 
             # Exclude main tumor bam and matched normal bam
             geno_samples_duplex = [s for s in geno_samples_duplex if s.file_name != tumor_duplex_bam.file_name]
-            geno_samples_duplex = [s for s in geno_samples_duplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
             geno_samples_simplex = [s for s in geno_samples_simplex if s.file_name != tumor_duplex_bam.file_name]
-            geno_samples_simplex = [s for s in geno_samples_simplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
+            if matched_normal_unfiltered_id:
+                geno_samples_duplex = [s for s in geno_samples_duplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
+                geno_samples_simplex = [s for s in geno_samples_simplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
 
         # Limit to 40 samples due to GBCMS command length restriction
         geno_samples_duplex = geno_samples_duplex[0:40]
@@ -218,8 +219,7 @@ class AccessLegacySNVOperator(Operator):
         capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_duplex]
         capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_simplex]
 
-        # SNV pipeline requires that all samples have simplex and duplex bams,
-        # and the IDs should be ordered in matching order
+        # SNV pipeline requires that all samples have simplex and duplex bams
         if set(capture_samples_duplex_sample_ids) != set(capture_samples_simplex_sample_ids):
             msg = 'ACCESS SNV Operator Error: Duplex sample IDs not matched to Simplex sample IDs'
             raise Exception(msg)
@@ -404,16 +404,9 @@ class AccessLegacySNVOperator(Operator):
             normal_sample_names = [ACCESS_DEFAULT_NORMAL_ID]
 
             genotyping_bams = [
-                {
-                    "class": "File",
-                    "location": 'juno://' + tumor_duplex_bam.path
-                },
-                {
-                    "class": "File",
-                    "location": 'juno://' + tumor_simplex_bam.path
-                }
+                {"class": "File", "location": 'juno://' + tumor_duplex_bam.path},
+                {"class": "File", "location": 'juno://' + tumor_simplex_bam.path}
             ]
-
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX']
 
             # Matched Normal may or may not be available for genotyping
@@ -427,19 +420,11 @@ class AccessLegacySNVOperator(Operator):
             # Additional matched Tumors may be available
             if len(geno_samples_duplex) > 0:
                 genotyping_bams += [
-                    {
-                        "class": "File",
-                        "location": 'juno://' + b.path
-                    } for b in geno_samples_duplex
+                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_duplex
                 ]
-
                 genotyping_bams += [
-                    {
-                        "class": "File",
-                        "location": 'juno://' + b.path
-                    } for b in geno_samples_simplex
+                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_simplex
                 ]
-
                 genotyping_bams_ids += geno_samples_duplex_sample_ids
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in geno_samples_simplex_sample_ids]
 
