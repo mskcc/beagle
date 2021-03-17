@@ -342,23 +342,22 @@ class TempoMPGenOperator(Operator):
 
         for patient_id in self.patients:
             patient = self.patients[patient_id]
-            for pair in patient.sample_pairing:
+            for pair in patient.sample_pairing: # must go by pairs so that we can "pair" the tumor in the row
                 normal = pair[1]
                 tumor = pair[0]
                 n_meta = normal.dedupe_metadata_values()
                 t_meta = tumor.dedupe_metadata_values()
-
                 running = list()
                 running.append(tumor.cmo_sample_name)
                 running.append(normal.cmo_sample_name)
-
                 for key in key_order:
                     running.append(t_meta[key])
                 for key in extra_keys:
                     running.append(t_meta[key])
-
                 tracker += "\t".join(running) + "\n"
-
+            for normal_id in patient.normal_samples: # must do this to account for unpaired normals
+                normal = patient.normal_samples[normal_id]
+                n_meta = normal.dedupe_metadata_values()
                 if normal.cmo_sample_name not in seen:
                     seen.add(normal.cmo_sample_name)
                     running_normal = list()

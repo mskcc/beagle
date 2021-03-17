@@ -5,6 +5,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
+            "finished_date": "2019-11-08T22:59:41.044Z",
             "name": "access legacy run",
             "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
             "operator_run": 4,
@@ -20,6 +21,7 @@
         "fields": {
             "created_date": "2019-10-08T22:59:41.044Z",
             "modified_date": "2019-10-08T22:59:41.044Z",
+            "finished_date": "2019-11-08T22:59:41.044Z",
             "name": "access legacy fake run (to simulate imported bams)",
             "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
             "operator_run": 5,
