@@ -29,14 +29,14 @@ NORMAL_SAMPLE_SEARCH = '-N0'
 TUMOR_SAMPLE_SEARCH = '-L0'
 DUPLEX_BAM_SEARCH = '__aln_srt_IR_FX-duplex.bam'
 SIMPLEX_BAM_SEARCH = '__aln_srt_IR_FX-simplex.bam'
+UNFILTERED_BAM_SEARCH = '__aln_srt_IR_FX.bam'
 DMP_DUPLEX_REGEX = '-duplex.bam'
 DMP_SIMPLEX_REGEX = '-simplex.bam'
 
 
 class AccessLegacySNVOperator(Operator):
 
-    fillout_duplex_normals = None
-    fillout_simplex_normals = None
+    fillout_unfiltered_normals = None
 
     def get_sample_inputs(self):
         """
@@ -66,24 +66,16 @@ class AccessLegacySNVOperator(Operator):
 
         # Cache a set of normal bams from this request for genotyping (we only need to do this query once)
         if self.request_id:
-            self.fillout_duplex_normals = File.objects.filter(
+            self.fillout_unfiltered_normals = File.objects.filter(
                 file_name__contains=NORMAL_SAMPLE_SEARCH,
-                file_name__endswith=DUPLEX_BAM_SEARCH,
-                port__run__tags__requestId__startswith=self.request_id.split('_')[0]
-            ) \
-            .distinct('file_name') \
-            .order_by('file_name', '-created_date')
-            self.fillout_simplex_normals = File.objects.filter(
-                file_name__contains=NORMAL_SAMPLE_SEARCH,
-                file_name__endswith=SIMPLEX_BAM_SEARCH,
+                file_name__endswith=UNFILTERED_BAM_SEARCH,
                 port__run__tags__requestId__startswith=self.request_id.split('_')[0]
             ) \
             .distinct('file_name') \
             .order_by('file_name', '-created_date')
             # Evaluate the queryset so that the cache is populated for later queries which use slicing / LIMIT
             # https://docs.djangoproject.com/en/3.1/topics/db/queries/#when-querysets-are-not-cached
-            list(self.fillout_duplex_normals)
-            list(self.fillout_simplex_normals)
+            list(self.fillout_unfiltered_normals)
 
         # Gather input Files / Metadata
         sample_infos = []
@@ -184,28 +176,21 @@ class AccessLegacySNVOperator(Operator):
             matched_normal_unfiltered_id
         )
 
+        geno_samples_normal_unfiltered = []
+        geno_samples_normal_unfiltered_sample_ids = []
         # If we have less than 20 samples from both the capture and the patient, add more fillout normals
         if (len(geno_samples_duplex) < 20) and self.request_id:
             num_normals_to_add = 20 - len(geno_samples_duplex)
 
-            print("Adding {} fillout samples to SNV run for sample {}:".format(num_normals_to_add, tumor_sample_id))
-            print("Geno samples before fillout:")
-            print([s.file_name for s in geno_samples_duplex])
-            print([s.file_name for s in geno_samples_simplex])
+            geno_samples_normal_unfiltered = self.fillout_unfiltered_normals[:num_normals_to_add]
+            print("Adding {} fillout samples to SNV run for sample {}:".format(len(geno_samples_normal_unfiltered), tumor_sample_id))
+            print([s.file_name for s in geno_samples_normal_unfiltered])
 
-            geno_samples_duplex = geno_samples_duplex + self.fillout_duplex_normals[:num_normals_to_add]
-            geno_samples_simplex = geno_samples_simplex + self.fillout_simplex_normals[:num_normals_to_add]
-
-            print("Geno samples after fillout:")
-            print([s.file_name for s in geno_samples_duplex])
-            print([s.file_name for s in geno_samples_simplex])
-
-            # Exclude main tumor bam and matched normal bam
-            geno_samples_duplex = [s for s in geno_samples_duplex if s.file_name != tumor_duplex_bam.file_name]
-            geno_samples_simplex = [s for s in geno_samples_simplex if s.file_name != tumor_duplex_bam.file_name]
+            # Exclude matched normal bam
             if matched_normal_unfiltered_id:
-                geno_samples_duplex = [s for s in geno_samples_duplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
-                geno_samples_simplex = [s for s in geno_samples_simplex if not s.file_name.startswith(matched_normal_unfiltered_id)]
+                geno_samples_normal_unfiltered = [s for s in geno_samples_normal_unfiltered if not s.file_name.startswith(matched_normal_unfiltered_id)]
+
+            geno_samples_normal_unfiltered_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_normal_unfiltered]
 
         # Limit to 40 samples due to GBCMS command length restriction
         geno_samples_duplex = geno_samples_duplex[0:40]
@@ -243,6 +228,8 @@ class AccessLegacySNVOperator(Operator):
             'matched_normal_unfiltered_id': matched_normal_unfiltered_id,
             'geno_samples_duplex': geno_samples_duplex,
             'geno_samples_simplex': geno_samples_simplex,
+            'geno_samples_normal_unfiltered': geno_samples_normal_unfiltered,
+            'geno_samples_normal_unfiltered_sample_ids': geno_samples_normal_unfiltered_sample_ids,
             'geno_samples_duplex_sample_ids': geno_samples_duplex_sample_ids,
             'geno_samples_simplex_sample_ids': geno_samples_simplex_sample_ids,
         }
@@ -381,7 +368,7 @@ class AccessLegacySNVOperator(Operator):
 
     def construct_sample_inputs(self, normal_bam, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_unfiltered,
                                 matched_normal_unfiltered_id, geno_samples_duplex, geno_samples_simplex, geno_samples_duplex_sample_ids,
-                                geno_samples_simplex_sample_ids):
+                                geno_samples_simplex_sample_ids, geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids):
         """
         Use sample metadata and json template to create inputs for the CWL run
 
@@ -427,6 +414,13 @@ class AccessLegacySNVOperator(Operator):
                 ]
                 genotyping_bams_ids += geno_samples_duplex_sample_ids
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in geno_samples_simplex_sample_ids]
+
+            # Additional unfiltered normals may be available
+            if len(geno_samples_normal_unfiltered) > 0:
+                genotyping_bams += [
+                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_normal_unfiltered
+                ]
+                genotyping_bams_ids += geno_samples_normal_unfiltered_sample_ids
 
             curated_normal_bams, curated_normal_ids = self.get_curated_normals()
             genotyping_bams += curated_normal_bams
