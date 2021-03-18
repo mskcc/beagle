@@ -17,7 +17,7 @@ from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
-    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
@@ -551,7 +551,10 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
                 if path != new_path:
                     CopyService.copy(path, new_path)
             except Exception as e:
-                raise FailedToFetchSampleException("Failed to copy file %s. Error %s" % (path, str(e)))
+                if "Permission denied" in str(e):
+                    raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
+                else:
+                    raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
             create_file_object(new_path, file_group_obj, lims_metadata, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
