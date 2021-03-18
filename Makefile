@@ -114,6 +114,7 @@ install: conda
 # pip install git+https://github.com/mskcc/beagle_cli.git@develop
 # pip install -r requirements-cli.txt # <- what happened to this file?
 
+BEAGLE_BACKUP_DB_FOLDER=/juno/work/ci/beagle_backups/
 export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
@@ -173,6 +174,11 @@ db-restore:
 	@echo ">>> restoring db from DBFILE: $(DBFILE)"
 	if [ -n "$(DBFILE)" ]; then \
 	psql "$(PGDATABASE)" < "$(DBFILE)" ; fi
+
+sync: 
+	LATEST_DUMP=`ssh voyager ls -Art $(BEAGLE_BACKUP_DB_FOLDER) | tail -n 1` && \
+	rsync --progress voyager:$(BEAGLE_BACKUP_DB_FOLDER)$$LATEST_DUMP . && \
+	psql $(PGDATABASE) < $$LATEST_DUMP
 
 # interactive Postgres console
 # use command `\dt` to show all tables
