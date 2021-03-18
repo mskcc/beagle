@@ -174,7 +174,7 @@ db-backup: $(DB_BACKUP_DIR)
 db-restore:
 	@echo ">>> restoring db from DBFILE: $(DBFILE)"
 	if [ -n "$(DBFILE)" ]; then \
-	psql "$(PGDATABASE)" < "$(DBFILE)" ; fi
+	pg_restore -d "$(PGDATABASE)" < "$(DBFILE)" ; fi
 
 # interactive Postgres console
 # use command `\dt` to show all tables
@@ -184,7 +184,7 @@ db-inter:
 db-sync-prod: 
 	LATEST_DUMP=`ssh voyager ls -Art $(BEAGLE_BACKUP_DB_FOLDER) | tail -n 1` && \
 	rsync --progress voyager:$(BEAGLE_BACKUP_DB_FOLDER)$$LATEST_DUMP . && \
-	psql $(PGDATABASE) < $$LATEST_DUMP
+	pg_restore  -d $(PGDATABASE) < $$LATEST_DUMP
 
 
 # ~~~~~~ Celery tasks & RabbitMQ setup ~~~~~ #
