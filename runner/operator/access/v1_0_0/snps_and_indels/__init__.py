@@ -183,8 +183,8 @@ class AccessLegacySNVOperator(Operator):
             num_normals_to_add = 20 - len(geno_samples_duplex)
 
             geno_samples_normal_unfiltered = self.fillout_unfiltered_normals[:num_normals_to_add]
-            print("Adding {} fillout samples to SNV run for sample {}:".format(len(geno_samples_normal_unfiltered), tumor_sample_id))
-            print([s.file_name for s in geno_samples_normal_unfiltered])
+            logger.info("Adding {} fillout samples to SNV run for sample {}:".format(len(geno_samples_normal_unfiltered), tumor_sample_id))
+            logger.info([s.file_name for s in geno_samples_normal_unfiltered])
 
             # Exclude matched normal bam
             if matched_normal_unfiltered_id:
