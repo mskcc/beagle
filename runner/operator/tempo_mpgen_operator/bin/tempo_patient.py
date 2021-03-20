@@ -57,26 +57,29 @@ class Patient:
             tumor_sample = self.tumor_samples[tumor_sample_name]
             tumor_cmo_sample_name = tumor_sample.metadata['cmoSampleName'][0] # they should all be the same
             tumor_baits = tumor_sample.bait_set
+            tumor_run_mode = tumor_sample.run_mode
             expected_normal_cmo_sample_name = ""
             if tumor_cmo_sample_name in self.pre_pairing:
                 expected_normal_cmo_sample_name = self.pre_pairing[tumor_cmo_sample_name]
-            normal = self._get_normal(tumor_baits, expected_normal_cmo_sample_name)
+            normal = self._get_normal(tumor_baits, tumor_run_mode, expected_normal_cmo_sample_name)
             if normal:
                 self.sample_pairing.append([tumor_sample, normal])
             else:
                 self.unpaired_samples.append(tumor_sample)
 
-    def _get_normal(self, bait_set, expected_normal_cmo_sample_name=""):
+    def _get_normal(self, bait_set, run_mode, expected_normal_cmo_sample_name=""):
         normal = None
         for normal_sample_name in self.normal_samples:
             normal_sample = self.normal_samples[normal_sample_name]
             normal_baits = normal_sample.bait_set
+            normal_run_mode = normal_sample.run_mode
             if expected_normal_cmo_sample_name: # if this is True, we're using historical pairing info
                 normal_cmo_sample_name = normal_sample.metadata['cmoSampleName'][0] # they should all be the same for this sample
                 if normal_cmo_sample_name == expected_normal_cmo_sample_name:
                     normal = normal_sample
                     return normal
-            elif normal_baits.lower() == bait_set.lower():
+            # make sure hiseq pairs with hiseq, novaseq with novaseq
+            elif normal_baits.lower() == bait_set.lower() and normal_run_mode.lower() == run_mode.lower():
                 if not normal:
                     normal = normal_sample
                 else:
