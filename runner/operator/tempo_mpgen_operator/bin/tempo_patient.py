@@ -164,12 +164,17 @@ class Patient:
         if num_normals == 0:
             return "No normals for patient"
         matching_baits = False
+        matching_run_modes = False
         for sample_name in self.normal_samples:
             normal = self.normal_samples[sample_name]
             if normal.bait_set.lower() == sample.bait_set.lower():
                 matching_baits = True
+            if normal.run_mode.lower() == sample.run_mode.lower():
+                matching_run_modes = True
         if not matching_baits:
             return "No normal sample has same bait set as tumor in patient"
+        if not matching_run_modes:
+            return "No normal sample has same bait set and run mode (HiSeq/NovaSeq) as tumor in patient"
         first_half_of_2017 = False
         run_dates = sample.metadata['runDate']
         if run_dates and isinstance(run_dates, str):
