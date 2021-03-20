@@ -8,7 +8,6 @@ router = routers.DefaultRouter()
 router.register('jobs', JobViewSet)
 
 
-
 urlpatterns = [
     path('', include(router.urls)),
     path('import-requests/', RequestIdLimsPullViewSet.as_view()),

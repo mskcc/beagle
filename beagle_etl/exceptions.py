@@ -47,3 +47,17 @@ class FailedToFetchPoolNormalException(ETLExceptions):
     Unable to parse and create pool normal file
     """
     code = 106
+
+
+class FailedToCopyFileException(ETLExceptions):
+    """
+    Failed to copy File
+    """
+    code = 107
+
+
+class FailedToCopyFilePermissionDeniedException(ETLExceptions):
+    """
+    Failed to copy File PermissionDenied
+    """
+    code = 108
