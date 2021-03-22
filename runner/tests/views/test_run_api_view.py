@@ -207,7 +207,13 @@ class TestRunAPIView(APITestCase):
         response = self.client.post('/v0/run/restart/', {'operator_run_id': operator_run_id}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        # Restarted run should have a new ID
         restart_run_id = submit_job_task.call_args[0][0]
+        self.assertNotEqual(failed_run.id, restart_run_id)
+        # Restarted run should have resume directory set to original run
+        restarted_run = Run.objects.get(id=restart_run_id)
+        self.assertEqual(str(failed_run.id), str(restarted_run.resume))
+        # Both runs should have same input ports
         restart_run_object = RunObject.from_db(restart_run_id)
         original_run_object = RunObject.from_db(failed_run.id)
         self.assertTrue(original_run_object.equal(restart_run_object))
