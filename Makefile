@@ -174,7 +174,7 @@ db-backup: $(DB_BACKUP_DIR)
 db-restore:
 	@echo ">>> restoring db from DBFILE: $(DBFILE)"
 	if [ -n "$(DBFILE)" ]; then \
-	pg_restore -d "$(PGDATABASE)" < "$(DBFILE)" ; fi
+	pg_restore -h $(PGHOST) -p $(PGPORT) --no-privileges --no-owner --clean -d $(PGDATABASE) < "$(DBFILE)" ; fi
 
 # interactive Postgres console
 # use command `\dt` to show all tables
