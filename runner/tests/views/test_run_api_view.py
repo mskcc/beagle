@@ -6,10 +6,11 @@ from mock import patch, call
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
-from runner.views.run_api_view import OperatorViewSet
+from runner.views.run_api_view import OperatorViewSet, RunApiRestartViewSet
 from beagle_etl.models import JobGroup
 from file_system.models import FileGroup
-from runner.models import Run, RunStatus, Pipeline
+from runner.models import Run, RunStatus, Pipeline, OperatorRun, Port, PortType
+from runner.run.objects.run_object import RunObject
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.management import call_command
@@ -186,6 +187,30 @@ class TestRunAPIView(APITestCase):
 
         abort_job_task.assert_has_calls(calls, any_order=True)
 
+    @patch('runner.tasks.submit_job.delay')
+    def test_restart_run(self, submit_job_task):
+        fg = FileGroup.objects.create(name='test', slug='test')
+        pipeline = Pipeline.objects.create(name='pipeline', output_directory='/tmp', output_file_group=fg)
+        operator_run = OperatorRun.objects.create(num_total_runs=1, num_completed_runs=0, num_failed_runs=1)
+        failed_run = Run.objects.create(
+            name='failed_run',
+            operator_run=operator_run,
+            output_directory='/test',
+            status=RunStatus.FAILED,
+            notify_for_outputs=[],
+            app=pipeline
+        )
+        input_port = Port.objects.create(run=failed_run, port_type=PortType.INPUT)
+        output_port = Port.objects.create(run=failed_run, port_type=PortType.OUTPUT)
+        operator_run_id = operator_run.id
+
+        response = self.client.post('/v0/run/restart/', {'operator_run_id': operator_run_id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        restart_run_id = submit_job_task.call_args[0][0]
+        restart_run_object = RunObject.from_db(restart_run_id)
+        original_run_object = RunObject.from_db(failed_run.id)
+        self.assertTrue(original_run_object.equal(restart_run_object))
 
 class TestCWLJsonView(APITestCase):
     fixtures = [

@@ -252,7 +252,8 @@ class RunApiRestartViewSet(GenericAPIView):
             r.save()
 
             # Copy over the input / output ports from the original Run
-            ports = r.port_set.all()
+            original_run = Run.objects.get(id=original_run_id)
+            ports = original_run.port_set.all()
             for p in ports:
                 files = p.files.all()
                 p.pk = None
