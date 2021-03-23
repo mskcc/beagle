@@ -57,7 +57,7 @@ class StatusFilter(admin.SimpleListFilter):
         return queryset
 
 def abort_run(modeladmin, request, queryset):
-    jobs = list(queryset.values_list("id"))
+    jobs = list(queryset.values_list("id", flat=True))
     updated = len(jobs)
     abort_job_task.delay(None, jobs)
     modeladmin.message_user(request, ngettext(
