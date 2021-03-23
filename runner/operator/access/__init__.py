@@ -14,6 +14,17 @@ DMP_UNFILTERED_REGEX = '-unfilter.bam'
 IGO_UNFILTERED_REGEX = '__aln_srt_IR_FX.bam'
 
 
+def get_request_id(run_ids, request_id=None):
+    if request_id:
+        return request_id
+
+    if run_ids:
+        run = Run.objects.get(pk=run_ids[0])
+        if run.tags.get('requestId'):
+            return run.tags.get('requestId')
+
+    raise Exception("Could not get find request id")
+
 def get_request_id_runs(request_id):
     """
     Get the latest completed runs for the given request ID
