@@ -98,6 +98,9 @@ class OperatorRun(BaseModel):
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return str(self.pk)
+
     def save(self, *args, **kwargs):
         if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
             if not self.finished_date:
@@ -184,6 +187,9 @@ class Run(BaseModel):
         self.original = {
             "status": self.status
         }
+
+    def __str__(self):
+        return str(self.pk)
 
     def clear(self):
         fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
