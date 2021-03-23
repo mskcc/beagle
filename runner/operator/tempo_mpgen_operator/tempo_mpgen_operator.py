@@ -312,6 +312,17 @@ class TempoMPGenOperator(Operator):
         return self.exclude_requests(exclude_reqs)
 
 
+    def _validate_to_str(self, data):
+        """
+        Make sure data can be outputed as a string
+        """
+        if isinstance(data, str):
+            return data
+        else:
+            new_str = unicodedata.normalize("NFKD", data)
+            return new_str
+        return ""
+
     def create_tracker_file(self):
         """
         Creates the string for tracker
@@ -351,9 +362,11 @@ class TempoMPGenOperator(Operator):
                 running.append(tumor.cmo_sample_name)
                 running.append(normal.cmo_sample_name)
                 for key in key_order:
-                    running.append(t_meta[key])
+                    s = self._validate_to_str(t_meta[key])
+                    running.append(s)
                 for key in extra_keys:
-                    running.append(t_meta[key])
+                    s = self._validate_to_str(t_meta[key])
+                    running.append(s)
                 tracker += "\t".join(running) + "\n"
             for normal_id in patient.normal_samples: # must do this to account for unpaired normals
                 normal = patient.normal_samples[normal_id]
@@ -364,8 +377,10 @@ class TempoMPGenOperator(Operator):
                     running_normal.append(normal.cmo_sample_name)
                     running_normal.append("N/A")
                     for key in key_order:
-                        running_normal.append(n_meta[key])
+                        s = self._validate_to_str(n_meta[key])
+                        running_normal.append(s)
                     for key in extra_keys:
-                        running_normal.append(n_meta[key])
+                        s = self._validate_to_str(n_meta[key])
+                        running_normal.append(s)
                     tracker += "\t".join(running_normal) + "\n"
         return self.write_to_file('sample_tracker.txt', tracker)
