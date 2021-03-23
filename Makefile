@@ -196,8 +196,8 @@ export BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
 # corresponds to ./conf/rabbitmq.conf ;
 export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
-export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)
-export RABBITMQ_NODE_IP_ADDRESS:=127.0.0.1
+export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)@localhost
+export RABBITMQ_NODE_IP_ADDRESS:=localhost
 export RABBITMQ_NODE_PORT:=5679
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
@@ -348,6 +348,7 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
+
 
 # NOTE: requires iPython
 shell_plus: check-env
