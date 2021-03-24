@@ -8,8 +8,6 @@ from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
-
-
 REQUEST_ID = "access_legacy_test_request"
 TEST_RUN_ID = 'bc23076e-f477-4578-943c-1fbf6f1fca44'
 FIXTURES = [
@@ -34,7 +32,6 @@ COMMON_FIXTURES = [
 
 
 class TestAccessSNVOperator(TestCase):
-
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_legacy_snv_operator(self):
@@ -52,7 +49,8 @@ class TestAccessSNVOperator(TestCase):
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID,
+                                           run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
         self.assertTrue(operator.request_id == REQUEST_ID)
@@ -127,9 +125,9 @@ class TestAccessSNVOperator(TestCase):
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID,
+                                           run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         input_data = operator.get_sample_inputs()
 
         geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
         self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))
-        
