@@ -25,7 +25,6 @@ REQUIRED_META_FIELDS = [
     'baitSet',
     'sampleName',
     'tumorOrNormal',
-    'sampleType',
     'patientId',
     'sex',
     'barcodeId',

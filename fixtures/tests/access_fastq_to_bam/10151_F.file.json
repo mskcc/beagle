@@ -1,0 +1,28 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "aa629c4c-8783-42ea-9a26-3cb41f4bbf9b",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.582Z",
+            "modified_date": "2020-01-07T19:59:50.585Z",
+            "file_name": "merged_R1_.fastq.gz",
+            "path": "/test/merged_R1_.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ab422946-ccbb-47ed-a6e6-bf8502a0a1b5",
+        "fields": {
+            "created_date": "2020-01-07T19:59:50.597Z",
+            "modified_date": "2020-01-07T19:59:50.598Z",
+            "file_name": "merged_R2_.fastq.gz",
+            "path": "/test/merged_R2_.fastq.gz",
+            "file_type": 1,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
