@@ -57,11 +57,14 @@ in source or exist with an empty value.
 def get_missing_fields(source, fields):
 
     def validate(field):
-        if type(source[field]) == list:
+        if field not in source:
+            return True
+        elif not source[field]:
+            return True
+        elif type(source[field]) == list:
             if not all(source[field]):
                 return True
-            return False
-        return field not in source or not source[field]
+        return False
 
     return list(filter(validate, fields))
 
