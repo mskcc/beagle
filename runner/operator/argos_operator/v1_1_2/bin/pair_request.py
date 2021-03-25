@@ -42,16 +42,17 @@ def compare_dates(normal, viable_normal, date_string):
     return viable_normal
 
 
-def get_viable_normal(normals, patient_id, bait_set):
+def get_viable_normal(normals, patient_id, run_mode, bait_set):
     """
     From a set of normals, return the ones that have matching patient_id, bait_set,
-    and the most recent
+    run_mode, and the most recent
 
     Does not check for Pooled Normals; that's done separately
     """
     viable_normal = dict()
     for normal in normals:
-        if normal['patient_id'] == patient_id and normal['bait_set'] == bait_set:
+        normal_run_mode = get_run_mode(normal['run_mode'])
+        if normal['patient_id'] == patient_id and normal['bait_set'] == bait_set and normal_run_mode == run_mode:
             if viable_normal:
                 try:
                     viable_normal = compare_dates(normal, viable_normal, '%y-%m-%d')
@@ -126,10 +127,11 @@ def compile_pairs(samples, pairing_info=None):
         else:
             patient_id = tumor['patient_id']
             if patient_id:
+                run_mode = get_run_mode(tumor['run_mode'])
                 bait_set = tumor['bait_set']
                 run_ids = tumor['run_id']
                 preservation_types = tumor['preservation_type']
-                normal = get_viable_normal(normals, patient_id, bait_set)
+                normal = get_viable_normal(normals, patient_id, run_mode, bait_set)
                 if normal:
                     LOGGER.info("Pairing %s (%s) with %s (%s)",
                                 tumor['sample_id'],
@@ -145,7 +147,7 @@ def compile_pairs(samples, pairing_info=None):
                                 patient_id)
                     patient_samples = get_samples_from_patient_id(patient_id)
                     new_normals = get_by_tumor_type(patient_samples, "Normal")
-                    new_normal = get_viable_normal(new_normals, patient_id, bait_set)
+                    new_normal = get_viable_normal(new_normals, patient_id, run_mode, bait_set)
                     if new_normal:
                         LOGGER.info("Pairing %s (%s) with %s (%s)",
                                     tumor['sample_id'],
@@ -187,6 +189,17 @@ def compile_pairs(samples, pairing_info=None):
                              tumor['sample_id'],
                              tumor['SM'])
     return pairs
+
+
+def get_run_mode(run_mode):
+    """
+    Normalizing hiseq and novaseq strings
+    """
+    if "hiseq" in run_mode.lower():
+        return "hiseq"
+    if "novaseq" in run_mode.lower():
+        return "novaseq"
+    return ""
 
 
 def create_pairing_info(pairs):
