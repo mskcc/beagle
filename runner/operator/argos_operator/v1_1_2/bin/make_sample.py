@@ -92,6 +92,15 @@ def get_file(fpath):
     return None
 
 
+def get_run_mode(run_mode):
+    if isinstance(run_mode, str):
+        if 'hiseq' in run_mode.lower():
+            return 'hiseq'
+        if 'novaseq' in run_mode.lower():
+            return 'novaseq'
+        return run_mode
+
+
 def build_sample(data, ignore_sample_formatting=False):
     """
     Given some data - which is a list of samples originally from the LIMS, split up into one file
@@ -132,7 +141,7 @@ def build_sample(data, ignore_sample_formatting=False):
         run_id = meta['runId']
         preservation_type = meta['preservation']
         rg_id = cmo_sample_name + "_1"
-        run_mode = meta['runMode']
+        run_mode = get_run_mode(meta['runMode'])
         if barcode_index:
             platform_unit = '_'.join([flowcell_id, barcode_index])
         try:
@@ -167,7 +176,7 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['R2'] = list()
             sample['R2_bid'] = list()
             sample['fastqs'] = list()
-            sample['run_mode'] = list()
+            sample['run_mode'] = run_mode
         else:
             sample = samples[sample_id]
 
