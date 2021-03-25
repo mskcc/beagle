@@ -53,7 +53,7 @@ def check_and_return_single_values(data):
     """
     single_values = ['CN', 'PL', 'SM', 'bait_set', 'patient_id',
                      'species', 'tumor_type', 'sample_id', 'specimen_type',
-                     'request_id']
+                     'request_id', 'run_mode']
 
     for key in single_values:
         value = set(data[key])
@@ -132,6 +132,7 @@ def build_sample(data, ignore_sample_formatting=False):
         run_id = meta['runId']
         preservation_type = meta['preservation']
         rg_id = cmo_sample_name + "_1"
+        run_mode = meta['runMode']
         if barcode_index:
             platform_unit = '_'.join([flowcell_id, barcode_index])
         try:
@@ -166,6 +167,7 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['R2'] = list()
             sample['R2_bid'] = list()
             sample['fastqs'] = list()
+            sample['run_mode'] = list()
         else:
             sample = samples[sample_id]
 
@@ -207,6 +209,7 @@ def build_sample(data, ignore_sample_formatting=False):
     result['pi_email'] = list()
     result['run_id'] = list()
     result['preservation_type'] = list()
+    result['run_mode'] = list()
 
     for sample_id in samples:
         sample = samples[sample_id]
