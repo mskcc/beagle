@@ -60,6 +60,7 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
 
     # Case 1
     if request_id:
+        # Todo: Joining to Port -> Run makes this query slow, make use of output_metadata for requestId instead
         unfiltered_matched_normal_bam = File.objects.filter(
             file_name__startswith=patient_normals_search,
             file_name__endswith=IGO_UNFILTERED_REGEX,
