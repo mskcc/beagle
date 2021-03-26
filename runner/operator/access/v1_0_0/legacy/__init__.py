@@ -20,13 +20,29 @@ from jinja2 import Template
 logger = logging.getLogger(__name__)
 
 REQUIRED_META_FIELDS = [
-    "sampleName",
-    "tumorOrNormal",
-    "sampleId"
+    'sampleId',
+    'captureName',
+    'baitSet',
+    'sampleName',
+    'tumorOrNormal',
+    'patientId',
+    'sex',
+    'barcodeId',
+    'investigatorSampleId',
 ]
 
 REQUIRED_INPUT_FIELDS = [
-    "fastq1", "fastq2", "add_rg_ID", "add_rg_LB", "adapter", "adapter2"
+    'fastq1',
+    'fastq2',
+    'sample_sheet',
+    'sample_class',
+    'patient_id',
+    'add_rg_SM',
+    'add_rg_ID',
+    'add_rg_LB',
+    'add_rg_PU',
+    'adapter',
+    'adapter2',
 ]
 
 ADAPTER = "GATCGGAAGAGC"
@@ -38,7 +54,18 @@ This returns a list of keys that are subset of `fields`, that do not exist
 in source or exist with an empty value.
 """
 def get_missing_fields(source, fields):
-    return list(filter(lambda field: field not in source or not source[field], fields))
+
+    def validate(field):
+        if field not in source:
+            return True
+        elif not source[field]:
+            return True
+        elif type(source[field]) == list:
+            if not all(source[field]):
+                return True
+        return False
+
+    return list(filter(validate, fields))
 
 # In standard order
 TITLE_FILE_COLUMNS = [

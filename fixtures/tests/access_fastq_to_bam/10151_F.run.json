@@ -1,0 +1,18 @@
+[
+    {
+        "model": "runner.run",
+        "pk": "bc23076e-f477-4578-943c-1fbf6f1fca44",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "finished_date": "2019-11-08T22:59:41.044Z",
+            "name": "access merge fastq run",
+            "app": "65419097-a2b8-4d57-a8ab-c4c4cdffffff",
+            "operator_run": 6,
+            "tags": {"requestId": "access_merge_fastq_test_request"},
+            "status": 4,
+            "execution_id": null,
+            "notify_for_outputs": "[]"
+        }
+    }
+]
