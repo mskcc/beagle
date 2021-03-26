@@ -13,7 +13,7 @@ NORMAL_SAMPLE_SEARCH = '-N0'
 DMP_UNFILTERED_REGEX = '-unfilter.bam'
 IGO_UNFILTERED_REGEX = '__aln_srt_IR_FX.bam'
 ACCESS_ASSAY = 'ACCESS_V1_0'
-DMP_IMPACT_ASSAYS = ['IMPACT341', 'IMPACT410', 'IMPACT468']
+DMP_IMPACT_ASSAYS = ['IMPACT341', 'IMPACT410', 'IMPACT468', 'hemepact_v4']
 
 
 def get_request_id_runs(request_id):
