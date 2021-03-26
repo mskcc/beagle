@@ -12,6 +12,8 @@ ACCESS_DEFAULT_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_
 NORMAL_SAMPLE_SEARCH = '-N0'
 DMP_UNFILTERED_REGEX = '-unfilter.bam'
 IGO_UNFILTERED_REGEX = '__aln_srt_IR_FX.bam'
+ACCESS_ASSAY = 'ACCESS_V1_0'
+DMP_IMPACT_ASSAYS = ['IMPACT341', 'IMPACT410', 'IMPACT468', 'hemepact_v4']
 
 
 def get_request_id_runs(request_id):
@@ -42,7 +44,8 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
     1. Latest Matched Normal from IGO ACCESS samples (same request)
     2. Latest Matched Normal from IGO ACCESS samples (any request)
     3. Latest Matched Normal from DMP ACCESS samples
-    4. Return (None, ''), which will be used as a placeholder for skipping genotyping in the SNV pipeline
+    4. Latest Matched Normal from DMP IMPACT samples
+    5. Return (None, ''), which will be used as a placeholder for skipping genotyping in the SNV pipeline
 
     Todo: generalize to work for duplex / simplex / standard, and use in MSI operator
 
@@ -52,60 +55,74 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
     """
     patient_normals_search = patient_id + NORMAL_SAMPLE_SEARCH
     unfiltered_matched_normal_bam = None
+    unfiltered_matched_normal_sample_id = ''
+    warnings = []
 
     # Case 1
     if request_id:
+        # Todo: Joining to Port -> Run makes this query slow, make use of output_metadata for requestId instead
         unfiltered_matched_normal_bam = File.objects.filter(
             file_name__startswith=patient_normals_search,
             file_name__endswith=IGO_UNFILTERED_REGEX,
-            port__run__tags__request_id__startswith=request_id.split('_')[0]
-        )
+            port__run__tags__requestId__startswith=request_id.split('_')[0]
+        ).order_by('-created_date').first()
+
+        if unfiltered_matched_normal_bam:
+            unfiltered_matched_normal_sample_id = \
+            unfiltered_matched_normal_bam.file_name.rstrip('_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam')
+
     # Case 2
-    if not request_id or len(unfiltered_matched_normal_bam) == 0:
+    if not request_id or not unfiltered_matched_normal_bam:
         unfiltered_matched_normal_bam = File.objects.filter(
             file_name__startswith=patient_normals_search,
             file_name__endswith=IGO_UNFILTERED_REGEX
-        )
+        ).order_by('-created_date').first()
 
-    if len(unfiltered_matched_normal_bam) > 1:
-        msg = 'WARNING: Found more than one matching unfiltered normal bam file for patient {}. ' \
-              'We will choose the most recently-created one for this run.'
-        msg = msg.format(patient_id)
-        logger.warning(msg)
-        unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-created_date').first()
-
-    elif len(unfiltered_matched_normal_bam) == 1:
-        unfiltered_matched_normal_bam = unfiltered_matched_normal_bam[0]
+        if unfiltered_matched_normal_bam:
+            unfiltered_matched_normal_sample_id = \
+            unfiltered_matched_normal_bam.file_name.rstrip('_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam')
 
     # Case 3
-    elif len(unfiltered_matched_normal_bam) == 0:
-        msg = 'WARNING: Could not find IGO matching unfiltered normal bam file for patient {}. ' \
-              'Searching for DMP sample.'
-        msg = msg.format(patient_id)
-        logger.warning(msg)
+    if not unfiltered_matched_normal_bam:
+        warnings.append('WARNING: Could not find matching IGO unfiltered normal bam file for patient {}. '
+              'Searching for DMP ACCESS sample.')
 
         unfiltered_matched_normal_bam = FileMetadata.objects.filter(
-            metadata__cmo_assay='ACCESS_V1_0',
-            metadata__patient__cmo=patient_id.replace('C-', ''),
+            metadata__cmo_assay=ACCESS_ASSAY,
+            metadata__patient__cmo=patient_id.lstrip('C-'),
             metadata__type='N',
             file__path__endswith=DMP_UNFILTERED_REGEX
-        )
+        ).order_by('-metadata__imported').first()
 
-        # Case 4
-        if len(unfiltered_matched_normal_bam) == 0:
-            msg = 'WARNING: Could not find DMP or IGO matching unfiltered normal bam file for patient {}. ' \
-                  'We will skip matched normal genotyping for this sample.'
-            msg = msg.format(patient_id)
-            logger.warning(msg)
+        if unfiltered_matched_normal_bam:
+            unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.file
+            unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.rstrip('.bam')
 
-            unfiltered_matched_normal_bam = None
-            unfiltered_matched_normal_sample_id = ''
-        else:
-            unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.order_by('-metadata__imported').first().file
+    # Case 4
+    if not unfiltered_matched_normal_bam:
+        warnings.append('WARNING: Could not find matching DMP ACCESS unfiltered normal bam file for patient {}. '
+              'Searching for DMP IMPACT sample.')
 
-    # Parse the Normal Sample ID from the file name
-    # Todo: Use output_metadata on Bams instead
-    if unfiltered_matched_normal_bam:
-        unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.split('_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam')[0]
+        unfiltered_matched_normal_bam = FileMetadata.objects.filter(
+            metadata__cmo_assay__in=DMP_IMPACT_ASSAYS,
+            metadata__patient__cmo=patient_id.lstrip('C-'),
+            metadata__type='N'
+        ).order_by('-metadata__imported').first()
+
+        if unfiltered_matched_normal_bam:
+            unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.file
+            unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.rstrip('.bam')
+
+    # Case 5
+    if not unfiltered_matched_normal_bam:
+        warnings.append('WARNING: Could not find DMP or IGO matching unfiltered normal bam file for patient {}. '
+              'We will skip matched normal genotyping for this sample.')
+
+        unfiltered_matched_normal_bam = None
+        unfiltered_matched_normal_sample_id = ''
+
+    for msg in warnings:
+        msg = msg.format(patient_id)
+        logger.warning(msg)
 
     return unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id
