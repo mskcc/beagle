@@ -264,6 +264,7 @@ class TempoMPGenOperator(Operator):
         "Agilent_v4_51MB_Human_hg19_BAITS",
         "IDT_Exome_v1_FP_b37_baits",
         "IDT_Exome_v1_FP_BAITS",
+        "IDT_Exome_v2_FP_b37_baits",
         "SureSelect-All-Exon-V4-hg19"
        ]
         return assays
