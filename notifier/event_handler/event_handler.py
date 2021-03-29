@@ -16,7 +16,7 @@ class EventHandler(object):
         self.logger.debug("Event received")
         e = Event.from_dict(event)
         try:
-            self.logger.info("[%s]: %s", e.get_type(), str(e))
+            self.logger.debug("[%s]: %s", e.get_type(), str(e))
             return getattr(self, self.events[e.get_type()])(e)
         except Exception as ex:
             self.logger.info("Failed to process event: %s with error %s", str(e), str(ex))
