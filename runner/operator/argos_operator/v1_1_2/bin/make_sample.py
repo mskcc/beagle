@@ -265,12 +265,15 @@ class Fastqs:
         pu = list()
         for f in self.r1:
             metadata = get_file(f).metadata
+            flowcell_id = ""
             if 'poolednormal' in self.sample_name.lower():
                 flowcell_id = 'PN_FCID'
                 r = get_r_orientation(f)
                 barcode_index = spoof_barcode(os.path.basename(f),r)
             else:
-                flowcell_id = metadata['flowCellId']
+                fid = metadata['flowCellId']
+                if fid:
+                    flowcell_id = fid
                 barcode_index = metadata['barcodeIndex']
             platform_unit = flowcell_id
             if barcode_index:
