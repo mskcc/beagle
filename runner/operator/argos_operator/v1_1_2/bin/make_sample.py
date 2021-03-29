@@ -265,7 +265,7 @@ class Fastqs:
         pu = list()
         for f in self.r1:
             metadata = get_file(f).metadata
-            flowcell_id = ""
+            flowcell_id = "MT_FCID"
             if 'poolednormal' in self.sample_name.lower():
                 flowcell_id = 'PN_FCID'
                 r = get_r_orientation(f)
