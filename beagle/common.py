@@ -21,3 +21,6 @@ def fix_query_list(request_query, key_list):
             else:
                 new_query_dict[single_param] = query_value[0]
     return new_query_dict
+
+def str2bool(singleStr):
+    return str(singleStr).lower() in ("yes", "true", "t", "1")
