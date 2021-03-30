@@ -1,7 +1,6 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from file_system.models import FileMetadata, File
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
-
 
 class FileRepository(object):
 
@@ -26,7 +25,7 @@ class FileRepository(object):
             raise FileNotFoundException("File with id:%s does not exist" % str(id))
 
     @classmethod
-    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex={}, q=None, values_metadata=None, values_metadata_list=[], filter_redact=False):
+    def filter(cls, queryset=None, path=None, path_in=[], path_regex=None, file_type=None, file_type_in=[], file_name=None, file_name_in=[], file_name_regex=None, file_group=None, file_group_in=[], metadata={}, metadata_regex=[], q=None, values_metadata=None, values_metadata_list=[], filter_redact=False, exclude=[], order_by=None, distinct=None, metadata_distribution=None):
         if queryset == None:
             # If queryset not set, use all files
             queryset = FileRepository.all()
@@ -60,16 +59,43 @@ class FileRepository(object):
         create_query_dict = {k: v for k, v in create_query_dict.items() if v}
         metadata_query_dict = dict()
         if metadata:
-            for k, v in metadata.items():
-                metadata_query_dict['metadata__%s' % k] = v
+            for k, queries in metadata.items():
+                if len(queries) > 1:
+                    metadata_query_q = Q()
+                    for single_query in queries:
+                        single_query_dict = {'metadata__%s' % k: single_query}
+                        metadata_query_q |= Q(**single_query_dict)
+                    queryset = queryset.filter(metadata_query_q)
+                else:
+                    v = queries[0]
+                    metadata_query_dict['metadata__%s' % k] = v
         elif metadata_regex:
-            for k, v in metadata.items():
-                metadata_query_dict['metadata__%s__regex' % k] = v
+            for single_regex_line in metadata_regex:
+                regex_query_q = Q()
+                for k,v in single_regex_line:
+                    regex_query_dict = {'metadata__%s__regex' % k: v}
+                    regex_query_q |= Q(**regex_query_dict)
+                queryset = queryset.filter(regex_query_q)
         create_query_dict.update(metadata_query_dict)
         queryset = queryset.filter(
             Q(**create_query_dict) & Q(file__sample__redact=False)) if filter_redact else queryset.filter(
             **create_query_dict)
-
+        if exclude:
+            exc_dict = {}
+            for single_exclude_field in exclude:
+                exc_dict['metadata__%s__isnull' % single_exclude_field] = True
+            queryset = queryset.exclude(**exc_dict)
+        if distinct:
+            distinct_query = 'metadata__%s' % distinct
+            queryset = queryset.order_by(distinct_query).distinct(distinct_query)
+        if order_by and not values_metadata_list:
+            if distinct:
+                metadata_ids = queryset.values_list('id', flat=True)
+                queryset = FileRepository.all()
+                queryset = queryset.filter(id__in=metadata_ids)
+                queryset = queryset.order_by(order_by)
+            else:
+                queryset = queryset.order_by(order_by)
         if values_metadata:
             ret_str = 'metadata__%s' % values_metadata
             return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
@@ -77,6 +103,15 @@ class FileRepository(object):
             values_metadata_query_list = ['metadata__%s' % single_metadata for single_metadata in values_metadata_list]
             values_metadata_query_set = set(values_metadata_query_list)
             sorted_metadata_query_list = sorted(values_metadata_query_set)
-            return queryset.values_list(*sorted_metadata_query_list).order_by(sorted_metadata_query_list[0]).distinct()
-
+            metadata_ids = queryset.values_list('id', flat=True)
+            queryset = FileRepository.all()
+            queryset = queryset.filter(id__in=metadata_ids)
+            if order_by:
+                queryset = queryset.order_by(order_by)
+            return queryset.values_list(*sorted_metadata_query_list)
+        if metadata_distribution:
+            metadata_query = 'metadata__%s' % metadata_distribution
+            metadata_ids = queryset.values_list('id',flat=True)
+            queryset = FileRepository.all()
+            queryset = queryset.filter(id__in=metadata_ids).values(metadata_query).annotate(Count(metadata_query))
         return queryset

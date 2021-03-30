@@ -15,6 +15,11 @@ def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
+def ValidateRegex(value):
+    possible_queries = value.split("|")
+    for single_query in possible_queries:
+        if len(single_query.split(":")) !=2:
+            raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
 class PatchFile(serializers.JSONField):
 
@@ -165,13 +170,20 @@ class FileQuerySerializer(serializers.Serializer):
         allow_empty=True,
         required=False
     )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
     metadata = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
         allow_empty=True,
         required=False
     )
     metadata_regex = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateDict]),
+        child=serializers.CharField(validators=[ValidateRegex]),
         allow_empty=True,
         required=False
     )
