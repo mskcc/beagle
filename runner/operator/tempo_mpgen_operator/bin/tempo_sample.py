@@ -38,6 +38,8 @@ class TempoSample(Sample):
         if "agilent" in target_assay:
             return "agilent"
         if "idt" in target_assay:
+            if "v2" in target_assay:
+                return "idt_v2"
             return "idt"
         if "sureselect" in target_assay:
             return "agilent"

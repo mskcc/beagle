@@ -15,7 +15,7 @@ class Patient:
         self.sample_pairing = list()
         self.unpaired_samples = list()
         self.pre_pairing = pairing
-        self._samples = self._get_samples(file_list)
+        self.all_samples = self._get_samples(file_list)
         self._characterize_samples()
         self._pair_samples()
 
@@ -35,8 +35,8 @@ class Patient:
         return samples
 
     def _characterize_samples(self):
-        for sample_name in self._samples:
-            sample = self._samples[sample_name]
+        for sample_name in self.all_samples:
+            sample = self.all_samples[sample_name]
             sample_class = sample.sample_class
             if not sample_class:
                 self.conflict_samples[sample_name] = sample
@@ -112,7 +112,7 @@ class Patient:
 
     def get_sample(self, sample_name):
         try:
-            return self._samples[sample_name]
+            return self.all_samples[sample_name]
         except:
             return None
 
