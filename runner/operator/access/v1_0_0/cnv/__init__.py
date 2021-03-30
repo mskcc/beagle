@@ -4,7 +4,7 @@ import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs, extract_tumor_ports
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
 from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.models import File
@@ -36,11 +36,7 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list of json_objects
         """
-        if self.request_id:
-            run_ids = get_request_id_runs(self.request_id)
-            run_ids = [r.id for r in run_ids]
-        else:
-            run_ids = self.run_ids
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # Get all unfiltered bam ports for these runs
         unfiltered_bam_ports = Port.objects.filter(
@@ -100,6 +96,7 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        self.request_id = get_request_id(self.run_ids, self.request_id)
         inputs, sample_ids = self.get_sample_inputs()
 
         return [
