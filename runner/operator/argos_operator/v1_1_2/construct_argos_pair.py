@@ -108,6 +108,8 @@ def get_baits_and_targets(assay, genomic_resources):
 
     if assay.find("IMPACT505") > -1:
         target_assay = "IMPACT505_b37"
+    if assay.find("OID42050_HG19_11nov2014_BAITS") > -1:
+        target_assay = "IMPACT410_b37"
     if assay.find("IMPACT410") > -1:
         target_assay = "IMPACT410_b37"
     if assay.find("IMPACT468") > -1:
