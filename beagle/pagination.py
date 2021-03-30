@@ -1,11 +1,29 @@
 import math
+import sys
 from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator
+from django.utils.functional import cached_property
+from rest_framework.compat import coreapi, coreschema
+from django.utils.encoding import force_str
+from beagle.common import str2bool
 
+COUNT_QUERY_PARAM = 'show_count'
+COUNT_QUERY_TITLE = 'Show Count'
+COUNT_QUERY_DESCRIPTION = 'Set to False to disable count and to speed up large queries'
 
 class BeaglePagination(PageNumberPagination):
     page_size_query_param = 'page_size'
+    show_count = True
+
+    def django_paginator_class(self, queryset, page_size):
+        return CountOptionalPaginator(queryset,page_size,show_count=self.show_count)
+
+    def paginate_queryset(self, queryset, request, view=None):
+        self.show_count = request.query_params.get(COUNT_QUERY_PARAM,True)
+        return super().paginate_queryset(queryset,request,view)
+
 
     def get_paginated_response(self, data):
         return Response({
@@ -21,11 +39,38 @@ class BeaglePagination(PageNumberPagination):
             page_size = int(request.query_params.get(self.page_size_query_param, self.page_size))
             if page_size > 0:
                 return page_size
-            elif page_size == 0:
+            if page_size == 0:
                 return None
-            else:
-                pass
         return self.page_size
+
+    def get_schema_fields(self, view):
+        fields = super().get_schema_fields(view)
+        fields.append(
+            coreapi.Field(
+                name=COUNT_QUERY_PARAM,
+                required=False,
+                location='query',
+                schema=coreschema.Boolean(
+                    title=COUNT_QUERY_TITLE,
+                    description=force_str(COUNT_QUERY_DESCRIPTION)
+                )
+            )
+            )
+        return fields
+
+class CountOptionalPaginator(Paginator):
+
+    def __init__(self, object_list, per_page, orphans=0,
+                 allow_empty_first_page=True, show_count=True):
+        super().__init__(object_list, per_page, orphans=orphans, allow_empty_first_page=allow_empty_first_page)
+        self.show_count = show_count
+
+    @cached_property
+    def count(self):
+        if str2bool(self.show_count):
+            return super().count
+        return sys.maxsize
+
 
 
 def time_filter(model, query_params, time_modal='created_date', previous_queryset=None):
