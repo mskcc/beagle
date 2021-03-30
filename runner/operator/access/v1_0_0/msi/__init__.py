@@ -10,7 +10,7 @@ from jinja2 import Template
 
 from file_system.models import File
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs, get_request_id
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
 from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
 
@@ -49,8 +49,7 @@ class AccessLegacyMSIOperator(Operator):
         )
 
         # Filter to only tumor bam files
-        # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_SEARCH in f['location'].split('/')[-1]]
+        standard_tumor_bam_files = extract_tumor_ports(standard_bam_ports)
         sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_ids = []

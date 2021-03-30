@@ -4,7 +4,7 @@ import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs, get_request_id
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
 from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
 from file_system.models import File
@@ -46,8 +46,7 @@ class AccessLegacyCNVOperator(Operator):
         )
 
         # Filter to only tumor bam files
-        # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        unfiltered_tumor_bam_files = [f for p in unfiltered_bam_ports for f in p.value if TUMOR_SEARCH in f['location'].split('/')[-1]]
+        unfiltered_tumor_bam_files = extract_tumor_ports(unfiltered_bam_ports)
         sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in unfiltered_tumor_bam_files]
 
         tumor_bams = []

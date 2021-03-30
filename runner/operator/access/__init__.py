@@ -48,6 +48,27 @@ def get_request_id_runs(request_id):
     return request_id_runs
 
 
+def extract_tumor_ports(ports):
+    """
+    Filter to just port objects from Tumor samples (or ports with anything *except* "N" in the timepoint
+
+    Include: -T (Tumor), -P (primary), -M (metastatic), -L
+    Exclude: -N (Normal)
+
+    Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
+
+    :param sample_ports:
+    :return:
+    """
+    def is_tumor(port):
+        file_name = port['location'].split('/')[-1]
+        t_n_timepoint = file_name.split('-')[2]
+        return not t_n_timepoint[0] == 'N'
+
+    tumor_ports = [f for p in ports for f in p.value if is_tumor(f)]
+    return tumor_ports
+
+
 def get_unfiltered_matched_normal(patient_id, request_id=None):
     """
     Find a matched normal sample for the given patient ID with the following precedence:
