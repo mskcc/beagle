@@ -15,7 +15,7 @@ from file_system.models import FileMetadata
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
-from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal
+from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal, get_request_id
 
 
 logger = logging.getLogger(__name__)
@@ -48,11 +48,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        if self.request_id:
-            run_ids = get_request_id_runs(self.request_id)
-            run_ids = [r.id for r in run_ids]
-        else:
-            run_ids = self.run_ids
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
@@ -374,6 +370,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        self.request_id = get_request_id(self.run_ids, self.request_id)
         sample_inputs = self.get_sample_inputs()
 
         return [
