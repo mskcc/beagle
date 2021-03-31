@@ -60,15 +60,18 @@ class FileRepository(object):
         metadata_query_dict = dict()
         if metadata:
             for k, queries in metadata.items():
-                if len(queries) > 1:
-                    metadata_query_q = Q()
-                    for single_query in queries:
-                        single_query_dict = {'metadata__%s' % k: single_query}
-                        metadata_query_q |= Q(**single_query_dict)
-                    queryset = queryset.filter(metadata_query_q)
+                if isinstance(queries,list):
+                    if len(queries) > 1:
+                        metadata_query_q = Q()
+                        for single_query in queries:
+                            single_query_dict = {'metadata__%s' % k: single_query}
+                            metadata_query_q |= Q(**single_query_dict)
+                        queryset = queryset.filter(metadata_query_q)
+                    else:
+                        v = queries[0]
+                        metadata_query_dict['metadata__%s' % k] = v
                 else:
-                    v = queries[0]
-                    metadata_query_dict['metadata__%s' % k] = v
+                    metadata_query_dict['metadata__%s' % k] = queries
         elif metadata_regex:
             for single_regex_line in metadata_regex:
                 regex_query_q = Q()
