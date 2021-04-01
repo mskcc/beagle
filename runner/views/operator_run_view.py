@@ -11,7 +11,7 @@ def query_from_dict(queryset, json_obj, query_filter):
     return queryset.filter(**query)
 
 class OperatorRunViewSet(ReadOnlyModelViewSet):
-    queryset = OperatorRun.objects.order_by("-created_date").distinct().all()
+    queryset = OperatorRun.objects.prefetch_related('operator__pipeline_set').order_by("-created_date").distinct().all()
     serializer_class = OperatorRunListSerializer
 
     @swagger_auto_schema(query_serializer=OperatorRunListSerializer)

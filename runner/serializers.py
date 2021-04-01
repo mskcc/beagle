@@ -379,7 +379,15 @@ class OperatorErrorSerializer(serializers.ModelSerializer):
 
 class OperatorRunSerializer(serializers.ModelSerializer):
     operator_class = serializers.SerializerMethodField()
+    app_name = serializers.SerializerMethodField()
+    app_version = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+
+    def get_app_name(self, obj):
+        return obj.operator.pipeline_set.first().name
+
+    def get_app_version(self, obj):
+        return obj.operator.pipeline_set.first().version
 
     def get_operator_class(self, obj):
         return obj.operator.class_name
