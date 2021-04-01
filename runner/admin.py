@@ -92,6 +92,7 @@ class OperatorRunAdmin(admin.ModelAdmin):
     list_display = ('id', link_relation("operator"), 'first_run', 'status', 'run_count', progress_bar('percent_runs_succeeded'),
                     progress_bar('percent_runs_finished'), 'created_date',)
     ordering = ('-created_date',)
+    readonly_fields = ('id', 'operator', 'job_group', 'job_group_notifier', 'parent')
 
     def run_count(self, obj):
         return obj.runs.count()
@@ -103,9 +104,6 @@ class OperatorRunAdmin(admin.ModelAdmin):
                           args=(run.pk,))
             return format_html("<a href='{url}'>{name}</a>",
                            url=url, name=run.name)
-
-    def has_change_permission(self, request, obj=None):
-        return False
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):

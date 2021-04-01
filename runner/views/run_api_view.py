@@ -18,12 +18,13 @@ from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCr
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
     TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
-    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer
+    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer, OperatorRunListSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+from rest_framework.views import APIView
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
@@ -31,6 +32,12 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 
+def query_from_dict(query_filter,queryset,input_list):
+    for single_input in input_list:
+        key, val = single_input.split(':')
+        query = {query_filter % key: val}
+        queryset = queryset.filter(**query).all()
+    return queryset
 
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
@@ -45,13 +52,6 @@ class RunApiViewSet(mixins.ListModelMixin,
             return RunApiListSerializer
         else:
             return RunSerializerFull
-
-    def query_from_dict(self,query_filter,queryset,input_list):
-        for single_input in input_list:
-            key, val = single_input.split(':')
-            query = {query_filter % key: val}
-            queryset = queryset.filter(**query).all()
-        return queryset
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
@@ -86,9 +86,9 @@ class RunApiViewSet(mixins.ListModelMixin,
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
-                queryset = self.query_from_dict("port__%s__exact",queryset,ports)
+                queryset = query_from_dict("port__%s__exact",queryset,ports)
             if tags:
-                queryset = self.query_from_dict("tags__%s__contains",queryset,tags)
+                queryset = query_from_dict("tags__%s__contains",queryset,tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if apps:
