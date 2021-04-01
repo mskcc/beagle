@@ -25,6 +25,12 @@ def format_port_data(port_data):
     return port_dict
 
 
+class OperatorRunListSerializer(serializers.Serializer):
+    app = serializers.UUIDField(required=False)
+    app_name = serializers.CharField(required=False)
+    tags = serializers.JSONField(required=False)
+    status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
+
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
     job_groups = serializers.ListField(
