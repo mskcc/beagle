@@ -25,6 +25,8 @@ class OperatorRunViewSet(ReadOnlyModelViewSet):
                 queryset = queryset.filter(operator__pipeline__id=serializer.validated_data.get('app'))
             if serializer.validated_data.get('app_name'):
                 queryset = queryset.filter(operator__pipeline__name=serializer.validated_data.get('app_name'))
+            if serializer.validated_data.get('app_version'):
+                queryset = queryset.filter(operator__pipeline__version=serializer.validated_data.get('app_version'))
             if serializer.validated_data.get('tags'):
                 queryset = query_from_dict(queryset, serializer.validated_data.get('tags'), "runs__tags__%s__contains")
 

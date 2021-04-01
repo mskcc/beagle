@@ -28,6 +28,7 @@ def format_port_data(port_data):
 class OperatorRunListSerializer(serializers.Serializer):
     app = serializers.UUIDField(required=False)
     app_name = serializers.CharField(required=False)
+    app_version = serializers.CharField(required=False)
     tags = serializers.JSONField(required=False)
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
 
