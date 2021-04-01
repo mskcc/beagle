@@ -15,7 +15,7 @@ from file_system.models import FileMetadata
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
-from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal
+from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal, get_request_id
 
 
 logger = logging.getLogger(__name__)
@@ -48,11 +48,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        if self.request_id:
-            run_ids = get_request_id_runs(self.request_id)
-            run_ids = [r.id for r in run_ids]
-        else:
-            run_ids = self.run_ids
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
@@ -297,30 +293,34 @@ class AccessLegacySNVOperator(Operator):
         # Don't double-genotype the main sample
         sample_ids.remove(tumor_sample_id)
 
-        capture_q = Q(  
-            *[('file_name__startswith', id) for id in sample_ids],
-            _connector=Q.OR
-        )
+        if len(sample_ids) == 0:
+            duplex_geno_samples = []
+            simplex_geno_samples = []
+        else:
+            capture_q = Q(
+                *[('file_name__startswith', id) for id in sample_ids],
+                _connector=Q.OR
+            )
 
-        # Include IGO Matched Tumor bams
-        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
-        matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
+            # Include IGO Matched Tumor bams
+            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+            matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
 
-        duplex_capture_q = (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & capture_q) | \
-                           (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
-        simplex_capture_q = (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & capture_q) | \
-                            (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
+            duplex_capture_q = (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & capture_q) | \
+                               (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
+            simplex_capture_q = (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & capture_q) | \
+                                (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
 
-        duplex_geno_samples = File.objects.filter(duplex_capture_q)\
-            .distinct('file_name')\
-            .order_by('file_name', '-created_date')\
-            .exclude(file_name=tumor_duplex_bam.file_name)\
-            .exclude(file_name__startswith=matched_normal_id)
-        simplex_geno_samples = File.objects.filter(simplex_capture_q)\
-            .distinct('file_name')\
-            .order_by('file_name', '-created_date')\
-            .exclude(file_name=tumor_simplex_bam.file_name)\
-            .exclude(file_name__startswith=matched_normal_id)
+            duplex_geno_samples = File.objects.filter(duplex_capture_q)\
+                .distinct('file_name')\
+                .order_by('file_name', '-created_date')\
+                .exclude(file_name=tumor_duplex_bam.file_name)\
+                .exclude(file_name__startswith=matched_normal_id)
+            simplex_geno_samples = File.objects.filter(simplex_capture_q)\
+                .distinct('file_name')\
+                .order_by('file_name', '-created_date')\
+                .exclude(file_name=tumor_simplex_bam.file_name)\
+                .exclude(file_name__startswith=matched_normal_id)
 
         # Convert to lists to merge with cached genotyping file lists
         duplex_geno_samples = list(duplex_geno_samples)
@@ -374,6 +374,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        self.request_id = get_request_id(self.run_ids, self.request_id)
         sample_inputs = self.get_sample_inputs()
 
         return [

@@ -3,6 +3,7 @@
         "model": "file_system.filemetadata",
         "pk": "7a3bceb3-1af8-4d3d-a158-3731c83aeb5a",
         "fields": {
+            "latest": true,
             "created_date": "2020-01-06T19:59:50.590Z",
             "modified_date": "2020-01-06T19:59:50.590Z",
             "file": "a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac",
@@ -78,6 +79,7 @@
         "model": "file_system.filemetadata",
         "pk": "ecf003cd-bd30-4e90-9d18-0d99e7fd79d3",
         "fields": {
+            "latest": true,
             "created_date": "2020-01-06T19:59:50.603Z",
             "modified_date": "2020-01-06T19:59:50.603Z",
             "file": "c71c259a-ebc0-4490-9af1-bc99387a70d7",
