@@ -288,14 +288,15 @@ class AccessLegacySNVOperator(Operator):
         if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata['captureName']
 
-            # Get samples IDs from this capture from fastqs with this capture ID
-            sample_id_fastqs = FileRepository.filter(
-                file_type='fastq',
-                metadata={'captureName': capture_id}
-            )
-            sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
-            # Don't double-genotype the main sample
-            sample_ids.remove(tumor_sample_id)
+            if capture_id:
+                # Get samples IDs from this capture from fastqs with this capture ID
+                sample_id_fastqs = FileRepository.filter(
+                    file_type='fastq',
+                    metadata={'captureName': capture_id}
+                )
+                sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
+                # Don't double-genotype the main sample
+                sample_ids.remove(tumor_sample_id)
 
         if len(sample_ids) == 0 or not capture_id:
             duplex_capture_samples = []
