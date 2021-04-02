@@ -285,7 +285,7 @@ class AccessLegacySNVOperator(Operator):
             file_type='fastq',
             metadata={'sampleName': tumor_sample_id}
         )
-        if len(sample_fastq) > 1:
+        if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata['captureName']
 
             # Get samples IDs from this capture from fastqs with this capture ID
