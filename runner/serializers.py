@@ -25,6 +25,13 @@ def format_port_data(port_data):
     return port_dict
 
 
+class OperatorRunListSerializer(serializers.Serializer):
+    app = serializers.UUIDField(required=False)
+    app_name = serializers.CharField(required=False)
+    app_version = serializers.CharField(required=False)
+    tags = serializers.JSONField(required=False)
+    status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
+
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
     job_groups = serializers.ListField(
@@ -372,7 +379,15 @@ class OperatorErrorSerializer(serializers.ModelSerializer):
 
 class OperatorRunSerializer(serializers.ModelSerializer):
     operator_class = serializers.SerializerMethodField()
+    app_name = serializers.SerializerMethodField()
+    app_version = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+
+    def get_app_name(self, obj):
+        return obj.operator.pipeline_set.first().name
+
+    def get_app_version(self, obj):
+        return obj.operator.pipeline_set.first().version
 
     def get_operator_class(self, obj):
         return obj.operator.class_name
