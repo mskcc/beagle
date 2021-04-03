@@ -68,6 +68,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
+            operator_run = fixed_query_params.get('operator_run')
             request_ids = fixed_query_params.get('request_ids')
             apps = fixed_query_params.get('apps')
             values_run = fixed_query_params.get('values_run')
@@ -77,6 +78,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             full = fixed_query_params.get('full')
             if full:
                 full = bool(strtobool(full))
+            if operator_run:
+                queryset = queryset.filter(operator_run_id=operator_run)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
