@@ -51,12 +51,12 @@ app.conf.beat_schedule = {
     'check_status': {
         "task": "runner.tasks.check_jobs_status",
         "schedule": 30.0,
-        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+        "options": {"queue": settings.BEAGLE_CHECK_STATUS_QUEUE}
     },
     "process_triggers": {
         "task": "runner.tasks.process_triggers",
         "schedule": 120.0,
-        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+        "options": {"queue": settings.BEAGLE_PROCESS_TRIGGER_QUEUE}
     },
     "timeout_runs": {
         "task": "runner.tasks.check_job_timeouts",
