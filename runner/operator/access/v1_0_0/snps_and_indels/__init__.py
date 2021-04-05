@@ -205,7 +205,7 @@ class AccessLegacySNVOperator(Operator):
             self.get_normal_geno_samples(tumor_sample_id, matched_normal_unfiltered_id)
 
         # Get genotyping bams for Simplex and Duplex Tumor samples from the same Patient or in the same Capture
-        geno_samples_duplex, geno_samples_simplex = self.get_pool_geno_samples(
+        geno_samples_duplex, geno_samples_simplex = self.get_geno_samples(
             tumor_sample_id,
             tumor_duplex_bam,
             tumor_simplex_bam,
@@ -264,7 +264,7 @@ class AccessLegacySNVOperator(Operator):
         geno_samples_normal_unfiltered_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_normal_unfiltered]
         return geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids
 
-    def get_pool_geno_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id):
+    def get_geno_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id):
         """
         Use the initial fastq metadata to get the capture of the sample,
         then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
@@ -279,53 +279,72 @@ class AccessLegacySNVOperator(Operator):
         :return:
         """
         # Get capture ID
-        capture_id = FileRepository.filter(
+        capture_id = None
+        sample_ids = []
+        sample_fastq = FileRepository.filter(
             file_type='fastq',
             metadata={'sampleName': tumor_sample_id}
-        )[0].metadata['captureName']
-
-        # Get samples IDs from this capture from fastqs with this capture ID
-        sample_id_fastqs = FileRepository.filter(
-            file_type='fastq',
-            metadata={'captureName': capture_id}
         )
-        sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
-        # Don't double-genotype the main sample
-        sample_ids.remove(tumor_sample_id)
+        if len(sample_fastq) >= 1:
+            capture_id = sample_fastq[0].metadata['captureName']
 
-        if len(sample_ids) == 0:
-            duplex_geno_samples = []
-            simplex_geno_samples = []
+            if capture_id:
+                # Get samples IDs from this capture from fastqs with this capture ID
+                sample_id_fastqs = FileRepository.filter(
+                    file_type='fastq',
+                    metadata={'captureName': capture_id}
+                )
+                sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
+                # Don't double-genotype the main sample
+                sample_ids.remove(tumor_sample_id)
+
+        if len(sample_ids) == 0 or not capture_id:
+            duplex_capture_samples = []
+            simplex_capture_samples = []
         else:
             capture_q = Q(
                 *[('file_name__startswith', id) for id in sample_ids],
                 _connector=Q.OR
             )
 
-            # Include IGO Matched Tumor bams
-            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
-            matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
+            duplex_capture_q = (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & capture_q)
+            simplex_capture_q = (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & capture_q)
 
-            duplex_capture_q = (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & capture_q) | \
-                               (Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
-            simplex_capture_q = (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & capture_q) | \
-                                (Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search))
-
-            duplex_geno_samples = File.objects.filter(duplex_capture_q)\
+            duplex_capture_samples = File.objects.filter(duplex_capture_q)\
                 .distinct('file_name')\
                 .order_by('file_name', '-created_date')\
                 .exclude(file_name=tumor_duplex_bam.file_name)\
                 .exclude(file_name__startswith=matched_normal_id)
-            simplex_geno_samples = File.objects.filter(simplex_capture_q)\
+            simplex_capture_samples = File.objects.filter(simplex_capture_q)\
                 .distinct('file_name')\
                 .order_by('file_name', '-created_date')\
                 .exclude(file_name=tumor_simplex_bam.file_name)\
                 .exclude(file_name__startswith=matched_normal_id)
 
-        # Convert to lists to merge with cached genotyping file lists
-        duplex_geno_samples = list(duplex_geno_samples)
-        simplex_geno_samples = list(simplex_geno_samples)
-        if len(duplex_geno_samples) < 20 and self.request_id:
+            duplex_capture_samples = list(duplex_capture_samples)
+            simplex_capture_samples = list(simplex_capture_samples)
+
+        # Add patient matched Tumors samples
+        patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+        matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
+        duplex_matched_q =  Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
+        simplex_matched_q =  Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
+
+        duplex_matched_samples = File.objects.filter(duplex_matched_q) \
+            .distinct('file_name') \
+            .order_by('file_name', '-created_date') \
+            .exclude(file_name=tumor_duplex_bam.file_name) \
+            .exclude(file_name__startswith=matched_normal_id)
+        simplex_matched_samples = File.objects.filter(simplex_matched_q) \
+            .distinct('file_name') \
+            .order_by('file_name', '-created_date') \
+            .exclude(file_name=tumor_simplex_bam.file_name) \
+            .exclude(file_name__startswith=matched_normal_id)
+
+        duplex_geno_samples = list(duplex_matched_samples) + list(duplex_capture_samples)
+        simplex_geno_samples = list(simplex_matched_samples) + list(simplex_capture_samples)
+
+        if len(duplex_geno_samples) < 20:
             num_geno_samples_to_add = 20 - len(duplex_geno_samples)
             duplex_geno_samples_to_add = self.fillout_duplex_tumors[:num_geno_samples_to_add]
             simplex_geno_samples_to_add = self.fillout_simplex_tumors[:num_geno_samples_to_add]
