@@ -2,7 +2,6 @@ import os
 import logging
 import requests
 from datetime import datetime, timedelta
-from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
@@ -16,7 +15,6 @@ from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
-from runner.exceptions import RunCreateException
 from notifier.models import JobGroup, JobGroupNotifier
 from file_system.repository import FileRepository
 
@@ -517,7 +515,6 @@ def check_job_timeouts():
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
 @shared_task
-@memcache_lock("check_jobs_status")
 def check_jobs_status():
     runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
                               execution_id__isnull=False)
