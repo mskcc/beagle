@@ -36,9 +36,9 @@ Includecmd: no
 
     nohup celery -A beagle_etl worker --concurrency 30 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner &
 
-    nohup celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_CHECK_STATUS_QUEUE} -f ${CELERY_LOG_PATH}/beagle_check_status_worker.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker &
+    nohup celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_CHECK_STATUS_QUEUE} -f ${CELERY_LOG_PATH}/beagle_check_status_worker.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_check_status_worker.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_check_status_worker &
 
-    nohup celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_PROCESS_TRIGGER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_process_trigger_worker.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker &
+    nohup celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_PROCESS_TRIGGER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_process_trigger_worker.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_process_trigger_worker.pid -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_process_trigger_worker &
 
     nohup celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${CELERY_LOG_PATH}/beagle_flower.log --pidfile ${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid --port=${FLOWER_PORT} --broker=$CELERY_BROKER_URL// &
 
