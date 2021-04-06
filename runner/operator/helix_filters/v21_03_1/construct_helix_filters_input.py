@@ -157,6 +157,10 @@ def construct_helix_filters_input(argos_run_id_list):
                 else:
                     input_json["is_impact"] = False
                 input_json['assay'] = single_port.value
+            if name == "tumor_bam":
+                input_json['tumor_bam_files'].append(get_file_obj(value))
+            if name == "normal_bam":
+                input_json['normal_bam_files'].append(get_file_obj(value))
         pairs.append(pair_info)
 
     references = convert_references(input_json['assay'])
