@@ -320,7 +320,7 @@ def get_assay_coverage(assay, helix_filters_resources):
     for key in assay_coverages_list.keys():
         curr_assay = key.lower()
         if curr_assay in assay.lower():
-            assay_coverage = assay_coverages_list[curr_assay]
+            assay_coverage = assay_coverages_list[key]
     return assay_coverage
 
 
