@@ -316,9 +316,11 @@ def convert_references(assay):
 
 def get_assay_coverage(assay, helix_filters_resources):
     assay_coverages_list = helix_filters_resources['assay_tmb_coverage_values']
-    assay_coverage = 10000000
-    if assay in assay_coverages_list.keys():
-        assay_coverage = assay_coverages_list[assay]
+    assay_coverage = 0
+    for key in assay_coverages_list.keys():
+        curr_assay = key.lower()
+        if curr_assay in assay.lower():
+            assay_coverage = assay_coverages_list[curr_assay]
     return assay_coverage
 
 
