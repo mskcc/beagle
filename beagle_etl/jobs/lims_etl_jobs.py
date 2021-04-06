@@ -149,6 +149,10 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     if len(FileRepository.filter(metadata={'requestId': request_id, 'tumorOrNormal': 'Tumor'})) == 0:
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
+        if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
+            admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
+            send_notification.delay(admin_hold_event)
+            return []
 
     operators = Operator.objects.filter(recipes__overlap=[recipe])
 
