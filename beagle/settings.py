@@ -371,7 +371,7 @@ BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_AB
 BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get('BEAGLE_NOTIFIER_EMAIL_FROM')
 
 ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get('BEAGLE_ASSAYS_ADMIN_HOLD_ONLY_NORMALS',
-                                                'IMPACT341,IMPACT+ (341 genes plus custom content),IMPACT468,HemePACT_v4,HemePACT_v3,IMPACT505').split(
+                                                'IMPACT341,IMPACT+ (341 genes plus custom content),IMPACT468,HemePACT_v4,HemePACT_v3,IMPACT505,IMPACT410').split(
     ',')
 
 PERMISSION_DENIED_CC = json.loads(os.environ.get('BEAGLE_PERMISSION_DENIED_CC', '{}'))
