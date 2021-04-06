@@ -102,7 +102,7 @@ def list_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a list of values in the JSON
     """
-    keys = ['mutation_maf_files', 'mutation_svs_maf_files', 'mutation_svs_txt_files','targets_list']
+    keys = ['mutation_maf_files', 'mutation_svs_maf_files', 'mutation_svs_txt_files','targets_list', 'tumor_bam_files', 'normal_bam_files']
     return set(keys)
 
 
