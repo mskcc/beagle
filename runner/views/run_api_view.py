@@ -392,13 +392,14 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
+        pipeline_versions = request.data.get('pipeline_versions', None)
         job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
-            for pipeline_name in pipeline_names:
-                get_object_or_404(Pipeline, name=pipeline_name)
-
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
             try:
                 run = Run.objects.get(id=run_ids[0])
                 req = run.tags.get('requestId', 'Unknown')
@@ -417,8 +418,9 @@ class RunOperatorViewSet(GenericAPIView):
                     return Response({'details': 'Invalid JobGroup: %s' % job_group_id},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-            for pipeline_name in pipeline_names:
-                pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
                 try:
                     job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
                                                                       notifier_type_id=pipeline.operator.notifier_id)
