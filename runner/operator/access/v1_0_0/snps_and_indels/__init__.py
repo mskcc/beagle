@@ -141,7 +141,8 @@ class AccessLegacySNVOperator(Operator):
                 basename = r['basename']
 
             # Skip normal samples
-            if NORMAL_SAMPLE_SEARCH in basename:
+            t_or_n = basename.split('-')[2]
+            if t_or_n.startswith('N'):
                 continue
             sample_id = basename.split('/')[-1].split('_cl_aln_srt')[0]
             tumor_sample_ids.append(sample_id)
