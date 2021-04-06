@@ -353,9 +353,10 @@ class AccessLegacySNVOperator(Operator):
             simplex_geno_samples_to_add = [s for s in simplex_geno_samples_to_add if s.file_name != tumor_simplex_bam.file_name]
             duplex_geno_samples += duplex_geno_samples_to_add
             simplex_geno_samples += simplex_geno_samples_to_add
-            # Deduplicate
-            duplex_geno_samples = list(set(duplex_geno_samples))
-            simplex_geno_samples = list(set(simplex_geno_samples))
+
+        # Deduplicate
+        duplex_geno_samples = list(set(duplex_geno_samples))
+        simplex_geno_samples = list(set(simplex_geno_samples))
 
         return duplex_geno_samples, simplex_geno_samples
 
