@@ -339,7 +339,6 @@ def submit_job(run_id, output_directory=None):
         job = {
             'root_dir': output_directory
         }
-        response = requests.post(url, json=job)
     else:
         url = settings.RIDGEBACK_URL + '/v0/jobs/'
         job = {
@@ -347,11 +346,11 @@ def submit_job(run_id, output_directory=None):
             'inputs': inputs,
             'root_dir': output_directory,
         }
-        if run.app.walltime:
-            job['walltime'] = run.app.walltime
-        if run.app.memlimit:
-            job['memlimit'] = run.app.memlimit
-        response = requests.post(url, json=job)
+    if run.app.walltime:
+        job['walltime'] = run.app.walltime
+    if run.app.memlimit:
+        job['memlimit'] = run.app.memlimit
+    response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
