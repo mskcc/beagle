@@ -339,19 +339,21 @@ def submit_job(run_id, output_directory=None):
         job = {
             'root_dir': output_directory
         }
-        response = requests.post(url, json=job)
     else:
         url = settings.RIDGEBACK_URL + '/v0/jobs/'
         job = {
             'type': run.run_type,
             'app': app,
             'inputs': inputs,
-            'root_dir': output_directory
+            'root_dir': output_directory,
         }
-        response = requests.post(url, json=job)
+    if run.app.walltime:
+        job['walltime'] = run.app.walltime
+    if run.app.memlimit:
+        job['memlimit'] = run.app.memlimit
+    response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()['id']
-        run.status = RunStatus.RUNNING
         logger.info("Job %s successfully submitted with id:%s" % (run_id, run.execution_id))
         run.save()
     else:
@@ -481,13 +483,15 @@ def _job_finished_notify(run):
 
 
 def running_job(run):
-    run.status = RunStatus.RUNNING
-    run.save()
+    if run.status != RunStatus.RUNNING:
+        run.status = RunStatus.RUNNING
+        run.save()
 
 
 def abort_job(run):
-    run.status = RunStatus.ABORTED
-    run.save()
+    if run.status != RunStatus.ABORTED:
+        run.status = RunStatus.ABORTED
+        run.save()
 
 
 def update_commandline_job_status(run, commandline_tool_job_set):
@@ -506,7 +510,8 @@ def check_job_timeouts():
     TIMEOUT_BY_DAYS = 3
     diff = datetime.now()-timedelta(days=TIMEOUT_BY_DAYS)
     runs = Run.objects.filter(status__in=(RunStatus.CREATING, RunStatus.READY),
-                              created_date__lte=diff).all()
+                              created_date__lte=diff,
+                              execution_id__isnull=True).all()
 
     for run in runs:
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
@@ -552,7 +557,13 @@ def check_jobs_status():
                 logger.info("Job %s [%s] COMPLETED" % (run.id, run.execution_id))
                 complete_job(str(run.id), status['outputs'])
                 continue
-            if status['status'] == 'CREATED' or status['status'] == 'PENDING' or status['status'] == 'RUNNING':
+            if status['status'] == 'CREATED':
+                logger.info("Job %s [%s] CREATED" % (run.id, run.execution_id))
+                continue
+            if status['status'] == 'PENDING':
+                logger.info("Job %s [%s] PENDING" % (run.id, run.execution_id))
+                continue
+            if status['status'] == 'RUNNING':
                 logger.info("Job %s [%s] RUNNING" % (run.id, run.execution_id))
                 running_job(run)
                 continue

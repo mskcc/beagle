@@ -53,7 +53,7 @@ def check_and_return_single_values(data):
     """
     single_values = ['CN', 'PL', 'SM', 'bait_set', 'patient_id',
                      'species', 'tumor_type', 'sample_id', 'specimen_type',
-                     'request_id']
+                     'request_id', 'run_mode']
 
     for key in single_values:
         value = set(data[key])
@@ -90,6 +90,15 @@ def get_file(fpath):
     if data:
         return data[0]
     return None
+
+
+def get_run_mode(run_mode):
+    if isinstance(run_mode, str):
+        if 'hiseq' in run_mode.lower():
+            return 'hiseq'
+        if 'novaseq' in run_mode.lower():
+            return 'novaseq'
+        return run_mode
 
 
 def build_sample(data, ignore_sample_formatting=False):
@@ -132,6 +141,7 @@ def build_sample(data, ignore_sample_formatting=False):
         run_id = meta['runId']
         preservation_type = meta['preservation']
         rg_id = cmo_sample_name + "_1"
+        run_mode = get_run_mode(meta['runMode'])
         if barcode_index:
             platform_unit = '_'.join([flowcell_id, barcode_index])
         try:
@@ -166,6 +176,7 @@ def build_sample(data, ignore_sample_formatting=False):
             sample['R2'] = list()
             sample['R2_bid'] = list()
             sample['fastqs'] = list()
+            sample['run_mode'] = run_mode
         else:
             sample = samples[sample_id]
 
@@ -207,6 +218,7 @@ def build_sample(data, ignore_sample_formatting=False):
     result['pi_email'] = list()
     result['run_id'] = list()
     result['preservation_type'] = list()
+    result['run_mode'] = list()
 
     for sample_id in samples:
         sample = samples[sample_id]
@@ -265,12 +277,15 @@ class Fastqs:
         pu = list()
         for f in self.r1:
             metadata = get_file(f).metadata
+            flowcell_id = "MT_FCID"
             if 'poolednormal' in self.sample_name.lower():
                 flowcell_id = 'PN_FCID'
                 r = get_r_orientation(f)
                 barcode_index = spoof_barcode(os.path.basename(f),r)
             else:
-                flowcell_id = metadata['flowCellId']
+                fid = metadata['flowCellId']
+                if fid:
+                    flowcell_id = fid
                 barcode_index = metadata['barcodeIndex']
             platform_unit = flowcell_id
             if barcode_index:
