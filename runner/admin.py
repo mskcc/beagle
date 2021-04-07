@@ -44,12 +44,11 @@ class StatusFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         # TODO support range in status count
         filters = {k:v for (k, v) in request.GET.items() if "range" not in k and "status" not in k
-                   and "q" not in k and "p" not in k}
+                   and "q" not in k and "p" not in k and "o" not in k}
 
         qs = model_admin.get_queryset(request).filter(**filters)
         if request.GET.get("q"):
-            qs, _use_distinct = model_admin.get_search_results(request, qs,
-                                                request.GET.get("q"))
+            qs, _use_distinct = model_admin.get_search_results(request, qs, request.GET.get("q"))
         return [(status.value, "%s (%s)" % (status.name, qs.filter(status=status.value).count())) for status in RunStatus]
 
     def queryset(self, request, queryset):
@@ -58,7 +57,7 @@ class StatusFilter(admin.SimpleListFilter):
         return queryset
 
 def abort_run(modeladmin, request, queryset):
-    jobs = list(queryset.values_list("id"))
+    jobs = list(queryset.values_list("id", flat=True))
     updated = len(jobs)
     abort_job_task.delay(None, jobs)
     modeladmin.message_user(request, ngettext(
@@ -75,7 +74,7 @@ class RunAdmin(admin.ModelAdmin):
     ordering = ('-created_date',)
     list_filter = (('created_date', DateTimeRangeFilter), StatusFilter, AppFilter,)
     search_fields = ('tags__sampleId', 'tags__requestId', 'tags__cmoSampleIds__contains',
-                     'operator_run_id')
+                     'operator_run__id')
     readonly_fields = ('samples', 'job_group', 'job_group_notifier', link_relation('operator_run'),
                        link_relation('app'))
 
@@ -93,6 +92,7 @@ class OperatorRunAdmin(admin.ModelAdmin):
     list_display = ('id', link_relation("operator"), 'first_run', 'status', 'run_count', progress_bar('percent_runs_succeeded'),
                     progress_bar('percent_runs_finished'), 'created_date',)
     ordering = ('-created_date',)
+    readonly_fields = ('id', 'operator', 'job_group', 'job_group_notifier', 'parent')
 
     def run_count(self, obj):
         return obj.runs.count()
@@ -104,9 +104,6 @@ class OperatorRunAdmin(admin.ModelAdmin):
                           args=(run.pk,))
             return format_html("<a href='{url}'>{name}</a>",
                            url=url, name=run.name)
-
-    def has_change_permission(self, request, obj=None):
-        return False
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):

@@ -2,13 +2,11 @@ import os
 
 from django.test import TestCase
 
+from file_system.models import File
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
-from file_system.repository.file_repository import FileRepository
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
-
-
 
 REQUEST_ID = "access_legacy_test_request"
 TEST_RUN_ID = 'bc23076e-f477-4578-943c-1fbf6f1fca44'
@@ -34,7 +32,6 @@ COMMON_FIXTURES = [
 
 
 class TestAccessSNVOperator(TestCase):
-
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_legacy_snv_operator(self):
@@ -52,7 +49,8 @@ class TestAccessSNVOperator(TestCase):
 
         pipeline_slug = "AccessLegacySNVOperator"
         access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID,
+                                           run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacySNVOperator))
         self.assertTrue(operator.request_id == REQUEST_ID)
@@ -63,24 +61,6 @@ class TestAccessSNVOperator(TestCase):
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
         self.validate(input_data)
-
-    def test_dmp_normal(self):
-        """
-        Test that DMP normal can be found and used for an SNV Request ID
-
-        :return:
-        """
-        # Delete the IGO test samples, so DMP normal must be used
-        metadatas = FileRepository.filter(path_regex='C-000884', metadata={"tumorOrNormal": "Normal"})
-        [f.file.delete() for f in metadatas]
-
-        pipeline_slug = "AccessLegacySNVOperator"
-        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID, run_ids=[TEST_RUN_ID])
-        input_data = operator.get_sample_inputs()
-
-        geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
-        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))
 
     def test_run_on_imported_bams(self):
         """
@@ -106,16 +86,20 @@ class TestAccessSNVOperator(TestCase):
             'matched_normal_ids',
         ]
 
-        # We should have 9 bams for genotyping:
+        # We should have 11 bams for genotyping:
         # - Main Tumor Bam Duplex
         # - Main Tumor Bam Simplex
         # - Default Variant Calling Normal Duplex
+        #
         # - Matched Normal Duplex
         # - Matched Normal Simplex
-        # - Matched Tumor Duplex IGO
-        # - Matched Tumor Simplex IGO
-        # - Matched Tumor Duplex DMP
-        # - Matched Tumor Simplex DMP
+        # - Matched Tumor Duplex
+        # - Matched Tumor Simplex
+        #
+        # - Pool Tumor Duplex
+        # - Pool Tumor Simplex
+        # - Pool Normal Duplex
+        # - Pool Normal Simplex
         required_input_fields_length_9 = [
             'genotyping_bams',
             'genotyping_bams_ids',
@@ -128,3 +112,22 @@ class TestAccessSNVOperator(TestCase):
             for field in required_input_fields_length_9:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 9)
+
+    def test_dmp_normal(self):
+        """
+        Test that DMP normal can be found and used for an SNV Request ID
+
+        :return:
+        """
+        # Delete the IGO test samples, so DMP normal must be used
+        igo_normals = File.objects.filter(path__regex='C-000884-N0')
+        [f.delete() for f in igo_normals]
+
+        pipeline_slug = "AccessLegacySNVOperator"
+        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=REQUEST_ID,
+                                           run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        input_data = operator.get_sample_inputs()
+
+        geno_bams = [b['location'] for b in input_data[0]['genotyping_bams']]
+        self.assertTrue(any('AA037277-N-unfilter.bam' in b for b in geno_bams))

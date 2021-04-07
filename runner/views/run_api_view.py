@@ -18,12 +18,13 @@ from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCr
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
     TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
-    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer
+    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer, OperatorRunListSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+from rest_framework.views import APIView
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
@@ -31,6 +32,12 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 
+def query_from_dict(query_filter,queryset,input_list):
+    for single_input in input_list:
+        key, val = single_input.split(':')
+        query = {query_filter % key: val}
+        queryset = queryset.filter(**query).all()
+    return queryset
 
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
@@ -45,13 +52,6 @@ class RunApiViewSet(mixins.ListModelMixin,
             return RunApiListSerializer
         else:
             return RunSerializerFull
-
-    def query_from_dict(self,query_filter,queryset,input_list):
-        for single_input in input_list:
-            key, val = single_input.split(':')
-            query = {query_filter % key: val}
-            queryset = queryset.filter(**query).all()
-        return queryset
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
@@ -68,6 +68,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
+            operator_run = fixed_query_params.get('operator_run')
             request_ids = fixed_query_params.get('request_ids')
             apps = fixed_query_params.get('apps')
             values_run = fixed_query_params.get('values_run')
@@ -77,6 +78,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             full = fixed_query_params.get('full')
             if full:
                 full = bool(strtobool(full))
+            if operator_run:
+                queryset = queryset.filter(operator_run_id=operator_run)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
@@ -86,9 +89,9 @@ class RunApiViewSet(mixins.ListModelMixin,
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
-                queryset = self.query_from_dict("port__%s__exact",queryset,ports)
+                queryset = query_from_dict("port__%s__exact",queryset,ports)
             if tags:
-                queryset = self.query_from_dict("tags__%s__contains",queryset,tags)
+                queryset = query_from_dict("tags__%s__contains",queryset,tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if apps:
@@ -389,13 +392,14 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
+        pipeline_versions = request.data.get('pipeline_versions', None)
         job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
-            for pipeline_name in pipeline_names:
-                get_object_or_404(Pipeline, name=pipeline_name)
-
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
             try:
                 run = Run.objects.get(id=run_ids[0])
                 req = run.tags.get('requestId', 'Unknown')
@@ -414,8 +418,9 @@ class RunOperatorViewSet(GenericAPIView):
                     return Response({'details': 'Invalid JobGroup: %s' % job_group_id},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-            for pipeline_name in pipeline_names:
-                pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
                 try:
                     job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
                                                                       notifier_type_id=pipeline.operator.notifier_id)

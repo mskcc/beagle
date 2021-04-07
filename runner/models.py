@@ -59,6 +59,8 @@ class Pipeline(BaseModel):
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
+    walltime = models.IntegerField(blank=True, null=True)
+    memlimit = models.CharField(blank=True, null=True, max_length=20)
 
     @property
     def pipeline_link(self):
