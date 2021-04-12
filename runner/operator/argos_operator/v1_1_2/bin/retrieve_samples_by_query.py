@@ -17,6 +17,15 @@ from runner.operator.helper import get_r_orientation, spoof_barcode, init_metada
 LOGGER = logging.getLogger(__name__)
 
 
+def build_argos_file_groups_query():
+    ARGOS_FG_SLUGS = ['lims', 'origin-unknown']
+    slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
+    query = slug_set.pop()
+    for item in slug_set:
+        query |= item
+    return query
+
+
 def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
@@ -25,7 +34,7 @@ def get_samples_from_patient_id(patient_id):
     """
     all_files = FileRepository.all()
     q_pid = Q(metadata__patientId=patient_id)
-    q_fg = Q(file__file_group=FileGroup.objects.get(slug="lims"))
+    q_fg = build_argos_file_groups_query()
     q = q_pid & q_fg
     files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
     data = list()
