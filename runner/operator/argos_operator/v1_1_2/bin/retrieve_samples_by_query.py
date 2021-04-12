@@ -7,7 +7,7 @@ and preservation type
 """
 import logging
 import os
-from file_system.models import File, FileMetadata
+from file_system.models import File, FileMetadata, FileGroup
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
@@ -20,8 +20,14 @@ LOGGER = logging.getLogger(__name__)
 def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
+
+    Only retrieve patients from LIMS file group
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id}, filter_redact=True)
+    all_files = FileRepository.all()
+    q_pid = Q(metadata__patientId=patient_id)
+    q_fg = Q(file__file_group=FileGroup.objects.get(slug="lims"))
+    q = q_pid & q_fg
+    files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
     data = list()
     for current_file in files:
         sample = dict()
