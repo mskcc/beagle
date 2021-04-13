@@ -129,7 +129,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         return []
 
     if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
-        no_samples_event = ETLImportNoSamplesEvent(job_group_notifier_id).to_dict()
+        no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
