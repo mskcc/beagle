@@ -7,7 +7,7 @@ and preservation type
 """
 import logging
 import os
-from file_system.models import File, FileMetadata
+from file_system.models import File, FileMetadata, FileGroup
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
@@ -17,11 +17,26 @@ from runner.operator.helper import get_r_orientation, spoof_barcode, init_metada
 LOGGER = logging.getLogger(__name__)
 
 
+def build_argos_file_groups_query():
+    ARGOS_FG_SLUGS = ['lims', 'origin-unknown']
+    slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
+    query = slug_set.pop()
+    for item in slug_set:
+        query |= item
+    return query
+
+
 def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
+
+    Only retrieve patients from LIMS file group
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id}, filter_redact=True)
+    all_files = FileRepository.all()
+    q_pid = Q(metadata__patientId=patient_id)
+    q_fg = build_argos_file_groups_query()
+    q = q_pid & q_fg
+    files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
     data = list()
     for current_file in files:
         sample = dict()
