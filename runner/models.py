@@ -10,6 +10,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
+class RunType(IntEnum):
+    CWL = 0
+    NEXTFLOW = 1
+
+
 class RunStatus(IntEnum):
     CREATING = 0
     READY = 1
@@ -157,6 +162,8 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
+    run_type = models.IntegerField(choices=[(run_type.value, run_type.name) for run_type in RunType], db_index=True,
+                                   default=RunType.CWL)
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
