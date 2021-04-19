@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from django.conf import settings
+from celery.schedules import crontab
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beagle.settings')
@@ -35,7 +36,7 @@ app.conf.task_routes = {
 app.conf.beat_schedule = {
     "fetch_requests_from_lims": {
         "task": "beagle_etl.tasks.fetch_requests_lims",
-        "schedule": 900.0,
+        "schedule": crontab(hour="*", minute=5),
         "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
     },
     "check_missing_requests": {
