@@ -83,7 +83,7 @@ class RunAdmin(admin.ModelAdmin):
     def link_to_ridgeback(self, obj):
         if not obj.execution_id:
             return "-"
-        return format_html("<a target='_blank' href='{ridgeback_url}/admin/toil_orchestrator/job/{execution_id}'>{execution_id}</a>",
+        return format_html("<a target='_blank' href='{ridgeback_url}/admin/orchestrator/job/{execution_id}'>{execution_id}</a>",
                            execution_id=obj.execution_id, ridgeback_url=RIDGEBACK_URL)
     link_to_ridgeback.short_description = "Execution ID (Ridgeback)"
 
