@@ -16,9 +16,9 @@ from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
-from runner.exceptions import RunCreateException
 from notifier.models import JobGroup, JobGroupNotifier
 from file_system.repository import FileRepository
+from runner.cache.github_cache import GithubCache
 
 
 logger = logging.getLogger(__name__)
@@ -590,3 +590,10 @@ def create_aion_job(operator, lab_head_email, job_group_id=None, job_group_notif
 def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, job_group_notifier_id=None):
     jobs = operator.get_jobs(pairing_override)
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+
+
+@shared_task
+@memcache_lock("add_cache_lock")
+def add_pipeline_to_cache(github, version):
+    if not GithubCache.get(github, version):
+        GithubCache.add(github, version)
