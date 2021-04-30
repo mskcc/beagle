@@ -11,16 +11,22 @@ class GithubCache(object):
     def get(github, version):
         expected_path = GithubCache._generate_directory_name(github, version)
         full_dir = os.path.join(expected_path, GithubCache._extract_dirname_from_github_link(github))
-        return full_dir if os.path.exists(full_dir) else None
+        if os.path.exists(full_dir):
+            GithubCache.logger.info("Pipeline found in cache : %s" % full_dir)
+            return full_dir
+        GithubCache.logger.info("Pipeline not found in cache")
+        return None
 
     @staticmethod
     def add(github, version):
         expected_path = GithubCache._generate_directory_name(github, version)
-        print("Expected path %s" % expected_path)
+        GithubCache.logger.info("Expected path %s" % expected_path)
         if not os.path.exists(expected_path):
+            GithubCache.logger.info("Pipeline not found in cache %s" % expected_path)
             os.makedirs(expected_path)
             git.Git(expected_path).clone(github, '--branch', version, '--recurse-submodules')
-            return expected_path
+            full_dir = os.path.join(expected_path, GithubCache._extract_dirname_from_github_link(github))
+            return full_dir
         return None
 
     @staticmethod
