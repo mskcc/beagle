@@ -77,16 +77,16 @@ SINGULARITYENV_BEAGLE_PATH # beagle install to use if not using what's in contai
 SINGULARITYENV_CELERY_LOG_PATH # location of where to store log files for celery; default is /tmp
 SINGULARITYENV_CELERY_PID_PATH # where to store pid files for celery workers; default is /tmp
 SINGULARITYENV_BEAT_SCHEDULE_PATH # where to store schedule of celery beat; default is /tmp
-SINGULARITYENV_EVENT QUEUE PREFIX # prefix for event queue; default is runtime timestamp
+SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX # prefix for event queue; default is runtime timestamp
 ```
 
 For more detailed information about beagles environment, you can use the beagle [environment page](../docs/ENVIRONMENT_VARIABLES.md)
 
 #### Running an instance
 
-Running the following command will create a beagle instance named `beagle_service`
+Running the following command will create a beagle instance named `beagle`
 ```
-singularity instance start beagle_service.sif beagle_service
+singularity instance start beagle.sif beagle
 ```
 
 This is accessible through the port number set through `SINGULARITYENV_BEAGLE_PORT`
@@ -95,4 +95,24 @@ For example, if `SINGULARITYENV_BEAGLE_PORT=4001` on a machine called `silo`:
 
 ```
 http://silo:4001
+```
+
+###### Starting the beagle service, celery
+
+To start beagle and its celery component:
+```
+singularity run --app beagle-start instance://beagle
+singularity run --app celery-start instance://beagle
+```
+
+###### Viewing and stopping celery
+
+Use `celery-env` to view current running celery processes:
+```
+singularity run --app celery-env instance://beagle
+```
+
+To stop all celery processes running for `$SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX`, use `celery-stop`:
+```
+singularity run --app celery-stop instance://beagle
 ```
