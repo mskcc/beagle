@@ -48,7 +48,7 @@ Includecmd: no
         exit 1
     fi
 
-    echo "Current env settings for beagle:"
+    echo "Starting beagle service with current settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
     echo "BEAGLE_PORT:"$BEAGLE_PORT
     echo "FLOWER_PORT:"$FLOWER_PORT
@@ -93,6 +93,8 @@ Includecmd: no
     export CELERY_SCHEDULER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
     export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+
+    echo "Starting celery services..."
 
     celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${CELERY_LOG_PATH}/beagle_beat.log --pidfile ${CELERY_BEAT_PID_FILE} -s ${CELERY_BEAT_SCHEDULE_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule >/dev/null 2>&1 < /dev/null &
 
@@ -141,7 +143,7 @@ Includecmd: no
     export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
 
-    echo "Current celery settings:"
+    echo "Killing celery services with the following settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
     echo "CELERY_LOG_PATH:"$CELERY_LOG_PATH
     echo "CELERY_PID_PATH:"$CELERY_PID_PATH
