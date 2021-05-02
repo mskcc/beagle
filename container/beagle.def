@@ -153,11 +153,11 @@ Includecmd: no
     echo "CELERY_RUNNER_PID_FILE:"$CELERY_RUNNER_PID_FILE
     echo "CELERY_FLOWER_PID_FILE:"$CELERY_FLOWER_PID_FILE
 
-    ps auxww | grep 'celery' | grep $CELERY_BEAT_PID_FILE | grep -v "grep" | awk "{print $2}" | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_WORKER_PID_FILE | grep -v "grep" | awk "{print $2}" | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_SCHEDULER_PID_FILE | grep -v "grep" | awk "{print $2}" | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v "grep" | awk "{print $2}" | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v "grep" | awk "{print $2}" | xargs kill -9
+    ps auxww | grep 'celery' | grep $CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
 
 ##############################
 # check env variables with celery-env, beagle-env 
