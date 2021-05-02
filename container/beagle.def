@@ -98,7 +98,7 @@ Includecmd: no
 
     celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${CELERY_LOG_PATH}/beagle_worker.log --pidfile ${CELERY_WORKER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_SCHEDULER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler & >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_SCHEDULER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_RUNNER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
