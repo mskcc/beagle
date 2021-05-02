@@ -94,15 +94,15 @@ Includecmd: no
     export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
 
-    celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${CELERY_LOG_PATH}/beagle_beat.log --pidfile ${CELERY_BEAT_PID_FILE} -s ${CELERY_BEAT_SCHEDULE_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule & #>/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${CELERY_LOG_PATH}/beagle_beat.log --pidfile ${CELERY_BEAT_PID_FILE} -s ${CELERY_BEAT_SCHEDULE_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${CELERY_LOG_PATH}/beagle_worker.log --pidfile ${CELERY_WORKER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker & # >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${CELERY_LOG_PATH}/beagle_worker.log --pidfile ${CELERY_WORKER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_SCHEDULER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler & # >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_SCHEDULER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler & >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_RUNNER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner & # >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_RUNNER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${CELERY_LOG_PATH}/beagle_flower.log --pidfile ${CELERY_FLOWER_PID_FILE} --port=${FLOWER_PORT} --broker=$CELERY_BROKER_URL// & # >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${CELERY_LOG_PATH}/beagle_flower.log --pidfile ${CELERY_FLOWER_PID_FILE} --port=${FLOWER_PORT} --broker=$CELERY_BROKER_URL// >/dev/null 2>&1 < /dev/null &
 
 
 ##############################
@@ -159,9 +159,11 @@ Includecmd: no
     ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
 
-##############################
+############################################################
 # check env variables with celery-env, beagle-env 
-##############################
+# 
+# view how many processes are running for each celery worker
+############################################################
 
 %apprun celery-env
     if [ -z "${BEAGLE_PATH}" ]; then
@@ -201,6 +203,21 @@ Includecmd: no
     echo "CELERY_SCHEDULER_PID_FILE:"$CELERY_SCHEDULER_PID_FILE
     echo "CELERY_RUNNER_PID_FILE:"$CELERY_RUNNER_PID_FILE
     echo "CELERY_FLOWER_PID_FILE:"$CELERY_FLOWER_PID_FILE
+    echo ""
+
+    export CELERY_BEAT=`ps auxww | grep 'celery' | grep $CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export CELERY_WORKER=`ps auxww | grep 'celery' | grep $CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export CELERY_SCHEDULER=`ps auxww | grep 'celery' | grep $CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export CELERY_RUNNER=`ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export CELERY_FLOWER=`ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+
+    echo "Number of celery processes currently running for $CELERY_EVENT_QUEUE_PREFIX:"
+    echo "Beat - $CELERY_BEAT"
+    echo "Worker - $CELERY_WORKER"
+    echo "Scheduler - $CELERY_SCHEDULER"
+    echo "Runner - $CELERY_RUNNER"
+    echo "Flower - $CELERY_FLOWER"
+
 
 %apprun beagle-env
     if [ -z "${BEAGLE_PATH}" ]; then
