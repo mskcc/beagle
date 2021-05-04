@@ -74,10 +74,10 @@ The following are mandatory environmental variables for use with `beagle` and `c
 
 ```
 SINGULARITYENV_BEAGLE_PATH # beagle install to use 
-SINGULARITYENV_CELERY_LOG_PATH # location of where to store log files for celery
-SINGULARITYENV_CELERY_PID_PATH # where to store pid files for celery workers
-SINGULARITYENV_BEAT_SCHEDULE_PATH # where to store schedule of celery beat
-SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX # prefix for event queue
+SINGULARITYENV_BEAGLE_CELERY_LOG_PATH # location of where to store log files for celery
+SINGULARITYENV_BEAGLE_CELERY_PID_PATH # where to store pid files for celery workers
+SINGULARITYENV_BEAGLE_BEAT_SCHEDULE_PATH # where to store schedule of celery beat
+SINGULARITYENV_BEAGLE_CELERY_EVENT_QUEUE_PREFIX # prefix for event queue
 ```
 
 For more detailed information about beagles environment, you can use the beagle [environment page](../docs/ENVIRONMENT_VARIABLES.md)
