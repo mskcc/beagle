@@ -58,7 +58,7 @@ SINGULARITYENV_BEAGLE_RABIX_URL
 SINGULARITYENV_BEAGLE_RABIX_PATH
 SINGULARITYENV_BEAGLE_RABBITMQ_USERNAME
 SINGULARITYENV_BEAGLE_RABBITMQ_PASSWORD
-SINGULARITYENV_CELERY_BROKER_URL
+SINGULARITYENV_BEAGLE_CELERY_BROKER_URL
 SINGULARITYENV_BEAGLE_LIMS_USERNAME
 SINGULARITYENV_BEAGLE_LIMS_PASSWORD
 SINGULARITYENV_BEAGLE_RUNNER_QUEUE
@@ -112,7 +112,7 @@ Use `celery-env` to view current running celery processes:
 singularity run --app celery-env instance://beagle
 ```
 
-To stop all celery processes running for `$SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX`, use `celery-stop`:
+To stop all celery processes running for `$SINGULARITYENV_BEAGLE_CELERY_EVENT_QUEUE_PREFIX`, use `celery-stop`:
 ```
 singularity run --app celery-stop instance://beagle
 ```
