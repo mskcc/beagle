@@ -54,8 +54,8 @@ Includecmd: no
     echo "FLOWER_PORT:"$FLOWER_PORT
     echo "BEAGLE_LOG_PATH:"$BEAGLE_LOG_PATH
 
-    python3 ${BEAGLE_PATH}/manage.py migrate > /dev/null 2>&1 < /dev/null &
-    python3 ${BEAGLE_PATH}/manage.py collectstatic > /dev/null 2>&1 < /dev/null &
+    python3 ${BEAGLE_PATH}/manage.py migrate
+    python3 ${BEAGLE_PATH}/manage.py collectstatic
     gunicorn beagle.wsgi --log-file $BEAGLE_LOG_PATH --bind 0.0.0.0:$BEAGLE_PORT --threads 10 --pythonpath ${BEAGLE_PATH} > /dev/null 2>&1 < /dev/null &
 
 ##############################
