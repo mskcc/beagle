@@ -68,43 +68,43 @@ Includecmd: no
         exit 1
     fi
 
-    if [ -z "${CELERY_LOG_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_LOG_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_PID_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_PID_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_BEAT_SCHEDULE_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_BEAT_SCHEDULE_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_EVENT_QUEUE_PREFIX}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX not set."
+    if [ -z "${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_EVENT_QUEUE_PREFIX not set."
         exit 1
     fi
 
-    export CELERY_BEAT_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
-    export CELERY_WORKER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
-    export CELERY_SCHEDULER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
-    export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
-    export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+    export BEAGLE_CELERY_BEAT_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
+    export BEAGLE_CELERY_WORKER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
+    export BEAGLE_CELERY_SCHEDULER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
+    export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
+    export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
 
     echo "Starting celery services..."
 
-    celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${CELERY_LOG_PATH}/beagle_beat.log --pidfile ${CELERY_BEAT_PID_FILE} -s ${CELERY_BEAT_SCHEDULE_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${BEAGLE_CELERY_LOG_PATH}/beagle_beat.log --pidfile ${BEAGLE_CELERY_BEAT_PID_FILE} -s ${BEAGLE_CELERY_BEAT_SCHEDULE_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${CELERY_LOG_PATH}/beagle_worker.log --pidfile ${CELERY_WORKER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_worker.log --pidfile ${BEAGLE_CELERY_WORKER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${CELERY_SCHEDULER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${BEAGLE_CELERY_SCHEDULER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${CELERY_LOG_PATH}/beagle_runner.log --pidfile ${CELERY_RUNNER_PID_FILE} -n ${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${CELERY_LOG_PATH}/beagle_flower.log --pidfile ${CELERY_FLOWER_PID_FILE} --port=${FLOWER_PORT} --broker=$CELERY_BROKER_URL// >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_flower.log --pidfile ${BEAGLE_CELERY_FLOWER_PID_FILE} --port=${FLOWER_PORT} --broker=$BEAGLE_CELERY_BROKER_URL// >/dev/null 2>&1 < /dev/null &
 
 
 ##############################
@@ -117,49 +117,49 @@ Includecmd: no
         exit 1
     fi
 
-    if [ -z "${CELERY_LOG_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_LOG_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_PID_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_PID_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_BEAT_SCHEDULE_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_BEAT_SCHEDULE_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_EVENT_QUEUE_PREFIX}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_EVENT_QUEUE_PREFIX not set."
+    if [ -z "${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_EVENT_QUEUE_PREFIX not set."
         exit 1
     fi
 
-    export CELERY_BEAT_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
-    export CELERY_WORKER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
-    export CELERY_SCHEDULER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
-    export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
-    export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+    export BEAGLE_CELERY_BEAT_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
+    export BEAGLE_CELERY_WORKER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
+    export BEAGLE_CELERY_SCHEDULER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
+    export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
+    export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
 
     echo "Killing celery services with the following settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
-    echo "CELERY_LOG_PATH:"$CELERY_LOG_PATH
-    echo "CELERY_PID_PATH:"$CELERY_PID_PATH
-    echo "CELERY_BEAT_SCHEDULE_PATH:"$CELERY_BEAT_SCHEDULE_PATH
-    echo "CELERY_EVENT_QUEUE_PREFIX:"$CELERY_EVENT_QUEUE_PREFIX
-    echo "CELERY_BEAT_PID_FILE:"$CELERY_BEAT_PID_FILE
-    echo "CELERY_WORKER_PID_FILE:"$CELERY_WORKER_PID_FILE
-    echo "CELERY_SCHEDULER_PID_FILE:"$CELERY_SCHEDULER_PID_FILE
-    echo "CELERY_RUNNER_PID_FILE:"$CELERY_RUNNER_PID_FILE
-    echo "CELERY_FLOWER_PID_FILE:"$CELERY_FLOWER_PID_FILE
+    echo "BEAGLE_CELERY_LOG_PATH:"$BEAGLE_CELERY_LOG_PATH
+    echo "BEAGLE_CELERY_PID_PATH:"$BEAGLE_CELERY_PID_PATH
+    echo "BEAGLE_CELERY_BEAT_SCHEDULE_PATH:"$BEAGLE_CELERY_BEAT_SCHEDULE_PATH
+    echo "BEAGLE_CELERY_EVENT_QUEUE_PREFIX:"$BEAGLE_CELERY_EVENT_QUEUE_PREFIX
+    echo "BEAGLE_CELERY_BEAT_PID_FILE:"$BEAGLE_CELERY_BEAT_PID_FILE
+    echo "BEAGLE_CELERY_WORKER_PID_FILE:"$BEAGLE_CELERY_WORKER_PID_FILE
+    echo "BEAGLE_CELERY_SCHEDULER_PID_FILE:"$BEAGLE_CELERY_SCHEDULER_PID_FILE
+    echo "BEAGLE_CELERY_RUNNER_PID_FILE:"$BEAGLE_CELERY_RUNNER_PID_FILE
+    echo "BEAGLE_CELERY_FLOWER_PID_FILE:"$BEAGLE_CELERY_FLOWER_PID_FILE
 
-    ps auxww | grep 'celery' | grep $CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
 
 ############################################################
 # check env variables with celery-env, beagle-env 
@@ -173,52 +173,52 @@ Includecmd: no
         exit 1
     fi
 
-    if [ -z "${CELERY_LOG_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_LOG_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_LOG_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_PID_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_PID_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_PID_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    if [ -z "${CELERY_BEAT_SCHEDULE_PATH}" ]; then
-        echo "ERROR: SINGULARITYENV_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
+    if [ -z "${BEAGLE_CELERY_BEAT_SCHEDULE_PATH}" ]; then
+        echo "ERROR: SINGULARITYENV_BEAGLE_CELERY_BEAT_SCHEDULE_PATH not set; suggest setting to default /tmp, accessible by container."
         exit 1
     fi
 
-    export CELERY_BEAT_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
-    export CELERY_WORKER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
-    export CELERY_SCHEDULER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
-    export CELERY_RUNNER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
-    export CELERY_FLOWER_PID_FILE=${CELERY_PID_PATH}/${CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+    export BEAGLE_CELERY_BEAT_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_beat.pid
+    export BEAGLE_CELERY_WORKER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker.pid
+    export BEAGLE_CELERY_SCHEDULER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
+    export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
+    export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
 
     echo "Current celery settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
-    echo "CELERY_LOG_PATH:"$CELERY_LOG_PATH
-    echo "CELERY_PID_PATH:"$CELERY_PID_PATH
-    echo "CELERY_BEAT_SCHEDULE_PATH:"$CELERY_BEAT_SCHEDULE_PATH
-    echo "CELERY_EVENT_QUEUE_PREFIX:"$CELERY_EVENT_QUEUE_PREFIX
-    echo "CELERY_BEAT_PID_FILE:"$CELERY_BEAT_PID_FILE
-    echo "CELERY_WORKER_PID_FILE:"$CELERY_WORKER_PID_FILE
-    echo "CELERY_SCHEDULER_PID_FILE:"$CELERY_SCHEDULER_PID_FILE
-    echo "CELERY_RUNNER_PID_FILE:"$CELERY_RUNNER_PID_FILE
-    echo "CELERY_FLOWER_PID_FILE:"$CELERY_FLOWER_PID_FILE
+    echo "BEAGLE_CELERY_LOG_PATH:"$BEAGLE_CELERY_LOG_PATH
+    echo "BEAGLE_CELERY_PID_PATH:"$BEAGLE_CELERY_PID_PATH
+    echo "BEAGLE_CELERY_BEAT_SCHEDULE_PATH:"$BEAGLE_CELERY_BEAT_SCHEDULE_PATH
+    echo "BEAGLE_CELERY_EVENT_QUEUE_PREFIX:"$BEAGLE_CELERY_EVENT_QUEUE_PREFIX
+    echo "BEAGLE_CELERY_BEAT_PID_FILE:"$BEAGLE_CELERY_BEAT_PID_FILE
+    echo "BEAGLE_CELERY_WORKER_PID_FILE:"$BEAGLE_CELERY_WORKER_PID_FILE
+    echo "BEAGLE_CELERY_SCHEDULER_PID_FILE:"$BEAGLE_CELERY_SCHEDULER_PID_FILE
+    echo "BEAGLE_CELERY_RUNNER_PID_FILE:"$BEAGLE_CELERY_RUNNER_PID_FILE
+    echo "BEAGLE_CELERY_FLOWER_PID_FILE:"$BEAGLE_CELERY_FLOWER_PID_FILE
     echo ""
 
-    export CELERY_BEAT=`ps auxww | grep 'celery' | grep $CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
-    export CELERY_WORKER=`ps auxww | grep 'celery' | grep $CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
-    export CELERY_SCHEDULER=`ps auxww | grep 'celery' | grep $CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
-    export CELERY_RUNNER=`ps auxww | grep 'celery' | grep $CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
-    export CELERY_FLOWER=`ps auxww | grep 'celery' | grep $CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export BEAGLE_CELERY_BEAT=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export BEAGLE_CELERY_WORKER=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export BEAGLE_CELERY_SCHEDULER=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export BEAGLE_CELERY_RUNNER=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
+    export BEAGLE_CELERY_FLOWER=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
 
-    echo "Number of celery processes currently running for $CELERY_EVENT_QUEUE_PREFIX:"
-    echo "Beat - $CELERY_BEAT"
-    echo "Worker - $CELERY_WORKER"
-    echo "Scheduler - $CELERY_SCHEDULER"
-    echo "Runner - $CELERY_RUNNER"
-    echo "Flower - $CELERY_FLOWER"
+    echo "Number of celery processes currently running for $BEAGLE_CELERY_EVENT_QUEUE_PREFIX:"
+    echo "Beat - $BEAGLE_CELERY_BEAT"
+    echo "Worker - $BEAGLE_CELERY_WORKER"
+    echo "Scheduler - $BEAGLE_CELERY_SCHEDULER"
+    echo "Runner - $BEAGLE_CELERY_RUNNER"
+    echo "Flower - $BEAGLE_CELERY_FLOWER"
 
 
 %apprun beagle-env
