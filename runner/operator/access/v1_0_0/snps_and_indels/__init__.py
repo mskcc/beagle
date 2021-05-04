@@ -429,48 +429,33 @@ class AccessLegacySNVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_names = [tumor_sample_id]
-            tumor_bams = [{
-                "class": "File",
-                "location": 'juno://' + tumor_duplex_bam.path
-            }]
-            matched_normal_ids = [matched_normal_unfiltered_id]
+            tumor_bams = [self._create_cwl_bam_object(tumor_duplex_bam)]
 
-            normal_bams = [{
-                "class": "File",
-                "location": 'juno://' + normal_bam.path
-            }]
+            matched_normal_ids = [matched_normal_unfiltered_id]
+            normal_bams = [self._create_cwl_bam_object(normal_bam)]
             normal_sample_names = [ACCESS_DEFAULT_NORMAL_ID]
 
             genotyping_bams = [
-                {"class": "File", "location": 'juno://' + tumor_duplex_bam.path},
-                {"class": "File", "location": 'juno://' + tumor_simplex_bam.path}
+                self._create_cwl_bam_object(tumor_duplex_bam),
+                self._create_cwl_bam_object(tumor_simplex_bam)
             ]
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX']
 
             # Matched Normal may or may not be available for genotyping
             if matched_normal_unfiltered:
-                genotyping_bams += [{
-                    "class": "File",
-                    "location": 'juno://' + matched_normal_unfiltered.path
-                }]
+                genotyping_bams += [self._create_cwl_bam_object(matched_normal_unfiltered)]
                 genotyping_bams_ids += [matched_normal_unfiltered_id]
 
             # Additional matched Tumors may be available
             if len(geno_samples_duplex) > 0:
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_duplex
-                ]
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_simplex
-                ]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_duplex]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_simplex]
                 genotyping_bams_ids += geno_samples_duplex_sample_ids
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in geno_samples_simplex_sample_ids]
 
             # Additional unfiltered normals may be available
             if len(geno_samples_normal_unfiltered) > 0:
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_normal_unfiltered
-                ]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_normal_unfiltered]
                 genotyping_bams_ids += geno_samples_normal_unfiltered_sample_ids
 
             genotyping_bams += self.curated_normal_bams
@@ -488,3 +473,16 @@ class AccessLegacySNVOperator(Operator):
 
             sample_input = json.loads(input_file)
             return sample_input
+
+    def _create_cwl_bam_object(self, bam):
+        """
+        Util function to create a simple CWL File object from a bam with a path attribute
+
+        :param bam:
+        :return:
+        """
+        return {
+            "class": "File",
+            "location": "juno://" + bam.path
+        }
+    
