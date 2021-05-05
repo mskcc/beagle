@@ -355,10 +355,34 @@ class AccessLegacySNVOperator(Operator):
             duplex_geno_samples += duplex_geno_samples_to_add
             simplex_geno_samples += simplex_geno_samples_to_add
 
-        # Deduplicate
+        # Deduplicate based on PK
         duplex_geno_samples = list(set(duplex_geno_samples))
         simplex_geno_samples = list(set(simplex_geno_samples))
+        # Deduplicate based on file name
+        duplex_geno_samples, simplex_geno_samples = self._remove_dups_by_file_name(duplex_geno_samples, simplex_geno_samples)
 
+        return duplex_geno_samples, simplex_geno_samples
+
+    def _remove_dups_by_file_name(self, duplex_geno_samples, simplex_geno_samples):
+        """
+        Simple util to avoid Genotyping same sample twice
+        (when bam comes from different runs and can't be
+        deduplicated based on ID)
+
+        :return:
+        """
+        duplex_geno_samples_dedup_ids = set()
+        duplex_geno_samples_dedup = []
+        for s in duplex_geno_samples:
+            if not s.file_name in duplex_geno_samples_dedup_ids:
+                duplex_geno_samples_dedup_ids.add(s.file_name)
+                duplex_geno_samples_dedup.append(s)
+        simplex_geno_samples_dedup_ids = set()
+        simplex_geno_samples_dedup = []
+        for s in simplex_geno_samples:
+            if not s.file_name in simplex_geno_samples_dedup_ids:
+                simplex_geno_samples_dedup_ids.add(s.file_name)
+                simplex_geno_samples_dedup.append(s)
         return duplex_geno_samples, simplex_geno_samples
 
     def get_dmp_matched_patient_geno_samples(self, patient_id):
