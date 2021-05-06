@@ -355,11 +355,35 @@ class AccessLegacySNVOperator(Operator):
             duplex_geno_samples += duplex_geno_samples_to_add
             simplex_geno_samples += simplex_geno_samples_to_add
 
-        # Deduplicate
+        # Deduplicate based on PK
         duplex_geno_samples = list(set(duplex_geno_samples))
         simplex_geno_samples = list(set(simplex_geno_samples))
+        # Deduplicate based on file name
+        duplex_geno_samples, simplex_geno_samples = self._remove_dups_by_file_name(duplex_geno_samples, simplex_geno_samples)
 
         return duplex_geno_samples, simplex_geno_samples
+
+    def _remove_dups_by_file_name(self, duplex_geno_samples, simplex_geno_samples):
+        """
+        Simple util to avoid Genotyping same sample twice
+        (when bam comes from different runs and can't be
+        deduplicated based on ID)
+
+        :return:
+        """
+        duplex_geno_samples_dedup_ids = set()
+        duplex_geno_samples_dedup = []
+        for s in duplex_geno_samples:
+            if not s.file_name in duplex_geno_samples_dedup_ids:
+                duplex_geno_samples_dedup_ids.add(s.file_name)
+                duplex_geno_samples_dedup.append(s)
+        simplex_geno_samples_dedup_ids = set()
+        simplex_geno_samples_dedup = []
+        for s in simplex_geno_samples:
+            if not s.file_name in simplex_geno_samples_dedup_ids:
+                simplex_geno_samples_dedup_ids.add(s.file_name)
+                simplex_geno_samples_dedup.append(s)
+        return duplex_geno_samples_dedup, simplex_geno_samples_dedup
 
     def get_dmp_matched_patient_geno_samples(self, patient_id):
         """
@@ -429,48 +453,33 @@ class AccessLegacySNVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_names = [tumor_sample_id]
-            tumor_bams = [{
-                "class": "File",
-                "location": 'juno://' + tumor_duplex_bam.path
-            }]
-            matched_normal_ids = [matched_normal_unfiltered_id]
+            tumor_bams = [self._create_cwl_bam_object(tumor_duplex_bam)]
 
-            normal_bams = [{
-                "class": "File",
-                "location": 'juno://' + normal_bam.path
-            }]
+            matched_normal_ids = [matched_normal_unfiltered_id]
+            normal_bams = [self._create_cwl_bam_object(normal_bam)]
             normal_sample_names = [ACCESS_DEFAULT_NORMAL_ID]
 
             genotyping_bams = [
-                {"class": "File", "location": 'juno://' + tumor_duplex_bam.path},
-                {"class": "File", "location": 'juno://' + tumor_simplex_bam.path}
+                self._create_cwl_bam_object(tumor_duplex_bam),
+                self._create_cwl_bam_object(tumor_simplex_bam)
             ]
             genotyping_bams_ids = [tumor_sample_id, tumor_sample_id + '-SIMPLEX']
 
             # Matched Normal may or may not be available for genotyping
             if matched_normal_unfiltered:
-                genotyping_bams += [{
-                    "class": "File",
-                    "location": 'juno://' + matched_normal_unfiltered.path
-                }]
+                genotyping_bams += [self._create_cwl_bam_object(matched_normal_unfiltered)]
                 genotyping_bams_ids += [matched_normal_unfiltered_id]
 
             # Additional matched Tumors may be available
             if len(geno_samples_duplex) > 0:
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_duplex
-                ]
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_simplex
-                ]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_duplex]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_simplex]
                 genotyping_bams_ids += geno_samples_duplex_sample_ids
                 genotyping_bams_ids += [i + '-SIMPLEX' for i in geno_samples_simplex_sample_ids]
 
             # Additional unfiltered normals may be available
             if len(geno_samples_normal_unfiltered) > 0:
-                genotyping_bams += [
-                    {"class": "File", "location": 'juno://' + b.path} for b in geno_samples_normal_unfiltered
-                ]
+                genotyping_bams += [self._create_cwl_bam_object(b) for b in geno_samples_normal_unfiltered]
                 genotyping_bams_ids += geno_samples_normal_unfiltered_sample_ids
 
             genotyping_bams += self.curated_normal_bams
@@ -488,3 +497,16 @@ class AccessLegacySNVOperator(Operator):
 
             sample_input = json.loads(input_file)
             return sample_input
+
+    def _create_cwl_bam_object(self, bam):
+        """
+        Util function to create a simple CWL File object from a bam with a path attribute
+
+        :param bam:
+        :return:
+        """
+        return {
+            "class": "File",
+            "location": "juno://" + bam.path
+        }
+    
