@@ -383,7 +383,7 @@ class AccessLegacySNVOperator(Operator):
             if not s.file_name in simplex_geno_samples_dedup_ids:
                 simplex_geno_samples_dedup_ids.add(s.file_name)
                 simplex_geno_samples_dedup.append(s)
-        return duplex_geno_samples, simplex_geno_samples
+        return duplex_geno_samples_dedup, simplex_geno_samples_dedup
 
     def get_dmp_matched_patient_geno_samples(self, patient_id):
         """
