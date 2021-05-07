@@ -112,7 +112,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         q = query & Q(metadata__sampleName=sample_name)
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
-            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+            LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)
 
     return pooled_normals, descriptor, sample_name
 
