@@ -162,6 +162,15 @@ Includecmd: no
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
 
+    echo ""
+    echo "Removing PID files..."
+    rm $BEAGLE_CELERY_BEAT_PID_FILE > /dev/null 2>&1 < /dev/null &
+    rm $BEAGLE_CELERY_WORKER_PID_FILE > /dev/null 2>&1 < /dev/null &
+    rm $BEAGLE_CELERY_SCHEDULER_PID_FILE > /dev/null 2>&1 < /dev/null &
+    rm $BEAGLE_CELERY_RUNNER_PID_FILE > /dev/null 2>&1 < /dev/null &
+    rm $BEAGLE_CELERY_FLOWER_PID_FILE > /dev/null 2>&1 < /dev/null &
+    sleep 5
+
 ############################################################
 # check env variables with celery-env, beagle-env 
 # 
