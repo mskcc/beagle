@@ -15,15 +15,22 @@ class CopyService(object):
                                                                      path_to=path_to))
         dirname = os.path.dirname(path_to)
         if not os.path.exists(dirname):
-            os.makedirs(dirname)
+            os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION)
         copyfile(path_from, path_to)
+        os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
+        prefix, dst = CopyService.get_mapping(recipe, path, mapping)
+        if prefix and dst:
+            path = path.replace(prefix, dst)
+        logger.info('New path {path}'.format(path=path))
+        return path
+
+    @staticmethod
+    def get_mapping(recipe, path, mapping=settings.DEFAULT_MAPPING):
         recipe_mapping = mapping.get(recipe, {})
         for prefix, dst in recipe_mapping.items():
             if path.startswith(prefix):
-                path = path.replace(prefix, dst)
-                break
-        logger.info('New path {path}'.format(path=path))
-        return path
+                return prefix, dst
+        return None, None
