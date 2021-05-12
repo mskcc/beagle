@@ -383,5 +383,7 @@ WES_ASSAYS = os.environ.get('BEAGLE_NOTIFIER_WES_ASSAYS', 'WholeExomeSequencing'
 NOTIFIER_WES_CC = os.environ.get('BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC', '')
 
 DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
+COPY_FILE_PERMISSION = 0o640
+COPY_DIR_PERMISSION = 0o750
 
 APP_CACHE = os.environ.get('BEAGLE_APP_CACHE', '/tmp')
