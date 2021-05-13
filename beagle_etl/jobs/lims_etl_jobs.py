@@ -228,7 +228,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     pooled_normals = sample_ids.get("pooledNormals", [])
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
-            job = get_or_create_pooled_normal_job(f, jg)
+            job = get_or_create_pooled_normal_job(f, jg, jgn, redelivery=redelivery)
             children.add(str(job.id))
     if import_samples:
         if not sample_ids.get('samples', False):
@@ -246,21 +246,20 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     return list(children)
 
 
-def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None):
+def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None, redelivery=False):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
 
     job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
 
-    if not job:
-        job = Job(run=TYPES['POOLED_NORMAL'],
-                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
-                  status=JobStatus.CREATED,
-                  max_retry=1,
-                  children=[],
-                  job_group=job_group,
-                  job_group_notifier=job_group_notifier)
-        job.save()
+    if not job or redelivery:
+        job = Job.objects.create(run=TYPES['POOLED_NORMAL'],
+                                 args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
+                                 status=JobStatus.CREATED,
+                                 max_retry=1,
+                                 children=[],
+                                 job_group=job_group,
+                                 job_group_notifier=job_group_notifier)
     return job
 
 
