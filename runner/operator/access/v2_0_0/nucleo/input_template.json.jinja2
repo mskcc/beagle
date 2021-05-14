@@ -1,0 +1,59 @@
+{
+    "reference_sequence": {
+        "class": "File",
+        "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta"
+    },
+
+    "gatk_base_recalibrator_known_sites": [
+        {
+            "class": "File",
+            "location": "juno:///work/access/production/resources/dbSNP/current/dbsnp_137.b37.vcf"
+        },
+        {
+            "class": "File",
+            "location": "juno:///work/access/production/resources/mills-and-1000g/current/Mills_and_1000G_gold_standard.indels.b37.vcf"
+        }
+    ],
+
+    "sample": "{{ sample_id }}",
+    "fgbio_fastq_to_bam_input": {{fgbio_fastq_to_bam_input}},
+
+    "read-group-id": "{{ sample_id }}",
+    "platform-unit": "{{ barcode_id }}",
+    "library": "{{ library_id }}",
+
+    "UBG_abra2_output_bams": "{{ sample_id }}_IR.bam",
+    "BC_abra2_output_bams": "{{ sample_id }}_IR.bam",
+
+    "fgbio_filter_consensus_read_output_file_name_simplex_duplex": "{{ sample_id }}_collapsed_simplex-duplex.bam",
+    "fgbio_filter_consensus_read_output_file_name_simplex_aln_metrics": "{{ sample_id }}_test_collapsed_simplex_aln_metrics.txt",
+    "fgbio_postprocessing_output_file_name_simplex": "{{ sample_id }}_collapsed_simplex.bam",
+    "fgbio_group_reads_by_umi_output_file_name": "{{ sample_id }}_test_collapsed_grouped.bam",
+    "fgbio_group_reads_by_umi_family_size_histogram": "{{ sample_id }}_test_umi_family_size.hist",
+
+    "BC_bwa_mem_output": "{{ sample_id }}.sam",
+
+    "UBG_picard_SamToFastq_R1_output_fastq": "{{ sample_id }}_samtofastq_R1.fastq",
+    "UBG_picard_SamToFastq_R2_output_fastq": "{{ sample_id }}_samtofastq_R2.fastq",
+
+    "fastp_read1_output_file_name": "{{ sample_id }}_trimmed_R1.fastq.gz",
+    "fastp_read2_output_file_name": "{{ sample_id }}_trimmed_R2.fastq.gz",
+    "fastp_html_output_file_name": "{{ sample_id }}_fastp_report.html",
+    "fastp_json_output_file_name": "{{ sample_id }}_fastp_report.json",
+
+    "UBG_picard_addRG_output_file_name": "{{ sample_id }}_uncollapsed.bam",
+    "UBG_bwa_mem_output": "{{ sample_id }}_uncollapsed.sam",
+    "UBG_gatk_merge_bam_alignment_output_file_name": "{{ sample_id }}_uncollapsed_merged.bam",
+
+    "gatk_mark_duplicates_output_file_name": "{{ sample_id }}_MD.bam",
+    "gatk_mark_duplicates_duplication_metrics_file_name": "{{ sample_id }}_uncollapsed_MD_metrics.txt",
+    "gatk_merge_sam_files_output_file_name": "{{ sample_id }}_uncollapsed_merged.sam",
+
+    "apply_bqsr_output_file_name": "{{ sample_id }}_BR.bam",
+
+    "BC_gatk_sam_to_fastq_output_name_R1": "{{ sample_id }}_collapsed_R1.fastq.gz",
+    "BC_gatk_sam_to_fastq_output_name_R2": "{{ sample_id }}_collapsed_R2.fastq.gz",
+    "BC_picard_fixmate_information_output_file_name": "{{ sample_id }}_collapsed_FM.bam",
+    "BC_picard_addRG_output_file_name": "{{ sample_id }})_collapsed.bam",
+    "BC_gatk_merge_bam_alignment_output_file_name": "{{ sample_id }}_collapsed_merged.bam"
+}
