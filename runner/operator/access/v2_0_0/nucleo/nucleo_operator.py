@@ -61,8 +61,8 @@ def construct_sample_inputs(samples, request_id):
         fgbio_fastq_to_bam_input = group_by_run(sample_group)
         fgbio_fastq_to_bam_input = [
             [
-                {"class": "File", "location": s[0]["path"]},
-                {"class": "File", "location": s[1]["path"]}
+                {"class": "File", "location": "juno://" + s[0]["path"]},
+                {"class": "File", "location": "juno://" + s[1]["path"]}
             ]
             for s in fgbio_fastq_to_bam_input
         ]
