@@ -56,7 +56,7 @@ def construct_sample_inputs(samples, request_id):
         })
 
         sample_group = list(sample_group)
-        sample_id = sample_group[0]["metadata"]["sampleId"]
+        sample_id = sample_group[0]["metadata"]["sampleName"]
 
         fgbio_fastq_to_bam_input = group_by_run(sample_group)
         fgbio_fastq_to_bam_input = [
