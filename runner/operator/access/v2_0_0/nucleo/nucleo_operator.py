@@ -29,12 +29,13 @@ def group_by_run(samples):
 
 
 def calc_avg(sample_files, field):
-    fields = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
-    field_count = len(fields)
+    samples_with_field = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
+    field_count = len(samples_with_field)
     if field_count == 0:
         return 0
 
-    return sum([float(s["metadata"][field]) for s in fields])/field_count
+    avg = sum([float(s["metadata"][field]) for s in samples_with_field])/field_count
+    return avg
 
 
 def construct_sample_inputs(samples, request_id):
@@ -76,7 +77,7 @@ def construct_sample_inputs(samples, request_id):
         )
 
         sample = json.loads(input_file)
-        sample_inputs.append((sample, sample_group[0]["metadata"]))
+        sample_inputs.append((sample, meta))
 
     return sample_inputs
 
