@@ -1,14 +1,9 @@
 import os
-import json
 import logging
-from jinja2 import Template
 
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
-from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
-
 
 logger = logging.getLogger(__name__)
 
