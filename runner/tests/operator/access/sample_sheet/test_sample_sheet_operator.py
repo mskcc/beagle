@@ -27,11 +27,7 @@ class TestSampleSheeetOperator(TestCase):
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
 
     def test_sample_sheet_operator(self):
-        """
-        Test that an Access legacy SV operator instance can be created and validated
-        """
         request_id = "10075_D"
-
         operator_model = Operator.objects.get(slug="AccessSampleSheetOperator")
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_jobs()[0][0].is_valid(), True)
