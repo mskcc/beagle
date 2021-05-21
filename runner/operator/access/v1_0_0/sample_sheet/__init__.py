@@ -23,20 +23,23 @@ class AccessSampleSheetOperator(Operator):
             if f.metadata["barcodeIndex"]:
                 barcodeIndex = f.metadata["barcodeIndex"].split("-")
                 index1 = barcodeIndex[0]
-                if len(barcodeIndex) > 1:
-                    index2 = barcodeIndex[1]
 
             for lane in f.metadata["flowCellLanes"]:
                 samples.append({
-                    "lane": lane,
-                    "sample_id": f.metadata["sampleId"],
-                    "sample_plate": f.metadata["tumorOrNormal"],
-                    "sample_well": f.metadata["recipe"],
-                    "17_index_id": f.metadata["barcodeId"],
-                    "index": index1,
-                    "index2": index2,
-                    "sample_project": "Project_" + self.request_id,
-                    "description": f.metadata["dataAnalystName"]
+                    "Lane": lane,
+                    "SampleID": f.metadata["cmoSampleName"][2:].replace("_", "-"),
+                    "SampleRef": f.metadata["species"],
+                    "Index": index1,
+                    "Description": f.metadata["tumorOrNormal"],
+                    "Control": "N",
+                    "Recipe": f.metadata["recipe"],
+                    "Operator": "|".join(["AR", "-;-", f.metadata["sampleId"], f.metadata["sex"], "NOVASEQ"]),
+                    "SampleProject": "Project_" + self.request_id,
+                    "DnaInputNg": f.metadata["dnaInputNg"],
+                    "CaptureInputNg": f.metadata["captureInputNg"],
+                    "LibraryVolume": f.metadata["libraryVolume"],
+                    "PatientId": f.metadata["patientId"],
+                    "IgoID": f.metadata["sampleId"],
                 })
 
         inputs = [{
