@@ -21,14 +21,13 @@ class CopyService(object):
         copyfile(path_from, path_to)
         os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
-        if settings.COPY_GROUP_OWNERSHIP:
-            for dirpath, dirnames, filenames in os.walk(path_to):
-                shutil.chown(dirpath, group=settings.COPY_GROUP_OWNERSHIP)
-                for filename in filenames:
-                    shutil.chown(
-                        os.path.join(dirpath, filename),
-                        group=settings.COPY_GROUP_OWNERSHIP,
-                    )
+        for dirpath, dirnames, filenames in os.walk(path_to):
+            shutil.chown(dirpath, group=settings.COPY_GROUP_OWNERSHIP)
+            for filename in filenames:
+                shutil.chown(
+                    os.path.join(dirpath, filename),
+                    group=settings.COPY_GROUP_OWNERSHIP,
+                )
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
