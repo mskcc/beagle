@@ -27,7 +27,7 @@ class AccessSampleSheetOperator(Operator):
             for lane in f.metadata["flowCellLanes"]:
                 samples.append({
                     "Lane": lane,
-                    "SampleID": f.metadata["cmoSampleName"][2:].replace("_", "-"),
+                    "SampleID": f.metadata["sampleName"],
                     "SampleRef": f.metadata["species"],
                     "Index": index1,
                     "Description": f.metadata["tumorOrNormal"],
