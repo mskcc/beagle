@@ -68,9 +68,11 @@ def check_and_return_single_values(data):
     data['pi_email'] = '; '.join(set(data['pi_email']))
 
     # hack; formats LB field so that it is a string
+    # sort first if there's more than one
     library_id = [i for i in data['LB'] if i]
     number_of_library_ids = len(library_id)
     if number_of_library_ids > 0:
+        library_id.sort()
         data['LB'] = '_and_'.join(library_id)
     else:
         data['LB'] = data['SM'] + "_1"
@@ -143,13 +145,8 @@ def build_sample(data, ignore_sample_formatting=False):
         rg_id = cmo_sample_name + "_1"
         run_mode = get_run_mode(meta['runMode'])
         if barcode_index:
-            platform_unit = '_'.join([flowcell_id, barcode_index])
-        try:
-            rg_id = '_'.join([cmo_sample_name, platform_unit])
-        except:
-            LOGGER.info("RG ID couldn't be set.")
-            LOGGER.info("Sample ID %s; patient ID %s", sample_id, cmo_patient_id)
-            LOGGER.info("SampleName %s; platform unit %s", cmo_sample_name, platform_unit)
+            platform_unit = '_'.join([cmo_sample_name, flowcell_id, barcode_index])
+            rg_id = platform_unit
         if sample_id not in samples:
             samples[sample_id] = dict()
             sample = dict()
