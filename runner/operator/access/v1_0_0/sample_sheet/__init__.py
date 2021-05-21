@@ -38,7 +38,7 @@ class AccessSampleSheetOperator(Operator):
                     "DnaInputNg": f.metadata["dnaInputNg"],
                     "CaptureInputNg": f.metadata["captureInputNg"],
                     "LibraryVolume": f.metadata["libraryVolume"],
-                    "PatientId": f.metadata["patientId"],
+                    "PatientID": f.metadata["patientId"],
                     "IgoID": f.metadata["sampleId"],
                 })
 
