@@ -71,6 +71,7 @@ def check_and_return_single_values(data):
     library_id = [i for i in data['LB'] if i]
     number_of_library_ids = len(library_id)
     if number_of_library_ids > 0:
+        library_id.sort()
         data['LB'] = '_and_'.join(library_id)
     else:
         data['LB'] = data['SM'] + "_1"
