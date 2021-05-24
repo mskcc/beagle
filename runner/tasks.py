@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
-from runner.run.objects.run_object import RunObject
+from runner.run.objects.cwl.cwl_run_object import CWLRunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
     SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, \
@@ -287,9 +287,9 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
              on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run for %s" % run_id)
-    run = RunObject.from_cwl_definition(run_id, inputs)
+    run = CWLRunObject.from_definition(run_id, inputs)
     run.ready()
-    RunObject.to_db(run)
+    CWLRunObject.to_db(run)
     submit_job.delay(run_id, output_directory)
     logger.info("Run %s Ready" % run_id)
 
@@ -312,8 +312,8 @@ def submit_job(run_id, output_directory=None):
         raise Exception("Failed to submit a run")
 
     if run.resume:
-        run1 = RunObject.from_db(run_id)
-        run2 = RunObject.from_db(run.resume)
+        run1 = CWLRunObject.from_db(run_id)
+        run2 = CWLRunObject.from_db(run.resume)
 
         if run1.equal(run2):
             logger.info("Resuming run: %s with execution id: %s" % (str(run.resume), str(run2.run_obj.execution_id)))
@@ -402,7 +402,7 @@ def check_statuses_on_ridgeback(execution_ids):
 
 
 def fail_job(run_id, error_message):
-    run = RunObject.from_db(run_id)
+    run = CWLRunObject.from_db(run_id)
     run.fail(error_message)
     run.to_db()
 
@@ -416,7 +416,7 @@ def fail_job(run_id, error_message):
 
 
 def complete_job(run_id, outputs):
-    run = RunObject.from_db(run_id)
+    run = CWLRunObject.from_db(run_id)
     if run.run_obj.is_completed:
         return
 

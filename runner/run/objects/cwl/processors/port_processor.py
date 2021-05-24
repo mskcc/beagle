@@ -4,7 +4,7 @@ import copy
 import logging
 from enum import Enum
 from pathlib import Path
-from runner.run.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
 from runner.exceptions import PortProcessorException, FileConflictException, FileHelperException
 from notifier.tasks import send_notification
 from notifier.events import UploadAttachmentEvent

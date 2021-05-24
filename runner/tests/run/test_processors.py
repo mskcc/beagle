@@ -1,11 +1,9 @@
 import uuid
-from rest_framework import status
 from dictdiffer import diff
-from runner.run.processors.file_processor import FileProcessor
-from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.processors.port_processor import PortProcessor, PortAction
 from rest_framework.test import APITestCase
-from runner.exceptions import FileHelperException
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, FileExtension
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileExtension
 
 
 class ProcessorTest(APITestCase):

@@ -3,8 +3,8 @@
 from django.db import migrations
 
 
-from runner.run.objects.run_object import RunObject
-from runner.run.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.cwl_run_object import CWLRunObject
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
 
 
 def populate_run_samples(apps, _):
@@ -12,7 +12,7 @@ def populate_run_samples(apps, _):
     for run in Run.objects.all():
         samples = set()
         try:
-            run_obj = RunObject.from_db(run.id)
+            run_obj = CWLRunObject.from_db(run.id)
         except Exception as e:
             print("Run %s can't be migrated" % str(run.id))
         for p in run_obj.inputs:

@@ -1,14 +1,12 @@
 import copy
-from notifier.tasks import send_notification
-from notifier.events import UploadAttachmentEvent
 from runner.models import Port, PortType, Run
 from runner.exceptions import PortObjectConstructException
-from runner.run.processors.file_processor import FileProcessor
-from runner.run.processors.schema_processor import SchemaProcessor
-from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.processors.schema_processor import SchemaProcessor
+from runner.run.objects.cwl.processors.port_processor import PortProcessor, PortAction
 
 
-class PortObject(object):
+class CWLPortObject(object):
 
     def __init__(self,
                  run_id,

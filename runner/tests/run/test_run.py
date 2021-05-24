@@ -3,9 +3,9 @@ from mock import patch
 from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
-from runner.run.objects.run_object import RunObject
+from runner.run.objects.cwl.cwl_run_object import CWLRunObject
 from runner.models import Run, RunStatus, Pipeline, OperatorRun
-from runner.run.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 
@@ -259,7 +259,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = CWLRunObject.from_definition(str(self.run.id), inputs)
         run.ready()
         for inp in run.inputs:
             if inp.name == 'pair':
@@ -279,7 +279,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = CWLRunObject.from_definition(str(self.run.id), inputs)
         run.to_db()
         try:
             run_obj = Run.objects.get(id=run.run_id)
@@ -294,7 +294,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = CWLRunObject.from_definition(str(self.run.id), inputs)
         run.to_db()
         operator_run = OperatorRun.objects.first()
         operator_run.runs.add(run.run_obj)
@@ -302,7 +302,7 @@ class RunObjectTest(APITestCase):
         complete_job(run.run_id, self.outputs)
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_completed_runs, num_completed_runs + 1)
-        run_obj = RunObject.from_db(run.run_id)
+        run_obj = CWLRunObject.from_db(run.run_id)
         file_obj = File.objects.filter(path=self.outputs['maf']['location'].replace('file://', '')).first()
         run_obj.to_db()
         for out in run_obj.outputs:
@@ -328,7 +328,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = CWLRunObject.from_definition(str(self.run.id), inputs)
         run.to_db()
 
         operator_run = OperatorRun.objects.first()
@@ -338,7 +338,7 @@ class RunObjectTest(APITestCase):
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
 
-        run_obj = RunObject.from_db(run.run_id)
+        run_obj = CWLRunObject.from_db(run.run_id)
         self.assertEqual(run_obj.message, {'details': 'Error has happened'})
 
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
@@ -349,7 +349,7 @@ class RunObjectTest(APITestCase):
             inputs = json.load(f)
 
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = CWLRunObject.from_definition(str(self.run.id), inputs)
         run.to_db()
 
         operator_run = OperatorRun.objects.first()

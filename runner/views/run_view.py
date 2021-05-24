@@ -7,13 +7,12 @@ from django.conf import settings
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
-from runner.models import Run, Port, Pipeline, RunStatus
+from runner.models import Run, Port, RunStatus
 from runner.serializers import RunSerializerFull, CreateRunSerializer, UpdateRunSerializer, RunStatusUpdateSerializer
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import GenericAPIView
-from runner.pipeline.pipeline_resolver import CWLResolver
-from runner.pipeline.pipeline_resolver import get_pipeline
+from runner.pipeline.cwl.cwl_resolver import get_pipeline
 
 
 class RunViewSet(mixins.ListModelMixin,

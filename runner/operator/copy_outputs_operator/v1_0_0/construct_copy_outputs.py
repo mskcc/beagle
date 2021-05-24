@@ -1,10 +1,7 @@
-import os
 import sys
-import argparse
-import json
 from pprint import pprint
 from runner.models import Port, Run
-from runner.run.processors.file_processor import FileProcessor
+from runner.run.objects.cwl.processors.file_processor import FileProcessor
 from notifier.helper import generate_sample_data_content
 
 
