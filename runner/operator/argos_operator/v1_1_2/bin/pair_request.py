@@ -200,7 +200,7 @@ def get_run_mode(run_mode):
             return "hiseq"
         if "novaseq" in run_mode.lower():
             return "novaseq"
-    return ""
+    return run_mode
 
 
 def create_pairing_info(pairs):
