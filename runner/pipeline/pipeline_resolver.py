@@ -1,6 +1,8 @@
 import os
+import json
 import git
 import uuid
+import shutil
 
 
 class PipelineResolver(object):
@@ -25,3 +27,9 @@ class PipelineResolver(object):
 
     def _cleanup(self, location):
         shutil.rmtree(location)
+
+    def load(self):
+        pass
+
+    def resolve(self):
+        pass

@@ -9,7 +9,7 @@ from runner.run.objects.cwl.processors.file_processor import FileProcessor
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 
-class RunObjectTest(APITestCase):
+class CWLRunObjectTest(APITestCase):
     fixtures = [
         "beagle_etl.operator.json",
         "runner.operator_run.json",
