@@ -1,4 +1,4 @@
-Django==2.2.18
+Django==2.2.20
 psycopg2==2.8.6
 djangorestframework==3.11.2
 markdown==3.1.1
