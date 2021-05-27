@@ -310,14 +310,25 @@ LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s|%(levelname)s|%(name)s|%(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
         "file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
             "maxBytes": 209715200,
-            "backupCount": 10
+            "backupCount": 10,
+            "formatter": "simple",
         }
     },
     "loggers": {
