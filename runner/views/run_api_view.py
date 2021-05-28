@@ -210,7 +210,7 @@ class RunApiRestartViewSet(GenericAPIView):
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED]))
+        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.ABORTED]))
         if runs_in_progress:
             return Response("There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST)
 
