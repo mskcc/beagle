@@ -39,6 +39,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'elasticapm.contrib.django',
     'core.apps.CoreConfig',
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
@@ -86,8 +87,23 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': datetime.timedelta(days=1),
 }
 
+ELASTIC_APM = {
+  # Set the required service name. Allowed characters:
+  # a-z, A-Z, 0-9, -, _, and space
+  'SERVICE_NAME': 'beagle',
+
+  # Use if APM Server requires a secret token
+  #'SECRET_TOKEN': '',
+
+  # Set the custom APM Server URL (default: http://localhost:8200)
+  'SERVER_URL': 'http://bic-dockerapp01.mskcc.org:8200/',
+
+  # Set the service environment
+  'ENVIRONMENT': ENVIRONMENT,
+}
 
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.TracingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
