@@ -18,8 +18,10 @@ class CopyService(object):
         )
 
         dirname = os.path.dirname(path_to)
-        splitted_path = dirname.split('/')
-        subpaths = ['/'.join(splitted_path[:i]) for i in range(2,len(splitted_path)+1)]
+        splitted_path = dirname.split("/")
+        subpaths = [
+            "/".join(splitted_path[:i]) for i in range(2, len(splitted_path) + 1)
+        ]
         subpaths_iter = iter(subpaths)
         newly_created = []
         for subpath in subpaths_iter:
