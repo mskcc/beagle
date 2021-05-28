@@ -195,11 +195,12 @@ def get_run_mode(run_mode):
     """
     Normalizing hiseq and novaseq strings
     """
-    if "hiseq" in run_mode.lower():
-        return "hiseq"
-    if "novaseq" in run_mode.lower():
-        return "novaseq"
-    return ""
+    if run_mode:
+        if "hiseq" in run_mode.lower():
+            return "hiseq"
+        if "novaseq" in run_mode.lower():
+            return "novaseq"
+    return run_mode
 
 
 def create_pairing_info(pairs):
