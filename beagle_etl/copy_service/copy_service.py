@@ -1,6 +1,8 @@
 import os
+import grp
+import pwd
 import logging
-from shutil import copyfile
+from shutil import copyfile, chown
 from django.conf import settings
 
 
@@ -15,19 +17,27 @@ class CopyService(object):
                 path_from=path_from, path_to=path_to
             )
         )
+
         dirname = os.path.dirname(path_to)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION)
+        splitted_path = dirname.split('/')
+        subpaths = ['/'.join(splitted_path[:i]) for i in range(2,len(splitted_path)+1)]
+        subpaths_iter = iter(subpaths)
+        newly_created = []
+        for subpath in subpaths_iter:
+            if not os.path.exists(subpath):
+                newly_created = [subpath] + list(subpaths_iter)
+                os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION)
+                break
+
         copyfile(path_from, path_to)
         os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
-        for dirpath, dirnames, filenames in os.walk(path_to):
-            shutil.chown(dirpath, group=settings.COPY_GROUP_OWNERSHIP)
-            for filename in filenames:
-                shutil.chown(
-                    os.path.join(dirpath, filename),
-                    group=settings.COPY_GROUP_OWNERSHIP,
-                )
+        if settings.COPY_GROUP_OWNERSHIP:
+            uid = os.getuid()
+            gid = grp.getgrnam(settings.COPY_GROUP_OWNERSHIP).gr_gid
+            for dirpath in newly_created:
+                chown(dirpath, group=gid)
+            os.chown(path_to, uid=uid, gid=gid)
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
