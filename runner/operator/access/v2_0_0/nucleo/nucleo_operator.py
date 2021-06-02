@@ -13,6 +13,25 @@ from file_system.repository.file_repository import FileRepository
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
+METADATA_OUTPUT_FIELDS = [
+    'barcodeId',
+    'sampleName',
+    'investigatorSampleId',
+    'patientId',
+    'tumorOrNormal',
+    'sampleOrigin',
+    'dnaInputNg',
+    'captureInputNg',
+    'baitSet',
+    'sex',
+    'barcodeIndex',
+    'libraryVolume',
+    'captureName',
+    'libraryConcentrationNgul',
+    'captureConcentrationNm',
+    'sampleId',
+    'requestId'
+]
 
 
 def group_by_sample_id(samples):
@@ -118,7 +137,8 @@ class AccessNucleoOperator(Operator):
                         'name': "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'output_metadata': metadata,
+                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
+                                            key in metadata},
                         'tags': {'requestId': self.request_id}}
                 ),
                 job
