@@ -1,9 +1,9 @@
 {
     "sample": "{{ sample_id }}",
     "read-group-id": "{{ sample_id }}",
-    "library": "{{ sample_id }}",
+    "library": "{{ library_id }}",
     "platform-model": "novaseq",
-    "platform-unit": "IDT11",
+    "platform-unit": "{{ barcode_id }}",
 
     "BC_picard_fixmate_information_output_file_name": "{{ sample_id }}__aln_srt_IR_FX.bam",
     "UBG_abra2_output_bams": "{{ sample_id }}_uncollapsed_IR.bam",
