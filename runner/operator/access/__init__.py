@@ -42,7 +42,7 @@ def get_request_id_runs(request_id):
 
     request_id_runs = Run.objects.filter(
         operator_run_id=operator_run_id,
-        app__name='access legacy',
+        app__name__in=['access legacy', 'access nucleo'],
         status=RunStatus.COMPLETED
     )
     return request_id_runs
