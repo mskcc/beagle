@@ -166,6 +166,8 @@ class TempoMPGenOperator(Operator):
                        beagle_version=beagle_version)
                 )
 
+        return []
+
 
     def load_pairing_file(self, tsv_file):
         pairing = dict()
