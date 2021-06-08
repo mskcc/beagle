@@ -29,20 +29,20 @@ def get_request_id(run_ids, request_id=None):
 
 def get_request_id_runs(request_id):
     """
-    Get the latest completed runs for the given request ID
+    Get the latest completed bam-generation runs for the given request ID
 
     :param request_id: str - IGO request ID
     :return: List[str] - List of most recent runs from given request ID
     """
     operator_run_id = Run.objects.filter(
         tags__requestId=request_id,
-        app__name='access legacy',
+        app__name__in=['access legacy', 'access nucleo'],
         operator_run__status=RunStatus.COMPLETED
     ).exclude(finished_date__isnull=True).order_by('-finished_date').first().operator_run_id
 
     request_id_runs = Run.objects.filter(
         operator_run_id=operator_run_id,
-        app__name='access legacy',
+        app__name__in=['access legacy', 'access nucleo'],
         status=RunStatus.COMPLETED
     )
     return request_id_runs
