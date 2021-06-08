@@ -116,3 +116,6 @@ To stop all celery processes running for `$SINGULARITYENV_BEAGLE_CELERY_EVENT_QU
 ```
 singularity run --app celery-stop instance://beagle
 ```
+
+#### Running Filebeat
+See https://app.gitbook.com/@mskcc-1/s/experimental-dev/filebeat

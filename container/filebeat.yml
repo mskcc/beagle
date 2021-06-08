@@ -1,0 +1,25 @@
+filebeat.inputs:
+- type: log
+  tags: ["beagle"]
+  enabled: true
+  paths:
+    - /srv/services/beagle/logs/*.log
+  #exclude_lines: ['^DBG']
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
+
+- type: log
+  tags: ["ridgeback"]
+  enabled: true
+  paths:
+    - /srv/services/ridgeback/logs/*.log
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
+
+output.logstash:
+  hosts: ["bic-dockerapp01.mskcc.org:5044"]
+output.elasticsearch:
+  hosts: ["bic-dockerapp01.mskcc.org:9002"]
+
