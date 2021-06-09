@@ -84,7 +84,9 @@ class TempoMPGenOperator(Operator):
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
         files = FileRepository.all()
+        files = FileRepository.filter(queryset=files, filter_redact=True)
         tempo_files = FileRepository.filter(queryset=files, q=q)
+        tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message("""
             Querying database for the following recipes:
