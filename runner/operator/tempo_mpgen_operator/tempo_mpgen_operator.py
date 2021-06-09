@@ -86,6 +86,7 @@ class TempoMPGenOperator(Operator):
         files = FileRepository.all()
         files = FileRepository.filter(queryset=files, filter_redact=True)
         tempo_files = FileRepository.filter(queryset=files, q=q)
+        tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message("""
             Querying database for the following recipes:
