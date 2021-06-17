@@ -5,7 +5,7 @@ from runner.models import Port
 from runner.tasks import complete_job, fail_job
 from runner.run.objects.cwl.cwl_run_object import CWLRunObject
 from runner.models import Run, RunStatus, Pipeline, OperatorRun
-from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 

@@ -1,10 +1,11 @@
+import os
 import logging
 from runner.run.objects.run_object import RunObject
-from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.cwl.cwl_port_object import CWLPortObject
 from runner.pipeline.pipeline_cache import PipelineCache
-from runner.models import PortType, RunStatus, Run, Port
-from runner.run.objects.cwl.processors.port_processor import PortProcessor, PortAction
+from runner.models import PortType, RunStatus, Run, Port, ProtocolType
+from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException, RunCreateException, RunObjectConstructException
 
 
@@ -14,6 +15,7 @@ class CWLRunObject(RunObject):
     def __init__(self, run_id, run_obj, inputs, outputs, status, samples=[], job_statuses=None, message={},
                  output_metadata={},
                  execution_id=None, tags={}, job_group=None, job_group_notifier=None, notify_for_outputs=[]):
+        self.run_type = ProtocolType.CWL
         super().__init__(run_id, run_obj, inputs, outputs, status, samples, job_statuses, message, output_metadata,
                          execution_id, tags, job_group, job_group_notifier, notify_for_outputs)
 
@@ -35,9 +37,9 @@ class CWLRunObject(RunObject):
         except Exception as e:
             raise RunCreateException("Failed to create run. Failed to resolve CWL %s" % str(e))
         try:
-            input_ports = [CWLPortObject.from_cwl_definition(run_id, inp, PortType.INPUT, inputs) for inp in
+            input_ports = [CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in
                            app.get('inputs', [])]
-            output_ports = [CWLPortObject.from_cwl_definition(run_id, out, PortType.OUTPUT, {}) for out in
+            output_ports = [CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in
                             app.get('outputs', [])]
         except PortProcessorException as e:
             raise RunCreateException("Failed to create run: %s" % str(e))
@@ -120,14 +122,34 @@ class CWLRunObject(RunObject):
                         return False
         return True
 
-    def fail(self, error_message):
-        self.status = RunStatus.FAILED
-        self.message = error_message
-
     def complete(self, outputs):
         for out in self.outputs:
-            out.complete(outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata)
+            out.complete(outputs.get(out.name, None),
+                         self.output_file_group,
+                         self.job_group_notifier,
+                         self.output_metadata)
         self.status = RunStatus.COMPLETED
+
+    def dump_job(self, output_directory=None):
+        app = {
+            "github": {
+                "repository": self.run_obj.app.github,
+                "entrypoint": self.run_obj.app.entrypoint,
+                "version": self.run_obj.app.version
+            }
+        }
+        inputs = dict()
+        for port in self.inputs:
+            inputs[port.name] = port.value
+        if not output_directory:
+            output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
+        job = {
+            'type': self.run_type,
+            'app': app,
+            'inputs': inputs,
+            'root_dir': output_directory,
+        }
+        return job
 
     def __repr__(self):
         return "(RUN) %s: status: %s" % (self.run_id, RunStatus(self.status).name)

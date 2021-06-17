@@ -1,14 +1,7 @@
 import logging
-from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.cwl.cwl_port_object import CWLPortObject
-from runner.pipeline.pipeline_cache import PipelineCache
-from runner.models import PortType, RunStatus, Run, Port
-from runner.run.objects.cwl.processors.port_processor import PortProcessor, PortAction
-from runner.exceptions import (
-    PortProcessorException,
-    RunCreateException,
-    RunObjectConstructException,
-)
+from runner.models import RunStatus
 
 
 class RunObject(object):
@@ -94,7 +87,14 @@ class RunObject(object):
         """
 
     def fail(self, error_message):
-        pass
+        self.status = RunStatus.FAILED
+        self.message = error_message
 
     def complete(self, outputs):
+        pass
+
+    def dump_job(self, output_directory=None):
+        """
+        :return: Job Dict
+        """
         pass

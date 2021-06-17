@@ -4,7 +4,7 @@ from django.db import migrations
 
 
 from runner.run.objects.cwl.cwl_run_object import CWLRunObject
-from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 
 
 def populate_run_samples(apps, _):
