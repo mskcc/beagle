@@ -7,7 +7,7 @@ import os
 import sys
 import json
 from runner.models import Port,Run
-from runner.run.objects.cwl.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
 from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler

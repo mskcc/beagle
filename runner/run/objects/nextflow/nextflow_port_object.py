@@ -1,4 +1,5 @@
 import copy
+import pystache
 from runner.models import Port, PortType, Run
 from runner.exceptions import PortObjectConstructException
 from runner.run.objects.port_object import PortObject
@@ -7,7 +8,7 @@ from runner.run.processors.schema_processor import SchemaProcessor
 from runner.run.processors.port_processor import PortProcessor, PortAction
 
 
-class CWLPortObject(PortObject):
+class NextflowPortObject(PortObject):
 
     def __init__(self,
                  run_id,
@@ -19,7 +20,8 @@ class CWLPortObject(PortObject):
                  value,
                  files,
                  port_id=None,
-                 notify=False):
+                 notify=False,
+                 template=None):
         super().__init__(run_id,
                          name,
                          port_type,
@@ -30,29 +32,35 @@ class CWLPortObject(PortObject):
                          files,
                          port_id,
                          notify)
+        self.template = template
 
     @classmethod
     def from_definition(cls, run_id, value, port_type, port_values, notify=False):
         name = value.get('id')
-        input_schema = value.get('type')
-        secondary_files = value.get('secondaryFiles', [])
-        schema = input_schema
+        schema = value.get('schema')
+        template = value.get('template')
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
         files = []
         db_value = copy.deepcopy(port_values.get(name))
         notify = notify
-        return cls(run_id, name, port_type, schema, secondary_files, db_value, value, files, notify)
+        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template)
 
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
         files = []
-        self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                    PortAction.CONVERT_TO_BID,
-                                                    file_list=files)
-        self.value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                 PortAction.CONVERT_TO_PATH)
-        self.files = files
+        if self.port_type == PortType.INPUT:
+            self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
+                                                        PortAction.CONVERT_TO_BID,
+                                                        file_list=files)
+            self.value = PortProcessor.process_files(copy.deepcopy(self.value),
+                                                     PortAction.CONVERT_TO_PATH)
+            self.value = PortProcessor.process_files(copy.deepcopy(self.value),
+                                                     PortAction.NEXTFLOW_TEMPLATE)
+            if self.template:
+                render_value = {self.name: self.value}
+                self.value = pystache.render(self.template, render_value)
+            self.files = files
 
     def complete(self, value, group, job_group_notifier, output_metadata={}):
 
@@ -85,7 +93,8 @@ class CWLPortObject(PortObject):
                    port.value,
                    [FileProcessor.get_bid_from_file(f) for f in port.files.all()],
                    port_id=port_id,
-                   notify=port.notify)
+                   notify=port.notify,
+                   template=port.template)
 
     def to_db(self):
         if self.port_object:
@@ -98,6 +107,7 @@ class CWLPortObject(PortObject):
             self.port_object.save()
             self.port_object.files.set([FileProcessor.get_file_obj(v) for v in self.files])
             self.port_object.notify = self.notify
+            self.port_object.template = self.template
             self.port_object.save()
         else:
             try:

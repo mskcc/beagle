@@ -1,7 +1,5 @@
 import os
-import git
-import uuid
-import glob
+import json
 from runner.pipeline.pipeline_resolver import PipelineResolver
 
 
@@ -13,6 +11,7 @@ class NextflowResolver(PipelineResolver):
     def resolve(self):
         dir = self._dir_name()
         location = self._git_clone(dir)
-        inputs = glob.glob(os.path.join(location, '*.template'))
-        for input in inputs:
-            pass
+        with open(os.path.join(location, 'inputs.template.json'), 'r') as f:
+            pipeline = json.loads(f)
+        self._cleanup(location)
+        return pipeline
