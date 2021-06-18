@@ -231,6 +231,8 @@ def get_files_from_run(r):
         files.append(FileProcessor.get_file_path(p['location']))
     for p in inp_port.db_value[0]['zR2']:
         files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[0]['bam']:
+        files.append(FileProcessor.get_file_path(p['location']))
     return files
 
 
