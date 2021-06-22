@@ -10,6 +10,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
+class RunType(IntEnum):
+    CWL = 0
+    NEXTFLOW = 1
+
+
 class RunStatus(IntEnum):
     CREATING = 0
     READY = 1
@@ -54,6 +59,8 @@ class Pipeline(BaseModel):
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
+    walltime = models.IntegerField(blank=True, null=True)
+    memlimit = models.CharField(blank=True, null=True, max_length=20)
 
     @property
     def pipeline_link(self):
@@ -92,6 +99,9 @@ class OperatorRun(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return str(self.pk)
 
     def save(self, *args, **kwargs):
         if self.status == RunStatus.COMPLETED or self.status == RunStatus.FAILED:
@@ -152,6 +162,8 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
+    run_type = models.IntegerField(choices=[(run_type.value, run_type.name) for run_type in RunType], db_index=True,
+                                   default=RunType.CWL)
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
@@ -166,6 +178,8 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
     samples = models.ManyToManyField(Sample)
+    started = models.DateTimeField(blank=True, null=True)
+    submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
 
@@ -175,6 +189,19 @@ class Run(BaseModel):
         self.original = {
             "status": self.status
         }
+
+    def __str__(self):
+        return str(self.pk)
+
+    def clear(self):
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
+                           "execution_id"]
+        for f in fields_to_clear:
+            setattr(self, f, None)
+
+        self.job_statuses = {}
+        self.status = RunStatus.READY
+        return self
 
     @property
     def is_completed(self):
@@ -186,7 +213,7 @@ class Run(BaseModel):
         If output directory is set to None, by default assign it to the pipeline output directory
         plus the run id
         """
-        if not self.output_directory:
+        if not self.output_directory and self.id:
             pipeline = self.app
             pipeline_output_directory = pipeline.output_directory
             self.output_directory = os.path.join(pipeline_output_directory, str(self.id))

@@ -8,11 +8,11 @@ import json
 import logging
 from jinja2 import Template
 
+from file_system.models import File
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id_runs
-from runner.models import Port, Run, RunStatus
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
+from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import FileRepository
 
 
 logger = logging.getLogger(__name__)
@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
 NORMAL_SEARCH = '-N0'
+STANDARD_BAM_SEARCH = '_cl_aln_srt_MD_IR_FX_BR.bam'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 class AccessLegacyMSIOperator(Operator):
@@ -38,11 +39,7 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        if self.request_id:
-            run_ids = get_request_id_runs(self.request_id)
-            run_ids = [r.id for r in run_ids]
-        else:
-            run_ids = self.run_ids
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
@@ -52,8 +49,7 @@ class AccessLegacyMSIOperator(Operator):
         )
 
         # Filter to only tumor bam files
-        # Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-        standard_tumor_bam_files = [f for p in standard_bam_ports for f in p.value if TUMOR_SEARCH in f['location'].split('/')[-1]]
+        standard_tumor_bam_files = extract_tumor_ports(standard_bam_ports)
         sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
 
         sample_ids = []
@@ -62,8 +58,10 @@ class AccessLegacyMSIOperator(Operator):
 
         for i, tumor_sample_id in enumerate(sample_ids_to_run):
             # Find the Tumor Standard bam
-            sample_regex = r'{}_cl_aln_srt_MD_IR_FX_BR.bam$'.format(tumor_sample_id)
-            tumor_bam = FileRepository.filter(file_name_regex=sample_regex)
+            tumor_bam = File.objects.filter(
+                file_name__startswith=tumor_sample_id,
+                file_name__endswith=STANDARD_BAM_SEARCH
+            )
 
             if not len(tumor_bam) > 0:
                 msg = 'No matching standard tumor Bam found for sample {}'
@@ -75,8 +73,11 @@ class AccessLegacyMSIOperator(Operator):
             patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
-            sample_regex = r'{}.*{}.*_cl_aln_srt_MD_IR_FX_BR.bam$'.format(patient_id, NORMAL_SEARCH)
-            matched_normal_bam = FileRepository.filter(path_regex=sample_regex)
+            sample_search_start = patient_id + NORMAL_SEARCH
+            matched_normal_bam = File.objects.filter(
+                file_name__startswith=sample_search_start,
+                file_name__endswith=STANDARD_BAM_SEARCH
+            )
 
             if not len(matched_normal_bam) > 0:
                 msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
@@ -103,6 +104,7 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
+        self.request_id = get_request_id(self.run_ids, self.request_id)
         inputs = self.get_sample_inputs()
 
         return [
@@ -136,12 +138,12 @@ class AccessLegacyMSIOperator(Operator):
         sample_names = [sample_name]
         matched_normal_bams = [{
             "class": "File",
-            "location": 'juno://' + matched_normal_bam.file.path
+            "location": 'juno://' + matched_normal_bam.path
         }]
 
         tumor_bams = [{
             "class": "File",
-            "location": 'juno://' + tumor_bam.file.path
+            "location": 'juno://' + tumor_bam.path
         }]
 
         input_file = template.render(

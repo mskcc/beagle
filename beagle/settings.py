@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import ldap
+import json
 import datetime
 from django_auth_ldap.config import LDAPSearch
 
@@ -25,8 +26,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4gm1)1&0x71+^vwo)rf=%%b)f3l$%u893bs$scif+h#nj@eyx('
 
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'prod')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = ENVIRONMENT == 'dev'
 
 ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
@@ -36,6 +39,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'elasticapm.contrib.django',
     'core.apps.CoreConfig',
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
@@ -49,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'import_export',
+    'rangefilter',
     'rest_framework',
     'corsheaders',
     'drf_multiple_model',
@@ -82,8 +87,23 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': datetime.timedelta(days=1),
 }
 
+ELASTIC_APM = {
+  # Set the required service name. Allowed characters:
+  # a-z, A-Z, 0-9, -, _, and space
+  'SERVICE_NAME': 'beagle',
+
+  # Use if APM Server requires a secret token
+  #'SECRET_TOKEN': '',
+
+  # Set the custom APM Server URL (default: http://localhost:8200)
+  'SERVER_URL': 'http://bic-dockerapp01.mskcc.org:8200/',
+
+  # Set the service environment
+  'ENVIRONMENT': ENVIRONMENT,
+}
 
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.TracingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -183,7 +203,6 @@ DB_USERNAME = os.environ['BEAGLE_DB_USERNAME']
 DB_PASSWORD = os.environ['BEAGLE_DB_PASSWORD']
 DB_HOST = os.environ.get('BEAGLE_DB_URL', 'localhost')
 DB_PORT = os.environ.get('BEAGLE_DB_PORT', 5432)
-DB_CONN_MAX_AGE = os.environ.get('BEAGLE_DB_CONN_MAX_AGE', None)
 
 DATABASES = {
     'default': {
@@ -193,7 +212,6 @@ DATABASES = {
         'PASSWORD': DB_PASSWORD,
         'HOST': DB_HOST,
         'PORT': DB_PORT,
-        'CONN_MAX_AGE': DB_CONN_MAX_AGE,
         'DISABLE_SERVER_SIDE_CURSORS': True
     }
 }
@@ -258,12 +276,25 @@ SWAGGER_SETTINGS = {
 RABIX_URL = os.environ.get('BEAGLE_RABIX_URL')
 RABIX_PATH = os.environ.get('BEAGLE_RABIX_PATH')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'beagle-cache',
+MEMCACHED_PORT = os.environ.get('BEAGLE_MEMCACHED_PORT', 11211)
+
+if ENVIRONMENT == "dev":
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'beagle-cache',
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
+            'LOCATION': '127.0.0.1:%s' % MEMCACHED_PORT,
+            'OPTIONS': {# see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
+                'default_noreply': False
+            }
+        }
+    }
 
 RABBITMQ_USERNAME = os.environ.get('BEAGLE_RABBITMQ_USERNAME', 'guest')
 RABBITMQ_PASSWORD = os.environ.get('BEAGLE_RABBITMQ_PASSWORD', 'guest')
@@ -306,14 +337,25 @@ LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s|%(levelname)s|%(name)s|%(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
         "file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
             "maxBytes": 209715200,
-            "backupCount": 10
+            "backupCount": 10,
+            "formatter": "simple",
         }
     },
     "loggers": {
@@ -362,12 +404,25 @@ STATICFILES_DIRS = (
 
 SAMPLE_ID_METADATA_KEY = 'sampleId'
 
-BEAGLE_NOTIFIER_EMAIL_GROUP=os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
-BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS=os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')
+BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
+BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')
 BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get('BEAGLE_NOTIFIER_EMAIL_FROM')
+
+ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get('BEAGLE_ASSAYS_ADMIN_HOLD_ONLY_NORMALS',
+                                                'IMPACT341,IMPACT+ (341 genes plus custom content),IMPACT468,HemePACT_v4,HemePACT_v3,IMPACT505,IMPACT410').split(
+    ',')
+
+PERMISSION_DENIED_CC = json.loads(os.environ.get('BEAGLE_PERMISSION_DENIED_CC', '{}'))
+PERMISSION_DENIED_EMAILS = json.loads(os.environ.get('BEAGLE_PERMISSION_DENIED_EMAIL', '{}'))
 
 ## Tempo
 
 WES_ASSAYS = os.environ.get('BEAGLE_NOTIFIER_WES_ASSAYS', 'WholeExomeSequencing').split(',')
 NOTIFIER_WES_CC = os.environ.get('BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC', '')
 
+DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
+COPY_FILE_PERMISSION = 0o640
+COPY_DIR_PERMISSION = 0o750
+COPY_GROUP_OWNERSHIP = os.environ.get('BEAGLE_GROUP_OWNERSHIP', 'cmoigo')
+
+APP_CACHE = os.environ.get('BEAGLE_APP_CACHE', '/tmp')
