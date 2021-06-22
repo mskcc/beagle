@@ -15,7 +15,7 @@ class Patient:
         self.sample_pairing = list()
         self.unpaired_samples = list()
         self.pre_pairing = pairing
-        self._samples = self._get_samples(file_list)
+        self.all_samples = self._get_samples(file_list)
         self._characterize_samples()
         self._pair_samples()
 
@@ -35,8 +35,8 @@ class Patient:
         return samples
 
     def _characterize_samples(self):
-        for sample_name in self._samples:
-            sample = self._samples[sample_name]
+        for sample_name in self.all_samples:
+            sample = self.all_samples[sample_name]
             sample_class = sample.sample_class
             if not sample_class:
                 self.conflict_samples[sample_name] = sample
@@ -57,26 +57,29 @@ class Patient:
             tumor_sample = self.tumor_samples[tumor_sample_name]
             tumor_cmo_sample_name = tumor_sample.metadata['cmoSampleName'][0] # they should all be the same
             tumor_baits = tumor_sample.bait_set
+            tumor_run_mode = tumor_sample.run_mode
             expected_normal_cmo_sample_name = ""
             if tumor_cmo_sample_name in self.pre_pairing:
                 expected_normal_cmo_sample_name = self.pre_pairing[tumor_cmo_sample_name]
-            normal = self._get_normal(tumor_baits, expected_normal_cmo_sample_name)
+            normal = self._get_normal(tumor_baits, tumor_run_mode, expected_normal_cmo_sample_name)
             if normal:
                 self.sample_pairing.append([tumor_sample, normal])
             else:
                 self.unpaired_samples.append(tumor_sample)
 
-    def _get_normal(self, bait_set, expected_normal_cmo_sample_name=""):
+    def _get_normal(self, bait_set, run_mode, expected_normal_cmo_sample_name=""):
         normal = None
         for normal_sample_name in self.normal_samples:
             normal_sample = self.normal_samples[normal_sample_name]
             normal_baits = normal_sample.bait_set
+            normal_run_mode = normal_sample.run_mode
             if expected_normal_cmo_sample_name: # if this is True, we're using historical pairing info
                 normal_cmo_sample_name = normal_sample.metadata['cmoSampleName'][0] # they should all be the same for this sample
                 if normal_cmo_sample_name == expected_normal_cmo_sample_name:
                     normal = normal_sample
                     return normal
-            elif normal_baits.lower() == bait_set.lower():
+            # make sure hiseq pairs with hiseq, novaseq with novaseq
+            elif normal_baits.lower() == bait_set.lower() and normal_run_mode.lower() == run_mode.lower():
                 if not normal:
                     normal = normal_sample
                 else:
@@ -109,7 +112,7 @@ class Patient:
 
     def get_sample(self, sample_name):
         try:
-            return self._samples[sample_name]
+            return self.all_samples[sample_name]
         except:
             return None
 
@@ -161,12 +164,17 @@ class Patient:
         if num_normals == 0:
             return "No normals for patient"
         matching_baits = False
+        matching_run_modes = False
         for sample_name in self.normal_samples:
             normal = self.normal_samples[sample_name]
             if normal.bait_set.lower() == sample.bait_set.lower():
                 matching_baits = True
+            if normal.run_mode.lower() == sample.run_mode.lower():
+                matching_run_modes = True
         if not matching_baits:
             return "No normal sample has same bait set as tumor in patient"
+        if not matching_run_modes:
+            return "No normal sample has same bait set and run mode (HiSeq/NovaSeq) as tumor in patient"
         first_half_of_2017 = False
         run_dates = sample.metadata['runDate']
         if run_dates and isinstance(run_dates, str):

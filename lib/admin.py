@@ -6,6 +6,7 @@ from pygments import highlight
 from pygments.lexers import JsonLexer, PythonLexer
 from pygments.formatters import HtmlFormatter
 
+
 def link_relation(field_name):
     """
     Converts a foreign key value into clickable links.

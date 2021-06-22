@@ -114,6 +114,7 @@ install: conda
 # pip install git+https://github.com/mskcc/beagle_cli.git@develop
 # pip install -r requirements-cli.txt # <- what happened to this file?
 
+export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
 export BEAGLE_DB_NAME=db
 export BEAGLE_DB_USERNAME=$(shell whoami)
@@ -195,8 +196,8 @@ export BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
 # corresponds to ./conf/rabbitmq.conf ;
 export RABBITMQ_CONFIG_FILE:=$(CURDIR)/conf/rabbitmq
 # give the RabbitMQ node cluster a name based on current dir; hopefully different from other instances on same server
-export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)
-export RABBITMQ_NODE_IP_ADDRESS:=127.0.0.1
+export RABBITMQ_NODENAME:=rabbit_$(CURDIR_BASE)@localhost
+export RABBITMQ_NODE_IP_ADDRESS:=localhost
 export RABBITMQ_NODE_PORT:=5679
 export RABBITMQ_LOG_BASE:=$(LOG_DIR_ABS)
 export RABBITMQ_LOGS:=rabbitmq.log
@@ -272,6 +273,8 @@ celery-start:
 	--pidfile "$(CELERY_WORKER_RUNNER_PID_FILE)" \
 	--logfile "$(CELERY_WORKER_RUNNER_LOGFILE)" &
 
+flower:
+	flower -A beagle_etl --port=5555 -logLevel=debug --broker=$(CELERY_BROKER_URL)
 # check that the Celery processes are running
 celery-check:
 	-ps auxww | grep 'celery' | grep -v 'grep' | grep -v 'make' | grep '$(CURDIR)'
@@ -345,9 +348,17 @@ runserver: check-env
 MIGRATION_ARGS?=
 migrate: check-env
 	python manage.py migrate $(MIGRATION_ARGS)
-shell : check-env
+
+
+# NOTE: requires iPython
+shell_plus: check-env
 	python manage.py shell_plus --notebook
 
+shell_print_sql : check-env
+	python manage.py shell_plus --print-sql
+
+shell: check-env
+	python manage.py shell
 
 dumpdata: check-env
 	python manage.py dumpdata

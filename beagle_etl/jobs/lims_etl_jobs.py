@@ -18,10 +18,12 @@ from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
-    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum
+    ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
+from beagle_etl.lims_client import LIMSClient
+from beagle_etl.copy_service import CopyService
 from django.contrib.auth.models import User
 
 
@@ -112,7 +114,7 @@ def request_callback(request_id, recipe, job_group=None, job_group_notifier=None
         return []
 
     if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
-        no_samples_event = ETLImportNoSamplesEvent(job_group_notifier_id).to_dict()
+        no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
@@ -132,6 +134,10 @@ def request_callback(request_id, recipe, job_group=None, job_group_notifier=None
     if len(FileRepository.filter(metadata={'requestId': request_id, 'tumorOrNormal': 'Tumor'})) == 0:
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
+        if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
+            admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
+            send_notification.delay(admin_hold_event)
+            return []
 
     operators = Operator.objects.filter(recipes__overlap=[recipe])
 
@@ -197,7 +203,7 @@ def parse_samples_job(request, import_pooled_normals=True, import_samples=True, 
 
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
-            job = get_or_create_pooled_normal_job(f, jg)
+            job = get_or_create_pooled_normal_job(f, jg, jgn, redelivery=redelivery)
             children.add(str(job.id))
 
     if import_samples:
@@ -215,21 +221,20 @@ def _convert_to_dict(sample_list):
     return sample_dict
 
 
-def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None):
+def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None, redelivery=False):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
 
     job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
 
-    if not job:
-        job = Job(run=TYPES['POOLED_NORMAL'],
-                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
-                  status=JobStatus.CREATED,
-                  max_retry=1,
-                  children=[],
-                  job_group=job_group,
-                  job_group_notifier=job_group_notifier)
-        job.save()
+    if not job or redelivery:
+        job = Job.objects.create(run=TYPES['POOLED_NORMAL'],
+                                 args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
+                                 status=JobStatus.CREATED,
+                                 max_retry=1,
+                                 children=[],
+                                 job_group=job_group,
+                                 job_group_notifier=job_group_notifier)
     return job
 
 
@@ -333,6 +338,14 @@ def create_pooled_normal(filepath, file_group_id):
         "preservation": preservation_type,
         "recipe": recipe
     }
+    try:
+        new_path = CopyService.remap(recipe, filepath)
+        if new_path != filepath:
+            CopyService.copy(filepath, new_path)
+    except Exception as e:
+        logger.error("Failed to copy file %s." % (filepath,))
+        raise FailedToFetchPoolNormalException("Failed to copy file %s. Error %s" % (filepath, str(e)))
+
     try:
         f = File.objects.create(file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj,
                                 file_type=file_type_obj)
@@ -492,10 +505,19 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        f = FileRepository.filter(path=path).first()
+        recipe = metadata.get('recipe', '')
+        new_path = CopyService.remap(recipe, path) # Get copied file path
+        f = FileRepository.filter(path=new_path).first()
         if not f:
-            create_file_object(path, file_group_obj, lims_metadata, metadata, file_type_obj)
-
+            try:
+                if path != new_path:
+                    CopyService.copy(path, new_path)
+            except Exception as e:
+                if "Permission denied" in str(e):
+                    raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
+                else:
+                    raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
+            create_file_object(new_path, file_group_obj, lims_metadata, metadata, file_type_obj)
             if update:
                 message = "File registered: %s" % path
                 update = RedeliveryUpdateEvent(job_group_notifier, message).to_dict()
@@ -503,7 +525,7 @@ def create_or_update_file(path, request_id, file_group_id, file_type, igocomplet
         else:
             if update:
                 before = f.file.filemetadata_set.order_by('-created_date').count()
-                update_file_object(f.file, path, metadata)
+                update_file_object(f.file, f.file.path, metadata)
                 after = f.file.filemetadata_set.order_by('-created_date').count()
                 if after != before:
                     all_metadata = f.file.filemetadata_set.order_by('-created_date')
