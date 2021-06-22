@@ -280,6 +280,17 @@ LIMS_USERNAME = os.environ.get('BEAGLE_LIMS_USERNAME')
 LIMS_PASSWORD = os.environ.get('BEAGLE_LIMS_PASSWORD')
 ETL_USER = os.environ.get('BEAGLE_ETL_USER')
 
+# NATS
+
+# SSL
+NATS_SSL_CERTFILE = os.environ.get('BEAGLE_NATS_SSL_CERTFILE')
+NATS_SSL_KEYFILE = os.environ.get('BEAGLE_NATS_SSL_KEYFILE')
+
+METADB_NATS_URL = os.environ.get('BEAGLE_METADB_NATS_URL')
+METADB_NATS_SUBJECT = os.environ.get('BEAGLE_METADB_NATS_SUBJECT', 'METADB.cmo-new-request')
+METADB_USERNAME = os.environ.get('BEAGLE_METADB_USERNAME')
+METADB_PASSWORD = os.environ.get('BEAGLE_METADB_PASSWORD')
+
 LIMS_URL = os.environ.get('BEAGLE_LIMS_URL', 'https://igolims.mskcc.org:8443')
 
 IMPORT_FILE_GROUP = os.environ.get('BEAGLE_IMPORT_FILE_GROUP', '1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')
