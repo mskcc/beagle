@@ -49,7 +49,7 @@ async def run(loop):
         "closed_cb": closed_cb,
         "reconnected_cb": reconnected_cb,
         "servers": settings.METADB_NATS_URL,
-        "username": settings.METADB_USERNAME,
+        "user": settings.METADB_USERNAME,
         "password": settings.METADB_PASSWORD,
         "tls": ssl_ctx
     }
