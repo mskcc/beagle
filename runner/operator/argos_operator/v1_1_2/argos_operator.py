@@ -6,7 +6,7 @@ from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
-from runner.run.objects.cwl.processors import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
 from .bin.make_sample import format_sample_name
