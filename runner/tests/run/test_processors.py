@@ -1,7 +1,7 @@
 import uuid
 from dictdiffer import diff
 from runner.run.processors.file_processor import FileProcessor
-from runner.run.objects.cwl.processors.port_processor import PortProcessor, PortAction
+from runner.run.processors.port_processor import PortProcessor, PortAction
 from rest_framework.test import APITestCase
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileExtension
 
