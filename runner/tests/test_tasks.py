@@ -7,6 +7,7 @@ from runner.models import Run
 from runner.tasks import check_job_timeouts
 from freezegun import freeze_time
 
+
 class TestRunnerTasks(TestCase):
     fixtures = [
         "file_system.filegroup.json",
