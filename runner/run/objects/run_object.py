@@ -1,7 +1,7 @@
 import logging
+from runner.models import RunStatus
 from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.cwl.cwl_port_object import CWLPortObject
-from runner.models import RunStatus
 
 
 class RunObject(object):
