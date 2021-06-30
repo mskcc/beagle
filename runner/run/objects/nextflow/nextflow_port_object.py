@@ -124,7 +124,8 @@ class NextflowPortObject(PortObject):
                             secondary_files=self.secondary_files,
                             db_value=self.db_value,
                             value=self.value,
-                            notify=self.name in run_object.notify_for_outputs
+                            notify=self.name in run_object.notify_for_outputs,
+                            template=self.template
                             )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])
