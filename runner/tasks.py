@@ -312,8 +312,8 @@ def submit_job(run_id, output_directory=None):
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
 
+    run1 = RunObjectFactory.from_db(run_id)
     if run.resume:
-        run1 = RunObjectFactory.from_db(run_id)
         run2 = RunObjectFactory.from_db(run.resume)
 
         if run1.equal(run2):
@@ -321,18 +321,9 @@ def submit_job(run_id, output_directory=None):
             resume = str(run2.run_obj.execution_id)
         else:
             logger.info("Failed to resume runs not equal")
-    app = {
-        "github": {
-            "repository": run.app.github,
-            "entrypoint": run.app.entrypoint,
-            "version": run.app.version
-        }
-    }
-    inputs = dict()
-    for port in run.port_set.filter(port_type=PortType.INPUT).all():
-        inputs[port.name] = port.value
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
+    job = run1.dump_job()
     logger.info("Job %s ready for submitting" % run_id)
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
@@ -342,12 +333,6 @@ def submit_job(run_id, output_directory=None):
         }
     else:
         url = settings.RIDGEBACK_URL + '/v0/jobs/'
-        job = {
-            'type': run.run_type,
-            'app': app,
-            'inputs': inputs,
-            'root_dir': output_directory,
-        }
     if run.app.walltime:
         job['walltime'] = run.app.walltime
     if run.app.memlimit:
