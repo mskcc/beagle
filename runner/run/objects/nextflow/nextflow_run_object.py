@@ -140,7 +140,7 @@ class NextflowRunObject(RunObject):
             else:
                 params[port.name] = port.value
         inputs['inputs'] = input_files
-        inputs['config'] = self.run_obj.app.config.replace('\\r\\n', '\r\n').replace('\\"', '\"')
+        inputs['config'] = bytes(self.run_obj.app.config, 'utf-8').decode("unicode_escape")
         inputs['profile'] = 'juno'
         inputs['params'] = params
         if not output_directory:
