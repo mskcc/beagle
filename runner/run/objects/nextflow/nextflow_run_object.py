@@ -29,7 +29,7 @@ class NextflowRunObject(RunObject):
         notify_for_outputs=[],
         config=None
     ):
-        self.config=config.replace('\\r\\n', '\r\n').replace('\\"', '\"')
+        self.config=config
         self.run_type = ProtocolType.NEXTFLOW
         super().__init__(run_id, run_obj, inputs, outputs, status, samples, job_statuses, message, output_metadata,
                          execution_id, tags, job_group, job_group_notifier, notify_for_outputs)
@@ -140,7 +140,7 @@ class NextflowRunObject(RunObject):
             else:
                 params[port.name] = port.value
         inputs['inputs'] = input_files
-        inputs['config'] = self.run_obj.app.config
+        inputs['config'] = self.run_obj.app.config.replace('\\r\\n', '\r\n').replace('\\"', '\"')
         inputs['profile'] = 'juno'
         inputs['params'] = params
         if not output_directory:
