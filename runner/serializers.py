@@ -299,7 +299,8 @@ class APIRunCreateSerializer(serializers.Serializer):
         name = "Run %s: %s" % (pipeline.name, create_date)
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name,
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
