@@ -1,5 +1,4 @@
 import os
-import json
 import git
 import uuid
 import shutil
@@ -23,7 +22,7 @@ class PipelineResolver(object):
         return dirname
 
     def _extract_dirname_from_github_link(self):
-        return self.github.rsplit('/', 2)
+        return self.github.rsplit('/', 2)[1] if self.github.endswith('/') else self.github.rsplit('/', 1)[1]
 
     def _cleanup(self, location):
         shutil.rmtree(location)
