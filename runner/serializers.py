@@ -134,8 +134,13 @@ class CreateRunSerializer(serializers.Serializer):
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-        run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
-                  status=RunStatus.CREATING, job_statuses=dict(), resume=validated_data.get('resume'))
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
+                  app=pipeline,
+                  tags={"requestId": validated_data.get('request_id')},
+                  status=RunStatus.CREATING,
+                  job_statuses=dict(),
+                  resume=validated_data.get('resume'))
         run.save()
         return run
 

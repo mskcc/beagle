@@ -1,4 +1,5 @@
 import copy
+import logging
 import pystache
 from runner.models import Port, PortType, Run
 from runner.exceptions import PortObjectConstructException
@@ -9,6 +10,7 @@ from runner.run.processors.port_processor import PortProcessor, PortAction
 
 
 class NextflowPortObject(PortObject):
+    logger = logging.getLogger(__name__)
 
     def __init__(self,
                  run_id,
@@ -39,12 +41,13 @@ class NextflowPortObject(PortObject):
         name = value.get('id')
         schema = value.get('schema')
         template = value.get('template')
+        cls.logger.debug(template)
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
         files = []
         db_value = copy.deepcopy(port_values.get(name))
         notify = notify
-        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template)
+        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template=template)
 
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
