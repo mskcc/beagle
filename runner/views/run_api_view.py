@@ -37,6 +37,7 @@ def query_from_dict(query_filter,queryset,input_list):
         queryset = queryset.filter(**query).all()
     return queryset
 
+
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,

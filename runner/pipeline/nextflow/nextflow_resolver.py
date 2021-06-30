@@ -12,6 +12,6 @@ class NextflowResolver(PipelineResolver):
         dir = self._dir_name()
         location = self._git_clone(dir)
         with open(os.path.join(location, 'inputs.template.json'), 'r') as f:
-            pipeline = json.loads(f)
+            pipeline = json.load(f)
         self._cleanup(location)
         return pipeline
