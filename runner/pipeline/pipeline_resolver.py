@@ -22,7 +22,10 @@ class PipelineResolver(object):
         return dirname
 
     def _extract_dirname_from_github_link(self):
-        return self.github.rsplit('/', 2)[1] if self.github.endswith('/') else self.github.rsplit('/', 1)[1]
+        dirname = self.github.rsplit('/', 2)[1] if self.github.endswith('/') else self.github.rsplit('/', 1)[1]
+        if dirname.endswith('.git'):
+            dirname = dirname[:-4]
+        return dirname
 
     def _cleanup(self, location):
         shutil.rmtree(location)
