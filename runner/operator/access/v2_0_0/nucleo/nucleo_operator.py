@@ -119,7 +119,11 @@ class AccessNucleoOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'output_metadata': metadata,
-                        'tags': {'requestId': self.request_id}}
+                        'tags': {
+                            'requestId': self.request_id,
+                            'cmoSampleId': metadata['sampleName']
+                        }
+                    }
                 ),
                 job
              )
