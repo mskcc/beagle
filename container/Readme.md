@@ -13,7 +13,7 @@ Building SIF inside the docker image
 
 If you do not have a singularity installed locally but you have docker you can use docker image to build singularity SIF.
 
-`docker run --privileged -it -v /path/to/beagle:/beagle:rw  --entrypoint "/bin/bash" singularityware/singularity:v3.3.0`
+`docker run --privileged -it -v /path/to/beagle:/beagle:rw  --entrypoint "/bin/bash" quay.io/singularity/singularity:v3.6.4`
 
 
 Building Pooling Service
@@ -116,3 +116,6 @@ To stop all celery processes running for `$SINGULARITYENV_BEAGLE_CELERY_EVENT_QU
 ```
 singularity run --app celery-stop instance://beagle
 ```
+
+#### Running Filebeat
+See https://app.gitbook.com/@mskcc-1/s/experimental-dev/filebeat

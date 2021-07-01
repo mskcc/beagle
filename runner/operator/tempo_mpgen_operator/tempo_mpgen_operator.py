@@ -72,9 +72,11 @@ class TempoMPGenOperator(Operator):
 
     def get_jobs(self, pairing_override=None):
         logger.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
-        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
-        self.OUTPUT_DIR = tmpdir 
-        Path(self.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_version = pipeline.version
+        output_directory = pipeline.output_directory
+        self.OUTPUT_DIR = output_directory
 
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
@@ -82,7 +84,9 @@ class TempoMPGenOperator(Operator):
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
         files = FileRepository.all()
+        files = FileRepository.filter(queryset=files, filter_redact=True)
         tempo_files = FileRepository.filter(queryset=files, q=q)
+        tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message("""
             Querying database for the following recipes:
@@ -154,24 +158,17 @@ class TempoMPGenOperator(Operator):
         tags = {"beagle_version": beagle_version,
                 "run_date" : run_date}
 
-        app = self.get_pipeline_id()
-        pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
-        output_directory = pipeline.output_directory
+        self.send_message("""
+            Writing files to {file_path}.
 
-        self.debug_json = input_json
+            Run Date: {run_date}
+            Beagle Version: {beagle_version}
+            """.format(file_path=self.OUTPUT_DIR,
+                       run_date=run_date,
+                       beagle_version=beagle_version)
+                )
 
-        tempo_mpgen_outputs_job_data = {
-            'app': app,
-            'inputs': input_json,
-            'name': "Tempo mpgen %s" % run_date,
-            'tags': tags,
-            'output_directory': output_directory
-       }
-
-        tempo_mpgen_outputs_job = [(APIRunCreateSerializer(
-            data=tempo_mpgen_outputs_job_data), input_json)]
-        return tempo_mpgen_outputs_job
+        return []
 
 
     def load_pairing_file(self, tsv_file):
@@ -266,7 +263,8 @@ class TempoMPGenOperator(Operator):
         "IDT_Exome_v1_FP_BAITS",
         "IDT_Exome_v2_FP_b37_baits",
         "IDT_Exome_v2_GRCh38_BAITS",
-        "SureSelect-All-Exon-V4-hg19"
+        "SureSelect-All-Exon-V4-hg19",
+        "IDT_Exome_v2_FP_Viral_Probes"
        ]
         return assays
 
