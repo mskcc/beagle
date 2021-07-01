@@ -209,7 +209,7 @@ class RunApiRestartViewSet(GenericAPIView):
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED]))
+        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.ABORTED]))
         if runs_in_progress:
             return Response("There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST)
 
@@ -446,6 +446,7 @@ class PairsOperatorViewSet(GenericAPIView):
     def post(self, request):
         pairs = request.data.get('pairs')
         pipeline_names = request.data.get('pipelines')
+        pipeline_versions = request.data.get('pipeline_versions')
         name = request.data.get('name')
         job_group_id = request.data.get('job_group_id', None)
         output_directory_prefix = request.data.get('output_directory_prefix', None)
@@ -455,8 +456,9 @@ class PairsOperatorViewSet(GenericAPIView):
             job_group.save()
             job_group_id = str(job_group.id)
 
-        for pipeline_name in pipeline_names:
-            pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+        for i,pipeline_name in enumerate(pipeline_names):
+            pipeline_version = pipeline_versions[i]
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
 
             try:
                 job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
