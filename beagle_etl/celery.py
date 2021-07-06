@@ -2,9 +2,8 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from django.conf import settings
-from celery.schedules import crontab
-from celery.signals import after_setup_task_logger
 from celery.app.log import TaskFormatter
+from celery.signals import after_setup_task_logger, worker_ready
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beagle.settings')
@@ -24,9 +23,16 @@ app.autodiscover_tasks()
 @after_setup_task_logger.connect
 def setup_task_logger(logger, *args, **kwargs):
     for handler in logger.handlers:
-        handler.setFormatter(TaskFormatter("%(asctime)s|%(levelname)s|%(name)s|%(task_id)s|%(task_name)s|%(name)s|%(message)s"))
+        handler.setFormatter(
+            TaskFormatter("%(asctime)s|%(levelname)s|%(name)s|%(task_id)s|%(task_name)s|%(name)s|%(message)s"))
 
-# app.conf.task_always_eager = settings.DEBUG
+
+@worker_ready.connect
+def at_start(sender, **k):
+    with sender.app.connection() as conn:
+        print(conn)
+        sender.app.send_task('beagle_etl.tasks.fetch_request_nats', connection=conn)
+
 
 app.conf.task_routes = {
     'beagle_etl.tasks.scheduler': {'queue': settings.BEAGLE_JOB_SCHEDULER_QUEUE},
@@ -40,7 +46,7 @@ app.conf.task_routes = {
     'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_DEFAULT_QUEUE} # TODO: Move to another queue
+    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_NATS_QUEUE}
 }
 
 app.conf.beat_schedule = {

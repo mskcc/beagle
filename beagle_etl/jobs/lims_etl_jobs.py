@@ -7,22 +7,21 @@ from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
-    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, \
+    RedeliveryEvent, RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
+    LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
-from beagle_etl.lims_client import LIMSClient
 from beagle_etl.copy_service import CopyService
 from django.contrib.auth.models import User
 
