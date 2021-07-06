@@ -1,5 +1,6 @@
 import os
 import logging
+import pystache
 from runner.run.objects.run_object import RunObject
 from runner.pipeline.pipeline_cache import PipelineCache
 from runner.run.processors.file_processor import FileProcessor
@@ -140,16 +141,23 @@ class NextflowRunObject(RunObject):
             else:
                 params[port.name] = port.value
         inputs['inputs'] = input_files
-        inputs['config'] = bytes(self.run_obj.app.config, 'utf-8').decode("unicode_escape")
-        inputs['profile'] = 'juno'
-        inputs['params'] = params
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
+        output_file_path = os.path.join(output_directory, 'nextflow_output.txt')
+        config = bytes(self.run_obj.app.config, 'utf-8').decode("unicode_escape")
+        if '{{output_directory}}' in config:
+            render_value = {'output_directory': output_file_path}
+            inputs['config'] = pystache.render(config, render_value)
+        else:
+            inputs['config'] = config
+        inputs['profile'] = 'juno'
+        inputs['params'] = params
+        inputs['outputs'] = output_file_path
         job = {
             'type': self.run_type.value,
             'app': app,
             'inputs': inputs,
-            'root_dir': output_directory,
+            'root_dir': output_directory
         }
         return job
 
