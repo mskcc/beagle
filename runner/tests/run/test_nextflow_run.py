@@ -20,6 +20,16 @@ class NextflowRunObjectTest(APITestCase):
             output_directory='/output/directory/',
             config="TEST CONFIG"
         )
+        config = """process {\r\n  memory = \"8.GB\"\r\n  time = { task.attempt < 3 ? 3.h * task.attempt  : 500.h }\r\n  clusterOptions = \"\"\r\n  scratch = true\r\n  beforeScript = \". \/etc\/profile.d\/modules.sh; module load singularity\/3.1.1; unset R_LIBS; catch_term () { echo 'caught USR2\/TERM signal'; set +e; false; on_exit ; } ; trap catch_term USR2 TERM\"\r\n}\r\n\r\nparams {\r\n  fileTracking = \"{{output_directory}}\"\r\n}"""
+        self.pipeline_config = Pipeline.objects.create(
+            name='nextflow_pipeline_config',
+            github='https://github.com/nextflow_pipeline',
+            version='1.0.0',
+            entrypoint='pipeline.nf',
+            output_file_group=self.nxf_file_group,
+            output_directory='/output/directory/',
+            config=config
+        )
         self.fastq_type = FileType.objects.create(name='fastq')
         self.fastq_ext = FileExtension.objects.create(extension='fastq',
                                                       file_type=self.fastq_type)
@@ -200,3 +210,55 @@ NORMAL_1\tTUMOR_1
         self.assertEqual(len(job_json['inputs']['inputs']), 2)
         self.assertEqual(len(job_json['inputs']['params']), 1)
         self.assertEqual(job_json['inputs']['profile'], 'juno')
+
+    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
+    def test_config(self, get_pipeline):
+        with open('runner/tests/run/inputs.template.json', 'r') as f:
+            inputs = json.load(f)
+        get_pipeline.return_value = inputs
+        input_dict = {
+            "mapping": [
+                {
+                    "sample": "sample_id_a",
+                    "assay": "assay_value",
+                    "target": "target_value",
+                    "fastq_pe1": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_a_1.fastq"
+                    },
+                    "fastq_pe2": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_a_2.fastq"
+                    }
+                },
+                {
+                    "sample": "sample_id_b",
+                    "assay": "assay_value",
+                    "target": "target_value",
+                    "fastq_pe1": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_b_1.fastq"
+                    },
+                    "fastq_pe2": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_b_2.fastq"
+                    }
+                }
+            ],
+            "pairing": [
+                {
+                    "tumor": "TUMOR_1",
+                    "normal": "NORMAL_1"
+                }
+            ]
+        }
+        run = Run.objects.create(app=self.pipeline_config,
+                                 run_type=ProtocolType.NEXTFLOW,
+                                 name='Nextflow Run 1',
+                                 status=RunStatus.CREATING,
+                                 notify_for_outputs=[])
+        run_object = NextflowRunObject.from_definition(str(run.id), input_dict)
+        run_object.ready()
+        job_json = run_object.dump_job(output_directory='/tmp/test/output')
+        self.assertEqual(job_json['inputs']['outputs'], '/tmp/test/output/nextflow_output.txt')
+        self.assertTrue('/tmp/test/output/nextflow_output.txt' in job_json['inputs']['config'])
