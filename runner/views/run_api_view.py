@@ -10,21 +10,19 @@ from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
-from runner.run.objects.run_object import RunObject
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, \
 abort_job_task, submit_job, create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
-from runner.models import Run, Port, PortType, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
+from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
     TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
-    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer, OperatorRunListSerializer
+    OperatorRunSerializer, OperatorLatestSamplesQuerySerializer, OperatorSampleQuerySerializer, AbortRunSerializer
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
-from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
@@ -38,6 +36,7 @@ def query_from_dict(query_filter,queryset,input_list):
         query = {query_filter % key: val}
         queryset = queryset.filter(**query).all()
     return queryset
+
 
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
@@ -91,7 +90,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             if ports:
                 queryset = query_from_dict("port__%s__exact",queryset,ports)
             if tags:
-                queryset = query_from_dict("tags__%s__contains",queryset,tags)
+                queryset = query_from_dict("tags__%s__contains", queryset, tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if apps:

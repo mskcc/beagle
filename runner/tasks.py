@@ -7,7 +7,8 @@ from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
-from runner.run.objects.run_object import RunObject
+from runner.run.objects.run_object_factory import RunObjectFactory
+# from runner.run.objects.cwl.cwl_run_object import CWLRunObject
 from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
     SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, \
@@ -287,9 +288,9 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
              on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info("Creating and validating Run for %s" % run_id)
-    run = RunObject.from_cwl_definition(run_id, inputs)
+    run = RunObjectFactory.from_definition(run_id, inputs)
     run.ready()
-    RunObject.to_db(run)
+    run.to_db()
     submit_job.delay(run_id, output_directory)
     logger.info("Run %s Ready" % run_id)
 
@@ -311,27 +312,18 @@ def submit_job(run_id, output_directory=None):
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
 
+    run1 = RunObjectFactory.from_db(run_id)
     if run.resume:
-        run1 = RunObject.from_db(run_id)
-        run2 = RunObject.from_db(run.resume)
+        run2 = RunObjectFactory.from_db(run.resume)
 
         if run1.equal(run2):
             logger.info("Resuming run: %s with execution id: %s" % (str(run.resume), str(run2.run_obj.execution_id)))
             resume = str(run2.run_obj.execution_id)
         else:
             logger.info("Failed to resume runs not equal")
-    app = {
-        "github": {
-            "repository": run.app.github,
-            "entrypoint": run.app.entrypoint,
-            "version": run.app.version
-        }
-    }
-    inputs = dict()
-    for port in run.port_set.filter(port_type=PortType.INPUT).all():
-        inputs[port.name] = port.value
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
+    job = run1.dump_job()
     logger.info("Job %s ready for submitting" % run_id)
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
@@ -341,12 +333,6 @@ def submit_job(run_id, output_directory=None):
         }
     else:
         url = settings.RIDGEBACK_URL + '/v0/jobs/'
-        job = {
-            'type': run.run_type,
-            'app': app,
-            'inputs': inputs,
-            'root_dir': output_directory,
-        }
     if run.app.walltime:
         job['walltime'] = run.app.walltime
     if run.app.memlimit:
@@ -402,7 +388,7 @@ def check_statuses_on_ridgeback(execution_ids):
 
 
 def fail_job(run_id, error_message):
-    run = RunObject.from_db(run_id)
+    run = RunObjectFactory.from_db(run_id)
     run.fail(error_message)
     run.to_db()
 
@@ -416,7 +402,7 @@ def fail_job(run_id, error_message):
 
 
 def complete_job(run_id, outputs):
-    run = RunObject.from_db(run_id)
+    run = RunObjectFactory.from_db(run_id)
     if run.run_obj.is_completed:
         return
 
