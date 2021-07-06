@@ -18,6 +18,7 @@ class PortAction(Enum):
     REGISTER_OUTPUT_FILES = 2
     SEND_AS_NOTIFICATION = 3
     CONVERT_TO_CWL_FORMAT = 4
+    NEXTFLOW_TEMPLATE = 5
     FIX_DB_VALUES = 99 # Temporary for fixing values in DB
 
 
@@ -80,6 +81,8 @@ class PortProcessor(object):
                                                 kwargs.get('file_list'))
         if action == PortAction.SEND_AS_NOTIFICATION:
             return PortProcessor._send_as_notification(file_obj, kwargs.get('job_group'))
+        if action == PortAction.NEXTFLOW_TEMPLATE:
+            return file_obj['path']
         else:
             raise PortProcessorException('Unknown PortProcessor action: %s' % action)
 
@@ -229,3 +232,7 @@ class PortProcessor(object):
             send_notification.delay(event.to_dict())
         logger.info("Can't upload file:%s. JobGroup not specified", path)
         return val
+
+    @staticmethod
+    def _nextflow_template(val, template):
+        return
