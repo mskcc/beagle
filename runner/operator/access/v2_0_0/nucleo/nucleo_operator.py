@@ -139,7 +139,11 @@ class AccessNucleoOperator(Operator):
                         'inputs': job,
                         'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
                                             key in metadata},
-                        'tags': {'requestId': self.request_id}}
+                        'tags': {
+                            'requestId': self.request_id,
+                            'cmoSampleId': metadata['sampleName']
+                        }
+                    }
                 ),
                 job
              )
