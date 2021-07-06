@@ -1,10 +1,7 @@
-import uuid
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
-from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
 from notifier.tasks import send_notification

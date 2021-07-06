@@ -2,7 +2,6 @@ import os
 from django.db import IntegrityError
 from file_system.models import File, FileType, FileGroup, FileMetadata
 from file_system.serializers import UpdateFileSerializer
-from django.conf import settings
 from runner.exceptions import FileHelperException, FileConflictException, FileUpdateException
 from django.contrib.auth.models import User
 

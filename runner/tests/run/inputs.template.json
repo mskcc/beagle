@@ -1,0 +1,52 @@
+{
+  "inputs": [
+    {
+      "id": "mapping",
+      "schema": {
+        "items": {
+          "fields": {
+            "sample": "string",
+            "assay": "string",
+            "target": "string",
+            "fastq_pe1": "File",
+            "fastq_pe2": "File"
+          },
+          "type": "record"
+        },
+        "type": "array"
+      },
+      "template": "SAMPLE\tASSAY\tTARGET\tFASTQ_PE1\tFASTQ_PE2\n{{#mapping}}\n{{sample}}\t{{assay}}\t{{target}}\t{{fastq_pe1}}\t{{fastq_pe2}}\n{{/mapping}}"
+    },
+    {
+      "id": "pairing",
+      "schema": {
+        "items": {
+          "fields": {
+            "tumor": "string",
+            "normal": "string"
+          },
+          "type": "record"
+        },
+        "type": "array"
+      },
+      "template": "NORMAL_ID\tTUMOR_ID\n{{#pairing}}\n{{normal}}\t{{tumor}}\n{{/pairing}}"
+    },
+    {
+      "id": "somatic",
+      "schema": {
+        "type": "bool"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "id": "outputs",
+      "schema": {
+        "type": {
+          "items": "File",
+          "type": "array"
+        }
+      }
+    }
+  ]
+}
