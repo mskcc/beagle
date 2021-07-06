@@ -1,6 +1,6 @@
 import logging
 
-from runner.models import Run, RunStatus
+from runner.models import Run, RunStatus, Port
 from file_system.models import File, FileMetadata
 
 
@@ -158,3 +158,24 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
         logger.warning(msg)
 
     return unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id
+
+
+def get_most_recent_files_for_request(app, request_id, name=None):
+    """
+    Given a request ID, return File objects associated with Ports from the most recent run of the given `app`
+
+    :param app: str - name of pipeline to get outputs from
+    :param request_id: str - IGO request id
+    :param name: str - optional name of port to be queried
+    :return: str[] - file paths for outputs of most recent run
+    """
+    most_recent_run = Run.objects.filter(app=app, tags__requestId=request_id).order_by('-created_date').first()
+
+    # Get all standard bam ports for these runs
+    port = Port.objects.filter(
+        name=name,
+        run__id=most_recent_run.pk,
+        run__status=RunStatus.COMPLETED
+    )
+
+    return [f.path for f in port.files]

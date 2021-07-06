@@ -1,0 +1,79 @@
+{
+    "collapsed_bam": {{ collapsed_bam }},
+    "duplex_bam": {{ duplex_bam }},
+    "group_reads_by_umi_bam": {{ group_reads_by_umi_bam }},
+    "simplex_bam": {{ simplex_bam }},
+    "uncollapsed_bam_base_recal": {{ uncollapsed_bam_base_recal }},
+
+    "sample_group": {{ sample_group }},
+    "sample_name": {{ sample_name }},
+    "sample_sex": {{ sample_sex }},
+
+    "samples-json": {
+        "contents": {{samples_json_content}},
+        "basename": "samples_json.json",
+        "class": "File"
+    },
+
+    multiqc_config: {
+      "class": "File",
+      "location": "juno:///juno/work/access/testing/users/johnsoni/access_qc/access_qc_generation/multiqc_configs/config.yaml"
+    },
+    "biometrics_bed_file": {
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.bed"
+    },
+    "biometrics_vcf_file":
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/fp_tiling_snps.vcf"
+    },
+    "biometrics_json": true,
+    "biometrics_plot": true,
+
+    "hsmetrics_coverage_cap": 30000,
+    "hsmetrics_minimum_base_quality": 1,
+    "hsmetrics_minimum_mapping_quality": 1,
+
+    "noise_sites_bed": {
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.bed"
+    },
+    "pool_a_bait_intervals": {
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+    },
+    "pool_a_target_intervals": {
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+    },
+    "pool_b_bait_intervals":
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+    },
+    "pool_b_target_intervals": {
+      "class": "File",
+      "location": "juno:///home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+    },
+
+    "reference": {
+      "class": "File",
+      "location": "juno:///juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+      "secondaryFiles": [
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.amb"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.ann"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.bwt"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.sa"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.pac"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai"},
+        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict"}
+      ]
+    },
+
+    "hotspots_maf": {
+      "class": "File",
+      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.maf"
+    },
+
+    "sequence_qc_min_basq": 1,
+    "sequence_qc_min_mapq": 1
+}
