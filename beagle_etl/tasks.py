@@ -10,7 +10,6 @@ from beagle_etl.exceptions import ETLExceptions
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import PermissionDeniedEvent, SendEmailEvent
-# from notifier.events import ETLImportEvent, ETLJobsLinksEvent, SetCIReviewEvent, UploadAttachmentEvent
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent
 from beagle_etl.nats_client.nats_client import run
 
