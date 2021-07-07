@@ -146,7 +146,7 @@ class AccessQCOperator(Operator):
     def create_cwl_file_object(self, file_path):
         return {
             "class": "File",
-            "location": file_path
+            "location": "juno://" + file_path
         }
 
     @staticmethod
