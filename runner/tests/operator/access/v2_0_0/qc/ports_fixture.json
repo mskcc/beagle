@@ -6,7 +6,7 @@
             "created_date": "2019-12-11T22:53:17.831Z",
             "modified_date": "2020-02-04T15:29:30.750Z",
             "run": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
-            "name": "duplex_bam",
+            "name": "fgbio_filter_consensus_reads_duplex_bam",
             "port_type": 0,
             "schema": {
                 "type": "File"
@@ -34,7 +34,7 @@
             "created_date": "2019-12-11T22:53:17.831Z",
             "modified_date": "2020-02-04T15:29:30.750Z",
             "run": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
-            "name": "simplex_bam",
+            "name": "fgbio_postprocessing_simplex_bam",
             "port_type": 0,
             "schema": {
                 "type": "File"
@@ -62,7 +62,7 @@
             "created_date": "2019-12-11T22:53:17.831Z",
             "modified_date": "2020-02-04T15:29:30.750Z",
             "run": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
-            "name": "collapsed_bam",
+            "name": "fgbio_collapsed_bam",
             "port_type": 0,
             "schema": {
                 "type": "File"
@@ -90,7 +90,7 @@
             "created_date": "2019-12-11T22:53:17.831Z",
             "modified_date": "2020-02-04T15:29:30.750Z",
             "run": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
-            "name": "group_reads_by_umi_bam",
+            "name": "fgbio_group_reads_by_umi_bam",
             "port_type": 0,
             "schema": {
                 "type": "File"
@@ -118,7 +118,7 @@
             "created_date": "2019-12-11T22:53:17.831Z",
             "modified_date": "2020-02-04T15:29:30.750Z",
             "run": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
-            "name": "uncollapsed_bam_base_recal",
+            "name": "uncollapsed_bam",
             "port_type": 0,
             "schema": {
                 "type": "File"
