@@ -7,7 +7,7 @@ from jinja2 import Template
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 
-from runner.models import RunStatus, Port, OperatorRun
+from runner.models import RunStatus, Port, Run
 
 
 
@@ -65,7 +65,6 @@ class AccessQCOperator(Operator):
                         'name': "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
-                        'output_metadata': metadata,
                         'tags': {
                             'requestId': self.request_id,
                             'cmoSampleId': job['sample_name']
@@ -74,19 +73,38 @@ class AccessQCOperator(Operator):
                 ),
                 job
              )
-            for i, (job, metadata) in enumerate(sample_inputs)
+            for i, job in enumerate(sample_inputs)
         ]
 
-    def parse_nucleo_output_ports(self, run, port_name):
-        bam = Port.objects.filter(
-            name=port_name,
-            run__id=run.pk
+    def get_nucleo_outputs(self):
+        # Use most recent set of runs that completed successfully
+        most_recent_operator_run = Run.objects.filter(
+            app__name='access nucleo',
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED,
+            operator_run__status=RunStatus.COMPLETED
+        ).order_by('-created_date').first().operator_run
+        runs = Run.objects.filter(
+            operator_run_id=most_recent_operator_run,
+            status=RunStatus.COMPLETED
         )
-        if not len(bam.files) == 1:
+
+        if not len(runs):
+            raise Exception('No matching Nucleo runs found for request {}'.format(self.request_id))
+
+        inputs = []
+        for r in runs:
+            inp = self.construct_sample_inputs(r)
+            inputs.append(inp)
+        return inputs
+
+    def parse_nucleo_output_ports(self, run, port_name):
+        bam = Port.objects.get(name=port_name, run=run.pk)
+        if not len(bam.files.all()) == 1:
             raise Exception('Output port {} for run {} should have just one file'.format(port_name, run.id))
 
-        bam = bam.files[0]
-        bam = self.create_cwl_file_object(bam)
+        bam = bam.files.all()[0]
+        bam = self.create_cwl_file_object(bam.path)
         return bam
 
     def construct_sample_inputs(self, run):
@@ -100,25 +118,25 @@ class AccessQCOperator(Operator):
             'group_reads_by_umi_bam',
             'uncollapsed_bam_base_recal'
         ]
-
         bams = {}
         for n in port_names:
-            bam = self.parse_nucleo_output_ports(run, n)
-            bams[n] = bam
+            # We are running a multi-sample workflow on just one sample,
+            # so we use lists here
+            bam = [self.parse_nucleo_output_ports(run, n)]
+            bams[n] = json.dumps(bam)
 
         sample_sex = 'unknown'
-        sample_name = bams['uncollapsed_bam'].split('_cl_aln')[0]
-        sample_group = sample_name.split('-')[0:2]
+        sample_name = run.output_metadata['sampleName']
+        sample_group = '-'.join(sample_name.split('-')[0:2])
         samples_json_content = self.create_sample_json(run)
 
         input_file = template.render(
-            **bams,
-            sample_sex=sample_sex,
-            sample_name=sample_name,
-            sample_group=sample_group,
+            sample_sex=json.dumps([sample_sex]),
+            sample_name=json.dumps([sample_name]),
+            sample_group=json.dumps([sample_group]),
             samples_json_content=samples_json_content,
+            **bams,
         )
-
         sample_input = json.loads(input_file)
         return sample_input
 
@@ -134,22 +152,4 @@ class AccessQCOperator(Operator):
         for f in meta_fields:
             if not f in j:
                 j[f] = None
-        return j
-
-    def get_nucleo_outputs(self):
-        most_recent_operator_run = OperatorRun.objects.filter(
-            app='access nucleo',
-            tags__requestId=self.request_id,
-            status=RunStatus.COMPLETED
-        ).order_by('-created_date').first()
-
-        runs = most_recent_operator_run.runs
-        if not len(runs):
-            raise Exception('No matching Nucleo runs found for request {}'.format(self.request_id))
-
-        inputs = []
-        for r in runs:
-            inp = self.construct_sample_inputs(r)
-            inputs.append(inp)
-
-        return inputs
+        return json.dumps(str(j))

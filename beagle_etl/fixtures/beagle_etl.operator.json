@@ -108,5 +108,16 @@
             "version": "v2.0.0",
             "slug": "AccessNucleoOperator"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 11,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v2_0_0.qc.AccessQCOperator",
+            "version": "v2.0.0",
+            "slug": "AccessQCOperator"
+        }
     }
 ]

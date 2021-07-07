@@ -1,0 +1,67 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "11fff52a-0696-48d4-9ca5-6580daa44ab3",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.576Z",
+            "modified_date": "2020-01-06T19:59:50.579Z",
+            "file_name": "C-261TDL-N001-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/test/path/C-261TDL-N001-d_cl_aln_srt_MD_IR_FX_BR.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1277f3ac-ab25-4a02-90bd-86542401ac81",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-261TDL-N001-d__aln_srt_IR_FX-simplex.bam",
+            "path": "/test/path/C-261TDL-N001-d__aln_srt_IR_FX-simplex.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "13fff52a-0696-48d4-9ca5-6580daa44a42",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.576Z",
+            "modified_date": "2020-01-06T19:59:50.579Z",
+            "file_name": "C-261TDL-N001-d_collapsed_grouped.bam",
+            "path": "/test/path/C-261TDL-N001-d_collapsed_grouped.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1477f3ac-ab25-4a02-90bd-86542401ac35",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-261TDL-N001-d__aln_srt_IR_FX-duplex.bam",
+            "path": "/test/path/C-261TDL-N001-d__aln_srt_IR_FX-duplex.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "1577f3ac-ab25-4a02-90bd-86542401ac37",
+        "fields": {
+            "created_date": "2020-01-06T19:59:50.591Z",
+            "modified_date": "2020-01-06T19:59:50.592Z",
+            "file_name": "C-261TDL-N001-d__aln_srt_IR_FX.bam",
+            "path": "/test/path/C-261TDL-N001-d__aln_srt_IR_FX.bam",
+            "file_type": 3,
+            "size": 0,
+            "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
+        }
+    }
+]
