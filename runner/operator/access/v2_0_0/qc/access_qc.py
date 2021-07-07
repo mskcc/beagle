@@ -107,19 +107,26 @@ class AccessQCOperator(Operator):
         with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
             template = Template(file.read())
 
-        port_names = [
+        nucleo_output_port_names = [
+            'uncollapsed_bam',
+            'fgbio_group_reads_by_umi_bam',
+            'fgbio_collapsed_bam',
+            'fgbio_filter_consensus_reads_duplex_bam',
+            'fgbio_postprocessing_simplex_bam',
+        ]
+        qc_input_port_names = [
+            'uncollapsed_bam_base_recal',
+            'group_reads_by_umi_bam',
+            'collapsed_bam',
             'duplex_bam',
             'simplex_bam',
-            'collapsed_bam',
-            'group_reads_by_umi_bam',
-            'uncollapsed_bam_base_recal'
         ]
         bams = {}
-        for n in port_names:
+        for o, i in zip(nucleo_output_port_names, qc_input_port_names):
             # We are running a multi-sample workflow on just one sample,
-            # so we use lists here
-            bam = [self.parse_nucleo_output_ports(run, n)]
-            bams[n] = json.dumps(bam)
+            # so we create single-element lists here
+            bam = [self.parse_nucleo_output_ports(run, o)]
+            bams[i] = json.dumps(bam)
 
         sample_sex = 'unknown'
         sample_name = run.output_metadata['sampleName']
