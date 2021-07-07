@@ -78,22 +78,18 @@ class AccessQCOperator(Operator):
 
     def get_nucleo_outputs(self):
         # Use most recent set of runs that completed successfully
-        most_recent_operator_run = Run.objects.filter(
+        most_recent_runs_for_request = Run.objects.filter(
             app__name='access nucleo',
             tags__requestId=self.request_id,
             status=RunStatus.COMPLETED,
             operator_run__status=RunStatus.COMPLETED
-        ).order_by('-created_date').first().operator_run
-        runs = Run.objects.filter(
-            operator_run_id=most_recent_operator_run,
-            status=RunStatus.COMPLETED
-        )
+        ).order_by('-created_date').first().operator_run.runs.all()
 
-        if not len(runs):
+        if not len(most_recent_runs_for_request):
             raise Exception('No matching Nucleo runs found for request {}'.format(self.request_id))
 
         inputs = []
-        for r in runs:
+        for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
             inputs.append(inp)
         return inputs
