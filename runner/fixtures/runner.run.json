@@ -148,6 +148,40 @@
             "execution_id": null,
             "notify_for_outputs": "[]"
         }
+    },
+    {
+        "model": "runner.run",
+        "pk": "a20694f1-0109-4205-a6b2-63e3e1d7c0a0",
+        "fields": {
+            "created_date": "2018-10-08T22:59:41.044Z",
+            "modified_date": "2018-10-08T22:59:41.044Z",
+            "name": "access nucleo",
+            "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbabc",
+            "operator_run": 7,
+            "tags": {"requestId": "05500_FH"},
+            "status": 4,
+            "execution_id": null,
+            "notify_for_outputs": "[]",
+            "output_metadata": {
+                "sex": "Unknown",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP_GRCh38",
+                "sampleId": "05500_HF_1",
+                "barcodeId": "-",
+                "patientId": "C-261TDL",
+                "requestId": "05500_HF",
+                "dnaInputNg": 0,
+                "sampleName": "C-261TDL-N001-d",
+                "captureName": null,
+                "barcodeIndex": "AGTTGTGC-AGTTGTGC",
+                "sampleOrigin": "Tissue",
+                "libraryVolume": 0,
+                "tumorOrNormal": "Normal",
+                "captureInputNg": 0,
+                "investigatorSampleId": "-",
+                "captureConcentrationNm": 0,
+                "libraryConcentrationNgul": 0.721
+            }
+        }
     }
 
 ]
