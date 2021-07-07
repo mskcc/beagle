@@ -96,10 +96,10 @@ class AccessQCOperator(Operator):
 
     def parse_nucleo_output_ports(self, run, port_name):
         bam = Port.objects.get(name=port_name, run=run.pk)
-        if not len(bam.files.all()) == 1:
-            raise Exception('Output port {} for run {} should have just one file'.format(port_name, run.id))
+        if not len(bam.files.all()) == 2:
+            raise Exception('Output port {} for run {} should have just 1 (bam/bai) pair'.format(port_name, run.id))
 
-        bam = bam.files.all()[0]
+        bam = [b for b in bam.files.all() if b.file_name.endswith('.bam')][0]
         bam = self.create_cwl_file_object(bam.path)
         return bam
 
