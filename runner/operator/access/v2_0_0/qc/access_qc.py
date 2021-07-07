@@ -6,14 +6,45 @@ from jinja2 import Template
 
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from runner.operator.access import get_most_recent_files_for_request
+
+from runner.models import RunStatus, Port, OperatorRun
+
 
 
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
-
+meta_fields = [
+    'igoId',
+    'cmoSampleName',
+    'sampleName',
+    'cmoSampleClass',
+    'cmoPatientId',
+    'investigatorSampleId',
+    'oncoTreeCode',
+    'tumorOrNormal',
+    'tissueLocation',
+    'specimenType',
+    'sampleOrigin',
+    'preservation',
+    'collectionYear',
+    'sex',
+    'species',
+    'tubeId',
+    'cfDNA2dBarcode',
+    'baitSet',
+    'qcReports',
+    'barcodeId',
+    'barcodeIndex',
+    'libraryIgoId',
+    'libraryVolume',
+    'libraryConcentrationNgul',
+    'dnaInputNg',
+    'captureConcentrationNm',
+    'captureInputNg',
+    'captureName'
+]
 
 class AccessQCOperator(Operator):
     """
@@ -25,7 +56,7 @@ class AccessQCOperator(Operator):
     """
     def get_jobs(self):
 
-        sample_inputs = self.construct_sample_inputs()
+        sample_inputs = self.get_nucleo_outputs()
 
         return [
             (
@@ -46,39 +77,45 @@ class AccessQCOperator(Operator):
             for i, (job, metadata) in enumerate(sample_inputs)
         ]
 
-    def construct_sample_inputs(self):
+    def parse_nucleo_output_ports(self, run, port_name):
+        bam = Port.objects.filter(
+            name=port_name,
+            run__id=run.pk
+        )
+        if not len(bam.files) == 1:
+            raise Exception('Output port {} for run {} should have just one file'.format(port_name, run.id))
+
+        bam = bam.files[0]
+        bam = self.create_cwl_file_object(bam)
+        return bam
+
+    def construct_sample_inputs(self, run):
         with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
             template = Template(file.read())
 
-        fgbio_postprocessing_simplex_bam = get_most_recent_files_for_request(self.request_id, self.app, name='fgbio_postprocessing_simplex_bam')
-        fgbio_filter_consensus_reads_duplex_bam = get_most_recent_files_for_request(self.request_id, self.app, name='fgbio_filter_consensus_reads_duplex_bam')
-        fgbio_collapsed_bam = get_most_recent_files_for_request(self.request_id, self.app, name='fgbio_collapsed_bam')
-        uncollapsed_bam = get_most_recent_files_for_request(self.request_id, self.app, name='uncollapsed_bam')
-        fgbio_group_reads_by_umi_bam = get_most_recent_files_for_request(self.request_id, self.app, name='fgbio_group_reads_by_umi_bam')
+        port_names = [
+            'duplex_bam',
+            'simplex_bam',
+            'collapsed_bam',
+            'group_reads_by_umi_bam',
+            'uncollapsed_bam_base_recal'
+        ]
 
-        # todo: need this?
-        # indel_realignment_bam
+        bams = {}
+        for n in port_names:
+            bam = self.parse_nucleo_output_ports(run, n)
+            bams[n] = bam
 
-        collapsed_bam = self.create_cwl_file_object(fgbio_collapsed_bam)
-        duplex_bam = self.create_cwl_file_object(fgbio_filter_consensus_reads_duplex_bam)
-        group_reads_by_umi_bam = self.create_cwl_file_object(fgbio_group_reads_by_umi_bam)
-        simplex_bam = self.create_cwl_file_object(fgbio_postprocessing_simplex_bam)
-        uncollapsed_bam_base_recal = self.create_cwl_file_object(uncollapsed_bam)
-
-        sample_name = uncollapsed_bam.split('_cl_aln')[0]
-        sample_group = sample_name.split('-')[0:2]
         sample_sex = 'unknown'
-        samples_json_content = json.dumps('metadata')
+        sample_name = bams['uncollapsed_bam'].split('_cl_aln')[0]
+        sample_group = sample_name.split('-')[0:2]
+        samples_json_content = self.create_sample_json(run)
 
         input_file = template.render(
-            collapsed_bam=collapsed_bam,
-            duplex_bam=duplex_bam,
-            group_reads_by_umi_bam=group_reads_by_umi_bam,
-            simplex_bam=simplex_bam,
-            uncollapsed_bam_base_recal=uncollapsed_bam_base_recal,
-            sample_group=sample_group,
-            sample_name=sample_name,
+            **bams,
             sample_sex=sample_sex,
+            sample_name=sample_name,
+            sample_group=sample_group,
             samples_json_content=samples_json_content,
         )
 
@@ -90,3 +127,29 @@ class AccessQCOperator(Operator):
             "class": "File",
             "location": file_path
         }
+
+    @staticmethod
+    def create_sample_json(run):
+        j = run.output_metadata
+        for f in meta_fields:
+            if not f in j:
+                j[f] = None
+        return j
+
+    def get_nucleo_outputs(self):
+        most_recent_operator_run = OperatorRun.objects.filter(
+            app='access nucleo',
+            tags__requestId=self.request_id,
+            status=RunStatus.COMPLETED
+        ).order_by('-created_date').first()
+
+        runs = most_recent_operator_run.runs
+        if not len(runs):
+            raise Exception('No matching Nucleo runs found for request {}'.format(self.request_id))
+
+        inputs = []
+        for r in runs:
+            inp = self.construct_sample_inputs(r)
+            inputs.append(inp)
+
+        return inputs
