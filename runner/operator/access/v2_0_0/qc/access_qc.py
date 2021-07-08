@@ -95,12 +95,18 @@ class AccessQCOperator(Operator):
         return inputs
 
     def parse_nucleo_output_ports(self, run, port_name):
-        bam = Port.objects.get(name=port_name, run=run.pk)
-        if not len(bam.files.all()) in [1, 2]:
+        bam_bai = Port.objects.get(name=port_name, run=run.pk)
+        if not len(bam_bai.files.all()) in [1, 2]:
             raise Exception('Port {} for run {} should have just 1 bam or 1 (bam/bai) pair'.format(port_name, run.id))
 
-        bam = [b for b in bam.files.all() if b.file_name.endswith('.bam')][0]
+        bam = [b for b in bam_bai.files.all() if b.file_name.endswith('.bam')][0]
+        bai = [b for b in bam_bai.files.all() if b.file_name.endswith('.bai')]
         bam = self.create_cwl_file_object(bam.path)
+        if len(bai):
+            bam['secondaryFiles'] = [{
+                "class": "File",
+                "path": bai[0].path
+            }]
         return bam
 
     def construct_sample_inputs(self, run):
