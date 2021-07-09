@@ -105,7 +105,7 @@ class AccessQCOperator(Operator):
         if len(bai):
             bam['secondaryFiles'] = [{
                 "class": "File",
-                "path": bai[0].path
+                "path": "juno://" + bai[0].path
             }]
         return bam
 
