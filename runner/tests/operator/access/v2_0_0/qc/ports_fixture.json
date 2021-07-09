@@ -20,11 +20,16 @@
                 "file": {
                     "location": "juno:///test/path/C-261TDL-N001-d_cl_aln_srt_MD_IR_FX_BR.bam",
                     "size": 7313069069,
-                    "class": "File"
+                    "class": "File",
+                    "secondaryFiles": [{
+                        "location": "juno:///test/path/C-261TDL-N001-d_cl_aln_srt_MD_IR_FX_BR.bai",
+                        "class": "File"
+                    }]
                 }
             },
             "files": [
-                "11fff52a-0696-48d4-9ca5-6580daa44ab3"
+                "11fff52a-0696-48d4-9ca5-6580daa44ab3",
+                "22fff52a-0696-48d4-9ca5-6580daa44ab3"
             ]
         }
     },{
@@ -48,11 +53,16 @@
                 "file": {
                     "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX-simplex.bam",
                     "size": 7313069069,
-                    "class": "File"
+                    "class": "File",
+                    "secondaryFiles": [{
+                        "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX-simplex.bai",
+                        "class": "File"
+                    }]
                 }
             },
             "files": [
-                "1277f3ac-ab25-4a02-90bd-86542401ac81"
+                "1277f3ac-ab25-4a02-90bd-86542401ac81",
+                "2377f3ac-ab25-4a02-90bd-86542401ac81"
             ]
         }
     },{
@@ -76,11 +86,16 @@
                 "file": {
                     "location": "juno:///test/path/C-261TDL-N001-d_collapsed_grouped.bam",
                     "size": 7313069069,
-                    "class": "File"
+                    "class": "File",
+                    "secondaryFiles": [{
+                        "location": "juno:///test/path/C-261TDL-N001-d_collapsed_grouped.bai",
+                        "class": "File"
+                    }]
                 }
             },
             "files": [
-                "13fff52a-0696-48d4-9ca5-6580daa44a42"
+                "13fff52a-0696-48d4-9ca5-6580daa44a42",
+                "24fff52a-0696-48d4-9ca5-6580daa44a42"
             ]
         }
     },{
@@ -104,11 +119,16 @@
                 "file": {
                     "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX-duplex.bam",
                     "size": 7313069069,
-                    "class": "File"
+                    "class": "File",
+                    "secondaryFiles": [{
+                        "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX-duplex.bai",
+                        "class": "File"
+                    }]
                 }
             },
             "files": [
-                "1477f3ac-ab25-4a02-90bd-86542401ac35"
+                "1477f3ac-ab25-4a02-90bd-86542401ac35",
+                "2577f3ac-ab25-4a02-90bd-86542401ac35"
             ]
         }
     },{
@@ -132,11 +152,16 @@
                 "file": {
                     "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX.bam",
                     "size": 7313069069,
-                    "class": "File"
+                    "class": "File",
+                    "secondaryFiles": [{
+                        "location": "juno:///test/path/C-261TDL-N001-d__aln_srt_IR_FX.bai",
+                        "class": "File"
+                    }]
                 }
             },
             "files": [
-                "1577f3ac-ab25-4a02-90bd-86542401ac37"
+                "1577f3ac-ab25-4a02-90bd-86542401ac37",
+                "2677f3ac-ab25-4a02-90bd-86542401ac37"
             ]
         }
     }
