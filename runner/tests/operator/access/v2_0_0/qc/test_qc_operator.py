@@ -29,13 +29,12 @@ class TestAccessQCOperator(TestCase):
 
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
-    def test_access_nucleo_operator(self):
+    def test_access_qc_operator(self):
         """
         Test that an ACCESS QC operator instance can be created and validated
         """
-        operator_files_count = 5
-        self.assertEqual(len(File.objects.all()), operator_files_count)
-        self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
+        self.assertEqual(len(File.objects.all()), 10)
+        self.assertEqual(len(FileMetadata.objects.all()), 5)
 
         request_id = "05500_FH"
 

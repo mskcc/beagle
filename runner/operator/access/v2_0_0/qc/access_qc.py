@@ -103,10 +103,8 @@ class AccessQCOperator(Operator):
         bai = [b for b in bam_bai.files.all() if b.file_name.endswith('.bai')]
         bam = self.create_cwl_file_object(bam.path)
         if len(bai):
-            bam['secondaryFiles'] = [{
-                "class": "File",
-                "path": "juno://" + bai[0].path
-            }]
+            bam['secondaryFiles'] = [self.create_cwl_file_object(bai[0].path)]
+
         return bam
 
     def construct_sample_inputs(self, run):
@@ -149,7 +147,8 @@ class AccessQCOperator(Operator):
         sample_input = json.loads(input_file)
         return sample_input
 
-    def create_cwl_file_object(self, file_path):
+    @staticmethod
+    def create_cwl_file_object(file_path):
         return {
             "class": "File",
             "location": "juno://" + file_path
