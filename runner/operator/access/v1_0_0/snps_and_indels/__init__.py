@@ -216,6 +216,11 @@ class AccessLegacySNVOperator(Operator):
         capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_duplex]
         capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_simplex]
 
+        # Use sample IDs to remove duplicates from normal geno samples
+        geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids = self._remove_normal_dups(
+            geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids,
+            capture_samples_duplex_sample_ids)
+
         # SNV pipeline requires that all samples have simplex and duplex bams
         if set(capture_samples_duplex_sample_ids) != set(capture_samples_simplex_sample_ids):
             msg = 'ACCESS SNV Operator Error: Duplex sample IDs not matched to Simplex sample IDs'
@@ -248,6 +253,25 @@ class AccessLegacySNVOperator(Operator):
 
         return sample_info
 
+    def _remove_normal_dups(self, geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids,
+                            capture_samples_duplex_sample_ids):
+        """
+        Make sure none of the normals are already present in duplex genotyping samples (GBCMS can not have
+        duplicate sample IDs)
+
+        :param geno_samples_normal_unfiltered:
+        :param geno_samples_normal_unfiltered_sample_ids:
+        :param capture_samples_duplex_sample_ids:
+        :return:
+        """
+        deduped = []
+        deduped_ids = []
+        for i, s in enumerate(geno_samples_normal_unfiltered_sample_ids):
+            if not any([sid in s for sid in capture_samples_duplex_sample_ids]):
+                deduped_ids.append(s)
+                deduped.append(geno_samples_normal_unfiltered[i])
+        return deduped, deduped_ids
+
     def get_normal_geno_samples(self, tumor_sample_id, matched_normal_unfiltered_id):
         """
         20 first Normal fillout samples
@@ -270,7 +294,7 @@ class AccessLegacySNVOperator(Operator):
         Use the initial fastq metadata to get the capture of the sample,
         then, based on this capture ID, find tumor and matched normal simplex and duplex bams for genotyping
 
-        Also include any tumor samples from the same patie4nt
+        Also include any tumor samples from the same patient
 
         Limits to 40 samples (or 80 bams, because each has Simplex and Duplex)
 
@@ -366,8 +390,8 @@ class AccessLegacySNVOperator(Operator):
     def _remove_dups_by_file_name(self, duplex_geno_samples, simplex_geno_samples):
         """
         Simple util to avoid Genotyping same sample twice
-        (when bam comes from different runs and can't be
-        deduplicated based on ID)
+        (when bams come from different runs and can't be
+        de-duplicated based on PK)
 
         :return:
         """

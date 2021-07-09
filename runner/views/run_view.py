@@ -7,13 +7,12 @@ from django.conf import settings
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework import mixins
-from runner.models import Run, Port, Pipeline, RunStatus
+from runner.models import Run, Port, RunStatus
 from runner.serializers import RunSerializerFull, CreateRunSerializer, UpdateRunSerializer, RunStatusUpdateSerializer
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import GenericAPIView
-from runner.pipeline.pipeline_resolver import CWLResolver
-from runner.pipeline.pipeline_resolver import get_pipeline
+from runner.pipeline.pipeline_cache import PipelineCache
 
 
 class RunViewSet(mixins.ListModelMixin,
@@ -63,7 +62,7 @@ class StartRunViewSet(GenericAPIView):
         except Run.DoesNotExist:
             return Response({'details': 'Run %s not found' % str(pk)}, status=status.HTTP_404_NOT_FOUND)
         try:
-            resolved_dict = get_pipeline(run.app)
+            resolved_dict = PipelineCache.get_pipeline(run.app)
         except Exception as e:
             return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         app = "data:text/plain;base64,%s" % base64.b64encode(json.dumps(resolved_dict).encode("utf-8")).decode('utf-8')
