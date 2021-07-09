@@ -323,7 +323,7 @@ def submit_job(run_id, output_directory=None):
             logger.info("Failed to resume runs not equal")
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = run1.dump_job()
+    job = run1.dump_job(output_directory=output_directory)
     logger.info("Job %s ready for submitting" % run_id)
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
