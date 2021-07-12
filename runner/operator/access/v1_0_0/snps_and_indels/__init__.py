@@ -52,11 +52,13 @@ class AccessLegacySNVOperator(Operator):
 
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
-            name='duplex_bams',
+            # todo: generalize for nucleo
+            name__in=['duplex_bams', 'fgbio_duplex_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here
+        # todo: generalize for nucleo (make work for ports of a single element)
         all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
         # These are port objects, they don't have a metadata field
         tumors_to_run = self.parse_tumors_to_run(all_access_output_records)
@@ -77,6 +79,7 @@ class AccessLegacySNVOperator(Operator):
             } for b in curated_normal_bams
         ]
         if self.request_id:
+            # Todo: need to limit these to just Nucleo bams?
             self.fillout_unfiltered_normals = File.objects.filter(
                 file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=UNFILTERED_BAM_SEARCH,
@@ -144,6 +147,7 @@ class AccessLegacySNVOperator(Operator):
             t_or_n = basename.split('-')[2]
             if t_or_n.startswith('N'):
                 continue
+            # Todo: will this work with nucleo duplex file names?
             sample_id = basename.split('/')[-1].split('_cl_aln_srt')[0]
             tumor_sample_ids.append(sample_id)
 
@@ -168,6 +172,9 @@ class AccessLegacySNVOperator(Operator):
         # C-000884-L0011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
         #
         # What if the -d isn't present? Will sample IDs always have these terminators?
+
+        # todo: need to make sure all files come from Nucleo?
+
         tumor_duplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=DUPLEX_BAM_SEARCH)
         if len(tumor_duplex_bam) < 1:
             msg = 'ERROR: Could not find matching duplex bam file for sample {}'
