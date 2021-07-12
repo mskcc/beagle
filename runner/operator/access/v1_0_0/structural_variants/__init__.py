@@ -4,7 +4,7 @@ import logging
 from jinja2 import Template
 
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports, create_cwl_file_object
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File
 from runner.models import Port, RunStatus
@@ -38,7 +38,7 @@ class AccessLegacySVOperator(Operator):
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
-            name='standard_bams',
+            name__in=['standard_bams', 'uncollapsed_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
@@ -108,10 +108,7 @@ class AccessLegacySVOperator(Operator):
                 "location": tumor_bam['location'].replace('file://', 'juno://')
             }]
 
-            normal_bam = {
-                "class": "File",
-                "location": 'juno://' + normal_bam.path
-            }
+            normal_bam = create_cwl_file_object(normal_bam.path)
 
             input_file = template.render(
                 tumor_sample_id=tumor_sample_id,

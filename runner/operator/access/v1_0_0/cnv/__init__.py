@@ -40,7 +40,7 @@ class AccessLegacyCNVOperator(Operator):
 
         # Get all unfiltered bam ports for these runs
         unfiltered_bam_ports = Port.objects.filter(
-            name='unfiltered_bams',
+            name__in=['unfiltered_bams', 'fgbio_collapsed_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
@@ -128,6 +128,7 @@ class AccessLegacyCNVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_list = tumor_bam.path + '\t' + sample_sex
+            # Todo: need this to work with Nucleo bams:
             tumor_sample_id = tumor_bam.file_name.split('_cl_aln_srt_MD_IR_FX_BR')[0]
 
             input_file = template.render(

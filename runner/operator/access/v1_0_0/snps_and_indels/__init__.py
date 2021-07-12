@@ -46,7 +46,7 @@ class AccessLegacySNVOperator(Operator):
     def extract_files(ports):
         ret = []
         for p in ports:
-            if type(p) is list:
+            if type(p.value) is list:
                 ret += p.value
             else:
                 ret.append(p)
