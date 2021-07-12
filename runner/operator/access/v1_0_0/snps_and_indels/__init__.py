@@ -42,6 +42,16 @@ class AccessLegacySNVOperator(Operator):
     curated_normal_bams = None
     curated_normal_ids = None
 
+    @staticmethod
+    def extract_files(ports):
+        ret = []
+        for p in ports:
+            if type(p) is list:
+                ret += p.value
+            else:
+                ret.append(p)
+        return ret
+
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator
@@ -53,13 +63,13 @@ class AccessLegacySNVOperator(Operator):
         # Get all duplex bam ports for these runs
         access_duplex_output_ports = Port.objects.filter(
             # todo: generalize for nucleo
-            name__in=['duplex_bams', 'fgbio_duplex_bam'],
+            name__in=['duplex_bams', 'fgbio_filter_consensus_reads_duplex_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
         # Each port is a list, so need a double list comprehension here
         # todo: generalize for nucleo (make work for ports of a single element)
-        all_access_output_records = [f for p in access_duplex_output_ports for f in p.value]
+        all_access_output_records = self.extract_files(access_duplex_output_ports)
         # These are port objects, they don't have a metadata field
         tumors_to_run = self.parse_tumors_to_run(all_access_output_records)
 
@@ -72,12 +82,8 @@ class AccessLegacySNVOperator(Operator):
         )
         curated_normal_bams = [f for f in curated_normals_metadata]
         self.curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
-        self.curated_normal_bams = [
-            {
-                'class': 'File',
-                'location': 'juno://' + b.file.path
-            } for b in curated_normal_bams
-        ]
+        self.curated_normal_bams = [self._create_cwl_bam_object(b.file.path) for b in curated_normal_bams]
+
         if self.request_id:
             # Todo: need to limit these to just Nucleo bams?
             self.fillout_unfiltered_normals = File.objects.filter(
@@ -148,7 +154,11 @@ class AccessLegacySNVOperator(Operator):
             if t_or_n.startswith('N'):
                 continue
             # Todo: will this work with nucleo duplex file names?
-            sample_id = basename.split('/')[-1].split('_cl_aln_srt')[0]
+            sample_id = basename.split('/')[-1].split('_cl_aln_srt')
+            if len(sample_id) > 1:
+                sample_id = sample_id[0]
+            else:
+                sample_id = basename.split('/')[-1].split('__aln_srt_IR_FX-duplex.bam')[0]
             tumor_sample_ids.append(sample_id)
 
         return tumor_sample_ids
