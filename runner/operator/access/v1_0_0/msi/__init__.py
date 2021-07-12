@@ -10,13 +10,14 @@ from jinja2 import Template
 
 from file_system.models import File
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
+from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports, create_cwl_file_object
 from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
 
 
 logger = logging.getLogger(__name__)
 
+# Todo: needs to work for Nucleo bams as well
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
 NORMAL_SEARCH = '-N0'
@@ -43,7 +44,7 @@ class AccessLegacyMSIOperator(Operator):
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
-            name='standard_bams',
+            name=['standard_bams', 'uncollapsed_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
@@ -136,15 +137,8 @@ class AccessLegacyMSIOperator(Operator):
             template = Template(file.read())
 
         sample_names = [sample_name]
-        matched_normal_bams = [{
-            "class": "File",
-            "location": 'juno://' + matched_normal_bam.path
-        }]
-
-        tumor_bams = [{
-            "class": "File",
-            "location": 'juno://' + tumor_bam.path
-        }]
+        matched_normal_bams = [create_cwl_file_object(matched_normal_bam.path)]
+        tumor_bams = [create_cwl_file_object(tumor_bam.path)]
 
         input_file = template.render(
             tumor_bams=json.dumps(tumor_bams),

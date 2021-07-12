@@ -48,9 +48,30 @@ def get_request_id_runs(request_id):
     return request_id_runs
 
 
+def create_cwl_file_object(file_path):
+    """
+    Util function to create a simple CWL File object from a file_path
+
+    :param file_path: str
+    :return:
+    """
+    return {
+        "class": "File",
+        "location": "juno://" + file_path
+    }
+
+
+def is_tumor(port):
+    file_name = port['location'].split('/')[-1]
+    t_n_timepoint = file_name.split('-')[2]
+    return not t_n_timepoint[0] == 'N'
+
+
 def extract_tumor_ports(ports):
     """
-    Filter to just port objects from Tumor samples (or ports with anything *except* "N" in the timepoint
+    Filter to just port objects from Tumor samples (or ports with anything *except* "N" in the timepoint.
+
+    Needs to work when p.value is either a list of files, or a single file
 
     Include: -T (Tumor), -P (primary), -M (metastatic), -L
     Exclude: -N (Normal)
@@ -60,13 +81,16 @@ def extract_tumor_ports(ports):
     :param sample_ports:
     :return:
     """
-    def is_tumor(port):
-        file_name = port['location'].split('/')[-1]
-        t_n_timepoint = file_name.split('-')[2]
-        return not t_n_timepoint[0] == 'N'
-
-    tumor_ports = [f for p in ports for f in p.value if is_tumor(f)]
-    return tumor_ports
+    ret = []
+    for p in ports:
+        if type(p.value) is list:
+            for pi in p.value:
+                if is_tumor(pi):
+                    ret.append(pi)
+        else:
+            if is_tumor(p):
+                ret.append(p)
+    return ret
 
 
 def get_unfiltered_matched_normal(patient_id, request_id=None):
