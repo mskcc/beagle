@@ -160,4 +160,6 @@ class AccessQCOperator(Operator):
         for f in meta_fields:
             if not f in j:
                 j[f] = None
-        return "\"" + json.dumps(j) + "\""
+        # Use some double quotes to make JSON compatible
+        j["qcReports"] = "na"
+        return json.dumps(str(j))
