@@ -43,14 +43,9 @@ class AccessLegacySNVOperator(Operator):
     curated_normal_ids = None
 
     @staticmethod
-    def extract_files(ports):
-        ret = []
-        for p in ports:
-            if type(p.value) is list:
-                ret += p.value
-            else:
-                ret.append(p)
-        return ret
+    def is_tumor(file):
+        t_n_timepoint = file.file_name.split('-')[2]
+        return not t_n_timepoint[0] == 'N'
 
     def get_sample_inputs(self):
         """
@@ -60,18 +55,31 @@ class AccessLegacySNVOperator(Operator):
         """
         run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
-        # Get all duplex bam ports for these runs
-        access_duplex_output_ports = Port.objects.filter(
-            # todo: generalize for nucleo
+        # Get all duplex / simplex bam ports for these runs
+        duplex_output_ports = Port.objects.filter(
             name__in=['duplex_bams', 'fgbio_filter_consensus_reads_duplex_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
-        # Each port is a list, so need a double list comprehension here
-        # todo: generalize for nucleo (make work for ports of a single element)
-        all_access_output_records = self.extract_files(access_duplex_output_ports)
-        # These are port objects, they don't have a metadata field
-        tumors_to_run = self.parse_tumors_to_run(all_access_output_records)
+        simplex_output_ports = Port.objects.filter(
+            name__in=['simplex_bams', 'fgbio_filter_consensus_reads_simplex_bam'],
+            run__id__in=run_ids,
+            run__status=RunStatus.COMPLETED
+        )
+
+        duplex_tumor_bams = [f for p in duplex_output_ports for f in p.files.all() if self.is_tumor(f)]
+        simplex_tumor_bams = [f for p in simplex_output_ports for f in p.files.all() if self.is_tumor(f)]
+
+        def make_pairs(d, s):
+            paired = []
+            for di in d:
+                for si in s:
+                    if di.file_name.rstrip('-duplex.bam') == si.file_name.rstrip('-simplex.bam'):
+                        paired.append((di, si))
+            return paired
+
+        # Make sure simplex bams are paired with duplex of same sample ID
+        tumor_bams = make_pairs(duplex_tumor_bams, simplex_tumor_bams)
 
         # Todo: how to know which sequencer's default normal to use?
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME)[0]
@@ -82,7 +90,7 @@ class AccessLegacySNVOperator(Operator):
         )
         curated_normal_bams = [f for f in curated_normals_metadata]
         self.curated_normal_ids = [f.metadata['snv_pipeline_id'] for f in curated_normals_metadata]
-        self.curated_normal_bams = [self._create_cwl_bam_object(b.file.path) for b in curated_normal_bams]
+        self.curated_normal_bams = [self._create_cwl_bam_object(b.file) for b in curated_normal_bams]
 
         if self.request_id:
             # Todo: need to limit these to just Nucleo bams?
@@ -118,8 +126,8 @@ class AccessLegacySNVOperator(Operator):
 
         # Gather input Files / Metadata
         sample_infos = []
-        for tumor_sample_id in tumors_to_run:
-            sample_info = self.create_sample_info(tumor_sample_id)
+        for d, s in tumor_bams:
+            sample_info = self.create_sample_info(d, s)
             sample_info['normal_bam'] = normal_bam
             sample_infos.append(sample_info)
 
@@ -153,7 +161,7 @@ class AccessLegacySNVOperator(Operator):
             t_or_n = basename.split('-')[2]
             if t_or_n.startswith('N'):
                 continue
-            # Todo: will this work with nucleo duplex file names?
+
             sample_id = basename.split('/')[-1].split('_cl_aln_srt')
             if len(sample_id) > 1:
                 sample_id = sample_id[0]
@@ -163,7 +171,7 @@ class AccessLegacySNVOperator(Operator):
 
         return tumor_sample_ids
 
-    def create_sample_info(self, tumor_sample_id):
+    def create_sample_info(self, tumor_duplex_bam, tumor_simplex_bam):
         """
         Query DB for all relevant files / metadata necessary for SNV pipeline input:
 
@@ -175,43 +183,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return:
         """
-        # Locate the most recent Duplex BAM
-        #
-        # Todo: Does this fail in the following case?
-        # C-000884-L001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
-        # C-000884-L0011-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
-        #
-        # What if the -d isn't present? Will sample IDs always have these terminators?
-
-        # todo: need to make sure all files come from Nucleo?
-
-        tumor_duplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=DUPLEX_BAM_SEARCH)
-        if len(tumor_duplex_bam) < 1:
-            msg = 'ERROR: Could not find matching duplex bam file for sample {}'
-            msg = msg.format(tumor_sample_id)
-            logger.exception(msg)
-            raise Exception(msg)
-        elif len(tumor_duplex_bam) > 1:
-            msg = 'WARNING: Found more than one matching duplex bam file for sample {}. ' \
-                  'We will choose the most recently-created one for this run.'
-            msg = msg.format(tumor_sample_id)
-            logger.warning(msg)
-        tumor_duplex_bam = tumor_duplex_bam.order_by('-created_date').first()
-
-        # Locate the most recent Simplex BAM
-        tumor_simplex_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=SIMPLEX_BAM_SEARCH)
-        if len(tumor_simplex_bam) < 1:
-            msg = 'ERROR: Could not find matching simplex bam file for sample {}'
-            msg = msg.format(tumor_sample_id)
-            logger.exception(msg)
-            raise Exception(msg)
-        elif len(tumor_simplex_bam) > 1:
-            msg = 'WARNING: Found more than one matching simplex bam file for sample {}. ' \
-                  'We will choose the most recently-created one for this run.'
-            msg = msg.format(tumor_sample_id)
-            logger.warning(msg)
-        tumor_simplex_bam = tumor_simplex_bam.order_by('-created_date').first()
-
+        tumor_sample_id = '-'.join(tumor_duplex_bam.file_name.split('-')[0:4])
         patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
         # Get the Matched, Unfiltered, Normal BAM
@@ -230,8 +202,8 @@ class AccessLegacySNVOperator(Operator):
             matched_normal_unfiltered_id
         )
 
-        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_duplex]
-        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_simplex]
+        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_duplex]
+        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_simplex]
 
         # Use sample IDs to remove duplicates from normal geno samples
         geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids = self._remove_normal_dups(
@@ -303,7 +275,7 @@ class AccessLegacySNVOperator(Operator):
         if matched_normal_unfiltered_id:
             geno_samples_normal_unfiltered = [s for s in geno_samples_normal_unfiltered if not s.file_name.startswith(matched_normal_unfiltered_id)]
 
-        geno_samples_normal_unfiltered_sample_ids = [s.file_name.split('_cl_aln_srt')[0] for s in geno_samples_normal_unfiltered]
+        geno_samples_normal_unfiltered_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_normal_unfiltered]
         return geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids
 
     def get_geno_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id):
