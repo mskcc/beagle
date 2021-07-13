@@ -10,7 +10,7 @@ from jinja2 import Template
 
 from file_system.models import File
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports, create_cwl_file_object
+from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 from runner.models import Port, RunStatus
 from runner.serializers import APIRunCreateSerializer
 
@@ -34,6 +34,11 @@ class AccessLegacyMSIOperator(Operator):
     also find the matched normals based on the patient ID.
     """
 
+    @staticmethod
+    def is_tumor(file):
+        t_n_timepoint = file.file_name.split('-')[2]
+        return not t_n_timepoint[0] == 'N'
+
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator.
@@ -44,33 +49,17 @@ class AccessLegacyMSIOperator(Operator):
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
-            name=['standard_bams', 'uncollapsed_bam'],
+            name__in=['standard_bams', 'uncollapsed_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
 
-        # Filter to only tumor bam files
-        standard_tumor_bam_files = extract_tumor_ports(standard_bam_ports)
-        sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_bam_files]
+        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor(f)]
 
         sample_ids = []
-        tumor_bams = []
         matched_normal_bams = []
-
-        for i, tumor_sample_id in enumerate(sample_ids_to_run):
-            # Find the Tumor Standard bam
-            tumor_bam = File.objects.filter(
-                file_name__startswith=tumor_sample_id,
-                file_name__endswith=STANDARD_BAM_SEARCH
-            )
-
-            if not len(tumor_bam) > 0:
-                msg = 'No matching standard tumor Bam found for sample {}'
-                msg = msg.format(tumor_sample_id)
-                raise Exception(msg)
-
-            tumor_bam = tumor_bam.order_by('-created_date').first()
-
+        for standard_tumor_bam in standard_tumor_bams:
+            tumor_sample_id = standard_tumor_bam.file_name.split('_cl_aln')[0]
             patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
@@ -79,7 +68,6 @@ class AccessLegacyMSIOperator(Operator):
                 file_name__startswith=sample_search_start,
                 file_name__endswith=STANDARD_BAM_SEARCH
             )
-
             if not len(matched_normal_bam) > 0:
                 msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
                 logger.warning(msg)
@@ -88,12 +76,11 @@ class AccessLegacyMSIOperator(Operator):
             matched_normal_bam = matched_normal_bam.order_by('-created_date').first()
 
             sample_ids.append(tumor_sample_id)
-            tumor_bams.append(tumor_bam)
             matched_normal_bams.append(matched_normal_bam)
 
         sample_inputs = [self.construct_sample_inputs(
             sample_ids[i],
-            tumor_bams[i],
+            standard_tumor_bams[i],
             matched_normal_bams[i]
         ) for i in range(0, len(sample_ids))]
 

@@ -3,12 +3,11 @@ import json
 import logging
 from jinja2 import Template
 
-from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports
 from runner.models import Port, RunStatus
+from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-from file_system.models import File
 from file_system.repository.file_repository import FileRepository
+from runner.operator.access import get_request_id, get_request_id_runs
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +29,11 @@ class AccessLegacyCNVOperator(Operator):
     This Operator will search for ACCESS Unfiltered Bam files based on an IGO Request ID.
     """
 
+    @staticmethod
+    def is_tumor(file):
+        t_n_timepoint = file.file_name.split('-')[2]
+        return not t_n_timepoint[0] == 'N'
+
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator.
@@ -45,50 +49,34 @@ class AccessLegacyCNVOperator(Operator):
             run__status=RunStatus.COMPLETED
         )
 
-        # Filter to only tumor bam files
-        unfiltered_tumor_bam_files = extract_tumor_ports(unfiltered_bam_ports)
-        sample_ids_to_run = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in unfiltered_tumor_bam_files]
+        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor(f)]
 
+        sample_ids = []
         tumor_bams = []
         sample_sexes = []
 
-        for i, tumor_sample_id in enumerate(sample_ids_to_run):
-
-            # Locate the Unfiltered Tumor BAM
-            unfiltered_tumor_bam = File.objects.filter(file_name__startswith=tumor_sample_id, file_name__endswith=UNFILTERED_BAM_SEARCH)
-            if len(unfiltered_tumor_bam) < 1:
-                msg = 'WARNING: Could not find unfiltered tumor bam file for sample {}' \
-                      'We will skip running this sample.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-                raise Exception(msg)
-            if len(unfiltered_tumor_bam) > 1:
-                msg = 'WARNING: Found more than one unfiltered bam file for tumor sample {}. ' \
-                      'We will choose the most recently-created one for this run.'
-                msg = msg.format(tumor_sample_id)
-                logger.warning(msg)
-            # Take the latest one
-            unfiltered_tumor_bam = unfiltered_tumor_bam.order_by('-created_date').first()
-
+        for tumor_bam in unfiltered_tumor_bams:
+            sample_id = tumor_bam.file_name.split('_cl_aln')[0]
             # Use the initial fastq metadata to get the sex of the sample
             # Todo: Need to store this info on the bams themselves
             tumor_fastqs = FileRepository.filter(
                 file_type='fastq',
                 metadata={
                     'tumorOrNormal': 'Tumor',
-                    'sampleName': tumor_sample_id
+                    'sampleName': sample_id
                 }
             )
             sample_sex = tumor_fastqs[0].metadata['sex']
-            tumor_bams.append(unfiltered_tumor_bam)
+            tumor_bams.append(tumor_bam)
             sample_sexes.append(sample_sex)
+            sample_ids.append(sample_id)
 
         sample_inputs = [self.construct_sample_inputs(
             tumor_bams[i],
             sample_sexes[i]
         ) for i in range(0, len(tumor_bams))]
 
-        return sample_inputs, sample_ids_to_run
+        return sample_inputs, sample_ids
 
     def get_jobs(self):
         """
