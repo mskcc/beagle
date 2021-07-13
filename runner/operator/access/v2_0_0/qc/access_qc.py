@@ -162,4 +162,4 @@ class AccessQCOperator(Operator):
                 j[f] = None
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
-        return json.dumps(str(j))
+        return json.dumps(j)
