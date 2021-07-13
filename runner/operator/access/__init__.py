@@ -61,8 +61,8 @@ def create_cwl_file_object(file_path):
     }
 
 
-def is_tumor(port):
-    file_name = port['location'].split('/')[-1]
+def is_tumor(file):
+    file_name = file['location'].split('/')[-1]
     t_n_timepoint = file_name.split('-')[2]
     return not t_n_timepoint[0] == 'N'
 

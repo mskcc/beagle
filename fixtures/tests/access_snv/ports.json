@@ -99,7 +99,7 @@
             "db_value": [{
                 "file": {
                     "class": "File",
-                    "location": "bid://2f77f3ac-ab25-4a02-90bd-86542401ac82"
+                    "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44ab3"
                 },
                 "sampleId": "",
                 "patientId": "",
@@ -117,7 +117,7 @@
                 "tumorOrNormal": "Tumor"
             }],
             "files": [
-                "2f77f3ac-ab25-4a02-90bd-86542401ac82"
+                "fffff52a-0696-48d4-9ca5-6580daa44ab3"
             ]
         }
     },
@@ -140,7 +140,7 @@
             "secondary_files": [],
             "db_value": [{
                 "class": "File",
-                "location": "bid://2f77f3ac-ab25-4a02-90bd-86542401ac82"
+                "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44ab3"
             }],
             "value": [
                 {
@@ -151,7 +151,7 @@
                 }
             ],
             "files": [
-                "2f77f3ac-ab25-4a02-90bd-86542401ac82"
+                "fffff52a-0696-48d4-9ca5-6580daa44ab3"
             ]
         }
     },
