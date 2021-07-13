@@ -160,4 +160,4 @@ class AccessQCOperator(Operator):
         for f in meta_fields:
             if not f in j:
                 j[f] = None
-        return json.dumps(str(j))
+        return json.dumps(j)
