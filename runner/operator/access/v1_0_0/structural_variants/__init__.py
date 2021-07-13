@@ -3,11 +3,11 @@ import json
 import logging
 from jinja2 import Template
 
+from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
-from runner.operator.access import get_request_id, get_request_id_runs, extract_tumor_ports, create_cwl_file_object
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import File
-from runner.models import Port, RunStatus
+from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 
 
 
@@ -28,6 +28,11 @@ class AccessLegacySVOperator(Operator):
     This Operator will search for Standard Bam files based on an IGO Request ID
     """
 
+    @staticmethod
+    def is_tumor(file):
+        t_n_timepoint = file.file_name.split('-')[2]
+        return not t_n_timepoint[0] == 'N'
+
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator
@@ -43,9 +48,8 @@ class AccessLegacySVOperator(Operator):
             run__status=RunStatus.COMPLETED
         )
 
-        # Filter to only tumor bam files
-        standard_tumor_ports = extract_tumor_ports(standard_bam_ports)
-        sample_ids = [f['location'].split('/')[-1].split(SAMPLE_ID_SEP)[0] for f in standard_tumor_ports]
+        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor(f)]
+        sample_ids = [f.file_name.split('_cl_aln')[0] for f in standard_tumor_bams]
 
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_SV_NORMAL_FILENAME)
         if not len(normal_bam) == 1:
@@ -55,7 +59,7 @@ class AccessLegacySVOperator(Operator):
         normal_bam = normal_bam[0]
 
         sample_inputs = []
-        for i, b in enumerate(standard_tumor_ports):
+        for i, b in enumerate(standard_tumor_bams):
             sample_input = self.construct_sample_inputs(
                 sample_ids[i],
                 b,
@@ -105,7 +109,7 @@ class AccessLegacySVOperator(Operator):
             tumor_sample_names = [tumor_sample_id]
             tumor_bams = [{
                 "class": "File",
-                "location": tumor_bam['location'].replace('file://', 'juno://')
+                "location": tumor_bam.path.replace('file://', 'juno://')
             }]
 
             normal_bam = create_cwl_file_object(normal_bam.path)

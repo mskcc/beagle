@@ -67,32 +67,6 @@ def is_tumor(file):
     return not t_n_timepoint[0] == 'N'
 
 
-def extract_tumor_ports(ports):
-    """
-    Filter to just port objects from Tumor samples (or ports with anything *except* "N" in the timepoint.
-
-    Needs to work when p.value is either a list of files, or a single file
-
-    Include: -T (Tumor), -P (primary), -M (metastatic), -L
-    Exclude: -N (Normal)
-
-    Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-
-    :param sample_ports:
-    :return:
-    """
-    ret = []
-    for p in ports:
-        if type(p.value) is list:
-            for pi in p.value:
-                if is_tumor(pi):
-                    ret.append(pi)
-        else:
-            if is_tumor(p):
-                ret.append(p)
-    return ret
-
-
 def get_unfiltered_matched_normal(patient_id, request_id=None):
     """
     Find a matched normal sample for the given patient ID with the following precedence:
