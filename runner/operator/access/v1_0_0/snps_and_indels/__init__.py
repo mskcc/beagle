@@ -539,7 +539,8 @@ class AccessLegacySNVOperator(Operator):
             sample_input = json.loads(input_file)
             return sample_input
 
-    def _create_cwl_bam_object(self, bam):
+    @staticmethod
+    def _create_cwl_bam_object(bam):
         """
         Util function to create a simple CWL File object from a bam with a path attribute
 
