@@ -164,7 +164,7 @@ class AccessQCOperator(Operator):
                 j[f] = None
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
-        out = json.dumps(j)
+        out = json.dumps([j])
 
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         Path(tmpdir).mkdir(parents=True, exist_ok=True)
