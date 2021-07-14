@@ -144,7 +144,7 @@ class AccessQCOperator(Operator):
             sample_sex=json.dumps([sample_sex]),
             sample_name=json.dumps([sample_name]),
             sample_group=json.dumps([sample_group]),
-            samples_json_content=samples_json_content,
+            samples_json_content=json.dumps(samples_json_content),
             **bams,
         )
         sample_input = json.loads(input_file)
