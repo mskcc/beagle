@@ -1,13 +1,16 @@
 import os
 import json
+import uuid
 import logging
 
+from pathlib import Path
 from jinja2 import Template
 
+from beagle import settings
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
-
 from runner.models import RunStatus, Port, Run
+from file_system.models import File, FileGroup, FileType
 
 
 
@@ -154,12 +157,34 @@ class AccessQCOperator(Operator):
             "location": "juno://" + file_path
         }
 
-    @staticmethod
-    def create_sample_json(run):
+    def create_sample_json(self, run):
         j = run.output_metadata
         for f in meta_fields:
             if not f in j:
                 j[f] = None
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
-        return json.dumps(j).replace('"', '\"')
+        out = json.dumps(j)
+
+        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
+        Path(tmpdir).mkdir(parents=True, exist_ok=True)
+        output = os.path.join(tmpdir, 'samples_json.json')
+
+        with open(output, "w+") as fh:
+            fh.write(out)
+
+        os.chmod(output, 0o777)
+
+        fname = os.path.basename(output)
+        temp_file_group = FileGroup.objects.get(slug="temp")
+        file_type = FileType.objects.get(name="json")
+
+        f = File(
+            file_name=fname,
+            path=output,
+            file_type=file_type,
+            file_group=temp_file_group
+        )
+        f.save()
+
+        return self.create_cwl_file_object(f.path)
