@@ -159,6 +159,9 @@ class AccessQCOperator(Operator):
 
     def create_sample_json(self, run):
         j = run.output_metadata
+        # todo: cmoSampleName in output_metadata for Nucleo appears to be the igo ID?
+        j['cmoSampleName'] = run.output_metadata['sampleName']
+
         for f in meta_fields:
             if not f in j:
                 j[f] = None
