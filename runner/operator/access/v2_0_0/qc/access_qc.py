@@ -164,11 +164,6 @@ class AccessQCOperator(Operator):
                 j[f] = None
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
-<<<<<<< HEAD
-        # Using a multi-sample workflow for one sample, so we need a list
-        j = [j]
-        return json.dumps(j).replace('"', '\"')
-=======
         out = json.dumps([j])
 
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
@@ -193,4 +188,3 @@ class AccessQCOperator(Operator):
         f.save()
 
         return self.create_cwl_file_object(f.path)
->>>>>>> 80d31fb8e8cb184835e2348b394781709cff8dc8
