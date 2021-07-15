@@ -185,7 +185,7 @@ class AccessQCOperator(Operator):
 
         fname = os.path.basename(output)
         temp_file_group = FileGroup.objects.get(slug="temp")
-        file_type = FileType.objects.get(name="json")
+        file_type = FileType.objects.get(name="unknown")
 
         f = File(
             file_name=fname,
