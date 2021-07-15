@@ -168,7 +168,7 @@ class AccessQCOperator(Operator):
                 j[f] = None
         for f in j:
             # MultiQC cannot handle cells with ","
-            if "," in j[f]:
+            if type(j[f]) is str and "," in j[f]:
                 j[f] = j[f].replace(',', ';')
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
