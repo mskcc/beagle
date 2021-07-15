@@ -2,6 +2,7 @@ import os
 
 from django.test import TestCase
 
+from beagle import settings
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
@@ -36,6 +37,8 @@ class TestAccessQCOperator(TestCase):
         self.assertEqual(len(File.objects.all()), 10)
         self.assertEqual(len(FileMetadata.objects.all()), 5)
 
+        # This operator needs to write a temp file, so need to override this env var
+        settings.BEAGLE_SHARED_TMPDIR = '/tmp'
         request_id = "05500_FH"
 
         operator_model = Operator.objects.get(id=11)
