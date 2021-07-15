@@ -163,8 +163,13 @@ class AccessQCOperator(Operator):
         j['cmoSampleName'] = run.output_metadata['sampleName']
 
         for f in meta_fields:
+            # Use None for missing fields
             if not f in j:
                 j[f] = None
+        for f in j:
+            # MultiQC cannot handle cells with ","
+            if "," in j[f]:
+                j[f] = j[f].replace(',', ';')
         # Use some double quotes to make JSON compatible
         j["qcReports"] = "na"
         out = json.dumps([j])
