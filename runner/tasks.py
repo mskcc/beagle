@@ -33,6 +33,11 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
 def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None):
     jg = None
     jgn = None
+
+    if not jobs:
+        logger.info("Could not create operator run due to no jobs being passed")
+        return
+
     try:
         jg = JobGroup.objects.get(id=job_group_id)
         logger.info("JobGroup id: %s", job_group_id)
