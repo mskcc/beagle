@@ -1,7 +1,7 @@
 def format_log(message, obj=None, obj_id=None, operator_run_id=None, job_group_id=None, request_id=None):
     if hasattr(obj, "id"):
         obj_id = obj.id
-    if hasattr(obj, "operator_obj_id"):
+    if hasattr(obj, "operator_run_id"):
         operator_run_id = obj.operator_run_id
     if hasattr(obj, "job_group_id"):
         job_group_id = obj.job_group_id
