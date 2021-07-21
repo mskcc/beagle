@@ -19,9 +19,13 @@ def format_log(message, obj=None, obj_id=None, operator_run_id=None, job_group_i
                                                  get_tag_from_obj(obj, "sample_id"), message)
 
 def get_tag_from_obj(obj, tag):
+    data = None
     if obj and hasattr(obj, "tags"):
-        if tag in obj.tags:
-            return obj.tags[tag]
+        data = obj.tags
+    elif obj and hasattr(obj, "args"):
+        data = obj.args
+
+    if data and tag in data:
+        return data[tag]
+
     return "None"
-
-
