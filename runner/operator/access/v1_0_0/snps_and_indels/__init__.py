@@ -147,12 +147,12 @@ class AccessLegacySNVOperator(Operator):
         - Tumor Duplex Bam
         - Tumor Simplex Bam
         - Matched Normal Unfiltered bam (from IGO / DMP or None) (external code)
-        - Other Tumor Duplex bams from same patient (for genotyping)
-        - Other Tumor Simplex bams from same patient (for genotyping)
+        - Other Tumor Duplex bams from same patient or capture (for genotyping)
+        - Other Tumor Simplex bams from same patient or capture (for genotyping)
 
         :return:
         """
-        tumor_sample_id = '-'.join(tumor_duplex_bam.file_name.split('-')[0:4])
+        tumor_sample_id = self.extract_sample_id(tumor_duplex_bam)
         patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
 
         # Get the Matched, Unfiltered, Normal BAM
