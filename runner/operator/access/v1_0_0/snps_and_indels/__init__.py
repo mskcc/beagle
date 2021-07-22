@@ -62,7 +62,7 @@ class AccessLegacySNVOperator(Operator):
             run__status=RunStatus.COMPLETED
         )
         simplex_output_ports = Port.objects.filter(
-            name__in=['simplex_bams', 'fgbio_filter_consensus_reads_simplex_bam'],
+            name__in=['simplex_bams', 'fgbio_postprocessing_simplex_bam'],
             run__id__in=run_ids,
             run__status=RunStatus.COMPLETED
         )
@@ -171,8 +171,8 @@ class AccessLegacySNVOperator(Operator):
             matched_normal_unfiltered_id
         )
 
-        capture_samples_duplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_duplex]
-        capture_samples_simplex_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_simplex]
+        capture_samples_duplex_sample_ids = [self.extract_sample_id(s) for s in geno_samples_duplex]
+        capture_samples_simplex_sample_ids = [self.extract_sample_id(s) for s in geno_samples_simplex]
 
         # Use sample IDs to remove duplicates from normal geno samples
         geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids = self._remove_normal_dups(
@@ -211,6 +211,14 @@ class AccessLegacySNVOperator(Operator):
 
         return sample_info
 
+    @staticmethod
+    def extract_sample_id(s):
+        if '_cl_aln_srt' in s.file_name:
+            ret = s.file_name.split('_cl_aln_srt')[0]
+        else:
+            ret = s.filemetadata_set.first().metadata['sampleName']
+        return ret
+
     def _remove_normal_dups(self, geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids,
                             capture_samples_duplex_sample_ids):
         """
@@ -244,7 +252,7 @@ class AccessLegacySNVOperator(Operator):
         if matched_normal_unfiltered_id:
             geno_samples_normal_unfiltered = [s for s in geno_samples_normal_unfiltered if not s.file_name.startswith(matched_normal_unfiltered_id)]
 
-        geno_samples_normal_unfiltered_sample_ids = [s.file_name.split('_cl_aln_srt')[0] if '_cl_aln_srt' in s.file_name else s.metadata['cmoSampleName'] for s in geno_samples_normal_unfiltered]
+        geno_samples_normal_unfiltered_sample_ids = [self.extract_sample_id(s) for s in geno_samples_normal_unfiltered]
         return geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids
 
     def get_geno_samples(self, tumor_sample_id, tumor_duplex_bam, tumor_simplex_bam, matched_normal_id):
