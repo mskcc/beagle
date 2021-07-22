@@ -1,6 +1,6 @@
 import logging
 
-from runner.models import Run, RunStatus
+from runner.models import Run, RunStatus, Port
 from file_system.models import File, FileMetadata
 
 
