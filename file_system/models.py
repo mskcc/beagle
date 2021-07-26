@@ -31,7 +31,6 @@ class Storage(BaseModel):
     def __repr__(self):
         return "ID: %s NAME: %s TYPE: %s" % (self.id, self.name, StorageType(self.type))
 
-
     def __str__(self):
         return u"{}".format(self.name)
 
@@ -43,9 +42,19 @@ class FileType(models.Model):
         return u"{}".format(self.name)
 
 
+class Request(BaseModel):
+    request_id = models.CharField(max_length=100)
+
+
 class Sample(BaseModel):
     sample_id = models.CharField(max_length=32, unique=True, null=False, blank=False)
+    sample_name = models.CharField(max_length=100, null=True, blank=True)
+    cmo_sample_name = models.CharField(max_length=100, null=True, blank=True)
     redact = models.BooleanField(default=False, null=False)
+
+
+class Patient(BaseModel):
+    patient_id = models.CharField(max_length=100, null=True, blank=True)
 
 
 class FileExtension(models.Model):
@@ -82,7 +91,9 @@ class File(BaseModel):
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     checksum = models.CharField(max_length=50, blank=True, null=True)
+    request = models.ForeignKey(Request, null=True, on_delete=models.SET_NULL)
     sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
+    patient = models.ForeignKey(Patient, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         if not self.size:
@@ -107,18 +118,53 @@ class FileMetadata(BaseModel):
 
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop('do_not_version', False)
-        sample_id = self.metadata.get(settings.SAMPLE_ID_METADATA_KEY)
-        if sample_id:
-            with transaction.atomic():
-                try:
-                    sample = Sample.objects.get(sample_id=sample_id)
-                except Sample.DoesNotExist:
-                    sample = Sample.objects.create(sample_id=sample_id)
-                self.file.sample = sample
-                self.file.save(update_fields=('sample',))
         if do_not_version:
             super(FileMetadata, self).save(*args, **kwargs)
         else:
+            request_id = self.metadata.get(settings.REQUEST_ID_METADATA_KEY)
+            sample_id = self.metadata.get(settings.SAMPLE_ID_METADATA_KEY)
+            sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
+            cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
+            patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
+            with transaction.atomic():
+                if sample_id:
+                    if not self.file.sample:
+                        try:
+                            sample = Sample.objects.get(sample_id=sample_id, sample_name=sample_name,
+                                                        cmo_sample_name=cmo_sample_name)
+                        except Sample.DoesNotExist:
+                            sample = Sample.objects.create(sample_id=sample_id, sample_name=sample_name,
+                                                           cmo_sample_name=cmo_sample_name)
+                        self.file.sample = sample
+                        self.file.save(update_fields=('sample',))
+                    else:
+                        self.file.sample.sample_id = sample_id
+                        self.file.sample.sample_name = sample_name
+                        self.file.sample.cmo_sample_name = cmo_sample_name
+                        self.file.sample.save()
+
+                if request_id:
+                    if not self.file.request:
+                        try:
+                            request = Request.objects.get(request_id=request_id)
+                        except Request.DoesNotExist:
+                            request = Request.objects.create(request_id=request_id)
+                        self.file.request = request
+                        self.file.save(update_fields=('request',))
+                    else:
+                        self.file.request.request_id = request_id
+                        self.file.request.save()
+                if patient_id:
+                    if not self.file.patient:
+                        try:
+                            patient = Patient.objects.get(patient_id=patient_id)
+                        except Patient.DoesNotExist:
+                            patient = Patient.objects.create(patient_id=patient_id)
+                        self.file.patient = patient
+                        self.file.save(update_fields=('patient',))
+                    else:
+                        self.file.patient.patient_id = patient_id
+                        self.file.patient.save()
             versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
             version = max(versions) + 1 if versions else 0
             self.version = version
