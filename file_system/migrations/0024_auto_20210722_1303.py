@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('modified_date', models.DateTimeField(auto_now=True)),
-                ('patient_id', models.CharField(max_length=100)),
+                ('patient_id', models.CharField(blank=True, max_length=100, null=True)),
             ],
             options={
                 'abstract': False,
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('modified_date', models.DateTimeField(auto_now=True)),
-                ('request_id', models.CharField(max_length=32)),
+                ('request_id', models.CharField(max_length=100, null=True, blank=True)),
             ],
             options={
                 'abstract': False,
