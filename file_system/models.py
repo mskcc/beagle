@@ -43,7 +43,7 @@ class FileType(models.Model):
 
 
 class Request(BaseModel):
-    request_id = models.CharField(max_length=100)
+    request_id = models.CharField(max_length=100, null=True, blank=True)
 
 
 class Sample(BaseModel):
