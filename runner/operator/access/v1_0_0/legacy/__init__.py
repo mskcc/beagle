@@ -157,7 +157,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             missing_fields = get_missing_fields(meta, REQUIRED_META_FIELDS)
             if missing_fields:
                 ic_error = InputCreationFailedEvent(
-                    "The following fields are missing from the input: {}".format(",".join(missing_fields)),
+                    "The following fields are missing from the metadata: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
                     meta["sampleId"]
