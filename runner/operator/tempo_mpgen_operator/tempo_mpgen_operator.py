@@ -252,6 +252,8 @@ class TempoMPGenOperator(Operator):
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
             "WholeExomeSequencing",
+            "IDT_Exome_v1_FP_Viral_Probes",
+            "IDT_Exome_v2_FP_Viral_Probes"
        ]
         return recipe
 
@@ -264,6 +266,7 @@ class TempoMPGenOperator(Operator):
         "IDT_Exome_v2_FP_b37_baits",
         "IDT_Exome_v2_GRCh38_BAITS",
         "SureSelect-All-Exon-V4-hg19",
+        "IDT_Exome_v1_FP_Viral_Probes",
         "IDT_Exome_v2_FP_Viral_Probes"
        ]
         return assays
