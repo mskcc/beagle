@@ -9,6 +9,8 @@ from file_system.views.storage_view import StorageViewSet
 from file_system.views.file_metadata_view import FileMetadataView
 from file_system.views.file_type_view import FileTypeView
 from file_system.views.sample_view import SampleViewSet
+from file_system.views.patient_view import PatientViewSet
+from file_system.views.request_view import RequestViewSet
 
 
 router = routers.DefaultRouter()
@@ -18,6 +20,8 @@ router.register('file-types', FileTypeView)
 router.register('files', FileView)
 router.register('metadata', FileMetadataView)
 router.register('sample', SampleViewSet)
+router.register('request', RequestViewSet)
+router.register('patient', PatientViewSet)
 
 
 urlpatterns = [
