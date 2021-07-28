@@ -109,9 +109,12 @@ class AccessLegacySVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_names = [tumor_sample_id]
+            tumor_path = tumor_bam.path.replace('file://', 'juno://')
+            if not tumor_path.startswith('juno://'):
+                tumor_path = 'juno://' + tumor_path
             tumor_bams = [{
                 "class": "File",
-                "location": tumor_bam.path.replace('file://', 'juno://')
+                "location": tumor_path
             }]
 
             normal_bam = create_cwl_file_object(normal_bam.path)
