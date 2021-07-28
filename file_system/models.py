@@ -126,40 +126,44 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
-            with transaction.atomic():
-                if sample_id:
-                    if not self.file.sample:
+            if sample_id:
+                if not self.file.sample:
+                    with transaction.atomic():
                         try:
                             sample = Sample.objects.get(sample_id=sample_id, sample_name=sample_name,
                                                         cmo_sample_name=cmo_sample_name)
                         except Sample.DoesNotExist:
                             sample = Sample.objects.create(sample_id=sample_id, sample_name=sample_name,
                                                            cmo_sample_name=cmo_sample_name)
-                        self.file.sample = sample
-                        self.file.save(update_fields=('sample',))
-                    else:
-                        self.file.sample.sample_id = sample_id
-                        self.file.sample.sample_name = sample_name
-                        self.file.sample.cmo_sample_name = cmo_sample_name
-                        self.file.sample.save()
+                    self.file.sample = sample
+                    self.file.save(update_fields=('sample',))
+                else:
+                    self.file.sample.sample_id = sample_id
+                    self.file.sample.sample_name = sample_name
+                    self.file.sample.cmo_sample_name = cmo_sample_name
+                    self.file.sample.save()
 
                 if request_id:
                     if not self.file.request:
-                        try:
-                            request = Request.objects.get(request_id=request_id)
-                        except Request.DoesNotExist:
-                            request = Request.objects.create(request_id=request_id)
+                        with transaction.atomic():
+                            try:
+                                request = Request.objects.get(request_id=request_id)
+                            except Request.DoesNotExist:
+                                request = Request.objects.create(request_id=request_id)
+
                         self.file.request = request
                         self.file.save(update_fields=('request',))
                     else:
                         self.file.request.request_id = request_id
                         self.file.request.save()
+
                 if patient_id:
                     if not self.file.patient:
-                        try:
-                            patient = Patient.objects.get(patient_id=patient_id)
-                        except Patient.DoesNotExist:
-                            patient = Patient.objects.create(patient_id=patient_id)
+                        with transaction.atomic():
+                            try:
+                                patient = Patient.objects.get(patient_id=patient_id)
+                            except Patient.DoesNotExist:
+                                patient = Patient.objects.create(patient_id=patient_id)
                         self.file.patient = patient
                         self.file.save(update_fields=('patient',))
                     else:
