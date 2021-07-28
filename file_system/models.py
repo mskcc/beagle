@@ -47,7 +47,7 @@ class Request(BaseModel):
 
 
 class Sample(BaseModel):
-    sample_id = models.CharField(max_length=32, unique=True, null=False, blank=False)
+    sample_id = models.CharField(max_length=32, unique=False, null=False, blank=False)
     sample_name = models.CharField(max_length=100, null=True, blank=True)
     cmo_sample_name = models.CharField(max_length=100, null=True, blank=True)
     redact = models.BooleanField(default=False, null=False)
@@ -143,32 +143,32 @@ class FileMetadata(BaseModel):
                     self.file.sample.cmo_sample_name = cmo_sample_name
                     self.file.sample.save()
 
-                if request_id:
-                    if not self.file.request:
-                        with transaction.atomic():
-                            try:
-                                request = Request.objects.get(request_id=request_id)
-                            except Request.DoesNotExist:
-                                request = Request.objects.create(request_id=request_id)
+            if request_id:
+                if not self.file.request:
+                    with transaction.atomic():
+                        try:
+                            request = Request.objects.get(request_id=request_id)
+                        except Request.DoesNotExist:
+                            request = Request.objects.create(request_id=request_id)
 
-                        self.file.request = request
-                        self.file.save(update_fields=('request',))
-                    else:
-                        self.file.request.request_id = request_id
-                        self.file.request.save()
+                    self.file.request = request
+                    self.file.save(update_fields=('request',))
+                else:
+                    self.file.request.request_id = request_id
+                    self.file.request.save()
 
-                if patient_id:
-                    if not self.file.patient:
-                        with transaction.atomic():
-                            try:
-                                patient = Patient.objects.get(patient_id=patient_id)
-                            except Patient.DoesNotExist:
-                                patient = Patient.objects.create(patient_id=patient_id)
+            if patient_id:
+                if not self.file.patient:
+                    with transaction.atomic():
+                        try:
+                            patient = Patient.objects.get(patient_id=patient_id)
+                        except Patient.DoesNotExist:
+                            patient = Patient.objects.create(patient_id=patient_id)
                         self.file.patient = patient
                         self.file.save(update_fields=('patient',))
-                    else:
-                        self.file.patient.patient_id = patient_id
-                        self.file.patient.save()
+                else:
+                    self.file.patient.patient_id = patient_id
+                    self.file.patient.save()
             versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
             version = max(versions) + 1 if versions else 0
             self.version = version
