@@ -43,7 +43,7 @@ class FileType(models.Model):
 
 
 class Request(BaseModel):
-    request_id = models.CharField(max_length=100, null=True, blank=True)
+    request_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 
 
 class Sample(BaseModel):
@@ -54,7 +54,7 @@ class Sample(BaseModel):
 
 
 class Patient(BaseModel):
-    patient_id = models.CharField(max_length=100, null=True, blank=True)
+    patient_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 
 
 class FileExtension(models.Model):
