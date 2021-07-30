@@ -15,7 +15,7 @@ from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample, Request, Patient
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
@@ -37,6 +37,8 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
+        if not Request.objects.filter(request_id=request['request']):
+            Request.objects.create(request_id=request['request'])
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -397,6 +399,22 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
     validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
+
+    patient_id = format_patient_id(data.get('cmoPatientId'))
+
+    if not Patient.objects.filter(patient_id=patient_id):
+        Patient.objects.create(patient_id=patient_id)
+
+    sample_name = data.get('cmoSampleName', None)
+    specimen_type = data.get('specimenType', None)
+    cmo_sample_name = format_sample_name(sample_name, specimen_type)
+
+    if not Sample.objects.filter(sample_id=sample_id,
+                                 sample_name=sample_name,
+                                 cmo_sample_name=cmo_sample_name):
+        Sample.objects.create(sample_id=sample_id,
+                              sample_name=sample_name,
+                              cmo_sample_name=cmo_sample_name)
 
     libraries = data.pop('libraries')
     for library in libraries:
