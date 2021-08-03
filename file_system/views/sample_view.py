@@ -14,7 +14,7 @@ class SampleViewSet(mixins.ListModelMixin,
     queryset = Sample.objects.order_by('-created_date').all()
     permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter,)
-    search_fields = ('^sample_id',)
+    search_fields = ('^sample_id', '^sample_name', '^cmo_sample_name')
 
     def get_serializer_class(self):
         return SampleSerializer

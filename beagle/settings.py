@@ -91,9 +91,10 @@ ELASTIC_APM = {
   # Set the required service name. Allowed characters:
   # a-z, A-Z, 0-9, -, _, and space
   'SERVICE_NAME': 'beagle',
-
+  'TRANSACTION_SAMPLE_RATE': 0.3,
   # Use if APM Server requires a secret token
   #'SECRET_TOKEN': '',
+
 
   # Set the custom APM Server URL (default: http://localhost:8200)
   'SERVER_URL': 'http://bic-dockerapp01.mskcc.org:8200/',
@@ -391,7 +392,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     )
 
+REQUEST_ID_METADATA_KEY = 'requestId'
 SAMPLE_ID_METADATA_KEY = 'sampleId'
+SAMPLE_NAME_METADATA_KEY = 'sampleName'
+CMO_SAMPLE_NAME_METADATA_KEY = 'cmoSampleName'
+PATIENT_ID_METADATA_KEY = 'patientId'
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')
