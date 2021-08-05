@@ -127,7 +127,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
 def get_sequencer_type(run_ids_list):
     hiseq_machines = ['jax', 'pitt']
-    novaseq_machines = ['diana', 'michelle', 'aa00227']
+    novaseq_machines = ['diana', 'michelle', 'aa00227', 'ruth']
     run_ids_lower = [ i.lower() for i in run_ids_list if i ]
     for machine in hiseq_machines:
         is_hiseq = find_substr(machine, run_ids_lower)
