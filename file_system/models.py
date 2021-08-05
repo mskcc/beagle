@@ -47,7 +47,7 @@ class Request(BaseModel):
 
 
 class Sample(BaseModel):
-    sample_id = models.CharField(max_length=32, unique=False, null=False, blank=False)
+    sample_id = models.CharField(max_length=32, unique=True, null=False, blank=False)
     sample_name = models.CharField(max_length=100, null=True, blank=True)
     cmo_sample_name = models.CharField(max_length=100, null=True, blank=True)
     redact = models.BooleanField(default=False, null=False)
