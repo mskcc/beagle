@@ -240,8 +240,10 @@ class ArgosOperator(Operator):
         return all_files, cnt_tumors
 
     def get_regular_sample(self, sample_data, tumor_type):
-        sample_id = sample_data['sample_id']
-        sample = FileRepository.filter(queryset=self.files,
+        legacy_fg = Q(file__file_group=FileGroup.objects.get(slug='fero-legacy-data'))
+        data_files = FileRepository.filter(queryset=self.files, q=legacy_fg)
+        sample_id = sample_data['sample_id']    
+        sample = FileRepository.filter(queryset=data_files,
                                        metadata={'cmoSampleName': sample_id,
                                                  'igocomplete': True},
                                        filter_redact=True)
