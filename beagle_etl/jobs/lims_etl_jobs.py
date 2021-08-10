@@ -237,6 +237,27 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
             raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
 
         for sample in sample_ids.get('samples', []):
+            sampleMetadata = LIMSClient.get_sample_manifest(sample['igoSampleId'])
+            try:
+                data = sampleMetadata[0]
+            except Exception as e:
+                pass
+            patient_id = format_patient_id(data.get('cmoPatientId'))
+
+            if not Patient.objects.filter(patient_id=patient_id):
+                Patient.objects.create(patient_id=patient_id)
+
+            sample_name = data.get('cmoSampleName', None)
+            specimen_type = data.get('specimenType', None)
+            cmo_sample_name = format_sample_name(sample_name, specimen_type)
+
+            if not Sample.objects.filter(sample_id=sample['igoSampleId'],
+                                         sample_name=sample_name,
+                                         cmo_sample_name=cmo_sample_name):
+                Sample.objects.create(sample_id=sample['igoSampleId'],
+                                      sample_name=sample_name,
+                                      cmo_sample_name=cmo_sample_name)
+
             job = create_sample_job(sample['igoSampleId'],
                                     sample['igocomplete'],
                                     request_id,
@@ -393,28 +414,11 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
-        # logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
 
     validate_sample(sample_id, data.get('libraries', []), igocomplete, redelivery)
-
-    patient_id = format_patient_id(data.get('cmoPatientId'))
-
-    if not Patient.objects.filter(patient_id=patient_id):
-        Patient.objects.create(patient_id=patient_id)
-
-    sample_name = data.get('cmoSampleName', None)
-    specimen_type = data.get('specimenType', None)
-    cmo_sample_name = format_sample_name(sample_name, specimen_type)
-
-    if not Sample.objects.filter(sample_id=sample_id,
-                                 sample_name=sample_name,
-                                 cmo_sample_name=cmo_sample_name):
-        Sample.objects.create(sample_id=sample_id,
-                              sample_name=sample_name,
-                              cmo_sample_name=cmo_sample_name)
 
     libraries = data.pop('libraries')
     for library in libraries:
