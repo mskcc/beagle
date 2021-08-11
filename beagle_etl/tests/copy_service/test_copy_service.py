@@ -1,8 +1,5 @@
 from django.test import TestCase
 from beagle_etl.copy_service import CopyService
-from django.conf import settings
-from django.test.utils import override_settings
-from unittest.mock import patch
 
 
 class JobViewTest(TestCase):

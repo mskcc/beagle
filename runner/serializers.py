@@ -1,11 +1,10 @@
-import os
 import datetime
 from django.conf import settings
 from rest_framework import serializers
 from notifier.models import JobGroup, JobGroupNotifier
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
-from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException
+from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
 
 def ValidateDict(value):
@@ -24,6 +23,13 @@ def format_port_data(port_data):
         port_dict[port_name] = port_value
     return port_dict
 
+
+class OperatorRunListSerializer(serializers.Serializer):
+    app = serializers.UUIDField(required=False)
+    app_name = serializers.CharField(required=False)
+    app_version = serializers.CharField(required=False)
+    tags = serializers.JSONField(required=False)
+    status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
 
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
@@ -128,8 +134,13 @@ class CreateRunSerializer(serializers.Serializer):
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-        run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
-                  status=RunStatus.CREATING, job_statuses=dict(), resume=validated_data.get('resume'))
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
+                  app=pipeline,
+                  tags={"requestId": validated_data.get('request_id')},
+                  status=RunStatus.CREATING,
+                  job_statuses=dict(),
+                  resume=validated_data.get('resume'))
         run.save()
         return run
 
@@ -288,7 +299,8 @@ class APIRunCreateSerializer(serializers.Serializer):
         name = "Run %s: %s" % (pipeline.name, create_date)
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name,
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
@@ -347,6 +359,9 @@ class RunIdsOperatorSerializer(serializers.Serializer):
     pipelines = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
+    pipeline_versions = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
     job_group_id = serializers.UUIDField(required=False)
     for_each = serializers.BooleanField(default=False)
 
@@ -356,6 +371,9 @@ class PairOperatorSerializer(serializers.Serializer):
             child=serializers.JSONField(),allow_empty=True
     )
     pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipeline_versions = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
     name = serializers.CharField(allow_blank=False, allow_null=False)
@@ -372,7 +390,15 @@ class OperatorErrorSerializer(serializers.ModelSerializer):
 
 class OperatorRunSerializer(serializers.ModelSerializer):
     operator_class = serializers.SerializerMethodField()
+    app_name = serializers.SerializerMethodField()
+    app_version = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+
+    def get_app_name(self, obj):
+        return obj.operator.pipeline_set.first().name
+
+    def get_app_version(self, obj):
+        return obj.operator.pipeline_set.first().version
 
     def get_operator_class(self, obj):
         return obj.operator.class_name

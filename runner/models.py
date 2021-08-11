@@ -10,6 +10,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
 
+class ProtocolType(IntEnum):
+    CWL = 0
+    NEXTFLOW = 1
+
+
 class RunStatus(IntEnum):
     CREATING = 0
     READY = 1
@@ -46,6 +51,9 @@ class BaseModel(models.Model):
 
 
 class Pipeline(BaseModel):
+    pipeline_type = models.IntegerField(choices=[(pt.value, pt.name) for pt in ProtocolType],
+                                        db_index=True,
+                                        default=ProtocolType.CWL)
     name = models.CharField(max_length=100, editable=True)
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
@@ -56,6 +64,7 @@ class Pipeline(BaseModel):
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
+    config = models.CharField(blank=True, null=True, max_length=1000, default=None)
 
     @property
     def pipeline_link(self):
@@ -157,6 +166,9 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
+    run_type = models.IntegerField(choices=[(run_type.value, run_type.name) for run_type in ProtocolType],
+                                   db_index=True,
+                                   default=ProtocolType.CWL)
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
@@ -229,6 +241,7 @@ class Port(BaseModel):
     name = models.CharField(max_length=100, editable=True)
     port_type = models.IntegerField(choices=[(port_type.value, port_type.name) for port_type in PortType])
     schema = JSONField(null=True, blank=True)
+    template = JSONField(null=True, blank=True)
     secondary_files = JSONField(null=True, blank=True)
     db_value = JSONField(null=True)
     value = JSONField(null=True)

@@ -1,17 +1,25 @@
 from django.contrib import admin, messages
 from django.urls import reverse
 from django.utils.translation import ngettext
-from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
-from lib.admin import link_relation, progress_bar, pretty_python_exception
-from rangefilter.filter import DateTimeRangeFilter
 from django.utils.html import format_html
-from beagle.settings import RIDGEBACK_URL, BEAGLE_URL
-from runner.tasks import abort_job_task
-import requests
+from lib.admin import link_relation, progress_bar
+from beagle.settings import RIDGEBACK_URL
+from rangefilter.filter import DateTimeRangeFilter
+from runner.tasks import abort_job_task, add_pipeline_to_cache
+from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
+
+
+def action_add_pipeline_to_cache(modeladmin, request, queryset):
+    for pipeline in queryset:
+        add_pipeline_to_cache.delay(pipeline.github, pipeline.version)
+
+
+action_add_pipeline_to_cache.short_description = "Add Pipeline to Cache"
 
 
 class PipelineAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'version', 'default', 'output_directory', link_relation("operator"))
+    actions = [action_add_pipeline_to_cache,]
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -56,6 +64,7 @@ class StatusFilter(admin.SimpleListFilter):
             return queryset.filter(status=self.value())
         return queryset
 
+
 def abort_run(modeladmin, request, queryset):
     jobs = list(queryset.values_list("id", flat=True))
     updated = len(jobs)
@@ -66,7 +75,9 @@ def abort_run(modeladmin, request, queryset):
         updated,
     ) % updated, messages.SUCCESS)
 
+
 abort_run.short_description = "Abort Run"
+
 
 class RunAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', link_relation("app"), link_relation("operator_run"), 'tags',
@@ -83,7 +94,7 @@ class RunAdmin(admin.ModelAdmin):
     def link_to_ridgeback(self, obj):
         if not obj.execution_id:
             return "-"
-        return format_html("<a target='_blank' href='{ridgeback_url}/admin/toil_orchestrator/job/{execution_id}'>{execution_id}</a>",
+        return format_html("<a target='_blank' href='{ridgeback_url}/admin/orchestrator/job/{execution_id}'>{execution_id}</a>",
                            execution_id=obj.execution_id, ridgeback_url=RIDGEBACK_URL)
     link_to_ridgeback.short_description = "Execution ID (Ridgeback)"
 
@@ -92,6 +103,7 @@ class OperatorRunAdmin(admin.ModelAdmin):
     list_display = ('id', link_relation("operator"), 'first_run', 'status', 'run_count', progress_bar('percent_runs_succeeded'),
                     progress_bar('percent_runs_finished'), 'created_date',)
     ordering = ('-created_date',)
+    readonly_fields = ('id', 'operator', 'job_group', 'job_group_notifier', 'parent')
 
     def run_count(self, obj):
         return obj.runs.count()
@@ -103,9 +115,6 @@ class OperatorRunAdmin(admin.ModelAdmin):
                           args=(run.pk,))
             return format_html("<a href='{url}'>{name}</a>",
                            url=url, name=run.name)
-
-    def has_change_permission(self, request, obj=None):
-        return False
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):

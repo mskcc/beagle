@@ -9,6 +9,7 @@ from beagle_etl.exceptions import ETLExceptions
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, PermissionDeniedEvent, SendEmailEvent
+from lib.logger import format_log
 
 
 logger = logging.getLogger(__name__)
@@ -16,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def fetch_requests_lims():
-    logger.info("Fetching requestIDs")
+    logger.info("ETL fetching requestIDs")
     running = Job.objects.filter(run=TYPES['DELIVERY'],
                                  status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN))
     if len(running) > 0:
-        logger.info("Job already in progress %s" % running.first())
+        logger.info(format_log("ETL job already in progress", obj=running.first()))
         return
     latest = Job.objects.filter(run=TYPES['DELIVERY']).order_by('-created_date').first()
     timestamp = None
@@ -32,7 +33,7 @@ def fetch_requests_lims():
               status=JobStatus.CREATED,
               max_retry=3, children=[])
     job.save()
-    logger.info("Fetching fetch_new_requests_lims job created")
+    logger.info(format_log("ETL fetch_new_requests_lims job created", obj=job))
 
 
 @shared_task
@@ -40,7 +41,7 @@ def check_missing_requests():
     """
     Method implemented because some requests on LIMS can show up with the date from the past
     """
-    logger.info("Check for missing requests")
+    logger.info("ETL Check for missing requests")
     timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=12)).timestamp()) * 1000
 
     job = Job(run='beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims',
@@ -48,14 +49,14 @@ def check_missing_requests():
               status=JobStatus.CREATED,
               max_retry=3, children=[])
     job.save()
-    logger.info("Fetching fetch_new_requests_lims job created")
+    logger.info(format_log("ETL fetch_new_requests_lims job created", obj=job))
 
 
 @shared_task
 def job_processor(job_id):
-    logger.info("Creating job: %s" % str(job_id))
+    logger.info(format_log("ETL Creating job", obj_id=job_id))
     job = JobObject(job_id)
-    logger.info("Processing job: %s with args: %s" % (str(job.job.id), str(job.job.args)))
+    logger.info(format_log("ETL Processing job with args %s" % str(job.job.args), obj=job.job))
     job.process()
 
 
@@ -67,10 +68,10 @@ def scheduler():
         j = Job.objects.get(id=job.id)
         if not j.is_locked:
             j.lock_job()
-            logger.info("Submitting job: %s" % str(job.id))
+            logger.info(format_log("ETL submitting job", obj=job))
             job_processor.delay(j.id)
         else:
-            logger.info("Job already locked: %s" % str(job.id))
+            logger.info(format_log("ETL job already locked", obj=job))
 
 
 def get_pending_jobs():
@@ -107,7 +108,7 @@ class JobObject(object):
         elif self.job.status == JobStatus.WAITING_FOR_CHILDREN:
             self._check_children()
 
-        logger.info("Job %s in status: %s" % (str(self.job.id), JobStatus(self.job.status).name))
+        logger.info(format_log("ETL job in status: %s" % JobStatus(self.job.status).name, obj=self.job))
         self._unlock()
         self._save()
 
@@ -259,7 +260,8 @@ class JobObject(object):
             if child_job.status == JobStatus.FAILED:
                 failed.append(child_id)
                 if isinstance(child_job.message, dict) and child_job.message.get("code", 0) == 108:
-                    logger.error("Job failed because of the permission denied error")
+                    logger.error(format_log("ETL job failed because of permission denied error",
+                                            obj=self.job))
                     recipe = child_job.args.get('request_metadata', {}).get('recipe')
                     permission_denied = True
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):

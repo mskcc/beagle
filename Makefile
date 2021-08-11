@@ -352,7 +352,7 @@ migrate: check-env
 
 # NOTE: requires iPython
 shell_plus: check-env
-	python manage.py shell_plus --notebook
+	python manage.py shell_plus
 
 shell_print_sql : check-env
 	python manage.py shell_plus --print-sql

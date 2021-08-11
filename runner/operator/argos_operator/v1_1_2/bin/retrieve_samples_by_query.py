@@ -7,7 +7,7 @@ and preservation type
 """
 import logging
 import os
-from file_system.models import File, FileMetadata
+from file_system.models import File, FileMetadata, FileGroup
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Prefetch, Q
 from django.conf import settings
@@ -17,11 +17,26 @@ from runner.operator.helper import get_r_orientation, spoof_barcode, init_metada
 LOGGER = logging.getLogger(__name__)
 
 
+def build_argos_file_groups_query():
+    ARGOS_FG_SLUGS = ['lims', 'origin-unknown']
+    slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
+    query = slug_set.pop()
+    for item in slug_set:
+        query |= item
+    return query
+
+
 def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
+
+    Only retrieve patients from LIMS file group
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id}, filter_redact=True)
+    all_files = FileRepository.all()
+    q_pid = Q(metadata__patientId=patient_id)
+    q_fg = build_argos_file_groups_query()
+    q = q_pid & q_fg
+    files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
     data = list()
     for current_file in files:
         sample = dict()
@@ -80,15 +95,52 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
         descriptor = "IMPACT505"
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        machine = get_sequencer_type(run_ids)
+        if not machine:
+            LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
+        if machine is "hiseq":
+            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+        if machine is "novaseq":
+            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
         q = query & Q(metadata__sampleName=sample_name)
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
             LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+    elif "hemepact_v4" in bait_set.lower():
+        # We didn't find a pooled normal for HemePACT_v4; return "static" FROZEN or FFPE pool normal
+        descriptor = "HemePACT_v4"
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
+        if "ffpe" in preservations_lower_case:
+            sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
+        q = query & Q(metadata__sampleName=sample_name)
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+        if not pooled_normals:
+            LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)
 
     return pooled_normals, descriptor, sample_name
+
+
+def get_sequencer_type(run_ids_list):
+    hiseq_machines = ['jax', 'pitt']
+    novaseq_machines = ['diana', 'michelle', 'aa00227']
+    run_ids_lower = [ i.lower() for i in run_ids_list if i ]
+    for machine in hiseq_machines:
+        is_hiseq = find_substr(machine, run_ids_lower)
+        if is_hiseq:
+            return "hiseq"
+    for machine in novaseq_machines:
+        is_novaseq = find_substr(machine, run_ids_lower)
+        if is_novaseq:
+            return "novaseq"
+    return None
+
+def find_substr(s, l):
+    return any(s in string for string in l)
 
 
 def build_run_id_query(data):
