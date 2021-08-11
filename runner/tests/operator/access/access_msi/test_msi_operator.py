@@ -50,12 +50,12 @@ class TestAccessMSIOperator(TestCase):
 
         pipeline_slug = "AccessLegacyMSIOperator"
         access_legacy_msi_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacyMSIOperator(access_legacy_msi_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca42'])
+        operator = AccessLegacyMSIOperator(access_legacy_msi_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
 
         self.assertTrue(isinstance(operator, AccessLegacyMSIOperator))
         self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
-        self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca42'])
+        self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeee")
 
         # Create and validate the input data
@@ -65,6 +65,7 @@ class TestAccessMSIOperator(TestCase):
             'normal_bam',
             'sample_name',
         ]
+        self.assertEqual(len(input_data), 1)
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)

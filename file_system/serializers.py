@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from file_system.metadata.validator import MetadataValidator
-from file_system.models import File, Sample, Storage, StorageType, FileGroup, FileMetadata, FileType
+from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
 from drf_yasg import openapi
 
@@ -321,4 +321,18 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ('id', 'sample_id', 'redact')
+        fields = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact',)
+
+
+class RequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Request
+        fields = ('id', 'request_id',)
+
+
+class PatientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Patient
+        fields = ('id', 'patient_id',)

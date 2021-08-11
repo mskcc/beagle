@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from runner.views.run_view import RunViewSet, StartRunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
-from runner.views.operator_run_view import OperatorRunViews
+from runner.views.operator_run_view import OperatorRunViewSet
 from runner.views.run_api_view import RunApiViewSet, OperatorViewSet, OperatorErrorViewSet, RequestOperatorViewSet, \
     RunOperatorViewSet, AionViewSet, TempoMPGenViewSet, CWLJsonViewSet, PairsOperatorViewSet, RunApiRestartViewSet, \
     RunSamplesViewSet, OperatorSamplesLatestViewSet, OperatorSamplesAllViewSet
@@ -16,7 +16,6 @@ router.register('runs', RunViewSet)
 router.register('samples', RunSamplesViewSet)
 router.register('port', PortViewSet)
 router.register('api', RunApiViewSet)
-router.register('operator-run', OperatorRunViews)
 router.register('operator/latest', OperatorSamplesLatestViewSet)
 router.register('operator/all', OperatorSamplesAllViewSet)
 router.register('operator-errors', OperatorErrorViewSet)
@@ -30,6 +29,7 @@ urlpatterns = [
     path('run/update/<uuid:pk>', UpdateJob.as_view()),
     path('restart/', RunApiRestartViewSet.as_view()),
     path('request/', OperatorViewSet.as_view()),
+    path('operator-runs/', OperatorRunViewSet.as_view({'get': 'list'})),
     path('operator/request/', RequestOperatorViewSet.as_view()),
     path('operator/runs/', RunOperatorViewSet.as_view()),
     path('operator/pairs/', PairsOperatorViewSet.as_view()),

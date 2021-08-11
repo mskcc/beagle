@@ -2,6 +2,7 @@ import time
 import functools
 from django.core.cache import cache
 
+
 def memcache_lock(lock_id, expiration = 60 * 10):
     def decorator(func):
         @functools.wraps(func)

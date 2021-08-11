@@ -7,15 +7,15 @@ from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, LocalStoreFileEvent, \
+    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample, Request, Patient
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
@@ -37,6 +37,8 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
+        if not Request.objects.filter(request_id=request['request']):
+            Request.objects.create(request_id=request['request'])
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -129,7 +131,7 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
         return []
 
     if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
-        no_samples_event = ETLImportNoSamplesEvent(job_group_notifier_id).to_dict()
+        no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
@@ -149,6 +151,10 @@ def request_callback(request_id, job_group=None, job_group_notifier=None):
     if len(FileRepository.filter(metadata={'requestId': request_id, 'tumorOrNormal': 'Tumor'})) == 0:
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
+        if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
+            admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
+            send_notification.delay(admin_hold_event)
+            return []
 
     operators = Operator.objects.filter(recipes__overlap=[recipe])
 
@@ -224,13 +230,34 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     pooled_normals = sample_ids.get("pooledNormals", [])
     if import_pooled_normals and pooled_normals:
         for f in pooled_normals:
-            job = get_or_create_pooled_normal_job(f, jg)
+            job = get_or_create_pooled_normal_job(f, jg, jgn, redelivery=redelivery)
             children.add(str(job.id))
     if import_samples:
         if not sample_ids.get('samples', False):
             raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
 
         for sample in sample_ids.get('samples', []):
+            sampleMetadata = LIMSClient.get_sample_manifest(sample['igoSampleId'])
+            try:
+                data = sampleMetadata[0]
+            except Exception as e:
+                pass
+            patient_id = format_patient_id(data.get('cmoPatientId'))
+
+            if not Patient.objects.filter(patient_id=patient_id):
+                Patient.objects.create(patient_id=patient_id)
+
+            sample_name = data.get('cmoSampleName', None)
+            specimen_type = data.get('specimenType', None)
+            cmo_sample_name = format_sample_name(sample_name, specimen_type)
+
+            if not Sample.objects.filter(sample_id=sample['igoSampleId'],
+                                         sample_name=sample_name,
+                                         cmo_sample_name=cmo_sample_name):
+                Sample.objects.create(sample_id=sample['igoSampleId'],
+                                      sample_name=sample_name,
+                                      cmo_sample_name=cmo_sample_name)
+
             job = create_sample_job(sample['igoSampleId'],
                                     sample['igocomplete'],
                                     request_id,
@@ -242,21 +269,20 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
     return list(children)
 
 
-def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None):
+def get_or_create_pooled_normal_job(filepath, job_group=None, job_group_notifier=None, redelivery=False):
     logger.info(
         "Searching for job: %s for filepath: %s" % (TYPES['POOLED_NORMAL'], filepath))
 
     job = Job.objects.filter(run=TYPES['POOLED_NORMAL'], args__filepath=filepath).first()
 
-    if not job:
-        job = Job(run=TYPES['POOLED_NORMAL'],
-                  args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
-                  status=JobStatus.CREATED,
-                  max_retry=1,
-                  children=[],
-                  job_group=job_group,
-                  job_group_notifier=job_group_notifier)
-        job.save()
+    if not job or redelivery:
+        job = Job.objects.create(run=TYPES['POOLED_NORMAL'],
+                                 args={'filepath': filepath, 'file_group_id': str(settings.POOLED_NORMAL_FILE_GROUP)},
+                                 status=JobStatus.CREATED,
+                                 max_retry=1,
+                                 children=[],
+                                 job_group=job_group,
+                                 job_group_notifier=job_group_notifier)
     return job
 
 
@@ -388,7 +414,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
-        # logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))

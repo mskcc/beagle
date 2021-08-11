@@ -10,10 +10,9 @@ from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
-from runner.run.objects.run_object import RunObject
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, \
 abort_job_task, submit_job, create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
-from runner.models import Run, Port, PortType, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
+from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
@@ -31,6 +30,13 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 
+def query_from_dict(query_filter,queryset,input_list):
+    for single_input in input_list:
+        key, val = single_input.split(':')
+        query = {query_filter % key: val}
+        queryset = queryset.filter(**query).all()
+    return queryset
+
 
 class RunApiViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
@@ -45,13 +51,6 @@ class RunApiViewSet(mixins.ListModelMixin,
             return RunApiListSerializer
         else:
             return RunSerializerFull
-
-    def query_from_dict(self,query_filter,queryset,input_list):
-        for single_input in input_list:
-            key, val = single_input.split(':')
-            query = {query_filter % key: val}
-            queryset = queryset.filter(**query).all()
-        return queryset
 
     @swagger_auto_schema(query_serializer=RunApiListSerializer)
     def list(self, request, *args, **kwargs):
@@ -68,6 +67,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             status_param = fixed_query_params.get('status')
             ports = fixed_query_params.get('ports')
             tags = fixed_query_params.get('tags')
+            operator_run = fixed_query_params.get('operator_run')
             request_ids = fixed_query_params.get('request_ids')
             apps = fixed_query_params.get('apps')
             values_run = fixed_query_params.get('values_run')
@@ -77,6 +77,8 @@ class RunApiViewSet(mixins.ListModelMixin,
             full = fixed_query_params.get('full')
             if full:
                 full = bool(strtobool(full))
+            if operator_run:
+                queryset = queryset.filter(operator_run_id=operator_run)
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
@@ -86,9 +88,9 @@ class RunApiViewSet(mixins.ListModelMixin,
             if status_param:
                 queryset = queryset.filter(status=RunStatus[status_param].value)
             if ports:
-                queryset = self.query_from_dict("port__%s__exact",queryset,ports)
+                queryset = query_from_dict("port__%s__exact",queryset,ports)
             if tags:
-                queryset = self.query_from_dict("tags__%s__contains",queryset,tags)
+                queryset = query_from_dict("tags__%s__contains", queryset, tags)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if apps:
@@ -207,7 +209,7 @@ class RunApiRestartViewSet(GenericAPIView):
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED]))
+        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.ABORTED]))
         if runs_in_progress:
             return Response("There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST)
 
@@ -389,13 +391,14 @@ class RunOperatorViewSet(GenericAPIView):
     def post(self, request):
         run_ids = request.data.get('run_ids')
         pipeline_names = request.data.get('pipelines')
+        pipeline_versions = request.data.get('pipeline_versions', None)
         job_group_id = request.data.get('job_group_id', None)
         for_each = request.data.get('for_each', False)
 
         if not for_each:
-            for pipeline_name in pipeline_names:
-                get_object_or_404(Pipeline, name=pipeline_name)
-
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
             try:
                 run = Run.objects.get(id=run_ids[0])
                 req = run.tags.get('requestId', 'Unknown')
@@ -414,8 +417,9 @@ class RunOperatorViewSet(GenericAPIView):
                     return Response({'details': 'Invalid JobGroup: %s' % job_group_id},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-            for pipeline_name in pipeline_names:
-                pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+            for i,pipeline_name in enumerate(pipeline_names):
+                pipeline_version = pipeline_versions[i]
+                pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
                 try:
                     job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
                                                                       notifier_type_id=pipeline.operator.notifier_id)
@@ -442,6 +446,7 @@ class PairsOperatorViewSet(GenericAPIView):
     def post(self, request):
         pairs = request.data.get('pairs')
         pipeline_names = request.data.get('pipelines')
+        pipeline_versions = request.data.get('pipeline_versions')
         name = request.data.get('name')
         job_group_id = request.data.get('job_group_id', None)
         output_directory_prefix = request.data.get('output_directory_prefix', None)
@@ -451,8 +456,9 @@ class PairsOperatorViewSet(GenericAPIView):
             job_group.save()
             job_group_id = str(job_group.id)
 
-        for pipeline_name in pipeline_names:
-            pipeline = get_object_or_404(Pipeline, name=pipeline_name)
+        for i,pipeline_name in enumerate(pipeline_names):
+            pipeline_version = pipeline_versions[i]
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
 
             try:
                 job_group_notifier = JobGroupNotifier.objects.get(job_group_id=job_group_id,
