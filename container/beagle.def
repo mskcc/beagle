@@ -99,11 +99,11 @@ Includecmd: no
 
     celery -A beagle_etl beat --workdir ${BEAGLE_PATH} -l info -f ${BEAGLE_CELERY_LOG_PATH}/beagle_beat.log --pidfile ${BEAGLE_CELERY_BEAT_PID_FILE} -s ${BEAGLE_CELERY_BEAT_SCHEDULE_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.celerybeat-schedule >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_worker.log --pidfile ${BEAGLE_CELERY_WORKER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 10 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_worker.log --pidfile ${BEAGLE_CELERY_WORKER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${BEAGLE_CELERY_SCHEDULER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl worker --concurrency 10 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl flower --workdir ${BEAGLE_PATH} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_flower.log --pidfile ${BEAGLE_CELERY_FLOWER_PID_FILE} --port=${FLOWER_PORT} --broker=$BEAGLE_CELERY_BROKER_URL// >/dev/null 2>&1 < /dev/null &
 
