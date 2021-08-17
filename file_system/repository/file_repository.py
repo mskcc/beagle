@@ -88,6 +88,7 @@ class FileRepository(object):
             for single_exclude_field in exclude:
                 exc_dict['metadata__%s__isnull' % single_exclude_field] = True
             queryset = queryset.exclude(**exc_dict)
+        # TODO: Write the test for distinct
         if distinct:
             distinct_query = 'metadata__%s' % distinct
             queryset = queryset.order_by(distinct_query).distinct(distinct_query)
@@ -99,6 +100,7 @@ class FileRepository(object):
                 queryset = queryset.order_by(order_by)
             else:
                 queryset = queryset.order_by(order_by)
+        # ------------
         if values_metadata:
             ret_str = 'metadata__%s' % values_metadata
             return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
@@ -114,7 +116,7 @@ class FileRepository(object):
             return queryset.values_list(*sorted_metadata_query_list)
         if metadata_distribution:
             metadata_query = 'metadata__%s' % metadata_distribution
-            metadata_ids = queryset.values_list('id',flat=True)
+            metadata_ids = queryset.values_list('id', flat=True)
             queryset = FileRepository.all()
             queryset = queryset.filter(id__in=metadata_ids).values(metadata_query).annotate(Count(metadata_query))
         return queryset
