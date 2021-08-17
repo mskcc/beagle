@@ -209,9 +209,65 @@ class FileQuerySerializer(serializers.Serializer):
         required=False
     )
 
-    metadata_distribution = serializers.CharField(required=False)
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
 
-    count = serializers.BooleanField(required=False)
+
+class DistributionQuerySerializer(serializers.Serializer):
+    file_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    path = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
+    metadata = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateRegex]),
+        allow_empty=True,
+        required=False
+    )
+    path_regex = serializers.CharField(required=False)
+
+    filename = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    filename_regex = serializers.CharField(required=False)
+
+    file_type = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    values_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    metadata_distribution = serializers.CharField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)

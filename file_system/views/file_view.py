@@ -67,13 +67,10 @@ class FileView(mixins.CreateModelMixin,
             filename = fixed_query_params.get('filename')
             filename_regex = fixed_query_params.get('filename_regex')
             file_type = fixed_query_params.get('file_type')
-            values_metadata = fixed_query_params.get('values_metadata')
-            count = fixed_query_params.get('count')
-            metadata_distribution = fixed_query_params.get('metadata_distribution')
             exclude_null_metadata = fixed_query_params.get('exclude_null_metadata')
             order_by = fixed_query_params.get('order_by')
             distinct_metadata = fixed_query_params.get('distinct_metadata')
-            kwargs = {'queryset':queryset}
+            kwargs = {'queryset': queryset}
             if file_group:
                 if len(file_group) == 1:
                     kwargs['file_group'] = file_group[0]
@@ -102,7 +99,7 @@ class FileView(mixins.CreateModelMixin,
                     single_reqex_filters = []
                     for val in single_value:
                         k, v = val.split(':')
-                        single_reqex_filters.append((k.strip(),v.strip()))
+                        single_reqex_filters.append((k.strip(), v.strip()))
                     filter_query.append(single_reqex_filters)
                 if filter_query:
                     kwargs['metadata_regex'] = filter_query
@@ -120,8 +117,6 @@ class FileView(mixins.CreateModelMixin,
                     kwargs['file_type'] = file_type[0]
                 else:
                     kwargs['file_type_in'] = file_type
-            if metadata_distribution:
-                kwargs['metadata_distribution'] = metadata_distribution
             if exclude_null_metadata:
                 kwargs['exclude'] = exclude_null_metadata
             if order_by:
@@ -137,23 +132,6 @@ class FileView(mixins.CreateModelMixin,
                 queryset = FileRepository.filter(**kwargs)
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            if metadata_distribution:
-                distribution_dict = {}
-                for single_metadata in queryset:
-                    single_metadata_name = None
-                    single_metadata_count = 0
-                    for single_key, single_value in single_metadata.items():
-                        if 'count' in single_key:
-                            single_metadata_count = single_value
-                        else:
-                            single_metadata_name = single_value
-                    if single_metadata_name is not None:
-                        distribution_dict[single_metadata_name] = single_metadata_count
-                return Response(distribution_dict, status=status.HTTP_200_OK)
-            if count:
-                count = bool(strtobool(count))
-                if count:
-                    return Response(queryset.count(), status=status.HTTP_200_OK)
             page = self.paginate_queryset(queryset)
             if page is not None:
                 if values_metadata:
