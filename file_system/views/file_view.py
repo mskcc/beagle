@@ -67,6 +67,7 @@ class FileView(mixins.CreateModelMixin,
             filename = fixed_query_params.get('filename')
             filename_regex = fixed_query_params.get('filename_regex')
             file_type = fixed_query_params.get('file_type')
+            values_metadata = fixed_query_params.get('values_metadata')
             exclude_null_metadata = fixed_query_params.get('exclude_null_metadata')
             order_by = fixed_query_params.get('order_by')
             distinct_metadata = fixed_query_params.get('distinct_metadata')
