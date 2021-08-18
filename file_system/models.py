@@ -128,13 +128,10 @@ class FileMetadata(BaseModel):
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
             if sample_id:
                 if not self.file.sample:
-                    with transaction.atomic():
-                        try:
-                            sample = Sample.objects.get(sample_id=sample_id, sample_name=sample_name,
-                                                        cmo_sample_name=cmo_sample_name)
-                        except Sample.DoesNotExist:
-                            sample = Sample.objects.create(sample_id=sample_id, sample_name=sample_name,
-                                                           cmo_sample_name=cmo_sample_name)
+                    sample = Sample.objects.get_or_create(sample_id=sample_id,
+                                                          defaults={'cmo_sample_name': cmo_sample_name,
+                                                                    'sample_name': sample_name})
+
                     self.file.sample = sample
                     self.file.save(update_fields=('sample',))
                 else:
@@ -145,11 +142,7 @@ class FileMetadata(BaseModel):
 
             if request_id:
                 if not self.file.request:
-                    with transaction.atomic():
-                        try:
-                            request = Request.objects.get(request_id=request_id)
-                        except Request.DoesNotExist:
-                            request = Request.objects.create(request_id=request_id)
+                    request = Request.objects.get_or_create(request_id=request_id)
 
                     self.file.request = request
                     self.file.save(update_fields=('request',))
