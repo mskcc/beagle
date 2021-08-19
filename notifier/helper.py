@@ -14,6 +14,7 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
     ret_str = 'metadata__sampleId'
     query = Q(file__file_group_id=settings.IMPORT_FILE_GROUP)
     query |= Q(file__file_group__slug="origin-unknown")
+    query |= Q(file__file_group__slug="fero-legacy-data") 
     query = query & Q(file__path__in=files)
     samples = FileRepository.filter(q=query).order_by(ret_str).distinct(ret_str).all()
     for sample in samples:
