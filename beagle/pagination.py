@@ -2,10 +2,15 @@ import math
 from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator
+from django.utils.functional import cached_property
 
 
 class BeaglePagination(PageNumberPagination):
     page_size_query_param = 'page_size'
+
+    def django_paginator_class(self, queryset, page_size):
+        return CountFastPaginator(queryset, page_size)
 
     def get_paginated_response(self, data):
         return Response({
@@ -21,11 +26,16 @@ class BeaglePagination(PageNumberPagination):
             page_size = int(request.query_params.get(self.page_size_query_param, self.page_size))
             if page_size > 0:
                 return page_size
-            elif page_size == 0:
+            if page_size == 0:
                 return None
-            else:
-                pass
         return self.page_size
+
+
+class CountFastPaginator(Paginator):
+
+    @cached_property
+    def count(self):
+        return self.object_list.values('id').count()
 
 
 def time_filter(model, query_params, time_modal='created_date', previous_queryset=None):
