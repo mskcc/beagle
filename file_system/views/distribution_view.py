@@ -18,6 +18,9 @@ class DistributionView(mixins.ListModelMixin,
     permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
+    def get_serializer_class(self):
+        return DistributionQuerySerializer
+        
     @swagger_auto_schema(query_serializer=DistributionQuerySerializer)
     def list(self, request, *args, **kwargs):
         query_list_types = ['file_group', 'path', 'metadata', 'metadata_regex', 'filename', 'file_type',
