@@ -51,7 +51,7 @@ class FileView(mixins.CreateModelMixin,
     @swagger_auto_schema(query_serializer=FileQuerySerializer)
     def list(self, request, *args, **kwargs):
         query_list_types = ['file_group', 'path', 'metadata', 'metadata_regex', 'filename', 'file_type',
-                            'values_metadata']
+                            'values_metadata', 'exclude_null_metadata']
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
@@ -68,9 +68,10 @@ class FileView(mixins.CreateModelMixin,
             filename_regex = fixed_query_params.get('filename_regex')
             file_type = fixed_query_params.get('file_type')
             values_metadata = fixed_query_params.get('values_metadata')
-            count = fixed_query_params.get('count')
-            metadata_distribution = fixed_query_params.get('metadata_distribution')
-            kwargs = {'queryset':queryset}
+            exclude_null_metadata = fixed_query_params.get('exclude_null_metadata')
+            order_by = fixed_query_params.get('order_by')
+            distinct_metadata = fixed_query_params.get('distinct_metadata')
+            kwargs = {'queryset': queryset}
             if file_group:
                 if len(file_group) == 1:
                     kwargs['file_group'] = file_group[0]
@@ -85,14 +86,22 @@ class FileView(mixins.CreateModelMixin,
                 filter_query = dict()
                 for val in metadata:
                     k, v = val.split(':')
-                    filter_query[k] = v
+                    metadata_field = k.strip()
+                    if metadata_field not in filter_query:
+                        filter_query[metadata_field] = [v.strip()]
+                    else:
+                        filter_query[metadata_field].append(v.strip())
                 if filter_query:
                     kwargs['metadata'] = filter_query
             if metadata_regex:
-                filter_query = dict()
-                for val in metadata_regex:
-                    k, v = val.split(':')
-                    filter_query[k] = v
+                filter_query = []
+                for single_reqex_query in metadata_regex:
+                    single_value = single_reqex_query.split('|')
+                    single_reqex_filters = []
+                    for val in single_value:
+                        k, v = val.split(':')
+                        single_reqex_filters.append((k.strip(), v.strip()))
+                    filter_query.append(single_reqex_filters)
                 if filter_query:
                     kwargs['metadata_regex'] = filter_query
             if path_regex:
@@ -109,8 +118,12 @@ class FileView(mixins.CreateModelMixin,
                     kwargs['file_type'] = file_type[0]
                 else:
                     kwargs['file_type_in'] = file_type
-                ## TODO: Check this!
-                queryset = FileRepository.filter(queryset=queryset, file_type_in=file_type)
+            if exclude_null_metadata:
+                kwargs['exclude'] = exclude_null_metadata
+            if order_by:
+                kwargs['order_by'] = order_by
+            if distinct_metadata:
+                kwargs['distinct'] = distinct_metadata
             if values_metadata:
                 if len(values_metadata) == 1:
                     kwargs['values_metadata'] = values_metadata[0]
@@ -120,27 +133,6 @@ class FileView(mixins.CreateModelMixin,
                 queryset = FileRepository.filter(**kwargs)
             except Exception as e:
                 return Response({'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            if metadata_distribution:
-                distribution_dict = {}
-                metadata_query = 'metadata__%s' % metadata_distribution
-                metadata_ids = queryset.values_list('id',flat=True)
-                queryset = FileRepository.all()
-                queryset = queryset.filter(id__in=metadata_ids).values(metadata_query).order_by().annotate(Count(metadata_query))
-                for single_metadata in queryset:
-                    single_metadata_name = None
-                    single_metadata_count = 0
-                    for single_key, single_value in single_metadata.items():
-                        if 'count' in single_key:
-                            single_metadata_count = single_value
-                        else:
-                            single_metadata_name = single_value
-                    if single_metadata_name is not None:
-                        distribution_dict[single_metadata_name] = single_metadata_count
-                return Response(distribution_dict, status=status.HTTP_200_OK)
-            if count:
-                count = bool(strtobool(count))
-                if count:
-                    return Response(queryset.count(), status=status.HTTP_200_OK)
             page = self.paginate_queryset(queryset)
             if page is not None:
                 if values_metadata:
