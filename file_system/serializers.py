@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from file_system.metadata.validator import MetadataValidator
-from file_system.models import File, Sample, Storage, StorageType, FileGroup, FileMetadata, FileType
+from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
 from drf_yasg import openapi
 
@@ -15,6 +15,11 @@ def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
+def ValidateRegex(value):
+    possible_queries = value.split("|")
+    for single_query in possible_queries:
+        if len(single_query.split(":")) !=2:
+            raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
 class PatchFile(serializers.JSONField):
 
@@ -165,13 +170,78 @@ class FileQuerySerializer(serializers.Serializer):
         allow_empty=True,
         required=False
     )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
     metadata = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
         allow_empty=True,
         required=False
     )
     metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateRegex]),
+        allow_empty=True,
+        required=False
+    )
+    path_regex = serializers.CharField(required=False)
+
+    filename = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    filename_regex = serializers.CharField(required=False)
+
+    file_type = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    values_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
+
+
+class DistributionQuerySerializer(serializers.Serializer):
+    file_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    path = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
+    metadata = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateRegex]),
         allow_empty=True,
         required=False
     )
@@ -198,8 +268,6 @@ class FileQuerySerializer(serializers.Serializer):
     )
 
     metadata_distribution = serializers.CharField(required=False)
-
-    count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
@@ -309,4 +377,18 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ('id', 'sample_id', 'redact')
+        fields = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact',)
+
+
+class RequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Request
+        fields = ('id', 'request_id',)
+
+
+class PatientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Patient
+        fields = ('id', 'patient_id',)

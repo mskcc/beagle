@@ -1,6 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
-from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, Sample
+from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, \
+    Sample, Patient, Request
 
 # Register your models here.
 
@@ -11,8 +12,18 @@ class FileAdmin(ExportActionMixin, admin.ModelAdmin):
 
 
 class SampleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'sample_id', 'redact')
+    list_display = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact')
     search_fields = ['sample_id']
+
+
+class RequestAdmin(admin.ModelAdmin):
+    list_display = ('id', 'request_id',)
+    search_fields = ['request_id']
+
+
+class PatientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'patient_id',)
+    search_fields = ['patient_id']
 
 
 class FileRunMapAdmin(admin.ModelAdmin):
@@ -33,6 +44,8 @@ class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
+admin.site.register(Request, RequestAdmin)
+admin.site.register(Patient, PatientAdmin)
 admin.site.register(FileGroup)
 admin.site.register(FileType)
 admin.site.register(FileMetadata, FileMetadataAdmin)

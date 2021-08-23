@@ -1,5 +1,7 @@
 from django.core.cache import cache
-from runner.pipeline.pipeline_resolver import CWLResolver
+from runner.models import ProtocolType
+from runner.pipeline.cwl.cwl_resolver import CWLResolver
+from runner.pipeline.nextflow import NextflowResolver
 
 
 class PipelineCache(object):
@@ -12,10 +14,20 @@ class PipelineCache(object):
                           _pipeline.get('version') == pipeline.version):
             resolved_dict = _pipeline.get('app')
         else:
-            cwl_resolver = CWLResolver(pipeline.github, pipeline.entrypoint, pipeline.version)
-            resolved_dict = cwl_resolver.resolve()
+            resolver_class = PipelineCache._get_pipeline_resolver(pipeline.pipeline_type)
+            resolver = resolver_class(pipeline.github,
+                                      pipeline.entrypoint,
+                                      pipeline.version)
+            resolved_dict = resolver.resolve()
             cache.set(pipeline.id, {'app': resolved_dict,
                                     'github': pipeline.github,
                                     'entrypoint': pipeline.entrypoint,
                                     'version': pipeline.version})
         return resolved_dict
+
+    @staticmethod
+    def _get_pipeline_resolver(pipeline_type):
+        if pipeline_type == ProtocolType.CWL:
+            return CWLResolver
+        elif pipeline_type == ProtocolType.NEXTFLOW:
+            return NextflowResolver

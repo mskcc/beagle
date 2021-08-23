@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='run',
             name='run_type',
-            field=models.IntegerField(choices=[(0, 'CWL'), (1, 'NEXTFLOW')], db_index=True, default=runner.models.RunType(0)),
+            field=models.IntegerField(choices=[(0, 'CWL'), (1, 'NEXTFLOW')], db_index=True, default=runner.models.ProtocolType(0)),
         ),
     ]

@@ -1,11 +1,10 @@
-import os
 import datetime
 from django.conf import settings
 from rest_framework import serializers
 from notifier.models import JobGroup, JobGroupNotifier
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
-from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.exceptions import PortProcessorException
+from runner.run.processors.port_processor import PortProcessor, PortAction
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 
 
 def ValidateDict(value):
@@ -135,8 +134,13 @@ class CreateRunSerializer(serializers.Serializer):
         except Pipeline.DoesNotExist:
             raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
         name = "Run %s: %s" % (pipeline.name, datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-        run = Run(name=name, app=pipeline, tags={"requestId": validated_data.get('request_id')},
-                  status=RunStatus.CREATING, job_statuses=dict(), resume=validated_data.get('resume'))
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
+                  app=pipeline,
+                  tags={"requestId": validated_data.get('request_id')},
+                  status=RunStatus.CREATING,
+                  job_statuses=dict(),
+                  resume=validated_data.get('resume'))
         run.save()
         return run
 
@@ -295,7 +299,8 @@ class APIRunCreateSerializer(serializers.Serializer):
         name = "Run %s: %s" % (pipeline.name, create_date)
         if validated_data.get('name'):
             name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(name=name,
+        run = Run(run_type=pipeline.pipeline_type,
+                  name=name,
                   app=pipeline,
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
@@ -366,6 +371,9 @@ class PairOperatorSerializer(serializers.Serializer):
             child=serializers.JSONField(),allow_empty=True
     )
     pipelines = serializers.ListField(
+        child=serializers.CharField(max_length=30), allow_empty=True
+    )
+    pipeline_versions = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True
     )
     name = serializers.CharField(allow_blank=False, allow_null=False)
