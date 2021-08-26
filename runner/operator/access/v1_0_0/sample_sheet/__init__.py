@@ -53,6 +53,9 @@ class AccessSampleSheetOperator(Operator):
                         'name': "Sample Sheet: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
+                        'output_metadata': {
+                            'requestId': self.request_id
+                        },
                         'tags': {
                             'requestId': self.request_id
                         }
