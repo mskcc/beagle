@@ -322,6 +322,8 @@ DMP_BAM_FILE_GROUP = os.environ.get('BEAGLE_DMP_BAM_FILE_GROUP', '9ace63bf-ed55-
 
 RIDGEBACK_URL = os.environ.get('BEAGLE_RIDGEBACK_URL', 'http://localhost:5003')
 
+MPATH_URL = os.environ.get('BEAGLE_MPATH_URL', 'http://localhost:7331')
+
 LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
 
 LOGGING = {
