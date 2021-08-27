@@ -1,6 +1,6 @@
 """
-" This operator submits each downstream workflow to MPath
-" An operator trigger, for each downstream workflow (MSI/CNV/SV/SNV),
+" This operator submits each downstream pipeline to MPath
+" An operator trigger, for each downstream pipeline (MSI/CNV/SV/SNV),
 " _when all runs are complete_, should be created.
 " For additional information on the API and how MPath ACCESS server
 " is set-up, see https://app.gitbook.com/@mskcc-1/s/voyager/mpath/
@@ -11,20 +11,26 @@ from beagle.settings import MPATH_URL
 from runner.operator.operator import Operator
 from runner.models import PortType, Run, RunStatus, File
 
-WORKFLOW_NAME_TO_MPATH_TYPE = {
+PIPELINE_NAME_TO_MPATH_TYPE = {
     "access legacy MSI": "admie_microsatellite_instability",
     "access legacy SNV": "snp_indel_variants",
     "access legacy SV": "structural_variants",
     "access legacy CNV": "copy_number_variants",
 }
 
-WORKFLOW_NAME_TO_MPATH_LOCATION_KEY = {
+PIPELINE_NAME_TO_MPATH_LOCATION_KEY = {
     "access legacy MSI": "msi_fs_location",
     "access legacy SNV": "snp_fs_location",
     "access legacy SV": "sv_fs_location",
     "access legacy CNV": "cnv_fs_location",
 }
 
+PIPELINE_NAME_TO_FILES = {
+    "access legacy MSI": ["msi_results.txt"],
+    "access legacy SNV": [], #TODO
+    "access legacy SV": [], 
+    "access legacy CNV": []
+}
 
 
 def get_sample_sheet(request_id, job_group_id):
@@ -81,9 +87,9 @@ def submit_project(request_id):
     requests.post(MPATH_URL + "/ngs/projects", json=payload)
 
 
-def submit_workflow(request_id, workflow_name, files, sample_sheet_path):
-    mpath_type = WORKFLOW_NAME_TO_MPATH_TYPE[workflow_name]
-    location_key = WORKFLOW_NAME_TO_MPATH_LOCATION_KEY[workflow_name]
+def submit_pipeline(request_id, pipeline_name, files, sample_sheet_path):
+    mpath_type = PIPELINE_NAME_TO_MPATH_TYPE[pipeline_name]
+    location_key = PIPELINE_NAME_TO_MPATH_LOCATION_KEY[pipeline_name]
 
     data = {
         "dmp_alys_task_name": "ACCESSv1-" + request_id,
@@ -107,11 +113,12 @@ def submit_workflow(request_id, workflow_name, files, sample_sheet_path):
     requests.post(MPATH_URL + "/ngs/", json=payload)
 
 
-def get_files(runs):
+def get_files(pipeline_name, runs):
     return File.objects.filter(
         port__run__in=runs,
         port__run__status=RunStatus.COMPLETED,
-        port__port_type=PortType.OUTPUT
+        port__port_type=PortType.OUTPUT,
+        file_name__in=PIPELINE_NAME_TO_FILES[pipeline_name]
     ).all()
 
 
@@ -126,9 +133,9 @@ class AccessMPathSubmitter(Operator):
 
         sample_sheet_path = get_sample_sheet(request_id, job_group_id)
 
-        files = get_files(runs)
+        files = get_files(pipeline_name, runs)
 
         submit_project(request_id)
-        submit_workflow(request_id, pipeline_name, files, sample_sheet_path)
+        submit_pipeline(request_id, pipeline_name, files, sample_sheet_path)
 
         return []
