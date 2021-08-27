@@ -63,7 +63,7 @@ def submit_project(request_id):
         "data": [
             {
                 "comments": "",
-                "dmp_alys_task_name": "Project_" + request_id,
+                "dmp_alys_task_name": "ACCESSv1-" + request_id,
                 "dmp_alys_task_type_cv_id": 7,
                 # TODO
                 "analyst_cv_id": None,
@@ -86,7 +86,7 @@ def submit_workflow(request_id, workflow_name, files, sample_sheet_path):
     location_key = WORKFLOW_NAME_TO_MPATH_LOCATION_KEY[workflow_name]
 
     data = {
-        "dmp_alys_task_name": "Project_" + request_id,
+        "dmp_alys_task_name": "ACCESSv1-" + request_id,
         "ss_location": [
             juno_path_to_mpath(sample_sheet_path)
         ],
