@@ -34,7 +34,7 @@ class AccessSampleSheetOperator(Operator):
                     "Control": "N",
                     "Recipe": f.metadata["recipe"],
                     "Operator": "|".join(["AR", "-;-", f.metadata["sampleId"], f.metadata["sex"], "NOVASEQ"]),
-                    "SampleProject": "Project_" + self.request_id,
+                    "SampleProject": "ACCESSv1-" + self.request_id,
                     "DnaInputNg": f.metadata["dnaInputNg"],
                     "CaptureInputNg": f.metadata["captureInputNg"],
                     "LibraryVolume": f.metadata["libraryVolume"],
