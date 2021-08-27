@@ -12,7 +12,7 @@ from runner.operator.operator import Operator
 from runner.models import PortType, Run, RunStatus, File
 
 WORKFLOW_NAME_TO_MPATH_TYPE = {
-    "access legacy MSI": "microsatellite_instability",
+    "access legacy MSI": "admie_microsatellite_instability",
     "access legacy SNV": "snp_indel_variants",
     "access legacy SV": "structural_variants",
     "access legacy CNV": "copy_number_variants",
@@ -47,7 +47,31 @@ def juno_path_to_mpath(path):
     return "/voyager" + p
 
 
-def submit_to_mpath(request_id, workflow_name, files, sample_sheet_path):
+# This will return 400 bad request if the project already exists.
+def submit_project(request_id):
+    payload = {
+        "data": [
+            {
+                "comments": "",
+                "dmp_alys_task_name": "Project_" + request_id,
+                "dmp_alys_task_type_cv_id": 7,
+                # TODO
+                "analyst_cv_id": None,
+                "dmp_dms_at_id": None,
+                "dmp_dms_id": None,
+                "dmp_lims_id": None,
+                "fellow_cv_id": None,
+                "fs_location": "N/A",
+                "is_clinical": 0,
+                "pathologist_cv_id": None
+            }
+        ]
+    }
+
+    requests.post(MPATH_URL + "/ngs/projects", json=payload)
+
+
+def submit_workflow(request_id, workflow_name, files, sample_sheet_path):
     mpath_type = WORKFLOW_NAME_TO_MPATH_TYPE[workflow_name]
     location_key = WORKFLOW_NAME_TO_MPATH_LOCATION_KEY[workflow_name]
 
@@ -56,8 +80,12 @@ def submit_to_mpath(request_id, workflow_name, files, sample_sheet_path):
         "ss_location": [
             juno_path_to_mpath(sample_sheet_path)
         ],
+        # This shouldn't be required. We can't use READONLY dirs so pointing to 
+        # /voyager does not work. Talk with Anoop on what should be done.
+        "fs_location": "/srv",
         "options": [
-            mpath_type
+            mpath_type,
+            "samples"
         ],
     }
     data[location_key] = [juno_path_to_mpath(f.path) for f in files]
@@ -90,6 +118,7 @@ class AccessMPathSubmitter(Operator):
 
         files = get_files(runs)
 
-        submit_to_mpath(request_id, pipeline_name, files, sample_sheet_path)
+        submit_project(request_id)
+        submit_workflow(request_id, pipeline_name, files, sample_sheet_path)
 
         return []
