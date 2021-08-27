@@ -27,11 +27,21 @@ WORKFLOW_NAME_TO_MPATH_LOCATION_KEY = {
 
 
 
-def get_sample_sheet(job_group_id):
+def get_sample_sheet(request_id, job_group_id):
     sample_sheet_run = Run.objects.filter(
-        job_group_id=job_group_id,
         app__name="sample sheet",
-        status=RunStatus.COMPLETED
+        status=RunStatus.COMPLETED,
+
+        # Using job_group_id is better but in order to trigger MPath Submitter
+        # for the massive backlog where Sample Sheet was generated in a different
+        # job_group we have to use request ID
+        # To trigger this for the backlog see:
+        # https://app.gitbook.com/@mskcc-1/s/voyager/debugging/using-the-django-shell
+        # Once the backlog is submitted this should be reverted
+
+        # job_group_id=job_group_id,
+
+        tags__requestId=request_id
     ).order_by('-created_date').first()
 
     sample_sheet = File.objects.filter(
@@ -114,7 +124,7 @@ class AccessMPathSubmitter(Operator):
         pipeline_name = meta_run.app.name
         job_group_id = meta_run.job_group_id
 
-        sample_sheet_path = get_sample_sheet(job_group_id)
+        sample_sheet_path = get_sample_sheet(request_id, job_group_id)
 
         files = get_files(runs)
 
