@@ -85,7 +85,8 @@ def create_request_job(request_id, redelivery=False):
             send_notification.delay(redelivery_event)
         request_obj = Request.objects.filter(request_id=request_id).first()
         if request_obj:
-            delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id, request_obj.delivery_date).to_dict()
+            delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
+                                                            str(request_obj.delivery_date)).to_dict()
             send_notification.delay(delivery_date_event)
         return job, "Job Created"
 
