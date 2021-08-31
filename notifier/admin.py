@@ -3,7 +3,7 @@ from .models import JobGroup, Notifier, JobGroupNotifier
 
 
 class JobGroupAdmin(admin.ModelAdmin):
-    list_display = ('id', 'jira_id')
+    list_display = ('id',)
     ordering = ('-created_date',)
 
 
