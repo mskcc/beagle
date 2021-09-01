@@ -44,6 +44,7 @@ class FileType(models.Model):
 
 class Request(BaseModel):
     request_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    delivery_date = models.DateTimeField(null=True, blank=True)
 
 
 class Sample(BaseModel):
