@@ -2,13 +2,14 @@ import os
 import copy
 import logging
 from deepdiff import DeepDiff
+from datetime import datetime
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
     RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, LocalStoreFileEvent, \
-    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent, SetDeliveryDateFieldEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
@@ -38,7 +39,8 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         return []
     for request in request_ids:
         if not Request.objects.filter(request_id=request['request']):
-            Request.objects.create(request_id=request['request'])
+            Request.objects.create(request_id=request['request'],
+                                   delivery_date=datetime.fromtimestamp(request['deliveryDate'] / 1000))
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -81,6 +83,11 @@ def create_request_job(request_id, redelivery=False):
         if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
+        request_obj = Request.objects.filter(request_id=request_id).first()
+        if request_obj:
+            delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
+                                                            str(request_obj.delivery_date)).to_dict()
+            send_notification.delay(delivery_date_event)
         return job, "Job Created"
 
 
