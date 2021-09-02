@@ -38,9 +38,6 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        if not Request.objects.filter(request_id=request['request']):
-            Request.objects.create(request_id=request['request'],
-                                   delivery_date=datetime.fromtimestamp(request['deliveryDate'] / 1000))
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -58,6 +55,16 @@ def create_request_job(request_id, redelivery=False):
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     request_redelivered = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
 
+    delivery_date = None
+    try:
+        request_from_lims = LIMSClient.get_request_samples(request_id)
+        delivery_date = datetime.fromtimestamp(request_from_lims['deliveryDate'] / 1000)
+    except Exception:
+        logger.error("Failed to retrieve deliveryDate for request %s" % request_id)
+
+    if not Request.objects.filter(request_id=request_id):
+        Request.objects.create(request_id=request_id,
+                               delivery_date=delivery_date)
     assays = ETLConfiguration.objects.first()
 
     if request_redelivered and not (assays.redelivery and redelivery):
