@@ -38,9 +38,6 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        if not Request.objects.filter(request_id=request['request']):
-            Request.objects.create(request_id=request['request'],
-                                   delivery_date=datetime.fromtimestamp(request['deliveryDate'] / 1000))
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -58,6 +55,9 @@ def create_request_job(request_id, redelivery=False):
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     request_redelivered = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
 
+    if not Request.objects.filter(request_id=request['request']):
+        Request.objects.create(request_id=request['request'],
+                               delivery_date=datetime.fromtimestamp(request['deliveryDate'] / 1000))
     assays = ETLConfiguration.objects.first()
 
     if request_redelivered and not (assays.redelivery and redelivery):
