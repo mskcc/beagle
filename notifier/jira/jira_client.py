@@ -92,6 +92,11 @@ class JiraClient(object):
         body = {"fields": {settings.JIRA_PIPELINE_FIELD_ID: pipeline}}
         return self._put(update_url, body)
 
+    def update_delivery_date(self, ticket_id, delivery_date):
+        update_url = self.JiraEndpoints.UPDATE.value % ticket_id
+        body = {"fields": {settings.JIRA_DELIVERY_DATE_FIELD_ID: delivery_date}}
+        return self._put(update_url, body)
+
     def get_status_transitions(self, ticket_id):
         transitions_url = self.JiraEndpoints.TRANSITION.value % ticket_id
         response = self._get(transitions_url)
