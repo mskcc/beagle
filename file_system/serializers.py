@@ -384,7 +384,7 @@ class RequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ('id', 'request_id',)
+        fields = ('id', 'request_id', 'delivery_date')
 
 
 class PatientSerializer(serializers.ModelSerializer):
