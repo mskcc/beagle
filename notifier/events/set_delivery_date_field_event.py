@@ -1,3 +1,4 @@
+from datetime import datetime
 from notifier.event_handler.event import Event
 
 
@@ -16,4 +17,5 @@ class SetDeliveryDateFieldEvent(Event):
         return "process_set_delivery_date_event"
 
     def __str__(self):
-        return self.delivery_date
+        time = datetime.strptime(self.delivery_date, '%Y-%m-%d %H:%M:%S.%f%z')
+        return time.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + time.strftime('%z')
