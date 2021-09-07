@@ -119,5 +119,17 @@
             "version": "v2.0.0",
             "slug": "AccessQCOperator"
         }
+    },
+    {
+        "model": "beagle_etl.operator",
+        "pk": 12,
+        "fields": {
+            "active": true,
+            "recipes": "[\"None\"]",
+            "class_name": "runner.operator.access.v1_0_0.sample_sheet.AccessSampleSheetOperator",
+            "version": "v1.0.0",
+            "slug": "AccessSampleSheetOperator"
+        }
     }
+
 ]
