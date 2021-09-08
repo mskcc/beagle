@@ -120,6 +120,12 @@ class JiraStatusView(GenericAPIView):
             return JiraStatus.IN_VOYAGER
         elif status == "Done":
             return JiraStatus.DONE
+        elif status == "Import Complete":
+            return JiraStatus.IMPORT_COMPLETE
+        elif status == "Import Partially Complete":
+            return JiraStatus.IMPORT_PARTIALLY_COMPLETE
+        elif status == "Pipeline Completed; No Failures":
+            return JiraStatus.PIPELINE_COMPLETED_NO_FAILURES
         else:
             return JiraStatus.UNKNOWN
 
