@@ -24,7 +24,7 @@ class JobGroup(BaseModel):
 
 
 class JiraStatus(IntEnum):
-    IN_VOYAGER = 0
+    UNKNOWN = 0
     NOT_FOR_CI = 1
     CANT_DO = 2
     TERMINAL_DELIVER_AS_IS = 3
@@ -42,7 +42,8 @@ class JiraStatus(IntEnum):
     WAITING_FOR_PORTAL = 15
     READY_FOR_STANDARD_DELIVERY = 16
     READY_FOR_CUSTOM_DELIVERY = 17
-    UNKNOWN = 18
+    IN_VOYAGER = 18
+    ADMIN_HOLD = 19
 
 
 class JobGroupNotifier(BaseModel):

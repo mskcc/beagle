@@ -114,6 +114,12 @@ class JiraStatusView(GenericAPIView):
             return JiraStatus.PM_HOLD
         elif status == "Missing Information":
             return JiraStatus.MISSING_INFORMATION
+        elif status == "Admin Hold":
+            return JiraStatus.ADMIN_HOLD
+        elif status == "In Voyager":
+            return JiraStatus.IN_VOYAGER
+        elif status == "Done":
+            return JiraStatus.DONE
         else:
             return JiraStatus.UNKNOWN
 
