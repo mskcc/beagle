@@ -23,3 +23,12 @@ class CreateNotifierSerializer(serializers.Serializer):
 
 class JobGroupQuerySerializer(serializers.Serializer):
     jira_id = serializers.CharField(allow_blank=False)
+
+
+class JiraStatusSerializer(serializers.Serializer):
+    timestamp = serializers.IntegerField()
+    webhookEvent = serializers.CharField()
+    issue_event_type_name = serializers.CharField()
+    user = serializers.JSONField()
+    issue = serializers.JSONField(required=True)
+    changelog = serializers.JSONField()
