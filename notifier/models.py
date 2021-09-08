@@ -44,6 +44,8 @@ class JiraStatus(IntEnum):
     READY_FOR_CUSTOM_DELIVERY = 17
     IN_VOYAGER = 18
     ADMIN_HOLD = 19
+    IMPORT_COMPLETE = 20
+    IMPORT_PARTIALLY_COMPLETE = 21
 
 
 class JobGroupNotifier(BaseModel):
