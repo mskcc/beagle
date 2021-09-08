@@ -6,9 +6,10 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import GenericAPIView
 from drf_yasg.utils import swagger_auto_schema
 from .tasks import send_notification, notifier_start
-from .models import JobGroup, JobGroupNotifier
+from .models import JobGroup, JobGroupNotifier, JiraStatus
 from runner.models import Pipeline
-from .serializers import JobGroupSerializer, NotificationSerializer, JobGroupQuerySerializer, CreateNotifierSerializer
+from .serializers import JobGroupSerializer, NotificationSerializer, JobGroupQuerySerializer, CreateNotifierSerializer, \
+    JiraStatusSerializer
 
 
 class JobGroupViews(mixins.CreateModelMixin,
@@ -77,3 +78,53 @@ class NotifierStartView(GenericAPIView):
         request_id = request.data['job_group']
         notifier_id = notifier_start(job_group, request_id, pipeline.operator)
         return Response({"notifier_id": notifier_id}, status=status.HTTP_201_CREATED)
+
+
+class JiraStatusView(GenericAPIView):
+
+    serializer_class = JiraStatusSerializer
+    permission_classes = []
+
+    def _convert_to_status(self, status):
+        if status == 'Ready For Standard Delivery':
+            return JiraStatus.READY_FOR_STANDARD_DELIVERY
+        elif status == 'Ready For Custom Delivery':
+            return JiraStatus.READY_FOR_CUSTOM_DELIVERY
+        elif status == 'Not for CI':
+            return JiraStatus.NOT_FOR_CI
+        elif status == "Can't Do":
+            return JiraStatus.CANT_DO
+        elif status == "Terminal; Deliver As Is":
+            return JiraStatus.TERMINAL_DELIVER_AS_IS
+        elif status == "Partial Delivery; Will Rerun Remaining":
+            return JiraStatus.PARTIAL_DELIVERY_WILL_RERUN_REMAINING
+        elif status == "Deliver As Is; Will Not Rerun":
+            return JiraStatus.DELIVER_AS_IS_WILL_NOT_RERUN
+        elif status == "No Delivery; Will Reexecute":
+            return JiraStatus.NO_DELIVERY_WILL_REEXECUTE
+        elif status == "Primary Output Delivery":
+            return JiraStatus.PRIMARY_OUTPUT_DELIVERY
+        elif status == "Done":
+            return JiraStatus.DONE
+        elif status == "CI Review Needed":
+            return JiraStatus.CI_REVIEW_NEEDED
+        elif status == "Incomplete Request":
+            return JiraStatus.INCOMPLETE_REQUEST
+        elif status == "PM Hold":
+            return JiraStatus.PM_HOLD
+        elif status == "Missing Information":
+            return JiraStatus.MISSING_INFORMATION
+        else:
+            return JiraStatus.UNKNOWN
+
+    def post(self, request):
+        issue = request.data['issue']['key']
+        jira_status = request.data['issue']['fields']['status']['name']
+        jbn = JobGroupNotifier.objects.filter(jira_id=issue).first()
+        if jbn:
+            jbn.status = self._convert_to_status(jira_status)
+            jbn.save(update_fields=('status',))
+            return Response(status=status.HTTP_200_OK)
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+

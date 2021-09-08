@@ -3,7 +3,6 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.conf import settings
-from django.db import transaction
 from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
