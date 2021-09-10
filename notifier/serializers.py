@@ -1,5 +1,5 @@
-from .models import JobGroup
 from rest_framework import serializers
+from .models import JobGroup, JobGroupNotifier, JiraStatus
 
 
 class JobGroupSerializer(serializers.ModelSerializer):
@@ -32,3 +32,14 @@ class JiraStatusSerializer(serializers.Serializer):
     user = serializers.JSONField()
     issue = serializers.JSONField(required=True)
     changelog = serializers.JSONField()
+
+
+class ProjectStatus(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return JiraStatus(obj.status).name
+
+    class Meta:
+        model = JobGroupNotifier
+        fields = ('id', 'jira_id', 'request_id', 'status', 'investigator', 'PI', 'assay')
