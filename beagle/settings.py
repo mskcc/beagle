@@ -368,6 +368,7 @@ NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and 
 NOTIFIER_STORAGE_DIR = os.environ.get("BEAGLE_NOTIFIER_STORAGE_DIR", '/tmp')
 NOTIFIER_FILE_GROUP = os.environ.get("BEAGLE_NOTIFIER_FILE_GROUP")
 
+JIRA_PREFIX = os.environ.get("JIRA_PREFIX", "VADEV-")
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")

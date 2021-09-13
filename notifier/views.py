@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,7 +10,9 @@ from .tasks import send_notification, notifier_start
 from .models import JobGroup, JobGroupNotifier, JiraStatus
 from runner.models import Pipeline
 from .serializers import JobGroupSerializer, NotificationSerializer, JobGroupQuerySerializer, CreateNotifierSerializer, \
-    JiraStatusSerializer
+    JiraStatusSerializer, ProjectStatus
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter
 
 
 class JobGroupViews(mixins.CreateModelMixin,
@@ -140,3 +143,14 @@ class JiraStatusView(GenericAPIView):
         return Response(status.HTTP_400_BAD_REQUEST)
 
 
+class ProjectStatusView(mixins.ListModelMixin,
+                        GenericViewSet):
+    queryset = JobGroupNotifier.objects.filter(jira_id__startswith=settings.JIRA_PREFIX).order_by('request_id',
+                                                                                                  '-created_date').distinct(
+        'request_id').all()
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (SearchFilter,)
+    search_fields = ('^request_id', '^jira_id', '^status', '^investigator', '^PI', '^assay')
+
+    def get_serializer_class(self):
+        return ProjectStatus
