@@ -145,7 +145,9 @@ class JiraStatusView(GenericAPIView):
 
 class ProjectStatusView(mixins.ListModelMixin,
                         GenericViewSet):
-    queryset = JobGroupNotifier.objects.filter(jira_id__startswith=settings.JIRA_PREFIX).all()
+    queryset = JobGroupNotifier.objects.filter(jira_id__startswith=settings.JIRA_PREFIX).order_by('request_id',
+                                                                                                  '-created_date').distinct(
+        'request_id').all()
     permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter,)
     search_fields = ('^request_id', '^jira_id', '^status', '^investigator', '^PI', '^assay')
