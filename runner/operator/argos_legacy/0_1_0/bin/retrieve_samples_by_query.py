@@ -114,9 +114,17 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # We didn't find a pooled normal for HemePACT_v4; return "static" FROZEN or FFPE pool normal
         descriptor = "HemePACT_v4"
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
-        if "ffpe" in preservations_lower_case:
-            sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
+        machine = get_sequencer_type(run_ids)
+        if not machine:
+            LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
+        if machine is "hiseq":
+            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
+        if machine is "novaseq":
+            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
         q = query & Q(metadata__sampleName=sample_name)
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
@@ -127,7 +135,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
 def get_sequencer_type(run_ids_list):
     hiseq_machines = ['jax', 'pitt']
-    novaseq_machines = ['diana', 'michelle', 'aa00227']
+    novaseq_machines = ['diana', 'michelle', 'aa00227', 'ruth']
     run_ids_lower = [ i.lower() for i in run_ids_list if i ]
     for machine in hiseq_machines:
         is_hiseq = find_substr(machine, run_ids_lower)
