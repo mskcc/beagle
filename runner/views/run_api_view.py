@@ -510,7 +510,7 @@ class CWLJsonViewSet(GenericAPIView):
             if job_groups:
                 queryset = queryset.filter(job_group__in=job_groups)
             if jira_ids:
-                queryset = queryset.filter(job_group__jira_id__in=jira_ids)
+                queryset = queryset.filter(job_group_notifier__jira_id__in=jira_ids)
             if request_ids:
                 queryset = queryset.filter(tags__requestId__in=request_ids)
             if runs:
