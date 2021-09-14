@@ -6,7 +6,7 @@ class JobGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobGroup
-        fields = ('id', 'created_date', 'jira_id')
+        fields = ('id', 'created_date')
 
 
 class NotificationSerializer(serializers.Serializer):
