@@ -3,11 +3,12 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.conf import settings
-from django.db import transaction
 from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
+from notifier.models import JobGroupNotifier
+from django.db.models.signals import post_save
 
 
 class StorageType(IntEnum):
@@ -44,6 +45,7 @@ class FileType(models.Model):
 
 class Request(BaseModel):
     request_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    delivery_date = models.DateTimeField(null=True, blank=True)
 
 
 class Sample(BaseModel):
@@ -168,6 +170,20 @@ class FileMetadata(BaseModel):
                 old.save(do_not_version=True)
             super(FileMetadata, self).save(*args, **kwargs)
 
+    @staticmethod
+    def post_save(sender, **kwargs):
+        instance = kwargs.get('instance')
+        request_id = instance.metadata.get('requestId')
+        pi = instance.metadata.get('labHeadName')
+        investigator = instance.metadata.get('investigatorName')
+        assay = instance.metadata.get('recipe')
+        job_group_notifiers = JobGroupNotifier.objects.filter(request_id=request_id)
+        for job_group_notifier in job_group_notifiers:
+            job_group_notifier.PI = pi
+            job_group_notifier.investigator = investigator
+            job_group_notifier.assay = assay
+            job_group_notifier.save()
+
     class Meta:
         indexes = [
             models.Index(
@@ -179,6 +195,9 @@ class FileMetadata(BaseModel):
                 name='metadata_gin',
             ),
         ]
+
+
+post_save.connect(FileMetadata.post_save, sender=FileMetadata)
 
 
 class FileRunMap(BaseModel):
