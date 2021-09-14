@@ -12,6 +12,7 @@ from file_system.views.sample_view import SampleViewSet
 from file_system.views.patient_view import PatientViewSet
 from file_system.views.request_view import RequestViewSet
 from file_system.views.distribution_view import DistributionView
+from file_system.views.sample_view import SampleFullViewSet
 
 
 router = routers.DefaultRouter()
@@ -24,6 +25,7 @@ router.register('sample', SampleViewSet)
 router.register('request', RequestViewSet)
 router.register('patient', PatientViewSet)
 router.register('distribution', DistributionView)
+router.register('project-details', SampleFullViewSet)
 
 
 urlpatterns = [

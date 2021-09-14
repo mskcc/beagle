@@ -2,13 +2,14 @@ import os
 import copy
 import logging
 from deepdiff import DeepDiff
+from datetime import datetime
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
     RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, LocalStoreFileEvent, \
-    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent, SetDeliveryDateFieldEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
@@ -37,8 +38,6 @@ def fetch_new_requests_lims(timestamp, redelivery=True):
         logger.info("There is no new RequestIDs")
         return []
     for request in request_ids:
-        if not Request.objects.filter(request_id=request['request']):
-            Request.objects.create(request_id=request['request'])
         job, message = create_request_job(request['request'], redelivery=redelivery)
         if job:
             if job.status == JobStatus.CREATED:
@@ -56,6 +55,16 @@ def create_request_job(request_id, redelivery=False):
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     request_redelivered = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
 
+    delivery_date = None
+    try:
+        request_from_lims = LIMSClient.get_request_samples(request_id)
+        delivery_date = datetime.fromtimestamp(request_from_lims['deliveryDate'] / 1000)
+    except Exception:
+        logger.error("Failed to retrieve deliveryDate for request %s" % request_id)
+
+    if not Request.objects.filter(request_id=request_id):
+        Request.objects.create(request_id=request_id,
+                               delivery_date=delivery_date)
     assays = ETLConfiguration.objects.first()
 
     if request_redelivered and not (assays.redelivery and redelivery):
@@ -81,6 +90,11 @@ def create_request_job(request_id, redelivery=False):
         if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
+        request_obj = Request.objects.filter(request_id=request_id).first()
+        if request_obj:
+            delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
+                                                            str(request_obj.delivery_date)).to_dict()
+            send_notification.delay(delivery_date_event)
         return job, "Job Created"
 
 

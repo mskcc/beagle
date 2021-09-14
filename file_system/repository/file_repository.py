@@ -2,6 +2,7 @@ from django.db.models import Q, Count
 from file_system.models import FileMetadata, File
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
 
+
 class FileRepository(object):
 
     @classmethod
