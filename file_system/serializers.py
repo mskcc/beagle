@@ -458,7 +458,7 @@ class FullSampleSerializer(serializers.ModelSerializer):
     patient_id = serializers.SerializerMethodField()
 
     def get_runs(self, obj):
-        return RunSerializerPartial(obj.run_set.all(), many=True).data
+        return RunSerializerPartial(obj.run_set.order_by('-created_date').all(), many=True).data
 
     def get_tumor_or_normal(self, obj):
         return FileRepository.filter(metadata={'sampleId': obj.sample_id}, values_metadata='tumorOrNormal').first()
