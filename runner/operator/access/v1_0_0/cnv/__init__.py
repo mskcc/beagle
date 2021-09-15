@@ -30,7 +30,9 @@ class AccessLegacyCNVOperator(Operator):
     """
 
     @staticmethod
-    def is_tumor(file):
+    def is_tumor_bam(file):
+        if not file.file_name.endswith('.bam'):
+            return False
         t_n_timepoint = file.file_name.split('-')[2]
         return not t_n_timepoint[0] == 'N'
 
@@ -49,7 +51,7 @@ class AccessLegacyCNVOperator(Operator):
             run__status=RunStatus.COMPLETED
         )
 
-        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor(f)]
+        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
 
         sample_ids = []
         tumor_bams = []

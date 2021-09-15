@@ -3,11 +3,12 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.conf import settings
-from django.db import transaction
 from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
+from notifier.models import JobGroupNotifier
+from django.db.models.signals import post_save
 
 
 class StorageType(IntEnum):
@@ -43,7 +44,8 @@ class FileType(models.Model):
 
 
 class Request(BaseModel):
-    request_id = models.CharField(max_length=100, null=True, blank=True)
+    request_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    delivery_date = models.DateTimeField(null=True, blank=True)
 
 
 class Sample(BaseModel):
@@ -54,7 +56,7 @@ class Sample(BaseModel):
 
 
 class Patient(BaseModel):
-    patient_id = models.CharField(max_length=100, null=True, blank=True)
+    patient_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 
 
 class FileExtension(models.Model):
@@ -126,45 +128,38 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
-            with transaction.atomic():
-                if sample_id:
-                    if not self.file.sample:
-                        try:
-                            sample = Sample.objects.get(sample_id=sample_id, sample_name=sample_name,
-                                                        cmo_sample_name=cmo_sample_name)
-                        except Sample.DoesNotExist:
-                            sample = Sample.objects.create(sample_id=sample_id, sample_name=sample_name,
-                                                           cmo_sample_name=cmo_sample_name)
-                        self.file.sample = sample
-                        self.file.save(update_fields=('sample',))
-                    else:
-                        self.file.sample.sample_id = sample_id
-                        self.file.sample.sample_name = sample_name
-                        self.file.sample.cmo_sample_name = cmo_sample_name
-                        self.file.sample.save()
+            if sample_id:
+                if not self.file.sample:
+                    sample, _ = Sample.objects.get_or_create(sample_id=sample_id,
+                                                          defaults={'cmo_sample_name': cmo_sample_name,
+                                                                    'sample_name': sample_name})
 
-                if request_id:
-                    if not self.file.request:
-                        try:
-                            request = Request.objects.get(request_id=request_id)
-                        except Request.DoesNotExist:
-                            request = Request.objects.create(request_id=request_id)
-                        self.file.request = request
-                        self.file.save(update_fields=('request',))
-                    else:
-                        self.file.request.request_id = request_id
-                        self.file.request.save()
-                if patient_id:
-                    if not self.file.patient:
-                        try:
-                            patient = Patient.objects.get(patient_id=patient_id)
-                        except Patient.DoesNotExist:
-                            patient = Patient.objects.create(patient_id=patient_id)
-                        self.file.patient = patient
-                        self.file.save(update_fields=('patient',))
-                    else:
-                        self.file.patient.patient_id = patient_id
-                        self.file.patient.save()
+                    self.file.sample = sample
+                    self.file.save(update_fields=('sample',))
+                else:
+                    self.file.sample.sample_id = sample_id
+                    self.file.sample.sample_name = sample_name
+                    self.file.sample.cmo_sample_name = cmo_sample_name
+                    self.file.sample.save()
+
+            if request_id:
+                if not self.file.request:
+                    request, _ = Request.objects.get_or_create(request_id=request_id)
+
+                    self.file.request = request
+                    self.file.save(update_fields=('request',))
+                else:
+                    self.file.request.request_id = request_id
+                    self.file.request.save()
+
+            if patient_id:
+                if not self.file.patient:
+                    patient, _ = Patient.objects.get_or_create(patient_id=patient_id)
+                    self.file.patient = patient
+                    self.file.save(update_fields=('patient',))
+                else:
+                    self.file.patient.patient_id = patient_id
+                    self.file.patient.save()
             versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
             version = max(versions) + 1 if versions else 0
             self.version = version
@@ -174,6 +169,20 @@ class FileMetadata(BaseModel):
                 old.latest = False
                 old.save(do_not_version=True)
             super(FileMetadata, self).save(*args, **kwargs)
+
+    @staticmethod
+    def post_save(sender, **kwargs):
+        instance = kwargs.get('instance')
+        request_id = instance.metadata.get('requestId')
+        pi = instance.metadata.get('labHeadName')
+        investigator = instance.metadata.get('investigatorName')
+        assay = instance.metadata.get('recipe')
+        job_group_notifiers = JobGroupNotifier.objects.filter(request_id=request_id)
+        for job_group_notifier in job_group_notifiers:
+            job_group_notifier.PI = pi
+            job_group_notifier.investigator = investigator
+            job_group_notifier.assay = assay
+            job_group_notifier.save()
 
     class Meta:
         indexes = [
@@ -186,6 +195,9 @@ class FileMetadata(BaseModel):
                 name='metadata_gin',
             ),
         ]
+
+
+post_save.connect(FileMetadata.post_save, sender=FileMetadata)
 
 
 class FileRunMap(BaseModel):

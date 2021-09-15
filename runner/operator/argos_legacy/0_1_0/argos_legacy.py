@@ -1,4 +1,6 @@
 import uuid
+from django.db.models import Q
+from file_system.models import File, FileGroup
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
@@ -140,6 +142,8 @@ class ArgosOperator(Operator):
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
                 if filepath not in files:
+                    sample_mapping += "\t".join(
+                        [normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
             for p in job['pair'][1]['zR1']:
                 filepath = FileProcessor.parse_path_from_uri(p['location'])
@@ -238,8 +242,10 @@ class ArgosOperator(Operator):
         return all_files, cnt_tumors
 
     def get_regular_sample(self, sample_data, tumor_type):
-        sample_id = sample_data['sample_id']
-        sample = FileRepository.filter(queryset=self.files,
+        legacy_fg = Q(file__file_group=FileGroup.objects.get(slug='fero-legacy-data'))
+        data_files = FileRepository.filter(queryset=self.files, q=legacy_fg)
+        sample_id = sample_data['sample_id']    
+        sample = FileRepository.filter(queryset=data_files,
                                        metadata={'cmoSampleName': sample_id,
                                                  'igocomplete': True},
                                        filter_redact=True)

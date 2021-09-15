@@ -8,22 +8,23 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object_factory import RunObjectFactory
-# from runner.run.objects.cwl.cwl_run_object import CWLRunObject
-from .models import Run, RunStatus, PortType, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from .models import Run, RunStatus, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
 from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
     SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, \
-    SetLabelEvent, SetRunTicketInImportEvent
+    SetLabelEvent, SetRunTicketInImportEvent, SetDeliveryDateFieldEvent
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from notifier.models import JobGroup, JobGroupNotifier
+from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
 
 
 logger = logging.getLogger(__name__)
+
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
@@ -92,8 +93,9 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
         output_directory = run.output_directory
         if not pipeline_name and not pipeline_link:
-            logger.error(format_log("Run failed, could not find pipeline %s" % pipeline_id, obj=run, job_group_id=job_group_id,
-                               operator_run_id=operator_run.id))
+            logger.error(
+                format_log("Run failed, could not find pipeline %s" % pipeline_id, obj=run, job_group_id=job_group_id,
+                           operator_run_id=operator_run.id))
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
@@ -132,9 +134,14 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
             return
         try:
             job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
+            request_obj = Request.objects.filter(request_id=request_id).first()
+            if request_obj:
+                delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
+                                                                str(request_obj.delivery_date)).to_dict()
+                send_notification.delay(delivery_date_event)
         except Exception as e:
             logger.info(format_log("Failed to instantiate notifier" % operator_id, job_group_id=job_group_id,
-                            request_id=request_id))
+                                   request_id=request_id))
 
     operator = OperatorFactory.get_by_model(operator_model,
                                             job_group_id=job_group_id,
@@ -339,7 +346,7 @@ def submit_job(run_id, output_directory=None):
                                    obj=run))
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = run1.dump_job()
+    job = run1.dump_job(output_directory=output_directory)
     logger.info(format_log("Job ready for submitting", obj=run))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
