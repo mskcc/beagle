@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def build_argos_file_groups_query():
-    ARGOS_FG_SLUGS = ['lims', 'origin-unknown']
+    ARGOS_FG_SLUGS = ['fero-legacy-runs']
     slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
     query = slug_set.pop()
     for item in slug_set:
@@ -235,7 +235,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['libraryId'] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
-    # build_sample in runner.operator.argos_operator.bin
+    # build_sample in runner.operator.argos_legacy.bin
     metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
     metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
     metadata['flowCellId'] = 'PN_FCID'
@@ -292,7 +292,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata['R'] = 'Not applicable'
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
-    # build_sample in runner.operator.argos_operator.bin
+    # build_sample in runner.operator.argos_legacy.bin
     metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
     metadata['flowCellId'] = 'DMP_FCID'
     metadata['tumorOrNormal'] = tumor_type

@@ -105,7 +105,7 @@ def get_baits_and_targets(assay, genomic_resources):
     targets = genomic_resources['targets']
 
     target_assay = assay
-    
+
     if assay.find("HemePACT_v4") > -1:
         target_assay = "HemePACT_v4_BAITS"
 

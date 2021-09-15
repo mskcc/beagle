@@ -2,20 +2,21 @@ import os
 import copy
 import logging
 from deepdiff import DeepDiff
+from datetime import datetime
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
     RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, LocalStoreFileEvent, \
-    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent, SetDeliveryDateFieldEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample, Request, Patient
 from beagle_etl.exceptions import FailedToFetchSampleException, FailedToSubmitToOperatorException, \
     ErrorInconsistentDataException, MissingDataException, FailedToFetchPoolNormalException, FailedToCalculateChecksum, FailedToCopyFilePermissionDeniedException, FailedToCopyFileException
 from runner.tasks import create_jobs_from_request
@@ -54,6 +55,16 @@ def create_request_job(request_id, redelivery=False):
                                            JobStatus.WAITING_FOR_CHILDREN]).count()
     request_redelivered = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).count() > 0
 
+    delivery_date = None
+    try:
+        request_from_lims = LIMSClient.get_request_samples(request_id)
+        delivery_date = datetime.fromtimestamp(request_from_lims['deliveryDate'] / 1000)
+    except Exception:
+        logger.error("Failed to retrieve deliveryDate for request %s" % request_id)
+
+    if not Request.objects.filter(request_id=request_id):
+        Request.objects.create(request_id=request_id,
+                               delivery_date=delivery_date)
     assays = ETLConfiguration.objects.first()
 
     if request_redelivered and not (assays.redelivery and redelivery):
@@ -79,6 +90,11 @@ def create_request_job(request_id, redelivery=False):
         if request_redelivered:
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
+        request_obj = Request.objects.filter(request_id=request_id).first()
+        if request_obj:
+            delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
+                                                            str(request_obj.delivery_date)).to_dict()
+            send_notification.delay(delivery_date_event)
         return job, "Job Created"
 
 
@@ -235,6 +251,27 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
             raise FailedToFetchSampleException("No samples reported for requestId: %s" % request_id)
 
         for sample in sample_ids.get('samples', []):
+            sampleMetadata = LIMSClient.get_sample_manifest(sample['igoSampleId'])
+            try:
+                data = sampleMetadata[0]
+            except Exception as e:
+                pass
+            patient_id = format_patient_id(data.get('cmoPatientId'))
+
+            if not Patient.objects.filter(patient_id=patient_id):
+                Patient.objects.create(patient_id=patient_id)
+
+            sample_name = data.get('cmoSampleName', None)
+            specimen_type = data.get('specimenType', None)
+            cmo_sample_name = format_sample_name(sample_name, specimen_type)
+
+            if not Sample.objects.filter(sample_id=sample['igoSampleId'],
+                                         sample_name=sample_name,
+                                         cmo_sample_name=cmo_sample_name):
+                Sample.objects.create(sample_id=sample['igoSampleId'],
+                                      sample_name=sample_name,
+                                      cmo_sample_name=cmo_sample_name)
+
             job = create_sample_job(sample['igoSampleId'],
                                     sample['igocomplete'],
                                     request_id,
@@ -391,7 +428,6 @@ def fetch_sample_metadata(sample_id, igocomplete, request_id, request_metadata, 
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. Invalid response" % sample_id)
     if data['igoId'] != sample_id:
-        # logger.info(data)
         logger.info("Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
         raise FailedToFetchSampleException(
             "Failed to fetch SampleManifest for sampleId:%s. LIMS returned %s " % (sample_id, data['igoId']))
