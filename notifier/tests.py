@@ -1,4 +1,5 @@
 import uuid
+from mock import patch
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
@@ -11,8 +12,8 @@ class JobGroupAPITest(APITestCase):
         self.user = User.objects.create_user(username="username",
                                              password="password",
                                              email='admin@gmail.com')
-        self.job_group1 = JobGroup.objects.create(jira_id='JIRA-45')
-        self.job_group2 = JobGroup.objects.create(jira_id='JIRA-54')
+        self.job_group1 = JobGroup.objects.create()
+        self.job_group2 = JobGroup.objects.create()
         self.notifier = Notifier.objects.create(notifier_type='JIRA', default=True, board='TEST')
         self.job_group_notifier = JobGroupNotifier.objects.create(jira_id='JIRA-12',
                                                                   job_group=self.job_group1,
@@ -33,7 +34,7 @@ class JobGroupAPITest(APITestCase):
 
     def test_list_job_groups_by_jira_id(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
-        response = self.client.get('/v0/notifier/job-groups/?jira_id=%s' % self.job_group1.jira_id,
+        response = self.client.get('/v0/notifier/job-groups/?jira_id=%s' % self.job_group_notifier.jira_id,
                                    format='json')
         self.assertEqual(len(response.data['results']), 1)
 
@@ -44,7 +45,9 @@ class JobGroupAPITest(APITestCase):
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_send_notification(self):
+    @patch("notifier.tasks.send_notification.delay")
+    def test_send_notification(self, send_notification):
+        send_notification.return_value = False
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.post('/v0/notifier/send/',
                                     {

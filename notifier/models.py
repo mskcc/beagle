@@ -16,7 +16,6 @@ class Notifier(BaseModel):
 
 
 class JobGroup(BaseModel):
-    jira_id = models.CharField(max_length=20, blank=True, null=True)
 
     @property
     def timestamp(self):

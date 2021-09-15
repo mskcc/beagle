@@ -32,7 +32,7 @@ class JobGroupViews(mixins.CreateModelMixin,
         if serializer.is_valid():
             jira_id = request.query_params.get('jira_id')
             if jira_id:
-                job_groups = JobGroup.objects.filter(jira_id=jira_id).all()
+                job_groups = JobGroupNotifier.objects.filter(jira_id=jira_id).values_list('job_group', flat=True).all()
         else:
             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         page = self.paginate_queryset(job_groups)
