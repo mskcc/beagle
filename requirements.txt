@@ -1,4 +1,4 @@
-Django==2.2.20
+Django==2.2.24
 psycopg2==2.8.6
 djangorestframework==3.11.2
 markdown==3.1.1
@@ -23,3 +23,5 @@ django-import-export==2.4.0
 PyJWT==1.7.1
 django-pymemcache==1.0.0
 django-admin-rangefilter==0.6.4
+pystache==0.5.4
+elastic-apm==6.1.3
