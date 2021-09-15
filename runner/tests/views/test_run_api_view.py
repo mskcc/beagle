@@ -3,14 +3,13 @@ Tests for Run API View
 """
 import os
 from mock import patch, call
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
-from runner.views.run_api_view import OperatorViewSet, RunApiRestartViewSet
+from runner.views.run_api_view import OperatorViewSet
 from beagle_etl.models import JobGroup
 from file_system.models import FileGroup
 from runner.models import Run, RunStatus, Pipeline, OperatorRun, Port, PortType
-from runner.run.objects.run_object import RunObject
+from runner.run.objects.run_object_factory import RunObjectFactory
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.management import call_command
@@ -214,9 +213,10 @@ class TestRunAPIView(APITestCase):
         restarted_run = Run.objects.get(id=restart_run_id)
         self.assertEqual(str(failed_run.id), str(restarted_run.resume))
         # Both runs should have same input ports
-        restart_run_object = RunObject.from_db(restart_run_id)
-        original_run_object = RunObject.from_db(failed_run.id)
+        restart_run_object = RunObjectFactory.from_db(restart_run_id)
+        original_run_object = RunObjectFactory.from_db(failed_run.id)
         self.assertTrue(original_run_object.equal(restart_run_object))
+
 
 class TestCWLJsonView(APITestCase):
     fixtures = [

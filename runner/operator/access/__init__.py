@@ -1,6 +1,6 @@
 import logging
 
-from runner.models import Run, RunStatus
+from runner.models import Run, RunStatus, Port
 from file_system.models import File, FileMetadata
 
 
@@ -29,44 +29,42 @@ def get_request_id(run_ids, request_id=None):
 
 def get_request_id_runs(request_id):
     """
-    Get the latest completed runs for the given request ID
+    Get the latest completed bam-generation runs for the given request ID
 
     :param request_id: str - IGO request ID
     :return: List[str] - List of most recent runs from given request ID
     """
     operator_run_id = Run.objects.filter(
         tags__requestId=request_id,
-        app__name='access legacy',
+        app__name__in=['access legacy', 'access nucleo'],
         operator_run__status=RunStatus.COMPLETED
     ).exclude(finished_date__isnull=True).order_by('-finished_date').first().operator_run_id
 
     request_id_runs = Run.objects.filter(
         operator_run_id=operator_run_id,
-        app__name='access legacy',
+        app__name__in=['access legacy', 'access nucleo'],
         status=RunStatus.COMPLETED
     )
     return request_id_runs
 
 
-def extract_tumor_ports(ports):
+def create_cwl_file_object(file_path):
     """
-    Filter to just port objects from Tumor samples (or ports with anything *except* "N" in the timepoint
+    Util function to create a simple CWL File object from a file_path
 
-    Include: -T (Tumor), -P (primary), -M (metastatic), -L
-    Exclude: -N (Normal)
-
-    Todo: Use separate metadata fields for Tumor / sample ID designation instead of file name
-
-    :param sample_ports:
+    :param file_path: str
     :return:
     """
-    def is_tumor(port):
-        file_name = port['location'].split('/')[-1]
-        t_n_timepoint = file_name.split('-')[2]
-        return not t_n_timepoint[0] == 'N'
+    return {
+        "class": "File",
+        "location": "juno://" + file_path
+    }
 
-    tumor_ports = [f for p in ports for f in p.value if is_tumor(f)]
-    return tumor_ports
+
+def is_tumor(file):
+    file_name = file['location'].split('/')[-1]
+    t_n_timepoint = file_name.split('-')[2]
+    return not t_n_timepoint[0] == 'N'
 
 
 def get_unfiltered_matched_normal(patient_id, request_id=None):

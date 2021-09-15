@@ -7,8 +7,8 @@ from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import ETLSetRecipeEvent, OperatorRequestEvent, SetCIReviewEvent, SetLabelEvent, \
     NotForCIReviewEvent, UnknownAssayEvent, DisabledAssayEvent, AdminHoldEvent, CustomCaptureCCEvent, RedeliveryEvent, \
-    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, \
-    ETLImportNoSamplesEvent, LocalStoreFileEvent, ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
+    RedeliveryUpdateEvent, ETLImportCompleteEvent, ETLImportPartiallyCompleteEvent, LocalStoreFileEvent, \
+    ExternalEmailEvent, OnlyNormalSamplesEvent, WESJobFailedEvent
 
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration

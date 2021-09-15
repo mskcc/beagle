@@ -39,6 +39,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'elasticapm.contrib.django',
     'core.apps.CoreConfig',
     'runner.apps.RunnerConfig',
     'beagle_etl.apps.BeagleEtlConfig',
@@ -86,8 +87,24 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': datetime.timedelta(days=1),
 }
 
+ELASTIC_APM = {
+  # Set the required service name. Allowed characters:
+  # a-z, A-Z, 0-9, -, _, and space
+  'SERVICE_NAME': 'beagle',
+  'TRANSACTION_SAMPLE_RATE': 0.3,
+  # Use if APM Server requires a secret token
+  #'SECRET_TOKEN': '',
+
+
+  # Set the custom APM Server URL (default: http://localhost:8200)
+  'SERVER_URL': 'http://bic-dockerapp01.mskcc.org:8200/',
+
+  # Set the service environment
+  'ENVIRONMENT': ENVIRONMENT,
+}
 
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.TracingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -310,14 +327,25 @@ LOG_PATH = os.environ.get('BEAGLE_LOG_PATH', 'beagle-server.log')
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s|%(levelname)s|%(name)s|%(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
         "file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
             "maxBytes": 209715200,
-            "backupCount": 10
+            "backupCount": 10,
+            "formatter": "simple",
         }
     },
     "loggers": {
@@ -364,7 +392,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     )
 
+REQUEST_ID_METADATA_KEY = 'requestId'
 SAMPLE_ID_METADATA_KEY = 'sampleId'
+SAMPLE_NAME_METADATA_KEY = 'sampleName'
+CMO_SAMPLE_NAME_METADATA_KEY = 'cmoSampleName'
+PATIENT_ID_METADATA_KEY = 'patientId'
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')

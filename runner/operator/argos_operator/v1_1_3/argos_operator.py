@@ -115,6 +115,14 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in files:
                     files.append(filepath)
+            for p in job['pair'][0]['bam']:
+                filepath = FileProcessor.parse_path_from_uri(p['location'])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in files:
+                    files.append(filepath)
 
             normal_sample_name = job['pair'][1]['ID']
             for p in job['pair'][1]['R1']:
@@ -151,7 +159,6 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in files:
                     files.append(filepath)
-
             for p in job['pair'][1]['bam']:
                 filepath = FileProcessor.parse_path_from_uri(p['location'])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
