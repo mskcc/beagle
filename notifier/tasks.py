@@ -1,6 +1,7 @@
 import logging
 from celery import shared_task
 from django.conf import settings
+from file_system.repository import FileRepository
 from notifier.models import JobGroupNotifier, Notifier
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 from notifier.event_handler.noop_event_handler.noop_event_handler import NoOpEventHandler
@@ -39,6 +40,11 @@ def notifier_start(job_group, request_id, operator=None):
         eh = event_handler(job_group_notifier.id)
         notifier_id = eh.start(request_id)
         job_group_notifier.jira_id = notifier_id
+        if notifier_id.startswith(settings.JIRA_PREFIX):
+            file_obj = FileRepository.filter(metadata={'requestId': request_id}).first()
+            job_group_notifier.PI = file_obj.metadata.get('labHeadName')
+            job_group_notifier.investigator = file_obj.metadata.get('investigatorName')
+            job_group_notifier.assay = file_obj.metadata.get('recipe')
         job_group_notifier.save()
         return str(job_group_notifier.id)
     logger.info("Notifier Inactive")
