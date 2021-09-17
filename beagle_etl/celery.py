@@ -60,18 +60,17 @@ app.conf.beat_schedule = {
     },
     'check_status': {
         "task": "runner.tasks.check_jobs_status",
-        "schedule": 30.0,
+        "schedule": settings.CHECK_JOB_STATUS_PERIOD,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
     },
     "process_triggers": {
         "task": "runner.tasks.process_triggers",
-        "schedule": 120.0,
+        "schedule": settings.PROCESS_TRIGGERS_PERIOD,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
     },
     "timeout_runs": {
         "task": "runner.tasks.check_job_timeouts",
-        "schedule": 86400.0, # 1 day
+        "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
     },
-
 }

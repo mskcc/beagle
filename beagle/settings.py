@@ -383,6 +383,10 @@ BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_qu
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
 BEAGLE_SHARED_TMPDIR = os.environ.get('BEAGLE_SHARED_TMPDIR', '/juno/work/ci/temp')
 
+CHECK_JOB_STATUS_PERIOD = os.environ.get('BEAGLE_CHECK_JOB_STATUS_PERIOD', 60)
+PROCESS_TRIGGERS_PERIOD = os.environ.get('BEAGLE_PROCESS_TRIGGERS_PERIOD', 120)
+CHECK_JOB_TIMEOUTS = os.environ.get('BEAGLE_CHECK_JOB_TIMEOUTS', 86400.0)
+
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
 TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
