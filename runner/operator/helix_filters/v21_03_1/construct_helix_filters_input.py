@@ -32,7 +32,10 @@ def get_baits_and_targets(assay, helix_filters_resources):
     targets = helix_filters_resources['targets']
 
     target_assay = assay
-
+    
+    if assay.find("HemePACT_v4") > -1:
+        target_assay = "HemePACT_v4_BAITS"
+        
     if assay.find("IMPACT505") > -1:
         target_assay = "IMPACT505_b37"
     if assay.find("IMPACT410") > -1:
