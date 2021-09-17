@@ -86,16 +86,14 @@ class FileProcessor(object):
             group_id_obj = FileGroup.objects.get(id=group_id)
         except FileGroup.DoesNotExist as e:
             raise FileHelperException('Invalid FileGroup id: %s' % group_id)
-        file_object = File(path=file_path,
-                           file_name=os.path.basename(file_path),
-                           checksum=checksum,
-                           file_type=file_type,
-                           file_group=group_id_obj,
-                           size=size)
-        try:
-            file_object.save()
-        except IntegrityError as e:
+        if File.objects.filter(path=file_path).first():
             raise FileConflictException("File with path %s already exist" % file_path)
+        file_object = File.objects.create(path=file_path,
+                                          file_name=os.path.basename(file_path),
+                                          checksum=checksum,
+                                          file_type=file_type,
+                                          file_group=group_id_obj,
+                                          size=size)
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()
         return file_object
