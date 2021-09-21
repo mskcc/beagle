@@ -21,6 +21,7 @@ from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
+from lib.memcache_lock import memcache_task_lock
 
 
 logger = logging.getLogger(__name__)
@@ -525,11 +526,12 @@ def check_job_timeouts():
     for run in runs:
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
-@shared_task
+
+@shared_task(bind=True)
 @memcache_lock("check_jobs_status")
-def check_jobs_status():
+def check_jobs_status(self):
     runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                              execution_id__isnull=False)
+                                       execution_id__isnull=False)
 
     limit = 800
     i = 0
@@ -544,42 +546,46 @@ def check_jobs_status():
             continue
 
         for run in runs:
-            logger.info(format_log("Checking status for run", obj=run))
-            if str(run.execution_id) not in remote_statuses:
-                logger.info(format_log("Requested job status from executor that was not returned",
-                                       obj=run))
-                continue
+            lock_id = "job_lock_%s" % str(run.id)
+            with memcache_task_lock(lock_id, self.app.oid) as acquired:
+                if acquired:
+                    logger.info(format_log("Checking status for run", obj=run))
+                    if str(run.execution_id) not in remote_statuses:
+                        logger.info(format_log("Requested job status from executor that was not returned",
+                                               obj=run))
+                        continue
 
-            status = remote_statuses[str(run.execution_id)]
-            if status['started'] and not run.started:
-                run.started = status['started']
-            if status['submitted'] and not run.submitted:
-                run.submitted = status['submitted']
-            if status['commandlinetooljob_set']:
-                update_commandline_job_status(run, status['commandlinetooljob_set'])
-            if status['status'] == 'FAILED':
-                logger.error(format_log("Job failed ", obj=run))
-                message = dict(details=status.get('message'))
-                fail_job(str(run.id),
-                         message)
-                continue
-            if status['status'] == 'COMPLETED':
-                logger.info(format_log("Job completed", obj=run))
-                complete_job(str(run.id), status['outputs'])
-                continue
-            if status['status'] == 'CREATED':
-                logger.info(format_log("Job created", obj=run))
-                continue
-            if status['status'] == 'PENDING':
-                logger.info(format_log("Job pending", obj=run))
-                continue
-            if status['status'] == 'RUNNING':
-                logger.info(format_log("Job running", obj=run))
-                running_job(run)
-                continue
-            if status['status'] == 'ABORTED':
-                logger.info(format_log("Job aborted", obj=run))
-                abort_job(run)
+                    status = remote_statuses[str(run.execution_id)]
+                    if status['started'] and not run.started:
+                        run.started = status['started']
+                    if status['submitted'] and not run.submitted:
+                        run.submitted = status['submitted']
+                    if status['commandlinetooljob_set']:
+                        update_commandline_job_status(run, status['commandlinetooljob_set'])
+                    if status['status'] == 'FAILED':
+                        logger.error(format_log("Job failed ", obj=run))
+                        message = dict(details=status.get('message'))
+                        fail_job(str(run.id), message)
+                        continue
+                    if status['status'] == 'COMPLETED':
+                        logger.info(format_log("Job completed", obj=run))
+                        complete_job(str(run.id), status['outputs'])
+                        continue
+                    if status['status'] == 'CREATED':
+                        logger.info(format_log("Job created", obj=run))
+                        continue
+                    if status['status'] == 'PENDING':
+                        logger.info(format_log("Job pending", obj=run))
+                        continue
+                    if status['status'] == 'RUNNING':
+                        logger.info(format_log("Job running", obj=run))
+                        running_job(run)
+                        continue
+                    if status['status'] == 'ABORTED':
+                        logger.info(format_log("Job aborted", obj=run))
+                        abort_job(run)
+                else:
+                    logger.info("Run lock not acquired for run: %s" % str(run.id))
 
 
 def run_routine_operator_job(operator, job_group_id=None):
