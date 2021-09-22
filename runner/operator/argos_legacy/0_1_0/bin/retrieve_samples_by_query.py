@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def build_argos_file_groups_query():
-    ARGOS_FG_SLUGS = ['fero-legacy-runs']
+    ARGOS_FG_SLUGS = ['fero-legacy-data']
     slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
     query = slug_set.pop()
     for item in slug_set:
