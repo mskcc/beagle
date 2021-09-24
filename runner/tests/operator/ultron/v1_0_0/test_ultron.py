@@ -92,12 +92,13 @@ class TestUltron(TestCase):
             single_file.delete()
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
-        expected_input_json = self.first_run_expected_inputs
-        expected_input_json["unindexed_bam_files"] = []
-        expected_input_json["unindexed_sample_ids"] = []
-        expected_input_json["unindexed_maf_files"] = []
-        self.assertEqual(input_obj._build_inputs_json(),
-                         expected_input_json)
+        input_json = input_obj._build_inputs_json()
+        self.assertEqual(input_json["unindexed_bam_files"],
+                         [])
+        self.assertEqual(input_json["unindexed_sample_ids"],
+                         [])
+        self.assertEqual(input_json["unindexed_maf_files"],
+                         [])
 
     def test_construct_inputs_obj_no_dmp_muts(self):
         """
@@ -111,9 +112,8 @@ class TestUltron(TestCase):
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
         expected_input_json = self.first_run_expected_inputs
-        expected_input_json["unindexed_maf_files"] = []
-        self.assertEqual(input_obj._build_inputs_json(),
-                         expected_input_json)
+        input_json = input_obj._build_inputs_json()
+        self.assertEqual(input_json['unindexed_maf_files'], [])
 
     def test_construct_inputs_obj(self):
         """
