@@ -379,6 +379,9 @@ class PairOperatorSerializer(serializers.Serializer):
     name = serializers.CharField(allow_blank=False, allow_null=False)
     output_directory_prefix = serializers.CharField(max_length=50, allow_blank=True, allow_null=True)
     job_group_id = serializers.UUIDField(required=False)
+    labHeadName = serializers.CharField(max_length=30, required=False, allow_blank=True, allow_null=True)
+    investigatorName = serializers.CharField(max_length=30, required=False, allow_blank=False, allow_null=False)
+    assay = serializers.CharField(max_length=30, required=False, allow_blank=False, allow_null=False)
 
 
 class OperatorErrorSerializer(serializers.ModelSerializer):

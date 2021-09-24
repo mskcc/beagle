@@ -26,7 +26,7 @@ def event_handler(job_group_notifier):
         raise Exception("This shouldn't happen")
 
 
-def notifier_start(job_group, request_id, operator=None):
+def notifier_start(job_group, request_id, operator=None, metadata={}):
     if settings.NOTIFIER_ACTIVE:
         notifier = Notifier.objects.get(default=True)
         try:
@@ -42,9 +42,14 @@ def notifier_start(job_group, request_id, operator=None):
         job_group_notifier.jira_id = notifier_id
         if notifier_id.startswith(settings.JIRA_PREFIX):
             file_obj = FileRepository.filter(metadata={'requestId': request_id}).first()
-            job_group_notifier.PI = file_obj.metadata.get('labHeadName')
-            job_group_notifier.investigator = file_obj.metadata.get('investigatorName')
-            job_group_notifier.assay = file_obj.metadata.get('recipe')
+            if file_obj:
+                job_group_notifier.PI = file_obj.metadata.get('labHeadName')
+                job_group_notifier.investigator = file_obj.metadata.get('investigatorName')
+                job_group_notifier.assay = file_obj.metadata.get('recipe')
+            else:
+                job_group_notifier.PI = metadata.get('labHeadName')
+                job_group_notifier.investigator = metadata.get('investigatorName')
+                job_group_notifier.assay = metadata.get('recipe')
         job_group_notifier.save()
         return str(job_group_notifier.id)
     logger.info("Notifier Inactive")
