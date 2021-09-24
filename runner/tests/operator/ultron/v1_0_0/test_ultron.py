@@ -121,8 +121,21 @@ class TestUltron(TestCase):
         """
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
-        self.assertEqual(input_obj._build_inputs_json(),
-                         self.first_run_expected_inputs)
+        input_json = input_obj._build_inputs_json()
+        self.assertEqual(len(input_json["unindexed_bam_files"]),
+                         2)
+        self.assertEqual(len(input_json["unindexed_sample_ids"]),
+                         2)
+        self.assertEqual(len(input_json["unindexed_maf_files"]),
+                         2)
+        self.assertEqual(len(input_json["bam_files"]),
+                         1)
+        self.assertEqual(len(input_json["sample_ids"]),
+                         1)
+        self.assertEqual(len(input_json["ref_fasta"]),
+                         2)
+        self.assertEqual(len(input_json["exac_filter"]),
+                         2)
 
     def test_construct_sample_data_null_patient_id(self):
         """
