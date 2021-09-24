@@ -92,13 +92,14 @@ class TestUltron(TestCase):
             single_file.delete()
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json["unindexed_bam_files"],
-                         [])
-        self.assertEqual(input_json["unindexed_sample_ids"],
-                         [])
-        self.assertEqual(input_json["unindexed_maf_files"],
-                         [])
+        expected_input_json = self.first_run_expected_inputs
+        expected_input_json["unindexed_bam_files"] = []
+        expected_input_json["unindexed_sample_ids"] = []
+        expected_input_json["unindexed_maf_files"] = []
+        inputs_match = False
+        if expected_input_json == input_obj._build_inputs_json():
+            inputs_match = True
+        self.assertEqual(inputs_match, True)
 
     def test_construct_inputs_obj_no_dmp_muts(self):
         """
@@ -112,8 +113,11 @@ class TestUltron(TestCase):
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
         expected_input_json = self.first_run_expected_inputs
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json['unindexed_maf_files'], [])
+        expected_input_json["unindexed_maf_files"] = []
+        inputs_match = False
+        if expected_input_json == input_obj._build_inputs_json():
+            inputs_match = True
+        self.assertEqual(inputs_match, True)
 
     def test_construct_inputs_obj(self):
         """
@@ -121,8 +125,10 @@ class TestUltron(TestCase):
         """
         single_run = Run.objects.get(id=self.run_ids[0])
         input_obj = InputsObj(single_run)
-        self.assertEqual(input_obj._build_inputs_json(),
-                         self.first_run_expected_inputs)
+        inputs_match = False
+        if self.first_run_expected_inputs == input_obj._build_inputs_json():
+            inputs_match = True
+        self.assertEqual(inputs_match, True)
 
     def test_construct_sample_data_null_patient_id(self):
         """
