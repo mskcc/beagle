@@ -31,6 +31,18 @@ def get_file_group(file_group_name):
     return file_group_obj.pk
 
 
+def get_project_prefix(run_id_list):
+    project_prefix = set()
+
+    for single_run_id in run_id_list:
+        port_list = Port.objects.filter(run=single_run_id)
+        for single_port in port_list:
+            if single_port.name == "project_prefix":
+                project_prefix.add(single_port.value)
+    project_prefix_str = "_".join(sorted(project_prefix))
+    return project_prefix_str
+
+
 class UltronOperator(Operator):
     def get_jobs(self):
         """
@@ -38,15 +50,35 @@ class UltronOperator(Operator):
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
         name = "ULTRON PHASE1 run"
+        self.output_directory = ""
+        self.project_prefix = ""
 
         inputs = self._build_inputs(run_ids)
-
+        self._get_output_directory(run_ids)
         ultron_output_jobs = list()
         for input_json in inputs:
-            output_job = self._build_job(input_json)
+            output_job = self._build_job(
+                input_json)
             ultron_output_jobs.append(output_job)
 
         return ultron_output_jobs
+
+    def _get_output_directory(self, run_ids):
+        project_prefix = get_project_prefix(run_ids)
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        pipeline_version = pipeline.version
+        output_directory = None
+        if self.job_group_id:
+            jg = JobGroup.objects.get(id=self.job_group_id)
+            jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+            output_directory = os.path.join(pipeline.output_directory,
+                                            "argos",
+                                            project_prefix,
+                                            pipeline_version,
+                                            jg_created_date)
+        self.output_directory = output_directory
+        self.project_prefix = project_prefix
 
     def _build_inputs(self, run_ids):
         run_jsons = list()
@@ -61,12 +93,14 @@ class UltronOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
         sample_name = input_json['sample_names'][0]  # should only be one
-        tags = {'sampleNameTumor': sample_name}
+        tags = {'sampleNameTumor': sample_name,
+                "project_prefix": self.project_prefix}
         # add tags, name
         output_job_data = {
             'app': app,
             'tags': tags,
             'name': "Sample %s ULTRON PHASE1 run" % sample_name,
+            'output_directory': self.output_directory,
             'inputs': input_json}
         output_job = (APIRunCreateSerializer(
             data=output_job_data),
