@@ -80,19 +80,65 @@ def dump_run(**kwargs):
     output_run_file = "{}.run.json".format(runID)
     output_port_input_file = "{}.port.input.json".format(runID)
     output_port_output_file = "{}.port.output.json".format(runID)
+    output_files_output_file = "{}.files.json".format(runID)
+    output_samples_output_file = "{}.samples.json".format(runID)
 
     # get the parent Run instance
-    run_instance = Run.objects.get(id = runID)
-    print(json.dumps(json.loads(serializers.serialize('json', [run_instance])), indent=4), file = open(output_run_file, "w"))
+    run_instance = Run.objects.get(id=runID)
+    print(json.dumps(json.loads(serializers.serialize(
+        'json', [run_instance])), indent=4), file=open(output_run_file, "w"))
 
     # get the Run input and output Port instances
     input_queryset = run_instance.port_set.filter(port_type=PortType.INPUT)
-    print(json.dumps(json.loads(serializers.serialize('json', input_queryset.all())), indent=4), file = open(output_port_input_file, "w"))
+    print(json.dumps(json.loads(serializers.serialize(
+        'json', input_queryset.all())), indent=4), file=open(output_port_input_file, "w"))
 
     output_queryset = run_instance.port_set.filter(port_type=PortType.OUTPUT)
-    print(json.dumps(json.loads(serializers.serialize('json', output_queryset.all())), indent=4), file = open(output_port_output_file, "w"))
+    print(json.dumps(json.loads(serializers.serialize('json', output_queryset.all())),
+          indent=4), file=open(output_port_output_file, "w"))
+    all_data = []
+    all_samples = []
     for item in output_queryset:
-        pprint((item, item.files.all()))
+        files = item.files.all()
+        for single_file in files:
+            filemetadata_instance = FileMetadata.objects.filter(
+                file=single_file).last()
+            file_data = json.loads(
+                serializers.serialize('json', [single_file]))
+            filemetadata_data = json.loads(
+                serializers.serialize('json', [filemetadata_instance]))
+            all_data.append(file_data[0])
+            all_data.append(filemetadata_data[0])
+            if single_file.sample:
+                sample_data = json.loads(serializers.serialize(
+                    'json', [single_file.sample]))
+                all_samples.append(sample_data[0])
+    for item in input_queryset:
+        files = item.files.all()
+        for single_file in files:
+            filemetadata_instance = FileMetadata.objects.filter(
+                file=single_file).last()
+            file_data = json.loads(
+                serializers.serialize('json', [single_file]))
+            filemetadata_data = json.loads(
+                serializers.serialize('json', [filemetadata_instance]))
+            all_data.append(file_data[0])
+            all_data.append(filemetadata_data[0])
+            if single_file.sample:
+                sample_data = json.loads(serializers.serialize(
+                    'json', [single_file.sample]))
+                all_samples.append(sample_data[0])
+    print(json.dumps(all_data, indent=4),
+          file=open(output_files_output_file, "w"))
+    sample_ids = []
+    all_samples_unique = []
+    for single_sample in all_samples:
+        single_sample_id = single_sample['pk']
+        if single_sample_id not in sample_ids:
+            all_samples_unique.append(single_sample)
+            sample_ids.append(single_sample_id)
+    print(json.dumps(all_samples_unique, indent=4),
+          file=open(output_samples_output_file, "w"))
 
 
 def dump_port_files(**kwargs):
