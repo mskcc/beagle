@@ -26,7 +26,7 @@ class TestOperatorTriggers(TestCase):
 
     @patch('lib.memcache_lock.memcache_task_lock')
     @patch('runner.tasks.create_run_task')
-    @patch('notifier.tasks.send_notification')
+    @patch('notifier.tasks.send_notification.delay')
     @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs')
     @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id')
     def test_create_jobs_from_operator_pipeline_deleted(self,
