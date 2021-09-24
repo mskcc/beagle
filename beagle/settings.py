@@ -362,7 +362,7 @@ LOGGING = {
 
 SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
 
-NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", True)
+NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", "True") == "True"
 
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 NOTIFIER_STORAGE_DIR = os.environ.get("BEAGLE_NOTIFIER_STORAGE_DIR", '/tmp')
