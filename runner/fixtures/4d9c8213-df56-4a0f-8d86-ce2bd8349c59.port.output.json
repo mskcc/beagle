@@ -1,0 +1,1708 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "74009f2a-8cf3-4c65-9df7-4c02cd99edab",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.274Z",
+            "modified_date": "2021-08-05T16:52:56.383Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "snp_pileup",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 80583,
+                "class": "File",
+                "location": "bid://d310f2d1-6ecd-4af2-8b16-bece801ab966"
+            },
+            "value": {
+                "size": 80583,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_ALLANT_N002_d.rg.md.abra.printreads__s_C_ALLANT_T001_d.rg.md.abra.printreads.dat.gz",
+                "checksum": "sha1$d0cbda7de6d84ce4c96dd2e8953c3840c4e40489",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.abra.printreads__s_C_ALLANT_T001_d.rg.md.abra.printreads.dat.gz",
+                "nameroot": "s_C_ALLANT_N002_d.rg.md.abra.printreads__s_C_ALLANT_T001_d.rg.md.abra.printreads.dat"
+            },
+            "notify": false,
+            "files": [
+                "d310f2d1-6ecd-4af2-8b16-bece801ab966"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "79e141e0-231e-4c53-aed9-b228ca173811",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.294Z",
+            "modified_date": "2021-08-05T16:52:56.408Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "merged_file_unfiltered",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 10733,
+                "class": "File",
+                "location": "bid://49f3f051-9cbc-40e8-8161-1fbd512badb7"
+            },
+            "value": {
+                "size": 10733,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.vcf",
+                "checksum": "sha1$22a6d78a1999b64cd53cd4a3a98dadfb288304ce",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.vcf",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs"
+            },
+            "notify": false,
+            "files": [
+                "49f3f051-9cbc-40e8-8161-1fbd512badb7"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7f743915-a0d6-466c-b1eb-3f8501089a36",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.373Z",
+            "modified_date": "2021-08-05T16:52:56.513Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "maf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 105617,
+                "class": "File",
+                "location": "bid://978e84b8-389e-4619-b99d-8ece31eb2944"
+            },
+            "value": {
+                "size": 105617,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                "checksum": "sha1$485415d59a040cd7296685452bd778b3f34f8147",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts"
+            },
+            "notify": false,
+            "files": [
+                "978e84b8-389e-4619-b99d-8ece31eb2944"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f956dbc5-b6d8-4a2d-95f6-0a5a73037ac4",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.392Z",
+            "modified_date": "2021-08-05T16:52:56.531Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "genome",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "GRCh37",
+            "value": "GRCh37",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e5ea539e-7ae0-45b8-89d2-e4b6a2c17978",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.412Z",
+            "modified_date": "2021-08-05T16:52:56.551Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "assay",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "IMPACT468_BAITS",
+            "value": "IMPACT468_BAITS",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "eaf31926-e7d2-4526-9098-497ed45ec54a",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.432Z",
+            "modified_date": "2021-08-05T16:52:56.571Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "pi",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "Dr. McGee",
+            "value": "Dr. McGee",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "bdf38bd0-5995-4a0e-b930-4aabf750e52f",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.453Z",
+            "modified_date": "2021-08-05T16:52:56.589Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "project_prefix",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "ALN-REQ-ID",
+            "value": "ALN-REQ-ID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "46efded2-c822-40fc-b1f2-1cdc4295c5b1",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.473Z",
+            "modified_date": "2021-08-05T16:52:56.606Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "pi_email",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "labhead@test.com",
+            "value": "labhead@test.com",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b5d68e5f-b368-445c-8f20-0bc01935f62f",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.491Z",
+            "modified_date": "2021-08-05T16:52:56.622Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "normal_sample_name",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "s_C_ALLANT_N002_d",
+            "value": "s_C_ALLANT_N002_d",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "9b8f6213-c722-4827-a74f-a3bf46d51247",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.512Z",
+            "modified_date": "2021-08-05T16:52:56.642Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "tumor_sample_name",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "s_C_ALLANT_T001_d",
+            "value": "s_C_ALLANT_T001_d",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "137e2df0-dc94-43db-949b-3e704dde2597",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.839Z",
+            "modified_date": "2021-08-05T16:52:56.698Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "tumor_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 36055059,
+                "class": "File",
+                "location": "bid://5f6c5d0c-121d-4f3d-ad10-ae18926ef868",
+                "secondaryFiles": [
+                    {
+                        "size": 1526040,
+                        "class": "File",
+                        "location": "bid://71a4dd69-66ce-4756-ace8-a9b46f00d479"
+                    }
+                ]
+            },
+            "value": {
+                "size": 36055059,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                "checksum": "sha1$1407fa6b7e61435638a64eff101215a9fe311827",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads",
+                "secondaryFiles": [
+                    {
+                        "size": 1526040,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.bai",
+                        "checksum": "sha1$8e3416bad95f32f7a7f96f7c72c8a4d9761e05e3",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bai",
+                        "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "5f6c5d0c-121d-4f3d-ad10-ae18926ef868",
+                "71a4dd69-66ce-4756-ace8-a9b46f00d479"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "309653a8-8d3a-4671-9ced-9fb20f88fd04",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.821Z",
+            "modified_date": "2021-08-05T16:52:56.669Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "normal_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 37593183,
+                "class": "File",
+                "location": "bid://5db1708a-7945-44b2-97f0-ca3e84a43b99",
+                "secondaryFiles": [
+                    {
+                        "size": 995248,
+                        "class": "File",
+                        "location": "bid://e36a0e71-e58e-4a1e-97cb-2b8c5743ada6"
+                    }
+                ]
+            },
+            "value": {
+                "size": 37593183,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "s_C_ALLANT_N002_d.rg.md.abra.printreads.bam",
+                "checksum": "sha1$2320ca7caeba12e0332c91f37ea286050c0e0e51",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.abra.printreads.bam",
+                "nameroot": "s_C_ALLANT_N002_d.rg.md.abra.printreads",
+                "secondaryFiles": [
+                    {
+                        "size": 995248,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "s_C_ALLANT_N002_d.rg.md.abra.printreads.bai",
+                        "checksum": "sha1$a6a4e5f6972a2ad2b4c3335256a8f46964b49094",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.abra.printreads.bai",
+                        "nameroot": "s_C_ALLANT_N002_d.rg.md.abra.printreads"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "5db1708a-7945-44b2-97f0-ca3e84a43b99",
+                "e36a0e71-e58e-4a1e-97cb-2b8c5743ada6"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c74b5f83-9db6-4b9f-8444-1a21a8f0ab7a",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.893Z",
+            "modified_date": "2021-08-05T16:52:56.781Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "md_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 2761,
+                    "class": "File",
+                    "location": "bid://1b9cd6fa-2741-4773-9c05-89a40a020d52"
+                },
+                {
+                    "size": 2834,
+                    "class": "File",
+                    "location": "bid://29e33165-d027-4cd6-aa19-7537a21eff4c"
+                }
+            ],
+            "value": [
+                {
+                    "size": 2761,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md_metrics",
+                    "checksum": "sha1$97f5058e7244fd65c3bad50a81dc57cf9deb0808",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md_metrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg"
+                },
+                {
+                    "size": 2834,
+                    "class": "File",
+                    "nameext": ".md_metrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md_metrics",
+                    "checksum": "sha1$529da543fbca969fb8396c69f84d137a7b1da467",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md_metrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "1b9cd6fa-2741-4773-9c05-89a40a020d52",
+                "29e33165-d027-4cd6-aa19-7537a21eff4c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8881861a-8585-4abd-8ec8-ab598e9eff1f",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.043Z",
+            "modified_date": "2021-08-05T16:52:57.012Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "doc_basecounts",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 5173976,
+                    "class": "File",
+                    "location": "bid://ab0675ed-b187-4a63-b4f3-6224a7c0220f"
+                },
+                {
+                    "size": 5177530,
+                    "class": "File",
+                    "location": "bid://dbfa4d92-0c78-4780-accc-149be3e0285c"
+                }
+            ],
+            "value": [
+                {
+                    "size": 5173976,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_ALLANT_T001_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$cf649d08ef5c428c31e009b4ea296e62638b5280",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md_FP_base_counts.txt",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md_FP_base_counts"
+                },
+                {
+                    "size": 5177530,
+                    "class": "File",
+                    "nameext": ".txt",
+                    "basename": "s_C_ALLANT_N002_d.rg.md_FP_base_counts.txt",
+                    "checksum": "sha1$4c56bce697b1cc4789125dd12501dd4aab8e456c",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md_FP_base_counts.txt",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md_FP_base_counts"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "ab0675ed-b187-4a63-b4f3-6224a7c0220f",
+                "dbfa4d92-0c78-4780-accc-149be3e0285c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6127238e-7062-4e59-8971-b6a06cd4379d",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.138Z",
+            "modified_date": "2021-08-05T16:52:57.155Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "mutect_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 33881,
+                "class": "File",
+                "location": "bid://c2727c95-c372-4bb8-a41c-a6acb27d5b37"
+            },
+            "value": {
+                "size": 33881,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.vcf",
+                "checksum": "sha1$52dc14b88019640d66fadec9336a5fdb4eb4fb42",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.vcf",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect"
+            },
+            "notify": false,
+            "files": [
+                "c2727c95-c372-4bb8-a41c-a6acb27d5b37"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "46d5b2a0-8cd5-4d07-b8b0-c484c09a897a",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.157Z",
+            "modified_date": "2021-08-05T16:52:57.180Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "mutect_callstats",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 153557,
+                "class": "File",
+                "location": "bid://0c198650-6bb6-4d14-a801-9eb98d2ba30c"
+            },
+            "value": {
+                "size": 153557,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.txt",
+                "checksum": "sha1$c3da456c0a57a480c0aada1ded5444300407c797",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.txt",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect"
+            },
+            "notify": false,
+            "files": [
+                "0c198650-6bb6-4d14-a801-9eb98d2ba30c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6550c10c-d7f7-4408-821f-71cabebdb0c4",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.214Z",
+            "modified_date": "2021-08-05T16:52:57.262Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "annotate_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 45215,
+                "class": "File",
+                "location": "bid://fa426afd-a2c9-4373-a079-3dafeefa7f14"
+            },
+            "value": {
+                "size": 45215,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.annotate-variants.vcf",
+                "checksum": "sha1$ddbef146a22e62ac398c592b2f9415fc163d4903",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.annotate-variants.vcf",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.annotate-variants"
+            },
+            "notify": false,
+            "files": [
+                "fa426afd-a2c9-4373-a079-3dafeefa7f14"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "685f6b9a-e1be-4fbc-90e3-df447cc14258",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.315Z",
+            "modified_date": "2021-08-05T16:52:56.433Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "merged_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 7189,
+                "class": "File",
+                "location": "bid://6bbf16fa-65fc-4b89-93fd-96865afd3355"
+            },
+            "value": {
+                "size": 7189,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vcf",
+                "checksum": "sha1$444a4e936868064e61ed27ee780848a9a7f2dc8f",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vcf",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass"
+            },
+            "notify": false,
+            "files": [
+                "6bbf16fa-65fc-4b89-93fd-96865afd3355"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "3414fd60-ba17-4cff-93f0-bd00ef26c8fe",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.334Z",
+            "modified_date": "2021-08-05T16:52:56.458Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "maf_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 1620,
+                "class": "File",
+                "location": "bid://3d3bd8fd-c059-4024-96ce-b500c3a76efb"
+            },
+            "value": {
+                "size": 1620,
+                "class": "File",
+                "nameext": ".maf",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep.maf",
+                "checksum": "sha1$d1eed8e218fc86be7ab38ae18e81b8b34fa921da",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep.maf",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep"
+            },
+            "notify": false,
+            "files": [
+                "3d3bd8fd-c059-4024-96ce-b500c3a76efb"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f0f0ba52-cbe9-4f80-aeb1-4f5df402f531",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.352Z",
+            "modified_date": "2021-08-05T16:52:56.484Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "portal_file",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 99,
+                "class": "File",
+                "location": "bid://549ab22c-c345-42bf-90ea-151654cedbba"
+            },
+            "value": {
+                "size": 99,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep.portal.txt",
+                "checksum": "sha1$c16f763b248813fcdde76f7486f1ddc4e9856038",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep.portal.txt",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.svs.pass.vep.portal"
+            },
+            "notify": false,
+            "files": [
+                "549ab22c-c345-42bf-90ea-151654cedbba"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "324d9553-34f4-4e31-af80-843c091818be",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.858Z",
+            "modified_date": "2021-08-05T16:52:56.725Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "clstats1",
+            "port_type": 1,
+            "schema": {
+                "type": "array",
+                "items": "array"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                [
+                    {
+                        "size": 1965,
+                        "class": "File",
+                        "location": "bid://adf72563-3cff-49d5-9748-d70b7ce17e1c"
+                    }
+                ],
+                [
+                    {
+                        "size": 1956,
+                        "class": "File",
+                        "location": "bid://adf72563-3cff-49d5-9748-d70b7ce17e1c"
+                    }
+                ]
+            ],
+            "value": [
+                [
+                    {
+                        "size": 1965,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$dfc858c7e8d23a9290d8f08296c19cc86b05a097",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+                        "nameroot": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 1956,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+                        "checksum": "sha1$fdd78ffbcd192a9340214284342c1f1ae47e6db3",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+                        "nameroot": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl"
+                    }
+                ]
+            ],
+            "notify": false,
+            "files": [
+                "adf72563-3cff-49d5-9748-d70b7ce17e1c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7ef44188-0953-4f1e-891a-d6c5202becbc",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.876Z",
+            "modified_date": "2021-08-05T16:52:56.753Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "clstats2",
+            "port_type": 1,
+            "schema": {
+                "type": "array",
+                "items": "array"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                [
+                    {
+                        "size": 2170,
+                        "class": "File",
+                        "location": "bid://b45b0a65-eb3e-4abe-b169-1314d313d953"
+                    }
+                ],
+                [
+                    {
+                        "size": 2126,
+                        "class": "File",
+                        "location": "bid://b45b0a65-eb3e-4abe-b169-1314d313d953"
+                    }
+                ]
+            ],
+            "value": [
+                [
+                    {
+                        "size": 2170,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$93c891972a46f160076bac75c227f89380873a73",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+                        "nameroot": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl"
+                    }
+                ],
+                [
+                    {
+                        "size": 2126,
+                        "class": "File",
+                        "nameext": ".stats",
+                        "basename": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+                        "checksum": "sha1$3a54dd0835179201f25306acd7291710aa4b4e67",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+                        "nameroot": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl"
+                    }
+                ]
+            ],
+            "notify": false,
+            "files": [
+                "b45b0a65-eb3e-4abe-b169-1314d313d953"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "9c5c9713-7b37-42f3-a8f1-f1c0425a10b9",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.912Z",
+            "modified_date": "2021-08-05T16:52:56.808Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "as_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 2075,
+                    "class": "File",
+                    "location": "bid://08f774e3-1165-4e8e-b520-b8f8c4cb0996"
+                },
+                {
+                    "size": 2081,
+                    "class": "File",
+                    "location": "bid://45d036e0-8e4f-4548-97f4-6fb9de497c5f"
+                }
+            ],
+            "value": [
+                {
+                    "size": 2075,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.asmetrics",
+                    "checksum": "sha1$de44d96081d6469c9f663dd87c7cb67018db7a7b",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.asmetrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 2081,
+                    "class": "File",
+                    "nameext": ".asmetrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.asmetrics",
+                    "checksum": "sha1$aaff5aa7a669a403fc6105df1b833dd5189c0920",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.asmetrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "08f774e3-1165-4e8e-b520-b8f8c4cb0996",
+                "45d036e0-8e4f-4548-97f4-6fb9de497c5f"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b8db2a7d-598e-4abd-ab57-70eaf60763f2",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.931Z",
+            "modified_date": "2021-08-05T16:52:56.838Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "hs_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 4415,
+                    "class": "File",
+                    "location": "bid://a7321d78-2217-4f46-8483-d86561d3fe03"
+                },
+                {
+                    "size": 4373,
+                    "class": "File",
+                    "location": "bid://928df6a6-bb8f-4ae7-99a0-722a9f222296"
+                }
+            ],
+            "value": [
+                {
+                    "size": 4415,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.hsmetrics",
+                    "checksum": "sha1$44a66611476f78b33d7ee0a83b615e5c97d78fb5",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.hsmetrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 4373,
+                    "class": "File",
+                    "nameext": ".hsmetrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.hsmetrics",
+                    "checksum": "sha1$6b2994ed72cd96caa35e9fe77214695dfd76fbf6",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.hsmetrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "928df6a6-bb8f-4ae7-99a0-722a9f222296",
+                "a7321d78-2217-4f46-8483-d86561d3fe03"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f12e37e6-c151-411b-b9a4-cf1a4cc0a168",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.949Z",
+            "modified_date": "2021-08-05T16:52:56.866Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "insert_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 3602,
+                    "class": "File",
+                    "location": "bid://33934630-68e2-44de-96af-52ef04e6544b"
+                },
+                {
+                    "size": 5243,
+                    "class": "File",
+                    "location": "bid://e9d7dc29-f2a3-4a80-866d-77105398b621"
+                }
+            ],
+            "value": [
+                {
+                    "size": 3602,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.ismetrics",
+                    "checksum": "sha1$233d0671ef25cda1fc7163afd8acfbd38826351a",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.ismetrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 5243,
+                    "class": "File",
+                    "nameext": ".ismetrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.ismetrics",
+                    "checksum": "sha1$796d99868b1264675d23b55ee9eec7a339d9a3fa",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.ismetrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "33934630-68e2-44de-96af-52ef04e6544b",
+                "e9d7dc29-f2a3-4a80-866d-77105398b621"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "bf402988-ed9e-4775-9156-52dd32dd332e",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.966Z",
+            "modified_date": "2021-08-05T16:52:56.894Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "insert_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 9432,
+                    "class": "File",
+                    "location": "bid://900411cc-bf22-4237-82e7-7a608563fd99"
+                },
+                {
+                    "size": 12553,
+                    "class": "File",
+                    "location": "bid://a46789d3-416f-45d4-9346-3ebc0137eb19"
+                }
+            ],
+            "value": [
+                {
+                    "size": 9432,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$f49e9f52764e88653274de808012717d80276e85",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.ismetrics.pdf",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md.ismetrics"
+                },
+                {
+                    "size": 12553,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.ismetrics.pdf",
+                    "checksum": "sha1$ca050dde2a2c7ccd4ffe08d8f391429c507555ff",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.ismetrics.pdf",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md.ismetrics"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "900411cc-bf22-4237-82e7-7a608563fd99",
+                "a46789d3-416f-45d4-9346-3ebc0137eb19"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "9f4ddf7f-8fad-4268-b4db-1accef0e87f2",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.988Z",
+            "modified_date": "2021-08-05T16:52:56.923Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "per_target_coverage",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 380579,
+                    "class": "File",
+                    "location": "bid://c4bbe2a0-c584-4a9a-9283-039b3e444f9b"
+                },
+                {
+                    "size": 381117,
+                    "class": "File",
+                    "location": "bid://1025fc57-58e1-400a-94b4-b599ce5938f3"
+                }
+            ],
+            "value": [
+                {
+                    "size": 380579,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.hstmetrics",
+                    "checksum": "sha1$cb9ebd2583e8196e59f921275a9528e072f7f02a",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.hstmetrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 381117,
+                    "class": "File",
+                    "nameext": ".hstmetrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.hstmetrics",
+                    "checksum": "sha1$60711c1d8999762cb51d261a77b94b1b788268a8",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.hstmetrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "1025fc57-58e1-400a-94b4-b599ce5938f3",
+                "c4bbe2a0-c584-4a9a-9283-039b3e444f9b"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d8080909-56bb-4c7b-9aa6-f72e05afa8ed",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.007Z",
+            "modified_date": "2021-08-05T16:52:56.951Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "qual_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 5441,
+                    "class": "File",
+                    "location": "bid://e274f92e-9d10-4f58-badb-da1f9abb37eb"
+                },
+                {
+                    "size": 5444,
+                    "class": "File",
+                    "location": "bid://6141dd7a-c7c6-4ea6-bfdf-cbce10585f4b"
+                }
+            ],
+            "value": [
+                {
+                    "size": 5441,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$58e66a85dc474a347bb5d23be81953e78a098d91",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics"
+                },
+                {
+                    "size": 5444,
+                    "class": "File",
+                    "nameext": ".quality_by_cycle_metrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "checksum": "sha1$7be7caf823fcb7eb4a6ebdd5936dc0b5949344b7",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "6141dd7a-c7c6-4ea6-bfdf-cbce10585f4b",
+                "e274f92e-9d10-4f58-badb-da1f9abb37eb"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0d29cbed-cc5b-46f8-ba41-e72443466194",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.025Z",
+            "modified_date": "2021-08-05T16:52:56.983Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "qual_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 8249,
+                    "class": "File",
+                    "location": "bid://973ab3c8-30fe-42cf-ada6-b3f8a331bcc7"
+                },
+                {
+                    "size": 8311,
+                    "class": "File",
+                    "location": "bid://d95ec211-2644-4f0c-b438-1e7b4cbc8062"
+                }
+            ],
+            "value": [
+                {
+                    "size": 8249,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$87e0953f99d158581d6e2c30a012a365bc81b3f9",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                },
+                {
+                    "size": 8311,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "checksum": "sha1$f5d4842c8cf3a1211ed6c7392db04d6aa9d290e3",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "973ab3c8-30fe-42cf-ada6-b3f8a331bcc7",
+                "d95ec211-2644-4f0c-b438-1e7b4cbc8062"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "19c4b276-6964-437a-9e12-cd601f4ce8e1",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.060Z",
+            "modified_date": "2021-08-05T16:52:57.041Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "gcbias_pdf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 6768,
+                    "class": "File",
+                    "location": "bid://2852ce7b-fa50-4d89-b9ce-54d5bdc2c03b"
+                },
+                {
+                    "size": 6811,
+                    "class": "File",
+                    "location": "bid://ea86b114-1714-4de2-a712-10a29484186a"
+                }
+            ],
+            "value": [
+                {
+                    "size": 6768,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$2a5b382d2087766d4c41fc3b170a4afe61b9b92b",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.gcbias.pdf",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 6811,
+                    "class": "File",
+                    "nameext": ".pdf",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.gcbias.pdf",
+                    "checksum": "sha1$d87059efd1f60b0dcdec50a0498b98d3282ba855",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.gcbias.pdf",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md.gcbias"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "2852ce7b-fa50-4d89-b9ce-54d5bdc2c03b",
+                "ea86b114-1714-4de2-a712-10a29484186a"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "200d7cc6-55ef-4f45-b182-47804eb7bf9a",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.078Z",
+            "modified_date": "2021-08-05T16:52:57.069Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "gcbias_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 5981,
+                    "class": "File",
+                    "location": "bid://0e899ae1-107b-4888-8d17-e05ccf103270"
+                },
+                {
+                    "size": 6017,
+                    "class": "File",
+                    "location": "bid://69177f8e-26c4-46e8-97c0-ac2461653f5a"
+                }
+            ],
+            "value": [
+                {
+                    "size": 5981,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$fadb7d02c513b0d4a13e9dd192459b07f83403c8",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.gcbiasmetrics",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 6017,
+                    "class": "File",
+                    "nameext": ".gcbiasmetrics",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.gcbiasmetrics",
+                    "checksum": "sha1$dd8c24367663701869f1a23bd859c632b41c63d1",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.gcbiasmetrics",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "0e899ae1-107b-4888-8d17-e05ccf103270",
+                "69177f8e-26c4-46e8-97c0-ac2461653f5a"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0b31b719-8fe9-45bf-a28e-e79597fdccd2",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.097Z",
+            "modified_date": "2021-08-05T16:52:57.101Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "gcbias_summary",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 1195,
+                    "class": "File",
+                    "location": "bid://a3f4f614-073d-4aa1-bab3-c7b92612399e"
+                },
+                {
+                    "size": 1194,
+                    "class": "File",
+                    "location": "bid://15f42681-e42e-4930-a099-c63022cb52a8"
+                }
+            ],
+            "value": [
+                {
+                    "size": 1195,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$2c76be5b08e66507e7fcd5544bc5f52729b17fe2",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.gcbias.summary",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md.gcbias"
+                },
+                {
+                    "size": 1194,
+                    "class": "File",
+                    "nameext": ".summary",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.gcbias.summary",
+                    "checksum": "sha1$8e4786fac9cfe9a29b43863f68a988c9271b6667",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.gcbias.summary",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md.gcbias"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "15f42681-e42e-4930-a099-c63022cb52a8",
+                "a3f4f614-073d-4aa1-bab3-c7b92612399e"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "06fa942a-ca70-477f-9bb1-c8385ba60cb2",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.117Z",
+            "modified_date": "2021-08-05T16:52:57.130Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "conpair_pileups",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "size": 48680,
+                    "class": "File",
+                    "location": "bid://de512b1c-321c-48d6-bcb7-a4927a05cd70"
+                },
+                {
+                    "size": 92666,
+                    "class": "File",
+                    "location": "bid://5d9a5278-4f3f-4397-9e12-f3a1fe66e2fa"
+                }
+            ],
+            "value": [
+                {
+                    "size": 48680,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_ALLANT_T001_d.rg.md.pileup",
+                    "checksum": "sha1$5130aba435a8c4a1038c5c6f057e2c83d1166563",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.pileup",
+                    "nameroot": "s_C_ALLANT_T001_d.rg.md"
+                },
+                {
+                    "size": 92666,
+                    "class": "File",
+                    "nameext": ".pileup",
+                    "basename": "s_C_ALLANT_N002_d.rg.md.pileup",
+                    "checksum": "sha1$33be9aebd5b6cd314d2c223fe92cc4f6346d5fb8",
+                    "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_N002_d.rg.md.pileup",
+                    "nameroot": "s_C_ALLANT_N002_d.rg.md"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "5d9a5278-4f3f-4397-9e12-f3a1fe66e2fa",
+                "de512b1c-321c-48d6-bcb7-a4927a05cd70"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8bc05516-17d4-4614-bbc6-f63134630db7",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.175Z",
+            "modified_date": "2021-08-05T16:52:57.207Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "vardict_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 405145,
+                "class": "File",
+                "location": "bid://5fef267c-3ebf-46c5-b8fe-7b429df8bc96"
+            },
+            "value": {
+                "size": 405145,
+                "class": "File",
+                "nameext": ".vcf",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.vcf",
+                "checksum": "sha1$fbab450a0662d8575a0e15cf6c1d0aea61755815",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.vcf",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict"
+            },
+            "notify": false,
+            "files": [
+                "5fef267c-3ebf-46c5-b8fe-7b429df8bc96"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "45e65d3a-3102-45bd-aa2e-bf9c711de91b",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.194Z",
+            "modified_date": "2021-08-05T16:52:57.234Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "combine_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 11190,
+                "class": "File",
+                "location": "bid://9b92c0b6-af2f-4a6c-8c28-5ccecc4cf642",
+                "secondaryFiles": [
+                    {
+                        "size": 716,
+                        "class": "File",
+                        "location": "bid://bdc7d626-2a59-4bfe-8713-2ff523d9bcac"
+                    }
+                ]
+            },
+            "value": {
+                "size": 11190,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz",
+                "checksum": "sha1$5a734b0f06dd8f5ec246b981b6dc77581862329f",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz",
+                "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 716,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz.tbi",
+                        "checksum": "sha1$42d5fe2e14a5a387386252d27c27f1749ff154b1",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz.tbi",
+                        "nameroot": "s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "9b92c0b6-af2f-4a6c-8c28-5ccecc4cf642",
+                "bdc7d626-2a59-4bfe-8713-2ff523d9bcac"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "98b3d63b-1b0f-42da-9327-11c3d768d309",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.234Z",
+            "modified_date": "2021-08-05T16:52:57.293Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "vardict_norm_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 8492,
+                "class": "File",
+                "location": "bid://dff37b40-dea7-4f34-8ac8-b93652df43c8",
+                "secondaryFiles": [
+                    {
+                        "size": 717,
+                        "class": "File",
+                        "location": "bid://30bb7d06-818d-4d3f-adf4-85fff180d55f"
+                    }
+                ]
+            },
+            "value": {
+                "size": 8492,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$fb317acad17582bfba266f9dc4d621a3aaa51f84",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 717,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$c4b5fba7379faabc3e38827aa64a66f5843a3d14",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+                        "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "30bb7d06-818d-4d3f-adf4-85fff180d55f",
+                "dff37b40-dea7-4f34-8ac8-b93652df43c8"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c5203bb9-6487-4261-9bb3-095ed09babcc",
+        "fields": {
+            "created_date": "2021-08-05T15:42:45.254Z",
+            "modified_date": "2021-08-05T16:52:57.324Z",
+            "run": "4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+            "name": "mutect_norm_vcf",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "size": 3366,
+                "class": "File",
+                "location": "bid://59f46494-2a4c-457d-8f13-1f4fae46cdbd",
+                "secondaryFiles": [
+                    {
+                        "size": 175,
+                        "class": "File",
+                        "location": "bid://c9aa6fa9-fad2-4f4e-9fed-f472c946720b"
+                    }
+                ]
+            },
+            "value": {
+                "size": 3366,
+                "class": "File",
+                "nameext": ".gz",
+                "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "checksum": "sha1$e13f44b5bc247feb3423d6d7f476822a1686f8e5",
+                "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+                "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf",
+                "secondaryFiles": [
+                    {
+                        "size": 175,
+                        "class": "File",
+                        "nameext": ".tbi",
+                        "basename": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "checksum": "sha1$b01caedb8a5fbf7788d3d343081406661b1776cf",
+                        "location": "file:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+                        "nameroot": "s_C_ALLANT_T001_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "59f46494-2a4c-457d-8f13-1f4fae46cdbd",
+                "c9aa6fa9-fad2-4f4e-9fed-f472c946720b"
+            ]
+        }
+    }
+]
