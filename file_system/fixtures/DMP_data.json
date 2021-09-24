@@ -1,0 +1,427 @@
+[
+  {
+    "model": "file_system.file",
+    "pk": "eeccf455-28c7-4757-bd7a-193b4a3345bd",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.320Z",
+      "modified_date": "2021-08-05T22:11:52.320Z",
+      "file_name": "P-0000001-T01-IM6.txt",
+      "path": "/path/to/P-0000000-T01-IM6.txt",
+      "file_type": 17,
+      "size": 3046,
+      "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "92a88d6d-92cc-4107-a334-d11c75efd8d6",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.330Z",
+      "modified_date": "2021-08-05T22:11:52.330Z",
+      "file": "eeccf455-28c7-4757-bd7a-193b4a3345bd",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000001-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT",
+          "dmp": "P-0000001"
+        },
+        "updated": "2021-08-05 21:14:29.400530+00:00",
+        "version": 1,
+        "coverage": 687,
+        "imported": "2021-08-05 21:14:29.400495+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "1",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 1,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.451,
+        "minor_allele_contamination": 0.00085
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8c64f064-f3b3-4af7-91fe-08b9c09eae96",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.397Z",
+      "modified_date": "2021-08-05T22:11:52.397Z",
+      "file_name": "P-0000002-T01-IM6.txt",
+      "path": "/path/to/P-0000002-T01-IM6.txt",
+      "file_type": 17,
+      "size": 4372,
+      "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "76ef7c46-50f2-455f-a7fe-2fd45a486efc",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.408Z",
+      "modified_date": "2021-08-05T22:11:52.408Z",
+      "file": "8c64f064-f3b3-4af7-91fe-08b9c09eae96",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000002-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT",
+          "dmp": "P-0000002"
+        },
+        "updated": "2021-08-05 21:14:29.413286+00:00",
+        "version": 1,
+        "coverage": 300,
+        "imported": "2021-08-05 21:14:29.413271+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "0",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 0,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.443,
+        "minor_allele_contamination": 0.00133
+      }
+    }
+  },
+
+  {
+    "model": "file_system.file",
+    "pk": "16bfda12-c227-4eb5-8c16-ef614ab7af8a",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.320Z",
+      "modified_date": "2021-08-05T22:11:52.320Z",
+      "file_name": "P-0000004-T01-IM6.txt",
+      "path": "/path/to/P-0000004-T01-IM6.txt",
+      "file_type": 17,
+      "size": 3046,
+      "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6e34307e-8ea7-4698-8117-09e2c3d722d3",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.330Z",
+      "modified_date": "2021-08-05T22:11:52.330Z",
+      "file": "16bfda12-c227-4eb5-8c16-ef614ab7af8a",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000004-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT2",
+          "dmp": "P-0000001"
+        },
+        "updated": "2021-08-05 21:14:29.400530+00:00",
+        "version": 1,
+        "coverage": 687,
+        "imported": "2021-08-05 21:14:29.400495+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "1",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 1,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.451,
+        "minor_allele_contamination": 0.00085
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "20e951f6-72bb-43c9-aa84-ca085537c364",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.397Z",
+      "modified_date": "2021-08-05T22:11:52.397Z",
+      "file_name": "P-0000005-T01-IM6.txt",
+      "path": "/path/to/P-0000005-T01-IM6.txt",
+      "file_type": 17,
+      "size": 4372,
+      "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0de9530f-eec8-4951-bd68-daca9ea7682d",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.408Z",
+      "modified_date": "2021-08-05T22:11:52.408Z",
+      "file": "20e951f6-72bb-43c9-aa84-ca085537c364",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000005-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT2",
+          "dmp": "P-0000002"
+        },
+        "updated": "2021-08-05 21:14:29.413286+00:00",
+        "version": 1,
+        "coverage": 300,
+        "imported": "2021-08-05 21:14:29.413271+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "0",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 0,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.443,
+        "minor_allele_contamination": 0.00133
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f6348396-ec03-4db6-bf13-81853bf538c2",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.320Z",
+      "modified_date": "2021-08-05T22:11:52.320Z",
+      "file_name": "00000001-T.bam",
+      "path": "/path/to/00000001-T.bam",
+      "file_type": 17,
+      "size": 3046,
+      "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "638dbd71-0d7d-46bb-833d-25b7d90651c7",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.330Z",
+      "modified_date": "2021-08-05T22:11:52.330Z",
+      "file": "f6348396-ec03-4db6-bf13-81853bf538c2",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000001-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT",
+          "dmp": "P-0000001"
+        },
+        "updated": "2021-08-05 21:14:29.400530+00:00",
+        "version": 1,
+        "coverage": 687,
+        "imported": "2021-08-05 21:14:29.400495+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "1",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 1,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.451,
+        "minor_allele_contamination": 0.00085
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "577213f5-7dd5-42af-b4a5-5747abf75082",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.397Z",
+      "modified_date": "2021-08-05T22:11:52.397Z",
+      "file_name": "00000002-T.bam",
+      "path": "/path/to/P-00000002-T.bam",
+      "file_type": 17,
+      "size": 4372,
+      "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "85ee95c3-845d-4563-81f3-2a2ec7d46466",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.408Z",
+      "modified_date": "2021-08-05T22:11:52.408Z",
+      "file": "577213f5-7dd5-42af-b4a5-5747abf75082",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000002-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT",
+          "dmp": "P-0000002"
+        },
+        "updated": "2021-08-05 21:14:29.413286+00:00",
+        "version": 1,
+        "coverage": 300,
+        "imported": "2021-08-05 21:14:29.413271+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "0",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 0,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.443,
+        "minor_allele_contamination": 0.00133
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "24fe2b8d-c7da-4583-a5d1-e794d53fd9bf",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.320Z",
+      "modified_date": "2021-08-05T22:11:52.320Z",
+      "file_name": "00000004-T.bam",
+      "path": "/path/to/00000004-T.bam",
+      "file_type": 17,
+      "size": 3046,
+      "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b8959425-f1bb-4cc2-849b-cc6dbf908227",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.330Z",
+      "modified_date": "2021-08-05T22:11:52.330Z",
+      "file": "24fe2b8d-c7da-4583-a5d1-e794d53fd9bf",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000004-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT2",
+          "dmp": "P-0000004"
+        },
+        "updated": "2021-08-05 21:14:29.400530+00:00",
+        "version": 1,
+        "coverage": 687,
+        "imported": "2021-08-05 21:14:29.400495+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "1",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 1,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.451,
+        "minor_allele_contamination": 0.00085
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "779308db-3263-4202-bbdf-c03c623af1af",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.397Z",
+      "modified_date": "2021-08-05T22:11:52.397Z",
+      "file_name": "00000005-T.bam",
+      "path": "/path/to/P-00000005-T.bam",
+      "file_type": 17,
+      "size": 4372,
+      "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d29557ec-0907-47e6-85c5-6fc69a618408",
+    "fields": {
+      "created_date": "2021-08-05T22:11:52.408Z",
+      "modified_date": "2021-08-05T22:11:52.408Z",
+      "file": "779308db-3263-4202-bbdf-c03c623af1af",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "type": "T",
+        "assay": "IM6",
+        "sample": "P-0000005-T01-IM6",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "ALLANT2",
+          "dmp": "P-0000005"
+        },
+        "updated": "2021-08-05 21:14:29.413286+00:00",
+        "version": 1,
+        "coverage": 300,
+        "imported": "2021-08-05 21:14:29.413271+00:00",
+        "cmo_assay": "IMPACT468",
+        "tumor_type": "REDACTED",
+        "external_id": "REDACTED",
+        "sample_type": "0",
+        "tissue_type": "REDACTED",
+        "primary_site": "REDACTED",
+        "project_name": "REDACTED",
+        "part_c_consent": 0,
+        "metastasis_site": "REDACTED",
+        "somatic_calling_status": "REDACTED",
+        "major_allele_contamination": 0.443,
+        "minor_allele_contamination": 0.00133
+      }
+    }
+  }
+]

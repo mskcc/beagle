@@ -1,0 +1,33 @@
+[
+  {
+    "model": "runner.run",
+    "pk": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+    "fields": {
+      "created_date": "2021-08-05T15:42:40.115Z",
+      "modified_date": "2021-08-05T17:02:57.417Z",
+      "run_type": 0,
+      "name": "ARGOS ALN-REQ-ID, 1 of 2 (08/05/2021, 11:42:40)",
+      "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
+      "status": 4,
+      "execution_id": "caafa18c-40cf-4edd-8f77-6e202fff31e9",
+      "job_statuses": {},
+      "message": {},
+      "output_metadata": {},
+      "output_directory": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+      "tags": {
+        "requestId": "ALN-REQ-ID",
+        "labHeadName": "Dr. McGee",
+        "labHeadEmail": "labhead@test.com",
+        "sampleNameTumor": "s_C_ALLANT_T003_d",
+        "sampleNameNormal": "s_C_ALLANT_N002_d"
+      },
+      "operator_run": 4,
+      "notify_for_outputs": "[]",
+      "started": null,
+      "submitted": "2021-08-05T15:43:22.770Z",
+      "finished_date": "2021-08-05T17:02:57.417Z",
+      "resume": null,
+      "samples": []
+    }
+  }
+]
