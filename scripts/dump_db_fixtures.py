@@ -29,23 +29,25 @@ Example:
 - <requestId>.filemetadata.json
 
 """
+# fmt: off
 import os
 import sys
-import json
-import argparse
 import django
-from django.db.models import Prefetch
-from django.core import serializers
-from pprint import pprint
-
 # import django app from parent dir
 parentdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, parentdir)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 django.setup()
-from file_system.models import File, FileMetadata, FileGroup, FileType
 from runner.models import Run, RunStatus, Port, PortType, Pipeline
+from file_system.models import File, FileMetadata, FileGroup, FileType
 sys.path.pop(0)
+import json
+import argparse
+
+from django.db.models import Prefetch
+from django.core import serializers
+from pprint import pprint
+# fmt: on
 
 
 def dump_request(**kwargs):
@@ -57,16 +59,18 @@ def dump_request(**kwargs):
     output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
     # get FileMetadata entries that match the request ID
-    file_instances = FileMetadata.objects.filter(metadata__requestId = requestID)
-    print(json.dumps(json.loads(serializers.serialize('json', file_instances)), indent=4), file = open(output_filemetadata_file, "w"))
+    file_instances = FileMetadata.objects.filter(metadata__requestId=requestID)
+    print(json.dumps(json.loads(serializers.serialize('json', file_instances)),
+          indent=4), file=open(output_filemetadata_file, "w"))
 
     # get the File entries that corresponds to the request ID
     queryset = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=
-        FileMetadata.objects.select_related('file').order_by('-created_date'))).\
+        Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').order_by('-created_date'))).\
         order_by('file_name').all()
-    queryset = queryset.filter(filemetadata__metadata__requestId = requestID)
-    print(json.dumps(json.loads(serializers.serialize('json', queryset)), indent=4), file = open(output_file_file, "w"))
+    queryset = queryset.filter(filemetadata__metadata__requestId=requestID)
+    print(json.dumps(json.loads(serializers.serialize('json', queryset)),
+          indent=4), file=open(output_file_file, "w"))
+
 
 def dump_run(**kwargs):
     """
@@ -99,14 +103,19 @@ def dump_port_files(**kwargs):
     output_port_file_file = "{}.port.file.json".format(portID)
     output_port_filemetadat_file = "{}.port.filemetadat.json".format(portID)
 
-    port_instance = Port.objects.get(id = portID)
-    print(json.dumps(json.loads(serializers.serialize('json', [port_instance])), indent=4), file = open(output_port_file, "w"))
+    port_instance = Port.objects.get(id=portID)
+    print(json.dumps(json.loads(serializers.serialize(
+        'json', [port_instance])), indent=4), file=open(output_port_file, "w"))
 
     files_queryset = port_instance.files.all()
-    print(json.dumps(json.loads(serializers.serialize('json', files_queryset.all())), indent=4), file = open(output_port_file_file, "w"))
+    print(json.dumps(json.loads(serializers.serialize(
+        'json', files_queryset.all())), indent=4), file=open(output_port_file_file, "w"))
 
-    filemetadata_queryset = FileMetadata.objects.filter(file__in = [i for i in files_queryset])
-    print(json.dumps(json.loads(serializers.serialize('json', filemetadata_queryset.all())), indent=4), file = open(output_port_filemetadat_file, "w"))
+    filemetadata_queryset = FileMetadata.objects.filter(
+        file__in=[i for i in files_queryset])
+    print(json.dumps(json.loads(serializers.serialize('json', filemetadata_queryset.all())),
+          indent=4), file=open(output_port_filemetadat_file, "w"))
+
 
 def dump_pipeline(**kwargs):
     """
@@ -114,12 +123,16 @@ def dump_pipeline(**kwargs):
     """
     pipelineName = kwargs.pop('pipelineName')
     output_pipeline_file = "{}.pipeline.json".format(pipelineName)
-    output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(pipelineName)
+    output_pipeline_filegroup_file = "{}.pipeline.output_file_group.json".format(
+        pipelineName)
 
-    pipeline_instance = Pipeline.objects.get(name = pipelineName)
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance])), indent=4), file = open(output_pipeline_file, "w"))
+    pipeline_instance = Pipeline.objects.get(name=pipelineName)
+    print(json.dumps(json.loads(serializers.serialize(
+        'json', [pipeline_instance])), indent=4), file=open(output_pipeline_file, "w"))
 
-    print(json.dumps(json.loads(serializers.serialize('json', [pipeline_instance.output_file_group])), indent=4), file = open(output_pipeline_filegroup_file, "w"))
+    print(json.dumps(json.loads(serializers.serialize('json', [
+          pipeline_instance.output_file_group])), indent=4), file=open(output_pipeline_filegroup_file, "w"))
+
 
 def get_files(value, type):
     """
@@ -127,12 +140,13 @@ def get_files(value, type):
     """
     instances = []
     if type == "bid":
-        instances.append(File.objects.get(id = value))
+        instances.append(File.objects.get(id=value))
     if type == "filename":
-        for item in File.objects.filter(file_name = value):
+        for item in File.objects.filter(file_name=value):
             instances.append(item)
     for instance in instances:
         yield(instance)
+
 
 def dump_file(**kwargs):
     """
@@ -158,16 +172,21 @@ def dump_file(**kwargs):
         output_filemetadata_file = "{}.filemetadata.json".format(output_label)
 
         # get File entries that match the request ID
-        for file_instance in get_files(value = bid, type = get_key):
-            file_data = json.loads(serializers.serialize('json', [ file_instance ] ))
+        for file_instance in get_files(value=bid, type=get_key):
+            file_data = json.loads(
+                serializers.serialize('json', [file_instance]))
             if onefile == False:
-                print(json.dumps(file_data, indent=4), file = open(output_filemetadata_file, "w"))
+                print(json.dumps(file_data, indent=4),
+                      file=open(output_filemetadata_file, "w"))
 
             # get the FileMetadata entries that corresponds to the File
-            filemetadata_instance = FileMetadata.objects.get(file = file_instance)
-            filemetadata_data = json.loads(serializers.serialize('json', [ filemetadata_instance ]))
+            filemetadata_instance = FileMetadata.objects.get(
+                file=file_instance)
+            filemetadata_data = json.loads(
+                serializers.serialize('json', [filemetadata_instance]))
             if onefile == False:
-                print(json.dumps(filemetadata_data, indent=4), file = open(output_file_file, "w"))
+                print(json.dumps(filemetadata_data, indent=4),
+                      file=open(output_file_file, "w"))
 
             if onefile == True:
                 for item in file_data:
@@ -176,42 +195,52 @@ def dump_file(**kwargs):
                     all_data.append(item)
     if onefile == True:
         output_file = "all.file_filemetadata.json"
-        print(json.dumps(all_data, indent=4), file = open(output_file, "w"))
+        print(json.dumps(all_data, indent=4), file=open(output_file, "w"))
 
 
 def parse():
     """
     Parses script args
     """
-    parser = argparse.ArgumentParser(description = 'Dump items from Beagle database into a fixture-ready format')
-    subparsers = parser.add_subparsers(help ='Sub-commands available')
+    parser = argparse.ArgumentParser(
+        description='Dump items from Beagle database into a fixture-ready format')
+    subparsers = parser.add_subparsers(help='Sub-commands available')
 
     # subparser for dumping requests
-    request = subparsers.add_parser('request', help = 'Dump File and FileMetadata based on a requestId')
-    request.add_argument('requestID', help = 'requestID to dump items for')
-    request.set_defaults(func = dump_request)
+    request = subparsers.add_parser(
+        'request', help='Dump File and FileMetadata based on a requestId')
+    request.add_argument('requestID', help='requestID to dump items for')
+    request.set_defaults(func=dump_request)
 
-    run = subparsers.add_parser('run', help = 'Dump output data for pipeline run')
-    run.add_argument('runID', help = 'Run ID to dump items for')
-    run.set_defaults(func = dump_run)
+    run = subparsers.add_parser(
+        'run', help='Dump output data for pipeline run')
+    run.add_argument('runID', help='Run ID to dump items for')
+    run.set_defaults(func=dump_run)
 
-    pipeline = subparsers.add_parser('pipeline', help = 'Dump pipeline fixture')
-    pipeline.add_argument('pipelineName', help = 'Name of the pipeline to dump')
-    pipeline.set_defaults(func = dump_pipeline)
+    pipeline = subparsers.add_parser('pipeline', help='Dump pipeline fixture')
+    pipeline.add_argument(
+        'pipelineName', help='Name of the pipeline to dump')
+    pipeline.set_defaults(func=dump_pipeline)
 
-    file = subparsers.add_parser('file', help = 'Dump file fixture')
-    file.add_argument('bids', nargs = "*", help = "Beagle db id's of the file to dump")
-    file.add_argument('--onefile', action = "store_true", help = 'Put all the outputs into a single file ')
-    file.add_argument('--filenames', action = "store_true", help = 'Items passed are file basenames instead of Beagle db IDs ')
-    file.add_argument('--filepaths', action = "store_true", help = 'Items passed are file paths instead of Beagle db IDs ')
-    file.set_defaults(func = dump_file)
+    file = subparsers.add_parser('file', help='Dump file fixture')
+    file.add_argument('bids', nargs="*",
+                      help="Beagle db id's of the file to dump")
+    file.add_argument('--onefile', action="store_true",
+                      help='Put all the outputs into a single file ')
+    file.add_argument('--filenames', action="store_true",
+                      help='Items passed are file basenames instead of Beagle db IDs ')
+    file.add_argument('--filepaths', action="store_true",
+                      help='Items passed are file paths instead of Beagle db IDs ')
+    file.set_defaults(func=dump_file)
 
-    port_files = subparsers.add_parser('port_files', help = 'Dump port.files fixture')
-    port_files.add_argument('portID', help = 'Port ID to dump files for')
-    port_files.set_defaults(func = dump_port_files)
+    port_files = subparsers.add_parser(
+        'port_files', help='Dump port.files fixture')
+    port_files.add_argument('portID', help='Port ID to dump files for')
+    port_files.set_defaults(func=dump_port_files)
 
     args = parser.parse_args()
     args.func(**vars(args))
+
 
 if __name__ == '__main__':
     parse()
