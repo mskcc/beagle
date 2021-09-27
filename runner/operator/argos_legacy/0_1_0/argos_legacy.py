@@ -65,10 +65,7 @@ class ArgosOperator(Operator):
         for igo_id in igo_id_group:
             sample = igo_id_group[igo_id][0]
             sample_name = sample['metadata']['sampleName']
-            if "poolednormal" in sample_name.lower():
-                samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
-            else:
-                samples.append(build_sample(igo_id_group[igo_id]))
+            samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
 
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
