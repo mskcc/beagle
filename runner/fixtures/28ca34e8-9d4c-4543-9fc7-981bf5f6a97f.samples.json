@@ -1,0 +1,26 @@
+[
+    {
+        "model": "file_system.sample",
+        "pk": "9af6ab44-0117-479c-aeab-d7a774f4c9b9",
+        "fields": {
+            "created_date": "2020-10-08T02:39:13.392Z",
+            "modified_date": "2021-08-03T16:51:36.937Z",
+            "sample_id": "ALN-TEST-03",
+            "sample_name": "C-ALLANT-T003-d",
+            "cmo_sample_name": "s_C_ALLANT_T003_d",
+            "redact": false
+        }
+    },
+    {
+        "model": "file_system.sample",
+        "pk": "f750a0a2-5fe5-440c-a7d4-e042fe3c470c",
+        "fields": {
+            "created_date": "2020-10-08T02:39:13.302Z",
+            "modified_date": "2021-08-03T16:51:34.526Z",
+            "sample_id": "ALN-TEST-02",
+            "sample_name": "C-ALLANT-N002-d",
+            "cmo_sample_name": "s_C_ALLANT_N002_d",
+            "redact": false
+        }
+    }
+]
