@@ -139,8 +139,6 @@ class ArgosOperator(Operator):
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
             for p in job['pair'][1]['zR1']:
                 filepath = FileProcessor.parse_path_from_uri(p['location'])
