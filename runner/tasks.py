@@ -411,45 +411,66 @@ def check_statuses_on_ridgeback(execution_ids):
     return None
 
 
-def fail_job(run_id, error_message):
-    run = RunObjectFactory.from_db(run_id)
-    run.fail(error_message)
-    run.to_db()
+@shared_task(bind=True)
+def fail_job(self, run_id, error_message):
+    lock_id = "run_lock_%s" % run_id
+    with memcache_task_lock(lock_id, self.app.oid) as acquired:
+        if acquired:
+            run = RunObjectFactory.from_db(run_id)
+            if run.run_obj.is_failed:
+                logger.info(format_log("Run Fail already processed", obj=run.run_obj))
+                return
 
-    job_group_notifier = run.job_group_notifier
-    job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
+            logger.info(format_log("Failing Run", obj=run.run_obj))
 
-    ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
-    send_notification.delay(ci_review)
+            run.fail(error_message)
+            run.to_db()
 
-    _job_finished_notify(run)
+            job_group_notifier = run.job_group_notifier
+            job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
+
+            ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
+            send_notification.delay(ci_review)
+
+            _job_finished_notify(run)
+        else:
+            logger.warning("Run %s is processing by another worker" % run_id)
 
 
-def complete_job(run_id, outputs):
-    run = RunObjectFactory.from_db(run_id)
-    if run.run_obj.is_completed:
-        return
+@shared_task(bind=True)
+def complete_job(self, run_id, outputs):
+    lock_id = "run_lock_%s" % run_id
+    with memcache_task_lock(lock_id, self.app.oid) as acquired:
+        if acquired:
+            run = RunObjectFactory.from_db(run_id)
+            if run.run_obj.is_completed:
+                logger.info(format_log("Run Complete already processed", obj=run.run_obj))
+                return
 
-    try:
-        run.complete(outputs)
-    except Exception as e:
-        fail_job(run_id, str(e))
-        return
+            logger.info(format_log("Completing Run", obj=run.run_obj))
 
-    run.to_db()
-    job_group = run.job_group
-    job_group_id = str(job_group.id) if job_group else None
+            try:
+                run.complete(outputs)
+            except Exception as e:
+                fail_job(run_id, str(e))
+                return
 
-    _job_finished_notify(run)
+            run.to_db()
+            job_group = run.job_group
+            job_group_id = str(job_group.id) if job_group else None
 
-    for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
-        create_jobs_from_chaining.delay(
-            trigger.to_operator_id,
-            trigger.from_operator_id,
-            [run_id],
-            job_group_id=job_group_id,
-            parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
-        )
+            _job_finished_notify(run)
+
+            for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
+                create_jobs_from_chaining.delay(
+                    trigger.to_operator_id,
+                    trigger.from_operator_id,
+                    [run_id],
+                    job_group_id=job_group_id,
+                    parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
+                )
+        else:
+            logger.warning("Run %s is processing by another worker" % run_id)
 
 
 def _job_finished_notify(run):
@@ -492,16 +513,32 @@ def _job_finished_notify(run):
     send_notification.delay(e)
 
 
-def running_job(run):
-    if run.status != RunStatus.RUNNING:
-        run.status = RunStatus.RUNNING
-        run.save()
+@shared_task(bind=True)
+def running_job(self, run_id):
+    lock_id = "run_lock_%s" % run_id
+    with memcache_task_lock(lock_id, self.app.oid) as acquired:
+        if acquired:
+            run = Run.objects.get(id=run_id)
+            logger.info(format_log("Transition to state RUNNING", obj=run))
+            if run.status != RunStatus.RUNNING:
+                run.status = RunStatus.RUNNING
+                run.save()
+        else:
+            logger.warning("Run %s is processing by another worker" % run_id)
 
 
-def abort_job(run):
-    if run.status != RunStatus.ABORTED:
-        run.status = RunStatus.ABORTED
-        run.save()
+@shared_task(bind=True)
+def abort_job(self, run_id):
+    lock_id = "run_lock_%s" % run_id
+    with memcache_task_lock(lock_id, self.app.oid) as acquired:
+        if acquired:
+            run = Run.objects.get(id=run_id)
+            logger.info(format_log("Transition to state ABORTED", obj=run))
+            if run.status != RunStatus.ABORTED:
+                run.status = RunStatus.ABORTED
+                run.save()
+        else:
+            logger.warning("Run %s is processing by another worker" % run_id)
 
 
 def update_commandline_job_status(run, commandline_tool_job_set):
@@ -527,9 +564,9 @@ def check_job_timeouts():
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
 
-@shared_task(bind=True)
+@shared_task
 @memcache_lock("check_jobs_status")
-def check_jobs_status(self):
+def check_jobs_status():
     runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
                                        execution_id__isnull=False)
 
@@ -546,46 +583,42 @@ def check_jobs_status(self):
             continue
 
         for run in runs:
-            lock_id = "job_lock_%s" % str(run.id)
-            with memcache_task_lock(lock_id, self.app.oid) as acquired:
-                if acquired:
-                    logger.info(format_log("Checking status for run", obj=run))
-                    if str(run.execution_id) not in remote_statuses:
-                        logger.info(format_log("Requested job status from executor that was not returned",
-                                               obj=run))
-                        continue
+            logger.info(format_log("Checking status for run", obj=run))
+            if str(run.execution_id) not in remote_statuses:
+                logger.info(format_log("Requested job status from executor that was not returned", obj=run))
+                continue
 
-                    status = remote_statuses[str(run.execution_id)]
-                    if status['started'] and not run.started:
-                        run.started = status['started']
-                    if status['submitted'] and not run.submitted:
-                        run.submitted = status['submitted']
-                    if status['commandlinetooljob_set']:
-                        update_commandline_job_status(run, status['commandlinetooljob_set'])
-                    if status['status'] == 'FAILED':
-                        logger.error(format_log("Job failed ", obj=run))
-                        message = dict(details=status.get('message'))
-                        fail_job(str(run.id), message)
-                        continue
-                    if status['status'] == 'COMPLETED':
-                        logger.info(format_log("Job completed", obj=run))
-                        complete_job(str(run.id), status['outputs'])
-                        continue
-                    if status['status'] == 'CREATED':
-                        logger.info(format_log("Job created", obj=run))
-                        continue
-                    if status['status'] == 'PENDING':
-                        logger.info(format_log("Job pending", obj=run))
-                        continue
-                    if status['status'] == 'RUNNING':
-                        logger.info(format_log("Job running", obj=run))
-                        running_job(run)
-                        continue
-                    if status['status'] == 'ABORTED':
-                        logger.info(format_log("Job aborted", obj=run))
-                        abort_job(run)
-                else:
-                    logger.info("Run lock not acquired for run: %s" % str(run.id))
+            status = remote_statuses[str(run.execution_id)]
+            if status['started'] and not run.started:
+                run.started = status['started']
+            if status['submitted'] and not run.submitted:
+                run.submitted = status['submitted']
+            if status['commandlinetooljob_set']:
+                update_commandline_job_status(run, status['commandlinetooljob_set'])
+            if status['status'] == 'FAILED':
+                logger.error(format_log("Job failed ", obj=run))
+                message = dict(details=status.get('message'))
+                fail_job.delay(str(run.id), message)
+                continue
+            if status['status'] == 'COMPLETED':
+                logger.info(format_log("Job completed", obj=run))
+                complete_job.delay(str(run.id), status['outputs'])
+                continue
+            if status['status'] == 'CREATED':
+                logger.info(format_log("Job created", obj=run))
+                continue
+            if status['status'] == 'PENDING':
+                logger.info(format_log("Job pending", obj=run))
+                continue
+            if status['status'] == 'RUNNING':
+                logger.info(format_log("Job running", obj=run))
+                running_job.delay(str(run.id))
+                continue
+            if status['status'] == 'ABORTED':
+                logger.info(format_log("Job aborted", obj=run))
+                abort_job.delay(str(run.id))
+            else:
+                logger.info("Run lock not acquired for run: %s" % str(run.id))
 
 
 def run_routine_operator_job(operator, job_group_id=None):
