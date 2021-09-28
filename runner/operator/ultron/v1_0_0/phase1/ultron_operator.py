@@ -92,7 +92,7 @@ class UltronOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        sample_name = input_json['sample_names'][0]  # should only be one
+        sample_name = input_json['sample_ids'][0]  # should only be one
         tags = {'sampleNameTumor': sample_name,
                 "project_prefix": self.project_prefix}
         # add tags, name
