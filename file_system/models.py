@@ -7,9 +7,8 @@ from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
-from notifier.models import JobGroupNotifier
-from notifier.tasks import populate_job_group_notifier_metadata
 from django.db.models.signals import post_save
+from file_system.tasks import populate_job_group_notifier_metadata
 
 
 class StorageType(IntEnum):
@@ -189,9 +188,6 @@ class FileMetadata(BaseModel):
                 name='metadata_gin',
             ),
         ]
-
-
-post_save.connect(FileMetadata.post_save, sender=FileMetadata)
 
 
 class FileRunMap(BaseModel):
