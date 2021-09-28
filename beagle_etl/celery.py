@@ -39,7 +39,7 @@ app.conf.task_routes = {
     'runner.tasks.add_pipeline_to_cache': {'queue': settings.BEAGLE_RUNNER_QUEUE},
     'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'notifier.tasks.populate_job_group_notifier_metadata': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
+    'file_system.tasks.populate_job_group_notifier_metadata': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
 }
 
