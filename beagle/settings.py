@@ -362,7 +362,7 @@ LOGGING = {
 
 SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
 
-NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", True)
+NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", "True") == "True"
 
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 NOTIFIER_STORAGE_DIR = os.environ.get("BEAGLE_NOTIFIER_STORAGE_DIR", '/tmp')
@@ -383,6 +383,10 @@ BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_qu
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
 BEAGLE_SHARED_TMPDIR = os.environ.get('BEAGLE_SHARED_TMPDIR', '/juno/work/ci/temp')
 
+CHECK_JOB_STATUS_PERIOD = os.environ.get('BEAGLE_CHECK_JOB_STATUS_PERIOD', 60)
+PROCESS_TRIGGERS_PERIOD = os.environ.get('BEAGLE_PROCESS_TRIGGERS_PERIOD', 120)
+CHECK_JOB_TIMEOUTS = os.environ.get('BEAGLE_CHECK_JOB_TIMEOUTS', 86400.0)
+
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
 TEST_FIXTURE_DIR = os.path.join(ROOT_DIR, "fixtures", "tests")
@@ -399,6 +403,9 @@ SAMPLE_ID_METADATA_KEY = 'sampleId'
 SAMPLE_NAME_METADATA_KEY = 'sampleName'
 CMO_SAMPLE_NAME_METADATA_KEY = 'cmoSampleName'
 PATIENT_ID_METADATA_KEY = 'patientId'
+LAB_HEAD_NAME_METADATA_KEY = 'labHeadName'
+INVESTIGATOR_METADATA_KEY = 'investigatorName'
+ASSAY_METADATA_KEY = 'recipe'
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')
