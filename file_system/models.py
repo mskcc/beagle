@@ -7,8 +7,8 @@ from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
-from notifier.models import JobGroupNotifier
 from django.db.models.signals import post_save
+from file_system.tasks import populate_job_group_notifier_metadata
 
 
 class StorageType(IntEnum):
@@ -128,11 +128,18 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
+            assay = self.metadata.get(settings.ASSAY_METADATA_KEY, '')
+            investigator = self.metadata.get(settings.INVESTIGATOR_METADATA_KEY, '')
+            pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, '')
+            populate_job_group_notifier_metadata.delay(request_id,
+                                                       pi,
+                                                       investigator,
+                                                       assay)
             if sample_id:
                 if not self.file.sample:
                     sample, _ = Sample.objects.get_or_create(sample_id=sample_id,
-                                                          defaults={'cmo_sample_name': cmo_sample_name,
-                                                                    'sample_name': sample_name})
+                                                             defaults={'cmo_sample_name': cmo_sample_name,
+                                                                       'sample_name': sample_name})
 
                     self.file.sample = sample
                     self.file.save(update_fields=('sample',))
@@ -170,20 +177,6 @@ class FileMetadata(BaseModel):
                 old.save(do_not_version=True)
             super(FileMetadata, self).save(*args, **kwargs)
 
-    @staticmethod
-    def post_save(sender, **kwargs):
-        instance = kwargs.get('instance')
-        request_id = instance.metadata.get('requestId')
-        pi = instance.metadata.get('labHeadName')
-        investigator = instance.metadata.get('investigatorName')
-        assay = instance.metadata.get('recipe')
-        job_group_notifiers = JobGroupNotifier.objects.filter(request_id=request_id)
-        for job_group_notifier in job_group_notifiers:
-            job_group_notifier.PI = pi
-            job_group_notifier.investigator = investigator
-            job_group_notifier.assay = assay
-            job_group_notifier.save()
-
     class Meta:
         indexes = [
             models.Index(
@@ -195,9 +188,6 @@ class FileMetadata(BaseModel):
                 name='metadata_gin',
             ),
         ]
-
-
-post_save.connect(FileMetadata.post_save, sender=FileMetadata)
 
 
 class FileRunMap(BaseModel):
