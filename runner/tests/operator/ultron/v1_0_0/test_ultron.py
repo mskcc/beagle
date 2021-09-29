@@ -88,7 +88,7 @@ class TestUltron(TestCase):
         """
         sample = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][0]).metadata["sampleId"]
-        input_json = {"sample_names": [sample]}
+        input_json = {"sample_ids": [sample]}
         ultron_run_name = "Sample %s ULTRON PHASE1 run" % sample
         operator_model = Operator.objects.get(id=12)
         job_group = JobGroup()

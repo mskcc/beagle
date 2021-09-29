@@ -213,6 +213,11 @@ class Run(BaseModel):
         self.refresh_from_db()
         return self.status == RunStatus.COMPLETED
 
+    @property
+    def is_failed(self):
+        self.refresh_from_db()
+        return self.status == RunStatus.FAILED
+
     def save(self, *args, **kwargs):
         """
         If output directory is set to None, by default assign it to the pipeline output directory

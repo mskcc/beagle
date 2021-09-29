@@ -448,6 +448,9 @@ class PairsOperatorViewSet(GenericAPIView):
         pipeline_names = request.data.get('pipelines')
         pipeline_versions = request.data.get('pipeline_versions')
         name = request.data.get('name')
+        labHeadName = request.data.get('labHeadName')
+        investigatorName = request.data.get('investigatorName')
+        assay = request.data.get('assay')
         job_group_id = request.data.get('job_group_id', None)
         output_directory_prefix = request.data.get('output_directory_prefix', None)
 
@@ -456,7 +459,7 @@ class PairsOperatorViewSet(GenericAPIView):
             job_group.save()
             job_group_id = str(job_group.id)
 
-        for i,pipeline_name in enumerate(pipeline_names):
+        for i, pipeline_name in enumerate(pipeline_names):
             pipeline_version = pipeline_versions[i]
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
 
@@ -465,7 +468,12 @@ class PairsOperatorViewSet(GenericAPIView):
                                                                   notifier_type_id=pipeline.operator.notifier_id)
                 job_group_notifier_id = str(job_group_notifier.id)
             except JobGroupNotifier.DoesNotExist:
-                job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator)
+                metadata = {
+                    "assay": assay,
+                    "investigatorName": investigatorName,
+                    "labHeadName": labHeadName
+                }
+                job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator, metadata=metadata)
 
             operator_model = Operator.objects.get(id=pipeline.operator_id)
             operator = OperatorFactory.get_by_model(operator_model, pairing={'pairs': pairs}, job_group_id=job_group_id,
