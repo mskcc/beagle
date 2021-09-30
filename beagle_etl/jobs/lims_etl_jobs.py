@@ -273,7 +273,7 @@ def fetch_samples(request_id, import_pooled_normals=True, import_samples=True, j
                                       cmo_sample_name=cmo_sample_name)
 
             job = create_sample_job(sample['igoSampleId'],
-                                    sample['igocomplete'],
+                                    sample['igoComplete'],
                                     request_id,
                                     request_metadata,
                                     redelivery,
