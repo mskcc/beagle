@@ -49,7 +49,7 @@ class JiraStatus(IntEnum):
 
 class JobGroupNotifier(BaseModel):
     jira_id = models.CharField(max_length=20, blank=True, null=True)
-    request_id = models.CharField(max_length=30, blank=True, null=True)
+    request_id = models.CharField(max_length=100, blank=True, null=True)
     job_group = models.ForeignKey(JobGroup, null=False, blank=False, on_delete=models.CASCADE)
     notifier_type = models.ForeignKey(Notifier, null=False, blank=False, on_delete=models.CASCADE)
     status = models.IntegerField(choices=[(status.value, status.name) for status in JiraStatus],
