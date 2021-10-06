@@ -32,19 +32,7 @@ def at_start(sender, **k):
     with sender.app.connection() as conn:
         print(conn)
         sender.app.send_task('beagle_etl.tasks.fetch_request_nats', connection=conn)
-
-
-@worker_ready.connect
-def at_start(sender, **k):
-    with sender.app.connection() as conn:
-        print(conn)
         sender.app.send_task('beagle_etl.tasks.fetch_request_update_nats', connection=conn)
-
-
-@worker_ready.connect
-def at_start(sender, **k):
-    with sender.app.connection() as conn:
-        print(conn)
         sender.app.send_task('beagle_etl.tasks.fetch_sample_update_nats', connection=conn)
 
 
