@@ -34,6 +34,20 @@ def at_start(sender, **k):
         sender.app.send_task('beagle_etl.tasks.fetch_request_nats', connection=conn)
 
 
+@worker_ready.connect
+def at_start(sender, **k):
+    with sender.app.connection() as conn:
+        print(conn)
+        sender.app.send_task('beagle_etl.tasks.fetch_request_update_nats', connection=conn)
+
+
+@worker_ready.connect
+def at_start(sender, **k):
+    with sender.app.connection() as conn:
+        print(conn)
+        sender.app.send_task('beagle_etl.tasks.fetch_sample_update_nats', connection=conn)
+
+
 app.conf.task_routes = {
     'beagle_etl.tasks.scheduler': {'queue': settings.BEAGLE_JOB_SCHEDULER_QUEUE},
     'runner.tasks.process_triggers': {'queue': settings.BEAGLE_RUNNER_QUEUE},
@@ -46,7 +60,9 @@ app.conf.task_routes = {
     'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_NATS_QUEUE}
+    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
+    'beagle_etl.tasks.fetch_request_update_nats': {'queue': settings.BEAGLE_NATS_UPDATE_REQUEST_QUEUE},
+    'beagle_etl.tasks.fetch_sample_update_nats': {'queue': settings.BEAGLE_NATS_UPDATE_SAMPLE_QUEUE}
 }
 
 app.conf.beat_schedule = {
