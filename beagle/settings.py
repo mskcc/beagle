@@ -392,7 +392,9 @@ JIRA_PIPELINE_FIELD_ID = os.environ.get('JIRA_PIPELINE_FIELD_ID', "customfield_1
 
 BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
-BEAGLE_NATS_QUEUE = os.environ.get('BEAGLE_NATS_QUEUE', 'beagle_nats_queue')
+BEAGLE_NATS_NEW_REQUEST_QUEUE = os.environ.get('BEAGLE_NATS_NEW_REQUEST_QUEUE', 'beagle_nats_queue')
+BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get('BEAGLE_NATS_UPDATE_REQUEST_QUEUE', 'beagle_nats_update_request_queue')
+BEAGLE_NATS_UPDATE_SAMPLE_QUEUE = os.environ.get('BEAGLE_NATS_UPDATE_SAMPLE_QUEUE', 'beagle_nats_update_sample_queue')
 BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue')
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
