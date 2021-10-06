@@ -41,7 +41,21 @@ def fetch_requests_lims():
 @shared_task
 def fetch_request_nats():
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
+    loop.run_until_complete(run(loop, settings.METADB_NATS_NEW_REQUEST))
+    loop.run_forever()
+
+
+@shared_task
+def fetch_request_update_nats():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(run(loop, settings.METADB_NATS_REQUEST_UPDATE))
+    loop.run_forever()
+
+
+@shared_task
+def fetch_sample_update_nats():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(run(loop, settings.METADB_NATS_SAMPLE_UPDATE))
     loop.run_forever()
 
 

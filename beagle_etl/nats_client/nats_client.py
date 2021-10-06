@@ -12,7 +12,7 @@ from nats.aio.client import Client as NATS
 logger = logging.getLogger(__name__)
 
 
-async def run(loop):
+async def run(loop, queue):
     nc = NATS()
 
     async def error_cb(e):
@@ -70,4 +70,4 @@ async def run(loop):
     for sig in ('SIGINT', 'SIGTERM'):
         loop.add_signal_handler(getattr(signal, sig), signal_handler)
 
-    await nc.subscribe(settings.METADB_NATS_SUBJECT, "", subscribe_handler)
+    await nc.subscribe(queue, "", subscribe_handler)
