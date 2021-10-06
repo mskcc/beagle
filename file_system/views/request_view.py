@@ -10,6 +10,7 @@ class RequestViewSet(mixins.ListModelMixin,
                      mixins.CreateModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
                      GenericViewSet):
     queryset = Request.objects.order_by('-created_date').all()
     permission_classes = (IsAuthenticated,)
