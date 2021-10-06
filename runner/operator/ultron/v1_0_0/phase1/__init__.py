@@ -1,1 +1,1 @@
-from .ultron_operator import UltronOperator, InputsObj, SampleData, BamData
+from .ultron_operator import UltronOperator, InputsObj, SampleData, BamData, BatchInputObj
