@@ -14,6 +14,7 @@ class SampleViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
                     GenericViewSet):
     queryset = Sample.objects.order_by('-created_date').all()
     permission_classes = (IsAuthenticated,)
