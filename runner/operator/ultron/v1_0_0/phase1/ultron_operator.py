@@ -81,12 +81,12 @@ class UltronOperator(Operator):
         self.project_prefix = project_prefix
 
     def _build_inputs(self, run_ids):
-        run_jsons = list()
+        input_objs = list()
         for rid in set(run_ids):
             run = Run.objects.filter(id=rid)[0]
-            inputs_data = InputsObj(run)
-            run_jsons.append(inputs_data.inputs_json)
-        return run_jsons
+            input_objs.append(InputsObj(run))
+        batch_input_json = BatchInputObj(input_objs)
+        return batch_input_json.inputs_json
 
     def _build_job(self, input_json):
         app = self.get_pipeline_id()
@@ -106,6 +106,41 @@ class UltronOperator(Operator):
             data=output_job_data),
             input_json)
         return output_job
+
+
+class BatchInputObj:
+
+    def __init__(self, inputObjList):
+        self.inputObjList = inputObjList
+        self.inputs_json = self._build_inputs_json()
+
+    def _build_inputs_json(self):
+        batch_input_json = {
+            "unindexed_bam_files": [],
+            "unindexed_sample_ids": [],
+            "unindexed_maf_files": [],
+            "maf_files": [],
+            "bam_files": [],
+            "sample_ids": [],
+            "ref_fasta": None,
+            "exac_filter": None
+        }
+        for single_input_obj in self.inputObjList:
+            single_input_data = single_input_obj.inputs_data
+            if single_input_data["tumor_sample_name"] not in batch_input_json["sample_ids"]:
+                batch_input_json["unindexed_bam_files"] += single_input_data["dmp_bams_tumor"]
+                batch_input_json["unindexed_sample_ids"] += single_input_data["dmp_bams_tumor_sample_name"]
+                batch_input_json["unindexed_maf_files"] += single_input_data["dmp_bams_tumor_muts"]
+                batch_input_json["maf_files"] += single_input_data["maf"]
+                batch_input_json["bam_files"] += single_input_data["tumor_bam"]
+                batch_input_json["sample_ids"] += single_input_data["tumor_sample_name"]
+                if not batch_input_json["ref_fasta"]:
+                    batch_input_json["ref_fasta"] = single_input_obj.load_reference_fasta(
+                    )
+                if not batch_input_json["exac_filter"]:
+                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter(
+                    )
+        return batch_input_json
 
 
 class InputsObj:
