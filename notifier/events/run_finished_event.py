@@ -4,7 +4,8 @@ from notifier.event_handler.event import Event
 
 class RunFinishedEvent(Event):
 
-    def __init__(self, job_notifier, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags, running, completed, failed, total, operator_run_id):
+    def __init__(self, job_notifier, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags,
+                 running, completed, failed, total, operator_run_id, lsf_log_location, input_json_location):
         self.job_notifier = job_notifier
         self.request_id = request_id
         self.pipeline = pipeline
@@ -18,6 +19,8 @@ class RunFinishedEvent(Event):
         self.failed = failed
         self.total = total
         self.operator_run_id = operator_run_id
+        self.lsf_log_location = lsf_log_location
+        self.input_json_location = input_json_location
 
     @classmethod
     def get_type(cls):
@@ -37,6 +40,8 @@ class RunFinishedEvent(Event):
         {tags}
         Status: {status}
         Link: {link}
+        LSF Log Location: {lsf_log_location}
+        inputs.json Location: {inputs_json_location}
         
         _____________________________________________
         
@@ -68,5 +73,7 @@ class RunFinishedEvent(Event):
                                    total=str(self.total),
                                    tags=tags,
                                    run_status=status,
-                                   output_directory=self.output_directory
+                                   output_directory=self.output_directory,
+                                   lsf_log_location=self.lsf_log_location,
+                                   inputs_json_location=self.input_json_location
                                    )
