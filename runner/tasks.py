@@ -438,7 +438,7 @@ def fail_job(self, run_id, error_message):
 
 
 @shared_task(bind=True)
-def complete_job(self, run_id, outputs):
+def complete_job(self, run_id, outputs, lsf_log_location, inputs_json_location):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -459,7 +459,7 @@ def complete_job(self, run_id, outputs):
             job_group = run.job_group
             job_group_id = str(job_group.id) if job_group else None
 
-            _job_finished_notify(run)
+            _job_finished_notify(run, lsf_log_location, inputs_json_location)
 
             for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
                 create_jobs_from_chaining.delay(
@@ -473,7 +473,7 @@ def complete_job(self, run_id, outputs):
             logger.warning("Run %s is processing by another worker" % run_id)
 
 
-def _job_finished_notify(run):
+def _job_finished_notify(run, lsf_log_location, input_json_location):
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
@@ -507,7 +507,9 @@ def _job_finished_notify(run):
                              completed_runs,
                              failed_runs,
                              total_runs,
-                             operator_run_id
+                             operator_run_id,
+                             lsf_log_location,
+                             input_json_location
                              )
     e = event.to_dict()
     send_notification.delay(e)
@@ -593,6 +595,7 @@ def check_jobs_status():
                 run.started = status['started']
             if status['submitted'] and not run.submitted:
                 run.submitted = status['submitted']
+
             if status['commandlinetooljob_set']:
                 update_commandline_job_status(run, status['commandlinetooljob_set'])
             if status['status'] == 'FAILED':
@@ -602,7 +605,11 @@ def check_jobs_status():
                 continue
             if status['status'] == 'COMPLETED':
                 logger.info(format_log("Job completed", obj=run))
-                complete_job.delay(str(run.id), status['outputs'])
+                lsf_log_location = status.get('message', {}).get("log")
+                inputs_location = None
+                if lsf_log_location:
+                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
+                complete_job.delay(str(run.id), status['outputs'], lsf_log_location, inputs_location)
                 continue
             if status['status'] == 'CREATED':
                 logger.info(format_log("Job created", obj=run))
