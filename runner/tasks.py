@@ -473,7 +473,7 @@ def complete_job(self, run_id, outputs, lsf_log_location, inputs_json_location):
             logger.warning("Run %s is processing by another worker" % run_id)
 
 
-def _job_finished_notify(run, lsf_log_location, input_json_location):
+def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
