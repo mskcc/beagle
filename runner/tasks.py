@@ -438,7 +438,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
 
 
 @shared_task(bind=True)
-def complete_job(self, run_id, outputs, lsf_log_location, inputs_json_location):
+def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_location=None):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
