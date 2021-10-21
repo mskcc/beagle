@@ -412,7 +412,7 @@ def check_statuses_on_ridgeback(execution_ids):
 
 
 @shared_task(bind=True)
-def fail_job(self, run_id, error_message):
+def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_location=None):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -432,7 +432,7 @@ def fail_job(self, run_id, error_message):
             ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review)
 
-            _job_finished_notify(run)
+            _job_finished_notify(run, lsf_log_location, input_json_location)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
@@ -601,7 +601,11 @@ def check_jobs_status():
             if status['status'] == 'FAILED':
                 logger.error(format_log("Job failed ", obj=run))
                 message = dict(details=status.get('message'))
-                fail_job.delay(str(run.id), message)
+                lsf_log_location = status.get('message', {}).get("log")
+                inputs_location = None
+                if lsf_log_location:
+                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
+                fail_job.delay(str(run.id), message, lsf_log_location, inputs_location)
                 continue
             if status['status'] == 'COMPLETED':
                 logger.info(format_log("Job completed", obj=run))
