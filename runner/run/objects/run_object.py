@@ -11,6 +11,8 @@ class RunObject(object):
         self,
         run_id,
         run_obj,
+        app,
+        name,
         inputs,
         outputs,
         status,

@@ -181,7 +181,7 @@ class Run(BaseModel):
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
-    notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True))
+    notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True, null=True))
     samples = models.ManyToManyField(Sample)
     started = models.DateTimeField(blank=True, null=True)
     submitted = models.DateTimeField(blank=True, null=True)

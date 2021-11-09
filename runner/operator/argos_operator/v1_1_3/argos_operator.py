@@ -1,10 +1,7 @@
-import uuid
-from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
-from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
 from notifier.tasks import send_notification
@@ -180,9 +177,8 @@ class ArgosOperator(Operator):
                     'labHeadEmail': pi_email}
             if self.output_directory_prefix:
                 tags['output_directory_prefix'] = self.output_directory_prefix
-            argos_jobs.append((APIRunCreateSerializer(
-                data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
-                      'tags': tags}), job))
+            argos_jobs.append((RunCreator(app=pipeline, inputs=argos_inputs, name=name,
+                                          tags=tags), job))
 
         operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)

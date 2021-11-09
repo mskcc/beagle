@@ -31,6 +31,7 @@ class OperatorRunListSerializer(serializers.Serializer):
     tags = serializers.JSONField(required=False)
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
 
+
 class RunApiListSerializer(serializers.Serializer):
     status = serializers.ChoiceField([(status.name, status.value) for status in RunStatus], allow_blank=True, required=False)
     job_groups = serializers.ListField(
@@ -275,6 +276,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 class RestartRunSerializer(serializers.Serializer):
     operator_run_id = serializers.UUIDField(required=True)
 
+
 class APIRunCreateSerializer(serializers.Serializer):
     app = serializers.UUIDField()
     name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
@@ -286,7 +288,6 @@ class APIRunCreateSerializer(serializers.Serializer):
     operator_run_id = serializers.UUIDField(required=False)
     job_group_id = serializers.UUIDField(required=False)
     job_group_notifier_id = serializers.UUIDField(required=False)
-    notify_for_outputs = serializers.ListField(allow_null=True, required=False)
     resume = serializers.UUIDField(allow_null=True, required=False)
 
     def create(self, validated_data):
