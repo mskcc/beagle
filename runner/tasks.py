@@ -50,6 +50,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
         logger.info(format_log("Job group notifier not set", job_group_id=job_group_id))
     valid_jobs, invalid_jobs = [], []
 
+    print(jobs)
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
@@ -85,10 +86,13 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     set_pipeline_field = SetPipelineFieldEvent(job_group_notifier_id, pipeline_name).to_dict()
     send_notification.delay(set_pipeline_field)
 
+    print(valid_jobs)
     for job in valid_jobs:
         logger.info(format_log("Creating run", obj=job[0]))
-        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id,
-                          job_group_notifier_id=job_group_notifier_id)
+        job[0].operator_run_id = str(operator_run.id)
+        job[0].job_group_id = str(job_group_id)
+        job[0].job_group_notifier_id = job_group_notifier_id
+        run = job[0].create()
         logger.info(format_log("Run created", obj=run))
 
         run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
@@ -309,6 +313,9 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
              retry_kwargs={"max_retries": 4},
              on_failure=on_failure_to_create_run_task)
 def create_run_task(run_id, inputs, output_directory=None):
+    print(run_id)
+    print(inputs)
+    print(output_directory)
     logger.info(format_log("Creating and validating run", obj_id=run_id))
     run = RunObjectFactory.from_definition(run_id, inputs)
     run.ready()

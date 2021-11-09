@@ -39,6 +39,7 @@ class CWLRunObject(RunObject):
         try:
             input_ports = [CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in
                            app.get('inputs', [])]
+            print(input_ports)
             output_ports = [CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in
                             app.get('outputs', [])]
         except PortProcessorException as e:

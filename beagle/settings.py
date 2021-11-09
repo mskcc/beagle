@@ -101,6 +101,7 @@ ELASTIC_APM = {
 
   # Set the service environment
   'ENVIRONMENT': ENVIRONMENT,
+  'ENABLED': False
 }
 
 MIDDLEWARE = [
