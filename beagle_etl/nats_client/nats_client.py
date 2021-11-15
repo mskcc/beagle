@@ -6,6 +6,7 @@ import asyncio
 from django.conf import settings
 from beagle_etl.tasks import TYPES
 from beagle_etl.models import Job, JobStatus
+from beagle_etl.jobs.lims_etl_jobs import new_request
 from nats.aio.client import Client as NATS
 
 
@@ -34,10 +35,7 @@ async def run(loop, queue):
 
         logger.info("Received a message on '{subject} {reply}': {data}".format(
           subject=subject, reply=reply, data=data))
-        job = Job(run=TYPES['PARSE_NEW_REQUEST'], args={'request': request_data},
-                  status=JobStatus.CREATED,
-                  max_retry=3, children=[])
-        job.save()
+        new_request(request_data)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE,
