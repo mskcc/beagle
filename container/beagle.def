@@ -94,6 +94,7 @@ Includecmd: no
     export BEAGLE_CELERY_SCHEDULER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
     export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+    export BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request.pid
 
     echo "Starting celery services..."
 
@@ -102,6 +103,8 @@ Includecmd: no
     celery -A beagle_etl worker --concurrency 100 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_DEFAULT_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_worker.log --pidfile ${BEAGLE_CELERY_WORKER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_worker >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${BEAGLE_CELERY_SCHEDULER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
+
+    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_new_request.log --pidfile ${BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE} -n ${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
@@ -203,6 +206,7 @@ Includecmd: no
     export BEAGLE_CELERY_SCHEDULER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler.pid
     export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
+    export BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request.pid
 
     echo "Current celery settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH

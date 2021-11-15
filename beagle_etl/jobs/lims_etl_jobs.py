@@ -1,7 +1,6 @@
 import os
 import copy
 import logging
-import asyncio
 from deepdiff import DeepDiff
 from django.conf import settings
 from beagle_etl.jobs import TYPES
@@ -66,6 +65,68 @@ def parse_new_request_job(request):
             redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
             send_notification.delay(redelivery_event)
         return [str(job.id)]
+
+
+def new_request(data):
+    request_id = data.get('requestId')
+    logger.info("Importing new request: %s" % request_id)
+    job_group = JobGroup()
+    job_group.save()
+    job_group_notifier_id = notifier_start(job_group, request_id)
+    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+
+    project_id = data.get('projectId')
+    recipe = data.get('recipe')
+
+    set_recipe_event = ETLSetRecipeEvent(job_group_notifier, recipe).to_dict()
+    send_notification.delay(set_recipe_event)
+
+    project_manager_name = data.get('projectManagerName')
+    pi_email = data.get('piEmail')
+    lab_head_name = data.get('labHeadName')
+    lab_head_email = data.get('labHeadEmail')
+    investigator_name = data.get('investigatorName')
+    investigator_email = data.get('investigatorEmail')
+    data_analyst_name = data.get('dataAnalystName')
+    data_analyst_email = data.get('dataAnalystEmail')
+    other_contact_emails = data.get('otherContactEmails')
+    data_access_email = data.get('dataAccessEmails')
+    qc_access_email = data.get('qcAccessEmails')
+
+    request_metadata = {
+        "requestId": request_id,
+        "projectId": project_id,
+        "projectManagerName": project_manager_name,
+        "piEmail": pi_email,
+        "labHeadName": lab_head_name,
+        "labHeadEmail": lab_head_email,
+        "investigatorName": investigator_name,
+        "investigatorEmail": investigator_email,
+        "dataAnalystName": data_analyst_name,
+        "dataAnalystEmail": data_analyst_email,
+        "otherContactEmails": other_contact_emails,
+        "dataAccessEmails": data_access_email,
+        "qcAccessEmails": qc_access_email
+    }
+
+    samples = data.get('samples')
+    for idx, sample in enumerate(data.get('sampleManifestList')):
+        igocomplete = samples[idx]['igocomplete']
+        sample_id = sample['igoId']
+        logger.info("Parsing sample: %s" % sample_id)
+        validate_sample(sample, sample.get('libraries', []), igocomplete)
+        libraries = sample.pop('libraries')
+        for library in libraries:
+            logger.info("Processing library %s" % library)
+            runs = library.pop('runs')
+            for run in runs:
+                logger.info("Processing run %s" % run)
+                fastqs = run.pop('fastqs')
+                for fastq in fastqs:
+                    logger.info("Adding file %s" % fastq)
+                    create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq',
+                                          igocomplete, sample, library, run, request_metadata, R1_or_R2(fastq),
+                                          job_group_notifier=job_group_notifier)
 
 
 def request_callback(request_id, recipe, job_group=None, job_group_notifier=None):
@@ -211,6 +272,12 @@ def parse_samples_job(request, import_pooled_normals=True, import_samples=True, 
                                           redelivery, jg, jgn)
             children.add(str(job.id))
     return list(children)
+
+
+def update_request_job(request_id, request_metadata):
+    files = FileRepository.filter(metadata={'requestId': request_id})
+    for f in files:
+        update_file_object(f, f.path, request_metadata)
 
 
 def _convert_to_dict(sample_list):
