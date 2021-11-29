@@ -26,5 +26,4 @@ install:
 script:
   - source travis_env.sh
   - python manage.py test
-  - flake8
   - black --check .
