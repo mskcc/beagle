@@ -212,25 +212,6 @@ class Run(BaseModel):
         self.status = RunStatus.READY
         return self
 
-    def set_for_restart(self):
-        if self.resume_attempts == 0:
-            return None
-        resume_attempts = self.resume_attempts - 1
-        resume_id = self.pk
-        started = self.started
-        output_directory = self.output_directory
-        message = self.message
-        if "resume" not in message:
-            message["resume"] = []
-        message["resume"].append(now())
-        self.clear().save()
-        self.resume = resume_id
-        self.started = started
-        self.output_directory = output_directory
-        self.resume_attempts = resume_attempts
-        self.save()
-        return self
-
     @property
     def is_completed(self):
         self.refresh_from_db()
