@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class PermissionDeniedEvent(Event):
-
     def __init__(self, job_notifier, error, cc):
         self.job_notifier = job_notifier
         self.error = error

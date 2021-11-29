@@ -5,8 +5,8 @@ class TempoSample(Sample):
     def __init__(self, sample_name, file_list):
         self.sample_name = sample_name
         super().__init__(sample_name, file_list)
-        self.metadata = dict() # every field in this dict will be a list
-        metadata_list = [ i.metadata for i in file_list ]
+        self.metadata = dict()  # every field in this dict will be a list
+        metadata_list = [i.metadata for i in file_list]
         for metadata in metadata_list:
             for key in metadata:
                 if key not in self.metadata:
@@ -23,17 +23,16 @@ class TempoSample(Sample):
         self.run_mode = ""
         self.patient_id = ""
         # _find_conflict_fields() did not discrepancies in fields it checked
-        if not self.conflict: 
+        if not self.conflict:
             self.bait_set = self._get_bait_sets().pop()
-            self.specimen_type = self.metadata['specimenType'][0]
-            self.sample_class = self.metadata['sampleClass'][0]
-            self.cmo_sample_name = self.metadata['cmoSampleName'][0]
+            self.specimen_type = self.metadata["specimenType"][0]
+            self.sample_class = self.metadata["sampleClass"][0]
+            self.cmo_sample_name = self.metadata["cmoSampleName"][0]
             self.run_mode = self.remapped_run_mode.pop()
-            self.patient_id = self.metadata['patientId'][0]
+            self.patient_id = self.metadata["patientId"][0]
 
     def _resolve_target(self, bait_set):
-        """
-        """
+        """ """
         target_assay = bait_set.lower()
         if "agilent" in target_assay:
             return "agilent"
@@ -57,21 +56,19 @@ class TempoSample(Sample):
         self._map_run_modes()
         self._find_conflict_fields()
 
-
     def _map_run_modes(self):
-        run_modes = self.metadata['runMode']
+        run_modes = self.metadata["runMode"]
         self.remapped_run_mode = set()
 
         for i in run_modes:
-            if 'novaseq' in i.lower():
+            if "novaseq" in i.lower():
                 self.remapped_run_mode.add("NovaSeq")
-            elif 'hiseq' in i.lower():
+            elif "hiseq" in i.lower():
                 self.remapped_run_mode.add("HiSeq")
             else:
                 self.remapped_run_mode.add(i)
         if len(self.remapped_run_mode) > 1:
             self.conflict = True
-
 
     def _find_conflict_fields(self):
         """
@@ -83,8 +80,7 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [ 'patientId', 'specimenType',
-                    'sampleClass', 'cmoSampleName' ]
+        fields_to_check = ["patientId", "specimenType", "sampleClass", "cmoSampleName"]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -94,13 +90,12 @@ class TempoSample(Sample):
                     self.conflict = True
         bait_sets = self._get_bait_sets()
         if len(bait_sets) > 1 or len(bait_sets) == 0:
-            self.conflict_fields.append('baitSet')
+            self.conflict_fields.append("baitSet")
             self.conflict = True
-
 
     def _get_bait_sets(self):
         bait_sets = set()
-        for value in self.metadata['baitSet']:
+        for value in self.metadata["baitSet"]:
             bait_set = self._resolve_target(value)
             bait_sets.add(bait_set)
         return bait_sets
@@ -122,7 +117,7 @@ class TempoSample(Sample):
                 if self._values_are_list(key):
                     # remove duplicate list values
                     values_set = set(tuple(x) for x in values)
-                    values = [ list(x) for x in values_set ]
+                    values = [list(x) for x in values_set]
                     metadata[key] = values
                 else:
                     # remove empty strings
@@ -131,9 +126,8 @@ class TempoSample(Sample):
                         metadata[key] = values[0]
                     else:
                         value = set(values)
-                        metadata[key] = ','.join(value)
+                        metadata[key] = ",".join(value)
         return metadata
-
 
     def _values_are_list(self, key):
         """
@@ -144,11 +138,16 @@ class TempoSample(Sample):
                 return False
         return True
 
-
     def __str__(self):
-        keys_for_str = [ 'sampleName', 'requestId', 'sampleId',
-                'patientId', 'specimenType', 'sampleClass',
-                'cmoSampleName']
+        keys_for_str = [
+            "sampleName",
+            "requestId",
+            "sampleId",
+            "patientId",
+            "specimenType",
+            "sampleClass",
+            "cmoSampleName",
+        ]
         s = ""
         metadata = self.dedupe_metadata_values()
         for key in keys_for_str:

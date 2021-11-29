@@ -3,9 +3,24 @@ from notifier.event_handler.event import Event
 
 
 class RunFinishedEvent(Event):
-
-    def __init__(self, job_notifier, request_id, run_id, pipeline, pipeline_link, output_directory, run_status, tags,
-                 running, completed, failed, total, operator_run_id, lsf_log_location, input_json_location):
+    def __init__(
+        self,
+        job_notifier,
+        request_id,
+        run_id,
+        pipeline,
+        pipeline_link,
+        output_directory,
+        run_status,
+        tags,
+        running,
+        completed,
+        failed,
+        total,
+        operator_run_id,
+        lsf_log_location,
+        input_json_location,
+    ):
         self.job_notifier = job_notifier
         self.request_id = request_id
         self.pipeline = pipeline
@@ -54,7 +69,7 @@ class RunFinishedEvent(Event):
         TOTAL: {total}
 
         """
-        link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', self.run_id)
+        link = "%s%s%s\n" % (settings.BEAGLE_URL, "/v0/run/api/", self.run_id)
         if self.operator_run_id:
             status = "OperatorRun {operator_run} status".format(operator_run=self.operator_run_id)
         else:
@@ -62,18 +77,19 @@ class RunFinishedEvent(Event):
         tags = ""
         for k, v in self.tags.items():
             tags += "%s: %s\n" % (k, str(v))
-        return RUN_TEMPLATE.format(run_id=self.run_id,
-                                   pipeline_name=self.pipeline,
-                                   pipeline_link=self.pipeline_link,
-                                   status=self.run_status,
-                                   link=link,
-                                   running=str(self.running),
-                                   completed=str(self.completed),
-                                   failed=str(self.failed),
-                                   total=str(self.total),
-                                   tags=tags,
-                                   run_status=status,
-                                   output_directory=self.output_directory,
-                                   lsf_log_location=self.lsf_log_location,
-                                   inputs_json_location=self.input_json_location
-                                   )
+        return RUN_TEMPLATE.format(
+            run_id=self.run_id,
+            pipeline_name=self.pipeline,
+            pipeline_link=self.pipeline_link,
+            status=self.run_status,
+            link=link,
+            running=str(self.running),
+            completed=str(self.completed),
+            failed=str(self.failed),
+            total=str(self.total),
+            tags=tags,
+            run_status=status,
+            output_directory=self.output_directory,
+            lsf_log_location=self.lsf_log_location,
+            inputs_json_location=self.input_json_location,
+        )

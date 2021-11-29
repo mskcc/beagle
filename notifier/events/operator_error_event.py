@@ -2,14 +2,12 @@ from notifier.event_handler.event import Event
 
 
 class OperatorErrorEvent(Event):
-
     def __init__(self, job_notifier, operator_run_id, sample_id, pipeline, error):
         self.job_notifier = job_notifier
         self.operator_run_id = operator_run_id
         self.sample_id = sample_id
         self.pipeline = pipeline
         self.error = error
-
 
     @classmethod
     def get_type(cls):
@@ -28,7 +26,9 @@ class OperatorErrorEvent(Event):
         Error: {error}
 
         """
-        return OPERATOR_ERROR_TEMPLATE.format(operator_run_id=self.operator_run_id,
-                                              sample_id=self.sample_id,
-                                              pipeline_name=self.pipeline,
-                                              error=self.error)
+        return OPERATOR_ERROR_TEMPLATE.format(
+            operator_run_id=self.operator_run_id,
+            sample_id=self.sample_id,
+            pipeline_name=self.pipeline,
+            error=self.error,
+        )

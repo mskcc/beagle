@@ -7,14 +7,16 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0004_remove_notifier_operator'),
-        ('beagle_etl', '0028_operators_update'),
+        ("notifier", "0004_remove_notifier_operator"),
+        ("beagle_etl", "0028_operators_update"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operator',
-            name='notifier',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='notifier.Notifier'),
+            model_name="operator",
+            name="notifier",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="notifier.Notifier"
+            ),
         ),
     ]

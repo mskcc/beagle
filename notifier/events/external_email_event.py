@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class ExternalEmailEvent(Event):
-
     def __init__(self, job_notifier, request_id):
         self.job_notifier = job_notifier
         self.request_id = request_id

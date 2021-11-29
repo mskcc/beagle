@@ -21,7 +21,7 @@ class TestRunnerTasks(TestCase):
     ]
 
     @freeze_time("2018-12-12T22:59:41.044Z")
-    @patch('runner.tasks.fail_job')
+    @patch("runner.tasks.fail_job")
     def test_timeout_fails_appropriate_jobs(self, fail_job):
         runs = Run.objects.all()
         check_job_timeouts()

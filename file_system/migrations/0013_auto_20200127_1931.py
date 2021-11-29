@@ -7,25 +7,28 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0012_migrate_bad_filenames'),
+        ("file_system", "0012_migrate_bad_filenames"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='filetype',
-            old_name='ext',
-            new_name='name',
+            model_name="filetype",
+            old_name="ext",
+            new_name="name",
         ),
         migrations.RemoveField(
-            model_name='filetype',
-            name='valid_extensions',
+            model_name="filetype",
+            name="valid_extensions",
         ),
         migrations.CreateModel(
-            name='FileExtension',
+            name="FileExtension",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('extension', models.CharField(max_length=30, unique=True)),
-                ('file_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.FileType')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("extension", models.CharField(max_length=30, unique=True)),
+                (
+                    "file_type",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.FileType"),
+                ),
             ],
         ),
     ]

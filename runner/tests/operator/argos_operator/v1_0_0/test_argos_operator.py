@@ -43,9 +43,9 @@ class TestArgosOperator(TestCase):
         """
         # Load fixtures; 4 fastq files for 2 patient samples
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
+        call_command("loaddata", test_files_fixture, verbosity=0)
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
+        call_command("loaddata", test_files_fixture, verbosity=0)
 
         request_id = "bar"
         operator_model = Operator.objects.get(id=1)
@@ -62,9 +62,9 @@ class TestArgosOperator(TestCase):
         """
         # Load fixtures; 4 fastq files for 2 patient samples
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
+        call_command("loaddata", test_files_fixture, verbosity=0)
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
+        call_command("loaddata", test_files_fixture, verbosity=0)
 
         self.assertEqual(len(File.objects.all()), 4)
         self.assertEqual(len(FileMetadata.objects.all()), 4)
@@ -72,8 +72,8 @@ class TestArgosOperator(TestCase):
         # create some more fixtures
         file_instance = File.objects.create(
             file_name="foo.fastq.gz",
-            path='/foo.fastq.gz',
-            file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP)
+            path="/foo.fastq.gz",
+            file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
         )
         filemetadata_instance = FileMetadata.objects.create(file=file_instance)
 

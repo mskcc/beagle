@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class LocalStoreFileEvent(Event):
-
     def __init__(self, job_notifier, file_name, content, download=False):
         self.job_notifier = job_notifier
         self.file_name = file_name
@@ -20,7 +19,7 @@ class LocalStoreFileEvent(Event):
 
     def get_content(self):
         if os.path.exists(self.content):
-            f = open(self.content, 'rb')
+            f = open(self.content, "rb")
             return f
         return self.content
 

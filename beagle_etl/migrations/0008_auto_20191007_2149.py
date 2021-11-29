@@ -7,18 +7,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0007_job_lock'),
+        ("beagle_etl", "0007_job_lock"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='job',
-            name='args',
+            model_name="job",
+            name="args",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='children',
+            model_name="job",
+            name="children",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
     ]
