@@ -42,9 +42,9 @@ class JiraClient(object):
             }
         """
         search_url = self.JiraEndpoints.SEARCH.value
-        jql_url = 'project=' + self.project + ' AND summary~"' + str(project_id) + '"'
+        jql_url = "project=" + self.project + ' AND summary~"' + str(project_id) + '"'
         params = {"jql": jql_url}
-        headers = {'content-type': 'application/json'}
+        headers = {"content-type": "application/json"}
         return self._get(search_url, params=params, headers=headers)
 
     def get_ticket(self, ticket_id):
@@ -60,9 +60,17 @@ class JiraClient(object):
         :return: {'id': '21402', 'key': 'RSLDEV-21', 'self': 'http://jira.mskcc.org:8090/rest/api/2/issue/21402'}
         """
         create_url = self.JiraEndpoints.CREATE.value
-        body = {"fields": {"project": {"key": self.project}, "summary": summary, "issuetype": {"name": "Task"},
-                           "reporter": {"name": self.username}, "assignee": {"name": assignee},
-                           "priority": {"name": "Major"}, "description": message}}
+        body = {
+            "fields": {
+                "project": {"key": self.project},
+                "summary": summary,
+                "issuetype": {"name": "Task"},
+                "reporter": {"name": self.username},
+                "assignee": {"name": assignee},
+                "priority": {"name": "Major"},
+                "description": message,
+            }
+        }
         response = self._post(create_url, body)
         return response
 
@@ -110,7 +118,7 @@ class JiraClient(object):
 
     def get_ticket_description(self, ticket_id):
         description = self.get_ticket(ticket_id).json()
-        return description['fields']['description']
+        return description["fields"]["description"]
 
     def get_comments(self, ticket_id):
         comment_url = self.JiraEndpoints.COMMENT.value % ticket_id
@@ -120,52 +128,55 @@ class JiraClient(object):
     def add_attachment(self, ticket_id, file_name, content, download=False):
         attachment_url = self.JiraEndpoints.ATTACHMENT.value % ticket_id
         if not download:
-            files = {'file': (file_name, content, 'text/plain')}
+            files = {"file": (file_name, content, "text/plain")}
         else:
-            files = {'file': (file_name, content)}
-        headers = {
-            "X-Atlassian-Token": "nocheck"
-        }
+            files = {"file": (file_name, content)}
+        headers = {"X-Atlassian-Token": "nocheck"}
         response = self._post(attachment_url, {}, files=files, headers=headers)
         return response
 
     @staticmethod
     def parse_ticket_id(ticket_body):
-        return ticket_body['key']
+        return ticket_body["key"]
 
     def _get(self, url, params={}, headers={}):
-        default_headers = {'content-type': 'application/json'}
+        default_headers = {"content-type": "application/json"}
         headers.update(default_headers)
-        response = requests.get(urljoin(self.url, url),
-                                auth=HTTPBasicAuth(self.username, self.password),
-                                params=params,
-                                headers=headers)
+        response = requests.get(
+            urljoin(self.url, url), auth=HTTPBasicAuth(self.username, self.password), params=params, headers=headers
+        )
         return response
 
     def _post(self, url, body, params={}, headers={}, files={}):
         if files:
-            response = requests.post(urljoin(self.url, url),
-                                     auth=HTTPBasicAuth(self.username, self.password),
-                                     params=params,
-                                     headers=headers,
-                                     files=files)
+            response = requests.post(
+                urljoin(self.url, url),
+                auth=HTTPBasicAuth(self.username, self.password),
+                params=params,
+                headers=headers,
+                files=files,
+            )
             return response
         else:
-            default_headers = {'content-type': 'application/json'}
+            default_headers = {"content-type": "application/json"}
             headers.update(default_headers)
-            response = requests.post(urljoin(self.url, url),
-                                     auth=HTTPBasicAuth(self.username, self.password),
-                                     data=json.dumps(body),
-                                     params=params,
-                                     headers=headers)
+            response = requests.post(
+                urljoin(self.url, url),
+                auth=HTTPBasicAuth(self.username, self.password),
+                data=json.dumps(body),
+                params=params,
+                headers=headers,
+            )
             return response
 
     def _put(self, url, body, params={}, headers={}):
-        default_headers = {'content-type': 'application/json'}
+        default_headers = {"content-type": "application/json"}
         headers.update(default_headers)
-        response = requests.put(urljoin(self.url, url),
-                                auth=HTTPBasicAuth(self.username, self.password),
-                                data=json.dumps(body),
-                                params=params,
-                                headers=headers)
+        response = requests.put(
+            urljoin(self.url, url),
+            auth=HTTPBasicAuth(self.username, self.password),
+            data=json.dumps(body),
+            params=params,
+            headers=headers,
+        )
         return response

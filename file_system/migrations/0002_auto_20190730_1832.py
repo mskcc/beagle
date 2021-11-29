@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0001_initial'),
+        ("file_system", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='file',
-            old_name='cohort',
-            new_name='file_group',
+            model_name="file",
+            old_name="cohort",
+            new_name="file_group",
         ),
     ]

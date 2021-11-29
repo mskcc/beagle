@@ -8,28 +8,57 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0003_etlerror_type'),
+        ("beagle_etl", "0003_etlerror_type"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Job',
+            name="Job",
             fields=[
-                ('basemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.BaseModel')),
-                ('run', models.CharField(max_length=100)),
-                ('args', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('type', models.CharField(max_length=40)),
-                ('status', models.IntegerField(choices=[(0, 'CREATED'), (1, 'IN_PROGRESS'), (2, 'WAITING_FOR_CHILDREN'), (3, 'COMPLETED'), (4, 'FAILED')])),
-                ('children', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('retry_count', models.IntegerField(default=0)),
-                ('message', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('max_retry', models.IntegerField(default=3)),
+                (
+                    "basemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.BaseModel",
+                    ),
+                ),
+                ("run", models.CharField(max_length=100)),
+                ("args", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("type", models.CharField(max_length=40)),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[
+                            (0, "CREATED"),
+                            (1, "IN_PROGRESS"),
+                            (2, "WAITING_FOR_CHILDREN"),
+                            (3, "COMPLETED"),
+                            (4, "FAILED"),
+                        ]
+                    ),
+                ),
+                ("children", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("retry_count", models.IntegerField(default=0)),
+                ("message", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("max_retry", models.IntegerField(default=3)),
             ],
-            bases=('beagle_etl.basemodel',),
+            bases=("beagle_etl.basemodel",),
         ),
         migrations.AlterField(
-            model_name='jobbasemodel',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'CREATED'), (1, 'IN_PROGRESS'), (2, 'WAITING_FOR_CHILDREN'), (3, 'COMPLETED'), (4, 'FAILED')]),
+            model_name="jobbasemodel",
+            name="status",
+            field=models.IntegerField(
+                choices=[
+                    (0, "CREATED"),
+                    (1, "IN_PROGRESS"),
+                    (2, "WAITING_FOR_CHILDREN"),
+                    (3, "COMPLETED"),
+                    (4, "FAILED"),
+                ]
+            ),
         ),
     ]

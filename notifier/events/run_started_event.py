@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class RunStartedEvent(Event):
-
     def __init__(self, job_notifier, run_id, pipeline, pipeline_link, output_directory, tags):
         self.job_notifier = job_notifier
         self.pipeline = pipeline
@@ -31,14 +30,15 @@ class RunStartedEvent(Event):
         Link: {link}
 
         """
-        link = "%s%s%s\n" % (settings.BEAGLE_URL, '/v0/run/api/', self.run_id)
+        link = "%s%s%s\n" % (settings.BEAGLE_URL, "/v0/run/api/", self.run_id)
         tags = ""
         for k, v in self.tags.items():
             tags += "%s: %s\n" % (k, str(v))
-        return RUN_TEMPLATE.format(run_id=self.run_id,
-                                   pipeline_name=self.pipeline,
-                                   pipeline_link=self.pipeline_link,
-                                   link=link,
-                                   tags=tags,
-                                   output_directory=self.output_directory
-                                   )
+        return RUN_TEMPLATE.format(
+            run_id=self.run_id,
+            pipeline_name=self.pipeline,
+            pipeline_link=self.pipeline_link,
+            link=link,
+            tags=tags,
+            output_directory=self.output_directory,
+        )

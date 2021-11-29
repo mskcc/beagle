@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class ETLSetRecipeEvent(Event):
-
     def __init__(self, job_notifier, recipe):
         self.job_notifier = job_notifier
         self.recipe = recipe

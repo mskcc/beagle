@@ -2,18 +2,9 @@ from runner.models import Port, PortType
 
 
 class PortObject(object):
-
-    def __init__(self,
-                 run_id,
-                 name,
-                 port_type,
-                 schema,
-                 secondary_files,
-                 db_value,
-                 value,
-                 files,
-                 port_id=None,
-                 notify=False):
+    def __init__(
+        self, run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id=None, notify=False
+    ):
         self.run_id = run_id
         self.name = name
         self.port_type = port_type

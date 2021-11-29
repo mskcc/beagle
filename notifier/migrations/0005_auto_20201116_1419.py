@@ -4,10 +4,10 @@ from django.db import migrations
 
 
 def create_email_notifier(apps, _):
-    Notifier = apps.get_model('notifier', 'Notifier')
-    JobGroup = apps.get_model('notifier', 'JobGroup')
-    JobGroupNotifier = apps.get_model('notifier', 'JobGroupNotifier')
-    notifier = Notifier.objects.create(notifier_type='EMAIL', board='ALL', default=False)
+    Notifier = apps.get_model("notifier", "Notifier")
+    JobGroup = apps.get_model("notifier", "JobGroup")
+    JobGroupNotifier = apps.get_model("notifier", "JobGroupNotifier")
+    notifier = Notifier.objects.create(notifier_type="EMAIL", board="ALL", default=False)
     job_group = JobGroup.objects.create()
     job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
     print(str(job_group_notifier.id))
@@ -20,7 +20,7 @@ def revert():
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0004_remove_notifier_operator'),
+        ("notifier", "0004_remove_notifier_operator"),
     ]
 
     operations = [
