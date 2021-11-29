@@ -421,7 +421,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 logger.info(format_log("Run Fail already processed", obj=run.run_obj))
                 return
 
-            restart_run = run.set_for_restart()
+            restart_run = run.run_obj.set_for_restart()
 
             if not restart_run:
 
