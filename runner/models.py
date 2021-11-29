@@ -217,6 +217,8 @@ class Run(BaseModel):
         started = self.started
         output_directory = self.output_directory
         message = self.message
+        if not message:
+            message = {}
         if "resume" not in message:
             message["resume"] = []
         message["resume"].append(now())
