@@ -485,26 +485,18 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 logger.info(format_log("Run Fail already processed", obj=run.run_obj))
                 return
 
-            restart_run = run.set_for_restart()
+            logger.info(format_log("Failing Run", obj=run.run_obj))
 
-            if not restart_run:
+            run.fail(error_message)
+            run.to_db()
 
-                logger.info(format_log("Failing Run", obj=run.run_obj))
+            job_group_notifier = run.job_group_notifier
+            job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
-                run.fail(error_message)
-                run.to_db()
+            ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
+            send_notification.delay(ci_review)
 
-                job_group_notifier = run.job_group_notifier
-                job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
-
-                ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
-                send_notification.delay(ci_review)
-
-                _job_finished_notify(run, lsf_log_location, input_json_location)
-
-            else:
-                logger.info(format_log("Restarting Run", obj=run.run_obj))
-                submit_job.delay(restart_run.pk, restart_run.output_directory)
+            _job_finished_notify(run, lsf_log_location, input_json_location)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
