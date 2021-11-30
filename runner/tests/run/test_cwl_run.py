@@ -333,15 +333,17 @@ class CWLRunObjectTest(APITestCase):
         self.assertTrue(port.files.all()[2].path in expected_result)
         self.assertTrue(port.files.all()[3].path in expected_result)
 
+    @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
-    @patch("lib.memcache_lock.memcache_task_lock")
-    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
-    def test_run_fail_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
-        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
+    @patch('lib.memcache_lock.memcache_task_lock')
+    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
+    def test_run_fail_job(self, mock_get_pipeline, memcache_task_lock, send_notification, set_for_restart):
+        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open("runner/tests/run/inputs.json", "r") as f:
             inputs = json.load(f)
 
+        set_for_restart.return_value = None
         mock_get_pipeline.return_value = app
         memcache_task_lock.return_value = True
         send_notification.return_value = False
@@ -358,15 +360,17 @@ class CWLRunObjectTest(APITestCase):
         run_obj = RunObjectFactory.from_db(run.run_id)
         self.assertEqual(run_obj.message, {"details": "Error has happened"})
 
+    @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
-    @patch("lib.memcache_lock.memcache_task_lock")
-    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
-    def test_multiple_failed_on_same_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
-        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
+    @patch('lib.memcache_lock.memcache_task_lock')
+    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
+    def test_multiple_failed_on_same_job(self, mock_get_pipeline, memcache_task_lock, send_notification, set_for_restart):
+        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open("runner/tests/run/inputs.json", "r") as f:
             inputs = json.load(f)
 
+        set_for_restart.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         mock_get_pipeline.return_value = app
