@@ -18,19 +18,15 @@ class ETLJobsLinksEvent(Event):
     def get_method(cls):
         return "process_etl_jobs_links_event"
 
-    def translate_status(self, status, message):
-        if message:
-            try:
-                code = message.get('code')
-                if code == 101:
-                    return "DATA_SOURCE_ERROR"
-                elif code == 102:
-                    return "NO_DATA"
-                elif code == 103:
-                    return "ERROR"
-            except Exception as e:
-                print(e)
-        return status
+    def translate_status(self, code=None, message=""):
+        if code:
+            if code == 101:
+                return "DATA_SOURCE_ERROR"
+            elif code == 102:
+                return "NO_DATA"
+            elif code == 103:
+                return "ERROR"
+        return message
 
     def get_message(self, message):
         try:
@@ -42,11 +38,11 @@ class ETLJobsLinksEvent(Event):
     def __str__(self):
         ETL_COMMENT_MESSAGE_TEMPLATE = """
         ETLJobs:
-        | TYPE | SAMPLE ID | LINK | STATUS | MESSAGE |
+        | TYPE | SAMPLE ID | STATUS | MESSAGE |
         {etl_jobs}
         """
         etl_jobs = ""
         for j in self.etl_jobs:
-            etl_jobs += "| %s | %s | %s%s%s | %s | %s |\n" % (
-            j[2], j[4], settings.BEAGLE_URL, '/v0/etl/jobs/', j[0], self.translate_status(j[1], j[3]), self.get_message(j[3]))
+            etl_jobs += "| %s | %s | %s | %s |\n" % (
+                j['type'], j['sample'], self.translate_status(code=j['code'], message=j['status']), j['message'])
         return ETL_COMMENT_MESSAGE_TEMPLATE.format(etl_jobs=etl_jobs)

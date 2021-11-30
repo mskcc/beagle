@@ -1,0 +1,3598 @@
+[
+  {
+    "model": "file_system.file",
+    "pk": "35b0cefa-69c0-417b-b1ac-1319e69fb999",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.901Z",
+      "modified_date": "2021-08-05T17:02:52.901Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vcf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vcf",
+      "file_type": 7,
+      "size": 7189,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$9e9c7871fb481552539b87703d0810ba61105ab6",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9a6b8bc9-4673-4f0c-b325-36cfdbd82663",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.908Z",
+      "modified_date": "2021-08-05T17:02:52.908Z",
+      "file": "35b0cefa-69c0-417b-b1ac-1319e69fb999",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ddd0c090-a2e7-4136-99bf-0b6e1133f559",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.196Z",
+      "modified_date": "2021-08-05T17:02:53.196Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 36055122,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$9c1928766fac4ad65e915b0690148d6b9ceeb5cb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9bf6ba2f-e380-42cd-933f-8f4f40705669",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.202Z",
+      "modified_date": "2021-08-05T17:02:53.202Z",
+      "file": "ddd0c090-a2e7-4136-99bf-0b6e1133f559",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e8119244-5f4f-4165-b172-0cd20cb4e050",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.241Z",
+      "modified_date": "2021-08-05T17:02:53.241Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 1526040,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$f654529ad892aaedbfc9139c3e7ee8c7519a383a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "abe464db-8894-41bc-974e-acf9cd097ebe",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.247Z",
+      "modified_date": "2021-08-05T17:02:53.247Z",
+      "file": "e8119244-5f4f-4165-b172-0cd20cb4e050",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a50c82e8-2ba0-48a7-ac98-ad55f339e4db",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.150Z",
+      "modified_date": "2021-08-05T17:02:53.151Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 995248,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$cb3f5beec58d973253b6faf86fa41a5793a41a1c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3b6a77f4-63da-4b40-a1ff-4abb524ca485",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.156Z",
+      "modified_date": "2021-08-05T17:02:53.156Z",
+      "file": "a50c82e8-2ba0-48a7-ac98-ad55f339e4db",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e77521e1-42ee-4661-b3ef-b28298f9083b",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.105Z",
+      "modified_date": "2021-08-05T17:02:53.105Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 37593255,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$ff2e692908e1faee92e467937c4f2a06f06e4747",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0f2b97c6-2c76-4b2b-aa00-669b16f1ea04",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.110Z",
+      "modified_date": "2021-08-05T17:02:53.110Z",
+      "file": "e77521e1-42ee-4661-b3ef-b28298f9083b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "916712a4-5832-424c-a763-5626c4b61db0",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.704Z",
+      "modified_date": "2021-08-05T17:02:53.704Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md_metrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md_metrics",
+      "file_type": 7,
+      "size": 2834,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$06b3e040a4b9e46af050e72507dbed7f9478fd60",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f2100494-0235-496e-a869-844dc5f2ce8b",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.711Z",
+      "modified_date": "2021-08-05T17:02:53.711Z",
+      "file": "916712a4-5832-424c-a763-5626c4b61db0",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e98bd80d-e3a9-49dd-b005-e3e089125746",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.639Z",
+      "modified_date": "2021-08-05T17:02:53.639Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md_metrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md_metrics",
+      "file_type": 7,
+      "size": 2761,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a1cf1209022908cae19d8bd3ae7efc67db92e857",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "19c372b7-856e-429d-9893-e64996d93321",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.647Z",
+      "modified_date": "2021-08-05T17:02:53.647Z",
+      "file": "e98bd80d-e3a9-49dd-b005-e3e089125746",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "11a136b9-7f4a-4db2-810d-ebd06796e58f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.661Z",
+      "modified_date": "2021-08-05T17:02:54.661Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md_FP_base_counts.txt",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md_FP_base_counts.txt",
+      "file_type": 7,
+      "size": 5173976,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$2cf746d9d4b2cbbebdc903224eab45ef705a781c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "650d8e41-4b67-4834-9e35-f0a96e8494fa",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.669Z",
+      "modified_date": "2021-08-05T17:02:54.669Z",
+      "file": "11a136b9-7f4a-4db2-810d-ebd06796e58f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8620c8a1-420c-4185-84fe-cda9e32c5c77",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.726Z",
+      "modified_date": "2021-08-05T17:02:54.726Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md_FP_base_counts.txt",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md_FP_base_counts.txt",
+      "file_type": 7,
+      "size": 5177530,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4c56bce697b1cc4789125dd12501dd4aab8e456c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9210422d-2117-49fd-9385-d6fe59fce5f5",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.733Z",
+      "modified_date": "2021-08-05T17:02:54.733Z",
+      "file": "8620c8a1-420c-4185-84fe-cda9e32c5c77",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3c878d4c-fee8-4f56-bdb3-cee4f7ca1c6f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.330Z",
+      "modified_date": "2021-08-05T17:02:55.330Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.vcf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.vcf",
+      "file_type": 7,
+      "size": 33881,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$af25ec09170d4ea9f8d14280bc9eb949afe096da",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2450ca4c-6f78-4355-b249-bb69a9a8f43d",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.337Z",
+      "modified_date": "2021-08-05T17:02:55.337Z",
+      "file": "3c878d4c-fee8-4f56-bdb3-cee4f7ca1c6f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3261b844-7ae5-4ba8-a769-b8da60b8c7ba",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.402Z",
+      "modified_date": "2021-08-05T17:02:55.402Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.txt",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect.txt",
+      "file_type": 7,
+      "size": 153557,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$153a686ca8ba1edae64d787ed20663fe261ea136",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b2081845-5d09-4506-875c-7a0c43fe4254",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.411Z",
+      "modified_date": "2021-08-05T17:02:55.411Z",
+      "file": "3261b844-7ae5-4ba8-a769-b8da60b8c7ba",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c2d53dd1-8886-42ca-92e4-69eb15a1b866",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.652Z",
+      "modified_date": "2021-08-05T17:02:55.652Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.annotate-variants.vcf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.annotate-variants.vcf",
+      "file_type": 7,
+      "size": 45215,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$1e6ae86580d1baae94efc876d2ef8fa88a568559",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5c14a8f3-67b5-4e43-9760-3fb90d0ac14a",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.660Z",
+      "modified_date": "2021-08-05T17:02:55.660Z",
+      "file": "c2d53dd1-8886-42ca-92e4-69eb15a1b866",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ea6629fa-ae2a-4234-8f16-6152a916650a",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.309Z",
+      "modified_date": "2021-08-05T17:02:53.401Z",
+      "file_name": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R1-001.chunk000_cl.stats",
+      "file_type": 7,
+      "size": 1965,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d63bed22a521cb0c9ab996d1614740415be8c135",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1b9d46e5-b765-46c3-8b0b-3d7ea88eb773",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.318Z",
+      "modified_date": "2021-08-05T17:02:53.318Z",
+      "file": "ea6629fa-ae2a-4234-8f16-6152a916650a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ec84d9cf-b8b1-4dd4-9020-f26ba03d39b3",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.751Z",
+      "modified_date": "2021-08-05T17:02:52.751Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.abra.printreads__s_C_ALLANT_T003_d.rg.md.abra.printreads.dat.gz",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.abra.printreads__s_C_ALLANT_T003_d.rg.md.abra.printreads.dat.gz",
+      "file_type": 7,
+      "size": 80583,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d0cbda7de6d84ce4c96dd2e8953c3840c4e40489",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "79072d83-01c4-46e8-b8e6-55866e08af35",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.774Z",
+      "modified_date": "2021-08-05T17:02:52.775Z",
+      "file": "ec84d9cf-b8b1-4dd4-9020-f26ba03d39b3",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9e73da38-24cf-4906-ba83-e4ca1f7cb0ac",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.839Z",
+      "modified_date": "2021-08-05T17:02:52.839Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.vcf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.vcf",
+      "file_type": 7,
+      "size": 10733,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$83c47757a0bdf7a042fea5f7ecada291605adbc9",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "957e04a1-b722-4459-b94a-d524471f271e",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.847Z",
+      "modified_date": "2021-08-05T17:02:52.847Z",
+      "file": "9e73da38-24cf-4906-ba83-e4ca1f7cb0ac",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "eb519907-2f67-496e-8472-2a453822bf03",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.959Z",
+      "modified_date": "2021-08-05T17:02:52.959Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vep.maf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vep.maf",
+      "file_type": 7,
+      "size": 1620,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d1eed8e218fc86be7ab38ae18e81b8b34fa921da",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dcc52d4c-c905-4713-b633-0db372c94bd3",
+    "fields": {
+      "created_date": "2021-08-05T17:02:52.965Z",
+      "modified_date": "2021-08-05T17:02:52.965Z",
+      "file": "eb519907-2f67-496e-8472-2a453822bf03",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d7938c10-913d-45a8-abe4-22ecc3c5584f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.012Z",
+      "modified_date": "2021-08-05T17:02:53.012Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vep.portal.txt",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.svs.pass.vep.portal.txt",
+      "file_type": 7,
+      "size": 99,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c16f763b248813fcdde76f7486f1ddc4e9856038",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "539a3c71-7de4-4eff-a2f4-3e05c06f0523",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.019Z",
+      "modified_date": "2021-08-05T17:02:53.019Z",
+      "file": "d7938c10-913d-45a8-abe4-22ecc3c5584f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d31237cd-3741-4249-818a-dd36bb7ad197",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.059Z",
+      "modified_date": "2021-08-05T17:02:53.059Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+      "file_type": 7,
+      "size": 105617,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$7e71a6170f51b430ba780477a5f7b53f66f2f8be",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a22517d4-c5f5-4ecb-9926-cf6c509f4662",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.066Z",
+      "modified_date": "2021-08-05T17:02:53.066Z",
+      "file": "d31237cd-3741-4249-818a-dd36bb7ad197",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c8227008-1b61-40d8-8a99-c82dafba4a22",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.471Z",
+      "modified_date": "2021-08-05T17:02:53.572Z",
+      "file_name": "MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/MyFlowCellId_MyBarcodeIndex-IGO-00000-TEST-L001-R2-001.chunk000_cl.stats",
+      "file_type": 7,
+      "size": 2170,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$e73376ac6473f9ae6d10b8bf388d55e7b12d4481",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "770c675e-6a83-4d83-98fb-2154153072d4",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.480Z",
+      "modified_date": "2021-08-05T17:02:53.481Z",
+      "file": "c8227008-1b61-40d8-8a99-c82dafba4a22",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0c0dcabf-d12f-4ae6-9732-4b50c528422f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.830Z",
+      "modified_date": "2021-08-05T17:02:53.830Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.asmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.asmetrics",
+      "file_type": 7,
+      "size": 2081,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$ed6923cc0810a9aa0c55613cd0cdb9d2d895ecf5",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "282a7d1d-6a12-4137-a094-c2e28fb4b6a0",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.838Z",
+      "modified_date": "2021-08-05T17:02:53.838Z",
+      "file": "0c0dcabf-d12f-4ae6-9732-4b50c528422f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "661c3805-bb82-46ba-974b-ce418fa7b22d",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.767Z",
+      "modified_date": "2021-08-05T17:02:53.767Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.asmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.asmetrics",
+      "file_type": 7,
+      "size": 2075,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d16f623ce61434fa83facb55f6a64abe963e89cb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "bc24be41-ed9b-4695-90ab-610b5942387a",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.775Z",
+      "modified_date": "2021-08-05T17:02:53.775Z",
+      "file": "661c3805-bb82-46ba-974b-ce418fa7b22d",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "177fca9b-32a6-4b5e-a90d-13a313c43a24",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.893Z",
+      "modified_date": "2021-08-05T17:02:53.893Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.hsmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.hsmetrics",
+      "file_type": 7,
+      "size": 4415,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$f54a89d709a7a779bf2085905c12556fc97dcf4a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "92b9ff37-7e16-4f5c-b701-01ce8882ad29",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.901Z",
+      "modified_date": "2021-08-05T17:02:53.901Z",
+      "file": "177fca9b-32a6-4b5e-a90d-13a313c43a24",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "757bc611-cf2a-4338-8e13-9072ba47af5a",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.952Z",
+      "modified_date": "2021-08-05T17:02:53.952Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.hsmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.hsmetrics",
+      "file_type": 7,
+      "size": 4373,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$e417c8079073fba66aa54bac411f7278a6b704b7",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d1cabb8f-c3b1-48ac-b1a3-7613ec804b76",
+    "fields": {
+      "created_date": "2021-08-05T17:02:53.960Z",
+      "modified_date": "2021-08-05T17:02:53.960Z",
+      "file": "757bc611-cf2a-4338-8e13-9072ba47af5a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "833b1cc1-1a74-41e3-a0df-b76e24a47d02",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.080Z",
+      "modified_date": "2021-08-05T17:02:54.080Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.ismetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.ismetrics",
+      "file_type": 7,
+      "size": 5243,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$f27ae72d8812f8a2272a8b0dbcb771db3e39336c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3e08c68c-9575-43b1-8657-5e6bd1e1cd1e",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.088Z",
+      "modified_date": "2021-08-05T17:02:54.088Z",
+      "file": "833b1cc1-1a74-41e3-a0df-b76e24a47d02",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9468b019-0ded-4580-bcde-a2de1993dcc1",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.018Z",
+      "modified_date": "2021-08-05T17:02:54.018Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.ismetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.ismetrics",
+      "file_type": 7,
+      "size": 3602,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4e0d0302d4829af666b3c425e5bf3dee1634d7c8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5bafc4d3-ce4d-40d7-b251-34a741d04ec3",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.025Z",
+      "modified_date": "2021-08-05T17:02:54.025Z",
+      "file": "9468b019-0ded-4580-bcde-a2de1993dcc1",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0cdc8d5b-cd98-4884-81e8-d8ed9aae0660",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.207Z",
+      "modified_date": "2021-08-05T17:02:54.207Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.ismetrics.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.ismetrics.pdf",
+      "file_type": 7,
+      "size": 12553,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c77c164243a112bf3d5b4624e78d0397456e31da",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0349e51c-d55e-4952-a575-ee3a264675e2",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.214Z",
+      "modified_date": "2021-08-05T17:02:54.214Z",
+      "file": "0cdc8d5b-cd98-4884-81e8-d8ed9aae0660",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b549ccf5-7019-4018-b97e-df452c2c5f0b",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.144Z",
+      "modified_date": "2021-08-05T17:02:54.144Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.ismetrics.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.ismetrics.pdf",
+      "file_type": 7,
+      "size": 9432,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$8ca541f43ed14889754cf003b8970a033f0e18f5",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "72be0d9f-5e7a-441b-8b4a-4c8ce7ebcff6",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.152Z",
+      "modified_date": "2021-08-05T17:02:54.152Z",
+      "file": "b549ccf5-7019-4018-b97e-df452c2c5f0b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1af016e8-b99b-4074-ba55-f48a83d36326",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.266Z",
+      "modified_date": "2021-08-05T17:02:54.266Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.hstmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.hstmetrics",
+      "file_type": 7,
+      "size": 380579,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$cb9ebd2583e8196e59f921275a9528e072f7f02a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "43dce720-e2a2-48f6-8fde-3dd280b5af1f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.270Z",
+      "modified_date": "2021-08-05T17:02:54.270Z",
+      "file": "1af016e8-b99b-4074-ba55-f48a83d36326",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "85fb18f6-84c1-493c-be46-61bfcb0e335f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.307Z",
+      "modified_date": "2021-08-05T17:02:54.307Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.hstmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.hstmetrics",
+      "file_type": 7,
+      "size": 381117,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$60711c1d8999762cb51d261a77b94b1b788268a8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dbfd82a8-1699-472f-ba8e-f92be9de823d",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.314Z",
+      "modified_date": "2021-08-05T17:02:54.314Z",
+      "file": "85fb18f6-84c1-493c-be46-61bfcb0e335f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "21dabc54-f13f-4467-b1d5-7fc1b32f5e6f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.445Z",
+      "modified_date": "2021-08-05T17:02:54.445Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+      "file_type": 7,
+      "size": 5444,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$83dca97791309d867e76f96f38b077e25104dc1d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4c79185f-1d5c-44c6-8aa3-5f858c9c499f",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.454Z",
+      "modified_date": "2021-08-05T17:02:54.454Z",
+      "file": "21dabc54-f13f-4467-b1d5-7fc1b32f5e6f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e3d00e56-116e-45d7-ac70-94b93fbf2a27",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.378Z",
+      "modified_date": "2021-08-05T17:02:54.378Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.qmetrics.quality_by_cycle_metrics",
+      "file_type": 7,
+      "size": 5441,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$903e126e78ec596720ce46f3419a631039ea6af1",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c89a2be7-eb9d-44d5-82f2-77bd7cce7a7c",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.386Z",
+      "modified_date": "2021-08-05T17:02:54.386Z",
+      "file": "e3d00e56-116e-45d7-ac70-94b93fbf2a27",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0946bbb0-11a6-4001-976c-c062bbf535b4",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.592Z",
+      "modified_date": "2021-08-05T17:02:54.592Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+      "file_type": 7,
+      "size": 8311,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$038694d43a905f47ad4ce660e41acc78e0c87ae3",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e0b1b4a6-a2b2-4118-b16c-d88eb91f0157",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.600Z",
+      "modified_date": "2021-08-05T17:02:54.600Z",
+      "file": "0946bbb0-11a6-4001-976c-c062bbf535b4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "954075c3-47ea-46b7-966d-1c92e05d1c3c",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.523Z",
+      "modified_date": "2021-08-05T17:02:54.523Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.qmetrics.quality_by_cycle.pdf",
+      "file_type": 7,
+      "size": 8249,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6f8e3eb3e930587c486f66d2097cde5f7ed25f67",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "ab07abdc-3308-4a70-9e40-281e30c3fce8",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.532Z",
+      "modified_date": "2021-08-05T17:02:54.532Z",
+      "file": "954075c3-47ea-46b7-966d-1c92e05d1c3c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0db0a515-7d42-469c-a9e7-e85040ea7eac",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.863Z",
+      "modified_date": "2021-08-05T17:02:54.863Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.gcbias.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.gcbias.pdf",
+      "file_type": 7,
+      "size": 6811,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$bb21790bb49b22d809421fbcc48fd7c57c13d46c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2e77bae3-1155-4222-8fdf-0df6851f43ae",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.870Z",
+      "modified_date": "2021-08-05T17:02:54.871Z",
+      "file": "0db0a515-7d42-469c-a9e7-e85040ea7eac",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "283355ce-d649-41ed-b97f-e6f7e14302fd",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.798Z",
+      "modified_date": "2021-08-05T17:02:54.798Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.gcbias.pdf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.gcbias.pdf",
+      "file_type": 7,
+      "size": 6768,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$52796f6acdd2dc45406a45a0207083b1554e583a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c1af3495-0110-48d9-b082-3abb90e8ec90",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.806Z",
+      "modified_date": "2021-08-05T17:02:54.806Z",
+      "file": "283355ce-d649-41ed-b97f-e6f7e14302fd",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "2efc21a8-cf86-412d-9439-716eb1e4d613",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.929Z",
+      "modified_date": "2021-08-05T17:02:54.929Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.gcbiasmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.gcbiasmetrics",
+      "file_type": 7,
+      "size": 5981,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$b7a2582cd5e88b290a073fb25d83bb680ee99175",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2891af81-27e8-4922-b119-50a416306f9c",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.938Z",
+      "modified_date": "2021-08-05T17:02:54.938Z",
+      "file": "2efc21a8-cf86-412d-9439-716eb1e4d613",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a12fd967-c10a-49f8-8937-c37b61a5a502",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.988Z",
+      "modified_date": "2021-08-05T17:02:54.988Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.gcbiasmetrics",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.gcbiasmetrics",
+      "file_type": 7,
+      "size": 6017,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$67ae7fcd912f6b8c684c4eab12f2bf54f3b0657e",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dc949be9-5586-4672-9e5c-1e79b7182a04",
+    "fields": {
+      "created_date": "2021-08-05T17:02:54.995Z",
+      "modified_date": "2021-08-05T17:02:54.995Z",
+      "file": "a12fd967-c10a-49f8-8937-c37b61a5a502",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4cfc9135-48ec-437c-a766-739293faa27d",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.051Z",
+      "modified_date": "2021-08-05T17:02:55.051Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.gcbias.summary",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.gcbias.summary",
+      "file_type": 7,
+      "size": 1195,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6a029d82679f073fac0d4a1b7a0168a130ad225b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "67035743-de35-48f6-bdce-3425371fe0ab",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.058Z",
+      "modified_date": "2021-08-05T17:02:55.058Z",
+      "file": "4cfc9135-48ec-437c-a766-739293faa27d",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "db865597-286f-4d90-8e39-2aaeb1139d73",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.111Z",
+      "modified_date": "2021-08-05T17:02:55.111Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.gcbias.summary",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.gcbias.summary",
+      "file_type": 7,
+      "size": 1194,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$14340b150aae4c245abbd926c914015875487e8c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a7c927e0-bb0c-4e6d-8ef2-3f532ea88933",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.119Z",
+      "modified_date": "2021-08-05T17:02:55.119Z",
+      "file": "db865597-286f-4d90-8e39-2aaeb1139d73",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "6cb850bf-4b5c-407b-b617-7f894bbc14da",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.259Z",
+      "modified_date": "2021-08-05T17:02:55.259Z",
+      "file_name": "s_C_ALLANT_N002_d.rg.md.pileup",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_N002_d.rg.md.pileup",
+      "file_type": 7,
+      "size": 92666,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$33be9aebd5b6cd314d2c223fe92cc4f6346d5fb8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dcefa994-ec27-4cda-a20d-dcc26791c77d",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.269Z",
+      "modified_date": "2021-08-05T17:02:55.269Z",
+      "file": "6cb850bf-4b5c-407b-b617-7f894bbc14da",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a6151e99-2951-4497-99f3-da6b8a2e131c",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.175Z",
+      "modified_date": "2021-08-05T17:02:55.175Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.pileup",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.pileup",
+      "file_type": 7,
+      "size": 48680,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$5130aba435a8c4a1038c5c6f057e2c83d1166563",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "81cd1401-cc22-40d2-aebb-75ea0620b6dc",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.182Z",
+      "modified_date": "2021-08-05T17:02:55.182Z",
+      "file": "a6151e99-2951-4497-99f3-da6b8a2e131c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "992bc4ec-ce30-438b-8707-b055e30f2873",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.470Z",
+      "modified_date": "2021-08-05T17:02:55.470Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.vcf",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.vcf",
+      "file_type": 7,
+      "size": 405145,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$974a4d6f573e061bca7a1f4e92f62a1b0a52c08b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2923a1da-8182-4153-9300-ded1d59c7dcf",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.477Z",
+      "modified_date": "2021-08-05T17:02:55.477Z",
+      "file": "992bc4ec-ce30-438b-8707-b055e30f2873",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "899783ac-4cb3-4a22-b718-b45163fa0834",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.531Z",
+      "modified_date": "2021-08-05T17:02:55.531Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz",
+      "file_type": 7,
+      "size": 11194,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6c3039fc81dc505dbc2f4bd686ea7f012ab4cb7d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "fb9f2511-f4e1-45cb-a50b-67796e11f4fc",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.538Z",
+      "modified_date": "2021-08-05T17:02:55.538Z",
+      "file": "899783ac-4cb3-4a22-b718-b45163fa0834",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f1f0e581-7c7f-47f2-97b3-8c66522fff2e",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.597Z",
+      "modified_date": "2021-08-05T17:02:55.597Z",
+      "file_name": "s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz.tbi",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.combined-variants.vcf.gz.tbi",
+      "file_type": 7,
+      "size": 715,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$0c3fc05a167c66e4c1292633de489c0d31709b39",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "fba689f9-9dc1-438b-a92c-679f46b9d8b8",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.604Z",
+      "modified_date": "2021-08-05T17:02:55.604Z",
+      "file": "f1f0e581-7c7f-47f2-97b3-8c66522fff2e",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5d6323ef-7ccd-4d64-a0f7-65442b1ce950",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.725Z",
+      "modified_date": "2021-08-05T17:02:55.725Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz",
+      "file_type": 7,
+      "size": 8491,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$149114b6599c2d3dcacb7885418674fcd4be73fe",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "240be573-35ab-4e53-b7a2-1b87a28af30e",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.734Z",
+      "modified_date": "2021-08-05T17:02:55.734Z",
+      "file": "5d6323ef-7ccd-4d64-a0f7-65442b1ce950",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "81218e28-91e4-49c2-a1fb-ad0a74d561ab",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.800Z",
+      "modified_date": "2021-08-05T17:02:55.800Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.vardict.complex_filtered_STDfilter.norm.vcf.gz.tbi",
+      "file_type": 7,
+      "size": 716,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$5d83a3ad44a845fccac82d6a008552b441df8f08",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6419061f-fc86-4bb6-a14b-1b74832b3446",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.809Z",
+      "modified_date": "2021-08-05T17:02:55.809Z",
+      "file": "81218e28-91e4-49c2-a1fb-ad0a74d561ab",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "22a6f412-1741-470b-bdec-25985476f327",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.876Z",
+      "modified_date": "2021-08-05T17:02:55.876Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz",
+      "file_type": 7,
+      "size": 3367,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$9c2196de82f3d894f9e35d9ef7fbf0198c58f16c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b3cbed97-85d5-4e1a-85cc-4b0230d790b2",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.884Z",
+      "modified_date": "2021-08-05T17:02:55.884Z",
+      "file": "22a6f412-1741-470b-bdec-25985476f327",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "df1f1022-7410-4a8f-b9b9-ce8e271f98ad",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.945Z",
+      "modified_date": "2021-08-05T17:02:55.945Z",
+      "file_name": "s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+      "path": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.s_C_ALLANT_N002_d.rg.md.abra.printreads.mutect_STDfilter.norm.vcf.gz.tbi",
+      "file_type": 7,
+      "size": 175,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$7891b55e1e5952e981ae1c4832484607e9198d96",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "382592f7-86da-4995-95ce-b4c1efa79456",
+    "fields": {
+      "created_date": "2021-08-05T17:02:55.954Z",
+      "modified_date": "2021-08-05T17:02:55.954Z",
+      "file": "df1f1022-7410-4a8f-b9b9-ce8e271f98ad",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "72aa956a-7d5b-485f-8cc2-c4df96c5d626",
+    "fields": {
+      "created_date": "2020-05-27T18:01:09.371Z",
+      "modified_date": "2020-05-27T18:01:09.371Z",
+      "file_name": "1000G_phase1.snps.high_confidence.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
+      "file_type": 16,
+      "size": 7313069069,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$28e4228fdb4aeccd37a37ea404534d5595052101",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c670cfce-725a-4c1f-bf44-395bb8328c65",
+    "fields": {
+      "created_date": "2020-05-27T18:01:09.379Z",
+      "modified_date": "2020-10-08T01:38:01.579Z",
+      "file": "72aa956a-7d5b-485f-8cc2-c4df96c5d626",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "snps_1000g",
+        "data_type": "request_file"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f2391e3a-6fa5-4f51-ac97-d961f49a7ea7",
+    "fields": {
+      "created_date": "2020-05-27T18:01:08.980Z",
+      "modified_date": "2020-05-27T18:01:08.980Z",
+      "file_name": "Mills_and_1000G_gold_standard.indels.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
+      "file_type": 16,
+      "size": 86369975,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$414c7ab361dc659f63f42ae0585e24dcc7376366",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9b60d5d8-75b5-44ca-b461-df0781226d8e",
+    "fields": {
+      "created_date": "2020-05-27T18:01:08.991Z",
+      "modified_date": "2020-10-08T01:38:01.555Z",
+      "file": "f2391e3a-6fa5-4f51-ac97-d961f49a7ea7",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "indels_1000g",
+        "data_type": "request_file"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "505d6f3c-0541-4151-94eb-719d86790fce",
+    "fields": {
+      "created_date": "2020-05-27T18:01:10.443Z",
+      "modified_date": "2020-05-27T18:01:10.443Z",
+      "file_name": "ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+      "path": "/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+      "file_type": 16,
+      "size": 337197976,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$c48e7776ff3ad6026209ced11a784fd1eb3bacdd",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "356bfe44-955d-456b-8a1e-34432aab646d",
+    "fields": {
+      "created_date": "2020-05-27T18:01:10.452Z",
+      "modified_date": "2020-10-08T01:38:01.576Z",
+      "file": "505d6f3c-0541-4151-94eb-719d86790fce",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "exac_filter",
+        "data_type": "request_file"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5348bbd0-6441-4d32-b6d7-33e1807d2655",
+    "fields": {
+      "created_date": "2020-05-27T18:01:09.743Z",
+      "modified_date": "2020-05-27T18:01:09.743Z",
+      "file_name": "CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+      "path": "/juno/work/ci/resources/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+      "file_type": 16,
+      "size": 112402812,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$cda175e2520eccac798343e7d44a5575d019c30e",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "29e37a88-912c-452c-afc5-6b89a79d8fa6",
+    "fields": {
+      "created_date": "2020-05-27T18:01:09.752Z",
+      "modified_date": "2020-10-08T01:38:01.574Z",
+      "file": "5348bbd0-6441-4d32-b6d7-33e1807d2655",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "cosmic",
+        "data_type": "request_file"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d4c3f8ae-491e-4574-bfc8-b54d0b0c8162",
+    "fields": {
+      "created_date": "2020-05-27T15:56:46.410Z",
+      "modified_date": "2020-05-27T15:56:46.410Z",
+      "file_name": "GRCm38.fasta",
+      "path": "/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta",
+      "file_type": 25,
+      "size": 2769885087,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$1fecedd2bb7d04a9522a4800f22e3e9de3707e0f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8f0c413f-e8a8-4553-b168-ed8e58e8ab08",
+    "fields": {
+      "created_date": "2020-05-27T15:56:46.420Z",
+      "modified_date": "2020-10-08T01:38:01.238Z",
+      "file": "d4c3f8ae-491e-4574-bfc8-b54d0b0c8162",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh38",
+        "data_type": "fasta"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "54f9809d-0e64-4450-8ad9-240195c55552",
+    "fields": {
+      "created_date": "2020-05-27T16:46:13.236Z",
+      "modified_date": "2020-05-27T16:46:13.236Z",
+      "file_name": "hapmap_3.3.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf",
+      "file_type": 16,
+      "size": 225898391,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$ec99d0d2a3833c9427df9ba41da4a83e9ae2e364",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0f623f87-91c1-4311-8a62-eee038ae3978",
+    "fields": {
+      "created_date": "2020-05-27T16:46:13.247Z",
+      "modified_date": "2020-10-08T01:38:01.471Z",
+      "file": "54f9809d-0e64-4450-8ad9-240195c55552",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "data_type": "vcf"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "2b22e87b-a6c1-4c96-8627-75bcd5cf5ce6",
+    "fields": {
+      "created_date": "2020-05-27T16:53:16.030Z",
+      "modified_date": "2020-05-27T16:53:16.030Z",
+      "file_name": "dbsnp_138.b37.excluding_sites_after_129.vcf",
+      "path": "/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
+      "file_type": 16,
+      "size": 2432705678,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$67f0a4f4b5dad2b653857caf723482b823829461",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "fffafdec-d663-4067-9486-cfe6e4e959a3",
+    "fields": {
+      "created_date": "2020-05-27T16:53:16.042Z",
+      "modified_date": "2020-10-08T01:38:01.529Z",
+      "file": "2b22e87b-a6c1-4c96-8627-75bcd5cf5ce6",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh37",
+        "version": "129",
+        "data_type": "dbsnp"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5e9540ae-c3b8-45c1-9994-fd86b81b0719",
+    "fields": {
+      "created_date": "2020-05-27T15:56:44.675Z",
+      "modified_date": "2020-05-27T15:56:44.675Z",
+      "file_name": "b37.fasta",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+      "file_type": 25,
+      "size": 3189750467,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$992291353a574f76f4be22ed6e37a64bf37e215f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e7c29192-99d2-490c-ae5e-62e023b1863f",
+    "fields": {
+      "created_date": "2020-05-27T15:56:44.684Z",
+      "modified_date": "2020-10-08T01:38:00.792Z",
+      "file": "5e9540ae-c3b8-45c1-9994-fd86b81b0719",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh37",
+        "data_type": "fasta"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0c7fc951-3328-4fa9-8942-5b5d3bf96353",
+    "fields": {
+      "created_date": "2020-05-26T19:00:03.247Z",
+      "modified_date": "2020-05-26T19:00:03.247Z",
+      "file_name": "refGene_b37.sorted.txt",
+      "path": "/juno/work/ci/resources/request_files/refseq/refGene_b37.sorted.txt",
+      "file_type": 17,
+      "size": 0,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$2073a44e3c834b1c03e3cd393aca5aa8a2800e1a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "134c3324-ad80-4e12-85f7-f95ce2035a27",
+    "fields": {
+      "created_date": "2020-05-26T19:00:03.253Z",
+      "modified_date": "2020-10-08T01:38:00.326Z",
+      "file": "0c7fc951-3328-4fa9-8942-5b5d3bf96353",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh37",
+        "data_type": "refseq"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.558Z",
+      "modified_date": "2020-05-22T22:20:24.558Z",
+      "file_name": "picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+      "file_type": 20,
+      "size": 0,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b42c0242-fbc9-4ef6-b3fe-9487f6f65b26",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.566Z",
+      "modified_date": "2020-10-08T01:56:22.260Z",
+      "file": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "targets_list"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "2b6e0c05-d1bc-4587-bd4b-5ab3f484807c",
+    "fields": {
+      "created_date": "2020-05-22T22:20:23.563Z",
+      "modified_date": "2020-05-22T22:20:23.563Z",
+      "file_name": "FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+      "file_type": 17,
+      "size": 0,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8b59756c-b548-4a62-8db8-fb564b9eef80",
+    "fields": {
+      "created_date": "2020-05-22T22:20:23.569Z",
+      "modified_date": "2020-10-08T01:56:22.253Z",
+      "file": "2b6e0c05-d1bc-4587-bd4b-5ab3f484807c",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "FP_genotypes"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "588f3370-f005-4f46-b80d-3441f24e9ef0",
+    "fields": {
+      "created_date": "2020-05-27T15:56:43.673Z",
+      "modified_date": "2020-05-27T15:56:43.673Z",
+      "file_name": "human.hg19.excl.tsv",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/delly/human.hg19.excl.tsv",
+      "file_type": 18,
+      "size": 6984,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$a1249f96e0e7900a0f49447c246c5d88a3676cb0",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d7cd4058-6380-4f69-9b3e-7f0b091a2cae",
+    "fields": {
+      "created_date": "2020-05-27T15:56:43.680Z",
+      "modified_date": "2020-10-08T01:38:01.099Z",
+      "file": "588f3370-f005-4f46-b80d-3441f24e9ef0",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh37",
+        "data_type": "delly"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "66b4837f-1029-463c-8acd-70d4ac233ffe",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.223Z",
+      "modified_date": "2020-05-22T22:20:24.223Z",
+      "file_name": "picard_baits.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+      "file_type": 20,
+      "size": 0,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e7a61862-6e9e-44cc-863f-710d1ff93f6b",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.230Z",
+      "modified_date": "2020-10-08T01:56:22.258Z",
+      "file": "66b4837f-1029-463c-8acd-70d4ac233ffe",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "baits_list"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8952f7b8-4bee-4c4c-8de0-f5a7ace1dd90",
+    "fields": {
+      "created_date": "2020-05-27T14:59:43.885Z",
+      "modified_date": "2020-05-27T14:59:43.885Z",
+      "file_name": "hotspot-list-union-v1-v2.maf",
+      "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
+      "file_type": 4,
+      "size": 624846,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$a66bd38c2e15780be5bede2b23d14cc787c38922",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "637f88aa-f2ca-4aac-a8e4-edf68f11994c",
+    "fields": {
+      "created_date": "2020-05-27T14:59:43.895Z",
+      "modified_date": "2020-10-08T01:38:00.510Z",
+      "file": "8952f7b8-4bee-4c4c-8de0-f5a7ace1dd90",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "data_type": "maf"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b82af4b3-4edf-4ddd-b727-f09b8b62fc1e",
+    "fields": {
+      "created_date": "2020-05-27T15:56:44.344Z",
+      "modified_date": "2020-05-27T15:56:44.344Z",
+      "file_name": "dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+      "file_type": 16,
+      "size": 1015019014,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$174b0e3c7cd1c83db3c57fdc9c3a66a3d9a1cff8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3fec67f3-54f8-4478-9a39-01348aa8df1e",
+    "fields": {
+      "created_date": "2020-05-27T15:56:44.350Z",
+      "modified_date": "2020-10-08T01:38:00.936Z",
+      "file": "b82af4b3-4edf-4ddd-b727-f09b8b62fc1e",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "genome": "GRCh37",
+        "data_type": "facets_snps"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ce1c63ea-d4b3-4a10-a310-4a0bae242fa3",
+    "fields": {
+      "created_date": "2020-05-22T22:20:23.885Z",
+      "modified_date": "2020-05-22T22:20:23.885Z",
+      "file_name": "FP_tiling_intervals.list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+      "file_type": 20,
+      "size": 0,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "baa3173b-e76c-4c3b-90e1-17c546ae68e7",
+    "fields": {
+      "created_date": "2020-05-22T22:20:23.892Z",
+      "modified_date": "2020-10-08T01:56:22.256Z",
+      "file": "ce1c63ea-d4b3-4a10-a310-4a0bae242fa3",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "FP_intervals"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "23539956-9ca1-43f9-9dfd-8f98698f6ab6",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.107Z",
+      "modified_date": "2020-05-27T15:56:52.107Z",
+      "file_name": "s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1281116533,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$bf0311ebdeeaab919fa727dfbbc7960193b493d2",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "95fb4375-57e7-4b5d-ab61-91a1d927d82b",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.113Z",
+      "modified_date": "2020-10-08T01:38:00.939Z",
+      "file": "23539956-9ca1-43f9-9dfd-8f98698f6ab6",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "266750cd-1cf6-4932-ac66-6a1e8475ecaf",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.535Z",
+      "modified_date": "2020-05-27T15:56:48.535Z",
+      "file_name": "s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3506739569,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$5fc81f7f713f65b94eafdc4f34f0122631764573",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e667ddaf-9c67-4ebf-b79f-fd27d33282be",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.544Z",
+      "modified_date": "2020-10-08T01:38:00.988Z",
+      "file": "266750cd-1cf6-4932-ac66-6a1e8475ecaf",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3a8e9361-d405-43c0-886d-d8948f67ebdb",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.597Z",
+      "modified_date": "2020-05-27T15:56:53.597Z",
+      "file_name": "s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1507048799,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$2e4d2598a1d40e6b06f3bdf047e4f330dfc7bd9c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "54a5e516-a9e4-4e2c-9a49-bd0c20a45ca1",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.605Z",
+      "modified_date": "2020-10-08T01:38:00.941Z",
+      "file": "3a8e9361-d405-43c0-886d-d8948f67ebdb",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4247fb15-4883-46b8-8b34-7053b23c0197",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.943Z",
+      "modified_date": "2020-05-27T15:57:02.944Z",
+      "file_name": "s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2076693674,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$516c94947ee0e19bd33d2dc1afba37a99c4f619c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5568ea56-83a3-4dcf-ac34-fc23cdafc382",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.952Z",
+      "modified_date": "2020-10-08T01:38:01.031Z",
+      "file": "4247fb15-4883-46b8-8b34-7053b23c0197",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4c03baf0-a722-4bb5-99f6-09224870d4fa",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.183Z",
+      "modified_date": "2020-05-27T15:56:48.183Z",
+      "file_name": "s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3727525387,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$4715d6e24117d8486a08fd0b90ed0e03dc948115",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9d3b8d69-d032-44a7-bbe9-ad36d2545a42",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.191Z",
+      "modified_date": "2020-10-08T01:38:01.012Z",
+      "file": "4c03baf0-a722-4bb5-99f6-09224870d4fa",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5051589e-b392-4501-9257-1cc723e3444a",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.066Z",
+      "modified_date": "2020-05-27T15:56:51.066Z",
+      "file_name": "s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1873938178,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$7d2c1cdfc9c0e88f94eebdeaacd24e09c0635ac0",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "de4e70b3-d0db-414a-8880-bfbf0771bd04",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.074Z",
+      "modified_date": "2020-10-08T01:38:00.947Z",
+      "file": "5051589e-b392-4501-9257-1cc723e3444a",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "51a01398-abbf-402b-abeb-e4b627a76011",
+    "fields": {
+      "created_date": "2020-05-27T15:56:54.665Z",
+      "modified_date": "2020-05-27T15:56:54.665Z",
+      "file_name": "s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2972235408,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$afd27f50854d704ed2c82280f23fe402b71e9931",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "53e99cce-3327-4698-9a90-14f694e796e1",
+    "fields": {
+      "created_date": "2020-05-27T15:56:54.675Z",
+      "modified_date": "2020-10-08T01:38:00.963Z",
+      "file": "51a01398-abbf-402b-abeb-e4b627a76011",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5832fa2f-d559-4dac-bca6-8fc707ff9b11",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.756Z",
+      "modified_date": "2020-05-27T15:56:51.757Z",
+      "file_name": "s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2298166927,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$6e0a0b41a78d0e7eb768260556e05d89d6dca701",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dc737462-44e9-421d-89ad-4a802c9a7fe2",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.765Z",
+      "modified_date": "2020-10-08T01:38:00.958Z",
+      "file": "5832fa2f-d559-4dac-bca6-8fc707ff9b11",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5a6c6603-f30c-4264-8248-947af2750ea2",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.121Z",
+      "modified_date": "2020-05-27T15:57:00.121Z",
+      "file_name": "s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2613987166,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$305df68a9c3d101860804a1d9dda9ab2d582bce4",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dfdabb72-bcbd-4e94-9659-490e19631351",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.128Z",
+      "modified_date": "2020-10-08T01:38:01.043Z",
+      "file": "5a6c6603-f30c-4264-8248-947af2750ea2",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5e04d4d1-cbf0-4513-9035-7cb07c02c8ac",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.047Z",
+      "modified_date": "2020-05-27T15:56:55.047Z",
+      "file_name": "s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2093758629,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$70428f8bc8897f38f42aecf99725003b05c59ba2",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c60af2b5-b9f3-49ab-8c75-360215de7414",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.054Z",
+      "modified_date": "2020-10-08T01:38:00.582Z",
+      "file": "5e04d4d1-cbf0-4513-9035-7cb07c02c8ac",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "635dabd2-c80d-4b69-b398-3a4b48c4a5f4",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.957Z",
+      "modified_date": "2020-05-27T15:56:53.957Z",
+      "file_name": "s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1702329989,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$16cb8c2e81ae4d91a26995ccd70df17f5a5eb7e3",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "bafa6f21-e5ac-4891-b181-076ad238f100",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.967Z",
+      "modified_date": "2020-10-08T01:38:00.944Z",
+      "file": "635dabd2-c80d-4b69-b398-3a4b48c4a5f4",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "675561c3-0c98-45d4-b14c-06b8963358a5",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.488Z",
+      "modified_date": "2020-05-27T15:56:56.488Z",
+      "file_name": "s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2337197309,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$70c9e4d1768222e1f47a9541cbb646d22c94498c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2ee33bb8-06ba-4bb7-89fb-97008000cac4",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.495Z",
+      "modified_date": "2020-10-08T01:38:01.041Z",
+      "file": "675561c3-0c98-45d4-b14c-06b8963358a5",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "67d49fe2-2471-4d20-b4ca-b7d0c37ffdc4",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.408Z",
+      "modified_date": "2020-05-27T15:56:51.408Z",
+      "file_name": "s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 4023855606,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$1b038d59bf9aed436a18be60a8019402f193a253",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a320c19f-d9ba-45c5-8fa0-daf905b561b9",
+    "fields": {
+      "created_date": "2020-05-27T15:56:51.417Z",
+      "modified_date": "2020-10-08T01:38:00.968Z",
+      "file": "67d49fe2-2471-4d20-b4ca-b7d0c37ffdc4",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "684bfdb8-6f33-419a-bcc6-5dafb3b71756",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.605Z",
+      "modified_date": "2020-05-27T15:57:02.605Z",
+      "file_name": "s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1677939673,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$4cb0a011a491cf3651310fe6364c12265bb33546",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9a21ce39-10b6-4ccd-afde-57273ad8ec89",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.613Z",
+      "modified_date": "2020-10-08T01:38:01.028Z",
+      "file": "684bfdb8-6f33-419a-bcc6-5dafb3b71756",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "78c975b5-c192-41d4-a1c1-0bfcdc369792",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.778Z",
+      "modified_date": "2020-05-27T15:56:58.778Z",
+      "file_name": "s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2999188032,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$e1b8738660b5f639cdb5466e04dea50f2dca210f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "425a8c31-62b3-4cda-b396-f50fca78227e",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.787Z",
+      "modified_date": "2020-10-08T01:38:01.306Z",
+      "file": "78c975b5-c192-41d4-a1c1-0bfcdc369792",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7f890999-d7f7-4d4e-843a-3d31414694c3",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.251Z",
+      "modified_date": "2020-05-27T15:56:53.251Z",
+      "file_name": "s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2054678576,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$7f2020a427eb1616051a6580feabf63820e12a55",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "33c662bc-ebf8-43d8-ac1c-118363470c1a",
+    "fields": {
+      "created_date": "2020-05-27T15:56:53.259Z",
+      "modified_date": "2020-10-08T01:38:00.961Z",
+      "file": "7f890999-d7f7-4d4e-843a-3d31414694c3",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "830a1614-803e-4be2-8d81-c6663c39518a",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.712Z",
+      "modified_date": "2020-05-27T15:56:50.712Z",
+      "file_name": "s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3542807384,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$2c6f6cb6907b504b363e13e7cc2ba83f5ed78b69",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "33346f04-0ebd-4008-95df-a45b6b743112",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.720Z",
+      "modified_date": "2020-10-08T01:38:01.014Z",
+      "file": "830a1614-803e-4be2-8d81-c6663c39518a",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "85f29569-cc97-4e9f-a636-37b816df89ad",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.268Z",
+      "modified_date": "2020-05-27T15:57:02.268Z",
+      "file_name": "s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1841725480,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$108231abd8b7f8a5e3c84205d1b8ef15aeebdef1",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a75c8968-6329-4d26-b1ad-a10ff4b18ec3",
+    "fields": {
+      "created_date": "2020-05-27T15:57:02.277Z",
+      "modified_date": "2020-10-08T01:38:01.019Z",
+      "file": "85f29569-cc97-4e9f-a636-37b816df89ad",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "86d8a19b-d080-4317-819c-3c4d8b8d1726",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.138Z",
+      "modified_date": "2020-05-27T15:56:56.138Z",
+      "file_name": "s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1438785234,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$ea43b46a74b81be52d92214daf36533c45f54d8a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "82396e7d-04b1-4166-a591-aa6082d051cd",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.145Z",
+      "modified_date": "2020-10-08T01:38:01.026Z",
+      "file": "86d8a19b-d080-4317-819c-3c4d8b8d1726",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "871d9a1a-95d0-4a1c-b648-c5afe7dff85f",
+    "fields": {
+      "created_date": "2020-05-27T15:56:59.173Z",
+      "modified_date": "2020-05-27T15:56:59.173Z",
+      "file_name": "s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2013280397,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$6222469876f56acf576018bd52fb66a59f300c21",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "369c1e74-e696-4549-b360-bb619bf23127",
+    "fields": {
+      "created_date": "2020-05-27T15:56:59.182Z",
+      "modified_date": "2020-10-08T01:38:01.038Z",
+      "file": "871d9a1a-95d0-4a1c-b648-c5afe7dff85f",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8f9560ab-2f51-4023-9b22-12c0720daed1",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.904Z",
+      "modified_date": "2020-05-27T15:57:01.904Z",
+      "file_name": "s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2842957613,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$f01fe46a55372701c296ee395cd543a5f7a4a384",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f7306801-99f8-45c4-b01a-128d45d172aa",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.911Z",
+      "modified_date": "2020-10-08T01:38:01.053Z",
+      "file": "8f9560ab-2f51-4023-9b22-12c0720daed1",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "93526aca-09b5-4dd5-8a77-e30e80a1bc96",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.785Z",
+      "modified_date": "2020-05-27T15:56:55.785Z",
+      "file_name": "s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2049846455,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$74bc0fc83e0a191cf9eb932d62cd04fbbe782d3d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f1e08e81-e750-437b-b6c2-8ee8d73237ec",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.793Z",
+      "modified_date": "2020-10-08T01:38:01.228Z",
+      "file": "93526aca-09b5-4dd5-8a77-e30e80a1bc96",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "94258f87-773e-42b2-905b-f0bf30c4789e",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.536Z",
+      "modified_date": "2020-05-27T15:57:01.536Z",
+      "file_name": "s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2450372054,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$487c8b8ae32dfbc152646af4b6f89d037ced895f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dc40c964-7593-4646-b64f-6a6a7e2cb110",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.545Z",
+      "modified_date": "2020-10-08T01:38:01.048Z",
+      "file": "94258f87-773e-42b2-905b-f0bf30c4789e",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "94a52808-55b4-496b-9d7a-1b9174a649b2",
+    "fields": {
+      "created_date": "2020-05-27T15:56:49.658Z",
+      "modified_date": "2020-05-27T15:56:49.658Z",
+      "file_name": "s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 357147001,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$07b08950daefaec551462f12f9bfae5b713841ee",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3d7a688b-5b8b-4646-b411-583b1980d98d",
+    "fields": {
+      "created_date": "2020-05-27T15:56:49.666Z",
+      "modified_date": "2020-10-08T01:38:01.106Z",
+      "file": "94a52808-55b4-496b-9d7a-1b9174a649b2",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "98fbf54d-c903-4eba-868c-916c76b277b3",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.435Z",
+      "modified_date": "2020-05-27T15:56:52.435Z",
+      "file_name": "s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1872524914,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$c05f15a1c195f8f079fbb9126e96a5985f632e7e",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "bfbc68b3-67c5-4f81-89f7-1581d786d253",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.444Z",
+      "modified_date": "2020-10-08T01:38:00.953Z",
+      "file": "98fbf54d-c903-4eba-868c-916c76b277b3",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "99a61114-0206-449f-b022-c2f707862112",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.101Z",
+      "modified_date": "2020-05-27T15:56:58.101Z",
+      "file_name": "s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2324784125,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$233a0a89b389bf0bf75e22658e8b8a7a9e7c88c5",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0dda1a92-b838-44bc-b6b7-bf3f30121cb5",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.109Z",
+      "modified_date": "2020-10-08T01:38:01.033Z",
+      "file": "99a61114-0206-449f-b022-c2f707862112",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a818fbaa-fb0d-4e5e-9752-c0a73fc82ef0",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.381Z",
+      "modified_date": "2020-05-27T15:56:50.381Z",
+      "file_name": "s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3817576500,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$50929e545885ec09c417a1093f67e086b7c16c11",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4a2ca3d2-5619-4a98-b810-29bed95aa3f1",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.390Z",
+      "modified_date": "2020-10-08T01:38:01.241Z",
+      "file": "a818fbaa-fb0d-4e5e-9752-c0a73fc82ef0",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "aa82ebb1-f196-496d-a41f-738a48579a68",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.008Z",
+      "modified_date": "2020-05-27T15:56:50.008Z",
+      "file_name": "s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1685774338,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$51a8abda62339d8da2b2649907fd9f81ad8fd2f7",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b0836c4a-7353-45c6-b46b-3dae64b23683",
+    "fields": {
+      "created_date": "2020-05-27T15:56:50.016Z",
+      "modified_date": "2020-10-08T01:38:01.121Z",
+      "file": "aa82ebb1-f196-496d-a41f-738a48579a68",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "acba31f7-7ac3-4381-b96d-7dd694ee52bc",
+    "fields": {
+      "created_date": "2020-05-27T15:56:54.293Z",
+      "modified_date": "2020-05-27T15:56:54.293Z",
+      "file_name": "s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1837781380,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$270b8c21f1a132b34ad9388c30a29549b786d914",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6875b467-ce66-456b-9394-0e673299dcad",
+    "fields": {
+      "created_date": "2020-05-27T15:56:54.303Z",
+      "modified_date": "2020-10-08T01:38:00.950Z",
+      "file": "acba31f7-7ac3-4381-b96d-7dd694ee52bc",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ba793d6e-2223-4571-9b12-7aebc474dffd",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.441Z",
+      "modified_date": "2020-05-27T15:56:58.441Z",
+      "file_name": "s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2332122557,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$a8a57eedbeeac9cfa0d617826ae9a5b1a1b56382",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "131c5484-4737-4326-91db-48b84c1b54fe",
+    "fields": {
+      "created_date": "2020-05-27T15:56:58.449Z",
+      "modified_date": "2020-10-08T01:38:01.035Z",
+      "file": "ba793d6e-2223-4571-9b12-7aebc474dffd",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c075b79e-128b-46dd-b2cb-4a13415e89c0",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.154Z",
+      "modified_date": "2020-05-27T15:57:01.155Z",
+      "file_name": "s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2943821584,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$0b4980d2ab58a10922ecb63d62e37965ce54ec22",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "202a99f6-e06c-4a1a-aff5-f5f0e34b6ebd",
+    "fields": {
+      "created_date": "2020-05-27T15:57:01.163Z",
+      "modified_date": "2020-10-08T01:38:01.051Z",
+      "file": "c075b79e-128b-46dd-b2cb-4a13415e89c0",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "cfe4be34-3760-488b-8468-e82ff2533881",
+    "fields": {
+      "created_date": "2020-05-27T15:56:57.181Z",
+      "modified_date": "2020-05-27T15:56:57.181Z",
+      "file_name": "s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1504713508,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$9a9422b026e95e0aab7066441769a30dbaea6724",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c20551e9-e4d1-4983-8a85-527ffa80788e",
+    "fields": {
+      "created_date": "2020-05-27T15:56:57.191Z",
+      "modified_date": "2020-10-08T01:38:01.244Z",
+      "file": "cfe4be34-3760-488b-8468-e82ff2533881",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d7664871-6f58-4a2b-820b-5d7081af34b1",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.845Z",
+      "modified_date": "2020-05-27T15:56:52.845Z",
+      "file_name": "s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2587901961,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$f2fd77fed153fd4bfe78e842348b5ebb127a1d41",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a2f17422-4a5f-4fde-aa15-ceefb0a97194",
+    "fields": {
+      "created_date": "2020-05-27T15:56:52.855Z",
+      "modified_date": "2020-10-08T01:38:01.225Z",
+      "file": "d7664871-6f58-4a2b-820b-5d7081af34b1",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "decad7fc-5b49-454f-b78d-08647da7bfa3",
+    "fields": {
+      "created_date": "2020-05-27T15:56:49.278Z",
+      "modified_date": "2020-05-27T15:56:49.278Z",
+      "file_name": "s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 4384120977,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$2e1677082acb4e2e9c0532d2b4febda132609436",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9dfd754c-7346-4818-b488-9420ee034827",
+    "fields": {
+      "created_date": "2020-05-27T15:56:49.287Z",
+      "modified_date": "2020-10-08T01:38:00.990Z",
+      "file": "decad7fc-5b49-454f-b78d-08647da7bfa3",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e0971571-8468-49e6-bbec-5aeeb9a4c9fa",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.790Z",
+      "modified_date": "2020-05-27T15:57:00.790Z",
+      "file_name": "s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1893685916,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$acc976b6a877977dd55c2c7ed8026919775c2a8b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6dbea0ad-ca06-4071-bde2-86ce5ea8b807",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.797Z",
+      "modified_date": "2020-10-08T01:38:01.023Z",
+      "file": "e0971571-8468-49e6-bbec-5aeeb9a4c9fa",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e30da179-c062-4a4e-9bf5-be54b4bd4f18",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.464Z",
+      "modified_date": "2020-05-27T15:57:00.464Z",
+      "file_name": "s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3185868859,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$821f9fe7ef6e77e1850ce1fcad48d054b7a23545",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "27d2c9b0-4136-44b7-8c7b-4b887ddd09c0",
+    "fields": {
+      "created_date": "2020-05-27T15:57:00.472Z",
+      "modified_date": "2020-10-08T01:38:01.046Z",
+      "file": "e30da179-c062-4a4e-9bf5-be54b4bd4f18",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e42b9177-50f1-4cf4-acb0-9b962e420f66",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.423Z",
+      "modified_date": "2020-05-27T15:56:55.423Z",
+      "file_name": "s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1906184759,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$16c161a0cecb913c89d4d822da82dd316d99097b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8049da97-3719-43c0-a29f-bf2c5ba19c96",
+    "fields": {
+      "created_date": "2020-05-27T15:56:55.432Z",
+      "modified_date": "2020-10-08T01:38:01.232Z",
+      "file": "e42b9177-50f1-4cf4-acb0-9b962e420f66",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "eb197bf1-ba18-44c8-a7ff-e95bc03def19",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.922Z",
+      "modified_date": "2020-05-27T15:56:48.922Z",
+      "file_name": "s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 3554787689,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$bc578aa803c810d247f8348ef62be83ee0b5add2",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d5dc7cb5-6b83-4438-8a7a-18b8284baa70",
+    "fields": {
+      "created_date": "2020-05-27T15:56:48.932Z",
+      "modified_date": "2020-10-08T01:38:00.966Z",
+      "file": "eb197bf1-ba18-44c8-a7ff-e95bc03def19",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "fbdfd883-1702-45fe-8c08-40a449e73927",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.826Z",
+      "modified_date": "2020-05-27T15:56:56.826Z",
+      "file_name": "s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 1179733581,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$ec7cd5906efa9e10683b1bdb2b1f58d939e13d49",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9765fe32-f227-4b02-821c-06c6620933e6",
+    "fields": {
+      "created_date": "2020-05-27T15:56:56.833Z",
+      "modified_date": "2020-10-08T01:38:01.235Z",
+      "file": "fbdfd883-1702-45fe-8c08-40a449e73927",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ff15c5f2-ff37-4137-b5f9-0d89f7950780",
+    "fields": {
+      "created_date": "2020-05-27T15:56:59.528Z",
+      "modified_date": "2020-05-27T15:56:59.529Z",
+      "file_name": "s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+      "file_type": 24,
+      "size": 2143139421,
+      "file_group": "d7d75722-3cc5-4681-b8ea-1119099bbb54",
+      "checksum": "sha1$47a411dac8b7ef4f01389126cd762b8e63d2ac71",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2fcc6d5f-88ea-40d7-8032-69278f2af3f8",
+    "fields": {
+      "created_date": "2020-05-27T15:56:59.534Z",
+      "modified_date": "2020-10-08T01:38:01.021Z",
+      "file": "ff15c5f2-ff37-4137-b5f9-0d89f7950780",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "curated_bam"
+      }
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3dd98473-5857-4288-a042-84ee0e06b9d7",
+    "fields": {
+      "created_date": "2020-11-07T20:29:22.941Z",
+      "modified_date": "2021-08-03T16:51:36.934Z",
+      "file_name": "DU874146-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
+      "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
+      "file_type": 26,
+      "size": 8881738,
+      "file_group": "5da0fcfa-5292-4e97-9a9e-78220e4c357f",
+      "checksum": "sha1$4552c11b7a200f368d50750ecdc08c6d2884a9c9",
+      "request": null,
+      "sample": "9af6ab44-0117-479c-aeab-d7a774f4c9b9",
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c28794bf-de45-40a1-b32f-5659263ddde3",
+    "fields": {
+      "created_date": "2020-11-07T20:29:22.970Z",
+      "modified_date": "2021-04-14T15:04:19.408Z",
+      "file": "3dd98473-5857-4288-a042-84ee0e06b9d7",
+      "version": 0,
+      "latest": false,
+      "metadata": {
+        "R": "R2",
+        "sex": "Unknown",
+        "runId": null,
+        "recipe": "IMPACT468",
+        "baitSet": "IMPACT468_BAITS",
+        "piEmail": "piemail@test.com",
+        "runDate": "2019-01-01",
+        "runMode": null,
+        "species": "Human",
+        "platform": "Illumina",
+        "sampleId": "ALN-TEST-03",
+        "barcodeId": null,
+        "libraryId": "MyLibraryId",
+        "patientId": "C-ALLANT",
+        "requestId": "ALN-REQ-ID",
+        "flowCellId": "MyFlowCellId",
+        "readLength": null,
+        "sampleName": "C-ALLANT-T003-d",
+        "captureName": null,
+        "igocomplete": true,
+        "labHeadName": "Dr. McGee",
+        "sampleClass": "Tumor",
+        "barcodeIndex": "MyBarcodeIndex",
+        "labHeadEmail": "labhead@test.com",
+        "oncoTreeCode": null,
+        "preservation": "FFPE",
+        "sampleOrigin": "Cells",
+        "specimenType": "Blood",
+        "cmoSampleName": "s_C_ALLANT_T003_d",
+        "flowCellLanes": [],
+        "libraryVolume": null,
+        "pooledNormals": null,
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "collectionYear": "",
+        "qcAccessEmails": "email1@mskcc.org, email2@mskcc.org",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAnalystEmail": "",
+        "externalSampleId": "ALN_TEST_EXT_03",
+        "investigatorName": "",
+        "sequencingCenter": "MySequencingCenter",
+        "investigatorEmail": "",
+        "projectManagerName": "",
+        "investigatorSampleId": "ALN",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": null
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9db92443-f53d-4f9d-9abc-668f18c1dcc7",
+    "fields": {
+      "created_date": "2020-11-07T20:29:22.562Z",
+      "modified_date": "2021-08-03T16:51:36.946Z",
+      "file_name": "DU874146-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
+      "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
+      "file_type": 26,
+      "size": 8968582,
+      "file_group": "5da0fcfa-5292-4e97-9a9e-78220e4c357f",
+      "checksum": "sha1$83b9de1ea9ece4e4d21be82994916b526963a540",
+      "request": null,
+      "sample": "9af6ab44-0117-479c-aeab-d7a774f4c9b9",
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "969b2757-c116-4569-b39f-0294335dfea8",
+    "fields": {
+      "created_date": "2021-04-14T15:04:06.759Z",
+      "modified_date": "2021-04-14T15:04:06.759Z",
+      "file": "9db92443-f53d-4f9d-9abc-668f18c1dcc7",
+      "version": 1,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Unknown",
+        "runId": null,
+        "recipe": "IMPACT468",
+        "baitSet": "IMPACT468_BAITS",
+        "piEmail": "piemail@test.com",
+        "runDate": "2019-01-01",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "sampleId": "ALN-TEST-03",
+        "barcodeId": null,
+        "libraryId": "MyLibraryId",
+        "patientId": "C-ALLANT",
+        "requestId": "ALN-REQ-ID",
+        "flowCellId": "MyFlowCellId",
+        "readLength": null,
+        "sampleName": "C-ALLANT-T003-d",
+        "captureName": null,
+        "igocomplete": true,
+        "labHeadName": "Dr. McGee",
+        "sampleClass": "Tumor",
+        "barcodeIndex": "MyBarcodeIndex",
+        "labHeadEmail": "labhead@test.com",
+        "oncoTreeCode": null,
+        "preservation": "FFPE",
+        "sampleOrigin": "Cells",
+        "specimenType": "Blood",
+        "cmoSampleName": "s_C_ALLANT_T003_d",
+        "flowCellLanes": [],
+        "libraryVolume": null,
+        "pooledNormals": null,
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "collectionYear": "",
+        "qcAccessEmails": "email1@mskcc.org, email2@mskcc.org",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAnalystEmail": "",
+        "externalSampleId": "ALN_TEST_EXT_03",
+        "investigatorName": "",
+        "sequencingCenter": "MySequencingCenter",
+        "investigatorEmail": "",
+        "projectManagerName": "",
+        "investigatorSampleId": "ALN",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": null
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a8bfec56-70d6-4ece-8d7d-49f9febfbb4e",
+    "fields": {
+      "created_date": "2020-11-07T20:29:20.873Z",
+      "modified_date": "2021-08-03T16:51:34.525Z",
+      "file_name": "DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
+      "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
+      "file_type": 26,
+      "size": 9695259,
+      "file_group": "5da0fcfa-5292-4e97-9a9e-78220e4c357f",
+      "checksum": "sha1$cbe18f972f5558f51661a43165fc511bc3b58aee",
+      "request": null,
+      "sample": "f750a0a2-5fe5-440c-a7d4-e042fe3c470c",
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d769789b-7938-4ac5-b897-121d7623c61a",
+    "fields": {
+      "created_date": "2021-04-14T15:02:53.080Z",
+      "modified_date": "2021-04-14T15:02:53.080Z",
+      "file": "a8bfec56-70d6-4ece-8d7d-49f9febfbb4e",
+      "version": 1,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Unknown",
+        "runId": null,
+        "recipe": "IMPACT468",
+        "baitSet": "IMPACT468_BAITS",
+        "piEmail": "piemail@test.com",
+        "runDate": "2019-01-01",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "sampleId": "ALN-TEST-02",
+        "barcodeId": null,
+        "libraryId": "MyLibraryId",
+        "patientId": "C-ALLANT",
+        "requestId": "ALN-REQ-ID",
+        "flowCellId": "MyFlowCellId",
+        "readLength": null,
+        "sampleName": "C-ALLANT-N002-d",
+        "captureName": null,
+        "igocomplete": true,
+        "labHeadName": "Dr. McGee",
+        "sampleClass": "Normal",
+        "barcodeIndex": "MyBarcodeIndex",
+        "labHeadEmail": "labhead@test.com",
+        "oncoTreeCode": null,
+        "preservation": "FFPE",
+        "sampleOrigin": "Cells",
+        "specimenType": "Blood",
+        "cmoSampleName": "s_C_ALLANT_N002_d",
+        "flowCellLanes": [],
+        "libraryVolume": null,
+        "pooledNormals": null,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": null,
+        "collectionYear": "",
+        "qcAccessEmails": "email1@mskcc.org, email2@mskcc.org",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAnalystEmail": "",
+        "externalSampleId": "ALN_TEST_EXT_02",
+        "investigatorName": "",
+        "sequencingCenter": "MySequencingCenter",
+        "investigatorEmail": "",
+        "projectManagerName": "",
+        "investigatorSampleId": "ALN",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": null
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c15a1bfd-5b68-4f64-a966-fc2f405dc9bc",
+    "fields": {
+      "created_date": "2020-11-07T20:29:20.481Z",
+      "modified_date": "2021-08-03T16:51:34.530Z",
+      "file_name": "DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
+      "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
+      "file_type": 26,
+      "size": 9446362,
+      "file_group": "5da0fcfa-5292-4e97-9a9e-78220e4c357f",
+      "checksum": "sha1$325ff5f5f1d176d69559ac88a31766021754c12e",
+      "request": null,
+      "sample": "f750a0a2-5fe5-440c-a7d4-e042fe3c470c",
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6226e750-ba7a-4144-a9d4-835e93dc31ea",
+    "fields": {
+      "created_date": "2021-04-14T15:02:38.698Z",
+      "modified_date": "2021-04-14T15:02:38.698Z",
+      "file": "c15a1bfd-5b68-4f64-a966-fc2f405dc9bc",
+      "version": 1,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Unknown",
+        "runId": null,
+        "recipe": "IMPACT468",
+        "baitSet": "IMPACT468_BAITS",
+        "piEmail": "piemail@test.com",
+        "runDate": "2019-01-01",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "sampleId": "ALN-TEST-02",
+        "barcodeId": null,
+        "libraryId": "MyLibraryId",
+        "patientId": "C-ALLANT",
+        "requestId": "ALN-REQ-ID",
+        "flowCellId": "MyFlowCellId",
+        "readLength": null,
+        "sampleName": "C-ALLANT-N002-d",
+        "captureName": null,
+        "igocomplete": true,
+        "labHeadName": "Dr. McGee",
+        "sampleClass": "Normal",
+        "barcodeIndex": "MyBarcodeIndex",
+        "labHeadEmail": "labhead@test.com",
+        "oncoTreeCode": null,
+        "preservation": "FFPE",
+        "sampleOrigin": "Cells",
+        "specimenType": "Blood",
+        "cmoSampleName": "s_C_ALLANT_N002_d",
+        "flowCellLanes": [],
+        "libraryVolume": null,
+        "pooledNormals": null,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": null,
+        "collectionYear": "",
+        "qcAccessEmails": "email1@mskcc.org, email2@mskcc.org",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAnalystEmail": "",
+        "externalSampleId": "ALN_TEST_EXT_02",
+        "investigatorName": "",
+        "sequencingCenter": "MySequencingCenter",
+        "investigatorEmail": "",
+        "projectManagerName": "",
+        "investigatorSampleId": "ALN",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": null
+      },
+      "user": null
+    }
+  }
+]

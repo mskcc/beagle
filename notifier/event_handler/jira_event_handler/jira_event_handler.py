@@ -94,6 +94,14 @@ class JiraEventHandler(EventHandler):
         if not pipeline:
             self.client.update_pipeline(job_notifier.jira_id, str(event))
 
+    def process_set_delivery_date_event(self, event):
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        if settings.JIRA_DELIVERY_DATE_FIELD_ID:
+            delivery_date = self.client.get_ticket(job_notifier.jira_id).json().get('fields', {}).get(
+                settings.JIRA_DELIVERY_DATE_FIELD_ID)
+            if not delivery_date:
+                self.client.update_delivery_date(job_notifier.jira_id, str(event))
+
     def process_transition_event(self, event, through_ci_review=False):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         response = self.client.get_status_transitions(job_notifier.jira_id)

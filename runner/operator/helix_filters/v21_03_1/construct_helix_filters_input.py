@@ -32,7 +32,10 @@ def get_baits_and_targets(assay, helix_filters_resources):
     targets = helix_filters_resources['targets']
 
     target_assay = assay
-
+    
+    if assay.find("HemePACT_v4") > -1:
+        target_assay = "HemePACT_v4_BAITS"
+        
     if assay.find("IMPACT505") > -1:
         target_assay = "IMPACT505_b37"
     if assay.find("IMPACT410") > -1:
@@ -230,6 +233,8 @@ def get_files_from_run(r):
     for p in inp_port.db_value[0]['zR1']:
         files.append(FileProcessor.get_file_path(p['location']))
     for p in inp_port.db_value[0]['zR2']:
+        files.append(FileProcessor.get_file_path(p['location']))
+    for p in inp_port.db_value[0]['bam']:
         files.append(FileProcessor.get_file_path(p['location']))
     return files
 

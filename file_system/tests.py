@@ -25,16 +25,23 @@ class FileTest(APITestCase):
         self.file_type_fastq = FileType(name='fastq')
         self.file_type_fastq.save()
 
-    def _create_single_file(self, path, file_type, group_id, request_id, sample_id):
+    def _create_single_file(self, path, file_type, group_id, request_id, sample_id, sample_name=None, cmo_sample_name=None, patient_id=None):
         file_type_obj = FileType.objects.get(name=file_type)
         group_id_obj = FileGroup.objects.get(id=group_id)
         file = File(path=path, file_name=os.path.basename(path), file_type=file_type_obj, file_group=group_id_obj,
                     size=1234)
         file.save()
         file_metadata = {
-            "requestId": request_id,
-            "igoSampleId": sample_id
+            settings.REQUEST_ID_METADATA_KEY: request_id,
+            settings.SAMPLE_ID_METADATA_KEY: sample_id
         }
+        if sample_name:
+            file_metadata[settings.SAMPLE_NAME_METADATA_KEY] = sample_name
+        if cmo_sample_name:
+            file_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = cmo_sample_name
+        if patient_id:
+            file_metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
+
         file_metadata =FileMetadata(file=file, metadata=file_metadata)
         file_metadata.save()
         return file
@@ -79,8 +86,8 @@ class FileTest(APITestCase):
                                         "file_group": str(self.file_group.id),
                                         "file_type": self.file_type_fasta.name,
                                         "metadata": {
-                                            "requestId": "Request_001",
-                                            "sampleId": "igoSampleId_001_length_too_long_123"
+                                            settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                            settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001_length_too_long_123"
                                         }
                                     },
                                     format='json')
@@ -95,8 +102,8 @@ class FileTest(APITestCase):
                                         "file_group": str(self.file_group.id),
                                         "file_type": self.file_type_fasta.name,
                                         "metadata": {
-                                            "requestId": "Request_001",
-                                            "sampleId": "igoSampleId_001"
+                                            settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                            settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001"
                                         }
                                     },
                                     format='json')
@@ -117,8 +124,8 @@ class FileTest(APITestCase):
                                         "file_group": str(self.file_group.id),
                                         "file_type": 'unknown',
                                         "metadata": {
-                                            "requestId": "Request_001",
-                                            "igoSampleId": "igoSampleId_001"
+                                            settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                            settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001"
                                         }
                                     },
                                     format='json')
@@ -185,8 +192,9 @@ class FileTest(APITestCase):
                                        "file_group": str(_file.file_group.id),
                                        "file_type": _file.file_type.name,
                                        "metadata": {
-                                           "requestId": "Request_001",
-                                           "igoSampleId": _file.filemetadata_set.first().metadata['igoSampleId']
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                           settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
+                                               settings.SAMPLE_ID_METADATA_KEY]
                                        }
                                    },
                                    format='json')
@@ -195,31 +203,68 @@ class FileTest(APITestCase):
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
 
+    def test_update_file_metadata_updates_request_sample_and_patient_objects(self):
+        _file = self._create_single_file('/path/to/sample_file.bam',
+                                         'bam',
+                                         str(self.file_group.id),
+                                         'request_id',
+                                         'sample_id',
+                                         'sample_name',
+                                         'cmo_sample_name',
+                                         'patient_id')
+        user1 = User.objects.create_user(username="user1",
+                                         password="password",
+                                         email='user1@gmail.com')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt(username=user1.username))
+        response = self.client.put('/v0/fs/files/%s/' % _file.id,
+                                   {
+                                       "path": _file.file_name,
+                                       "size": _file.size,
+                                       "file_group": str(_file.file_group.id),
+                                       "file_type": _file.file_type.name,
+                                       "metadata": {
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                           settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[settings.SAMPLE_ID_METADATA_KEY],
+                                           settings.SAMPLE_NAME_METADATA_KEY: 'Sample_Name_001',
+                                           settings.CMO_SAMPLE_NAME_METADATA_KEY: 'CMO_Sample_Name_001',
+                                           settings.PATIENT_ID_METADATA_KEY: 'Patient_001'
+                                       }
+                                   },
+                                   format='json')
+        self.assertEqual(response.data['user'], user1.username)
+        self.assertEqual(response.data['metadata']['requestId'], 'Request_001')
+
+        _file.refresh_from_db()
+        self.assertEqual(_file.request.request_id, 'Request_001')
+        self.assertEqual(_file.sample.sample_name, 'Sample_Name_001')
+        self.assertEqual(_file.sample.cmo_sample_name, 'CMO_Sample_Name_001')
+        self.assertEqual(_file.patient.patient_id, 'Patient_001')
+
     def test_patch_file_metadata(self):
         _file = self._create_single_file('/path/to/sample_file.bam', 'bam', str(self.file_group.id), 'request_id', 'sample_id')
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
         response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
                                    {
                                        "metadata": {
-                                           "requestId": "Request_001",
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_001",
                                        }
                                    },
                                    format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['metadata']['requestId'], "Request_001")
-        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        self.assertEqual(response.data['metadata'][settings.REQUEST_ID_METADATA_KEY], "Request_001")
+        self.assertEqual(response.data['metadata'][settings.SAMPLE_ID_METADATA_KEY], "sample_id")
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
         response = self.client.patch('/v0/fs/files/%s/' % str(_file.id),
                                      {
                                          "metadata": {
-                                             "requestId": "Request_002",
+                                             settings.REQUEST_ID_METADATA_KEY: "Request_002",
                                          }
                                      },
                                      format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['metadata']['requestId'], "Request_002")
-        self.assertEqual(response.data['metadata']['igoSampleId'], "sample_id")
+        self.assertEqual(response.data['metadata'][settings.REQUEST_ID_METADATA_KEY], "Request_002")
+        self.assertEqual(response.data['metadata'][settings.SAMPLE_ID_METADATA_KEY], "sample_id")
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 3)
 
@@ -233,7 +278,7 @@ class FileTest(APITestCase):
                 "id": first_file.id,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_001"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_001"
                             }
                 }
 
@@ -242,7 +287,7 @@ class FileTest(APITestCase):
                 "id": second_file.id,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_002"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_002"
                             }
                 }
 
@@ -268,7 +313,7 @@ class FileTest(APITestCase):
                 "id": None,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_001"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_001"
                             }
                 }
 
@@ -277,7 +322,7 @@ class FileTest(APITestCase):
                 "id": None,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_002"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_002"
                             }
                 }
 
@@ -299,7 +344,7 @@ class FileTest(APITestCase):
                 "id": first_file.id,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_001"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_001"
                             }
                 }
 
@@ -308,7 +353,7 @@ class FileTest(APITestCase):
                 "id": None,
                 "patch": {
                     "metadata": {
-                            "requestId": "Request_002"
+                            settings.REQUEST_ID_METADATA_KEY: "Request_002"
                             }
                 }
 
@@ -344,28 +389,37 @@ class FileTest(APITestCase):
                                        "file_group": str(_file.file_group.id),
                                        "file_type": _file.file_type.name,
                                        "metadata": {
-                                           "requestId": "Request_001",
-                                           "igoSampleId": _file.filemetadata_set.first().metadata['igoSampleId']
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                           settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
+                                               settings.SAMPLE_ID_METADATA_KEY]
                                        }
                                    },
                                    format='json')
         self.assertEqual(response.data['user'], user1.username)
         self.assertEqual(response.data['metadata']['requestId'], 'Request_001')
+
+        _file.refresh_from_db()
+        self.assertEqual(_file.request.request_id, 'Request_001')
+
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt(username=user2.username))
         response = self.client.put('/v0/fs/files/%s/' % str(_file.id),
                                    {
-                                       "path":_file.file_name,
-                                       "size":_file.size,
+                                       "path": _file.file_name,
+                                       "size": _file.size,
                                        "file_group": str(_file.file_group.id),
                                        "file_type": _file.file_type.name,
                                        "metadata": {
-                                           "requestId": "Request_002",
-                                           "igoSampleId": _file.filemetadata_set.first().metadata['igoSampleId']
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_002",
+                                           settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
+                                               settings.SAMPLE_ID_METADATA_KEY]
                                        }
                                    },
                                    format='json')
         self.assertEqual(response.data['user'], user2.username)
         self.assertEqual(response.data['metadata']['requestId'], 'Request_002')
+
+        _file.refresh_from_db()
+        self.assertEqual(_file.request.request_id, 'Request_002')
 
         # Check listing files as well
         response = self.client.get('/v0/fs/files/?metadata=requestId:Request_001',
@@ -394,7 +448,7 @@ class FileTest(APITestCase):
     #                                    "file_group": str(_file.file_group.id),
     #                                    "file_type": _file.file_type.name,
     #                                    "metadata": {
-    #                                        "igoSampleId": _file.filemetadata_set.first().metadata['igoSampleId']
+    #                                        settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata['igoSampleId']
     #                                    }
     #                                },
     #                                format='json')
@@ -426,8 +480,9 @@ class FileTest(APITestCase):
                                        "file_group": str(_file.file_group.id),
                                        "file_type": _file.file_type.name,
                                        "metadata": {
-                                           "requestId": "Request_001",
-                                           "igoSampleId": _file.filemetadata_set.first().metadata['igoSampleId']
+                                           settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                                           settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
+                                               settings.SAMPLE_ID_METADATA_KEY]
                                        }
                                    },
                                    format='json')
@@ -466,11 +521,11 @@ class FileTest(APITestCase):
         self._create_single_file('/path/to/file4.fastq', 'fastq', str(self.file_group.id), '3', '4')
         self._create_single_file('/path/to/file5.fastq', 'fastq', str(self.file_group.id), '4', '3')
         self.client.credentials(HTTP_AUTHORIZATION='Bearer %s' % self._generate_jwt())
-        response = self.client.get('/v0/fs/files/?metadata=requestId:1&values_metadata=requestId,igoSampleId',
+        response = self.client.get('/v0/fs/files/?metadata=requestId:1&values_metadata=requestId,sampleId',
                                    format='json'
                                    )
         self.assertEqual(len(response.json()['results']), 2)
-        response = self.client.get('/v0/fs/files/?values_metadata=requestId,igoSampleId',
+        response = self.client.get('/v0/fs/files/?values_metadata=requestId,sampleId',
                                    format='json'
                                    )
         self.assertEqual(len(response.json()['results']), 5)
