@@ -6,7 +6,7 @@ import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, InputsObj, SampleData, BamData
+from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, InputsObj, SampleData, BamData, BatchInputObj
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
 from runner.models import Run
@@ -248,3 +248,28 @@ class TestUltron(TestCase):
                          self.first_dmp_mutations_extended)
         self.assertEqual(bam_data._set_dmp_sample_name(),
                          self.first_dmp_dmp_sample_name)
+
+    def test_construct_batch_input(self):
+        """
+        Test the construction of batch input
+        """
+        first_run = Run.objects.get(id=self.run_ids[0])
+        second_run = Run.objects.get(id=self.run_ids[0])
+        first_input_obj = InputsObj(first_run)
+        second_input_obj = InputsObj(second_run)
+        batch_input_json = BatchInputObj(
+            [first_input_obj, second_input_obj])._build_inputs_json()
+        self.assertEqual(len(batch_input_json["unindexed_bam_files"]),
+                         4)
+        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]),
+                         4)
+        self.assertEqual(len(batch_input_json["unindexed_maf_files"]),
+                         4)
+        self.assertEqual(len(batch_input_json["bam_files"]),
+                         2)
+        self.assertEqual(len(batch_input_json["sample_ids"]),
+                         2)
+        self.assertEqual(len(batch_input_json["ref_fasta"]),
+                         2)
+        self.assertEqual(len(batch_input_json["exac_filter"]),
+                         2)
