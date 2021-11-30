@@ -335,10 +335,10 @@ class CWLRunObjectTest(APITestCase):
 
     @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_run_fail_job(self, mock_get_pipeline, memcache_task_lock, send_notification, set_for_restart):
-        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
+        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
             app = json.load(f)
         with open("runner/tests/run/inputs.json", "r") as f:
             inputs = json.load(f)
@@ -362,10 +362,12 @@ class CWLRunObjectTest(APITestCase):
 
     @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    def test_multiple_failed_on_same_job(self, mock_get_pipeline, memcache_task_lock, send_notification, set_for_restart):
-        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
+    def test_multiple_failed_on_same_job(
+        self, mock_get_pipeline, memcache_task_lock, send_notification, set_for_restart
+    ):
+        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
             app = json.load(f)
         with open("runner/tests/run/inputs.json", "r") as f:
             inputs = json.load(f)
