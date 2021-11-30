@@ -3,13 +3,13 @@ from mock import patch
 from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
-from runner.run.objects.run_object import RunObject
 from runner.models import Run, RunStatus, Pipeline, OperatorRun
 from runner.run.processors.file_processor import FileProcessor
+from runner.run.objects.run_object_factory import RunObjectFactory
 from file_system.models import Storage, StorageType, FileGroup, File, FileType
 
 
-class RunObjectTest(APITestCase):
+class CWLRunObjectTest(APITestCase):
     fixtures = [
         "beagle_etl.operator.json",
         "runner.operator_run.json",
@@ -28,7 +28,10 @@ class RunObjectTest(APITestCase):
                                  output_file_group=self.file_group,
                                  output_directory="/path/to/outputs")
         self.pipeline.save()
-        self.run = Run(app=self.pipeline, status=RunStatus.CREATING, notify_for_outputs=[])
+        self.run = Run(run_type=0,
+                       app=self.pipeline,
+                       status=RunStatus.CREATING,
+                       notify_for_outputs=[])
         self.run.save()
         self.file_type_unknown = FileType(name='unknown')
         self.file_type_unknown.save()
@@ -259,7 +262,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = RunObjectFactory.from_definition(str(self.run.id), inputs)
         run.ready()
         for inp in run.inputs:
             if inp.name == 'pair':
@@ -279,7 +282,7 @@ class RunObjectTest(APITestCase):
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = RunObjectFactory.from_definition(str(self.run.id), inputs)
         run.to_db()
         try:
             run_obj = Run.objects.get(id=run.run_id)
@@ -287,14 +290,18 @@ class RunObjectTest(APITestCase):
             pass
         self.assertEqual(str(run_obj.id), run.run_id)
 
+    @patch("notifier.tasks.send_notification.delay")
+    @patch('lib.memcache_lock.memcache_task_lock')
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    def test_run_complete_job(self, mock_get_pipeline):
+    def test_run_complete_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
         with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        memcache_task_lock.return_value = True
+        send_notification.return_value = False
+        run = RunObjectFactory.from_definition(str(self.run.id), inputs)
         run.to_db()
         operator_run = OperatorRun.objects.first()
         operator_run.runs.add(run.run_obj)
@@ -302,7 +309,7 @@ class RunObjectTest(APITestCase):
         complete_job(run.run_id, self.outputs)
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_completed_runs, num_completed_runs + 1)
-        run_obj = RunObject.from_db(run.run_id)
+        run_obj = RunObjectFactory.from_db(run.run_id)
         file_obj = File.objects.filter(path=self.outputs['maf']['location'].replace('file://', '')).first()
         run_obj.to_db()
         for out in run_obj.outputs:
@@ -321,14 +328,19 @@ class RunObjectTest(APITestCase):
         self.assertTrue(port.files.all()[2].path in expected_result)
         self.assertTrue(port.files.all()[3].path in expected_result)
 
+    @patch("notifier.tasks.send_notification.delay")
+    @patch('lib.memcache_lock.memcache_task_lock')
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    def test_run_fail_job(self, mock_get_pipeline):
+    def test_run_fail_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
         with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
+
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        memcache_task_lock.return_value = True
+        send_notification.return_value = False
+        run = RunObjectFactory.from_definition(str(self.run.id), inputs)
         run.to_db()
 
         operator_run = OperatorRun.objects.first()
@@ -338,18 +350,22 @@ class RunObjectTest(APITestCase):
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
 
-        run_obj = RunObject.from_db(run.run_id)
+        run_obj = RunObjectFactory.from_db(run.run_id)
         self.assertEqual(run_obj.message, {'details': 'Error has happened'})
 
+    @patch("notifier.tasks.send_notification.delay")
+    @patch('lib.memcache_lock.memcache_task_lock')
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    def test_multiple_failed_on_same_job(self, mock_get_pipeline):
+    def test_multiple_failed_on_same_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
         with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
 
+        memcache_task_lock.return_value = True
+        send_notification.return_value = False
         mock_get_pipeline.return_value = app
-        run = RunObject.from_cwl_definition(str(self.run.id), inputs)
+        run = RunObjectFactory.from_definition(str(self.run.id), inputs)
         run.to_db()
 
         operator_run = OperatorRun.objects.first()

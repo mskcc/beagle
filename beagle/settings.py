@@ -91,7 +91,7 @@ ELASTIC_APM = {
     # Set the required service name. Allowed characters:
     # a-z, A-Z, 0-9, -, _, and space
     'SERVICE_NAME': 'beagle',
-
+    'TRANSACTION_SAMPLE_RATE': 0.3,
     # Use if APM Server requires a secret token
     # 'SECRET_TOKEN': '',
 
@@ -379,17 +379,19 @@ LOGGING = {
 
 SUPPORTED_NOTIFIERS = ('JIRA', 'NONE')
 
-NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", True)
+NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", "True") == "True"
 
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", '') # Put "CC [~webbera] and [~socci]" for production
 NOTIFIER_STORAGE_DIR = os.environ.get("BEAGLE_NOTIFIER_STORAGE_DIR", '/tmp')
 NOTIFIER_FILE_GROUP = os.environ.get("BEAGLE_NOTIFIER_FILE_GROUP")
 
+JIRA_PREFIX = os.environ.get("JIRA_PREFIX", "VADEV-")
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
 JIRA_PASSWORD = os.environ.get("JIRA_PASSWORD", "")
 JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "")
 JIRA_PIPELINE_FIELD_ID = os.environ.get('JIRA_PIPELINE_FIELD_ID', "customfield_10901")
+JIRA_DELIVERY_DATE_FIELD_ID = os.environ.get('JIRA_DELIVERY_DATE_FIELD_ID', "customfield_11000")
 
 BEAGLE_URL = os.environ.get('BEAGLE_URL', 'http://silo:5001')
 
@@ -400,6 +402,10 @@ BEAGLE_RUNNER_QUEUE = os.environ.get('BEAGLE_RUNNER_QUEUE', 'beagle_runner_queue
 BEAGLE_DEFAULT_QUEUE = os.environ.get('BEAGLE_DEFAULT_QUEUE', 'beagle_default_queue')
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get('BEAGLE_JOB_SCHEDULER_QUEUE', 'beagle_job_scheduler_queue')
 BEAGLE_SHARED_TMPDIR = os.environ.get('BEAGLE_SHARED_TMPDIR', '/juno/work/ci/temp')
+
+CHECK_JOB_STATUS_PERIOD = os.environ.get('BEAGLE_CHECK_JOB_STATUS_PERIOD', 60)
+PROCESS_TRIGGERS_PERIOD = os.environ.get('BEAGLE_PROCESS_TRIGGERS_PERIOD', 120)
+CHECK_JOB_TIMEOUTS = os.environ.get('BEAGLE_CHECK_JOB_TIMEOUTS', 86400.0)
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
@@ -412,7 +418,14 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     )
 
+REQUEST_ID_METADATA_KEY = 'requestId'
 SAMPLE_ID_METADATA_KEY = 'sampleId'
+SAMPLE_NAME_METADATA_KEY = 'sampleName'
+CMO_SAMPLE_NAME_METADATA_KEY = 'cmoSampleName'
+PATIENT_ID_METADATA_KEY = 'patientId'
+LAB_HEAD_NAME_METADATA_KEY = 'labHeadName'
+INVESTIGATOR_METADATA_KEY = 'investigatorName'
+ASSAY_METADATA_KEY = 'recipe'
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get('BEAGLE_NOTIFIER_EMAIL_GROUP', '946a922c-8c6b-4cba-8754-16df02f05d2a')
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get('BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS')

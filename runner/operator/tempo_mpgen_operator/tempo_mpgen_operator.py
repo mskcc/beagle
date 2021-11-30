@@ -84,7 +84,9 @@ class TempoMPGenOperator(Operator):
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
         files = FileRepository.all()
+        files = FileRepository.filter(queryset=files, filter_redact=True)
         tempo_files = FileRepository.filter(queryset=files, q=q)
+        tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message("""
             Querying database for the following recipes:
@@ -250,6 +252,8 @@ class TempoMPGenOperator(Operator):
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
             "WholeExomeSequencing",
+            "IDT_Exome_v1_FP_Viral_Probes",
+            "IDT_Exome_v2_FP_Viral_Probes"
        ]
         return recipe
 
@@ -261,7 +265,9 @@ class TempoMPGenOperator(Operator):
         "IDT_Exome_v1_FP_BAITS",
         "IDT_Exome_v2_FP_b37_baits",
         "IDT_Exome_v2_GRCh38_BAITS",
-        "SureSelect-All-Exon-V4-hg19"
+        "SureSelect-All-Exon-V4-hg19",
+        "IDT_Exome_v1_FP_Viral_Probes",
+        "IDT_Exome_v2_FP_Viral_Probes"
        ]
         return assays
 

@@ -1,19 +1,30 @@
 import os
 from deepdiff import DeepDiff
 from rest_framework import serializers
+from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
+from notifier.models import JobGroupNotifier
 from file_system.metadata.validator import MetadataValidator
-from file_system.models import File, Sample, Storage, StorageType, FileGroup, FileMetadata, FileType
+from file_system.repository.file_repository import FileRepository
+from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
+from runner.models import Run, RunStatus
 from drf_yasg import openapi
 
 
 def ValidateDict(value):
     if len(value.split(":")) !=2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
+
+def ValidateRegex(value):
+    possible_queries = value.split("|")
+    for single_query in possible_queries:
+        if len(single_query.split(":")) !=2:
+            raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
 
 class PatchFile(serializers.JSONField):
@@ -165,13 +176,78 @@ class FileQuerySerializer(serializers.Serializer):
         allow_empty=True,
         required=False
     )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
     metadata = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
         allow_empty=True,
         required=False
     )
     metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateRegex]),
+        allow_empty=True,
+        required=False
+    )
+    path_regex = serializers.CharField(required=False)
+
+    filename = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    filename_regex = serializers.CharField(required=False)
+
+    file_type = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    values_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+
+    created_date_timedelta = serializers.IntegerField(required=False)
+    created_date_gt = serializers.DateTimeField(required=False)
+    created_date_lt = serializers.DateTimeField(required=False)
+    modified_date_timedelta = serializers.IntegerField(required=False)
+    modified_date_gt = serializers.DateTimeField(required=False)
+    modified_date_lt = serializers.DateTimeField(required=False)
+
+
+class DistributionQuerySerializer(serializers.Serializer):
+    file_group = serializers.ListField(
+        child=serializers.UUIDField(),
+        allow_empty=True,
+        required=False
+    )
+    path = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    exclude_null_metadata = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=True,
+        required=False
+    )
+    order_by = serializers.CharField(required=False)
+    distinct_metadata = serializers.CharField(required=False)
+    metadata = serializers.ListField(
         child=serializers.CharField(validators=[ValidateDict]),
+        allow_empty=True,
+        required=False
+    )
+    metadata_regex = serializers.ListField(
+        child=serializers.CharField(validators=[ValidateRegex]),
         allow_empty=True,
         required=False
     )
@@ -198,8 +274,6 @@ class FileQuerySerializer(serializers.Serializer):
     )
 
     metadata_distribution = serializers.CharField(required=False)
-
-    count = serializers.BooleanField(required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
@@ -309,4 +383,90 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ('id', 'sample_id', 'redact')
+        fields = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact',)
+
+
+class RequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Request
+        fields = ('id', 'request_id', 'delivery_date')
+
+
+class PatientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Patient
+        fields = ('id', 'patient_id',)
+
+
+class SampleQuerySerializer(serializers.Serializer):
+    project_id = serializers.CharField(required=True)
+
+
+class RunSerializerPartial(serializers.ModelSerializer):
+    request_id = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    jira_id = serializers.SerializerMethodField()
+    investigator = serializers.SerializerMethodField()
+    pi = serializers.SerializerMethodField()
+    assay = serializers.SerializerMethodField()
+    delivery_date = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return RunStatus(obj.status).name
+
+    def get_request_id(self, obj):
+        return obj.tags.get('requestId')
+
+    def get_jira_id(self, obj):
+        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
+                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
+            '-created_date').first()
+        return jgn.jira_id if jgn else None
+
+    def get_pi(self, obj):
+        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
+                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
+            '-created_date').first()
+        return jgn.PI if jgn else None
+
+    def get_investigator(self, obj):
+        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
+                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
+            '-created_date').first()
+        return jgn.investigator if jgn else None
+
+    def get_assay(self, obj):
+        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
+                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
+            '-created_date').first()
+        return jgn.assay if jgn else None
+
+    def get_delivery_date(self, obj):
+        return Request.objects.filter(request_id=obj.tags.get('requestId')).first().delivery_date
+
+    class Meta:
+        model = Run
+        fields = ('id', 'name', 'message', 'status', 'request_id', 'app',
+                  'created_date', 'job_group', 'jira_id', 'investigator', 'pi', 'assay', 'delivery_date')
+
+
+class FullSampleSerializer(serializers.ModelSerializer):
+    runs = serializers.SerializerMethodField()
+    tumor_or_normal = serializers.SerializerMethodField()
+    patient_id = serializers.SerializerMethodField()
+
+    def get_runs(self, obj):
+        return RunSerializerPartial(obj.run_set.order_by('-created_date').all(), many=True).data
+
+    def get_tumor_or_normal(self, obj):
+        return FileRepository.filter(metadata={'sampleId': obj.sample_id}, values_metadata='tumorOrNormal').first()
+
+    def get_patient_id(self, obj):
+        return FileRepository.filter(metadata={'sampleId': obj.sample_id}, values_metadata='patientId').first()
+
+    class Meta:
+        model = Sample
+        fields = (
+        'id', 'sample_id', 'runs', 'sample_name', 'cmo_sample_name', 'redact', 'tumor_or_normal', 'patient_id')

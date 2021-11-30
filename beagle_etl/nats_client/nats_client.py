@@ -6,7 +6,7 @@ import asyncio
 from django.conf import settings
 from beagle_etl.tasks import TYPES
 from beagle_etl.models import Job, JobStatus
-from beagle_etl.jobs.lims_etl_jobs import new_request
+from beagle_etl.jobs.lims_etl_jobs import new_request, update_request_job, update_sample_job
 from nats.aio.client import Client as NATS
 
 
@@ -35,7 +35,12 @@ async def run(loop, queue):
 
         logger.info("Received a message on '{subject} {reply}': {data}".format(
           subject=subject, reply=reply, data=data))
-        new_request(request_data)
+        if queue == settings.METADB_NATS_NEW_REQUEST:
+            new_request(request_data)
+        elif queue == settings.METADB_NATS_REQUEST_UPDATE:
+            update_request_job(request_data)
+        elif queue == settings.METADB_NATS_SAMPLE_UPDATE:
+            update_sample_job(request_data)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE,

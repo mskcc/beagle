@@ -1,0 +1,1335 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "8788190d-330f-46c6-9fcb-ec7ab0a22996",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.762Z",
+            "modified_date": "2021-08-05T17:02:56.002Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "snps_1000g",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://72aa956a-7d5b-485f-8cc2-c4df96c5d626"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "72aa956a-7d5b-485f-8cc2-c4df96c5d626"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "406cb6c1-ecf7-402a-8b85-7403255fe157",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.736Z",
+            "modified_date": "2021-08-05T17:02:55.979Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "indels_1000g",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://f2391e3a-6fa5-4f51-ac97-d961f49a7ea7"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "f2391e3a-6fa5-4f51-ac97-d961f49a7ea7"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "23a3cd85-9bc8-4f6e-b5e2-7405624a2aa5",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.814Z",
+            "modified_date": "2021-08-05T17:02:56.049Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "exac_filter",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".tbi"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://505d6f3c-0541-4151-94eb-719d86790fce"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "505d6f3c-0541-4151-94eb-719d86790fce"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5f630e6b-a8ac-4317-bd0a-0e43b55796d9",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.789Z",
+            "modified_date": "2021-08-05T17:02:56.025Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "cosmic",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://5348bbd0-6441-4d32-b6d7-33e1807d2655"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "5348bbd0-6441-4d32-b6d7-33e1807d2655"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1bc41772-e9ae-4d84-ab21-cdc3f8d35b5d",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.656Z",
+            "modified_date": "2021-08-05T17:02:56.137Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "mouse_fasta",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".amb",
+                ".ann",
+                ".bwt",
+                ".pac",
+                ".sa",
+                ".fai",
+                "^.dict"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://d4c3f8ae-491e-4574-bfc8-b54d0b0c8162"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "d4c3f8ae-491e-4574-bfc8-b54d0b0c8162"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "cebe6134-0d17-4b52-b49f-6df0957ff671",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.683Z",
+            "modified_date": "2021-08-05T17:02:56.160Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "hapmap",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://54f9809d-0e64-4450-8ad9-240195c55552"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "54f9809d-0e64-4450-8ad9-240195c55552"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c702eda5-d591-474e-88dd-ceff0c0dec1b",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.710Z",
+            "modified_date": "2021-08-05T17:02:56.183Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "dbsnp",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://2b22e87b-a6c1-4c96-8627-75bcd5cf5ce6"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "2b22e87b-a6c1-4c96-8627-75bcd5cf5ce6"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1e80d474-73ff-48d0-b55e-0d67db7dc115",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.631Z",
+            "modified_date": "2021-08-05T17:02:56.114Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "ref_fasta",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".amb",
+                ".ann",
+                ".bwt",
+                ".pac",
+                ".sa",
+                ".fai",
+                "^.dict"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://5e9540ae-c3b8-45c1-9994-fd86b81b0719"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "5e9540ae-c3b8-45c1-9994-fd86b81b0719"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7e7e2e55-167f-4a99-bbc6-e29d10aa3e04",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.583Z",
+            "modified_date": "2021-08-05T17:02:56.090Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "db_files",
+            "port_type": 0,
+            "schema": {
+                "type": "record",
+                "fields": {
+                    "refseq": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "vep_data": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "vep_path": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "custom_enst": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "facets_snps": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "hotspot_vcf": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "fp_genotypes": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "fp_intervals": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "hotspot_list": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "delly_exclude": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "bait_intervals": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "conpair_markers": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "hotspot_list_maf": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "target_intervals": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "File"
+                    },
+                    "conpair_markers_bed": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    }
+                }
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "refseq": {
+                    "class": "File",
+                    "location": "bid://0c7fc951-3328-4fa9-8942-5b5d3bf96353"
+                },
+                "vep_data": "/var/cache",
+                "vep_path": "/usr/bin/vep",
+                "custom_enst": "/usr/bin/vcf2maf/data/isoform_overrides_at_mskcc",
+                "facets_snps": {
+                    "class": "File",
+                    "location": "bid://b82af4b3-4edf-4ddd-b727-f09b8b62fc1e"
+                },
+                "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
+                "fp_genotypes": {
+                    "class": "File",
+                    "location": "bid://2b6e0c05-d1bc-4587-bd4b-5ab3f484807c"
+                },
+                "fp_intervals": {
+                    "class": "File",
+                    "location": "bid://ce1c63ea-d4b3-4a10-a310-4a0bae242fa3"
+                },
+                "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
+                "delly_exclude": {
+                    "class": "File",
+                    "location": "bid://588f3370-f005-4f46-b80d-3441f24e9ef0"
+                },
+                "bait_intervals": {
+                    "class": "File",
+                    "location": "bid://66b4837f-1029-463c-8acd-70d4ac233ffe"
+                },
+                "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
+                "hotspot_list_maf": {
+                    "class": "File",
+                    "location": "bid://8952f7b8-4bee-4c4c-8de0-f5a7ace1dd90"
+                },
+                "target_intervals": {
+                    "class": "File",
+                    "location": "bid://0d6d4e53-f7cd-412c-bf14-5c147ab2abae"
+                },
+                "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed"
+            },
+            "value": {
+                "refseq": {
+                    "path": "/juno/work/ci/resources/request_files/refseq/refGene_b37.sorted.txt",
+                    "class": "File"
+                },
+                "vep_data": "/var/cache",
+                "vep_path": "/usr/bin/vep",
+                "custom_enst": "/usr/bin/vcf2maf/data/isoform_overrides_at_mskcc",
+                "facets_snps": {
+                    "path": "/juno/work/ci/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+                    "class": "File"
+                },
+                "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
+                "fp_genotypes": {
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+                    "class": "File"
+                },
+                "fp_intervals": {
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+                    "class": "File"
+                },
+                "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
+                "delly_exclude": {
+                    "path": "/juno/work/ci/resources/genomes/GRCh37/delly/human.hg19.excl.tsv",
+                    "class": "File"
+                },
+                "bait_intervals": {
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+                    "class": "File"
+                },
+                "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
+                "hotspot_list_maf": {
+                    "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
+                    "class": "File"
+                },
+                "target_intervals": {
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+                    "class": "File"
+                },
+                "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed"
+            },
+            "notify": false,
+            "files": [
+                "0c7fc951-3328-4fa9-8942-5b5d3bf96353",
+                "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
+                "2b6e0c05-d1bc-4587-bd4b-5ab3f484807c",
+                "588f3370-f005-4f46-b80d-3441f24e9ef0",
+                "66b4837f-1029-463c-8acd-70d4ac233ffe",
+                "8952f7b8-4bee-4c4c-8de0-f5a7ace1dd90",
+                "b82af4b3-4edf-4ddd-b727-f09b8b62fc1e",
+                "ce1c63ea-d4b3-4a10-a310-4a0bae242fa3"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "677e6732-c4bd-49d4-916f-4e5f51d9bdfe",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.841Z",
+            "modified_date": "2021-08-05T17:02:56.297Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "curated_bams",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://4c03baf0-a722-4bb5-99f6-09224870d4fa"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://266750cd-1cf6-4932-ac66-6a1e8475ecaf"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://eb197bf1-ba18-44c8-a7ff-e95bc03def19"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://decad7fc-5b49-454f-b78d-08647da7bfa3"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://94a52808-55b4-496b-9d7a-1b9174a649b2"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://aa82ebb1-f196-496d-a41f-738a48579a68"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://a818fbaa-fb0d-4e5e-9752-c0a73fc82ef0"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://830a1614-803e-4be2-8d81-c6663c39518a"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://5051589e-b392-4501-9257-1cc723e3444a"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://67d49fe2-2471-4d20-b4ca-b7d0c37ffdc4"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://5832fa2f-d559-4dac-bca6-8fc707ff9b11"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://23539956-9ca1-43f9-9dfd-8f98698f6ab6"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://98fbf54d-c903-4eba-868c-916c76b277b3"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://d7664871-6f58-4a2b-820b-5d7081af34b1"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://7f890999-d7f7-4d4e-843a-3d31414694c3"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://3a8e9361-d405-43c0-886d-d8948f67ebdb"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://635dabd2-c80d-4b69-b398-3a4b48c4a5f4"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://acba31f7-7ac3-4381-b96d-7dd694ee52bc"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://51a01398-abbf-402b-abeb-e4b627a76011"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://5e04d4d1-cbf0-4513-9035-7cb07c02c8ac"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://e42b9177-50f1-4cf4-acb0-9b962e420f66"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://93526aca-09b5-4dd5-8a77-e30e80a1bc96"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://86d8a19b-d080-4317-819c-3c4d8b8d1726"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://675561c3-0c98-45d4-b14c-06b8963358a5"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://fbdfd883-1702-45fe-8c08-40a449e73927"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://cfe4be34-3760-488b-8468-e82ff2533881"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://99a61114-0206-449f-b022-c2f707862112"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://ba793d6e-2223-4571-9b12-7aebc474dffd"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://78c975b5-c192-41d4-a1c1-0bfcdc369792"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://871d9a1a-95d0-4a1c-b648-c5afe7dff85f"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://ff15c5f2-ff37-4137-b5f9-0d89f7950780"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://5a6c6603-f30c-4264-8248-947af2750ea2"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://e30da179-c062-4a4e-9bf5-be54b4bd4f18"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://e0971571-8468-49e6-bbec-5aeeb9a4c9fa"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://c075b79e-128b-46dd-b2cb-4a13415e89c0"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://94258f87-773e-42b2-905b-f0bf30c4789e"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://8f9560ab-2f51-4023-9b22-12c0720daed1"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://85f29569-cc97-4e9f-a636-37b816df89ad"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://684bfdb8-6f33-419a-bcc6-5dafb3b71756"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://4247fb15-4883-46b8-8b34-7053b23c0197"
+                }
+            ],
+            "value": [
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+                    "class": "File"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "23539956-9ca1-43f9-9dfd-8f98698f6ab6",
+                "266750cd-1cf6-4932-ac66-6a1e8475ecaf",
+                "3a8e9361-d405-43c0-886d-d8948f67ebdb",
+                "4247fb15-4883-46b8-8b34-7053b23c0197",
+                "4c03baf0-a722-4bb5-99f6-09224870d4fa",
+                "5051589e-b392-4501-9257-1cc723e3444a",
+                "51a01398-abbf-402b-abeb-e4b627a76011",
+                "5832fa2f-d559-4dac-bca6-8fc707ff9b11",
+                "5a6c6603-f30c-4264-8248-947af2750ea2",
+                "5e04d4d1-cbf0-4513-9035-7cb07c02c8ac",
+                "635dabd2-c80d-4b69-b398-3a4b48c4a5f4",
+                "675561c3-0c98-45d4-b14c-06b8963358a5",
+                "67d49fe2-2471-4d20-b4ca-b7d0c37ffdc4",
+                "684bfdb8-6f33-419a-bcc6-5dafb3b71756",
+                "78c975b5-c192-41d4-a1c1-0bfcdc369792",
+                "7f890999-d7f7-4d4e-843a-3d31414694c3",
+                "830a1614-803e-4be2-8d81-c6663c39518a",
+                "85f29569-cc97-4e9f-a636-37b816df89ad",
+                "86d8a19b-d080-4317-819c-3c4d8b8d1726",
+                "871d9a1a-95d0-4a1c-b648-c5afe7dff85f",
+                "8f9560ab-2f51-4023-9b22-12c0720daed1",
+                "93526aca-09b5-4dd5-8a77-e30e80a1bc96",
+                "94258f87-773e-42b2-905b-f0bf30c4789e",
+                "94a52808-55b4-496b-9d7a-1b9174a649b2",
+                "98fbf54d-c903-4eba-868c-916c76b277b3",
+                "99a61114-0206-449f-b022-c2f707862112",
+                "a818fbaa-fb0d-4e5e-9752-c0a73fc82ef0",
+                "aa82ebb1-f196-496d-a41f-738a48579a68",
+                "acba31f7-7ac3-4381-b96d-7dd694ee52bc",
+                "ba793d6e-2223-4571-9b12-7aebc474dffd",
+                "c075b79e-128b-46dd-b2cb-4a13415e89c0",
+                "cfe4be34-3760-488b-8468-e82ff2533881",
+                "d7664871-6f58-4a2b-820b-5d7081af34b1",
+                "decad7fc-5b49-454f-b78d-08647da7bfa3",
+                "e0971571-8468-49e6-bbec-5aeeb9a4c9fa",
+                "e30da179-c062-4a4e-9bf5-be54b4bd4f18",
+                "e42b9177-50f1-4cf4-acb0-9b962e420f66",
+                "eb197bf1-ba18-44c8-a7ff-e95bc03def19",
+                "fbdfd883-1702-45fe-8c08-40a449e73927",
+                "ff15c5f2-ff37-4137-b5f9-0d89f7950780"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ab06b8a4-a31c-45bd-a7fe-c777ea9d1674",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.963Z",
+            "modified_date": "2021-08-05T17:02:56.320Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "runparams",
+            "port_type": 0,
+            "schema": {
+                "type": "record",
+                "fields": {
+                    "pi": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "assay": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "genome": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "tmp_dir": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "pi_email": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "intervals": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "mutect_rf": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "complex_nn": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "float"
+                    },
+                    "complex_tn": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "float"
+                    },
+                    "covariates": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "delly_type": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "mutect_dcov": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "int"
+                    },
+                    "num_threads": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "int"
+                    },
+                    "abra_ram_min": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "int"
+                    },
+                    "abra_scratch": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "gatk_jar_path": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "project_prefix": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "opt_dup_pix_dist": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "string"
+                    },
+                    "emit_original_quals": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "boolean"
+                    },
+                    "num_cpu_threads_per_data_thread": {
+                        "type": [
+                            "null",
+                            "array"
+                        ],
+                        "items": "int"
+                    }
+                }
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "pi": "Dr. McGee",
+                "assay": "IMPACT468_BAITS",
+                "genome": "GRCh37",
+                "tmp_dir": "/scratch",
+                "pi_email": "labhead@test.com",
+                "intervals": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19",
+                    "20",
+                    "21",
+                    "22",
+                    "X",
+                    "Y",
+                    "MT"
+                ],
+                "mutect_rf": [
+                    "BadCigar"
+                ],
+                "complex_nn": 0.2,
+                "complex_tn": 0.5,
+                "covariates": [
+                    "CycleCovariate",
+                    "ContextCovariate",
+                    "ReadGroupCovariate",
+                    "QualityScoreCovariate"
+                ],
+                "delly_type": [
+                    "DUP",
+                    "DEL",
+                    "INV",
+                    "INS",
+                    "BND"
+                ],
+                "facets_cval": 50,
+                "mutect_dcov": 50000,
+                "num_threads": 10,
+                "scripts_bin": "/usr/bin",
+                "abra_ram_min": 84000,
+                "abra_scratch": "/scratch",
+                "facets_pcval": 100,
+                "gatk_jar_path": "/usr/bin/gatk.jar",
+                "project_prefix": "ALN-REQ-ID",
+                "opt_dup_pix_dist": "2500",
+                "emit_original_quals": true,
+                "num_cpu_threads_per_data_thread": 6
+            },
+            "value": {
+                "pi": "Dr. McGee",
+                "assay": "IMPACT468_BAITS",
+                "genome": "GRCh37",
+                "tmp_dir": "/scratch",
+                "pi_email": "labhead@test.com",
+                "intervals": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19",
+                    "20",
+                    "21",
+                    "22",
+                    "X",
+                    "Y",
+                    "MT"
+                ],
+                "mutect_rf": [
+                    "BadCigar"
+                ],
+                "complex_nn": 0.2,
+                "complex_tn": 0.5,
+                "covariates": [
+                    "CycleCovariate",
+                    "ContextCovariate",
+                    "ReadGroupCovariate",
+                    "QualityScoreCovariate"
+                ],
+                "delly_type": [
+                    "DUP",
+                    "DEL",
+                    "INV",
+                    "INS",
+                    "BND"
+                ],
+                "facets_cval": 50,
+                "mutect_dcov": 50000,
+                "num_threads": 10,
+                "scripts_bin": "/usr/bin",
+                "abra_ram_min": 84000,
+                "abra_scratch": "/scratch",
+                "facets_pcval": 100,
+                "gatk_jar_path": "/usr/bin/gatk.jar",
+                "project_prefix": "ALN-REQ-ID",
+                "opt_dup_pix_dist": "2500",
+                "emit_original_quals": true,
+                "num_cpu_threads_per_data_thread": 6
+            },
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b2b1bb8b-9f1d-4176-a88a-acf3304a853c",
+        "fields": {
+            "created_date": "2021-08-05T15:42:44.985Z",
+            "modified_date": "2021-08-05T17:02:56.351Z",
+            "run": "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
+            "name": "pair",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "record"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "CN": "MySequencingCenter",
+                    "ID": "s_C_ALLANT_T003_d",
+                    "LB": "MyLibraryId",
+                    "PL": "Illumina",
+                    "PU": [
+                        "MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "R1": [
+                        {
+                            "class": "File",
+                            "location": "bid://9db92443-f53d-4f9d-9abc-668f18c1dcc7"
+                        }
+                    ],
+                    "R2": [
+                        {
+                            "class": "File",
+                            "location": "bid://3dd98473-5857-4288-a042-84ee0e06b9d7"
+                        }
+                    ],
+                    "bam": [],
+                    "zR1": [],
+                    "zR2": [],
+                    "RG_ID": [
+                        "s_C_ALLANT_T003_d_MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+                    "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "bwa_output": "s_C_ALLANT_T003_d.bam",
+                    "request_id": "ALN-REQ-ID",
+                    "specimen_type": "Blood"
+                },
+                {
+                    "CN": "MySequencingCenter",
+                    "ID": "s_C_ALLANT_N002_d",
+                    "LB": "MyLibraryId",
+                    "PL": "Illumina",
+                    "PU": [
+                        "MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "R1": [
+                        {
+                            "class": "File",
+                            "location": "bid://c15a1bfd-5b68-4f64-a966-fc2f405dc9bc"
+                        }
+                    ],
+                    "R2": [
+                        {
+                            "class": "File",
+                            "location": "bid://a8bfec56-70d6-4ece-8d7d-49f9febfbb4e"
+                        }
+                    ],
+                    "bam": [],
+                    "zR1": [],
+                    "zR2": [],
+                    "RG_ID": [
+                        "s_C_ALLANT_N002_d_MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+                    "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "bwa_output": "s_C_ALLANT_N002_d.bam",
+                    "request_id": "ALN-REQ-ID",
+                    "specimen_type": "Blood"
+                }
+            ],
+            "value": [
+                {
+                    "CN": "MySequencingCenter",
+                    "ID": "s_C_ALLANT_T003_d",
+                    "LB": "MyLibraryId",
+                    "PL": "Illumina",
+                    "PU": [
+                        "MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "R1": [
+                        {
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
+                            "class": "File"
+                        }
+                    ],
+                    "R2": [
+                        {
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
+                            "class": "File"
+                        }
+                    ],
+                    "bam": [],
+                    "zR1": [],
+                    "zR2": [],
+                    "RG_ID": [
+                        "s_C_ALLANT_T003_d_MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+                    "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "bwa_output": "s_C_ALLANT_T003_d.bam",
+                    "request_id": "ALN-REQ-ID",
+                    "specimen_type": "Blood"
+                },
+                {
+                    "CN": "MySequencingCenter",
+                    "ID": "s_C_ALLANT_N002_d",
+                    "LB": "MyLibraryId",
+                    "PL": "Illumina",
+                    "PU": [
+                        "MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "R1": [
+                        {
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
+                            "class": "File"
+                        }
+                    ],
+                    "R2": [
+                        {
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
+                            "class": "File"
+                        }
+                    ],
+                    "bam": [],
+                    "zR1": [],
+                    "zR2": [],
+                    "RG_ID": [
+                        "s_C_ALLANT_N002_d_MyFlowCellId_MyBarcodeIndex"
+                    ],
+                    "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+                    "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "bwa_output": "s_C_ALLANT_N002_d.bam",
+                    "request_id": "ALN-REQ-ID",
+                    "specimen_type": "Blood"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "3dd98473-5857-4288-a042-84ee0e06b9d7",
+                "9db92443-f53d-4f9d-9abc-668f18c1dcc7",
+                "a8bfec56-70d6-4ece-8d7d-49f9febfbb4e",
+                "c15a1bfd-5b68-4f64-a966-fc2f405dc9bc"
+            ]
+        }
+    }
+]
