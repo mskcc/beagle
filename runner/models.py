@@ -187,6 +187,7 @@ class Run(BaseModel):
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
+    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=5)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -206,6 +207,27 @@ class Run(BaseModel):
 
         self.job_statuses = {}
         self.status = RunStatus.READY
+        return self
+
+    def set_for_restart(self):
+        if self.resume_attempts == 0:
+            return None
+        resume_attempts = self.resume_attempts - 1
+        resume_id = self.pk
+        started = self.started
+        output_directory = self.output_directory
+        message = self.message
+        if not message:
+            message = {}
+        if "resume" not in message:
+            message["resume"] = []
+        message["resume"].append(now())
+        self.clear().save()
+        self.resume = resume_id
+        self.started = started
+        self.output_directory = output_directory
+        self.resume_attempts = resume_attempts
+        self.save()
         return self
 
     @property
