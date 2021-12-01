@@ -222,7 +222,8 @@ class Run(BaseModel):
             message = {}
         if "resume" not in message:
             message["resume"] = []
-        message["resume"].append((started, now(), execution_id))
+        message["resume"].append((started.strftime(
+            "%Y%m%d_%H_%M_%f"), now().strftime("%Y%m%d_%H_%M_%f"), execution_id))
         self.clear().save()
         self.execution_id = execution_id
         self.message = message
