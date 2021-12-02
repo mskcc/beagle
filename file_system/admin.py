@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
 from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, \
-    Sample, Patient, Request
+    Sample, Patient, Request, FileExtension
 
 # Register your models here.
 
@@ -48,6 +48,7 @@ admin.site.register(Request, RequestAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(FileGroup)
 admin.site.register(FileType)
+admin.site.register(FileExtension)
 admin.site.register(FileMetadata, FileMetadataAdmin)
 admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
