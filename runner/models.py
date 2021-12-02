@@ -214,6 +214,7 @@ class Run(BaseModel):
             return None
         resume_attempts = self.resume_attempts - 1
         resume_id = self.pk
+        execution_id = self.execution_id
         started = self.started
         output_directory = self.output_directory
         message = self.message
@@ -221,8 +222,15 @@ class Run(BaseModel):
             message = {}
         if "resume" not in message:
             message["resume"] = []
-        message["resume"].append(now())
+        started_strftime = ""
+        exited_strftime = now().strftime("%m/%d/%Y, %H:%M:%S")
+        if started:
+            started_strftime = started.strftime("%m/%d/%Y, %H:%M:%S")
+        message["resume"].append(
+            (started_strftime, exited_strftime, str(execution_id)))
         self.clear().save()
+        self.execution_id = execution_id
+        self.message = message
         self.resume = resume_id
         self.started = started
         self.output_directory = output_directory
