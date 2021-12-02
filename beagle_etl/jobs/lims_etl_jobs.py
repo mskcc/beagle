@@ -1,5 +1,6 @@
 import os
 import copy
+import json
 import logging
 from deepdiff import DeepDiff
 from datetime import datetime
@@ -30,7 +31,8 @@ from django.contrib.auth.models import User
 logger = logging.getLogger(__name__)
 
 
-def new_request(data):
+def new_request(input_data):
+    data = json.loads(input_data)
     request_id = data.get('requestId')
     if data.get('deliveryDate'):
         delivery_date = datetime.fromtimestamp(data['deliveryDate'] / 1000)
@@ -46,8 +48,13 @@ def new_request(data):
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
+
+    igocomplete = True
+    '''
+    Fix until igoComplete is in the MetaDB
+    '''
     samples = data.get('samples')
-    for idx, sample in enumerate(data.get('sampleManifestList')):
+    for idx, sample in enumerate(data.get('sampleManifestList', [])):
         igocomplete = samples[idx]['igocomplete']
         try:
             validate_sample(sample, sample.get('libraries', []), igocomplete)
@@ -122,8 +129,8 @@ def new_request(data):
     }
 
     samples = data.get('samples')
-    for idx, sample in enumerate(data.get('sampleManifestList')):
-        igocomplete = samples[idx]['igocomplete']
+    for idx, sample in enumerate(data.get('samples')):
+        # igocomplete = samples[idx]['igocomplete']
         sample_id = sample['igoId']
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop('libraries')
