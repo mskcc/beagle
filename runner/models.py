@@ -229,8 +229,7 @@ class Run(BaseModel):
         exited_strftime = now().strftime("%m/%d/%Y, %H:%M:%S")
         if started:
             started_strftime = started.strftime("%m/%d/%Y, %H:%M:%S")
-        message["resume"].append(
-            (started_strftime, exited_strftime, str(execution_id)))
+        message["resume"].append((started_strftime, exited_strftime, str(execution_id)))
         self.clear().save()
         self.execution_id = execution_id
         self.message = message
