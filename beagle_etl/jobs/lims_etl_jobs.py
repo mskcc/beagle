@@ -292,7 +292,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     return []
 
 
-def update_request_job(data):
+def update_request_job(input_data):
+    data = json.loads(input_data)
     request_id = data.get('requestId')
     files = FileRepository.filter(metadata={'requestId': request_id})
 
@@ -373,7 +374,8 @@ def update_request_job(data):
     request_callback(request_id, recipe, sample_status_list, job_group, job_group_notifier)
 
 
-def update_sample_job(data):
+def update_sample_job(input_data):
+    data = json.loads(input_data)
     request_id = data.get('requestId')
     files = FileRepository.filter(metadata={'requestId': request_id}).all()
     file_paths = [f.file.path for f in files]
@@ -418,9 +420,10 @@ def update_sample_job(data):
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
+    igocomplete = True
     samples = data.get('samples')
-    for idx, sample in enumerate(data.get('sampleManifestList')):
-        igocomplete = samples[idx]['igocomplete']
+    for idx, sample in enumerate(data.get('samples')):
+        # igocomplete = samples[idx]['igocomplete']
         sample_id = sample['igoId']
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop('libraries')
