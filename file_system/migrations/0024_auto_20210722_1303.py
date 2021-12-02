@@ -8,54 +8,54 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0023_auto_20201117_1729'),
+        ("file_system", "0023_auto_20201117_1729"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Patient',
+            name="Patient",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('patient_id', models.CharField(blank=True, max_length=100, null=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("patient_id", models.CharField(blank=True, max_length=100, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Request',
+            name="Request",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('request_id', models.CharField(max_length=100, null=True, blank=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("request_id", models.CharField(max_length=100, null=True, blank=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='sample',
-            name='cmo_sample_name',
-            field=models.CharField(default='', max_length=100, null=True, blank=True),
+            model_name="sample",
+            name="cmo_sample_name",
+            field=models.CharField(default="", max_length=100, null=True, blank=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='sample',
-            name='sample_name',
-            field=models.CharField(default='', max_length=100, null=True, blank=True),
+            model_name="sample",
+            name="sample_name",
+            field=models.CharField(default="", max_length=100, null=True, blank=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='file',
-            name='patient',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='file_system.Patient'),
+            model_name="file",
+            name="patient",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="file_system.Patient"),
         ),
         migrations.AddField(
-            model_name='file',
-            name='request',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='file_system.Request'),
+            model_name="file",
+            name="request",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="file_system.Request"),
         ),
     ]

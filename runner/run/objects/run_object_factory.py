@@ -5,7 +5,6 @@ from runner.run.objects.nextflow import NextflowRunObject
 
 
 class RunObjectFactory(object):
-
     @staticmethod
     def from_definition(run_id, inputs):
         try:

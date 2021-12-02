@@ -4,14 +4,13 @@ from .views import JobGroupViews, JobGroupNotificationView, NotifierStartView, J
 
 
 router = routers.DefaultRouter()
-router.register('job-groups', JobGroupViews)
-router.register('status-page', ProjectStatusView)
+router.register("job-groups", JobGroupViews)
+router.register("status-page", ProjectStatusView)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('send/', JobGroupNotificationView.as_view()),
-    path('create/', NotifierStartView.as_view()),
-    path('update/', JiraStatusView.as_view()),
+    path("", include(router.urls)),
+    path("send/", JobGroupNotificationView.as_view()),
+    path("create/", NotifierStartView.as_view()),
+    path("update/", JiraStatusView.as_view()),
 ]
-

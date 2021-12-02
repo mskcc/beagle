@@ -6,27 +6,27 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0024_assay_redelivery'),
+        ("beagle_etl", "0024_assay_redelivery"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Assay',
-            new_name='ETLConfiguration',
+            old_name="Assay",
+            new_name="ETLConfiguration",
         ),
         migrations.RenameField(
-            model_name='etlconfiguration',
-            old_name='all',
-            new_name='all_recipes',
+            model_name="etlconfiguration",
+            old_name="all",
+            new_name="all_recipes",
         ),
         migrations.RenameField(
-            model_name='etlconfiguration',
-            old_name='disabled',
-            new_name='disabled_recipes',
+            model_name="etlconfiguration",
+            old_name="disabled",
+            new_name="disabled_recipes",
         ),
         migrations.RenameField(
-            model_name='etlconfiguration',
-            old_name='hold',
-            new_name='hold_recipes',
+            model_name="etlconfiguration",
+            old_name="hold",
+            new_name="hold_recipes",
         ),
     ]

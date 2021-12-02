@@ -7,6 +7,7 @@ import os
 import sys
 import json
 from runner.models import Port
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
@@ -15,7 +16,7 @@ def load_references():
     """
     Loads QC reference data from the resources JSON
     """
-    data = json.load(open(os.path.join(WORKDIR, 'reference_jsons/qc_resources.json'), 'rb'))
+    data = json.load(open(os.path.join(WORKDIR, "reference_jsons/qc_resources.json"), "rb"))
     return data
 
 
@@ -23,7 +24,7 @@ def get_baits_and_targets(assay, qc_resources):
     """
     From value in assay, retrieve target files (mainly fp_genotypes) from qc_resources
     """
-    targets = qc_resources['targets']
+    targets = qc_resources["targets"]
 
     target_assay = assay
 
@@ -43,7 +44,7 @@ def get_baits_and_targets(assay, qc_resources):
         target_assay = "IMPACT468_08050"
 
     if target_assay in targets:
-        return {"class": "File", 'location': str(targets[target_assay]['fp_genotypes'])}
+        return {"class": "File", "location": str(targets[target_assay]["fp_genotypes"])}
     else:
         error_msg = "ERROR: Targets for Assay not found in qc_resources.json: %s" % assay
         LOGGER.error(error_msg)
@@ -53,7 +54,7 @@ def create_cwl_file_obj(file_path):
     """
     Given a filepath, return a dictionary with class File and JUNO-specific URI
     """
-    cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
+    cwl_file_obj = {"class": "File", "location": "juno://%s" % file_path}
     return cwl_file_obj
 
 
@@ -64,17 +65,15 @@ def get_file_obj(file_obj):
     JUNO-specific URI file paths
     """
     secondary_file_list = []
-    file_location = file_obj['location'].replace('file://', '')
-    if 'secondaryFiles' in file_obj:
-        for single_secondary_file in file_obj['secondaryFiles']:
-            secondary_file_location = single_secondary_file['location'].replace(
-                'file://', '')
-            secondary_file_cwl_obj = create_cwl_file_obj(
-                secondary_file_location)
+    file_location = file_obj["location"].replace("file://", "")
+    if "secondaryFiles" in file_obj:
+        for single_secondary_file in file_obj["secondaryFiles"]:
+            secondary_file_location = single_secondary_file["location"].replace("file://", "")
+            secondary_file_cwl_obj = create_cwl_file_obj(secondary_file_location)
             secondary_file_list.append(secondary_file_cwl_obj)
     file_cwl_obj = create_cwl_file_obj(file_location)
     if secondary_file_list:
-        file_cwl_obj['secondaryFiles'] = secondary_file_list
+        file_cwl_obj["secondaryFiles"] = secondary_file_list
     return file_cwl_obj
 
 
@@ -96,10 +95,24 @@ def list_keys_for_qc():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a list of values in the JSON
     """
-    keys = ['tumor_bams', 'normal_bams', 'tumor_sample_names', 'normal_sample_names',
-            'hotspot_list_maf', 'conpair_markers', 'md_metrics', 'hs_metrics',
-            'insert_metrics', 'per_target_coverage', 'qual_metrics', 'doc_basecounts',
-            'conpair_pileups', 'directories', 'files', 'mafs']
+    keys = [
+        "tumor_bams",
+        "normal_bams",
+        "tumor_sample_names",
+        "normal_sample_names",
+        "hotspot_list_maf",
+        "conpair_markers",
+        "md_metrics",
+        "hs_metrics",
+        "insert_metrics",
+        "per_target_coverage",
+        "qual_metrics",
+        "doc_basecounts",
+        "conpair_pileups",
+        "directories",
+        "files",
+        "mafs",
+    ]
     return set(keys)
 
 
@@ -137,13 +150,13 @@ def construct_argos_qc_input(run_id_list):
                 if not input_json[name]:
                     input_json[name] = value
             if name == "tumor_bam":
-                input_json['tumor_bams'].append(get_file_obj(value))
+                input_json["tumor_bams"].append(get_file_obj(value))
             if name == "normal_bam":
-                input_json['normal_bams'].append(get_file_obj(value))
+                input_json["normal_bams"].append(get_file_obj(value))
             if name == "tumor_sample_name":
-                input_json['tumor_sample_names'].append(value)
+                input_json["tumor_sample_names"].append(value)
             if name == "normal_sample_name":
-                input_json['normal_sample_names'].append(value)
+                input_json["normal_sample_names"].append(value)
             if name == "maf_file":
                 input_json["mafs"].append(get_file_obj(value))
             if name == "md_metrics":
@@ -161,7 +174,7 @@ def construct_argos_qc_input(run_id_list):
             if name == "conpair_pileups":
                 input_json[name].append(get_files_from_port(value))
 
-    references = convert_references(input_json['assay'])
+    references = convert_references(input_json["assay"])
     input_json.update(references)
     return input_json
 
@@ -175,15 +188,14 @@ def convert_references(assay):
     qc_resources = load_references()
     references = dict()
     fp_genotypes = get_baits_and_targets(assay, qc_resources)
-    references['fp_genotypes'] = fp_genotypes
-    references['ref_fasta'] = {'class': 'File', 'location': qc_resources['ref_fasta']}
-    references['conpair_markers'] = qc_resources['conpair_markers']
-    references['hotspot_list_maf'] = {'class': 'File',
-                                      'location': qc_resources['hotspot_list_maf']}
+    references["fp_genotypes"] = fp_genotypes
+    references["ref_fasta"] = {"class": "File", "location": qc_resources["ref_fasta"]}
+    references["conpair_markers"] = qc_resources["conpair_markers"]
+    references["hotspot_list_maf"] = {"class": "File", "location": qc_resources["hotspot_list_maf"]}
     return references
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     RUN_ID_LIST = []
     for single_arg in sys.argv[1:]:
         RUN_ID_LIST.append(single_arg)

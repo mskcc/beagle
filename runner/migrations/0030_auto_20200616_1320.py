@@ -3,6 +3,7 @@
 from django.db import migrations
 from runner.models import RunStatus
 
+
 def add_finished_date(model_list):
     for single_model in model_list:
         if single_model.status == RunStatus.COMPLETED or single_model.status == RunStatus.FAILED:
@@ -10,21 +11,24 @@ def add_finished_date(model_list):
                 single_model.finished_date = single_model.modified_date
                 single_model.save()
 
+
 def handle_finished_date_operator_run(apps, _):
-    operator_run_jobs = apps.get_model('runner', 'OperatorRun').objects.all()
+    operator_run_jobs = apps.get_model("runner", "OperatorRun").objects.all()
     add_finished_date(operator_run_jobs)
 
+
 def handle_finished_date_run(apps, _):
-    run_jobs = apps.get_model('runner', 'Run').objects.all()
+    run_jobs = apps.get_model("runner", "Run").objects.all()
     add_finished_date(run_jobs)
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0029_auto_20200612_2005'),
+        ("runner", "0029_auto_20200612_2005"),
     ]
 
     operations = [
         migrations.RunPython(handle_finished_date_run),
-        migrations.RunPython(handle_finished_date_operator_run)
+        migrations.RunPython(handle_finished_date_operator_run),
     ]

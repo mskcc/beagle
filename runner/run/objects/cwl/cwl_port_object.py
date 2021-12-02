@@ -8,34 +8,16 @@ from runner.run.processors.port_processor import PortProcessor, PortAction
 
 
 class CWLPortObject(PortObject):
-
-    def __init__(self,
-                 run_id,
-                 name,
-                 port_type,
-                 schema,
-                 secondary_files,
-                 db_value,
-                 value,
-                 files,
-                 port_id=None,
-                 notify=False):
-        super().__init__(run_id,
-                         name,
-                         port_type,
-                         schema,
-                         secondary_files,
-                         db_value,
-                         value,
-                         files,
-                         port_id,
-                         notify)
+    def __init__(
+        self, run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id=None, notify=False
+    ):
+        super().__init__(run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id, notify)
 
     @classmethod
     def from_definition(cls, run_id, value, port_type, port_values, notify=False):
-        name = value.get('id')
-        input_schema = value.get('type')
-        secondary_files = value.get('secondaryFiles', [])
+        name = value.get("id")
+        input_schema = value.get("type")
+        secondary_files = value.get("secondaryFiles", [])
         schema = input_schema
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
@@ -47,27 +29,27 @@ class CWLPortObject(PortObject):
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
         files = []
-        self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                    PortAction.CONVERT_TO_BID,
-                                                    file_list=files)
-        self.value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                 PortAction.CONVERT_TO_PATH)
+        self.db_value = PortProcessor.process_files(
+            copy.deepcopy(self.value), PortAction.CONVERT_TO_BID, file_list=files
+        )
+        self.value = PortProcessor.process_files(copy.deepcopy(self.value), PortAction.CONVERT_TO_PATH)
         self.files = files
 
     def complete(self, value, group, job_group_notifier, output_metadata={}):
 
         self.value = value
         files = []
-        self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                    PortAction.REGISTER_OUTPUT_FILES,
-                                                    file_list=files,
-                                                    group_id=str(group.id),
-                                                    metadata=output_metadata)
+        self.db_value = PortProcessor.process_files(
+            copy.deepcopy(self.value),
+            PortAction.REGISTER_OUTPUT_FILES,
+            file_list=files,
+            group_id=str(group.id),
+            metadata=output_metadata,
+        )
         if self.notify:
-            PortProcessor.process_files(copy.deepcopy(self.value),
-                                        PortAction.SEND_AS_NOTIFICATION,
-                                        job_group=job_group_notifier,
-                                        download=True)
+            PortProcessor.process_files(
+                copy.deepcopy(self.value), PortAction.SEND_AS_NOTIFICATION, job_group=job_group_notifier, download=True
+            )
         self.files = files
 
     @classmethod
@@ -75,17 +57,19 @@ class CWLPortObject(PortObject):
         try:
             port = Port.objects.get(id=port_id)
         except Port.DoesNotExist:
-            raise PortObjectConstructException('Port with id:')
-        return cls(str(port.run.id),
-                   port.name,
-                   port.port_type,
-                   port.schema,
-                   port.secondary_files,
-                   port.db_value,
-                   port.value,
-                   [FileProcessor.get_bid_from_file(f) for f in port.files.all()],
-                   port_id=port_id,
-                   notify=port.notify)
+            raise PortObjectConstructException("Port with id:")
+        return cls(
+            str(port.run.id),
+            port.name,
+            port.port_type,
+            port.schema,
+            port.secondary_files,
+            port.db_value,
+            port.value,
+            [FileProcessor.get_bid_from_file(f) for f in port.files.all()],
+            port_id=port_id,
+            notify=port.notify,
+        )
 
     def to_db(self):
         if self.port_object:
@@ -104,15 +88,16 @@ class CWLPortObject(PortObject):
                 run_object = Run.objects.get(id=self.run_id)
             except Run.DoesNotExist:
                 raise PortObjectConstructException("Port save failed. Run with id: %s doesn't exist.")
-            new_port = Port(run=run_object,
-                            name=self.name,
-                            port_type=self.port_type,
-                            schema=self.schema,
-                            secondary_files=self.secondary_files,
-                            db_value=self.db_value,
-                            value=self.value,
-                            notify=self.name in run_object.notify_for_outputs
-                            )
+            new_port = Port(
+                run=run_object,
+                name=self.name,
+                port_type=self.port_type,
+                schema=self.schema,
+                secondary_files=self.secondary_files,
+                db_value=self.db_value,
+                value=self.value,
+                notify=self.name in run_object.notify_for_outputs,
+            )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])
             new_port.save()

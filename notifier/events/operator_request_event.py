@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class OperatorRequestEvent(Event):
-
     def __init__(self, job_notifier, error):
         self.job_notifier = job_notifier
         self.error = error

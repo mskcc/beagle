@@ -17,15 +17,14 @@ class Sample:
 
     Sample class contains paired fastqs
     """
+
     def __init__(self, sample_id, file_list):
         self.fastqs = Fastqs(file_list)
         self.sample_id = sample_id
 
-
     def __str__(self):
         s = self.sample_id
         return s
-
 
     def __repr__(self):
         return "{Sample %s}" % self.sample_id
@@ -39,13 +38,13 @@ class Fastqs:
 
     The paired bool is True if all of the R1s in file list find a matching R2
     """
+
     def __init__(self, file_list):
         self.fastqs = dict()
         self.r1 = list()
         self.r2 = list()
         self.paired = True
         self._set_R(file_list)
-
 
     def _set_R(self, file_list):
         """
@@ -57,7 +56,7 @@ class Fastqs:
         r2s = list()
         for i in file_list:
             f = i.file
-            r = i.metadata['R']
+            r = i.metadata["R"]
             if r == "R1":
                 r1s.append(f)
             if r == "R2":
@@ -65,7 +64,7 @@ class Fastqs:
         for f in r1s:
             self.r1.append(f)
             fastq1 = f.path
-            expected_r2 = 'R2'.join(fastq1.rsplit('R1', 1))
+            expected_r2 = "R2".join(fastq1.rsplit("R1", 1))
             fastq2 = self._get_fastq_from_list(expected_r2, r2s)
             if fastq2:
                 self.r2.append(fastq2)
@@ -73,16 +72,14 @@ class Fastqs:
                 print("No fastq R2 found for %s" % f.path)
                 self.paired = False
 
-
     def __str__(self):
         s = "R1:\n"
         for i in self.r1:
-            s += i.path +"\n"
+            s += i.path + "\n"
         s += "\nR2:\n"
         for i in self.r2:
             s += i.path + "\n"
         return s
-
 
     def _get_fastq_from_list(self, fastq_path, fastq_files):
         """

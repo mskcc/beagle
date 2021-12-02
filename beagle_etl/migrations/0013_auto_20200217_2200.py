@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0012_operator_class_name'),
+        ("beagle_etl", "0012_operator_class_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='operator',
-            name='slug',
+            model_name="operator",
+            name="slug",
             field=models.CharField(default=False, max_length=100),
         ),
     ]

@@ -4,7 +4,7 @@ from django.db import migrations
 
 
 def _set_parent(apps, operator_runs):
-    OperatorTrigger = apps.get_model('runner', 'OperatorTrigger')
+    OperatorTrigger = apps.get_model("runner", "OperatorTrigger")
     for operator_run in operator_runs:
         parent = None
         trigger = OperatorTrigger.objects.filter(to_operator=operator_run.operator).first()
@@ -19,8 +19,8 @@ def _set_parent(apps, operator_runs):
 
 
 def set_parents_for_operator_runs(apps, _):
-    JobGroup = apps.get_model('notifier', 'JobGroup')
-    OperatorRun = apps.get_model('runner', 'OperatorRun')
+    JobGroup = apps.get_model("notifier", "JobGroup")
+    OperatorRun = apps.get_model("runner", "OperatorRun")
     job_groups = JobGroup.objects.all()
     for job_group in job_groups:
         operator_runs = OperatorRun.objects.filter(job_group=job_group).all()
@@ -29,7 +29,7 @@ def set_parents_for_operator_runs(apps, _):
 
 
 def revert(apps, _):
-    OperatorRun = apps.get_model('runner', 'OperatorRun')
+    OperatorRun = apps.get_model("runner", "OperatorRun")
     for operator_run in OperatorRun.objects.all():
         operator_run.parent = None
         operator_run.save()
@@ -38,9 +38,7 @@ def revert(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0038_populate_runs'),
+        ("runner", "0038_populate_runs"),
     ]
 
-    operations = [
-        migrations.RunPython(set_parents_for_operator_runs, reverse_code=revert)
-    ]
+    operations = [migrations.RunPython(set_parents_for_operator_runs, reverse_code=revert)]

@@ -8,22 +8,22 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0008_pipeline_output_file_group'),
+        ("runner", "0008_pipeline_output_file_group"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='OperatorErrors',
+            name="OperatorErrors",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('operator_name', models.CharField(max_length=100)),
-                ('request_id', models.CharField(max_length=100)),
-                ('error', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("operator_name", models.CharField(max_length=100)),
+                ("request_id", models.CharField(max_length=100)),
+                ("error", django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0007_remove_filegroup_metadata'),
+        ("file_system", "0007_remove_filegroup_metadata"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='file',
-            name='file_name',
+            model_name="file",
+            name="file_name",
             field=models.CharField(max_length=500),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='path',
+            model_name="file",
+            name="path",
             field=models.CharField(max_length=1500),
         ),
     ]
