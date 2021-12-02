@@ -7,26 +7,31 @@ from django.db.models import Q
 from runner.models import Run
 from runner.tasks import check_statuses_on_ridgeback, update_commandline_job_status
 
+
 def populate_job_info(apps, _):
-    run_list = Run.objects.all().filter(execution_id__isnull=False).filter(Q(job_statuses__isnull=True) | Q(job_statuses__exact='') | Q(job_statuses__exact={}))
+    run_list = (
+        Run.objects.all()
+        .filter(execution_id__isnull=False)
+        .filter(Q(job_statuses__isnull=True) | Q(job_statuses__exact="") | Q(job_statuses__exact={}))
+    )
     try:
         remote_statuses = check_statuses_on_ridgeback(list(run_list.values_list("execution_id")))
     except Exception as e:
         print("Could not pull remote statuses")
-        run_list=[]
+        run_list = []
     for single_run in run_list:
         try:
             if single_run.execution_id:
                 status = remote_statuses[str(single_run.execution_id)]
-                if status['commandlinetooljob_set']:
-                    update_commandline_job_status(single_run, status['commandlinetooljob_set'])
-                if status['started'] and not single_run.started:
-                    single_run.started = status['started']
-                if status['submitted'] and not single_run.submitted:
-                    single_run.submitted = status['submitted']
+                if status["commandlinetooljob_set"]:
+                    update_commandline_job_status(single_run, status["commandlinetooljob_set"])
+                if status["started"] and not single_run.started:
+                    single_run.started = status["started"]
+                if status["submitted"] and not single_run.submitted:
+                    single_run.submitted = status["submitted"]
                 single_run.save()
         except Exception as e:
-            print("Run %s could not update job statuses"  % str(single_run.id))
+            print("Run %s could not update job statuses" % str(single_run.id))
 
 
 def revert_migration(apps, _):
@@ -36,9 +41,7 @@ def revert_migration(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0041_auto_20210112_1400'),
+        ("runner", "0041_auto_20210112_1400"),
     ]
 
-    operations = [
-        migrations.RunPython(populate_job_info, reverse_code=revert_migration)
-    ]
+    operations = [migrations.RunPython(populate_job_info, reverse_code=revert_migration)]

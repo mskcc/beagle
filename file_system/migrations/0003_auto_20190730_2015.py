@@ -7,23 +7,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0002_auto_20190730_1832'),
+        ("file_system", "0002_auto_20190730_1832"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='sample',
-            old_name='sample_name',
-            new_name='name',
+            model_name="sample",
+            old_name="sample_name",
+            new_name="name",
         ),
         migrations.AlterField(
-            model_name='filegroup',
-            name='metadata',
+            model_name="filegroup",
+            name="metadata",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, null=True),
         ),
         migrations.AlterField(
-            model_name='filegroupmetadata',
-            name='metadata',
+            model_name="filegroupmetadata",
+            name="metadata",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, null=True),
         ),
     ]

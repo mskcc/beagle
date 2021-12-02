@@ -24,20 +24,20 @@ class GithubCache(object):
         if not os.path.exists(expected_path):
             GithubCache.logger.info("Pipeline not found in cache %s" % expected_path)
             os.makedirs(expected_path)
-            git.Git(expected_path).clone(github, '--branch', version, '--recurse-submodules')
+            git.Git(expected_path).clone(github, "--branch", version, "--recurse-submodules")
             full_dir = os.path.join(expected_path, GithubCache._extract_dirname_from_github_link(github))
             return full_dir
         return None
 
     @staticmethod
     def _generate_directory_name(github, version):
-        github_name = github.split('.com/')[-1].replace('/', '_')
+        github_name = github.split(".com/")[-1].replace("/", "_")
         path = os.path.join(settings.APP_CACHE, github_name, version)
         return path
 
     @staticmethod
     def _extract_dirname_from_github_link(github):
-        dirname = github.rsplit('/', 2)[1] if github.endswith('/') else github.rsplit('/', 1)[1]
-        if dirname.endswith('.git'):
+        dirname = github.rsplit("/", 2)[1] if github.endswith("/") else github.rsplit("/", 1)[1]
+        if dirname.endswith(".git"):
             dirname = dirname[:-4]
         return dirname

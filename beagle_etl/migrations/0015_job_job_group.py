@@ -7,14 +7,16 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0001_initial'),
-        ('beagle_etl', '0014_merge_20200224_2101'),
+        ("notifier", "0001_initial"),
+        ("beagle_etl", "0014_merge_20200224_2101"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='job',
-            name='job_group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='notifier.JobGroup'),
+            model_name="job",
+            name="job_group",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="notifier.JobGroup"
+            ),
         ),
     ]

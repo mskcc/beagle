@@ -13,29 +13,26 @@ from .bin.make_sample import format_sample_name
 
 class ArgosOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
-                                                'igocomplete': True})
+        files = FileRepository.filter(queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True})
         argos_jobs = list()
 
-        cnt_tumors = FileRepository.filter(queryset=self.files,
-                                           metadata={'requestId': self.request_id,
-                                                     'tumorOrNormal': 'Tumor',
-                                                     'igocomplete': True}).count()
+        cnt_tumors = FileRepository.filter(
+            queryset=self.files, metadata={"requestId": self.request_id, "tumorOrNormal": "Tumor", "igocomplete": True}
+        ).count()
         if cnt_tumors == 0:
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
             send_notification.delay(cant_do)
-            all_normals_event = SetLabelEvent(self.job_group_notifier_id, 'all_normals').to_dict()
+            all_normals_event = SetLabelEvent(self.job_group_notifier_id, "all_normals").to_dict()
             send_notification.delay(all_normals_event)
             return argos_jobs
 
         data = list()
         for f in files:
             sample = dict()
-            sample['id'] = f.file.id
-            sample['path'] = f.file.path
-            sample['file_name'] = f.file.file_name
-            sample['metadata'] = f.metadata
+            sample["id"] = f.file.id
+            sample["path"] = f.file.path
+            sample["file_name"] = f.file.file_name
+            sample["metadata"] = f.metadata
             data.append(sample)
 
         files = list()
@@ -43,7 +40,7 @@ class ArgosOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
+            igo_id = sample["metadata"]["sampleId"]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
@@ -64,91 +61,102 @@ class ArgosOperator(Operator):
             pass
 
         for i, job in enumerate(argos_inputs):
-            tumor_sample_name = job['pair'][0]['ID']
-            for p in job['pair'][0]['R1']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            tumor_sample_name = job["pair"][0]["ID"]
+            for p in job["pair"][0]["R1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [tumor_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([tumor_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][0]['R2']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][0]["R2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [tumor_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([tumor_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][0]['zR1']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][0]["zR1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [tumor_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([tumor_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][0]['zR2']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][0]["zR2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [tumor_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([tumor_sample_name, filepath]) + "\n"
                     files.append(filepath)
 
-            normal_sample_name = job['pair'][1]['ID']
-            for p in job['pair'][1]['R1']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            normal_sample_name = job["pair"][1]["ID"]
+            for p in job["pair"][1]["R1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][1]['R2']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][1]["R2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][1]['zR1']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][1]["zR1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
-            for p in job['pair'][1]['zR2']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][1]["zR2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
 
-            for p in job['pair'][1]['bam']:
-                filepath = FileProcessor.parse_path_from_uri(p['location'])
+            for p in job["pair"][1]["bam"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
                 if filepath not in files:
-                    sample_mapping += "\t".join(
-                        [normal_sample_name, filepath]) + "\n"
+                    sample_mapping += "\t".join([normal_sample_name, filepath]) + "\n"
                     files.append(filepath)
 
             name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
-            assay = job['assay']
-            pi = job['pi']
-            pi_email = job['pi_email']
+            assay = job["assay"]
+            pi = job["pi"]
+            pi_email = job["pi_email"]
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-            argos_jobs.append((APIRunCreateSerializer(
-                data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id,
-                          'sampleNameTumor': tumor_sample_name,
-                          'sampleNameNormal': normal_sample_name,
-                          'labHeadName': pi,
-                          'labHeadEmail': pi_email}}), job))
+            argos_jobs.append(
+                (
+                    APIRunCreateSerializer(
+                        data={
+                            "app": pipeline,
+                            "inputs": argos_inputs,
+                            "name": name,
+                            "tags": {
+                                "requestId": self.request_id,
+                                "sampleNameTumor": tumor_sample_name,
+                                "sampleNameNormal": normal_sample_name,
+                                "labHeadName": pi,
+                                "labHeadEmail": pi_email,
+                            },
+                        }
+                    ),
+                    job,
+                )
+            )
 
-        operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
+        operator_run_summary = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
+        ).to_dict()
         send_notification.delay(operator_run_summary)
 
-        mapping_file_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_mapping.txt', sample_mapping).to_dict()
+        mapping_file_event = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
+        ).to_dict()
         send_notification.delay(mapping_file_event)
 
-        data_clinical = generate_sample_data_content(files, pipeline_name=pipeline_obj.name,
-                                                     pipeline_github=pipeline_obj.github,
-                                                     pipeline_version=pipeline_obj.version)
-        sample_data_clinical_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_data_clinical.txt',
-                                                           data_clinical).to_dict()
+        data_clinical = generate_sample_data_content(
+            files,
+            pipeline_name=pipeline_obj.name,
+            pipeline_github=pipeline_obj.github,
+            pipeline_version=pipeline_obj.version,
+        )
+        sample_data_clinical_event = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
+        ).to_dict()
         send_notification.delay(sample_data_clinical_event)
 
         self.evaluate_sample_errors(error_samples)
@@ -164,11 +172,11 @@ class ArgosOperator(Operator):
         num_within_req = 0
         other_requests_matched = list()
         for i, job in enumerate(argos_inputs):
-            tumor = job['pair'][0]
-            normal = job['pair'][1]
-            req_t = tumor['request_id']
-            req_n = normal['request_id']
-            specimen_type_n = normal['specimen_type']
+            tumor = job["pair"][0]
+            normal = job["pair"][1]
+            req_t = tumor["request_id"]
+            req_n = normal["request_id"]
+            specimen_type_n = normal["specimen_type"]
             if specimen_type_n.lower() in "DMP Normal".lower():
                 num_dmp_normals += 1
             elif specimen_type_n.lower() in "Pooled Normal".lower():
@@ -176,9 +184,9 @@ class ArgosOperator(Operator):
             elif req_t.strip() != req_n.strip():
                 num_outside_req += 1
                 data = dict()
-                data['sample_name'] = tumor['ID']
-                data['matched_sample_name'] = normal['ID']
-                data['normal_request'] = req_n
+                data["sample_name"] = tumor["ID"]
+                data["matched_sample_name"] = normal["ID"]
+                data["normal_request"] = req_n
                 other_requests_matched.append(data)
             else:
                 num_within_req += 1
@@ -191,9 +199,9 @@ class ArgosOperator(Operator):
             s += "\n\nMatched samples fom different request\n"
             s += "| Sample Name | Matched Normal | Request Normal |\n"
             for i in other_requests_matched:
-                sample_name = i['sample_name']
-                matched_sample = i['matched_sample_name']
-                normal_request = i['normal_request']
+                sample_name = i["sample_name"]
+                matched_sample = i["matched_sample_name"]
+                normal_request = i["normal_request"]
                 s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
 
         self.send_message(s)
@@ -208,8 +216,27 @@ class ArgosOperator(Operator):
         unformatted_s = list()
         unformatted_s.append("IGO Sample ID\tSample Name / Error\tPatient ID\tSpecimen Type\n")
         for sample in error_samples:
-            s.append("| " + sample['sample_id']  + " | " + sample['sample_name'] + " |" + sample['patient_id'] + " |" + sample['specimen_type'] + " |")
-            unformatted_s.append(sample['sample_id']  + "\t" + sample['sample_name'] + "\t" + sample['patient_id'] + "\t" + sample['specimen_type'] + "\n")
+            s.append(
+                "| "
+                + sample["sample_id"]
+                + " | "
+                + sample["sample_name"]
+                + " |"
+                + sample["patient_id"]
+                + " |"
+                + sample["specimen_type"]
+                + " |"
+            )
+            unformatted_s.append(
+                sample["sample_id"]
+                + "\t"
+                + sample["sample_name"]
+                + "\t"
+                + sample["patient_id"]
+                + "\t"
+                + sample["specimen_type"]
+                + "\n"
+            )
 
         msg = """
         Number of samples with error: {number_of_errors}
@@ -219,15 +246,14 @@ class ArgosOperator(Operator):
         {error_sample_names}
         """
 
-        msg = msg.format(
-                number_of_errors=str(len(error_samples)),
-                error_sample_names='\n'.join(s))
+        msg = msg.format(number_of_errors=str(len(error_samples)), error_sample_names="\n".join(s))
 
         self.send_message(msg)
 
-        sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, 'error_sample_formatting.txt',
-                                                    "".join(unformatted_s)).to_dict()
+        sample_errors_event = UploadAttachmentEvent(
+            self.job_group_notifier_id, "error_sample_formatting.txt", "".join(unformatted_s)
+        ).to_dict()
         send_notification.delay(sample_errors_event)
 
-    def format_sample_name(self,*args, **kwargs):
+    def format_sample_name(self, *args, **kwargs):
         return format_sample_name(*args, **kwargs)

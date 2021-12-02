@@ -7,11 +7,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 
 
-class FileTypeView(mixins.ListModelMixin,
-                   mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   GenericViewSet):
-    queryset = FileType.objects.order_by('id').all()
+class FileTypeView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
+    queryset = FileType.objects.order_by("id").all()
     permission_classes = (IsAuthenticated,)
     serializer_class = FileTypeSerializer
     pagination_class = None

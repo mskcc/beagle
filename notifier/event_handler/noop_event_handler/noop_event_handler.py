@@ -2,7 +2,6 @@ from ..event_handler import EventHandler
 
 
 class NoOpEventHandler(EventHandler):
-
     def __init__(self):
         super().__init__()
 
@@ -81,4 +80,3 @@ class NoOpEventHandler(EventHandler):
 
     def process_send_email_event(self, event):
         pass
-

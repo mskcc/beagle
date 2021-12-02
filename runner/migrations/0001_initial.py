@@ -10,54 +10,61 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Pipeline',
+            name="Pipeline",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=100)),
-                ('github', models.CharField(max_length=300)),
-                ('version', models.CharField(max_length=100)),
-                ('entrypoint', models.CharField(max_length=100)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=100)),
+                ("github", models.CharField(max_length=300)),
+                ("version", models.CharField(max_length=100)),
+                ("entrypoint", models.CharField(max_length=100)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Run',
+            name="Run",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=100)),
-                ('status', models.IntegerField(choices=[(0, 'CREATING'), (1, 'READY'), (2, 'RUNNING'), (3, 'FAILED'), (4, 'COMPLETED')])),
-                ('job_statuses', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('app', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='runner.Pipeline')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=100)),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[(0, "CREATING"), (1, "READY"), (2, "RUNNING"), (3, "FAILED"), (4, "COMPLETED")]
+                    ),
+                ),
+                ("job_statuses", django.contrib.postgres.fields.jsonb.JSONField()),
+                (
+                    "app",
+                    models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="runner.Pipeline"),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Port',
+            name="Port",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=100)),
-                ('port_type', models.IntegerField(choices=[(0, 'INPUT'), (1, 'OUTPUT')])),
-                ('schema', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('value', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('run', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='runner.Run')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=100)),
+                ("port_type", models.IntegerField(choices=[(0, "INPUT"), (1, "OUTPUT")])),
+                ("schema", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("value", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("run", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="runner.Run")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

@@ -7,31 +7,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0008_auto_20191007_2149'),
+        ("beagle_etl", "0008_auto_20191007_2149"),
     ]
 
     def insert_operator(apps, schema_editor):
-        Operator = apps.get_model('beagle_etl', 'Operator')
+        Operator = apps.get_model("beagle_etl", "Operator")
         operator = Operator(active=False)
         operator.save()
 
     operations = [
         migrations.CreateModel(
-            name='Operator',
+            name="Operator",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('active', models.BooleanField(default=False)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("active", models.BooleanField(default=False)),
             ],
         ),
         migrations.AddField(
-            model_name='job',
-            name='callback',
-            field=models.CharField(default='', max_length=100),
+            model_name="job",
+            name="callback",
+            field=models.CharField(default="", max_length=100),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='job',
-            name='callback_args',
+            model_name="job",
+            name="callback_args",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
         migrations.RunPython(insert_operator),

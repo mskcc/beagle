@@ -8,7 +8,7 @@ from runner.run.processors.file_processor import FileProcessor
 
 
 def populate_run_samples(apps, _):
-    Run = apps.get_model('runner', 'Run')
+    Run = apps.get_model("runner", "Run")
     for run in Run.objects.all():
         samples = set()
         try:
@@ -31,9 +31,7 @@ def revert_migration(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0037_operatorrun_parent'),
+        ("runner", "0037_operatorrun_parent"),
     ]
 
-    operations = [
-        migrations.RunPython(populate_run_samples, reverse_code=revert_migration)
-    ]
+    operations = [migrations.RunPython(populate_run_samples, reverse_code=revert_migration)]

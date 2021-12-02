@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class AddPipelineToDescriptionEvent(Event):
-
     def __init__(self, job_notifier, pipeline_name, pipeline_version, github_link):
         self.job_notifier = job_notifier
         self.pipeline_name = pipeline_name
@@ -18,6 +17,6 @@ class AddPipelineToDescriptionEvent(Event):
         return "process_add_pipeline_to_description_event"
 
     def __str__(self):
-        return '| {pipeline_name} | {pipeline_version} | {pipeline_link} |\n'.format(pipeline_name=self.pipeline_name,
-                                                                                     pipeline_version=self.pipeline_version,
-                                                                                     pipeline_link=self.github_link)
+        return "| {pipeline_name} | {pipeline_version} | {pipeline_link} |\n".format(
+            pipeline_name=self.pipeline_name, pipeline_version=self.pipeline_version, pipeline_link=self.github_link
+        )

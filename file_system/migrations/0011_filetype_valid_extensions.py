@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0010_auto_20191202_1900'),
+        ("file_system", "0010_auto_20191202_1900"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='filetype',
-            name='valid_extensions',
+            model_name="filetype",
+            name="valid_extensions",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
     ]

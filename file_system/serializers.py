@@ -16,19 +16,18 @@ from drf_yasg import openapi
 
 
 def ValidateDict(value):
-    if len(value.split(":")) !=2:
+    if len(value.split(":")) != 2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
 
 def ValidateRegex(value):
     possible_queries = value.split("|")
     for single_query in possible_queries:
-        if len(single_query.split(":")) !=2:
+        if len(single_query.split(":")) != 2:
             raise serializers.ValidationError("Query for inputs needs to be in format input:value")
 
 
 class PatchFile(serializers.JSONField):
-
     class Meta:
         swagger_schema_fields = {
             "type": openapi.TYPE_OBJECT,
@@ -38,28 +37,20 @@ class PatchFile(serializers.JSONField):
                     title="patch",
                     type=openapi.TYPE_OBJECT,
                 ),
-                "id": openapi.Schema(
-                    title="id",
-                    type=openapi.TYPE_STRING,
-                    format=openapi.FORMAT_UUID
-                )
+                "id": openapi.Schema(title="id", type=openapi.TYPE_STRING, format=openapi.FORMAT_UUID),
             },
-            "required":["patch", "id"]
-         }
+            "required": ["patch", "id"],
+        }
 
 
 class BatchPatchFileSerializer(serializers.Serializer):
-    patch_files = serializers.ListField(
-        child=PatchFile(required=True),
-        allow_empty=False,
-        required=True
-    )
+    patch_files = serializers.ListField(child=PatchFile(required=True), allow_empty=False, required=True)
 
 
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = ('id', 'name', 'type')
+        fields = ("id", "name", "type")
 
 
 class CreateStorageSerializer(serializers.ModelSerializer):
@@ -68,34 +59,31 @@ class CreateStorageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Storage
-        fields = ('name', 'type')
+        fields = ("name", "type")
 
 
 class FileGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileGroup
-        fields = ('id', 'name', 'slug', 'storage')
+        fields = ("id", "name", "slug", "storage")
 
 
 class CreateFileGroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FileGroup
-        fields = ('id', 'name', 'storage')
+        fields = ("id", "name", "storage")
 
 
 class Metadata(serializers.ModelSerializer):
-
     class Meta:
         model = FileMetadata
-        fields = ('id', 'metadata', 'file', 'version', 'user')
+        fields = ("id", "metadata", "file", "version", "user")
 
 
 class FileTypeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FileType
-        fields = ('id', 'name')
+        fields = ("id", "name")
 
 
 class CreateMetadata(serializers.ModelSerializer):
@@ -110,7 +98,7 @@ class CreateMetadata(serializers.ModelSerializer):
 
     class Meta:
         model = FileMetadata
-        fields = ('file', 'metadata')
+        fields = ("file", "metadata")
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -161,59 +149,42 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileMetadata
         fields = (
-            'id', 'file_name', 'file_type', 'path', 'size', 'file_group', 'metadata', 'user', 'checksum', 'redacted',
-            'created_date', 'modified_date')
+            "id",
+            "file_name",
+            "file_type",
+            "path",
+            "size",
+            "file_group",
+            "metadata",
+            "user",
+            "checksum",
+            "redacted",
+            "created_date",
+            "modified_date",
+        )
 
 
 class FileQuerySerializer(serializers.Serializer):
-    file_group = serializers.ListField(
-        child=serializers.UUIDField(),
-        allow_empty=True,
-        required=False
-    )
-    path = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
-    exclude_null_metadata = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    file_group = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)
+    path = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
+    exclude_null_metadata = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
     order_by = serializers.CharField(required=False)
     distinct_metadata = serializers.CharField(required=False)
     metadata = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateDict]),
-        allow_empty=True,
-        required=False
+        child=serializers.CharField(validators=[ValidateDict]), allow_empty=True, required=False
     )
     metadata_regex = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateRegex]),
-        allow_empty=True,
-        required=False
+        child=serializers.CharField(validators=[ValidateRegex]), allow_empty=True, required=False
     )
     path_regex = serializers.CharField(required=False)
 
-    filename = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    filename = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     filename_regex = serializers.CharField(required=False)
 
-    file_type = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    file_type = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
-    values_metadata = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    values_metadata = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     created_date_timedelta = serializers.IntegerField(required=False)
     created_date_gt = serializers.DateTimeField(required=False)
@@ -224,54 +195,26 @@ class FileQuerySerializer(serializers.Serializer):
 
 
 class DistributionQuerySerializer(serializers.Serializer):
-    file_group = serializers.ListField(
-        child=serializers.UUIDField(),
-        allow_empty=True,
-        required=False
-    )
-    path = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
-    exclude_null_metadata = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    file_group = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)
+    path = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
+    exclude_null_metadata = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
     order_by = serializers.CharField(required=False)
     distinct_metadata = serializers.CharField(required=False)
     metadata = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateDict]),
-        allow_empty=True,
-        required=False
+        child=serializers.CharField(validators=[ValidateDict]), allow_empty=True, required=False
     )
     metadata_regex = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateRegex]),
-        allow_empty=True,
-        required=False
+        child=serializers.CharField(validators=[ValidateRegex]), allow_empty=True, required=False
     )
     path_regex = serializers.CharField(required=False)
 
-    filename = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    filename = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     filename_regex = serializers.CharField(required=False)
 
-    file_type = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    file_type = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
-    values_metadata = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    values_metadata = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     metadata_distribution = serializers.CharField(required=False)
 
@@ -284,8 +227,9 @@ class DistributionQuerySerializer(serializers.Serializer):
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-    path = serializers.CharField(max_length=400, required=True,
-                                 validators=[UniqueValidator(queryset=File.objects.all())])
+    path = serializers.CharField(
+        max_length=400, required=True, validators=[UniqueValidator(queryset=File.objects.all())]
+    )
     size = serializers.IntegerField(required=False)
     # file_group_id = serializers.UUIDField(required=True)
     file_type = serializers.CharField(max_length=30, required=True)
@@ -309,25 +253,30 @@ class CreateFileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
-        validated_data['file_name'] = os.path.basename(validated_data.get('path'))
-        validated_data['file_type'] = validated_data['file_type']
-        metadata = validated_data.pop('metadata')
+        validated_data["file_name"] = os.path.basename(validated_data.get("path"))
+        validated_data["file_type"] = validated_data["file_type"]
+        metadata = validated_data.pop("metadata")
         file = File.objects.create(**validated_data)
         metadata = FileMetadata(file=file, metadata=metadata, user=user)
         metadata.save()
-        job = Job.objects.create(run=TYPES["CALCULATE_CHECKSUM"],
-                                 args={'file_id': str(file.id), 'path': validated_data.get('path')},
-                                 status=JobStatus.CREATED, max_retry=3, children=[])
+        job = Job.objects.create(
+            run=TYPES["CALCULATE_CHECKSUM"],
+            args={"file_id": str(file.id), "path": validated_data.get("path")},
+            status=JobStatus.CREATED,
+            max_retry=3,
+            children=[],
+        )
         return file
 
     class Meta:
         model = File
-        fields = ('path', 'file_type', 'size', 'file_group', 'metadata', 'checksum')
+        fields = ("path", "file_type", "size", "file_group", "metadata", "checksum")
 
 
 class UpdateFileSerializer(serializers.Serializer):
-    path = serializers.CharField(max_length=400, required=False,
-                                 validators=[UniqueValidator(queryset=File.objects.all())])
+    path = serializers.CharField(
+        max_length=400, required=False, validators=[UniqueValidator(queryset=File.objects.all())]
+    )
     size = serializers.IntegerField(required=False)
     file_group_id = serializers.UUIDField(required=False)
     file_type = serializers.CharField(max_length=30, required=False)
@@ -355,49 +304,58 @@ class UpdateFileSerializer(serializers.Serializer):
         user = request.user if request and hasattr(request, "user") else None
         if not user:
             try:
-                user = User.objects.get(id=validated_data.get('user'))
+                user = User.objects.get(id=validated_data.get("user"))
             except User.DoesNotExist:
                 pass
-        instance.path = validated_data.get('path', instance.path)
+        instance.path = validated_data.get("path", instance.path)
         instance.file_name = os.path.basename(instance.path)
-        instance.size = validated_data.get('size', instance.size)
-        instance.file_group_id = validated_data.get('file_group_id', instance.file_group_id)
-        instance.file_type = validated_data.get('file_type', instance.file_type)
+        instance.size = validated_data.get("size", instance.size)
+        instance.file_group_id = validated_data.get("file_group_id", instance.file_group_id)
+        instance.file_type = validated_data.get("file_type", instance.file_type)
 
         if self.partial:
-            old_metadata = instance.filemetadata_set.order_by('-version').first().metadata
-            old_metadata.update(validated_data.get('metadata'))
+            old_metadata = instance.filemetadata_set.order_by("-version").first().metadata
+            old_metadata.update(validated_data.get("metadata"))
             metadata = FileMetadata(file=instance, metadata=old_metadata, user=user)
             metadata.save()
         else:
-            ddiff = DeepDiff(validated_data.get('metadata'),
-                             instance.filemetadata_set.order_by('-created_date').first().metadata, ignore_order=True)
+            ddiff = DeepDiff(
+                validated_data.get("metadata"),
+                instance.filemetadata_set.order_by("-created_date").first().metadata,
+                ignore_order=True,
+            )
             if ddiff:
-                metadata = FileMetadata(file=instance, metadata=validated_data.get('metadata'), user=user)
+                metadata = FileMetadata(file=instance, metadata=validated_data.get("metadata"), user=user)
                 metadata.save()
         instance.save()
         return instance
 
 
 class SampleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Sample
-        fields = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact',)
+        fields = (
+            "id",
+            "sample_id",
+            "sample_name",
+            "cmo_sample_name",
+            "redact",
+        )
 
 
 class RequestSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Request
-        fields = ('id', 'request_id', 'delivery_date')
+        fields = ("id", "request_id", "delivery_date")
 
 
 class PatientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Patient
-        fields = ('id', 'patient_id',)
+        fields = (
+            "id",
+            "patient_id",
+        )
 
 
 class SampleQuerySerializer(serializers.Serializer):
@@ -417,39 +375,60 @@ class RunSerializerPartial(serializers.ModelSerializer):
         return RunStatus(obj.status).name
 
     def get_request_id(self, obj):
-        return obj.tags.get('requestId')
+        return obj.tags.get("requestId")
 
     def get_jira_id(self, obj):
-        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
-                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
-            '-created_date').first()
+        jgn = (
+            JobGroupNotifier.objects.filter(job_group=obj.job_group, jira_id__startswith=settings.JIRA_PREFIX)
+            .order_by("-created_date")
+            .first()
+        )
         return jgn.jira_id if jgn else None
 
     def get_pi(self, obj):
-        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
-                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
-            '-created_date').first()
+        jgn = (
+            JobGroupNotifier.objects.filter(job_group=obj.job_group, jira_id__startswith=settings.JIRA_PREFIX)
+            .order_by("-created_date")
+            .first()
+        )
         return jgn.PI if jgn else None
 
     def get_investigator(self, obj):
-        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
-                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
-            '-created_date').first()
+        jgn = (
+            JobGroupNotifier.objects.filter(job_group=obj.job_group, jira_id__startswith=settings.JIRA_PREFIX)
+            .order_by("-created_date")
+            .first()
+        )
         return jgn.investigator if jgn else None
 
     def get_assay(self, obj):
-        jgn = JobGroupNotifier.objects.filter(job_group=obj.job_group,
-                                              jira_id__startswith=settings.JIRA_PREFIX).order_by(
-            '-created_date').first()
+        jgn = (
+            JobGroupNotifier.objects.filter(job_group=obj.job_group, jira_id__startswith=settings.JIRA_PREFIX)
+            .order_by("-created_date")
+            .first()
+        )
         return jgn.assay if jgn else None
 
     def get_delivery_date(self, obj):
-        return Request.objects.filter(request_id=obj.tags.get('requestId')).first().delivery_date
+        return Request.objects.filter(request_id=obj.tags.get("requestId")).first().delivery_date
 
     class Meta:
         model = Run
-        fields = ('id', 'name', 'message', 'status', 'request_id', 'app',
-                  'created_date', 'job_group', 'jira_id', 'investigator', 'pi', 'assay', 'delivery_date')
+        fields = (
+            "id",
+            "name",
+            "message",
+            "status",
+            "request_id",
+            "app",
+            "created_date",
+            "job_group",
+            "jira_id",
+            "investigator",
+            "pi",
+            "assay",
+            "delivery_date",
+        )
 
 
 class FullSampleSerializer(serializers.ModelSerializer):
@@ -458,15 +437,23 @@ class FullSampleSerializer(serializers.ModelSerializer):
     patient_id = serializers.SerializerMethodField()
 
     def get_runs(self, obj):
-        return RunSerializerPartial(obj.run_set.order_by('-created_date').all(), many=True).data
+        return RunSerializerPartial(obj.run_set.order_by("-created_date").all(), many=True).data
 
     def get_tumor_or_normal(self, obj):
-        return FileRepository.filter(metadata={'sampleId': obj.sample_id}, values_metadata='tumorOrNormal').first()
+        return FileRepository.filter(metadata={"sampleId": obj.sample_id}, values_metadata="tumorOrNormal").first()
 
     def get_patient_id(self, obj):
-        return FileRepository.filter(metadata={'sampleId': obj.sample_id}, values_metadata='patientId').first()
+        return FileRepository.filter(metadata={"sampleId": obj.sample_id}, values_metadata="patientId").first()
 
     class Meta:
         model = Sample
         fields = (
-        'id', 'sample_id', 'runs', 'sample_name', 'cmo_sample_name', 'redact', 'tumor_or_normal', 'patient_id')
+            "id",
+            "sample_id",
+            "runs",
+            "sample_name",
+            "cmo_sample_name",
+            "redact",
+            "tumor_or_normal",
+            "patient_id",
+        )

@@ -6,28 +6,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0019_job_finished_date'),
+        ("beagle_etl", "0019_job_finished_date"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='basemodel',
-            name='created_date',
+            model_name="basemodel",
+            name="created_date",
             field=models.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='finished_date',
+            model_name="job",
+            name="finished_date",
             field=models.DateTimeField(blank=True, db_index=True, null=True),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='run',
+            model_name="job",
+            name="run",
             field=models.CharField(db_index=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'CREATED'), (1, 'IN_PROGRESS'), (2, 'WAITING_FOR_CHILDREN'), (3, 'COMPLETED'), (4, 'FAILED')], db_index=True),
+            model_name="job",
+            name="status",
+            field=models.IntegerField(
+                choices=[
+                    (0, "CREATED"),
+                    (1, "IN_PROGRESS"),
+                    (2, "WAITING_FOR_CHILDREN"),
+                    (3, "COMPLETED"),
+                    (4, "FAILED"),
+                ],
+                db_index=True,
+            ),
         ),
     ]

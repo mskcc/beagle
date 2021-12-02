@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def build_argos_file_groups_query():
-    ARGOS_FG_SLUGS = ['fero-legacy-data']
+    ARGOS_FG_SLUGS = ["fero-legacy-data"]
     slug_set = [Q(file__file_group=FileGroup.objects.get(slug=value)) for value in set(ARGOS_FG_SLUGS)]
     query = slug_set.pop()
     for item in slug_set:
@@ -40,17 +40,17 @@ def get_samples_from_patient_id(patient_id):
     data = list()
     for current_file in files:
         sample = dict()
-        sample['id'] = current_file.file.id
-        sample['path'] = current_file.file.path
-        sample['file_name'] = current_file.file.file_name
-        sample['metadata'] = current_file.metadata
+        sample["id"] = current_file.file.id
+        sample["path"] = current_file.file.path
+        sample["file_name"] = current_file.file.file_name
+        sample["metadata"] = current_file.metadata
         data.append(sample)
 
     samples = list()
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample['metadata']['sampleId']
+        igo_id = sample["metadata"]["sampleId"]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)
@@ -60,8 +60,7 @@ def get_samples_from_patient_id(patient_id):
     samples, bad_samples = remove_with_caveats(samples)
     number_of_bad_samples = len(bad_samples)
     if number_of_bad_samples > 0:
-        LOGGER.warning('Some samples for patient query %s have invalid %i values',
-                       patient_id, number_of_bad_samples)
+        LOGGER.warning("Some samples for patient query %s have invalid %i values", patient_id, number_of_bad_samples)
     return samples
 
 
@@ -76,17 +75,17 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
     descriptor = None
     for pooled_normal in pooled_normals:
-        bset_data = pooled_normal.metadata['recipe']
+        bset_data = pooled_normal.metadata["recipe"]
         if bset_data.lower() in bait_set.lower():
             descriptor = bset_data
 
-    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+    if descriptor:  # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={"recipe": descriptor})
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+        run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
         if "ffpe" in preservations_lower_case:
@@ -134,9 +133,9 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
 
 def get_sequencer_type(run_ids_list):
-    hiseq_machines = ['jax', 'pitt']
-    novaseq_machines = ['diana', 'michelle', 'aa00227', 'ruth']
-    run_ids_lower = [ i.lower() for i in run_ids_list if i ]
+    hiseq_machines = ["jax", "pitt"]
+    novaseq_machines = ["diana", "michelle", "aa00227", "ruth"]
+    run_ids_lower = [i.lower() for i in run_ids_list if i]
     for machine in hiseq_machines:
         is_hiseq = find_substr(machine, run_ids_lower)
         if is_hiseq:
@@ -146,6 +145,7 @@ def get_sequencer_type(run_ids_list):
         if is_novaseq:
             return "novaseq"
     return None
+
 
 def find_substr(s, l):
     return any(s in string for string in l)
@@ -191,7 +191,9 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
-        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor, sample_name)
+        sample_file = build_pooled_normal_sample_by_file(
+            pooled_normal_file, run_ids, preservation_types, descriptor, sample_name
+        )
         sample_files.append(sample_file)
     pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
 
@@ -216,35 +218,35 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
 
 def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_name):
-    specimen_type = 'Pooled Normal'
+    specimen_type = "Pooled Normal"
     sample = dict()
-    sample['id'] = pooled_normal.file.id
-    sample['path'] = pooled_normal.file.path
-    sample['file_name'] = pooled_normal.file.file_name
+    sample["id"] = pooled_normal.file.id
+    sample["path"] = pooled_normal.file.path
+    sample["file_name"] = pooled_normal.file.file_name
     metadata = init_metadata()
-    metadata['sampleId'] = sample_name
-    metadata['sampleName'] = sample_name
-    metadata['cmoSampleName'] = sample_name
-    metadata['requestId'] = sample_name
-    metadata['sequencingCenter'] = "MSKCC"
-    metadata['platform'] = "Illumina"
-    metadata['baitSet'] = bait_set 
-    metadata['recipe'] = bait_set
-    metadata['runId'] = run_ids
-    metadata['preservation'] = preservation_types
-    metadata['libraryId'] = sample_name + "_1"
+    metadata["sampleId"] = sample_name
+    metadata["sampleName"] = sample_name
+    metadata["cmoSampleName"] = sample_name
+    metadata["requestId"] = sample_name
+    metadata["sequencingCenter"] = "MSKCC"
+    metadata["platform"] = "Illumina"
+    metadata["baitSet"] = bait_set
+    metadata["recipe"] = bait_set
+    metadata["runId"] = run_ids
+    metadata["preservation"] = preservation_types
+    metadata["libraryId"] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_legacy.bin
-    metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
-    metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
-    metadata['flowCellId'] = 'PN_FCID'
-    metadata['tumorOrNormal'] = 'Normal'
-    metadata['patientId'] = 'PN_PATIENT_ID'
-    metadata['specimenType'] = specimen_type
-    metadata['runMode'] = ""
-    metadata['sampleClass'] = ""
-    sample['metadata'] = metadata
+    metadata["R"] = get_r_orientation(pooled_normal.file.file_name)
+    metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
+    metadata["flowCellId"] = "PN_FCID"
+    metadata["tumorOrNormal"] = "Normal"
+    metadata["patientId"] = "PN_PATIENT_ID"
+    metadata["specimenType"] = specimen_type
+    metadata["runMode"] = ""
+    metadata["sampleClass"] = ""
+    sample["metadata"] = metadata
     return sample
 
 
@@ -256,7 +258,7 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
 
     dmp_query = build_dmp_query(patient_id, bait_set)
 
-    dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
+    dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by("file__file_name").first()
 
     if dmp_bam:
         sample = build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type)
@@ -266,41 +268,41 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
 
 
 def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
-    
+
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
-    sample_name = dmp_metadata['external_id']
+    sample_name = dmp_metadata["external_id"]
     sequencingCenter = "MSKCC"
     platform = "Illumina"
     sample = dict()
-    sample['id'] = dmp_bam.file.id
-    sample['path'] = dmp_bam.file.path
-    sample['file_name'] = dmp_bam.file.file_name
-    sample['file_type'] = dmp_bam.file.file_type
+    sample["id"] = dmp_bam.file.id
+    sample["path"] = dmp_bam.file.path
+    sample["file_name"] = dmp_bam.file.file_name
+    sample["file_type"] = dmp_bam.file.file_type
     metadata = init_metadata()
-    metadata['sampleId'] = sample_name
-    metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
-    metadata['cmoSampleName'] = metadata['sampleName']
-    metadata['requestId'] = sample_name
-    metadata['sequencingCenter'] = sequencingCenter
-    metadata['platform'] = platform
-    metadata['baitSet'] = bait_set
-    metadata['recipe'] = bait_set
-    metadata['run_id'] = ""
-    metadata['preservation'] = ""
-    metadata['libraryId'] = sample_name + "_1"
-    metadata['R'] = 'Not applicable'
+    metadata["sampleId"] = sample_name
+    metadata["sampleName"] = format_sample_name(sample_name, specimen_type)
+    metadata["cmoSampleName"] = metadata["sampleName"]
+    metadata["requestId"] = sample_name
+    metadata["sequencingCenter"] = sequencingCenter
+    metadata["platform"] = platform
+    metadata["baitSet"] = bait_set
+    metadata["recipe"] = bait_set
+    metadata["run_id"] = ""
+    metadata["preservation"] = ""
+    metadata["libraryId"] = sample_name + "_1"
+    metadata["R"] = "Not applicable"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_legacy.bin
-    metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
-    metadata['flowCellId'] = 'DMP_FCID'
-    metadata['tumorOrNormal'] = tumor_type
-    metadata['patientId'] = patient_id
-    metadata['specimenType'] = specimen_type
-    metadata['runMode'] = ""
-    metadata['sampleClass'] = ""
-    sample['metadata'] = metadata
+    metadata["barcodeIndex"] = "DMP_BARCODEIDX"
+    metadata["flowCellId"] = "DMP_FCID"
+    metadata["tumorOrNormal"] = tumor_type
+    metadata["patientId"] = patient_id
+    metadata["specimenType"] = specimen_type
+    metadata["runMode"] = ""
+    metadata["sampleClass"] = ""
+    sample["metadata"] = metadata
     return sample
 
 
@@ -327,8 +329,8 @@ def build_dmp_query(patient_id, bait_set):
     assay = Q(metadata__cmo_assay=value)
     # formatting to look like CMO patient IDs in dmp2cmo
     if "C-" in patient_id[:2]:
-      patient_id = patient_id[2:]
+        patient_id = patient_id[2:]
     patient = Q(metadata__patient__cmo=patient_id)
-    normal = Q(metadata__type='N')
+    normal = Q(metadata__type="N")
     query = assay & patient & normal
     return query
