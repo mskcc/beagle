@@ -31,14 +31,12 @@ def get_file_group(file_group_name):
     return file_group_obj.pk
 
 
-def get_project_prefix(run_id_list):
+def get_project_prefix(run_id):
     project_prefix = set()
-
-    for single_run_id in run_id_list:
-        port_list = Port.objects.filter(run=single_run_id)
-        for single_port in port_list:
-            if single_port.name == "project_prefix":
-                project_prefix.add(single_port.value)
+    port_list = Port.objects.filter(run=run_id)
+    for single_port in port_list:
+        if single_port.name == "project_prefix":
+            project_prefix.add(single_port.value)
     project_prefix_str = "_".join(sorted(project_prefix))
     return project_prefix_str
 
@@ -97,7 +95,7 @@ class UltronOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        sample_name = input_json["sample_ids"][0]  # should only be one
+        sample_name = input_json["sample_ids"]
         tags = {"sampleNameTumor": sample_name, "project_prefix": self.project_prefix}
         # add tags, name
         output_job_data = {
