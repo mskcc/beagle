@@ -134,16 +134,20 @@ class BatchInputObj:
         for single_input_obj in self.inputObjList:
             single_input_data = single_input_obj.inputs_data
             if single_input_data["tumor_sample_name"] not in batch_input_json["sample_ids"]:
-                batch_input_json["unindexed_bam_files"] += single_input_data["dmp_bams_tumor"]
-                batch_input_json["unindexed_sample_ids"] += single_input_data["dmp_bams_tumor_sample_name"]
-                batch_input_json["unindexed_maf_files"] += single_input_data["dmp_bams_tumor_muts"]
                 batch_input_json["maf_files"] += single_input_data["maf"]
                 batch_input_json["bam_files"] += single_input_data["tumor_bam"]
                 batch_input_json["sample_ids"] += single_input_data["tumor_sample_name"]
                 if not batch_input_json["ref_fasta"]:
                     batch_input_json["ref_fasta"] = single_input_obj.load_reference_fasta()
                 if not batch_input_json["exac_filter"]:
-                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()
+                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()o
+                # dedupe dmp samples
+                dmp_tumor_sample_names = single_input_data["dmp_bams_tumor_sample_name"]
+                for i in dmp_tumor_sample_names:
+                    if i not in batch_input_json["unindexed_sample_ids"]:
+                        batch_input_json["unindexed_bam_files"] += single_input_data["dmp_bams_tumor"]
+                        batch_input_json["unindexed_sample_ids"] += single_input_data["dmp_bams_tumor_sample_name"]
+                        batch_input_json["unindexed_maf_files"] += single_input_data["dmp_bams_tumor_muts"]
         return batch_input_json
 
 
