@@ -140,7 +140,7 @@ class BatchInputObj:
                 if not batch_input_json["ref_fasta"]:
                     batch_input_json["ref_fasta"] = single_input_obj.load_reference_fasta()
                 if not batch_input_json["exac_filter"]:
-                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()o
+                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()
                 # dedupe dmp samples
                 dmp_tumor_sample_names = single_input_data["dmp_bams_tumor_sample_name"]
                 for i in dmp_tumor_sample_names:
