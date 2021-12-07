@@ -352,9 +352,7 @@ class BamData:
         return results
 
     def _set_dmp_sample_name(self):
-        if "external_id" in self.metadata:
-            dmp_sample_name = self.metadata["external_id"]
-            if "s_" not in dmp_sample_name[:2]:
-                dmp_sample_name = "s_" + dmp_sample_name.replace("-", "_")
+        if "sample" in self.metadata:
+            dmp_sample_name = self.metadata['sample']
             return dmp_sample_name
         return "missingDMPSampleName"
