@@ -54,12 +54,10 @@ class UltronOperator(Operator):
 
         inputs = self._build_inputs(run_ids)
         self._get_output_directory(run_ids)
-        ultron_output_jobs = list()
-        for input_json in inputs:
-            output_job = self._build_job(input_json)
-            ultron_output_jobs.append(output_job)
+        ultron_output_job = list()
+        ultron_output_job = [self._build_job(inputs)]
 
-        return ultron_output_jobs
+        return ultron_output_job
 
     def _get_output_directory(self, run_ids):
         project_prefix = get_project_prefix(run_ids)
