@@ -47,13 +47,12 @@ class UltronOperator(Operator):
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
         name = "ULTRON PHASE1 run"
-        self.output_directory = ""
-        self.project_prefix = ""
+        self.project_prefix = "" 
 
         inputs = self._build_inputs(run_ids)
-        self._get_output_directory(run_ids)
+        rid = run_ids[0] # get representative run_id from list; assumes ALL run ids use same pipeline
         ultron_output_job = list()
-        ultron_output_job = [self._build_job(inputs)]
+        ultron_output_job = [self._build_job(inputs, rid)]
 
         return ultron_output_job
 
@@ -91,10 +90,11 @@ class UltronOperator(Operator):
         return batch_input_json.inputs_json
 
 
-    def _build_job(self, input_json):
+    def _build_job(self, input_json, run_id):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
+        output_directory = self._get_output_directory(run_id)
         sample_name = input_json["sample_ids"]
         tags = {"sampleNameTumor": sample_name, "project_prefix": self.project_prefix}
         # add tags, name
@@ -102,7 +102,7 @@ class UltronOperator(Operator):
             "app": app,
             "tags": tags,
             "name": "Sample %s ULTRON PHASE1 run" % sample_name,
-            "output_directory": self.output_directory,
+            "output_directory": output_directory,
             "inputs": input_json,
         }
         output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
