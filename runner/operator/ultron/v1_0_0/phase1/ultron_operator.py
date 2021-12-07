@@ -59,28 +59,39 @@ class UltronOperator(Operator):
 
         return ultron_output_job
 
-    def _get_output_directory(self, run_ids):
-        project_prefix = get_project_prefix(run_ids)
+
+    def _get_output_directory(self, run_id):
+        project_prefix = get_project_prefix(run_id)
         app = self.get_pipeline_id()
-        pipeline = Pipeline.objects.get(id=app)
+        pipeline = self._get_prev_pipeline(run_id)
         pipeline_version = pipeline.version
         output_directory = None
         if self.job_group_id:
             jg = JobGroup.objects.get(id=self.job_group_id)
             jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-            output_directory = os.path.join(
-                pipeline.output_directory, "argos", project_prefix, pipeline_version, jg_created_date
-            )
-        self.output_directory = output_directory
-        self.project_prefix = project_prefix
+            output_directory = os.path.join(pipeline.output_directory,
+                                            "argos",
+                                            project_prefix,
+                                            pipeline_version,
+                                            jg_created_date,
+                                            "analysis")
+        return output_directory
+
 
     def _build_inputs(self, run_ids):
         input_objs = list()
+        prev_pipeline_version = set()
         for rid in set(run_ids):
             run = Run.objects.filter(id=rid)[0]
             input_objs.append(InputsObj(run))
+            prev_pipe = self._get_prev_pipeline(rid)
+            prev_pipeline_version.add(prev_pipe.version)
+        prev_version_string = "_".join(sorted(prev_pipeline_version))
         batch_input_json = BatchInputObj(input_objs)
+        batch_input_json.inputs_json["argos_version_string"] = prev_version_string
+        batch_input_json.inputs_json["is_impact"] = True # assume True
         return batch_input_json.inputs_json
+
 
     def _build_job(self, input_json):
         app = self.get_pipeline_id()
@@ -98,6 +109,12 @@ class UltronOperator(Operator):
         }
         output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
         return output_job
+
+
+    def _get_prev_pipeline(self, run_id):
+        run = Run.objects.filter(id=run_id)[0]
+        pipeline = run.app
+        return pipeline
 
 
 class BatchInputObj:
