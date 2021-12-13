@@ -12,35 +12,28 @@ from runner.run.processors.port_processor import PortProcessor, PortAction
 class NextflowPortObject(PortObject):
     logger = logging.getLogger(__name__)
 
-    def __init__(self,
-                 run_id,
-                 name,
-                 port_type,
-                 schema,
-                 secondary_files,
-                 db_value,
-                 value,
-                 files,
-                 port_id=None,
-                 notify=False,
-                 template=None):
-        super().__init__(run_id,
-                         name,
-                         port_type,
-                         schema,
-                         secondary_files,
-                         db_value,
-                         value,
-                         files,
-                         port_id,
-                         notify)
+    def __init__(
+        self,
+        run_id,
+        name,
+        port_type,
+        schema,
+        secondary_files,
+        db_value,
+        value,
+        files,
+        port_id=None,
+        notify=False,
+        template=None,
+    ):
+        super().__init__(run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id, notify)
         self.template = template
 
     @classmethod
     def from_definition(cls, run_id, value, port_type, port_values, notify=False):
-        name = value.get('id')
-        schema = value.get('schema')
-        template = value.get('template')
+        name = value.get("id")
+        schema = value.get("schema")
+        template = value.get("template")
         cls.logger.debug(template)
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
@@ -53,13 +46,11 @@ class NextflowPortObject(PortObject):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
         files = []
         if self.port_type == PortType.INPUT:
-            self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                        PortAction.CONVERT_TO_BID,
-                                                        file_list=files)
-            self.value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                     PortAction.CONVERT_TO_PATH)
-            self.value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                     PortAction.NEXTFLOW_TEMPLATE)
+            self.db_value = PortProcessor.process_files(
+                copy.deepcopy(self.value), PortAction.CONVERT_TO_BID, file_list=files
+            )
+            self.value = PortProcessor.process_files(copy.deepcopy(self.value), PortAction.CONVERT_TO_PATH)
+            self.value = PortProcessor.process_files(copy.deepcopy(self.value), PortAction.NEXTFLOW_TEMPLATE)
             if self.template:
                 render_value = {self.name: self.value}
                 self.value = pystache.render(self.template, render_value)
@@ -69,16 +60,17 @@ class NextflowPortObject(PortObject):
 
         self.value = value
         files = []
-        self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
-                                                    PortAction.REGISTER_OUTPUT_FILES,
-                                                    file_list=files,
-                                                    group_id=str(group.id),
-                                                    metadata=output_metadata)
+        self.db_value = PortProcessor.process_files(
+            copy.deepcopy(self.value),
+            PortAction.REGISTER_OUTPUT_FILES,
+            file_list=files,
+            group_id=str(group.id),
+            metadata=output_metadata,
+        )
         if self.notify:
-            PortProcessor.process_files(copy.deepcopy(self.value),
-                                        PortAction.SEND_AS_NOTIFICATION,
-                                        job_group=job_group_notifier,
-                                        download=True)
+            PortProcessor.process_files(
+                copy.deepcopy(self.value), PortAction.SEND_AS_NOTIFICATION, job_group=job_group_notifier, download=True
+            )
         self.files = files
 
     @classmethod
@@ -86,18 +78,20 @@ class NextflowPortObject(PortObject):
         try:
             port = Port.objects.get(id=port_id)
         except Port.DoesNotExist:
-            raise PortObjectConstructException('Port with id:')
-        return cls(str(port.run.id),
-                   port.name,
-                   port.port_type,
-                   port.schema,
-                   port.secondary_files,
-                   port.db_value,
-                   port.value,
-                   [FileProcessor.get_bid_from_file(f) for f in port.files.all()],
-                   port_id=port_id,
-                   notify=port.notify,
-                   template=port.template)
+            raise PortObjectConstructException("Port with id:")
+        return cls(
+            str(port.run.id),
+            port.name,
+            port.port_type,
+            port.schema,
+            port.secondary_files,
+            port.db_value,
+            port.value,
+            [FileProcessor.get_bid_from_file(f) for f in port.files.all()],
+            port_id=port_id,
+            notify=port.notify,
+            template=port.template,
+        )
 
     def to_db(self):
         if self.port_object:
@@ -117,16 +111,17 @@ class NextflowPortObject(PortObject):
                 run_object = Run.objects.get(id=self.run_id)
             except Run.DoesNotExist:
                 raise PortObjectConstructException("Port save failed. Run with id: %s doesn't exist.")
-            new_port = Port(run=run_object,
-                            name=self.name,
-                            port_type=self.port_type,
-                            schema=self.schema,
-                            secondary_files=self.secondary_files,
-                            db_value=self.db_value,
-                            value=self.value,
-                            notify=self.name in run_object.notify_for_outputs,
-                            template=self.template
-                            )
+            new_port = Port(
+                run=run_object,
+                name=self.name,
+                port_type=self.port_type,
+                schema=self.schema,
+                secondary_files=self.secondary_files,
+                db_value=self.db_value,
+                value=self.value,
+                notify=self.name in run_object.notify_for_outputs,
+                template=self.template,
+            )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])
             new_port.save()

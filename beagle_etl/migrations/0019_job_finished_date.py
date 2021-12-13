@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0018_assay_hold'),
+        ("beagle_etl", "0018_assay_hold"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='job',
-            name='finished_date',
+            model_name="job",
+            name="finished_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

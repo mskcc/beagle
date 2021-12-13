@@ -4,9 +4,9 @@ from django.db import migrations
 
 
 def add_samples(apps, schema_editor):
-    File = apps.get_model('file_system', 'File')
-    FileGroup = apps.get_model('file_system', 'FileGroup')
-    Sample = apps.get_model('file_system', 'Sample')
+    File = apps.get_model("file_system", "File")
+    FileGroup = apps.get_model("file_system", "FileGroup")
+    Sample = apps.get_model("file_system", "Sample")
 
     try:
         fg = FileGroup.objects.get(name="LIMS")
@@ -15,8 +15,8 @@ def add_samples(apps, schema_editor):
 
     files = File.objects.filter(file_group=fg).all()
     for f in files:
-        metadata = f.filemetadata_set.order_by('-created_date').first().metadata
-        igo_id = metadata.get('sampleId')
+        metadata = f.filemetadata_set.order_by("-created_date").first().metadata
+        igo_id = metadata.get("sampleId")
         if igo_id:
             try:
                 sample = Sample.objects.get(sample_id=igo_id)
@@ -29,9 +29,7 @@ def add_samples(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0020_auto_20201006_1732'),
+        ("file_system", "0020_auto_20201006_1732"),
     ]
 
-    operations = [
-        migrations.RunPython(add_samples)
-    ]
+    operations = [migrations.RunPython(add_samples)]

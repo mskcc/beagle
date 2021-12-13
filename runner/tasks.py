@@ -9,9 +9,19 @@ from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object_factory import RunObjectFactory
 from .models import Run, RunStatus, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
-from notifier.events import RunFinishedEvent, OperatorRequestEvent, OperatorRunEvent, SetCIReviewEvent, \
-    SetPipelineCompletedEvent, AddPipelineToDescriptionEvent, SetPipelineFieldEvent, OperatorStartEvent, \
-    SetLabelEvent, SetRunTicketInImportEvent, SetDeliveryDateFieldEvent
+from notifier.events import (
+    RunFinishedEvent,
+    OperatorRequestEvent,
+    OperatorRunEvent,
+    SetCIReviewEvent,
+    SetPipelineCompletedEvent,
+    AddPipelineToDescriptionEvent,
+    SetPipelineFieldEvent,
+    OperatorStartEvent,
+    SetLabelEvent,
+    SetRunTicketInImportEvent,
+    SetDeliveryDateFieldEvent,
+)
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
@@ -58,11 +68,13 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     except OperatorRun.DoesNotExist:
         operator_run_parent = None
 
-    operator_run = OperatorRun.objects.create(operator=operator.model,
-                                              num_total_runs=len(valid_jobs),
-                                              job_group=jg,
-                                              job_group_notifier=jgn,
-                                              parent=operator_run_parent)
+    operator_run = OperatorRun.objects.create(
+        operator=operator.model,
+        num_total_runs=len(valid_jobs),
+        job_group=jg,
+        job_group_notifier=jgn,
+        parent=operator_run_parent,
+    )
     run_ids = []
     pipeline_id = None
 
@@ -77,9 +89,9 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
         pipeline_link = ""
         pipeline_version = ""
 
-    pipeline_description_event = AddPipelineToDescriptionEvent(job_group_notifier_id, pipeline_name,
-                                                               pipeline_version,
-                                                               pipeline_link).to_dict()
+    pipeline_description_event = AddPipelineToDescriptionEvent(
+        job_group_notifier_id, pipeline_name, pipeline_version, pipeline_link
+    ).to_dict()
     send_notification.delay(pipeline_description_event)
 
     set_pipeline_field = SetPipelineFieldEvent(job_group_notifier_id, pipeline_name).to_dict()
@@ -87,34 +99,40 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
 
     for job in valid_jobs:
         logger.info(format_log("Creating run", obj=job[0]))
-        run = job[0].save(operator_run_id=operator_run.id, job_group_id=job_group_id,
-                          job_group_notifier_id=job_group_notifier_id)
+        run = job[0].save(
+            operator_run_id=operator_run.id, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id
+        )
         logger.info(format_log("Run created", obj=run))
 
-        run_ids.append({"run_id": str(run.id), 'tags': run.tags, 'output_directory': run.output_directory})
+        run_ids.append({"run_id": str(run.id), "tags": run.tags, "output_directory": run.output_directory})
         output_directory = run.output_directory
         if not pipeline_name and not pipeline_link:
             logger.error(
-                format_log("Run failed, could not find pipeline %s" % pipeline_id, obj=run, job_group_id=job_group_id,
-                           operator_run_id=operator_run.id))
+                format_log(
+                    "Run failed, could not find pipeline %s" % pipeline_id,
+                    obj=run,
+                    job_group_id=job_group_id,
+                    operator_run_id=operator_run.id,
+                )
+            )
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
             create_run_task.delay(str(run.id), job[1], output_directory)
 
     if job_group_id:
-        event = OperatorRunEvent(job_group_notifier_id,
-                                 operator.request_id,
-                                 pipeline_name,
-                                 pipeline_link,
-                                 run_ids,
-                                 str(operator_run.id)).to_dict()
+        event = OperatorRunEvent(
+            job_group_notifier_id, operator.request_id, pipeline_name, pipeline_link, run_ids, str(operator_run.id)
+        ).to_dict()
         send_notification.delay(event)
 
     for job in invalid_jobs:
         # TODO: Report this to JIRA ticket also
-        logger.error(format_log("Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id,
-                                operator_run_id=operator_run.id))
+        logger.error(
+            format_log(
+                "Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id, operator_run_id=operator_run.id
+            )
+        )
 
     operator_run.status = RunStatus.RUNNING
     operator_run.save()
@@ -122,33 +140,39 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
 
 @shared_task
 def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
-    logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id,
-                            request_id=request_id))
+    logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
     if not job_group_notifier_id:
         try:
             job_group = JobGroup.objects.get(id=job_group_id)
         except JobGroup.DoesNotExist:
-            logger.info(format_log("Job group does not exist" % operator_id, job_group_id=job_group_id,
-                            request_id=request_id))
+            logger.info(
+                format_log("Job group does not exist" % operator_id, job_group_id=job_group_id, request_id=request_id)
+            )
             return
         try:
             job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
             request_obj = Request.objects.filter(request_id=request_id).first()
             if request_obj:
-                delivery_date_event = SetDeliveryDateFieldEvent(job_group_notifier_id,
-                                                                str(request_obj.delivery_date)).to_dict()
+                delivery_date_event = SetDeliveryDateFieldEvent(
+                    job_group_notifier_id, str(request_obj.delivery_date)
+                ).to_dict()
                 send_notification.delay(delivery_date_event)
         except Exception as e:
-            logger.info(format_log("Failed to instantiate notifier" % operator_id, job_group_id=job_group_id,
-                                   request_id=request_id))
+            logger.info(
+                format_log(
+                    "Failed to instantiate notifier" % operator_id, job_group_id=job_group_id, request_id=request_id
+                )
+            )
 
-    operator = OperatorFactory.get_by_model(operator_model,
-                                            job_group_id=job_group_id,
-                                            job_group_notifier_id=job_group_notifier_id,
-                                            request_id=request_id,
-                                            pipeline=pipeline)
+    operator = OperatorFactory.get_by_model(
+        operator_model,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        request_id=request_id,
+        pipeline=pipeline,
+    )
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
@@ -159,12 +183,14 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
 
 def _set_link_to_run_ticket(request_id, job_group_notifier_id):
     jira_id = None
-    import_job = Job.objects.filter(run=TYPES['REQUEST'], args__request_id=request_id).order_by('-created_date').first()
+    import_job = Job.objects.filter(run=TYPES["REQUEST"], args__request_id=request_id).order_by("-created_date").first()
     if not import_job:
         logger.error("Could not find Import JIRA ticket")
         return
     try:
-        job_group_notifier_job = JobGroupNotifier.objects.get(job_group=import_job.job_group.id, notifier_type__default=True)
+        job_group_notifier_job = JobGroupNotifier.objects.get(
+            job_group=import_job.job_group.id, notifier_type__default=True
+        )
     except JobGroupNotifier.DoesNotExist:
         logger.error("Could not find Import JIRA ticket")
         return
@@ -173,7 +199,9 @@ def _set_link_to_run_ticket(request_id, job_group_notifier_id):
     except JobGroupNotifier.DoesNotExist:
         logger.error("Could not find Import JIRA ticket")
         return
-    event = SetRunTicketInImportEvent(job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id).to_dict()
+    event = SetRunTicketInImportEvent(
+        job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id
+    ).to_dict()
     send_notification.delay(event)
 
 
@@ -184,54 +212,85 @@ def _generate_summary(req):
 
 
 def generate_description(job_group, job_group_notifier, request):
-    files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    files = FileRepository.filter(metadata={"requestId": request, "igocomplete": True})
     if files:
         data = files.first().metadata
-        request_id = data['requestId']
-        recipe = data['recipe']
-        a_name = data['dataAnalystName']
-        a_email = data['dataAnalystEmail']
-        i_name = data['investigatorName']
-        i_email = data['investigatorEmail']
-        l_name = data['labHeadName']
-        l_email = data['labHeadEmail']
-        p_email = data['piEmail']
-        pm_name = data['projectManagerName']
-        qc_emails = data['qcAccessEmails'] if 'qcAccessEmails' in data else ""
+        request_id = data["requestId"]
+        recipe = data["recipe"]
+        a_name = data["dataAnalystName"]
+        a_email = data["dataAnalystEmail"]
+        i_name = data["investigatorName"]
+        i_email = data["investigatorEmail"]
+        l_name = data["labHeadName"]
+        l_email = data["labHeadEmail"]
+        p_email = data["piEmail"]
+        pm_name = data["projectManagerName"]
+        qc_emails = data["qcAccessEmails"] if "qcAccessEmails" in data else ""
 
-        num_samples = len(files.order_by().values('metadata__cmoSampleName').annotate(n=Count("pk")))
-        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-                'metadata__cmoSampleName').annotate(n=Count("pk")))
-        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-                'metadata__cmoSampleName').annotate(n=Count("pk")))
-        operator_start_event = OperatorStartEvent(job_group_notifier, job_group, request_id, num_samples, recipe, a_name, a_email, i_name, i_email, l_name, l_email, p_email, pm_name, qc_emails, num_tumors, num_normals).to_dict()
+        num_samples = len(files.order_by().values("metadata__cmoSampleName").annotate(n=Count("pk")))
+        num_tumors = len(
+            FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Tumor"})
+            .order_by()
+            .values("metadata__cmoSampleName")
+            .annotate(n=Count("pk"))
+        )
+        num_normals = len(
+            FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Normal"})
+            .order_by()
+            .values("metadata__cmoSampleName")
+            .annotate(n=Count("pk"))
+        )
+        operator_start_event = OperatorStartEvent(
+            job_group_notifier,
+            job_group,
+            request_id,
+            num_samples,
+            recipe,
+            a_name,
+            a_email,
+            i_name,
+            i_email,
+            l_name,
+            l_email,
+            p_email,
+            pm_name,
+            qc_emails,
+            num_tumors,
+            num_normals,
+        ).to_dict()
         send_notification.delay(operator_start_event)
 
 
 def generate_label(job_group_id, request):
-    files = FileRepository.filter(metadata={'requestId': request, 'igocomplete': True})
+    files = FileRepository.filter(metadata={"requestId": request, "igocomplete": True})
     if files:
         data = files.first().metadata
-        recipe = data['recipe']
+        recipe = data["recipe"]
         recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
         send_notification.delay(recipe_label_event)
 
 
 @shared_task
-def create_jobs_from_chaining(to_operator_id, from_operator_id, run_ids=[], job_group_id=None,
-                              job_group_notifier_id=None, parent=None):
-    logger.info(format_log("Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id), job_group_id=job_group_id))
+def create_jobs_from_chaining(
+    to_operator_id, from_operator_id, run_ids=[], job_group_id=None, job_group_notifier_id=None, parent=None
+):
+    logger.info(
+        format_log(
+            "Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id), job_group_id=job_group_id
+        )
+    )
     operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id,
-                                            job_group_notifier_id=job_group_notifier_id, run_ids=run_ids)
+    operator = OperatorFactory.get_by_model(
+        operator_model, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id, run_ids=run_ids
+    )
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, parent)
 
 
 @shared_task
 def process_triggers():
-    operator_runs = OperatorRun.objects.prefetch_related(
-        'runs', 'operator__from_triggers'
-    ).exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED])
+    operator_runs = OperatorRun.objects.prefetch_related("runs", "operator__from_triggers").exclude(
+        status__in=[RunStatus.COMPLETED, RunStatus.FAILED]
+    )
 
     for operator_run in operator_runs:
         created_chained_job = False
@@ -251,10 +310,10 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.order_by('id').values_list('id', flat=True)),
+                                list(operator_run.runs.order_by("id").values_list("id", flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=str(operator_run.id)
+                                parent=str(operator_run.id),
                             )
                             continue
                     elif condition == TriggerAggregateConditionType.NINTY_PERCENT_SUCCEEDED:
@@ -263,16 +322,19 @@ def process_triggers():
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.order_by('id').values_list('id', flat=True)),
+                                list(operator_run.runs.order_by("id").values_list("id", flat=True)),
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
-                                parent=str(operator_run.id)
+                                parent=str(operator_run.id),
                             )
                             continue
 
                     if operator_run.percent_runs_finished == 100.0:
-                        logger.info(format_log("Conditions never met",
-                                               operator_run_id=operator_run.id, job_group_id=job_group_id))
+                        logger.info(
+                            format_log(
+                                "Conditions never met", operator_run_id=operator_run.id, job_group_id=job_group_id
+                            )
+                        )
 
                 elif trigger_type == TriggerRunType.INDIVIDUAL:
                     if operator_run.percent_runs_finished == 100.0:
@@ -287,14 +349,17 @@ def process_triggers():
                 else:
                     operator_run.fail()
                     if job_group_notifier_id:
-                        e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] Operator Run %s failed" % str(operator_run.id)).to_dict()
+                        e = OperatorRequestEvent(
+                            job_group_notifier_id, "[CIReviewEvent] Operator Run %s failed" % str(operator_run.id)
+                        ).to_dict()
                         send_notification.delay(e)
                         ci_review_event = SetCIReviewEvent(job_group_notifier_id).to_dict()
                         send_notification.delay(ci_review_event)
 
         except Exception as e:
-            logger.info(format_log("Trigger failed %s", str(e),
-                                   operator_run_id=operator_run.id, job_group_id=job_group_id))
+            logger.info(
+                format_log("Trigger failed %s", str(e), operator_run_id=operator_run.id, job_group_id=job_group_id)
+            )
             operator_run.fail()
 
 
@@ -303,11 +368,13 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
     fail_job(run_id, "Could not create run task")
 
 
-@shared_task(autoretry_for=(Exception,),
-             retry_jitter=True,
-             retry_backoff=60,
-             retry_kwargs={"max_retries": 4},
-             on_failure=on_failure_to_create_run_task)
+@shared_task(
+    autoretry_for=(Exception,),
+    retry_jitter=True,
+    retry_backoff=60,
+    retry_kwargs={"max_retries": 4},
+    on_failure=on_failure_to_create_run_task,
+)
 def create_run_task(run_id, inputs, output_directory=None):
     logger.info(format_log("Creating and validating run", obj_id=run_id))
     run = RunObjectFactory.from_definition(run_id, inputs)
@@ -322,11 +389,13 @@ def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     fail_job(run_id, "Failed to submit job to Ridgeback")
 
 
-@shared_task(autoretry_for=(Exception,),
-             retry_jitter=True,
-             retry_backoff=60,
-             retry_kwargs={"max_retries": 4},
-             on_failure=on_failure_to_submit_job)
+@shared_task(
+    autoretry_for=(Exception,),
+    retry_jitter=True,
+    retry_backoff=60,
+    retry_kwargs={"max_retries": 4},
+    on_failure=on_failure_to_submit_job,
+)
 def submit_job(run_id, output_directory=None):
     resume = None
     try:
@@ -339,31 +408,28 @@ def submit_job(run_id, output_directory=None):
         run2 = RunObjectFactory.from_db(run.resume)
 
         if run1.equal(run2):
-            logger.info(format_log("Resuming run with execution id %s" % run2.run_obj.execution_id,
-                                   obj=run))
+            logger.info(format_log("Resuming run with execution id %s" % run2.run_obj.execution_id, obj=run))
             resume = str(run2.run_obj.execution_id)
         else:
-            logger.info(format_log("Failed to resume runs as run is not equal to the following run: %s" % str(run2),
-                                   obj=run))
+            logger.info(
+                format_log("Failed to resume runs as run is not equal to the following run: %s" % str(run2), obj=run)
+            )
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = run1.dump_job(output_directory=output_directory)
     logger.info(format_log("Job ready for submitting", obj=run))
     if resume:
-        url = urljoin(settings.RIDGEBACK_URL, '/v0/jobs/{id}/resume/'.format(
-            id=resume))
-        job = {
-            'root_dir': output_directory
-        }
+        url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
+        job = {"root_dir": output_directory}
     else:
-        url = settings.RIDGEBACK_URL + '/v0/jobs/'
+        url = settings.RIDGEBACK_URL + "/v0/jobs/"
     if run.app.walltime:
-        job['walltime'] = run.app.walltime
+        job["walltime"] = run.app.walltime
     if run.app.memlimit:
-        job['memlimit'] = run.app.memlimit
+        job["memlimit"] = run.app.memlimit
     response = requests.post(url, json=job)
     if response.status_code == 201:
-        run.execution_id = response.json()['id']
+        run.execution_id = response.json()["id"]
         logger.info(format_log("Job successfully submitted", obj=run))
         run.save()
     else:
@@ -388,11 +454,11 @@ def abort_job_task(job_group_id=None, jobs=[]):
         else:
             unsuccessful.append(run)
     if unsuccessful:
-        logger.error("Failed to abort %s" % ', '.join(unsuccessful))
+        logger.error("Failed to abort %s" % ", ".join(unsuccessful))
 
 
 def abort_job_on_ridgeback(job_id):
-    response = requests.get(settings.RIDGEBACK_URL + '/v0/jobs/%s/abort/' % job_id)
+    response = requests.get(settings.RIDGEBACK_URL + "/v0/jobs/%s/abort/" % job_id)
     if response.status_code == 200:
         logger.info(format_log("Job aborted", obj_id=job_id))
         return True
@@ -401,9 +467,7 @@ def abort_job_on_ridgeback(job_id):
 
 
 def check_statuses_on_ridgeback(execution_ids):
-    response = requests.post(settings.RIDGEBACK_URL + '/v0/jobs/statuses/', data={
-        "job_ids": execution_ids
-    })
+    response = requests.post(settings.RIDGEBACK_URL + "/v0/jobs/statuses/", data={"job_ids": execution_ids})
     if response.status_code == 200:
         logger.info("Job statuses checked")
         return response.json()["jobs"]
@@ -421,18 +485,19 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 logger.info(format_log("Run Fail already processed", obj=run.run_obj))
                 return
 
-            logger.info(format_log("Failing Run", obj=run.run_obj))
+            restart_run = run.run_obj.set_for_restart()
 
-            run.fail(error_message)
-            run.to_db()
+            if not restart_run:
+                run.fail(error_message)
+                run.to_db()
 
-            job_group_notifier = run.job_group_notifier
-            job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
+                job_group_notifier = run.job_group_notifier
+                job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
-            ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
-            send_notification.delay(ci_review)
+                ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
+                send_notification.delay(ci_review)
 
-            _job_finished_notify(run, lsf_log_location, input_json_location)
+                _job_finished_notify(run, lsf_log_location, input_json_location)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
@@ -467,7 +532,7 @@ def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_locat
                     trigger.from_operator_id,
                     [run_id],
                     job_group_id=job_group_id,
-                    parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None
+                    parent=str(run.run_obj.operator_run.id) if run.run_obj.operator_run else None,
                 )
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
@@ -495,22 +560,23 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
             completed_runs, failed_runs = 0, 1
         running_runs = 0
 
-    event = RunFinishedEvent(job_group_notifier_id,
-                             run.tags.get('requestId', 'UNKNOWN REQUEST'),
-                             str(run.run_id),
-                             pipeline_name,
-                             pipeline_link,
-                             run.run_obj.output_directory,
-                             RunStatus(run.status).name,
-                             run.tags,
-                             running_runs,
-                             completed_runs,
-                             failed_runs,
-                             total_runs,
-                             operator_run_id,
-                             lsf_log_location,
-                             input_json_location
-                             )
+    event = RunFinishedEvent(
+        job_group_notifier_id,
+        run.tags.get("requestId", "UNKNOWN REQUEST"),
+        str(run.run_id),
+        pipeline_name,
+        pipeline_link,
+        run.run_obj.output_directory,
+        RunStatus(run.status).name,
+        run.tags,
+        running_runs,
+        completed_runs,
+        failed_runs,
+        total_runs,
+        operator_run_id,
+        lsf_log_location,
+        input_json_location,
+    )
     e = event.to_dict()
     send_notification.delay(e)
 
@@ -546,8 +612,8 @@ def abort_job(self, run_id):
 def update_commandline_job_status(run, commandline_tool_job_set):
     job_status_obj = {}
     for single_commandline_job in commandline_tool_job_set:
-        status = single_commandline_job.pop('status')
-        root = single_commandline_job.pop('root')
+        status = single_commandline_job.pop("status")
+        root = single_commandline_job.pop("root")
         if status not in job_status_obj:
             job_status_obj[status] = []
         job_status_obj[status].append(single_commandline_job)
@@ -557,10 +623,10 @@ def update_commandline_job_status(run, commandline_tool_job_set):
 @shared_task
 def check_job_timeouts():
     TIMEOUT_BY_DAYS = 3
-    diff = datetime.now()-timedelta(days=TIMEOUT_BY_DAYS)
-    runs = Run.objects.filter(status__in=(RunStatus.CREATING, RunStatus.READY),
-                              created_date__lte=diff,
-                              execution_id__isnull=True).all()
+    diff = datetime.now() - timedelta(days=TIMEOUT_BY_DAYS)
+    runs = Run.objects.filter(
+        status__in=(RunStatus.CREATING, RunStatus.READY), created_date__lte=diff, execution_id__isnull=True
+    ).all()
 
     for run in runs:
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
@@ -569,13 +635,12 @@ def check_job_timeouts():
 @shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
-    runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY),
-                                       execution_id__isnull=False)
+    runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY), execution_id__isnull=False)
 
     limit = 800
     i = 0
     while True:
-        runs = runs_queryset[i:i+limit]
+        runs = runs_queryset[i : i + limit]
         i += limit
         if not runs:
             return
@@ -591,41 +656,41 @@ def check_jobs_status():
                 continue
 
             status = remote_statuses[str(run.execution_id)]
-            if status['started'] and not run.started:
-                run.started = status['started']
-            if status['submitted'] and not run.submitted:
-                run.submitted = status['submitted']
+            if status["started"] and not run.started:
+                run.started = status["started"]
+            if status["submitted"] and not run.submitted:
+                run.submitted = status["submitted"]
 
-            if status['commandlinetooljob_set']:
-                update_commandline_job_status(run, status['commandlinetooljob_set'])
-            if status['status'] == 'FAILED':
+            if status["commandlinetooljob_set"]:
+                update_commandline_job_status(run, status["commandlinetooljob_set"])
+            if status["status"] == "FAILED":
                 logger.error(format_log("Job failed ", obj=run))
-                message = dict(details=status.get('message'))
-                lsf_log_location = status.get('message', {}).get("log")
+                message = dict(details=status.get("message"))
+                lsf_log_location = status.get("message", {}).get("log")
                 inputs_location = None
                 if lsf_log_location:
                     inputs_location = lsf_log_location.replace("lsf.log", "input.json")
                 fail_job.delay(str(run.id), message, lsf_log_location, inputs_location)
                 continue
-            if status['status'] == 'COMPLETED':
+            if status["status"] == "COMPLETED":
                 logger.info(format_log("Job completed", obj=run))
-                lsf_log_location = status.get('message', {}).get("log")
+                lsf_log_location = status.get("message", {}).get("log")
                 inputs_location = None
                 if lsf_log_location:
                     inputs_location = lsf_log_location.replace("lsf.log", "input.json")
-                complete_job.delay(str(run.id), status['outputs'], lsf_log_location, inputs_location)
+                complete_job.delay(str(run.id), status["outputs"], lsf_log_location, inputs_location)
                 continue
-            if status['status'] == 'CREATED':
+            if status["status"] == "CREATED":
                 logger.info(format_log("Job created", obj=run))
                 continue
-            if status['status'] == 'PENDING':
+            if status["status"] == "PENDING":
                 logger.info(format_log("Job pending", obj=run))
                 continue
-            if status['status'] == 'RUNNING':
+            if status["status"] == "RUNNING":
                 logger.info(format_log("Job running", obj=run))
                 running_job.delay(str(run.id))
                 continue
-            if status['status'] == 'ABORTED':
+            if status["status"] == "ABORTED":
                 logger.info(format_log("Job aborted", obj=run))
                 abort_job.delay(str(run.id))
             else:

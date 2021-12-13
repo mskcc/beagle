@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class FileSystemConfig(AppConfig):
-    name = 'file_system'
+    name = "file_system"

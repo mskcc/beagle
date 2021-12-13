@@ -119,7 +119,7 @@ class FileMetadata(BaseModel):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
-        do_not_version = kwargs.pop('do_not_version', False)
+        do_not_version = kwargs.pop("do_not_version", False)
         if do_not_version:
             super(FileMetadata, self).save(*args, **kwargs)
         else:
@@ -128,21 +128,18 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
-            assay = self.metadata.get(settings.ASSAY_METADATA_KEY, '')
-            investigator = self.metadata.get(settings.INVESTIGATOR_METADATA_KEY, '')
-            pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, '')
-            populate_job_group_notifier_metadata.delay(request_id,
-                                                       pi,
-                                                       investigator,
-                                                       assay)
+            assay = self.metadata.get(settings.ASSAY_METADATA_KEY, "")
+            investigator = self.metadata.get(settings.INVESTIGATOR_METADATA_KEY, "")
+            pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, "")
+            populate_job_group_notifier_metadata.delay(request_id, pi, investigator, assay)
             if sample_id:
                 if not self.file.sample:
-                    sample, _ = Sample.objects.get_or_create(sample_id=sample_id,
-                                                             defaults={'cmo_sample_name': cmo_sample_name,
-                                                                       'sample_name': sample_name})
+                    sample, _ = Sample.objects.get_or_create(
+                        sample_id=sample_id, defaults={"cmo_sample_name": cmo_sample_name, "sample_name": sample_name}
+                    )
 
                     self.file.sample = sample
-                    self.file.save(update_fields=('sample',))
+                    self.file.save(update_fields=("sample",))
                 else:
                     self.file.sample.sample_id = sample_id
                     self.file.sample.sample_name = sample_name
@@ -154,7 +151,7 @@ class FileMetadata(BaseModel):
                     request, _ = Request.objects.get_or_create(request_id=request_id)
 
                     self.file.request = request
-                    self.file.save(update_fields=('request',))
+                    self.file.save(update_fields=("request",))
                 else:
                     self.file.request.request_id = request_id
                     self.file.request.save()
@@ -163,15 +160,15 @@ class FileMetadata(BaseModel):
                 if not self.file.patient:
                     patient, _ = Patient.objects.get_or_create(patient_id=patient_id)
                     self.file.patient = patient
-                    self.file.save(update_fields=('patient',))
+                    self.file.save(update_fields=("patient",))
                 else:
                     self.file.patient.patient_id = patient_id
                     self.file.patient.save()
-            versions = FileMetadata.objects.filter(file_id=self.file.id).values_list('version', flat=True)
+            versions = FileMetadata.objects.filter(file_id=self.file.id).values_list("version", flat=True)
             version = max(versions) + 1 if versions else 0
             self.version = version
             self.latest = True
-            old = FileMetadata.objects.filter(file_id=self.file.id).order_by('-created_date').first()
+            old = FileMetadata.objects.filter(file_id=self.file.id).order_by("-created_date").first()
             if old:
                 old.latest = False
                 old.save(do_not_version=True)
@@ -180,12 +177,12 @@ class FileMetadata(BaseModel):
     class Meta:
         indexes = [
             models.Index(
-                fields=['version'],
-                name='version_idx',
+                fields=["version"],
+                name="version_idx",
             ),
             GinIndex(
-                fields=['metadata'],
-                name='metadata_gin',
+                fields=["metadata"],
+                name="metadata_gin",
             ),
         ]
 
@@ -193,4 +190,3 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
-

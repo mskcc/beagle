@@ -10,50 +10,79 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='BaseModel',
+            name="BaseModel",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='ETLError',
+            name="ETLError",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('job_id', models.UUIDField()),
-                ('error', django.contrib.postgres.fields.jsonb.JSONField(default=dict, null=True)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("job_id", models.UUIDField()),
+                ("error", django.contrib.postgres.fields.jsonb.JSONField(default=dict, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='JobBaseModel',
+            name="JobBaseModel",
             fields=[
-                ('basemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.BaseModel')),
-                ('status', models.IntegerField(choices=[(0, 'CREATED'), (1, 'PROCESSED'), (2, 'FAILED')])),
+                (
+                    "basemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.BaseModel",
+                    ),
+                ),
+                ("status", models.IntegerField(choices=[(0, "CREATED"), (1, "PROCESSED"), (2, "FAILED")])),
             ],
-            bases=('beagle_etl.basemodel',),
+            bases=("beagle_etl.basemodel",),
         ),
         migrations.CreateModel(
-            name='RequestFetchJob',
+            name="RequestFetchJob",
             fields=[
-                ('jobbasemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.JobBaseModel')),
-                ('request_id', models.CharField(max_length=40)),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                (
+                    "jobbasemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.JobBaseModel",
+                    ),
+                ),
+                ("request_id", models.CharField(max_length=40)),
+                ("data", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
             ],
-            bases=('beagle_etl.jobbasemodel',),
+            bases=("beagle_etl.jobbasemodel",),
         ),
         migrations.CreateModel(
-            name='SamplesFetchJob',
+            name="SamplesFetchJob",
             fields=[
-                ('jobbasemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.JobBaseModel')),
-                ('sample_id', models.CharField(max_length=40)),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                (
+                    "jobbasemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.JobBaseModel",
+                    ),
+                ),
+                ("sample_id", models.CharField(max_length=40)),
+                ("data", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
             ],
-            bases=('beagle_etl.jobbasemodel',),
+            bases=("beagle_etl.jobbasemodel",),
         ),
     ]

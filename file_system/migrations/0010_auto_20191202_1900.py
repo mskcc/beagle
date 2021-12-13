@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0009_filerunmap'),
+        ("file_system", "0009_filerunmap"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='file',
-            name='path',
+            model_name="file",
+            name="path",
             field=models.CharField(max_length=1500, unique=True),
         ),
     ]

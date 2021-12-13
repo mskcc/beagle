@@ -7,8 +7,9 @@ from file_system.repository.file_repository import FileRepository
 import json
 from jinja2 import Template
 
+
 def construct_sample_inputs(samples):
-    with open('runner/operator/access/fastq_to_bam/input_template.json.jinja2') as file:
+    with open("runner/operator/access/fastq_to_bam/input_template.json.jinja2") as file:
         template = Template(file.read())
 
     sample_inputs = list()
@@ -21,14 +22,10 @@ def construct_sample_inputs(samples):
             tumor_type=meta["specimenType"],
             igo_id=sample_id,
             patient_id=meta["patientId"],
-
             barcode_index=meta["barcodeIndex"],
-
             flowcell_id=meta["flowCellId"],
             run_date=meta["runDate"],
-
             request_id=meta["requestId"],
-
             fastq1_path="juno://" + sample_group[0]["path"],
             fastq2_path="juno://" + sample_group[1]["path"],
         )
@@ -39,18 +36,12 @@ def construct_sample_inputs(samples):
 
     return sample_inputs
 
+
 class AccessFastqToBamOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
-                                                'igocomplete': True})
+        files = FileRepository.filter(queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True})
         data = [
-            {
-                "id": f.file.id,
-                "path": f.file.path,
-                "file_name": f.file.file_name,
-                "metadata": f.metadata
-            } for f in files
+            {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
 
         sample_inputs = construct_sample_inputs(data)
@@ -61,13 +52,13 @@ class AccessFastqToBamOperator(Operator):
             (
                 APIRunCreateSerializer(
                     data={
-                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {'requestId': self.request_id}}
+                        "name": "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {"requestId": self.request_id},
+                    }
                 ),
-                job
-             )
-
+                job,
+            )
             for i, job in enumerate(sample_inputs)
         ]

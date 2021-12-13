@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class DisabledAssayEvent(Event):
-
     def __init__(self, job_notifier, assay):
         self.job_notifier = job_notifier
         self.assay = assay
