@@ -20,15 +20,15 @@ class TestCopyOutputs(TestCase):
         "file_system.filetype.json",
         "file_system.storage.json",
         "beagle_etl.operator.json",
-        "runner.pipeline.json"
+        "runner.pipeline.json",
     ]
 
     def setUp(self):
-        os.environ['TMPDIR'] = ''
+        os.environ["TMPDIR"] = ""
 
     def check_if_file_obj_valid(self, file_obj):
-        if 'class' in file_obj and 'location' in file_obj:
-            if file_obj['class'] == 'File' and type(file_obj['location']) == str:
+        if "class" in file_obj and "location" in file_obj:
+            if file_obj["class"] == "File" and type(file_obj["location"]) == str:
                 return True
         return False
 
@@ -43,9 +43,9 @@ class TestCopyOutputs(TestCase):
 
     def validate_copy_outputs_input(self, input_json):
         for single_field in input_json:
-            if single_field == 'project_prefix':
-                continue # test is failing for this value because project_prefix isn't actually a lis
-            elif single_field == 'meta':
+            if single_field == "project_prefix":
+                continue  # test is failing for this value because project_prefix isn't actually a lis
+            elif single_field == "meta":
                 if not len(input_json[single_field]) == 3:
                     return False
                 else:
@@ -63,17 +63,20 @@ class TestCopyOutputs(TestCase):
         print("Running test_create_copy_output_jobs ----")
         # Load fixtures
         test_files_fixture = os.path.join(
-            settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json")
-        call_command('loaddata', test_files_fixture, verbosity=0)
+            settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json"
+        )
+        call_command("loaddata", test_files_fixture, verbosity=0)
         operator_model = Operator.objects.get(id=4)
         operator = OperatorFactory.get_by_model(
-            operator_model, version='v1.1.0', run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"])
+            operator_model, version="v1.1.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+        )
         input_json_valid = False
         if operator.get_jobs()[0][0].is_valid():
-            input_json = operator.get_jobs()[0][0].initial_data['inputs']
+            input_json = operator.get_jobs()[0][0].initial_data["inputs"]
             input_json_valid = self.validate_copy_outputs_input(input_json)
             print(json.dumps(input_json, cls=UUIDEncoder))
         self.assertEqual(input_json_valid, True)
+
 
 class UUIDEncoder(json.JSONEncoder):
     def default(self, obj):

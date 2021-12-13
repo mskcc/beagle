@@ -5,24 +5,28 @@ from runner.pipeline.nextflow import NextflowResolver
 
 
 class PipelineCache(object):
-
     @staticmethod
     def get_pipeline(pipeline):
         _pipeline = cache.get(pipeline.id)
-        if _pipeline and (_pipeline.get('github') == pipeline.github and
-                          _pipeline.get('entrypoint') == pipeline.entrypoint and
-                          _pipeline.get('version') == pipeline.version):
-            resolved_dict = _pipeline.get('app')
+        if _pipeline and (
+            _pipeline.get("github") == pipeline.github
+            and _pipeline.get("entrypoint") == pipeline.entrypoint
+            and _pipeline.get("version") == pipeline.version
+        ):
+            resolved_dict = _pipeline.get("app")
         else:
             resolver_class = PipelineCache._get_pipeline_resolver(pipeline.pipeline_type)
-            resolver = resolver_class(pipeline.github,
-                                      pipeline.entrypoint,
-                                      pipeline.version)
+            resolver = resolver_class(pipeline.github, pipeline.entrypoint, pipeline.version)
             resolved_dict = resolver.resolve()
-            cache.set(pipeline.id, {'app': resolved_dict,
-                                    'github': pipeline.github,
-                                    'entrypoint': pipeline.entrypoint,
-                                    'version': pipeline.version})
+            cache.set(
+                pipeline.id,
+                {
+                    "app": resolved_dict,
+                    "github": pipeline.github,
+                    "entrypoint": pipeline.entrypoint,
+                    "version": pipeline.version,
+                },
+            )
         return resolved_dict
 
     @staticmethod

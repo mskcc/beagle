@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0027_auto_20200509_0631'),
+        ("runner", "0027_auto_20200509_0631"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operatorrun',
-            name='finished_date',
+            model_name="operatorrun",
+            name="finished_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='run',
-            name='finished_date',
+            model_name="run",
+            name="finished_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

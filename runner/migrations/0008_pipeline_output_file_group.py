@@ -7,15 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0007_remove_filegroup_metadata'),
-        ('runner', '0007_remove_port_required'),
+        ("file_system", "0007_remove_filegroup_metadata"),
+        ("runner", "0007_remove_port_required"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='output_file_group',
-            field=models.ForeignKey(default='a66f03b4-ce43-40d0-9134-d5a3575cabae', on_delete=django.db.models.deletion.CASCADE, to='file_system.FileGroup'),
+            model_name="pipeline",
+            name="output_file_group",
+            field=models.ForeignKey(
+                default="a66f03b4-ce43-40d0-9134-d5a3575cabae",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="file_system.FileGroup",
+            ),
             preserve_default=False,
         ),
     ]

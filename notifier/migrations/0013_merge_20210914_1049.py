@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0012_auto_20210913_0518'),
-        ('notifier', '0006_remove_jobgroup_jira_id'),
+        ("notifier", "0012_auto_20210913_0518"),
+        ("notifier", "0006_remove_jobgroup_jira_id"),
     ]
 
-    operations = [
-    ]
+    operations = []

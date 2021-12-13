@@ -16,10 +16,9 @@ class Notifier(BaseModel):
 
 
 class JobGroup(BaseModel):
-
     @property
     def timestamp(self):
-        return self.created_date.strftime('%Y%m%d_%H%M')
+        return self.created_date.strftime("%Y%m%d_%H%M")
 
 
 class JiraStatus(IntEnum):
@@ -52,8 +51,9 @@ class JobGroupNotifier(BaseModel):
     request_id = models.CharField(max_length=100, blank=True, null=True)
     job_group = models.ForeignKey(JobGroup, null=False, blank=False, on_delete=models.CASCADE)
     notifier_type = models.ForeignKey(Notifier, null=False, blank=False, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=[(status.value, status.name) for status in JiraStatus],
-                                 default=JiraStatus.UNKNOWN)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in JiraStatus], default=JiraStatus.UNKNOWN
+    )
     investigator = models.CharField(max_length=30, blank=True, null=True)
     PI = models.CharField(max_length=30, blank=True, null=True)
     assay = models.CharField(max_length=30, blank=True, null=True)

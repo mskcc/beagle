@@ -7,18 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0016_assay'),
+        ("beagle_etl", "0016_assay"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='assay',
-            name='all',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=100), blank=True, null=True, size=None),
+            model_name="assay",
+            name="all",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(max_length=100), blank=True, null=True, size=None
+            ),
         ),
         migrations.AlterField(
-            model_name='assay',
-            name='disabled',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=100), blank=True, null=True, size=None),
+            model_name="assay",
+            name="disabled",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(max_length=100), blank=True, null=True, size=None
+            ),
         ),
     ]

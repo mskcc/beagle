@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0042_populate_job_info'),
+        ("runner", "0042_populate_job_info"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='memlimit',
+            model_name="pipeline",
+            name="memlimit",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='pipeline',
-            name='walltime',
+            model_name="pipeline",
+            name="walltime",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

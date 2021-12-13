@@ -7,14 +7,14 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0013_auto_20200210_1902'),
-        ('runner', '0016_merge_20200204_2150'),
+        ("beagle_etl", "0013_auto_20200210_1902"),
+        ("runner", "0016_merge_20200204_2150"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='operator',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='beagle_etl.Operator'),
+            model_name="pipeline",
+            name="operator",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="beagle_etl.Operator"),
         ),
     ]

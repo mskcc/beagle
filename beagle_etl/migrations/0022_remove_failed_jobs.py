@@ -6,11 +6,11 @@ from beagle_etl.models import JobStatus
 
 
 def remove_old_pool_normal_jobs(apps, _):
-    Job = apps.get_model('beagle_etl', 'Job')
+    Job = apps.get_model("beagle_etl", "Job")
 
-    failed_pool_normal_jobs = Job.objects.filter(run=TYPES['POOLED_NORMAL'], status=JobStatus.FAILED)
+    failed_pool_normal_jobs = Job.objects.filter(run=TYPES["POOLED_NORMAL"], status=JobStatus.FAILED)
     for job in failed_pool_normal_jobs:
-        if job.message.get('message', '').startswith('Invalid metadata runId'):
+        if job.message.get("message", "").startswith("Invalid metadata runId"):
             print(job.id)
             print(job.message)
             job.delete()
@@ -19,7 +19,7 @@ def remove_old_pool_normal_jobs(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0021_auto_20200616_1303'),
+        ("beagle_etl", "0021_auto_20200616_1303"),
     ]
 
     operations = [

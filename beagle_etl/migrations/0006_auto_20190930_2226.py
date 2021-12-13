@@ -6,32 +6,32 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0005_auto_20190930_1819'),
+        ("beagle_etl", "0005_auto_20190930_1819"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='jobbasemodel',
-            name='basemodel_ptr',
+            model_name="jobbasemodel",
+            name="basemodel_ptr",
         ),
         migrations.RemoveField(
-            model_name='requestfetchjob',
-            name='jobbasemodel_ptr',
+            model_name="requestfetchjob",
+            name="jobbasemodel_ptr",
         ),
         migrations.RemoveField(
-            model_name='samplesfetchjob',
-            name='jobbasemodel_ptr',
+            model_name="samplesfetchjob",
+            name="jobbasemodel_ptr",
         ),
         migrations.DeleteModel(
-            name='ETLError',
+            name="ETLError",
         ),
         migrations.DeleteModel(
-            name='JobBaseModel',
+            name="JobBaseModel",
         ),
         migrations.DeleteModel(
-            name='RequestFetchJob',
+            name="RequestFetchJob",
         ),
         migrations.DeleteModel(
-            name='SamplesFetchJob',
+            name="SamplesFetchJob",
         ),
     ]

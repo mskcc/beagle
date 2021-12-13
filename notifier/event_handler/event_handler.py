@@ -8,7 +8,7 @@ class EventHandler(object):
 
     def __init__(self):
         self.events = dict()
-        for name, obj in inspect.getmembers(sys.modules['notifier.events']):
+        for name, obj in inspect.getmembers(sys.modules["notifier.events"]):
             if inspect.isclass(obj):
                 self.events[obj.get_type()] = obj.get_method()
 

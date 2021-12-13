@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class RedeliveryUpdateEvent(Event):
-
     def __init__(self, job_notifier, update):
         self.job_notifier = job_notifier
         self.update = update

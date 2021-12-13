@@ -7,10 +7,10 @@ from runner.models import ProtocolType, Pipeline
 def populate_pipeline_type(apps, _):
     pipelines = Pipeline.objects.all()
     for pipeline in pipelines:
-        if pipeline.entrypoint.endswith('.cwl'):
+        if pipeline.entrypoint.endswith(".cwl"):
             pipeline.pipeline_type = ProtocolType.CWL
             pipeline.save()
-        elif pipeline.entrypoint.endswith('.nf'):
+        elif pipeline.entrypoint.endswith(".nf"):
             pipeline.pipeline_type = ProtocolType.NEXTFLOW
             pipeline.save()
 
@@ -22,14 +22,14 @@ def revert(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0046_pipeline_pipeline_type'),
+        ("runner", "0046_pipeline_pipeline_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='config',
+            model_name="pipeline",
+            name="config",
             field=models.CharField(blank=True, default=None, max_length=1000, null=True),
         ),
-        migrations.RunPython(populate_pipeline_type, reverse_code=revert)
+        migrations.RunPython(populate_pipeline_type, reverse_code=revert),
     ]

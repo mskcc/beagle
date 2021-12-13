@@ -8,32 +8,32 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0007_remove_filegroup_metadata'),
-        ('runner', '0005_auto_20191028_1906'),
+        ("file_system", "0007_remove_filegroup_metadata"),
+        ("runner", "0005_auto_20191028_1906"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='port',
-            name='required',
+            model_name="port",
+            name="required",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='port',
-            name='secondary_files',
+            model_name="port",
+            name="secondary_files",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='port',
-            name='schema',
+            model_name="port",
+            name="schema",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
         migrations.CreateModel(
-            name='FileJobTracker',
+            name="FileJobTracker",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.File')),
-                ('job', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='runner.Run')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("file", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.File")),
+                ("job", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="runner.Run")),
             ],
         ),
     ]

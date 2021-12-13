@@ -7,18 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0002_auto_20190828_0320'),
+        ("runner", "0002_auto_20190828_0320"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='run',
-            name='execution_id',
+            model_name="run",
+            name="execution_id",
             field=models.UUIDField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='run',
-            name='job_statuses',
+            model_name="run",
+            name="job_statuses",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict),
         ),
     ]
