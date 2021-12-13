@@ -293,11 +293,14 @@ class CWLRunObjectTest(APITestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch('lib.memcache_lock.memcache_task_lock')
     @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    def test_run_complete_job(self, mock_get_pipeline, memcache_task_lock, send_notification):
+    @patch('file_system.tasks.populate_job_group_notifier_metadata.delay')
+    def test_run_complete_job(self, mock_populate_job_group_notifier, mock_get_pipeline, memcache_task_lock,
+                              send_notification):
         with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
             app = json.load(f)
         with open('runner/tests/run/inputs.json', 'r') as f:
             inputs = json.load(f)
+        mock_populate_job_group_notifier.return_value = None
         mock_get_pipeline.return_value = app
         memcache_task_lock.return_value = True
         send_notification.return_value = False

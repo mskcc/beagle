@@ -50,7 +50,6 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
         logger.info(format_log("Job group notifier not set", job_group_id=job_group_id))
     valid_jobs, invalid_jobs = [], []
 
-    print(jobs)
     for job in jobs:
         valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
 
@@ -86,12 +85,11 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     set_pipeline_field = SetPipelineFieldEvent(job_group_notifier_id, pipeline_name).to_dict()
     send_notification.delay(set_pipeline_field)
 
-    print(valid_jobs)
     for job in valid_jobs:
         logger.info(format_log("Creating run", obj=job[0]))
         job[0].operator_run_id = str(operator_run.id)
-        job[0].job_group_id = str(job_group_id)
-        job[0].job_group_notifier_id = job_group_notifier_id
+        job[0].job_group_id = str(job_group_id) if job_group_id else job_group_id
+        job[0].job_group_notifier_id = str(job_group_notifier_id) if job_group_notifier_id else job_group_notifier_id
         run = job[0].create()
         logger.info(format_log("Run created", obj=run))
 
@@ -104,7 +102,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
-            create_run_task.delay(str(run.id), job[1], output_directory)
+            create_run_task(str(run.id), job[1], output_directory)
 
     if job_group_id:
         event = OperatorRunEvent(job_group_notifier_id,
@@ -127,7 +125,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
 @shared_task
 def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id,
-                            request_id=request_id))
+                           request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
     if not job_group_notifier_id:
@@ -135,7 +133,7 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
             job_group = JobGroup.objects.get(id=job_group_id)
         except JobGroup.DoesNotExist:
             logger.info(format_log("Job group does not exist" % operator_id, job_group_id=job_group_id,
-                            request_id=request_id))
+                                   request_id=request_id))
             return
         try:
             job_group_notifier_id = notifier_start(job_group, request_id, operator=operator_model)
