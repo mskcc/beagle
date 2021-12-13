@@ -34,7 +34,7 @@ DEBUG = ENVIRONMENT == 'dev'
 ALLOWED_HOSTS = os.environ.get('BEAGLE_ALLOWED_HOSTS', 'localhost').split(',')
 
 CORS_ORIGIN_ALLOW_ALL = True
-
+SESSION_COOKIE_PATH = '/beagle'
 
 # Application definition
 

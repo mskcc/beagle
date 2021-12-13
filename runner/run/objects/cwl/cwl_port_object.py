@@ -122,4 +122,5 @@ class CWLPortObject(PortObject):
             self.port_object = new_port
 
     def __repr__(self):
-        return "(PORT) %s: Name: %s Type: %s" % (self.port_object.id, self.name, PortType(self.port_type).name)
+        port_id = self.port_object.id if self.port_object else "Id Not Assigned yet"
+        return "(PORT) %s: Name: %s Type: %s" % (port_id, self.name, PortType(self.port_type).name)

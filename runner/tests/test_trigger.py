@@ -9,6 +9,7 @@ from runner.models import OperatorRun, RunStatus, TriggerRunType, OperatorTrigge
 from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
+from runner.run.objects.run_creator_object import RunCreator
 from runner.serializers import APIRunCreateSerializer
 
 
@@ -36,8 +37,9 @@ class TestOperatorTriggers(TestCase):
                                                         create_run_task,
                                                         memcache_task_lock):
         argos_jobs = list()
-        argos_jobs.append((APIRunCreateSerializer(
-                data={'app': 'cb5d793b-e650-4b7d-bfcd-882858e29cc5', 'inputs': None, 'name': None, 'tags': {}}), None))
+
+        argos_jobs.append((RunCreator(app='cb5d793b-e650-4b7d-bfcd-882858e29cc5', inputs=None, name=None, tags={}),
+                           None))
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
         create_run_task.return_value = None
