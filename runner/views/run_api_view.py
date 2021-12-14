@@ -240,6 +240,7 @@ class RunApiRestartViewSet(GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         operator_run_id = serializer.validated_data.get("operator_run_id")
+        clean = serializer.validated_data.get("clean")
 
         o = (
             OperatorRun.objects.select_related(
@@ -293,7 +294,8 @@ class RunApiRestartViewSet(GenericAPIView):
             r.pk = None
             r.operator_run_id = o.pk
             r.clear().save()
-            r.resume = original_run_id
+            if clean == False:
+                r.resume = original_run_id
             r.samples.add(*samples)
 
             r.save()

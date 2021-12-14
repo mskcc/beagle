@@ -254,6 +254,7 @@ class RunStatusUpdateSerializer(serializers.Serializer):
 
 class RestartRunSerializer(serializers.Serializer):
     operator_run_id = serializers.UUIDField(required=True)
+    clean = serializers.BooleanField(default=False)
 
 
 class RequestIdOperatorSerializer(serializers.Serializer):
