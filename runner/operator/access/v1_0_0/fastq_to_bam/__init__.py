@@ -1,7 +1,7 @@
 from collections import defaultdict
 from itertools import groupby
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
 import json
@@ -50,15 +50,14 @@ class AccessFastqToBamOperator(Operator):
 
         return [
             (
-                APIRunCreateSerializer(
-                    data={
+                RunCreator(
+                    **{
                         "name": "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                         "app": self.get_pipeline_id(),
                         "inputs": job,
                         "tags": {"requestId": self.request_id},
                     }
                 ),
-                job,
             )
             for i, job in enumerate(sample_inputs)
         ]

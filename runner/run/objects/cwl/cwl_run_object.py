@@ -16,6 +16,8 @@ class CWLRunObject(RunObject):
         self,
         run_id,
         run_obj,
+        app,
+        name,
         inputs,
         outputs,
         status,
@@ -33,6 +35,8 @@ class CWLRunObject(RunObject):
         super().__init__(
             run_id,
             run_obj,
+            app,
+            name,
             inputs,
             outputs,
             status,
@@ -76,6 +80,8 @@ class CWLRunObject(RunObject):
         return cls(
             run_id,
             run,
+            run.app,
+            run.name,
             input_ports,
             output_ports,
             run.status,
@@ -111,6 +117,8 @@ class CWLRunObject(RunObject):
         return cls(
             run_id,
             run,
+            run.app,
+            run.name,
             inputs,
             outputs,
             run.status,
@@ -126,6 +134,8 @@ class CWLRunObject(RunObject):
         )
 
     def to_db(self):
+        self.run_obj.app = self.app
+        self.run_obj.name = self.name
         [CWLPortObject.to_db(p) for p in self.inputs]
         [CWLPortObject.to_db(p) for p in self.outputs]
         self.run_obj.status = self.status

@@ -10,9 +10,9 @@ from jinja2 import Template
 
 from file_system.models import File
 from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 from runner.models import Port, RunStatus
-from runner.serializers import APIRunCreateSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -96,20 +96,17 @@ class AccessLegacyMSIOperator(Operator):
         inputs = self.get_sample_inputs()
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        "name": "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
-                        "app": self.get_pipeline_id(),
-                        "inputs": job,
-                        "tags": {
-                            "requestId": self.request_id,
-                            "cmoSampleIds": job["sample_name"],
-                            "patientId": "-".join(job["sample_name"][0].split("-")[0:2]),
-                        },
-                    }
-                ),
-                job,
+            RunCreator(
+                **{
+                    "name": "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {
+                        "requestId": self.request_id,
+                        "cmoSampleIds": job["sample_name"],
+                        "patientId": "-".join(job["sample_name"][0].split("-")[0:2]),
+                    },
+                }
             )
             for i, job in enumerate(inputs)
         ]
