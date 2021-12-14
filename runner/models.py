@@ -194,6 +194,7 @@ class Run(BaseModel):
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
+    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=5)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
