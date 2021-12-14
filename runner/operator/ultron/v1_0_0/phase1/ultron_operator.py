@@ -84,7 +84,7 @@ class UltronOperator(Operator):
             input_objs.append(InputsObj(run))
             prev_pipe = self._get_prev_pipeline(rid)
             prev_pipeline_version.add(prev_pipe.version)
-            req_id.add(self._get_prev_reqid(rid))
+            req_id.add(self._get_prev_req_id(rid))
         prev_version_string = "_".join(sorted(prev_pipeline_version))
         req_id_string = "_".join(sorted(req_id))
         batch_input_json = BatchInputObj(input_objs)
