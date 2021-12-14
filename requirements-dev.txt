@@ -2,3 +2,5 @@
 dictdiffer==0.8.1
 mock==3.0.5
 freezegun==1.1.0
+flake8==3.9.0
+black==21.6b0

@@ -7,7 +7,7 @@ from contextlib import contextmanager
 LOCK_EXPIRE = 60 * 10  # Lock expires in 10 minutes
 
 
-def memcache_lock(lock_id, expiration = 60 * 10):
+def memcache_lock(lock_id, expiration=60 * 10):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -20,9 +20,10 @@ def memcache_lock(lock_id, expiration = 60 * 10):
                 finally:
                     if time.monotonic() < timeout_at:
                         cache.delete(lock_id)
-        return wrapper
-    return decorator
 
+        return wrapper
+
+    return decorator
 
 
 @contextmanager

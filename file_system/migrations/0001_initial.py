@@ -17,93 +17,105 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='FileGroup',
+            name="FileGroup",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=40)),
-                ('slug', models.SlugField(unique=True)),
-                ('metadata', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=40)),
+                ("slug", models.SlugField(unique=True)),
+                ("metadata", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Sample',
+            name="Sample",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('sample_name', models.CharField(max_length=40)),
-                ('tags', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("sample_name", models.CharField(max_length=40)),
+                ("tags", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Storage',
+            name="Storage",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=20)),
-                ('type', models.IntegerField(choices=[(0, 'LOCAL'), (1, 'AWS_S3')])),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=20)),
+                ("type", models.IntegerField(choices=[(0, "LOCAL"), (1, "AWS_S3")])),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='SampleMetadata',
+            name="SampleMetadata",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('version', models.IntegerField()),
-                ('metadata', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
-                ('sample', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.Sample')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("version", models.IntegerField()),
+                ("metadata", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("sample", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.Sample")),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='FileGroupMetadata',
+            name="FileGroupMetadata",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('version', models.IntegerField()),
-                ('metadata', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
-                ('cohort', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.FileGroup')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("version", models.IntegerField()),
+                ("metadata", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("cohort", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.FileGroup")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='filegroup',
-            name='storage',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='file_system.Storage'),
+            model_name="filegroup",
+            name="storage",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="file_system.Storage"
+            ),
         ),
         migrations.CreateModel(
-            name='File',
+            name="File",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('file_name', models.CharField(max_length=100)),
-                ('path', models.CharField(max_length=400)),
-                ('size', models.BigIntegerField()),
-                ('cohort', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.FileGroup')),
-                ('sample', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='file_system.Sample')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("file_name", models.CharField(max_length=100)),
+                ("path", models.CharField(max_length=400)),
+                ("size", models.BigIntegerField()),
+                ("cohort", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.FileGroup")),
+                (
+                    "sample",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="file_system.Sample"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

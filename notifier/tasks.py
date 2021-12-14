@@ -34,22 +34,22 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
                 notifier = Notifier.objects.filter(operator__id=operator.id).first()
         except Notifier.DoesNotExist:
             pass
-        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group,
-                                                             request_id=request_id,
-                                                             notifier_type=notifier)
+        job_group_notifier = JobGroupNotifier.objects.create(
+            job_group=job_group, request_id=request_id, notifier_type=notifier
+        )
         eh = event_handler(job_group_notifier.id)
         notifier_id = eh.start(request_id)
         job_group_notifier.jira_id = notifier_id
         if notifier_id.startswith(settings.JIRA_PREFIX):
-            file_obj = FileRepository.filter(metadata={'requestId': request_id}).first()
+            file_obj = FileRepository.filter(metadata={"requestId": request_id}).first()
             if file_obj:
-                job_group_notifier.PI = file_obj.metadata.get('labHeadName')
-                job_group_notifier.investigator = file_obj.metadata.get('investigatorName')
-                job_group_notifier.assay = file_obj.metadata.get('recipe')
+                job_group_notifier.PI = file_obj.metadata.get("labHeadName")
+                job_group_notifier.investigator = file_obj.metadata.get("investigatorName")
+                job_group_notifier.assay = file_obj.metadata.get("recipe")
             else:
-                job_group_notifier.PI = metadata.get('labHeadName')
-                job_group_notifier.investigator = metadata.get('investigatorName')
-                job_group_notifier.assay = metadata.get('recipe')
+                job_group_notifier.PI = metadata.get("labHeadName")
+                job_group_notifier.investigator = metadata.get("investigatorName")
+                job_group_notifier.assay = metadata.get("recipe")
         job_group_notifier.save()
         return str(job_group_notifier.id)
     logger.info("Notifier Inactive")
@@ -60,8 +60,7 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
 def send_notification(event):
     if settings.NOTIFIER_ACTIVE:
         logger.info(event)
-        eh = event_handler(event['job_notifier'])
+        eh = event_handler(event["job_notifier"])
         eh.process(event)
     else:
         logger.info("Notifier Inactive")
-

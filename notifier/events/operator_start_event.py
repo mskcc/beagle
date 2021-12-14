@@ -2,10 +2,25 @@ from notifier.event_handler.event import Event
 
 
 class OperatorStartEvent(Event):
-
-    def __init__(self, job_notifier, job_group, request_id, sample_list_completed, recipe, data_analyst_name,
-                 data_analyst_email, investigator_name, investigator_email, lab_head_name, lab_head_email, pi_email,
-                 project_manager_name, qc_access_emails, number_of_tumors, number_of_normals):
+    def __init__(
+        self,
+        job_notifier,
+        job_group,
+        request_id,
+        sample_list_completed,
+        recipe,
+        data_analyst_name,
+        data_analyst_email,
+        investigator_name,
+        investigator_email,
+        lab_head_name,
+        lab_head_email,
+        pi_email,
+        project_manager_name,
+        qc_access_emails,
+        number_of_tumors,
+        number_of_normals,
+    ):
         self.job_notifier = job_notifier
         self.job_group = job_group
         self.request_id = request_id
@@ -53,19 +68,20 @@ class OperatorStartEvent(Event):
         Pipelines:
         | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
-        return OPERATOR_START_TEMPLATE.format(request_id=self.request_id,
-                                              cnt_samples=self.sample_list_completed,
-                                              recipe=self.recipe,
-                                              data_analyst_name=self.data_analyst_name,
-                                              data_analyst_email=self.data_analyst_email,
-                                              investigator_name=self.investigator_name,
-                                              investigator_email=self.investigator_email,
-                                              lab_head_name=self.lab_head_name,
-                                              lab_head_email=self.lab_head_email,
-                                              pi_email=self.pi_email,
-                                              project_manager_name=self.project_manager_name,
-                                              qc_access_emails=self.qc_access_emails,
-                                              number_of_tumors=self.number_of_tumors,
-                                              number_of_normals=self.number_of_normals,
-                                              job_group=self.job_group
-                                              )
+        return OPERATOR_START_TEMPLATE.format(
+            request_id=self.request_id,
+            cnt_samples=self.sample_list_completed,
+            recipe=self.recipe,
+            data_analyst_name=self.data_analyst_name,
+            data_analyst_email=self.data_analyst_email,
+            investigator_name=self.investigator_name,
+            investigator_email=self.investigator_email,
+            lab_head_name=self.lab_head_name,
+            lab_head_email=self.lab_head_email,
+            pi_email=self.pi_email,
+            project_manager_name=self.project_manager_name,
+            qc_access_emails=self.qc_access_emails,
+            number_of_tumors=self.number_of_tumors,
+            number_of_normals=self.number_of_normals,
+            job_group=self.job_group,
+        )

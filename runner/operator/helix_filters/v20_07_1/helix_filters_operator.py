@@ -20,6 +20,7 @@ class HelixFiltersOperator(Operator):
     Constructs input JSON for the Helix Filters pipeline and then
     submits them as runs
     """
+
     def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
@@ -29,26 +30,21 @@ class HelixFiltersOperator(Operator):
         argos_run_ids = self.run_ids
         input_json = construct_helix_filters_input(argos_run_ids)
         number_of_runs = len(argos_run_ids)
-        name = "HELIX FILTERS OUTPUTS %s runs [%s,..] " % (
-            number_of_runs, argos_run_ids[0])
+        name = "HELIX FILTERS OUTPUTS %s runs [%s,..] " % (number_of_runs, argos_run_ids[0])
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        project_prefix = input_json['project_prefix']
-        input_json['helix_filter_version'] = pipeline_version
+        project_prefix = input_json["project_prefix"]
+        input_json["helix_filter_version"] = pipeline_version
         input_json = self.add_output_file_names(input_json, pipeline_version)
         tags = {"project_prefix": project_prefix, "argos_run_ids": argos_run_ids}
 
-        #TODO:  Remove purity facets seg files from facets_hisens_seg_files
-        input_json['facets_hisens_seg_files'] = self.remove_purity_files(input_json['facets_hisens_seg_files'])
+        # TODO:  Remove purity facets seg files from facets_hisens_seg_files
+        input_json["facets_hisens_seg_files"] = self.remove_purity_files(input_json["facets_hisens_seg_files"])
 
-        helix_filters_outputs_job_data = {
-            'app': app,
-            'inputs': input_json,
-            'name': name,
-            'tags': tags
-        }
+        helix_filters_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
+
         """
         If project_prefix and job_group_id, write output to a directory
         that uses both
@@ -79,12 +75,12 @@ class HelixFiltersOperator(Operator):
         """
         project_prefix = json_data["project_prefix"]
         json_data["argos_version_string"] = pipeline_version
-        json_data['analysis_mutations_filename'] = project_prefix + ".muts.maf"
-        json_data['analysis_gene_cna_filename'] = project_prefix + ".gene.cna.txt"
-        json_data['analysis_sv_filename'] = project_prefix + ".svs.maf"
-        json_data['analysis_segment_cna_filename'] = project_prefix + ".seg.cna.txt"
-        json_data['cbio_segment_data_filename'] = project_prefix + "_data_cna_hg19.seg"
-        json_data['cbio_meta_cna_segments_filename'] = project_prefix + "_meta_cna_hg19_seg.txt"
+        json_data["analysis_mutations_filename"] = project_prefix + ".muts.maf"
+        json_data["analysis_gene_cna_filename"] = project_prefix + ".gene.cna.txt"
+        json_data["analysis_sv_filename"] = project_prefix + ".svs.maf"
+        json_data["analysis_segment_cna_filename"] = project_prefix + ".seg.cna.txt"
+        json_data["cbio_segment_data_filename"] = project_prefix + "_data_cna_hg19.seg"
+        json_data["cbio_meta_cna_segments_filename"] = project_prefix + "_meta_cna_hg19_seg.txt"
         return json_data
 
     def remove_purity_files(self, data):
@@ -94,8 +90,7 @@ class HelixFiltersOperator(Operator):
         """
         new_data = list()
         for i in data:
-            location = i['location']
-            if '_purity.seg' not in location:
+            location = i["location"]
+            if "_purity.seg" not in location:
                 new_data.append(i)
         return new_data
-

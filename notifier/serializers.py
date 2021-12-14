@@ -3,10 +3,9 @@ from .models import JobGroup, JobGroupNotifier, JiraStatus
 
 
 class JobGroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = JobGroup
-        fields = ('id', 'created_date')
+        fields = ("id", "created_date")
 
 
 class NotificationSerializer(serializers.Serializer):
@@ -42,4 +41,4 @@ class ProjectStatus(serializers.ModelSerializer):
 
     class Meta:
         model = JobGroupNotifier
-        fields = ('id', 'jira_id', 'request_id', 'status', 'investigator', 'PI', 'assay')
+        fields = ("id", "jira_id", "request_id", "status", "investigator", "PI", "assay")

@@ -14,17 +14,17 @@ class AccessOperator(Operator):
         data = list()
         for file in files:
             sample = dict()
-            sample['id'] = file.id
-            sample['path'] = file.path
-            sample['file_name'] = file.file_name
-            sample['metadata'] = file.filemetadata_set.first().metadata
+            sample["id"] = file.id
+            sample["path"] = file.path
+            sample["file_name"] = file.file_name
+            sample["metadata"] = file.filemetadata_set.first().metadata
             data.append(sample)
 
         samples = list()
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
+            igo_id = sample["metadata"]["sampleId"]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)

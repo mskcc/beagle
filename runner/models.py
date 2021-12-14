@@ -51,9 +51,9 @@ class BaseModel(models.Model):
 
 
 class Pipeline(BaseModel):
-    pipeline_type = models.IntegerField(choices=[(pt.value, pt.name) for pt in ProtocolType],
-                                        db_index=True,
-                                        default=ProtocolType.CWL)
+    pipeline_type = models.IntegerField(
+        choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=ProtocolType.CWL
+    )
     name = models.CharField(max_length=100, editable=True)
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
@@ -68,9 +68,9 @@ class Pipeline(BaseModel):
 
     @property
     def pipeline_link(self):
-        return '{github}/blob/{version}/{entrypoint}'.format(github=self.github,
-                                                             version=self.version,
-                                                             entrypoint=self.entrypoint)
+        return "{github}/blob/{version}/{entrypoint}".format(
+            github=self.github, version=self.version, entrypoint=self.entrypoint
+        )
 
     def __str__(self):
         return u"{}".format(self.name)
@@ -79,13 +79,18 @@ class Pipeline(BaseModel):
 class OperatorTrigger(BaseModel):
     from_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="from_triggers")
     to_operator = models.ForeignKey(Operator, null=True, on_delete=models.SET_NULL, related_name="to_triggers")
-    aggregate_condition = models.IntegerField(choices=[(t.value, t.name) for t in TriggerAggregateConditionType], null=True)
+    aggregate_condition = models.IntegerField(
+        choices=[(t.value, t.name) for t in TriggerAggregateConditionType], null=True
+    )
     run_type = models.IntegerField(choices=[(t.value, t.name) for t in TriggerRunType])
 
     def __str__(self):
         if self.run_type == TriggerRunType.AGGREGATE:
-            return u"{} -> {} when {}".format(self.from_operator, self.to_operator,
-                                              TriggerAggregateConditionType(self.aggregate_condition).name.title())
+            return u"{} -> {} when {}".format(
+                self.from_operator,
+                self.to_operator,
+                TriggerAggregateConditionType(self.aggregate_condition).name.title(),
+            )
         elif self.run_type == TriggerRunType.INDIVIDUAL:
             return u"{} -> {} on each run".format(self.from_operator, self.to_operator)
         else:
@@ -93,8 +98,9 @@ class OperatorTrigger(BaseModel):
 
 
 class OperatorRun(BaseModel):
-    status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus],
-                                 default=RunStatus.CREATING, db_index=True)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in RunStatus], default=RunStatus.CREATING, db_index=True
+    )
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
@@ -102,7 +108,7 @@ class OperatorRun(BaseModel):
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
-    parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey("self", default=None, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.pk)
@@ -122,11 +128,11 @@ class OperatorRun(BaseModel):
         self.save()
 
     def increment_failed_run(self):
-        self.num_failed_runs = F('num_failed_runs') + 1
+        self.num_failed_runs = F("num_failed_runs") + 1
         self.save()
 
     def increment_completed_run(self):
-        self.num_completed_runs = F('num_completed_runs') + 1
+        self.num_completed_runs = F("num_completed_runs") + 1
         self.save()
 
     @property
@@ -140,7 +146,8 @@ class OperatorRun(BaseModel):
     def percent_runs_finished(self):
         if self.num_total_runs > 0:
             return float(
-                "{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0))
+                "{0:.2f}".format((self.num_failed_runs + self.num_completed_runs) / self.num_total_runs * 100.0)
+            )
         else:
             return 0
 
@@ -166,9 +173,9 @@ class OperatorRun(BaseModel):
 
 
 class Run(BaseModel):
-    run_type = models.IntegerField(choices=[(run_type.value, run_type.name) for run_type in ProtocolType],
-                                   db_index=True,
-                                   default=ProtocolType.CWL)
+    run_type = models.IntegerField(
+        choices=[(run_type.value, run_type.name) for run_type in ProtocolType], db_index=True, default=ProtocolType.CWL
+    )
     name = models.CharField(max_length=400, editable=True)
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
@@ -191,21 +198,46 @@ class Run(BaseModel):
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
         # TODO change state can be handled with a mixin
-        self.original = {
-            "status": self.status
-        }
+        self.original = {"status": self.status}
 
     def __str__(self):
         return str(self.pk)
 
     def clear(self):
-        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message",
-                           "execution_id"]
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message", "execution_id"]
         for f in fields_to_clear:
             setattr(self, f, None)
 
         self.job_statuses = {}
         self.status = RunStatus.READY
+        return self
+
+    def set_for_restart(self):
+        if self.resume_attempts == 0:
+            return None
+        resume_attempts = self.resume_attempts - 1
+        resume_id = self.pk
+        execution_id = self.execution_id
+        started = self.started
+        output_directory = self.output_directory
+        message = self.message
+        if not message:
+            message = {}
+        if "resume" not in message:
+            message["resume"] = []
+        started_strftime = ""
+        exited_strftime = now().strftime("%m/%d/%Y, %H:%M:%S")
+        if started:
+            started_strftime = started.strftime("%m/%d/%Y, %H:%M:%S")
+        message["resume"].append((started_strftime, exited_strftime, str(execution_id)))
+        self.clear().save()
+        self.execution_id = execution_id
+        self.message = message
+        self.resume = resume_id
+        self.started = started
+        self.output_directory = output_directory
+        self.resume_attempts = resume_attempts
+        self.save()
         return self
 
     @property
@@ -268,6 +300,7 @@ class FileJobTracker(models.Model):
     """
     TODO: FileJobTracker Deprecated. Remove model in the future
     """
+
     job = models.ForeignKey(Run, on_delete=models.CASCADE)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
 

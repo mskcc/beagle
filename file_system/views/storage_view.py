@@ -4,13 +4,10 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 
 
-class StorageViewSet(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     GenericViewSet):
-    queryset = Storage.objects.order_by('created_date').all()
+class StorageViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
+    queryset = Storage.objects.order_by("created_date").all()
 
     def get_serializer_class(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == "list" or self.action == "retrieve":
             return StorageSerializer
         return CreateStorageSerializer

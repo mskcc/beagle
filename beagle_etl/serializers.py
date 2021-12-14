@@ -5,8 +5,9 @@ from beagle_etl.jobs import TYPES
 
 
 def ValidateDict(value):
-    if len(value.split(":")) !=2:
+    if len(value.split(":")) != 2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
+
 
 class JobSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
@@ -17,15 +18,27 @@ class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields = (
-            'id', 'run', 'args', 'status', 'children', 'callback', 'callback_args', 'retry_count', 'message',
-            'max_retry', 'job_group', 'finished_date', 'created_date', 'modified_date')
+            "id",
+            "run",
+            "args",
+            "status",
+            "children",
+            "callback",
+            "callback_args",
+            "retry_count",
+            "message",
+            "max_retry",
+            "job_group",
+            "finished_date",
+            "created_date",
+            "modified_date",
+        )
 
 
 class AssaySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ETLConfiguration
-        fields = '__all__'
+        fields = "__all__"
 
 
 class JobsTypesSerializer(serializers.Serializer):
@@ -34,36 +47,26 @@ class JobsTypesSerializer(serializers.Serializer):
 
 class AssayElementSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
-    all = serializers.ListField(required=False,
-                                child=serializers.CharField())
-    disabled = serializers.ListField(required=False,
-                                     child=serializers.CharField())
-    hold = serializers.ListField(required=False,
-                                 child=serializers.CharField())
+    all = serializers.ListField(required=False, child=serializers.CharField())
+    disabled = serializers.ListField(required=False, child=serializers.CharField())
+    hold = serializers.ListField(required=False, child=serializers.CharField())
 
 
 class AssayUpdateSerializer(serializers.Serializer):
-    all = serializers.ListField(required=False,
-                                child=serializers.CharField())
-    disabled = serializers.ListField(required=False,
-                                     child=serializers.CharField())
-    hold = serializers.ListField(required=False,
-                                 child=serializers.CharField())
+    all = serializers.ListField(required=False, child=serializers.CharField())
+    disabled = serializers.ListField(required=False, child=serializers.CharField())
+    hold = serializers.ListField(required=False, child=serializers.CharField())
 
 
 class JobQuerySerializer(serializers.Serializer):
 
-    status = serializers.ChoiceField([(status.name, status.value) for status in JobStatus], allow_blank=True,
-                                     required=False)
-
-    job_group = serializers.ListField(
-        child=serializers.UUIDField(),
-        allow_empty=True,
-        required=False
+    status = serializers.ChoiceField(
+        [(status.name, status.value) for status in JobStatus], allow_blank=True, required=False
     )
 
-    type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True,
-                                   required=False)
+    job_group = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)
+
+    type = serializers.ChoiceField([(k, v) for k, v in TYPES.items()], allow_blank=True, required=False)
 
     sample_id = serializers.CharField(required=False)
 
@@ -71,18 +74,12 @@ class JobQuerySerializer(serializers.Serializer):
 
     count = serializers.BooleanField(required=False)
 
-    values_args = serializers.ListField(
-        child=serializers.CharField(),
-        allow_empty=True,
-        required=False
-    )
+    values_args = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     args_distribution = serializers.CharField(required=False)
 
     args = serializers.ListField(
-        child=serializers.CharField(validators=[ValidateDict]),
-        allow_empty=True,
-        required=False
+        child=serializers.CharField(validators=[ValidateDict]), allow_empty=True, required=False
     )
 
     created_date_timedelta = serializers.IntegerField(required=False)
@@ -101,28 +98,27 @@ class CreateJobSerializier(serializers.ModelSerializer):
     job_group = serializers.UUIDField()
 
     def create(self, validated_data):
-        run = TYPES.get(validated_data['run'])
-        callback = TYPES.get(validated_data.get('callback', None))
+        run = TYPES.get(validated_data["run"])
+        callback = TYPES.get(validated_data.get("callback", None))
         try:
-            jg = JobGroup.objects.get(id=validated_data.get('job_group'))
+            jg = JobGroup.objects.get(id=validated_data.get("job_group"))
         except JobGroup.DoesNotExist:
-            raise serializers.ValidationError("Unknown job_group: %s" % validated_data.get('job_group'))
-        job = Job.objects.create(status=JobStatus.CREATED,
-                                 run=run, args=validated_data.get('args'),
-                                 callback=callback,
-                                 callback_args=validated_data.get('callback_args', {}),
-                                 job_group=jg)
+            raise serializers.ValidationError("Unknown job_group: %s" % validated_data.get("job_group"))
+        job = Job.objects.create(
+            status=JobStatus.CREATED,
+            run=run,
+            args=validated_data.get("args"),
+            callback=callback,
+            callback_args=validated_data.get("callback_args", {}),
+            job_group=jg,
+        )
         return job
 
     class Meta:
         model = Job
-        fields = (
-            'id', 'run', 'args', 'callback', 'callback_args', 'retry_count',
-            'max_retry', 'job_group')
+        fields = ("id", "run", "args", "callback", "callback_args", "retry_count", "max_retry", "job_group")
 
 
 class RequestIdLimsPullSerializer(serializers.Serializer):
-    request_ids = serializers.ListField(
-        child=serializers.CharField(max_length=30)
-    )
+    request_ids = serializers.ListField(child=serializers.CharField(max_length=30))
     redelivery = serializers.BooleanField(default=False)

@@ -1,7 +1,7 @@
-"""""""""""""""""""""""""""""
+"""""" """""" """""" """""" """""
 " ACCESS-Pipeline MSI workflow operator
 " http://www.github.com/mskcc/access-pipeline/workflows/msi.cwl
-"""""""""""""""""""""""""""""
+""" """""" """""" """""" """""" ""
 
 import os
 import json
@@ -18,10 +18,10 @@ from runner.models import Port, RunStatus
 logger = logging.getLogger(__name__)
 
 # Todo: needs to work for Nucleo bams as well
-SAMPLE_ID_SEP = '_cl_aln'
-TUMOR_SEARCH = '-L0'
-NORMAL_SEARCH = '-N0'
-STANDARD_BAM_SEARCH = '_cl_aln_srt_MD_IR_FX_BR.bam'
+SAMPLE_ID_SEP = "_cl_aln"
+TUMOR_SEARCH = "-L0"
+NORMAL_SEARCH = "-N0"
+STANDARD_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR.bam"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -38,10 +38,10 @@ class AccessLegacyMSIOperator(Operator):
     @staticmethod
     def is_tumor_bam(file):
         # Todo: extract to common fn across 4 downstream operators
-        if not file.file_name.endswith('.bam'):
+        if not file.file_name.endswith(".bam"):
             return False
-        t_n_timepoint = file.file_name.split('-')[2]
-        return not t_n_timepoint[0] == 'N'
+        t_n_timepoint = file.file_name.split("-")[2]
+        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
         """
@@ -53,9 +53,7 @@ class AccessLegacyMSIOperator(Operator):
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
-            name__in=['standard_bams', 'uncollapsed_bam'],
-            run__id__in=run_ids,
-            run__status=RunStatus.COMPLETED
+            name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
         standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
@@ -63,30 +61,28 @@ class AccessLegacyMSIOperator(Operator):
         sample_ids = []
         matched_normal_bams = []
         for standard_tumor_bam in standard_tumor_bams:
-            tumor_sample_id = standard_tumor_bam.file_name.split('_cl_aln')[0]
-            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+            tumor_sample_id = standard_tumor_bam.file_name.split("_cl_aln")[0]
+            patient_id = "-".join(tumor_sample_id.split("-")[0:2])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
             sample_search_start = patient_id + NORMAL_SEARCH
             matched_normal_bam = File.objects.filter(
-                file_name__startswith=sample_search_start,
-                file_name__endswith=STANDARD_BAM_SEARCH
+                file_name__startswith=sample_search_start, file_name__endswith=STANDARD_BAM_SEARCH
             )
             if not len(matched_normal_bam) > 0:
-                msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
+                msg = "No matching standard normal Bam found for patient {}".format(patient_id)
                 logger.warning(msg)
                 continue
 
-            matched_normal_bam = matched_normal_bam.order_by('-created_date').first()
+            matched_normal_bam = matched_normal_bam.order_by("-created_date").first()
 
             sample_ids.append(tumor_sample_id)
             matched_normal_bams.append(matched_normal_bam)
 
-        sample_inputs = [self.construct_sample_inputs(
-            sample_ids[i],
-            standard_tumor_bams[i],
-            matched_normal_bams[i]
-        ) for i in range(0, len(sample_ids))]
+        sample_inputs = [
+            self.construct_sample_inputs(sample_ids[i], standard_tumor_bams[i], matched_normal_bams[i])
+            for i in range(0, len(sample_ids))
+        ]
 
         return sample_inputs
 
@@ -121,7 +117,7 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: JSON format sample inputs
         """
-        with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
+        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
             template = Template(file.read())
 
         sample_names = [sample_name]

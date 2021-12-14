@@ -7,29 +7,31 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0019_auto_20200219_2015'),
+        ("runner", "0019_auto_20200219_2015"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='operatortrigger',
-            name='condition',
+            model_name="operatortrigger",
+            name="condition",
         ),
         migrations.AddField(
-            model_name='operatortrigger',
-            name='aggregate_condition',
-            field=models.IntegerField(choices=[(0, 'NINTY_PERCENT_SUCCEEDED'), (1, 'ALL_RUNS_SUCCEEDED')], default=0),
+            model_name="operatortrigger",
+            name="aggregate_condition",
+            field=models.IntegerField(choices=[(0, "NINTY_PERCENT_SUCCEEDED"), (1, "ALL_RUNS_SUCCEEDED")], default=0),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='operatortrigger',
-            name='run_type',
-            field=models.IntegerField(choices=[(0, 'AGGREGATE'), (1, 'INDIVIDUAL')], default=0),
+            model_name="operatortrigger",
+            name="run_type",
+            field=models.IntegerField(choices=[(0, "AGGREGATE"), (1, "INDIVIDUAL")], default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='run',
-            name='operator_run',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='runs', to='runner.OperatorRun'),
+            model_name="run",
+            name="operator_run",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, related_name="runs", to="runner.OperatorRun"
+            ),
         ),
     ]

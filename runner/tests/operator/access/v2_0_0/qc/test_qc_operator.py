@@ -16,13 +16,13 @@ FIXTURES = [
 ]
 
 COMMON_FIXTURES = [
-    'runner/fixtures/runner.pipeline.json',
-    'runner/fixtures/runner.run.json',
-    'runner/fixtures/runner.operator_run.json',
-    'file_system/fixtures/file_system.filegroup.json',
-    'file_system/fixtures/file_system.filetype.json',
-    'file_system/fixtures/file_system.storage.json',
-    'beagle_etl/fixtures/beagle_etl.operator.json',
+    "runner/fixtures/runner.pipeline.json",
+    "runner/fixtures/runner.run.json",
+    "runner/fixtures/runner.operator_run.json",
+    "file_system/fixtures/file_system.filegroup.json",
+    "file_system/fixtures/file_system.filetype.json",
+    "file_system/fixtures/file_system.storage.json",
+    "beagle_etl/fixtures/beagle_etl.operator.json",
 ]
 
 
@@ -38,7 +38,7 @@ class TestAccessQCOperator(TestCase):
         self.assertEqual(len(FileMetadata.objects.all()), 5)
 
         # This operator needs to write a temp file, so need to override this env var
-        settings.BEAGLE_SHARED_TMPDIR = '/tmp'
+        settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         request_id = "05500_FH"
 
         operator_model = Operator.objects.get(id=11)

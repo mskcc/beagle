@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class SetLabelEvent(Event):
-
     def __init__(self, job_notifier, label):
         self.job_notifier = job_notifier
         self.label = label

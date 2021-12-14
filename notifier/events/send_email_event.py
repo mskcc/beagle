@@ -3,7 +3,6 @@ from notifier.event_handler.event import Event
 
 
 class SendEmailEvent(Event):
-
     def __init__(self, job_notifier, email_to, email_from, subject, content):
         self.job_notifier = job_notifier
         self.email_to = email_to

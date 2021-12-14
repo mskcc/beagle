@@ -17,6 +17,7 @@ class CopyOutputsOperator(Operator):
     Constructs input JSON for the argos QC pipeline and then
     submits them as runs
     """
+
     def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
@@ -27,43 +28,26 @@ class CopyOutputsOperator(Operator):
         input_json = construct_copy_outputs_input(run_ids)
 
         mapping_file_content, pairing_file_content, data_clinical_content = generate_sample_pairing_and_mapping_files(
-            run_ids)
+            run_ids
+        )
 
-        input_json['meta'] = [
-            {
-                "class": "File",
-                "basename": "sample_mapping.txt",
-                "contents": mapping_file_content
-            },
-            {
-                "class": "File",
-                "basename": "sample_pairing.txt",
-                "contents": pairing_file_content
-            },
-            {
-                "class": "File",
-                "basename": "sample_data_clinical.txt",
-                "contents": data_clinical_content
-            }
+        input_json["meta"] = [
+            {"class": "File", "basename": "sample_mapping.txt", "contents": mapping_file_content},
+            {"class": "File", "basename": "sample_pairing.txt", "contents": pairing_file_content},
+            {"class": "File", "basename": "sample_data_clinical.txt", "contents": data_clinical_content},
         ]
 
         number_of_runs = len(run_ids)
-        name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (
-            number_of_runs, run_ids[0])
+        name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (number_of_runs, run_ids[0])
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        project_prefix = input_json['project_prefix']
+        project_prefix = input_json["project_prefix"]
 
         tags = {"run_ids": run_ids}
 
-        copy_outputs_job_data = {
-            'app': app,
-            'inputs': input_json,
-            'name': name,
-            'tags': tags
-        }
+        copy_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
 
         """
         If project_prefix and job_group_id, write output to a directory

@@ -32,11 +32,18 @@ class UserRegistrationRequest(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is None:
             content = "User %s %s, with email %s@mskcc.org requested Voyager access." % (
-            self.first_name, self.last_name, self.username,)
-            for email in settings.BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS.split(','):
-                email = SendEmailEvent(job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP, email_to=email,
-                                       email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM, subject='Registration access',
-                                       content=content)
+                self.first_name,
+                self.last_name,
+                self.username,
+            )
+            for email in settings.BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS.split(","):
+                email = SendEmailEvent(
+                    job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                    email_to=email,
+                    email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                    subject="Registration access",
+                    content=content,
+                )
                 send_notification.delay(email.to_dict())
         super(UserRegistrationRequest, self).save(*args, **kwargs)
 
@@ -49,7 +56,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.mskuser.groups = 'mskcc'
+    instance.mskuser.groups = "mskcc"
     instance.mskuser.save()
 
 

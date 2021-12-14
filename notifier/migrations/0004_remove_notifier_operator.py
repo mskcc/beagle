@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0003_jobgroupnotifier_notifier'),
+        ("notifier", "0003_jobgroupnotifier_notifier"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='notifier',
-            name='operator',
+            model_name="notifier",
+            name="operator",
         ),
     ]
