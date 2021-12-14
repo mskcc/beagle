@@ -78,15 +78,19 @@ class UltronOperator(Operator):
     def _build_inputs(self, run_ids):
         input_objs = list()
         prev_pipeline_version = set()
+        req_id = set()
         for rid in set(run_ids):
             run = Run.objects.filter(id=rid)[0]
             input_objs.append(InputsObj(run))
             prev_pipe = self._get_prev_pipeline(rid)
             prev_pipeline_version.add(prev_pipe.version)
+            req_id.add(self._get_prev_reqid(rid))
         prev_version_string = "_".join(sorted(prev_pipeline_version))
+        req_id_string = "_".join(sorted(req_id))
         batch_input_json = BatchInputObj(input_objs)
         batch_input_json.inputs_json["argos_version_string"] = prev_version_string
         batch_input_json.inputs_json["is_impact"] = True # assume True
+        batch_input_json.inputs_json['fillout_output_fname'] = req_id_string + ".maf"
         return batch_input_json.inputs_json
 
 
@@ -107,6 +111,12 @@ class UltronOperator(Operator):
         }
         output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
         return output_job
+
+
+    def _get_prev_req_id(self, run_id):
+        run = Run.objects.filter(id=run_id)[0]
+        request_id = run.tags['requestId']
+        return request_id
 
 
     def _get_prev_pipeline(self, run_id):
