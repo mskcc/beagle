@@ -5,9 +5,9 @@ from django.db import migrations
 
 
 def add_import_metadata(apps, schema_editor):
-    FileMetadata = apps.get_model('file_system', 'FileMetadata')
-    FileGroup = apps.get_model('file_system', 'FileGroup')
-    ImportMetadata = apps.get_model('file_system', 'ImportMetadata')
+    FileMetadata = apps.get_model("file_system", "FileMetadata")
+    FileGroup = apps.get_model("file_system", "FileGroup")
+    ImportMetadata = apps.get_model("file_system", "ImportMetadata")
 
     try:
         fg = FileGroup.objects.get(name="LIMS")
@@ -22,27 +22,27 @@ def add_import_metadata(apps, schema_editor):
 
 
 def remove_import_metadata(apps, schema_editor):
-    ImportMetadata = apps.get_model('file_system', 'ImportMetadata')
+    ImportMetadata = apps.get_model("file_system", "ImportMetadata")
     ImportMetadata.objects.all().delete()
 
 
 def _revert_metadata(metadata):
     lims_metadata = copy.deepcopy(metadata)
-    lims_metadata['cmoSampleName'] = lims_metadata.pop('sampleName', None)
-    lims_metadata['sampleName'] = lims_metadata.pop('externalSampleId', None)
-    lims_metadata['libraryIgoId'] = lims_metadata.pop('libraryId', None)
-    lims_metadata['cmoPatientId'] = lims_metadata.pop('patientId', None)
-    lims_metadata.pop('platform')
-    lims_metadata['cmoSampleClass'] = lims_metadata.pop('sampleClass', None)
-    lims_metadata['igoId'] = lims_metadata.pop('sampleId', None)
-    lims_metadata.pop('sequencingCenter', None)
+    lims_metadata["cmoSampleName"] = lims_metadata.pop("sampleName", None)
+    lims_metadata["sampleName"] = lims_metadata.pop("externalSampleId", None)
+    lims_metadata["libraryIgoId"] = lims_metadata.pop("libraryId", None)
+    lims_metadata["cmoPatientId"] = lims_metadata.pop("patientId", None)
+    lims_metadata.pop("platform")
+    lims_metadata["cmoSampleClass"] = lims_metadata.pop("sampleClass", None)
+    lims_metadata["igoId"] = lims_metadata.pop("sampleId", None)
+    lims_metadata.pop("sequencingCenter", None)
     return lims_metadata
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0018_importmetadata'),
+        ("file_system", "0018_importmetadata"),
     ]
 
     operations = [

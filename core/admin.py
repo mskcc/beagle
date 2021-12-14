@@ -12,7 +12,7 @@ from .models import MskUser
 class MskccUserInline(admin.StackedInline):
     model = MskUser
     can_delete = False
-    verbose_name_plural = 'mskcc_user'
+    verbose_name_plural = "mskcc_user"
 
 
 class UserAdmin(BaseUserAdmin):
@@ -21,15 +21,18 @@ class UserAdmin(BaseUserAdmin):
 
 def approve(modeladmin, request, queryset):
     for req in queryset:
-        email = '%s@mskcc.org' % req.username
-        User.objects.create(username=req.username, email=email, first_name=req.first_name,
-                            last_name=req.last_name)
+        email = "%s@mskcc.org" % req.username
+        User.objects.create(username=req.username, email=email, first_name=req.first_name, last_name=req.last_name)
         req.approved = True
         req.save()
         content = "Your request to access Voyager is approved"
-        email = SendEmailEvent(job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP, email_to=email,
-                               email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM, subject='Registration approved',
-                               content=content)
+        email = SendEmailEvent(
+            job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+            email_to=email,
+            email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+            subject="Registration approved",
+            content=content,
+        )
         send_notification.delay(email.to_dict())
 
 
@@ -37,8 +40,11 @@ approve.short_description = "Approve request"
 
 
 class UserRegistrationRequestAdmin(admin.ModelAdmin):
-    list_display = ('username', 'approved',)
-    search_fields = ('username',)
+    list_display = (
+        "username",
+        "approved",
+    )
+    search_fields = ("username",)
     actions = (approve,)
 
 

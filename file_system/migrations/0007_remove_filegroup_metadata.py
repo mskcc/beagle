@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0006_auto_20190819_1621'),
+        ("file_system", "0006_auto_20190819_1621"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='filegroup',
-            name='metadata',
+            model_name="filegroup",
+            name="metadata",
         ),
     ]

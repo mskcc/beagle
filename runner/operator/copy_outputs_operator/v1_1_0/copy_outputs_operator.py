@@ -13,8 +13,11 @@ from file_system.models import File, FileGroup, FileType
 from runner.models import Pipeline, Run
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .construct_copy_outputs import construct_copy_outputs_input, generate_sample_pairing_and_mapping_files, \
-    get_output_directory_prefix
+from .construct_copy_outputs import (
+    construct_copy_outputs_input,
+    generate_sample_pairing_and_mapping_files,
+    get_output_directory_prefix,
+)
 
 
 class CopyOutputsOperator(Operator):
@@ -22,6 +25,7 @@ class CopyOutputsOperator(Operator):
     Constructs input JSON for the argos QC pipeline and then
     submits them as runs
     """
+
     def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
@@ -32,35 +36,26 @@ class CopyOutputsOperator(Operator):
         input_json = construct_copy_outputs_input(run_ids)
 
         mapping_file_content, pairing_file_content, data_clinical_content = generate_sample_pairing_and_mapping_files(
-            run_ids)
+            run_ids
+        )
         mapping_file = self.write_to_file("sample_mapping.txt", mapping_file_content)
         pairing_file = self.write_to_file("sample_pairing.txt", pairing_file_content)
         data_clinical_file = self.write_to_file("sample_data_clinical.txt", data_clinical_content)
 
-        input_json['meta'] = [
-                mapping_file,
-                pairing_file,
-                data_clinical_file
-        ]
+        input_json["meta"] = [mapping_file, pairing_file, data_clinical_file]
 
         number_of_runs = len(run_ids)
-        name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (
-            number_of_runs, run_ids[0])
+        name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (number_of_runs, run_ids[0])
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        project_prefix = input_json['project_prefix']
+        project_prefix = input_json["project_prefix"]
         output_directory_prefix = get_output_directory_prefix(self.run_ids)
 
         tags = {"run_ids": run_ids}
 
-        copy_outputs_job_data = {
-            'app': app,
-            'inputs': input_json,
-            'name': name,
-            'tags': tags
-        }
+        copy_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
 
         """
         If project_prefix and job_group_id, write output to a directory
@@ -100,7 +95,7 @@ class CopyOutputsOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        return {'class': 'File', 'location': "juno://" + output }
+        return {"class": "File", "location": "juno://" + output}
 
     def register_tmp_file(self, path):
         fname = os.path.basename(path)
@@ -110,8 +105,5 @@ class CopyOutputsOperator(Operator):
             File.objects.get(path=path)
         except:
             print("Registering temp file %s" % path)
-            f = File(file_name=fname,
-                    path=path,
-                    file_type=file_type,
-                    file_group=temp_file_group)
+            f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
             f.save()

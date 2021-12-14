@@ -10,13 +10,24 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
 from beagle_etl.models import JobStatus, Job, ETLConfiguration
-from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
+from beagle_etl.exceptions import (
+    FailedToFetchSampleException,
+    MissingDataException,
+    ErrorInconsistentDataException,
+    FailedToFetchPoolNormalException,
+)
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_metadata, get_run_id_from_string, fetch_samples, request_callback
+from beagle_etl.jobs.lims_etl_jobs import (
+    create_pooled_normal,
+    fetch_sample_metadata,
+    get_run_id_from_string,
+    fetch_samples,
+    request_callback,
+)
 
 # use local execution for Celery tasks
 # if beagle_etl.celery.app.conf['task_always_eager'] == False:
@@ -25,14 +36,12 @@ from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_met
 
 class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
-    fixtures = [
-        "file_system.filegroup.json",
-        "file_system.filetype.json",
-        "file_system.storage.json"
-    ]
+    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
-    @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
-            'Skip if username or password for LIMS are not provided')
+    @skipIf(
+        not (os.environ.get("BEAGLE_LIMS_USERNAME", None) and os.environ.get("BEAGLE_LIMS_PASSWORD", None)),
+        "Skip if username or password for LIMS are not provided",
+    )
     def test_fetch_samples1(self):
         """
         Test fetching samples for a request from IGO LIMS
@@ -52,7 +61,7 @@ class TestFetchSamples(TestCase):
 
         # check that jobs were created successfully
         jobs = Job.objects.all()
-        job_ids = [ job.id for job in jobs ]
+        job_ids = [job.id for job in jobs]
         self.assertTrue(len(jobs) == len(child_jobs))
         self.assertTrue(len(jobs) == 17)
         for child_job in child_jobs:
@@ -67,7 +76,7 @@ class TestFetchSamples(TestCase):
         print(">>> job scheduler complete")
 
         # check that all jobs completed successfully
-        jobs = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.create_pooled_normal').all()
+        jobs = Job.objects.filter(run="beagle_etl.jobs.lims_etl_jobs.create_pooled_normal").all()
         for job in jobs:
             print("%s %s" % (job.run, JobStatus(job.status).name))
             self.assertTrue(job.status == JobStatus.COMPLETED)
@@ -90,19 +99,15 @@ class TestFetchSamples(TestCase):
 
 class TestCreatePooledNormal(TestCase):
     # load fixtures for the test case temp db
-    fixtures = [
-        "file_system.filegroup.json",
-        "file_system.filetype.json",
-        "file_system.storage.json"
-    ]
+    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
         self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
         assay = ETLConfiguration.objects.first()
         self.disabled_backup = assay.disabled_recipes
-        assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
-        assay.disabled = ['DisabledAssay']
+        assay.all = ["IMPACT468", "HemePACT", "HemePACT_v4", "DisabledAssay"]
+        assay.disabled = ["DisabledAssay"]
         assay.save()
 
     def test_true(self):
@@ -130,9 +135,9 @@ class TestCreatePooledNormal(TestCase):
 
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FFPE')
-        self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'JAX_0397')
+        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FFPE")
+        self.assertTrue(imported_file_metadata.metadata["recipe"] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata["runId"] == "JAX_0397")
         # TODO: add more metadata fields?
 
     def test_create_pooled_normal2(self):
@@ -143,10 +148,9 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FROZEN')
-        self.assertTrue(imported_file_metadata.metadata['recipe'] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439')
-
+        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FROZEN")
+        self.assertTrue(imported_file_metadata.metadata["recipe"] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata["runId"] == "PITT_0439")
 
     def test_create_pooled_normal_recipe(self):
         """
@@ -156,7 +160,7 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata['recipe'] == 'HemePACT_v4')
+        self.assertTrue(imported_file_metadata.metadata["recipe"] == "HemePACT_v4")
 
     def test_create_pooled_normal_disabled_recipe(self):
         """
@@ -174,17 +178,17 @@ class TestGetRunID(TestCase):
     def test_get_run_id_from_string1(self):
         string = "PITT_0439_BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'PITT_0439')
+        self.assertTrue(runID == "PITT_0439")
 
     def test_get_run_id_from_string2(self):
         string = "foo_BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'foo')
+        self.assertTrue(runID == "foo")
 
     def test_get_run_id_from_string2(self):
         string = "BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'BHFTCNBBXY')
+        self.assertTrue(runID == "BHFTCNBBXY")
 
 
 class MockResponse:
@@ -197,19 +201,18 @@ class MockResponse:
 
 
 class TestImportSample(APITestCase):
-
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
-        self.fastq = FileType.objects.create(name='fastq')
+        self.fastq = FileType.objects.create(name="fastq")
         self.file_group = FileGroup.objects.create(name="LIMS", storage=self.storage)
         self.old_val = settings.IMPORT_FILE_GROUP
         settings.IMPORT_FILE_GROUP = str(self.file_group.id)
         assay = ETLConfiguration.objects.first()
         self.disabled_backup = assay.disabled_recipes
-        assay.all_recipes.append('DisabledAssay1')
-        assay.all_recipes.append('DisabledAssay2')
-        assay.all_recipes.append('TestAssay')
-        assay.disabled_recipes = ['DisabledAssay1', 'DisabledAssay2']
+        assay.all_recipes.append("DisabledAssay1")
+        assay.all_recipes.append("DisabledAssay2")
+        assay.all_recipes.append("TestAssay")
+        assay.disabled_recipes = ["DisabledAssay1", "DisabledAssay2"]
         assay.save()
         self.data_0_fastq = [
             {
@@ -249,15 +252,12 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
-                                "fastqs": [
-                                ]
+                                "flowCellLanes": [8],
+                                "fastqs": [],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_1_fastq = [
@@ -298,16 +298,14 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
+                                "flowCellLanes": [8],
                                 "fastqs": [
                                     "/path/to/sample/10/sampleName_001-d_IGO_igoId_002_S728_L008_R2_001.fastq.gz",
-                                ]
+                                ],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_2_fastq = [
@@ -348,17 +346,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
+                                "flowCellLanes": [8],
                                 "fastqs": [
                                     "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
+                                ],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_6_fastq = [
@@ -399,16 +395,13 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHGYTBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-25",
-                                "flowCellLanes": [
-                                    6,
-                                    7
-                                ],
+                                "flowCellLanes": [6, 7],
                                 "fastqs": [
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
-                                    "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
+                                ],
                             },
                             {
                                 "runMode": "HiSeq High Output",
@@ -416,17 +409,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHN7YBBXX",
                                 "readLength": "",
                                 "runDate": "2017-05-05",
-                                "flowCellLanes": [
-                                    3
-                                ],
+                                "flowCellLanes": [3],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
-                            }
-                        ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
+                            },
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_conflict_fastq = [
@@ -467,14 +458,11 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHGYTBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-25",
-                                "flowCellLanes": [
-                                    6,
-                                    7
-                                ],
+                                "flowCellLanes": [6, 7],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
                             },
                             {
                                 "runMode": "HiSeq High Output",
@@ -482,17 +470,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHN7YBBXX",
                                 "readLength": "",
                                 "runDate": "2017-05-05",
-                                "flowCellLanes": [
-                                    3
-                                ],
+                                "flowCellLanes": [3],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
-                            }
-                        ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
+                            },
+                        ],
                     }
-                ]
+                ],
             }
         ]
 
@@ -502,64 +488,70 @@ class TestImportSample(APITestCase):
         assay.save()
         settings.IMPORT_FILE_GROUP = self.old_val
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_zero_fastq_files(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
         with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata('igoId_000', True, 'sampleName_000', {})
+            fetch_sample_metadata("igoId_000", True, "sampleName_000", {})
             self.assertTrue("Missing fastq files for igcomplete: " in str(e))
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_zero_samples_igocomplete_false(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
         with self.assertRaises(MissingDataException):
-            fetch_sample_metadata('igoId_000', False, 'sampleName_000', {})
+            fetch_sample_metadata("igoId_000", False, "sampleName_000", {})
         count_files = FileRepository.all().count()
         self.assertEqual(count_files, 0)
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_import_sample_two_fastq_files(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
-        fetch_sample_metadata('igoId_002', True, 'sampleName_002', {})
-        count_files = FileRepository.filter(path_in=[
-                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz"
-                                ]).count()
+        fetch_sample_metadata("igoId_002", True, "sampleName_002", {})
+        count_files = FileRepository.filter(
+            path_in=[
+                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
+            ]
+        ).count()
         self.assertEqual(count_files, 2)
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_import_sample_six_fastq_files(self, mock_get_sample):
         mock_get_sample.return_value = MockResponse(json_data=self.data_6_fastq, status_code=200)
-        fetch_sample_metadata('igoId_006', True, 'sampleName_006', {})
-        count_files = FileRepository.filter(path_in=[
-            "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
-            "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
-            "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
-            "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
-            "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-            "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-        ]).count()
+        fetch_sample_metadata("igoId_006", True, "sampleName_006", {})
+        count_files = FileRepository.filter(
+            path_in=[
+                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
+                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
+                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
+                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
+                "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
+                "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+            ]
+        ).count()
         self.assertEqual(count_files, 6)
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_file_conflict(self, mock_get_sample):
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
             file_group=self.file_group,
-            )
+        )
         file_metadata = FileMetadata.objects.create(file=file_conflict, version=1, metadata={})
         mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
         with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata('igoId_002', True, 'sampleName_002', {})
-            self.assertTrue('Conflict of fastq file(s)' in str(e))
-        count_files = FileRepository.filter(path_in=[
-            "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-        ]).count()
+            fetch_sample_metadata("igoId_002", True, "sampleName_002", {})
+            self.assertTrue("Conflict of fastq file(s)" in str(e))
+        count_files = FileRepository.filter(
+            path_in=[
+                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+            ]
+        ).count()
         self.assertEqual(count_files, 1)
 
-    @patch('runner.tasks.create_jobs_from_request.delay')
-    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
+    @patch("runner.tasks.create_jobs_from_request.delay")
+    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "TestAssay"})
     def test_request_callback(self, mock_get_request_samples, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         file_conflict = File.objects.create(
@@ -567,23 +559,18 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        'requestId': 'test1',
-                                                        'recipe': 'TestAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        operator1 = Operator.objects.create(slug="Operator1",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        request_callback('test1')
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={"requestId": "test1", "recipe": "TestAssay", "labHeadEmail": "test@email.com"},
+        )
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
+        request_callback("test1")
 
-        mock_create_jobs_from_request.assert_called_once_with('test1', operator1.id, None)
+        mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, None)
 
-    @patch('runner.tasks.create_jobs_from_request.delay')
-    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
+    @patch("runner.tasks.create_jobs_from_request.delay")
+    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "TestAssay"})
     def test_request_callback_two_operators(self, mock_get_request_samples, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         file_conflict = File.objects.create(
@@ -591,32 +578,21 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        'requestId': 'test1',
-                                                        'recipe': 'TestAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        operator1 = Operator.objects.create(slug="Operator1",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        operator2 = Operator.objects.create(slug="Operator2",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        request_callback('test1')
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={"requestId": "test1", "recipe": "TestAssay", "labHeadEmail": "test@email.com"},
+        )
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
+        operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
+        request_callback("test1")
 
-        calls = [
-            call('test1', operator1.id, None),
-            call('test1', operator2.id, None)
-        ]
+        calls = [call("test1", operator1.id, None), call("test1", operator2.id, None)]
 
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
-    @patch('notifier.tasks.send_notification.delay')
-    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'UnknownAssay'})
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "UnknownAssay"})
     def test_request_callback_unknown_assay(self, mock_get_request_samples, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
         job_group = JobGroup.objects.create()
@@ -627,36 +603,25 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        'requestId': 'test1',
-                                                        'recipe': 'UnknownAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={"requestId": "test1", "recipe": "UnknownAssay", "labHeadEmail": "test@email.com"},
+        )
+        request_callback("test1", str(job_group.id), str(job_group_notifier.id))
 
         calls = [
-            call({
-                'class': 'SetCIReviewEvent',
-                'job_notifier': str(job_group_notifier.id)
-            }),
-            call({
-                'class': 'SetLabelEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'label': 'unrecognized_assay'
-            }),
-            call({
-                'class': 'UnknownAssayEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'assay': 'UnknownAssay'
-            })
+            call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
+            call({"class": "SetLabelEvent", "job_notifier": str(job_group_notifier.id), "label": "unrecognized_assay"}),
+            call({"class": "UnknownAssayEvent", "job_notifier": str(job_group_notifier.id), "assay": "UnknownAssay"}),
         ]
 
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
-    @patch('notifier.tasks.send_notification.delay')
-    @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'DisabledAssay1'})
+    @patch("notifier.tasks.send_notification.delay")
+    @patch(
+        "beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "DisabledAssay1"}
+    )
     def test_request_callback_disabled_assay(self, mock_get_request_samples, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
         job_group = JobGroup.objects.create()
@@ -667,26 +632,18 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        'requestId': 'test1',
-                                                        'recipe': 'DisabledAssay1',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={"requestId": "test1", "recipe": "DisabledAssay1", "labHeadEmail": "test@email.com"},
+        )
+        request_callback("test1", str(job_group.id), str(job_group_notifier.id))
 
         calls = [
-            call({
-                'class': 'NotForCIReviewEvent',
-                'job_notifier': str(job_group_notifier.id)
-            }),
-            call({
-                'class': 'DisabledAssayEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'assay': 'DisabledAssay1'
-            })
+            call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
+            call(
+                {"class": "DisabledAssayEvent", "job_notifier": str(job_group_notifier.id), "assay": "DisabledAssay1"}
+            ),
         ]
 
         mock_send_notification.assert_has_calls(calls, any_order=True)
-

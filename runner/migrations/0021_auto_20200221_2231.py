@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0020_auto_20200221_1930'),
+        ("runner", "0020_auto_20200221_1930"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='operatortrigger',
-            name='aggregate_condition',
-            field=models.IntegerField(choices=[(0, 'NINTY_PERCENT_SUCCEEDED'), (1, 'ALL_RUNS_SUCCEEDED')], null=True),
+            model_name="operatortrigger",
+            name="aggregate_condition",
+            field=models.IntegerField(choices=[(0, "NINTY_PERCENT_SUCCEEDED"), (1, "ALL_RUNS_SUCCEEDED")], null=True),
         ),
     ]

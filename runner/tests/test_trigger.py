@@ -22,17 +22,15 @@ class TestOperatorTriggers(TestCase):
         "runner.operator_trigger.json",
     ]
 
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.tasks.create_run_task')
-    @patch('notifier.tasks.send_notification.delay')
-    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs')
-    @patch('runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id')
-    def test_create_jobs_from_operator_pipeline_deleted(self,
-                                                        get_pipeline_id,
-                                                        get_jobs,
-                                                        send_notification,
-                                                        create_run_task,
-                                                        memcache_task_lock):
+    @patch("runner.models.Run.set_for_restart")
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.tasks.create_run_task")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs")
+    @patch("runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id")
+    def test_create_jobs_from_operator_pipeline_deleted(
+        self, get_pipeline_id, get_jobs, send_notification, create_run_task, memcache_task_lock, set_for_restart
+    ):
         argos_jobs = list()
         argos_jobs.append(RunCreator(app='cb5d793b-e650-4b7d-bfcd-882858e29cc5',
                                      inputs=None,
@@ -51,16 +49,15 @@ class TestOperatorTriggers(TestCase):
         self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.tasks.create_jobs_from_chaining')
-    def test_operator_trigger_creates_next_operator_run_when_90percent_runs_completed(self,
-                                                                                      create_jobs_from_chaining,
-                                                                                      memcache_task_lock,
-                                                                                      send_notification):
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.tasks.create_jobs_from_chaining")
+    def test_operator_trigger_creates_next_operator_run_when_90percent_runs_completed(
+        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+    ):
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
-        run_ids = list(operator_run.runs.order_by('id').values_list('id', flat=True))
+        run_ids = list(operator_run.runs.order_by("id").values_list("id", flat=True))
         for run_id in run_ids:
             complete_job(run_id, "done")
 
@@ -68,38 +65,40 @@ class TestOperatorTriggers(TestCase):
         operator_run.refresh_from_db()
         trigger = operator_run.operator.from_triggers.first()
 
-        create_jobs_from_chaining.delay.assert_called_once_with(trigger.to_operator.pk,
-                                                                trigger.from_operator.pk,
-                                                                run_ids,
-                                                                job_group_id=None,
-                                                                job_group_notifier_id=None,
-                                                                parent=str(operator_run.id))
+        create_jobs_from_chaining.delay.assert_called_once_with(
+            trigger.to_operator.pk,
+            trigger.from_operator.pk,
+            run_ids,
+            job_group_id=None,
+            job_group_notifier_id=None,
+            parent=str(operator_run.id),
+        )
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.tasks.create_jobs_from_chaining')
-    def test_operator_trigger_does_not_create_next_operator_run_when_too_few_runs_completed(self,
-                                                                                            create_jobs_from_chaining,
-                                                                                            memcache_task_lock,
-                                                                                            send_notification):
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.tasks.create_jobs_from_chaining")
+    def test_operator_trigger_does_not_create_next_operator_run_when_too_few_runs_completed(
+        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+    ):
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
-        run_ids = list(operator_run.runs.order_by('id').values_list('id', flat=True))
+        run_ids = list(operator_run.runs.order_by("id").values_list("id", flat=True))
         complete_job(run_ids.pop(), "done")
 
         process_triggers()
 
         create_jobs_from_chaining.delay.assert_not_called()
 
+    @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.tasks.create_jobs_from_chaining')
-    def test_operator_trigger_fails_operator_run_when_all_runs_are_complete_and_no_threshold_is_met(self,
-                                                                                                    create_jobs_from_chaining,
-                                                                                                    memcache_task_lock,
-                                                                                                    send_notification):
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.tasks.create_jobs_from_chaining")
+    def test_operator_trigger_fails_operator_run_when_all_runs_are_complete_and_no_threshold_is_met(
+        self, create_jobs_from_chaining, memcache_task_lock, send_notification, set_for_restart
+    ):
+        set_for_restart.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
@@ -113,12 +112,11 @@ class TestOperatorTriggers(TestCase):
         self.assertEqual(operator_run.status, RunStatus.FAILED)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.tasks.create_jobs_from_chaining')
-    def test_operator_trigger_executes_runs_individually(self,
-                                                         create_jobs_from_chaining,
-                                                         memcache_task_lock,
-                                                         send_notification):
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.tasks.create_jobs_from_chaining")
+    def test_operator_trigger_executes_runs_individually(
+        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+    ):
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         for op_run in OperatorRun.objects.prefetch_related("runs").all():
@@ -133,25 +131,30 @@ class TestOperatorTriggers(TestCase):
             complete_job(run_id, "done")
 
         calls = [
-            call(trigger.to_operator.pk,
-                 trigger.from_operator.pk,
-                 [run_ids[0]], job_group_id=None,
-                 parent=str(operator_run.id)
-                 ),
-            call(trigger.to_operator.pk,
-                 trigger.from_operator.pk,
-                 [run_ids[1]], job_group_id=None,
-                 parent=str(operator_run.id)
-                 ),
-            call(trigger.to_operator.pk,
-                 trigger.from_operator.pk,
-                 [run_ids[2]], job_group_id=None,
-                 parent=str(operator_run.id)
-                 )
+            call(
+                trigger.to_operator.pk,
+                trigger.from_operator.pk,
+                [run_ids[0]],
+                job_group_id=None,
+                parent=str(operator_run.id),
+            ),
+            call(
+                trigger.to_operator.pk,
+                trigger.from_operator.pk,
+                [run_ids[1]],
+                job_group_id=None,
+                parent=str(operator_run.id),
+            ),
+            call(
+                trigger.to_operator.pk,
+                trigger.from_operator.pk,
+                [run_ids[2]],
+                job_group_id=None,
+                parent=str(operator_run.id),
+            ),
         ]
 
         create_jobs_from_chaining.delay.assert_has_calls(calls, any_order=True)
         process_triggers()
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.status, RunStatus.COMPLETED)
-

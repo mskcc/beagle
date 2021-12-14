@@ -16,19 +16,16 @@ from file_system.views.sample_view import SampleFullViewSet
 
 
 router = routers.DefaultRouter()
-router.register('storage', StorageViewSet)
-router.register('file-groups', FileGroupViewSet)
-router.register('file-types', FileTypeView)
-router.register('files', FileView)
-router.register('metadata', FileMetadataView)
-router.register('sample', SampleViewSet)
-router.register('request', RequestViewSet)
-router.register('patient', PatientViewSet)
-router.register('distribution', DistributionView)
-router.register('project-details', SampleFullViewSet)
+router.register("storage", StorageViewSet)
+router.register("file-groups", FileGroupViewSet)
+router.register("file-types", FileTypeView)
+router.register("files", FileView)
+router.register("metadata", FileMetadataView)
+router.register("sample", SampleViewSet)
+router.register("request", RequestViewSet)
+router.register("patient", PatientViewSet)
+router.register("distribution", DistributionView)
+router.register("project-details", SampleFullViewSet)
 
 
-urlpatterns = [
-    path('', include(router.urls)),
-    path('batch-patch-files', BatchPatchFiles.as_view())
-]
+urlpatterns = [path("", include(router.urls)), path("batch-patch-files", BatchPatchFiles.as_view())]

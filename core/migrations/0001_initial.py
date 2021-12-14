@@ -15,11 +15,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='MskUser',
+            name="MskUser",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('groups', models.CharField(max_length=500)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("groups", models.CharField(max_length=500)),
+                (
+                    "user",
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                ),
             ],
         ),
     ]

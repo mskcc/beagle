@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0034_pipeline_default'),
+        ("runner", "0034_pipeline_default"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='run',
-            name='resume',
+            model_name="run",
+            name="resume",
             field=models.UUIDField(blank=True, null=True),
         ),
     ]

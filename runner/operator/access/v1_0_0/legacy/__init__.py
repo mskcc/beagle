@@ -1,7 +1,7 @@
-"""""""""""""""""""""""""""""
+"""""" """""" """""" """""" """""
 " ACCESS-Pipeline
 " github.com/mskcc/access-pipeline
-"""""""""""""""""""""""""""""
+""" """""" """""" """""" """""" ""
 
 import logging
 from collections import defaultdict
@@ -18,29 +18,29 @@ from jinja2 import Template
 logger = logging.getLogger(__name__)
 
 REQUIRED_META_FIELDS = [
-    'sampleId',
-    'captureName',
-    'baitSet',
-    'sampleName',
-    'tumorOrNormal',
-    'patientId',
-    'sex',
-    'barcodeId',
-    'investigatorSampleId',
+    "sampleId",
+    "captureName",
+    "baitSet",
+    "sampleName",
+    "tumorOrNormal",
+    "patientId",
+    "sex",
+    "barcodeId",
+    "investigatorSampleId",
 ]
 
 REQUIRED_INPUT_FIELDS = [
-    'fastq1',
-    'fastq2',
-    'sample_sheet',
-    'sample_class',
-    'patient_id',
-    'add_rg_SM',
-    'add_rg_ID',
-    'add_rg_LB',
-    'add_rg_PU',
-    'adapter',
-    'adapter2',
+    "fastq1",
+    "fastq2",
+    "sample_sheet",
+    "sample_class",
+    "patient_id",
+    "add_rg_SM",
+    "add_rg_ID",
+    "add_rg_LB",
+    "add_rg_PU",
+    "adapter",
+    "adapter2",
 ]
 
 ADAPTER = "GATCGGAAGAGC"
@@ -54,7 +54,6 @@ in source or exist with an empty value.
 
 
 def get_missing_fields(source, fields):
-
     def validate(field):
         if field not in source:
             return True
@@ -67,64 +66,65 @@ def get_missing_fields(source, fields):
 
     return list(filter(validate, fields))
 
+
 # In standard order
 TITLE_FILE_COLUMNS = [
-    'Barcode',
-    'Pool',
-    'Sample',
-    'Collab_ID',
-    'Patient_ID',
-    'Class',
-    'Sample_type',
-    'Input_ng',
-    'Library_yield',
-    'Pool_input',
-    'Bait_version',
-    'Sex',
-    'Barcode_index_1',
-    'Barcode_index_2',
-    'Lane',
-    'Study_ID',
+    "Barcode",
+    "Pool",
+    "Sample",
+    "Collab_ID",
+    "Patient_ID",
+    "Class",
+    "Sample_type",
+    "Input_ng",
+    "Library_yield",
+    "Pool_input",
+    "Bait_version",
+    "Sex",
+    "Barcode_index_1",
+    "Barcode_index_2",
+    "Lane",
+    "Study_ID",
 ]
 
 
 def generate_title_file_content(sample_group):
-    title_file_content = '\t'.join(TITLE_FILE_COLUMNS) + '\n'
+    title_file_content = "\t".join(TITLE_FILE_COLUMNS) + "\n"
     for sample_pair in sample_group:
         sample = sample_pair[0]
         meta = sample["metadata"]
 
         pool_info = meta["captureName"]
-        if meta['libraryVolume'] and meta['libraryConcentrationNgul']:
-            library_yield = meta['libraryVolume'] * meta['libraryConcentrationNgul']
+        if meta["libraryVolume"] and meta["libraryConcentrationNgul"]:
+            library_yield = meta["libraryVolume"] * meta["libraryConcentrationNgul"]
         else:
-            library_yield = '-'
+            library_yield = "-"
 
         line_content = "\t".join(["{}"] * len(TITLE_FILE_COLUMNS)) + "\n"
         title_file_content += line_content.format(
-            meta['barcodeId'] if meta['barcodeId'] else '-',
+            meta["barcodeId"] if meta["barcodeId"] else "-",
             pool_info,
-            meta['sampleName'],
-            meta['investigatorSampleId'],
-            meta['patientId'],
-            meta['tumorOrNormal'],
-            'Plasma' if meta['tumorOrNormal'] == 'Tumor' else 'Buffy Coat',
-            meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
+            meta["sampleName"],
+            meta["investigatorSampleId"],
+            meta["patientId"],
+            meta["tumorOrNormal"],
+            "Plasma" if meta["tumorOrNormal"] == "Tumor" else "Buffy Coat",
+            meta["dnaInputNg"] if meta["dnaInputNg"] else "-",
             library_yield,
-            meta['captureInputNg'] if meta['captureInputNg'] else '-',
-            meta['baitSet'],
-            meta['sex'] if meta['sex'] in ['Male', 'M', 'Female', 'F'] else '-',
-            meta['barcodeIndex'].split('-')[0] if meta['barcodeIndex'] else '-',
-            meta['barcodeIndex'].split('-')[1] if meta['barcodeIndex'] else '-',
+            meta["captureInputNg"] if meta["captureInputNg"] else "-",
+            meta["baitSet"],
+            meta["sex"] if meta["sex"] in ["Male", "M", "Female", "F"] else "-",
+            meta["barcodeIndex"].split("-")[0] if meta["barcodeIndex"] else "-",
+            meta["barcodeIndex"].split("-")[1] if meta["barcodeIndex"] else "-",
             # Todo: Get correct lane info
-            '1',
-            '-'
+            "1",
+            "-",
         )
     return title_file_content.strip()
 
 
 def construct_sample_inputs(samples, request_id, group_id):
-    with open('runner/operator/access/v1_0_0/legacy/input_template.json.jinja2') as file:
+    with open("runner/operator/access/v1_0_0/legacy/input_template.json.jinja2") as file:
         template = Template(file.read())
 
     sample_inputs = list()
@@ -162,7 +162,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the metadata: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"]
+                    meta["sampleId"],
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -175,24 +175,21 @@ def construct_sample_inputs(samples, request_id, group_id):
             patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
-            r1_fastq = sample_pair[0] if '_R1_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
-            r2_fastq = sample_pair[0] if '_R2_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
+            r1_fastq = sample_pair[0] if "_R1_.fastq.gz" in sample_pair[0]["path"] else sample_pair[1]
+            r2_fastq = sample_pair[0] if "_R2_.fastq.gz" in sample_pair[0]["path"] else sample_pair[1]
 
-            fastq1_files.append({
-                "class": "File",
-                "location": "juno://" + r1_fastq["path"]
-            })
+            fastq1_files.append({"class": "File", "location": "juno://" + r1_fastq["path"]})
 
-            fastq2_files.append({
-                "class": "File",
-                "location": "juno://" + r2_fastq["path"]
-            })
+            fastq2_files.append({"class": "File", "location": "juno://" + r2_fastq["path"]})
 
             # Todo: Using dummy sample sheets until this requirement is removed from the pipeline
-            sample_sheets.append({
-                "class": "File",
-                "location": "juno://" + "/juno/work/access/production/resources/tools/voyager_resources/SampleSheet.csv"
-            })
+            sample_sheets.append(
+                {
+                    "class": "File",
+                    "location": "juno://"
+                    + "/juno/work/access/production/resources/tools/voyager_resources/SampleSheet.csv",
+                }
+            )
 
         input_file = template.render(
             barcode_ids=json.dumps(barcode_ids),
@@ -219,7 +216,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the input: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"]
+                    meta["sampleId"],
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -235,12 +232,7 @@ class AccessLegacyOperator(Operator):
         ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
 
         data = [
-            {
-                "id": f.id,
-                "path": f.path,
-                "file_name": f.file_name,
-                "metadata": f.filemetadata_set.first().metadata
-            }
+            {"id": f.id, "path": f.path, "file_name": f.file_name, "metadata": f.filemetadata_set.first().metadata}
             for p in ports
             for f in p.files.all()
         ]
@@ -274,7 +266,7 @@ class AccessLegacyOperator(Operator):
 
 def chunks(lst, n):
     for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+        yield lst[i : i + n]
 
 
 def group_by_sample_id(samples):

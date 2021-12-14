@@ -13,7 +13,7 @@ def query_from_dict(queryset, json_obj, query_filter):
 
 
 class OperatorRunViewSet(ReadOnlyModelViewSet):
-    queryset = OperatorRun.objects.prefetch_related('operator__pipeline_set').order_by("-created_date").distinct().all()
+    queryset = OperatorRun.objects.prefetch_related("operator__pipeline_set").order_by("-created_date").distinct().all()
     serializer_class = OperatorRunListSerializer
 
     @swagger_auto_schema(query_serializer=OperatorRunListSerializer)
@@ -21,19 +21,18 @@ class OperatorRunViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(data=request.query_params)
         if serializer.is_valid():
             queryset = self.queryset
-            if serializer.validated_data.get('status'):
-                queryset = queryset.filter(status=RunStatus[serializer.validated_data.get('status')].value)
-            if serializer.validated_data.get('app'):
-                queryset = queryset.filter(operator__pipeline__id=serializer.validated_data.get('app'))
-            if serializer.validated_data.get('app_name'):
-                queryset = queryset.filter(operator__pipeline__name=serializer.validated_data.get('app_name'))
-            if serializer.validated_data.get('app_version'):
-                queryset = queryset.filter(operator__pipeline__version=serializer.validated_data.get('app_version'))
-            if serializer.validated_data.get('tags'):
-                queryset = query_from_dict(queryset, serializer.validated_data.get('tags'), "runs__tags__%s__contains")
+            if serializer.validated_data.get("status"):
+                queryset = queryset.filter(status=RunStatus[serializer.validated_data.get("status")].value)
+            if serializer.validated_data.get("app"):
+                queryset = queryset.filter(operator__pipeline__id=serializer.validated_data.get("app"))
+            if serializer.validated_data.get("app_name"):
+                queryset = queryset.filter(operator__pipeline__name=serializer.validated_data.get("app_name"))
+            if serializer.validated_data.get("app_version"):
+                queryset = queryset.filter(operator__pipeline__version=serializer.validated_data.get("app_version"))
+            if serializer.validated_data.get("tags"):
+                queryset = query_from_dict(queryset, serializer.validated_data.get("tags"), "runs__tags__%s__contains")
 
             serializer = OperatorRunSerializer(self.paginate_queryset(queryset), many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

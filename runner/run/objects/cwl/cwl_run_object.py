@@ -65,10 +65,12 @@ class CWLRunObject(RunObject):
         except Exception as e:
             raise RunCreateException("Failed to create run. Failed to resolve CWL %s" % str(e))
         try:
-            input_ports = [CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in
-                           app.get('inputs', [])]
-            output_ports = [CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in
-                            app.get('outputs', [])]
+            input_ports = [
+                CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in app.get("inputs", [])
+            ]
+            output_ports = [
+                CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in app.get("outputs", [])
+            ]
         except PortProcessorException as e:
             raise RunCreateException("Failed to create run: %s" % str(e))
         return cls(run_id,
@@ -156,10 +158,9 @@ class CWLRunObject(RunObject):
 
     def complete(self, outputs):
         for out in self.outputs:
-            out.complete(outputs.get(out.name, None),
-                         self.output_file_group,
-                         self.job_group_notifier,
-                         self.output_metadata)
+            out.complete(
+                outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata
+            )
         self.status = RunStatus.COMPLETED
 
     def dump_job(self, output_directory=None):
@@ -167,7 +168,7 @@ class CWLRunObject(RunObject):
             "github": {
                 "repository": self.run_obj.app.github,
                 "entrypoint": self.run_obj.app.entrypoint,
-                "version": self.run_obj.app.version
+                "version": self.run_obj.app.version,
             }
         }
         inputs = dict()
@@ -176,10 +177,10 @@ class CWLRunObject(RunObject):
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
         job = {
-            'type': self.run_type,
-            'app': app,
-            'inputs': inputs,
-            'root_dir': output_directory,
+            "type": self.run_type,
+            "app": app,
+            "inputs": inputs,
+            "root_dir": output_directory,
         }
         return job
 

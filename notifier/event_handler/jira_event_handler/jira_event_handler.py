@@ -7,18 +7,18 @@ from notifier.jira.jira_client import JiraClient
 
 
 class JiraEventHandler(EventHandler):
-
     def __init__(self, project):
         super().__init__()
         self.client = JiraClient(settings.JIRA_URL, settings.JIRA_USERNAME, settings.JIRA_PASSWORD, project)
 
     @property
     def db_name(self):
-        return 'jira_id'
+        return "jira_id"
 
     def start(self, request_id):
         jira_id = JiraClient.parse_ticket_id(
-            self.client.create_ticket("{request_id}".format(request_id=request_id), None, "").json())
+            self.client.create_ticket("{request_id}".format(request_id=request_id), None, "").json()
+        )
         self.logger.debug("Starting JIRA Ticket with ID %s" % jira_id)
         return jira_id
 
@@ -90,15 +90,21 @@ class JiraEventHandler(EventHandler):
 
     def process_set_pipeline_field_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
-        pipeline = self.client.get_ticket(job_notifier.jira_id).json().get('fields', {}).get(settings.JIRA_PIPELINE_FIELD_ID)
+        pipeline = (
+            self.client.get_ticket(job_notifier.jira_id).json().get("fields", {}).get(settings.JIRA_PIPELINE_FIELD_ID)
+        )
         if not pipeline:
             self.client.update_pipeline(job_notifier.jira_id, str(event))
 
     def process_set_delivery_date_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         if settings.JIRA_DELIVERY_DATE_FIELD_ID:
-            delivery_date = self.client.get_ticket(job_notifier.jira_id).json().get('fields', {}).get(
-                settings.JIRA_DELIVERY_DATE_FIELD_ID)
+            delivery_date = (
+                self.client.get_ticket(job_notifier.jira_id)
+                .json()
+                .get("fields", {})
+                .get(settings.JIRA_DELIVERY_DATE_FIELD_ID)
+            )
             if not delivery_date:
                 self.client.update_delivery_date(job_notifier.jira_id, str(event))
 
@@ -108,22 +114,22 @@ class JiraEventHandler(EventHandler):
 
         # Hack because there is no other way to retry transition and also change resolution.
         if through_ci_review:
-            for transition in response.json().get('transitions', []):
-                if transition.get('name') == 'CI Review Needed':
-                    self.client.update_status(job_notifier.jira_id, transition['id'])
+            for transition in response.json().get("transitions", []):
+                if transition.get("name") == "CI Review Needed":
+                    self.client.update_status(job_notifier.jira_id, transition["id"])
         # end of hack
 
         response = self.client.get_status_transitions(job_notifier.jira_id)
-        for transition in response.json().get('transitions', []):
-            if transition.get('name') == str(event):
-                self.client.update_status(job_notifier.jira_id, transition['id'])
+        for transition in response.json().get("transitions", []):
+            if transition.get("name") == str(event):
+                self.client.update_status(job_notifier.jira_id, transition["id"])
                 self._check_transition(job_notifier.jira_id, str(event), event)
-                self.logger.debug("Transition to state %s", transition.get('name'))
+                self.logger.debug("Transition to state %s", transition.get("name"))
                 break
 
     def _check_transition(self, jira_id, expected_status, event):
         response = self.client.get_ticket(jira_id)
-        status = response.json()['fields']['status']['name']
+        status = response.json()["fields"]["status"]["name"]
         if status == expected_status:
             return
         self.process_transition_event(event, through_ci_review=True)
@@ -139,10 +145,8 @@ class JiraEventHandler(EventHandler):
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
-        metadata = {
-            "jiraId": job_notifier.jira_id
-        }
-        with open(file_path, 'w') as f:
+        metadata = {"jiraId": job_notifier.jira_id}
+        with open(file_path, "w") as f:
             f.write(event.get_content())
         self._register_as_file(file_path, metadata)
 
@@ -155,12 +159,11 @@ class JiraEventHandler(EventHandler):
             file_group = FileGroup.objects.get(id=settings.NOTIFIER_FILE_GROUP)
         except FileGroup.DoesNotExist:
             return
-        file_type_obj = FileType.objects.filter(name='json').first()
+        file_type_obj = FileType.objects.filter(name="json").first()
         try:
-            f = File.objects.create(file_name=os.path.basename(path),
-                                    path=path,
-                                    file_group=file_group,
-                                    file_type=file_type_obj)
+            f = File.objects.create(
+                file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type_obj
+            )
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
@@ -176,7 +179,7 @@ class JiraEventHandler(EventHandler):
         ticket = self.client.get_ticket(job_notifier.jira_id)
         if ticket.status_code != 200:
             return
-        labels = ticket.json()['fields'].get('labels', [])
+        labels = ticket.json()["fields"].get("labels", [])
         labels.append(str(event))
         self.client.update_labels(job_notifier.jira_id, labels)
 

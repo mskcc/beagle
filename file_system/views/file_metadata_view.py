@@ -6,22 +6,19 @@ from rest_framework import mixins, permissions
 from rest_framework.viewsets import GenericViewSet
 
 
-class FileMetadataView(mixins.ListModelMixin,
-                       mixins.CreateModelMixin,
-                       mixins.RetrieveModelMixin,
-                       GenericViewSet):
-    queryset = FileMetadata.objects.order_by('created_date').all()
+class FileMetadataView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
+    queryset = FileMetadata.objects.order_by("created_date").all()
 
     def get_serializer_class(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == "list" or self.action == "retrieve":
             return Metadata
         return CreateMetadata
 
     def list(self, request, *args, **kwargs):
-        file_id = request.query_params.get('file_id')
+        file_id = request.query_params.get("file_id")
         if not file_id:
-            return Response({'details': 'file_id needs to be specified'}, status=status.HTTP_400_BAD_REQUEST)
-        queryset = FileMetadata.objects.filter(file_id=file_id).order_by('-created_date').all()
+            return Response({"details": "file_id needs to be specified"}, status=status.HTTP_400_BAD_REQUEST)
+        queryset = FileMetadata.objects.filter(file_id=file_id).order_by("-created_date").all()
         page = self.paginate_queryset(queryset)
         if page:
             serializer = Metadata(page, many=True)
@@ -32,7 +29,7 @@ class FileMetadataView(mixins.ListModelMixin,
         """
         The paginator instance associated with the view, or `None`.
         """
-        if not hasattr(self, '_paginator'):
+        if not hasattr(self, "_paginator"):
             if self.pagination_class is None:
                 self._paginator = None
             else:

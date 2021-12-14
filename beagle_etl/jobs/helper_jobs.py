@@ -48,7 +48,7 @@ def calculate_file_checksum(file_id):
         try:
             checksum = sha1(f.path)
             f.checksum = checksum
-            f.save(update_fields=['checksum'])
+            f.save(update_fields=["checksum"])
         except FailedToCalculateChecksum as e:
             logger.info("Failed to calculate checksum. Error:%s", f.path)
     return []
