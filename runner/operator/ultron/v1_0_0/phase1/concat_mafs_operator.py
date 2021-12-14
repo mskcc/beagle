@@ -5,15 +5,12 @@ Constructs input JSON for the Ultron pipeline and then
 submits them as runs
 """
 import os
-import datetime
 import logging
-from notifier.models import JobGroup
-from runner.models import Port, Run
+from runner.models import Pipeline, Port, Run
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
 from file_system.repository.file_repository import FileRepository
-import json
+from runner.run.objects.run_creator_object import RunCreator
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
@@ -30,11 +27,9 @@ class ConcatMafsOperator(Operator):
         ultron_output_job = [self._build_job(inputs_json)]
         return ultron_output_job
 
-
     def _build_inputs(self, run_ids):
         inputs_json = InputsObj(run_ids)
         return inputs_json
-
 
     def _build_job(self, input_json):
         app = self.get_pipeline_id()
@@ -49,11 +44,8 @@ class ConcatMafsOperator(Operator):
             'tags': tags,
             'name': "Request ID %s ULTRON PHASE1:CONCAT MAFs run" % request_id,
             'inputs': input_json}
-        output_job = (APIRunCreateSerializer(
-            data=output_job_data),
-            input_json)
+        output_job = RunCreator(**output_job_data)
         return output_job
-
 
     def _get_request_id(self):
         files = FileRepository.all()
@@ -76,7 +68,6 @@ class InputsObj:
         self.mafs = self._get_mafs()
         self.inputs_json = self._build_inputs_json()
 
-
     def _get_mafs(self):
         mafs = list()
         for run_id in self.run_ids:
@@ -86,14 +77,12 @@ class InputsObj:
                 mafs.append(maf)
         return mafs
 
-
     def _get_port(self, port_list, port_name):
         for single_port in port_list:
             current_port = single_port.name
             if current_port == port_name:
                  return self._get_files_from_port(single_port.value)
         return None
-
 
     def _get_files_from_port(self, port_obj):
         file_list = []
@@ -103,7 +92,6 @@ class InputsObj:
         elif isinstance(port_obj, dict):
             file_list.append(self._get_file_obj(port_obj))
         return file_list
-
 
     def _get_file_obj(self,file_obj):
         """
@@ -125,11 +113,9 @@ class InputsObj:
             file_cwl_obj['secondaryFiles'] = secondary_file_list
         return file_cwl_obj
 
-
     def _create_cwl_file_obj(self, file_path):
         cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
         return cwl_file_obj
-
 
     def _build_inputs_json(self):
         inputs_json = dict()

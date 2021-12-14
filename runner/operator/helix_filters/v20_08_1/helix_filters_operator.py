@@ -7,9 +7,9 @@ submits them as runs
 import os
 import logging
 from notifier.models import JobGroup
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline, Run
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_helix_filters_input import construct_helix_filters_input, get_output_directory_prefix
 LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class HelixFiltersOperator(Operator):
         """
         From self, retrieve relevant run IDs, build the input JSON for
         the pipeline, and then submit them as jobs through the
-        APIRunCreateSerializer
+        RunCreator
         """
         argos_run_ids = self.run_ids
         input_json = construct_helix_filters_input(argos_run_ids)
@@ -71,8 +71,7 @@ class HelixFiltersOperator(Operator):
                                                 argos_pipeline.version,
                                                 jg_created_date)
             helix_filters_outputs_job_data['output_directory'] = output_directory
-        helix_filters_outputs_job = [(APIRunCreateSerializer(
-            data=helix_filters_outputs_job_data), input_json)]
+        helix_filters_outputs_job = [RunCreator(**helix_filters_outputs_job_data)]
         return helix_filters_outputs_job
 
     def add_output_file_names(self, json_data, pipeline_version):

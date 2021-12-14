@@ -1,12 +1,10 @@
 import os
-from collections import defaultdict
-from itertools import groupby
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
-from file_system.repository.file_repository import FileRepository
-
 import json
 from jinja2 import Template
+from collections import defaultdict
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
+from file_system.repository.file_repository import FileRepository
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,10 +28,11 @@ METADATA_OUTPUT_FIELDS = [
     'sampleId',
     'requestId'
 ]
+
+
 def construct_inputs(samples, request_id):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
         template = Template(file.read())
-
 
     samples = list(group_by_sample_id(samples).values())
 
@@ -69,6 +68,7 @@ def construct_inputs(samples, request_id):
 
     return inputs
 
+
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
         files = FileRepository.filter(queryset=self.files,
@@ -88,21 +88,18 @@ class AccessLegacyFastqMergeOperator(Operator):
         number_of_inputs = len(inputs)
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                            key in metadata},
-                        'inputs': job,
-                        'tags': {'requestId': self.request_id, 'sampleId': metadata["sampleId"]}}
-                ),
-                job
-             )
-
+            RunCreator(
+                **{
+                    'name': "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    'app': self.get_pipeline_id(),
+                    'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
+                                        key in metadata},
+                    'inputs': job,
+                    'tags': {'requestId': self.request_id, 'sampleId': metadata["sampleId"]}}
+            )
             for i, (job, metadata) in enumerate(inputs)
         ]
+
 
 def calc_avg(sample_files, field):
     fields = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
@@ -112,12 +109,14 @@ def calc_avg(sample_files, field):
 
     return sum([float(s["metadata"][field]) for s in fields])/field_count
 
+
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
         sample_pairs[sample["metadata"]["sampleId"]].append(sample)
 
     return sample_pairs
+
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)

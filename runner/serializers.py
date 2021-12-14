@@ -277,62 +277,6 @@ class RestartRunSerializer(serializers.Serializer):
     operator_run_id = serializers.UUIDField(required=True)
 
 
-class APIRunCreateSerializer(serializers.Serializer):
-    app = serializers.UUIDField()
-    name = serializers.CharField(allow_null=True, max_length=400, required=False, default=None)
-    inputs = serializers.JSONField(allow_null=True, required=True)
-    outputs = serializers.JSONField(allow_null=True, required=False)
-    tags = serializers.JSONField(allow_null=True, required=False)
-    output_directory = serializers.CharField(max_length=1000, required=False, default=None, allow_null=True)
-    output_metadata = serializers.JSONField(required=False, default=dict)
-    operator_run_id = serializers.UUIDField(required=False)
-    job_group_id = serializers.UUIDField(required=False)
-    job_group_notifier_id = serializers.UUIDField(required=False)
-    resume = serializers.UUIDField(allow_null=True, required=False)
-
-    def create(self, validated_data):
-        try:
-            pipeline = Pipeline.objects.get(id=validated_data.get('app'))
-        except Pipeline.DoesNotExist:
-            raise serializers.ValidationError("Unknown pipeline: %s" % validated_data.get('pipeline_id'))
-        tags = validated_data.get('tags')
-        create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        name = "Run %s: %s" % (pipeline.name, create_date)
-        if validated_data.get('name'):
-            name = validated_data.get('name') + ' (' + create_date + ')'
-        run = Run(run_type=pipeline.pipeline_type,
-                  name=name,
-                  app=pipeline,
-                  status=RunStatus.CREATING,
-                  job_statuses=dict(),
-                  output_metadata=validated_data.get('output_metadata', {}),
-                  tags=tags,
-                  resume=validated_data.get('resume'))
-        if validated_data.get('output_directory'):
-            run.output_directory=validated_data.get('output_directory')
-        try:
-            run.operator_run = OperatorRun.objects.get(id=validated_data.get('operator_run_id'))
-        except OperatorRun.DoesNotExist:
-            pass
-        try:
-            run.job_group = JobGroup.objects.get(id=validated_data.get('job_group_id'))
-        except JobGroup.DoesNotExist:
-            print("[JobGroup] %s" % validated_data.get('job_group_id'))
-        try:
-            run.job_group_notifier = JobGroupNotifier.objects.get(id=validated_data.get('job_group_notifier_id'))
-        except JobGroupNotifier.DoesNotExist:
-            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
-        # Try to find JobGroupNotifier using app and job_group_id
-        try:
-            run.job_group_notifier = JobGroupNotifier.objects.get(job_group_id=validated_data.get('job_group_id'),
-                                                                  notifier_type_id=run.app.operator.notifier_id)
-        except JobGroupNotifier.DoesNotExist:
-            print("[JobGroupNotifier] Not found %s" % validated_data.get('job_group_notifier_id'))
-        run.notify_for_outputs = validated_data.get('notify_for_outputs', [])
-        run.save()
-        return run
-
-
 class RequestIdOperatorSerializer(serializers.Serializer):
     request_ids = serializers.ListField(
         child=serializers.CharField(max_length=30), allow_empty=True

@@ -5,11 +5,9 @@
 
 import logging
 from collections import defaultdict
-from itertools import groupby
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Port, PortType
-from file_system.repository.file_repository import FileRepository
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 
 from notifier.events import InputCreationFailedEvent
 from notifier.tasks import send_notification
@@ -53,6 +51,8 @@ SAMPLE_GROUP_SIZE = 20
 This returns a list of keys that are subset of `fields`, that do not exist
 in source or exist with an empty value.
 """
+
+
 def get_missing_fields(source, fields):
 
     def validate(field):
@@ -87,6 +87,7 @@ TITLE_FILE_COLUMNS = [
     'Study_ID',
 ]
 
+
 def generate_title_file_content(sample_group):
     title_file_content = '\t'.join(TITLE_FILE_COLUMNS) + '\n'
     for sample_pair in sample_group:
@@ -120,6 +121,7 @@ def generate_title_file_content(sample_group):
             '-'
         )
     return title_file_content.strip()
+
 
 def construct_sample_inputs(samples, request_id, group_id):
     with open('runner/operator/access/v1_0_0/legacy/input_template.json.jinja2') as file:
@@ -224,10 +226,11 @@ def construct_sample_inputs(samples, request_id, group_id):
             continue
 
         sample_inputs.append(sample_input)
-
     return (sample_inputs, errors)
 
+
 class AccessLegacyOperator(Operator):
+
     def get_jobs(self):
         ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
 
@@ -252,8 +255,8 @@ class AccessLegacyOperator(Operator):
 
         return [
             (
-                APIRunCreateSerializer(
-                    data={
+                RunCreator(
+                    **{
                         'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
                         'app': self.get_pipeline_id(),
                         'inputs': job,
@@ -263,10 +266,8 @@ class AccessLegacyOperator(Operator):
                             'reference_version': 'HG19'
                         }
                     }
-                ),
-                job
-             )
-
+                )
+            )
             for i, job in enumerate(sample_inputs)
         ]
 
@@ -274,6 +275,7 @@ class AccessLegacyOperator(Operator):
 def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
+
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)

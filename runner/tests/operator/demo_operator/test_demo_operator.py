@@ -5,7 +5,6 @@ import os
 from django.test import TestCase
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata, FileGroup
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Run, Pipeline, OperatorRun, Port
 from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory

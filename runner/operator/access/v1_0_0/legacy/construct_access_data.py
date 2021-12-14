@@ -1,4 +1,4 @@
-import os,sys
+import os, sys
 import argparse
 import json
 import pprint

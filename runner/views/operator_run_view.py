@@ -6,9 +6,11 @@ from runner.models import OperatorRun, RunStatus
 from runner.serializers import OperatorRunSerializer, OperatorRunListSerializer
 from drf_yasg.utils import swagger_auto_schema
 
+
 def query_from_dict(queryset, json_obj, query_filter):
     query = {query_filter % key: val for (key, val) in json_obj.items()}
     return queryset.filter(**query)
+
 
 class OperatorRunViewSet(ReadOnlyModelViewSet):
     queryset = OperatorRun.objects.prefetch_related('operator__pipeline_set').order_by("-created_date").distinct().all()

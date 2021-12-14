@@ -1,5 +1,5 @@
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs
 from runner.models import Pipeline
 from .bin.make_sample import build_sample
@@ -172,9 +172,10 @@ class ArgosOperator(Operator):
                     'labHeadEmail': pi_email}
             if self.output_directory_prefix:
                 tags['output_directory_prefix'] = self.output_directory_prefix
-            argos_jobs.append((APIRunCreateSerializer(
-                data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
-                      'tags': tags}), job))
+            argos_jobs.append(RunCreator(app=pipeline,
+                                         inputs=job,
+                                         name=name,
+                                         tags=tags))
 
         operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)
@@ -182,7 +183,8 @@ class ArgosOperator(Operator):
         mapping_file_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_mapping.txt', sample_mapping).to_dict()
         send_notification.delay(mapping_file_event)
 
-        data_clinical = generate_sample_data_content(files, pipeline_name=pipeline_obj.name,
+        data_clinical = generate_sample_data_content(files,
+                                                     pipeline_name=pipeline_obj.name,
                                                      pipeline_github=pipeline_obj.github,
                                                      pipeline_version=pipeline_obj.version)
         sample_data_clinical_event = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_data_clinical.txt',

@@ -177,8 +177,10 @@ class ArgosOperator(Operator):
                     'labHeadEmail': pi_email}
             if self.output_directory_prefix:
                 tags['output_directory_prefix'] = self.output_directory_prefix
-            argos_jobs.append((RunCreator(app=pipeline, inputs=argos_inputs, name=name,
-                                          tags=tags), job))
+            argos_jobs.append(RunCreator(app=pipeline,
+                                         inputs=job,
+                                         name=name,
+                                         tags=tags))
 
         operator_run_summary = UploadAttachmentEvent(self.job_group_notifier_id, 'sample_pairing.txt', sample_pairing).to_dict()
         send_notification.delay(operator_run_summary)
