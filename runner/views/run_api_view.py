@@ -25,7 +25,6 @@ from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operat
 from runner.serializers import (
     RunSerializerPartial,
     RunSerializerFull,
-    APIRunCreateSerializer,
     RequestIdOperatorSerializer,
     OperatorErrorSerializer,
     RunApiListSerializer,
