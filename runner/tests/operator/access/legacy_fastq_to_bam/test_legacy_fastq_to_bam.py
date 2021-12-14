@@ -57,4 +57,3 @@ class TestAccessLegacyOperator(TestCase):
             input_json = job.inputs
             self.assertEqual(len(input_json["fastq1"]), 1)
             self.assertEqual(len(input_json["fastq2"]), 1)
-

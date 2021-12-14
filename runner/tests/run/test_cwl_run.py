@@ -295,12 +295,13 @@ class CWLRunObjectTest(APITestCase):
         self.assertEqual(str(run_obj.id), run.run_id)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch('lib.memcache_lock.memcache_task_lock')
-    @patch('runner.pipeline.pipeline_cache.PipelineCache.get_pipeline')
-    @patch('file_system.tasks.populate_job_group_notifier_metadata.delay')
-    def test_run_complete_job(self, mock_populate_job_group_notifier, mock_get_pipeline, memcache_task_lock,
-                              send_notification):
-        with open('runner/tests/run/pair-workflow.cwl', 'r') as f:
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_run_complete_job(
+        self, mock_populate_job_group_notifier, mock_get_pipeline, memcache_task_lock, send_notification
+    ):
+        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
             app = json.load(f)
         with open("runner/tests/run/inputs.json", "r") as f:
             inputs = json.load(f)

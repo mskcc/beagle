@@ -12,40 +12,44 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class CWLRunObject(RunObject):
     logger = logging.getLogger(__name__)
 
-    def __init__(self,
-                 run_id,
-                 run_obj,
-                 app,
-                 name,
-                 inputs,
-                 outputs,
-                 status,
-                 samples=[],
-                 job_statuses=None,
-                 message={},
-                 output_metadata={},
-                 execution_id=None,
-                 tags={},
-                 job_group=None,
-                 job_group_notifier=None,
-                 notify_for_outputs=[]):
+    def __init__(
+        self,
+        run_id,
+        run_obj,
+        app,
+        name,
+        inputs,
+        outputs,
+        status,
+        samples=[],
+        job_statuses=None,
+        message={},
+        output_metadata={},
+        execution_id=None,
+        tags={},
+        job_group=None,
+        job_group_notifier=None,
+        notify_for_outputs=[],
+    ):
         self.run_type = ProtocolType.CWL
-        super().__init__(run_id,
-                         run_obj,
-                         app,
-                         name,
-                         inputs,
-                         outputs,
-                         status,
-                         samples,
-                         job_statuses,
-                         message,
-                         output_metadata,
-                         execution_id,
-                         tags,
-                         job_group,
-                         job_group_notifier,
-                         notify_for_outputs)
+        super().__init__(
+            run_id,
+            run_obj,
+            app,
+            name,
+            inputs,
+            outputs,
+            status,
+            samples,
+            job_statuses,
+            message,
+            output_metadata,
+            execution_id,
+            tags,
+            job_group,
+            job_group_notifier,
+            notify_for_outputs,
+        )
 
     @classmethod
     def from_definition(cls, run_id, inputs):
@@ -73,20 +77,22 @@ class CWLRunObject(RunObject):
             ]
         except PortProcessorException as e:
             raise RunCreateException("Failed to create run: %s" % str(e))
-        return cls(run_id,
-                   run,
-                   run.app,
-                   run.name,
-                   input_ports,
-                   output_ports,
-                   run.status,
-                   samples=[],
-                   job_statuses=run.job_statuses,
-                   message=run.message,
-                   output_metadata=run.output_metadata,
-                   tags=run.tags,
-                   job_group=run.job_group,
-                   job_group_notifier=run.job_group_notifier)
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            input_ports,
+            output_ports,
+            run.status,
+            samples=[],
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+        )
 
     def ready(self):
         [CWLPortObject.ready(p) for p in self.inputs]
@@ -108,10 +114,24 @@ class CWLRunObject(RunObject):
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [CWLPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
         outputs = [CWLPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
-        return cls(run_id, run, run.app, run.name, inputs, outputs, run.status, job_statuses=run.job_statuses,
-                   message=run.message, output_metadata=run.output_metadata, tags=run.tags,
-                   execution_id=run.execution_id, job_group=run.job_group, job_group_notifier=run.job_group_notifier,
-                   notify_for_outputs=run.notify_for_outputs, samples=list(run.samples.all()))
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            inputs,
+            outputs,
+            run.status,
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            execution_id=run.execution_id,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+            notify_for_outputs=run.notify_for_outputs,
+            samples=list(run.samples.all()),
+        )
 
     def to_db(self):
         self.run_obj.app = self.app

@@ -443,14 +443,14 @@ class AccessLegacySNVOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "ACCESS LEGACY SNV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                    'app': self.get_pipeline_id(),
-                    'inputs': job,
-                    'tags': {
-                        'requestId': self.request_id,
-                        'cmoSampleIds': job["tumor_sample_names"],
-                        'patientId': '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
-                    }
+                    "name": "ACCESS LEGACY SNV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {
+                        "requestId": self.request_id,
+                        "cmoSampleIds": job["tumor_sample_names"],
+                        "patientId": "-".join(job["tumor_sample_names"][0].split("-")[0:2]),
+                    },
                 }
             )
             for i, job in enumerate(sample_inputs)

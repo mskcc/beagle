@@ -39,10 +39,11 @@ class ConcatMafsOperator(Operator):
         tags = {"requestId": request_id}
         # add tags, name
         output_job_data = {
-            'app': app,
-            'tags': tags,
-            'name': "Request ID %s ULTRON PHASE1:CONCAT MAFs run" % request_id,
-            'inputs': input_json}
+            "app": app,
+            "tags": tags,
+            "name": "Request ID %s ULTRON PHASE1:CONCAT MAFs run" % request_id,
+            "inputs": input_json,
+        }
         output_job = RunCreator(**output_job_data)
         return output_job
 

@@ -125,15 +125,11 @@ class AccessNucleoOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                    'app': self.get_pipeline_id(),
-                    'inputs': job,
-                    'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                        key in metadata},
-                    'tags': {
-                        'requestId': self.request_id,
-                        'cmoSampleId': metadata['sampleName']
-                    }
+                    "name": "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
+                    "tags": {"requestId": self.request_id, "cmoSampleId": metadata["sampleName"]},
                 }
             )
             for i, (job, metadata) in enumerate(sample_inputs)

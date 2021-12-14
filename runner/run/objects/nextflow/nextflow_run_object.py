@@ -34,22 +34,24 @@ class NextflowRunObject(RunObject):
     ):
         self.config = config
         self.run_type = ProtocolType.NEXTFLOW
-        super().__init__(run_id,
-                         run_obj,
-                         app,
-                         name,
-                         inputs,
-                         outputs,
-                         status,
-                         samples,
-                         job_statuses,
-                         message,
-                         output_metadata,
-                         execution_id,
-                         tags,
-                         job_group,
-                         job_group_notifier,
-                         notify_for_outputs)
+        super().__init__(
+            run_id,
+            run_obj,
+            app,
+            name,
+            inputs,
+            outputs,
+            status,
+            samples,
+            job_statuses,
+            message,
+            output_metadata,
+            execution_id,
+            tags,
+            job_group,
+            job_group_notifier,
+            notify_for_outputs,
+        )
 
     @classmethod
     def from_definition(cls, run_id, inputs):
@@ -77,21 +79,23 @@ class NextflowRunObject(RunObject):
             ]
         except PortProcessorException as e:
             raise RunCreateException("Failed to create run: %s" % str(e))
-        return cls(run_id,
-                   run,
-                   run.app,
-                   run.name,
-                   input_ports,
-                   output_ports,
-                   run.status,
-                   samples=[],
-                   job_statuses=run.job_statuses,
-                   message=run.message,
-                   output_metadata=run.output_metadata,
-                   tags=run.tags,
-                   job_group=run.job_group,
-                   job_group_notifier=run.job_group_notifier,
-                   config=run.app.config)
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            input_ports,
+            output_ports,
+            run.status,
+            samples=[],
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+            config=run.app.config,
+        )
 
     def ready(self):
         [NextflowPortObject.ready(p) for p in self.inputs]
@@ -112,29 +116,30 @@ class NextflowRunObject(RunObject):
         except Run.DoesNotExist:
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [
-            NextflowPortObject.from_db(p.id) for p in
-                Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
-        outputs = [
-            NextflowPortObject.from_db(p.id) for p in
-            Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)
+            NextflowPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)
         ]
-        return cls(run_id,
-                   run,
-                   run.app,
-                   run.name,
-                   inputs,
-                   outputs,
-                   run.status,
-                   job_statuses=run.job_statuses,
-                   message=run.message,
-                   output_metadata=run.output_metadata,
-                   tags=run.tags,
-                   execution_id=run.execution_id,
-                   job_group=run.job_group,
-                   job_group_notifier=run.job_group_notifier,
-                   notify_for_outputs=run.notify_for_outputs,
-                   samples=list(run.samples.all()),
-                   config=run.app.config)
+        outputs = [
+            NextflowPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)
+        ]
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            inputs,
+            outputs,
+            run.status,
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            execution_id=run.execution_id,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+            notify_for_outputs=run.notify_for_outputs,
+            samples=list(run.samples.all()),
+            config=run.app.config,
+        )
 
     def to_db(self):
         [NextflowPortObject.to_db(p) for p in self.inputs]

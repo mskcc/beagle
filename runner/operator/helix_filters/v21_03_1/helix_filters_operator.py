@@ -58,14 +58,11 @@ class HelixFiltersOperator(Operator):
             if self.job_group_id:
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-                output_directory = os.path.join(pipeline.output_directory,
-                                                "argos",
-                                                project_prefix,
-                                                argos_pipeline.version,
-                                                jg_created_date)
-            helix_filters_outputs_job_data['output_directory'] = output_directory
-        helix_filters_outputs_job = [RunCreator(
-            **helix_filters_outputs_job_data)]
+                output_directory = os.path.join(
+                    pipeline.output_directory, "argos", project_prefix, argos_pipeline.version, jg_created_date
+                )
+            helix_filters_outputs_job_data["output_directory"] = output_directory
+        helix_filters_outputs_job = [RunCreator(**helix_filters_outputs_job_data)]
         return helix_filters_outputs_job
 
     def add_output_file_names(self, json_data, pipeline_version):

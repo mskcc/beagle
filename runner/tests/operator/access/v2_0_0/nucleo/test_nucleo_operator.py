@@ -55,10 +55,11 @@ class TestAccessNucleoOperator(TestCase):
             self.assertEqual(len(job.output_metadata.keys()) > 3, True)
             job.output_metadata["sampleOrigin"] = "Tissue"
             self.assertEqual(float(job.output_metadata["captureConcentrationNm"]) > 0, True)
-            self.assertEqual(job.output_metadata["captureConcentrationNm"],
-                             sum([float(f.metadata["captureConcentrationNm"]) for f in
-                                  list(FileMetadata.objects.all())]) /
-                             operator_files_count)
+            self.assertEqual(
+                job.output_metadata["captureConcentrationNm"],
+                sum([float(f.metadata["captureConcentrationNm"]) for f in list(FileMetadata.objects.all())])
+                / operator_files_count,
+            )
 
             input_json = job.inputs
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"]), 2)

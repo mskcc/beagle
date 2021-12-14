@@ -86,14 +86,14 @@ class AccessLegacyCNVOperator(Operator):
             (
                 RunCreator(
                     **{
-                        'name': "ACCESS LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {
-                            'requestId': self.request_id,
-                            'cmoSampleIds': sample_ids[i],
-                            'patientId': '-'.join(sample_ids[i].split('-')[0:2])
-                        }
+                        "name": "ACCESS LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {
+                            "requestId": self.request_id,
+                            "cmoSampleIds": sample_ids[i],
+                            "patientId": "-".join(sample_ids[i].split("-")[0:2]),
+                        },
                     }
                 )
             )

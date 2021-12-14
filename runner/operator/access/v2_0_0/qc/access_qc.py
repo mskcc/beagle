@@ -64,13 +64,10 @@ class AccessQCOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                    'app': self.get_pipeline_id(),
-                    'inputs': job,
-                    'tags': {
-                        'requestId': self.request_id,
-                        'cmoSampleId': job['sample_name']
-                    }
+                    "name": "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {"requestId": self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
             for i, job in enumerate(sample_inputs)

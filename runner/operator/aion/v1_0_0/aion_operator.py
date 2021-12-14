@@ -10,11 +10,11 @@ import logging
 from runner.models import Run, Pipeline
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
+
 LOGGER = logging.getLogger(__name__)
 
 
 class AionOperator(Operator):
-
     def get_jobs(self, lab_head_email):
         """
         From self, retrieve relevant run IDs, build the input JSON for
