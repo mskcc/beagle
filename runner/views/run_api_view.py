@@ -10,10 +10,11 @@ from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework import mixins
+from runner.run.objects.run_creator_object import RunCreator
 from runner.tasks import create_run_task, create_jobs_from_operator, run_routine_operator_job, \
 abort_job_task, submit_job, create_jobs_from_request, create_aion_job, create_tempo_mpgen_job
 from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
-from runner.serializers import RunSerializerPartial, RunSerializerFull, APIRunCreateSerializer, \
+from runner.serializers import RunSerializerPartial, RunSerializerFull, \
     RequestIdOperatorSerializer, OperatorErrorSerializer, RunApiListSerializer, RequestIdsOperatorSerializer, \
     RunIdsOperatorSerializer, AionOperatorSerializer, RunSerializerCWLInput, RunSerializerCWLOutput, CWLJsonSerializer, \
     TempoMPGenOperatorSerializer, PairOperatorSerializer, RestartRunSerializer, RunSamplesSerializer, \
@@ -153,16 +154,16 @@ class RunApiViewSet(mixins.ListModelMixin,
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
-        serializer = APIRunCreateSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            run = serializer.save()
+        run_creator = RunCreator(**request.data)
+        if run_creator.is_valid():
+            run = run_creator.create()
             response = RunSerializerFull(run)
             create_run_task.delay(response.data['id'], request.data['inputs'])
             job_group_notifier_id = str(run.job_group_notifier_id)
             if job_group_notifier_id:
                 self._send_notifications(job_group_notifier_id, run)
             return Response(response.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Error", status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=AbortRunSerializer)
     @action(detail=False, methods=['post'])

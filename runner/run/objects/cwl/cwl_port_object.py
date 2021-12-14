@@ -45,16 +45,13 @@ class CWLPortObject(PortObject):
         return cls(run_id, name, port_type, schema, secondary_files, db_value, value, files, notify)
 
     def ready(self):
-        print(self.schema)
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
         files = []
-        print(self.value)
         self.db_value = PortProcessor.process_files(copy.deepcopy(self.value),
                                                     PortAction.CONVERT_TO_BID,
                                                     file_list=files)
         self.value = PortProcessor.process_files(copy.deepcopy(self.value),
                                                  PortAction.CONVERT_TO_PATH)
-        print(self.files)
         self.files = files
 
     def complete(self, value, group, job_group_notifier, output_metadata={}):

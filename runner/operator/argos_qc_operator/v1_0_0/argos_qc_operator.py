@@ -7,9 +7,9 @@ submits them as runs
 import os
 import logging
 from notifier.models import JobGroup
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_qc_outputs import construct_argos_qc_input
 LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class ArgosQcOperator(Operator):
         """
         From self, retrieve relevant run IDs, build the input JSON for
         the pipeline, and then submit them as jobs through the
-        APIRunCreateSerializer
+        RunCreator
         """
         run_ids = self.run_ids
         input_json = construct_argos_qc_input(run_ids)
@@ -63,7 +63,6 @@ class ArgosQcOperator(Operator):
                                                 jg_created_date)
             argos_qc_outputs_job_data['output_directory'] = output_directory
 
-        argos_qc_outputs_job = [(APIRunCreateSerializer(
-            data=argos_qc_outputs_job_data), input_json)]
+        argos_qc_outputs_job = [RunCreator(**argos_qc_outputs_job_data)]
 
         return argos_qc_outputs_job

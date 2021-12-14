@@ -14,7 +14,6 @@ from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as sample_obj
 import runner.operator.tempo_mpgen_operator.bin.tempo_patient as patient_obj

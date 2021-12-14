@@ -2,7 +2,6 @@ import re
 from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
 
@@ -21,11 +20,9 @@ class Sample:
         self.fastqs = Fastqs(file_list)
         self.sample_id = sample_id
 
-
     def __str__(self):
         s = self.sample_id
         return s
-
 
     def __repr__(self):
         return "{Sample %s}" % self.sample_id
@@ -73,7 +70,6 @@ class Fastqs:
                 print("No fastq R2 found for %s" % f.path)
                 self.paired = False
 
-
     def __str__(self):
         s = "R1:\n"
         for i in self.r1:
@@ -82,7 +78,6 @@ class Fastqs:
         for i in self.r2:
             s += i.path + "\n"
         return s
-
 
     def _get_fastq_from_list(self, fastq_path, fastq_files):
         """

@@ -7,20 +7,19 @@ submits them as runs
 import os
 import datetime
 import logging
-from notifier.models import JobGroup
-from runner.models import Run
+from runner.models import Run, Pipeline
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
+from runner.run.objects.run_creator_object import RunCreator
 LOGGER = logging.getLogger(__name__)
 
 
 class AionOperator(Operator):
+
     def get_jobs(self, lab_head_email):
         """
         From self, retrieve relevant run IDs, build the input JSON for
         the pipeline, and then submit them as jobs through the
-        APIRunCreateSerializer
+        RunCreator
         """
         run_ids = self.get_helix_filter_run_ids(lab_head_email)
         number_of_runs = len(run_ids)
@@ -40,12 +39,10 @@ class AionOperator(Operator):
             'name': name,
             'tags': tags}
 
-        aion_outputs_job = [(APIRunCreateSerializer(
-            data=aion_outputs_job_data), input_json)]
+        aion_outputs_job = [RunCreator(**aion_outputs_job_data)]
 
         return aion_outputs_job
-    
-    
+
     def build_input_json(self, run_ids):
     #    run_ids = self.run_ids
         project_prefixes = set()
@@ -75,7 +72,6 @@ class AionOperator(Operator):
             input_json["directories"].append({"class": "Directory", "path": portal_directory})
         return input_json
     
-    
     def get_lab_head(self, argos_run_ids):
         lab_head_emails = set()
         for argos_run_id in argos_run_ids:
@@ -90,7 +86,6 @@ class AionOperator(Operator):
         if lab_head_emails:
              return sorted(lab_head_emails)[0]
         return None
-    
     
     def get_helix_filter_run_ids(self, lab_head_email):
         runs = Run.objects.filter(status=4, app__name="argos_helix_filters")

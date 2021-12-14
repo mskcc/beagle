@@ -6,7 +6,7 @@ from jinja2 import Template
 from collections import defaultdict
 
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
 
@@ -132,21 +132,18 @@ class AccessNucleoOperator(Operator):
         sample_inputs = construct_sample_inputs(data, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                            key in metadata},
-                        'tags': {
-                            'requestId': self.request_id,
-                            'cmoSampleId': metadata['sampleName']
-                        }
+            RunCreator(
+                **{
+                    'name': "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    'app': self.get_pipeline_id(),
+                    'inputs': job,
+                    'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
+                                        key in metadata},
+                    'tags': {
+                        'requestId': self.request_id,
+                        'cmoSampleId': metadata['sampleName']
                     }
-                ),
-                job
-             )
+                }
+            )
             for i, (job, metadata) in enumerate(sample_inputs)
         ]

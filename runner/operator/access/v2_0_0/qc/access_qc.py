@@ -2,19 +2,17 @@ import os
 import json
 import uuid
 import logging
-
 from pathlib import Path
 from jinja2 import Template
-
 from beagle import settings
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import RunStatus, Port, Run
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
 
 
-
 logger = logging.getLogger(__name__)
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -49,6 +47,7 @@ meta_fields = [
     'captureName'
 ]
 
+
 class AccessQCOperator(Operator):
     """
     Operator for the ACCESS QC workflow:
@@ -62,20 +61,17 @@ class AccessQCOperator(Operator):
         sample_inputs = self.get_nucleo_outputs()
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {
-                            'requestId': self.request_id,
-                            'cmoSampleId': job['sample_name']
-                        }
+            RunCreator(
+                **{
+                    'name': "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    'app': self.get_pipeline_id(),
+                    'inputs': job,
+                    'tags': {
+                        'requestId': self.request_id,
+                        'cmoSampleId': job['sample_name']
                     }
-                ),
-                job
-             )
+                }
+            )
             for i, job in enumerate(sample_inputs)
         ]
 

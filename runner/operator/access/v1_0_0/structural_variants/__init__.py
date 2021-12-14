@@ -2,16 +2,14 @@ import os
 import json
 import logging
 from jinja2 import Template
-
 from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import File
 from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 
-
-
 logger = logging.getLogger(__name__)
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 TUMOR_OR_NORMAL_SEARCH = '-L0'
 SAMPLE_ID_SEP = '_cl_aln'
@@ -81,21 +79,18 @@ class AccessLegacySVOperator(Operator):
         sample_inputs = self.get_sample_inputs()
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {
-                            'requestId': self.request_id,
-                            'cmoSampleIds': job["sv_sample_id"],
-                            'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
-                        }
+            RunCreator(
+                **{
+                    'name': "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    'app': self.get_pipeline_id(),
+                    'inputs': job,
+                    'tags': {
+                        'requestId': self.request_id,
+                        'cmoSampleIds': job["sv_sample_id"],
+                        'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
                     }
-                ),
-                job
-             )
+                }
+            )
             for i, job in enumerate(sample_inputs)
         ]
 
