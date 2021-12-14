@@ -75,14 +75,14 @@ class AccessLegacySVOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                    'app': self.get_pipeline_id(),
-                    'inputs': job,
-                    'tags': {
-                        'requestId': self.request_id,
-                        'cmoSampleIds': job["sv_sample_id"],
-                        'patientId': '-'.join(job["sv_sample_id"][0].split('-')[0:2])
-                    }
+                    "name": "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {
+                        "requestId": self.request_id,
+                        "cmoSampleIds": job["sv_sample_id"],
+                        "patientId": "-".join(job["sv_sample_id"][0].split("-")[0:2]),
+                    },
                 }
             )
             for i, job in enumerate(sample_inputs)

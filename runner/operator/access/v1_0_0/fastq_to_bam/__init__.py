@@ -52,10 +52,10 @@ class AccessFastqToBamOperator(Operator):
             (
                 RunCreator(
                     **{
-                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {'requestId': self.request_id}
+                        "name": "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {"requestId": self.request_id},
                     }
                 ),
             )

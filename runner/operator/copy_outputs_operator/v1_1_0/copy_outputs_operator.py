@@ -75,12 +75,10 @@ class CopyOutputsOperator(Operator):
                 output_prefix = output_directory_prefix if output_directory_prefix else project_prefix
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-                output_directory = os.path.join(pipeline.output_directory,
-                                                "argos",
-                                                output_prefix,
-                                                argos_pipeline.version,
-                                                jg_created_date)
-            copy_outputs_job_data['output_directory'] = output_directory
+                output_directory = os.path.join(
+                    pipeline.output_directory, "argos", output_prefix, argos_pipeline.version, jg_created_date
+                )
+            copy_outputs_job_data["output_directory"] = output_directory
         copy_outputs_job = [RunCreator(**copy_outputs_job_data)]
         return copy_outputs_job
 

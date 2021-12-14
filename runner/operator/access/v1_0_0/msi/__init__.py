@@ -98,14 +98,14 @@ class AccessLegacyMSIOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
-                    'app': self.get_pipeline_id(),
-                    'inputs': job,
-                    'tags': {
-                        'requestId': self.request_id,
-                        'cmoSampleIds': job["sample_name"],
-                        'patientId': '-'.join(job["sample_name"][0].split('-')[0:2])
-                    }
+                    "name": "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {
+                        "requestId": self.request_id,
+                        "cmoSampleIds": job["sample_name"],
+                        "patientId": "-".join(job["sample_name"][0].split("-")[0:2]),
+                    },
                 }
             )
             for i, job in enumerate(inputs)

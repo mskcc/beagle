@@ -227,7 +227,6 @@ def construct_sample_inputs(samples, request_id, group_id):
 
 
 class AccessLegacyOperator(Operator):
-
     def get_jobs(self):
         ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
 
@@ -249,14 +248,14 @@ class AccessLegacyOperator(Operator):
             (
                 RunCreator(
                     **{
-                        'name': "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {
-                            'requestId': request_id,
-                            'cmoSampleIds': job["add_rg_ID"],
-                            'reference_version': 'HG19'
-                        }
+                        "name": "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {
+                            "requestId": request_id,
+                            "cmoSampleIds": job["add_rg_ID"],
+                            "reference_version": "HG19",
+                        },
                     }
                 )
             )

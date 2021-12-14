@@ -7,8 +7,9 @@ from .bin.make_sample import generate_results
 
 class AccessOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__requestId=self.request_id,
-                                  filemetadata__metadata__igocomplete=True).all()
+        files = self.files.filter(
+            filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True
+        ).all()
         access_jobs = list()  # [RunCreator(app=self.get_pipeline_id(), inputs=inputs})]
 
         data = list()
@@ -37,10 +38,15 @@ class AccessOperator(Operator):
 
         for i, job in enumerate(access_inputs):
             name = "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
-            access_jobs.append(RunCreator(
-                **{'name': name,
-                   'app': self.get_pipeline_id(),
-                   'inputs': job,
-                   'tags': {'requestId': self.request_id}}))
+            access_jobs.append(
+                RunCreator(
+                    **{
+                        "name": name,
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {"requestId": self.request_id},
+                    }
+                )
+            )
 
         return access_jobs  # Not returning anything for some reason for inputs; deal with later

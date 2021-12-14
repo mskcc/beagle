@@ -32,10 +32,7 @@ class TestOperatorTriggers(TestCase):
         self, get_pipeline_id, get_jobs, send_notification, create_run_task, memcache_task_lock, set_for_restart
     ):
         argos_jobs = list()
-        argos_jobs.append(RunCreator(app='cb5d793b-e650-4b7d-bfcd-882858e29cc5',
-                                     inputs=None,
-                                     name=None,
-                                     tags={}))
+        argos_jobs.append(RunCreator(app="cb5d793b-e650-4b7d-bfcd-882858e29cc5", inputs=None, name=None, tags={}))
         set_for_restart.return_value = None
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None

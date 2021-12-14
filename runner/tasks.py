@@ -129,8 +129,11 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
 
     for job in invalid_jobs:
         # TODO: Report this to JIRA ticket also
-        logger.error(format_log("Job invalid %s" % job.errors, obj=job, job_group_id=job_group_id,
-                                operator_run_id=operator_run.id))
+        logger.error(
+            format_log(
+                "Job invalid %s" % job.errors, obj=job, job_group_id=job_group_id, operator_run_id=operator_run.id
+            )
+        )
         logger.error(
             format_log(
                 "Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id, operator_run_id=operator_run.id

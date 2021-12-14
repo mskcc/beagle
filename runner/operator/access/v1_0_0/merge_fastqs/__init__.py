@@ -79,12 +79,12 @@ class AccessLegacyFastqMergeOperator(Operator):
         return [
             RunCreator(
                 **{
-                    'name': "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                    'app': self.get_pipeline_id(),
-                    'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                        key in metadata},
-                    'inputs': job,
-                    'tags': {'requestId': self.request_id, 'sampleId': metadata["sampleId"]}}
+                    "name": "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "app": self.get_pipeline_id(),
+                    "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
+                    "inputs": job,
+                    "tags": {"requestId": self.request_id, "sampleId": metadata["sampleId"]},
+                }
             )
             for i, (job, metadata) in enumerate(inputs)
         ]

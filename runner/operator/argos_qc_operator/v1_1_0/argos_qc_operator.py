@@ -71,11 +71,9 @@ class ArgosQcOperator(Operator):
             if self.job_group_id:
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-                output_directory = os.path.join(pipeline.output_directory,
-                                                "argos",
-                                                output_prefix,
-                                                argos_pipeline.version,
-                                                jg_created_date)
-            argos_qc_outputs_job_data['output_directory'] = output_directory
+                output_directory = os.path.join(
+                    pipeline.output_directory, "argos", output_prefix, argos_pipeline.version, jg_created_date
+                )
+            argos_qc_outputs_job_data["output_directory"] = output_directory
         argos_qc_outputs_job = [RunCreator(**argos_qc_outputs_job_data)]
         return argos_qc_outputs_job

@@ -8,18 +8,18 @@ class RunCreator(object):
     logger = logging.getLogger(__name__)
 
     def __init__(
-            self,
-            app,
-            inputs,
-            name,
-            tags,
-            output_directory=None,
-            output_metadata={},
-            operator_run_id=None,
-            job_group_id=None,
-            job_group_notifier_id=None,
-            notify_for_outputs=[],
-            resume=None
+        self,
+        app,
+        inputs,
+        name,
+        tags,
+        output_directory=None,
+        output_metadata={},
+        operator_run_id=None,
+        job_group_id=None,
+        job_group_notifier_id=None,
+        notify_for_outputs=[],
+        resume=None,
     ):
         self.app = app
         self.inputs = inputs
@@ -41,16 +41,18 @@ class RunCreator(object):
         create_date = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         name = "Run %s: %s" % (pipeline.name, create_date)
         if self.name:
-            name = self.name + ' (' + create_date + ')'
-        run = Run(run_type=pipeline.pipeline_type,
-                  name=name,
-                  app=pipeline,
-                  status=RunStatus.CREATING,
-                  job_statuses=dict(),
-                  output_metadata=self.output_metadata,
-                  tags=self.tags,
-                  notify_for_outputs=self.notify_for_outputs,
-                  resume=self.resume)
+            name = self.name + " (" + create_date + ")"
+        run = Run(
+            run_type=pipeline.pipeline_type,
+            name=name,
+            app=pipeline,
+            status=RunStatus.CREATING,
+            job_statuses=dict(),
+            output_metadata=self.output_metadata,
+            tags=self.tags,
+            notify_for_outputs=self.notify_for_outputs,
+            resume=self.resume,
+        )
         if self.output_directory:
             run.output_directory = self.output_directory
         try:

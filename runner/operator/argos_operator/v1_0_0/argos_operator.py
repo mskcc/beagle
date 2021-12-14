@@ -118,15 +118,14 @@ class ArgosOperator(Operator):
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-            tags = {'requestId': self.request_id,
-                    'sampleNameTumor': tumor_sample_name,
-                    'sampleNameNormal': normal_sample_name,
-                    'labHeadName': pi,
-                    'labHeadEmail': pi_email}
-            argos_jobs.append(RunCreator(app=pipeline,
-                                         inputs=job,
-                                         name=name,
-                                         tags=tags))
+            tags = {
+                "requestId": self.request_id,
+                "sampleNameTumor": tumor_sample_name,
+                "sampleNameNormal": normal_sample_name,
+                "labHeadName": pi,
+                "labHeadEmail": pi_email,
+            }
+            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
 
         operator_run_summary = UploadAttachmentEvent(
             self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
