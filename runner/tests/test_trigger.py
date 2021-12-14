@@ -36,6 +36,7 @@ class TestOperatorTriggers(TestCase):
                                      inputs=None,
                                      name=None,
                                      tags={}))
+        set_for_restart.return_value = None
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
         create_run_task.return_value = None
@@ -46,7 +47,7 @@ class TestOperatorTriggers(TestCase):
         operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
         create_jobs_from_operator(operator, None)
         self.assertEqual(len(Run.objects.all()), 1)
-        self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
+        self.assertEqual(RunStatus(Run.objects.first().status), RunStatus.FAILED)
 
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")
