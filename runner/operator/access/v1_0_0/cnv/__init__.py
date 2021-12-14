@@ -5,7 +5,7 @@ from jinja2 import Template
 
 from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 from runner.operator.access import get_request_id, get_request_id_runs
 
@@ -84,8 +84,8 @@ class AccessLegacyCNVOperator(Operator):
 
         return [
             (
-                APIRunCreateSerializer(
-                    data={
+                RunCreator(
+                    **{
                         "name": "ACCESS LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                         "app": self.get_pipeline_id(),
                         "inputs": job,
@@ -95,8 +95,7 @@ class AccessLegacyCNVOperator(Operator):
                             "patientId": "-".join(sample_ids[i].split("-")[0:2]),
                         },
                     }
-                ),
-                job,
+                )
             )
             for i, job in enumerate(inputs)
         ]

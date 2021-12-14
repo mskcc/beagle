@@ -5,11 +5,9 @@
 
 import logging
 from collections import defaultdict
-from itertools import groupby
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Port, PortType
-from file_system.repository.file_repository import FileRepository
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 
 from notifier.events import InputCreationFailedEvent
 from notifier.tasks import send_notification
@@ -225,7 +223,6 @@ def construct_sample_inputs(samples, request_id, group_id):
             continue
 
         sample_inputs.append(sample_input)
-
     return (sample_inputs, errors)
 
 
@@ -249,8 +246,8 @@ class AccessLegacyOperator(Operator):
 
         return [
             (
-                APIRunCreateSerializer(
-                    data={
+                RunCreator(
+                    **{
                         "name": "ACCESS LEGACY COLLAPSING M1: %s, %i of %i" % (request_id, i + 1, number_of_inputs),
                         "app": self.get_pipeline_id(),
                         "inputs": job,
@@ -260,8 +257,7 @@ class AccessLegacyOperator(Operator):
                             "reference_version": "HG19",
                         },
                     }
-                ),
-                job,
+                )
             )
             for i, job in enumerate(sample_inputs)
         ]
