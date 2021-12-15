@@ -1,9 +1,9 @@
 """
 Example Operator implementation
 """
-from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
+from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import FileMetadata
 
 
@@ -37,8 +37,7 @@ class DemoOperator(Operator):
         pipeline_obj = Pipeline.objects.get(id=self.get_pipeline_id())
         inputs = self.create_input()
         name = "DEMO JOB"
-        serialized_run = APIRunCreateSerializer(data=dict(app=pipeline_obj.id, inputs=inputs, name=name, tags={}))
-        job = inputs
-        job = (serialized_run, job)
-        jobs = [job]
+        job = dict(app=pipeline_obj.id, inputs=inputs, name=name, tags={})
+        serialized_run = RunCreator(**job)
+        jobs = [serialized_run]
         return jobs

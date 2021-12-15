@@ -136,11 +136,11 @@ class TestUltron(TestCase):
         ultron_job = ultron_operator._build_job(input_json)
         job_name = ""
         job_input_json = ""
-        if ultron_job[0].is_valid():
-            job_name = ultron_job[0].data["name"]
-            job_input_json = ultron_job[0].data["inputs"]
-            tags = ultron_job[0].data["tags"]
-            output_directory = ultron_job[0].data["output_directory"]
+        if ultron_job.is_valid():
+            job_name = ultron_job.name
+            job_input_json = ultron_job.inputs
+            tags = ultron_job.tags
+            output_directory = ultron_job.output_directory
         expected_output_directory_with_timestamp = os.path.join(
             self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f")
         )
