@@ -8,7 +8,6 @@ from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
-from runner.tasks import submit_job
 
 
 class ProtocolType(IntEnum):
@@ -238,8 +237,7 @@ class Run(BaseModel):
         self.output_directory = output_directory
         self.resume_attempts = resume_attempts
         self.save()
-        submit_job.delay(run_id, output_directory, execution_id)
-        return self
+        return run_id, output_directory, execution_id
 
     @property
     def is_completed(self):
