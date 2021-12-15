@@ -90,7 +90,7 @@ class UltronOperator(Operator):
         batch_input_json = BatchInputObj(input_objs)
         batch_input_json.inputs_json["argos_version_string"] = prev_version_string
         batch_input_json.inputs_json["is_impact"] = True # assume True
-        batch_input_json.inputs_json['fillout_output_fname'] = req_id_string + ".maf"
+        batch_input_json.inputs_json['fillout_output_fname'] = req_id_string + ".fillout.maf"
         return batch_input_json.inputs_json
 
 
