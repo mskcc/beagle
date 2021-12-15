@@ -5,15 +5,11 @@ Constructs input JSON for the Ultron pipeline and then
 submits them as runs
 """
 import os
-import datetime
 import logging
-from notifier.models import JobGroup
-from runner.models import Port, Run
+from runner.models import Pipeline, Port, Run
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
-from runner.models import Pipeline
 from file_system.repository.file_repository import FileRepository
-import json
+from runner.run.objects.run_creator_object import RunCreator
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -48,7 +44,7 @@ class ConcatMafsOperator(Operator):
             "name": "Request ID %s ULTRON PHASE1:CONCAT MAFs run" % request_id,
             "inputs": input_json,
         }
-        output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
+        output_job = RunCreator(**output_job_data)
         return output_job
 
     def _get_request_id(self):

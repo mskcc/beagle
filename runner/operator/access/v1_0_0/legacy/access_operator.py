@@ -1,7 +1,6 @@
 import uuid
-from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_access_data import construct_access_jobs
 from .bin.make_sample import generate_results
 
@@ -11,7 +10,7 @@ class AccessOperator(Operator):
         files = self.files.filter(
             filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True
         ).all()
-        access_jobs = list()  #  [APIRunCreateSerializer(data={'app': self.get_pipeline_id(), 'inputs': inputs})]
+        access_jobs = list()  # [RunCreator(app=self.get_pipeline_id(), inputs=inputs})]
 
         data = list()
         for file in files:
@@ -40,16 +39,13 @@ class AccessOperator(Operator):
         for i, job in enumerate(access_inputs):
             name = "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             access_jobs.append(
-                (
-                    APIRunCreateSerializer(
-                        data={
-                            "name": name,
-                            "app": self.get_pipeline_id(),
-                            "inputs": access_inputs,
-                            "tags": {"requestId": self.request_id},
-                        }
-                    ),
-                    job,
+                RunCreator(
+                    **{
+                        "name": name,
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {"requestId": self.request_id},
+                    }
                 )
             )
 
