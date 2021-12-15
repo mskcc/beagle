@@ -1,7 +1,7 @@
 import uuid
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
 from .bin.make_sample import build_sample
@@ -41,16 +41,13 @@ class TempoOperator(Operator):
         for i, job in enumerate(tempo_inputs):
             name = "FLATBUSH: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             tempo_jobs.append(
-                (
-                    APIRunCreateSerializer(
-                        data={
-                            "app": self.get_pipeline_id(),
-                            "inputs": tempo_inputs,
-                            "name": name,
-                            "tags": {"requestId": self.request_id},
-                        }
-                    ),
-                    job,
+                RunCreator(
+                    **{
+                        "app": self.get_pipeline_id(),
+                        "inputs": tempo_inputs,
+                        "name": name,
+                        "tags": {"requestId": self.request_id},
+                    }
                 )
             )
 

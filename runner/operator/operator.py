@@ -1,9 +1,9 @@
 import logging
 from file_system.models import File, FileMetadata
 from file_system.repository.file_repository import FileRepository
-from runner.serializers import OperatorErrorSerializer, APIRunCreateSerializer
-from django.db.models import Prefetch
+from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
+from runner.run.objects.run_creator_object import RunCreator
 
 
 class Operator(object):
@@ -43,7 +43,7 @@ class Operator(object):
     def get_jobs(self):
         """
 
-        :return: ([`(APIRunCreateSerializer, job)`])
+        :return: ([RunCreator])
         """
         return self._jobs
 
@@ -68,4 +68,4 @@ class Operator(object):
             self.logger.error("Invalid Operator: %s error" % self.model.slug)
 
     def ready_job(self, pipeline, tempo_inputs, job):
-        self._jobs.append((APIRunCreateSerializer(data={"app": pipeline, "inputs": tempo_inputs}), job))
+        self._jobs.append(RunCreator(app=pipeline, inputs=job))
