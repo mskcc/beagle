@@ -396,7 +396,7 @@ def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     retry_kwargs={"max_retries": 4},
     on_failure=on_failure_to_submit_job,
 )
-def submit_job(run_id, output_directory=None):
+def submit_job(run_id, output_directory=None, execution_id=None):
     resume = None
     try:
         run = Run.objects.get(id=run_id)
@@ -414,6 +414,8 @@ def submit_job(run_id, output_directory=None):
             logger.info(
                 format_log("Failed to resume runs as run is not equal to the following run: %s" % str(run2), obj=run)
             )
+    if execution_id:
+        resume = execution_id
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = run1.dump_job(output_directory=output_directory)
