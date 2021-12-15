@@ -16,6 +16,8 @@ class NextflowRunObject(RunObject):
         self,
         run_id,
         run_obj,
+        app,
+        name,
         inputs,
         outputs,
         status,
@@ -35,6 +37,8 @@ class NextflowRunObject(RunObject):
         super().__init__(
             run_id,
             run_obj,
+            app,
+            name,
             inputs,
             outputs,
             status,
@@ -78,6 +82,8 @@ class NextflowRunObject(RunObject):
         return cls(
             run_id,
             run,
+            run.app,
+            run.name,
             input_ports,
             output_ports,
             run.status,
@@ -118,6 +124,8 @@ class NextflowRunObject(RunObject):
         return cls(
             run_id,
             run,
+            run.app,
+            run.name,
             inputs,
             outputs,
             run.status,
