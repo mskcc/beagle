@@ -500,6 +500,9 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 send_notification.delay(ci_review)
 
                 _job_finished_notify(run, lsf_log_location, input_json_location)
+            else:
+                run_id, output_directory, execution_id = restart_run
+                submit_job.delay(run_id, output_directory, execution_id)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
