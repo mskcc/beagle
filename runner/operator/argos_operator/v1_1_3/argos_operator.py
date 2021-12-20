@@ -345,26 +345,26 @@ class ArgosOperator(Operator):
         return format_sample_name(*args, **kwargs)
 
     def on_job_fail(self, run):
-        cmo_sample_name = run.tags.get('sampleNameTumor')
+        cmo_sample_name = run.tags.get("sampleNameTumor")
         files = FileRepository.filter(queryset=self.files, metadata={"cmoSampleName": cmo_sample_name})
         if files:
-            qc_report = files[0].metadata['qcReports']
-            sample_id = files[0].metadata['sampleId']
-            '''
+            qc_report = files[0].metadata["qcReports"]
+            sample_id = files[0].metadata["sampleId"]
+            """
             {
                 "comments": "Suboptimal quantity",
                 "qcReportType": "LIBRARY",
                 "IGORecommendation": "Try",
                 "investigatorDecision": "Continue processing"
             }
-            '''
-            report_str = ''
+            """
+            report_str = ""
             for report in qc_report:
-                report_str += '{comments}\t{qc_report_type}\t{igo_recommendation}\t{investigator_decision}\n'.format(
-                    comments=report['comments'],
-                    qc_report_type=report['qcReportType'],
-                    igo_recommendation=report['IGORecommendation'],
-                    investigator_decision=report['investigatorDecision']
+                report_str += "{comments}\t{qc_report_type}\t{igo_recommendation}\t{investigator_decision}\n".format(
+                    comments=report["comments"],
+                    qc_report_type=report["qcReportType"],
+                    igo_recommendation=report["IGORecommendation"],
+                    investigator_decision=report["investigatorDecision"],
                 )
             msg = """
             cmoSampleId: {cmo_sample_name}
@@ -372,10 +372,10 @@ class ArgosOperator(Operator):
             
             | Comments | QC Report Type | IGORecommendation | Investigator Decision |
             {report_str}
-            """.format(cmo_sample_name=cmo_sample_name, sample_id=sample_id, report_str=report_str)
+            """.format(
+                cmo_sample_name=cmo_sample_name, sample_id=sample_id, report_str=report_str
+            )
 
-            file_name = '{cmo_sample_name}_qc_report.txt'.format(cmo_sample_name=cmo_sample_name)
-            sample_errors_event = UploadAttachmentEvent(
-                self.job_group_notifier_id, file_name, msg
-            ).to_dict()
+            file_name = "{cmo_sample_name}_qc_report.txt".format(cmo_sample_name=cmo_sample_name)
+            sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, file_name, msg).to_dict()
             send_notification.delay(sample_errors_event)
