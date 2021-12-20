@@ -547,9 +547,7 @@ def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_locat
 
 def _upload_qc_report(run):
     operator = OperatorFactory.get_by_model(
-        run.operator_run.operator,
-        job_group_id=run.job_group_id,
-        job_group_notifier_id=run.job_group_notifier_id
+        run.operator_run.operator, job_group_id=run.job_group_id, job_group_notifier_id=run.job_group_notifier_id
     )
     operator.on_job_fail(run)
 
