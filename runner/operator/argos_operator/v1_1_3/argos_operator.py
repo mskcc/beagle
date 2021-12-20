@@ -376,6 +376,6 @@ class ArgosOperator(Operator):
                 cmo_sample_name=cmo_sample_name, sample_id=sample_id, report_str=report_str
             )
 
-            file_name = "{cmo_sample_name}_qc_report.txt".format(cmo_sample_name=cmo_sample_name)
+            file_name = "{cmo_sample_name}_igo_qc_report".format(cmo_sample_name=cmo_sample_name)
             sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, file_name, msg).to_dict()
             send_notification.delay(sample_errors_event)
