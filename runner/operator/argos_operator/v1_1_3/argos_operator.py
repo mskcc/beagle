@@ -367,12 +367,11 @@ class ArgosOperator(Operator):
                     investigator_decision=report["investigatorDecision"],
                 )
             msg = """
-            cmoSampleId: {cmo_sample_name}
-            sampleId: {sample_id}
-            
-            | Comments | QC Report Type | IGORecommendation | Investigator Decision |
-            {report_str}
-            """.format(
+cmoSampleId: {cmo_sample_name}
+sampleId: {sample_id}
+Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
+{report_str}
+""".format(
                 cmo_sample_name=cmo_sample_name, sample_id=sample_id, report_str=report_str
             )
 
