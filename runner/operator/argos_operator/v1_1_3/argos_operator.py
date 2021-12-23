@@ -343,3 +343,38 @@ class ArgosOperator(Operator):
 
     def format_sample_name(self, *args, **kwargs):
         return format_sample_name(*args, **kwargs)
+
+    def on_job_fail(self, run):
+        cmo_sample_name = run.tags.get("sampleNameTumor")
+        files = FileRepository.filter(queryset=self.files, metadata={"cmoSampleName": cmo_sample_name})
+        if files:
+            qc_report = files[0].metadata["qcReports"]
+            sample_id = files[0].metadata["sampleId"]
+            """
+            {
+                "comments": "Suboptimal quantity",
+                "qcReportType": "LIBRARY",
+                "IGORecommendation": "Try",
+                "investigatorDecision": "Continue processing"
+            }
+            """
+            report_str = ""
+            for report in qc_report:
+                report_str += "{comments}\t{qc_report_type}\t{igo_recommendation}\t{investigator_decision}\n".format(
+                    comments=report["comments"],
+                    qc_report_type=report["qcReportType"],
+                    igo_recommendation=report["IGORecommendation"],
+                    investigator_decision=report["investigatorDecision"],
+                )
+            msg = """
+cmoSampleId: {cmo_sample_name}
+sampleId: {sample_id}
+Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
+{report_str}
+""".format(
+                cmo_sample_name=cmo_sample_name, sample_id=sample_id, report_str=report_str
+            )
+
+            file_name = "{cmo_sample_name}_igo_qc_report".format(cmo_sample_name=cmo_sample_name)
+            sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, file_name, msg).to_dict()
+            send_notification.delay(sample_errors_event)
