@@ -69,3 +69,6 @@ class Operator(object):
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append(RunCreator(app=pipeline, inputs=job))
+
+    def on_job_fail(self, run):
+        pass
