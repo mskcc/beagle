@@ -332,6 +332,7 @@ class TestUltron(TestCase):
         self.assertEqual(len(batch_input_json["ref_fasta"]), 2)
         self.assertEqual(len(batch_input_json["exac_filter"]), 2)
 
+
 def ordered(obj):
     if isinstance(obj, dict):
         return sorted((k, ordered(v)) for k, v in obj.items())
