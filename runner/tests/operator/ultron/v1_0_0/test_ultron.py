@@ -178,6 +178,12 @@ class TestUltron(TestCase):
             expected_output_directory_with_timestamp = os.path.join(
                 self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "analysis"
             )
+            from pprint import pprint
+            print("-----job_input_json")
+            pprint(job_input_json)
+            print("-----input_json")
+            pprint(input_json)
+            print("-----END")
             self.assertEqual(job_input_json, input_json)
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
