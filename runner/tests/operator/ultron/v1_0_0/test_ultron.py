@@ -99,7 +99,7 @@ class TestUltron(TestCase):
                 "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
-        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.0.0-rc5/"
+        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.1.2/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
     def test_construct_output_directory(self):
@@ -126,7 +126,7 @@ class TestUltron(TestCase):
         Test the creation of an ultron job
         """
         sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata["sampleId"]
-        input_json = {'argos_version_string': '1.0.0-rc5',
+        input_json = {'argos_version_string': '1.1.2',
                 'bam_files': [{'class': 'File',
                                'location': 'juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam',
                                'secondaryFiles': [{'class': 'File',
