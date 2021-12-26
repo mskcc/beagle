@@ -46,12 +46,11 @@ class UltronOperator(Operator):
         number_of_runs = len(run_ids)
         name = "ULTRON PHASE1 run"
         inputs = self._build_inputs(run_ids)
-        rid = run_ids[0] # get representative run_id from list; assumes ALL run ids use same pipeline
+        rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
         ultron_output_job = list()
         ultron_output_job = [self._build_job(inputs, rid)]
 
         return ultron_output_job
-
 
     def _get_output_directory(self, run_id):
         project_prefix = get_project_prefix(run_id)
@@ -62,14 +61,10 @@ class UltronOperator(Operator):
         if self.job_group_id:
             jg = JobGroup.objects.get(id=self.job_group_id)
             jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-            output_directory = os.path.join(pipeline.output_directory,
-                                            "argos",
-                                            project_prefix,
-                                            pipeline_version,
-                                            jg_created_date,
-                                            "analysis")
+            output_directory = os.path.join(
+                pipeline.output_directory, "argos", project_prefix, pipeline_version, jg_created_date, "analysis"
+            )
         return output_directory
-
 
     def _build_inputs(self, run_ids):
         input_objs = list()
@@ -85,10 +80,9 @@ class UltronOperator(Operator):
         req_id_string = "_".join(sorted(req_id))
         batch_input_json = BatchInputObj(input_objs)
         batch_input_json.inputs_json["argos_version_string"] = prev_version_string
-        batch_input_json.inputs_json["is_impact"] = True # assume True
-        batch_input_json.inputs_json['fillout_output_fname'] = req_id_string + ".fillout.maf"
+        batch_input_json.inputs_json["is_impact"] = True  # assume True
+        batch_input_json.inputs_json["fillout_output_fname"] = req_id_string + ".fillout.maf"
         return batch_input_json.inputs_json
-
 
     def _build_job(self, input_json, run_id):
         app = self.get_pipeline_id()
@@ -109,12 +103,10 @@ class UltronOperator(Operator):
         output_job = RunCreator(**output_job_data)
         return output_job
 
-
     def _get_prev_req_id(self, run_id):
         run = Run.objects.filter(id=run_id)[0]
-        request_id = run.tags['requestId']
+        request_id = run.tags["requestId"]
         return request_id
-
 
     def _get_prev_pipeline(self, run_id):
         run = Run.objects.filter(id=run_id)[0]
@@ -364,6 +356,6 @@ class BamData:
 
     def _set_dmp_sample_name(self):
         if "sample" in self.metadata:
-            dmp_sample_name = self.metadata['sample']
+            dmp_sample_name = self.metadata["sample"]
             return dmp_sample_name
         return "missingDMPSampleName"
