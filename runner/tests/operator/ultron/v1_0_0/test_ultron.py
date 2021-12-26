@@ -200,14 +200,8 @@ class TestUltron(TestCase):
             expected_output_directory_with_timestamp = os.path.join(
                 self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "analysis"
             )
-            from pprint import pprint
-
-            print("-----job_input_json")
-            pprint(job_input_json)
-            print("-----input_json")
-            pprint(input_json)
-            print("-----END")
-            self.assertEqual(job_input_json, input_json)
+            for key in job_input_json:
+                self.assertEqual(ordered(job_input_json[key]), ordered(input_json[key]))
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
     def test_construct_inputs_obj_no_dmp_bams(self):
@@ -337,3 +331,11 @@ class TestUltron(TestCase):
         self.assertEqual(len(batch_input_json["sample_ids"]), 2)
         self.assertEqual(len(batch_input_json["ref_fasta"]), 2)
         self.assertEqual(len(batch_input_json["exac_filter"]), 2)
+
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return sorted(ordered(x) for x in obj)
+    else:
+        return obj
