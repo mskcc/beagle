@@ -45,8 +45,6 @@ class UltronOperator(Operator):
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
         name = "ULTRON PHASE1 run"
-        self.project_prefix = "" 
-
         inputs = self._build_inputs(run_ids)
         rid = run_ids[0] # get representative run_id from list; assumes ALL run ids use same pipeline
         ultron_output_job = list()
@@ -96,9 +94,10 @@ class UltronOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
+        project_prefix = get_project_prefix(run_id)
         output_directory = self._get_output_directory(run_id)
         sample_name = input_json["sample_ids"]
-        tags = {"sampleNameTumor": sample_name, "project_prefix": self.project_prefix}
+        tags = {"sampleNameTumor": sample_name, "project_prefix": project_prefix}
         # add tags, name
         output_job_data = {
             "app": app,
