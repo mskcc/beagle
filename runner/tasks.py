@@ -505,6 +505,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
                 send_notification.delay(ci_review)
 
+                _upload_qc_report(run.run_obj)
                 _job_finished_notify(run, lsf_log_location, input_json_location)
             else:
                 run_id, output_directory, execution_id = restart_run
@@ -547,6 +548,13 @@ def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_locat
                 )
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
+
+
+def _upload_qc_report(run):
+    operator = OperatorFactory.get_by_model(
+        run.operator_run.operator, job_group_id=run.job_group_id, job_group_notifier_id=run.job_group_notifier_id
+    )
+    operator.on_job_fail(run)
 
 
 def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
