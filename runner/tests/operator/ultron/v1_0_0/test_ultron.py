@@ -63,15 +63,15 @@ class TestUltron(TestCase):
         self.first_dmp_bam_metadata_id = "638dbd71-0d7d-46bb-833d-25b7d90651c7"
         self.first_dmp_mutations_extended_id = "92a88d6d-92cc-4107-a334-d11c75efd8d6"
         self.first_dmp_mutations_extended = "/path/to/P-0000000-T01-IM6.txt"
-        self.first_dmp_dmp_sample_name = "s_REDACTED"
+        self.first_dmp_dmp_sample_name = "P-0000001-T01-IM6"
         self.first_run_expected_inputs = {
             "unindexed_bam_files": [
-                {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+                {"class": "File", "location": "juno:///path/to/P-00000001-T.bam"},
                 {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
             ],
-            "unindexed_sample_ids": ["s_REDACTED", "s_REDACTED"],
+            "unindexed_sample_ids": ["P-0000001-T01-IM6", "P-0000000-T01-IM6"],
             "unindexed_maf_files": [
-                {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+                {"class": "File", "location": "juno:///path/to/P-0000001-T01-IM6.txt"},
                 {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
             ],
             "maf_files": [
@@ -261,15 +261,17 @@ class TestUltron(TestCase):
     def test_construct_batch_input(self):
         """
         Test the construction of batch input
+
+        Samples get deduped
         """
         first_run = Run.objects.get(id=self.run_ids[0])
-        second_run = Run.objects.get(id=self.run_ids[0])
+        second_run = Run.objects.get(id=self.run_ids[1])
         first_input_obj = InputsObj(first_run)
         second_input_obj = InputsObj(second_run)
         batch_input_json = BatchInputObj([first_input_obj, second_input_obj])._build_inputs_json()
-        self.assertEqual(len(batch_input_json["unindexed_bam_files"]), 4)
-        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]), 4)
-        self.assertEqual(len(batch_input_json["unindexed_maf_files"]), 4)
+        self.assertEqual(len(batch_input_json["unindexed_bam_files"]), 2)
+        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]), 2)
+        self.assertEqual(len(batch_input_json["unindexed_maf_files"]), 2)
         self.assertEqual(len(batch_input_json["bam_files"]), 2)
         self.assertEqual(len(batch_input_json["sample_ids"]), 2)
         self.assertEqual(len(batch_input_json["ref_fasta"]), 2)
