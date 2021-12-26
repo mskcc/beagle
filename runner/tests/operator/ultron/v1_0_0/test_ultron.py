@@ -126,36 +126,58 @@ class TestUltron(TestCase):
         Test the creation of an ultron job
         """
         sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata["sampleId"]
-        input_json = {'argos_version_string': '1.1.2',
-                'bam_files': [{'class': 'File',
-                               'location': 'juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam',
-                               'secondaryFiles': [{'class': 'File',
-                                                   'location': 'juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bai'}]},
-                              {'class': 'File',
-                               'location': 'juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam',
-                               'secondaryFiles': [{'class': 'File',
-                                                   'location': 'juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai'}]}],
-                'exac_filter': {'class': 'File',
-                                'location': 'juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz'},
-                'fillout_output_fname': 'ALN-REQ-ID.fillout.maf',
-                'is_impact': True,
-                'maf_files': [{'class': 'File',
-                               'location': 'juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf'},
-                              {'class': 'File',
-                               'location': 'juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf'}],
-                'ref_fasta': {'class': 'File',
-                              'location': 'juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta'},
-                'sample_ids': ['s_C_ALLANT_T001_d', 's_C_ALLANT_T003_d'],
-                'unindexed_bam_files': [{'class': 'File',
-                                         'location': 'juno:///path/to/P-00000002-T.bam'},
-                                        {'class': 'File',
-                                         'location': 'juno:///path/to/00000001-T.bam'}],
-                'unindexed_maf_files': [{'class': 'File',
-                                         'location': 'juno:///path/to/P-0000002-T01-IM6.txt'},
-                                        {'class': 'File',
-                                         'location': 'juno:///path/to/P-0000000-T01-IM6.txt'}],
-                'unindexed_sample_ids': ['P-0000002-T01-IM6', 'P-0000001-T01-IM6']
-                }
+        input_json = {
+            "argos_version_string": "1.1.2",
+            "bam_files": [
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bai",
+                        }
+                    ],
+                },
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
+                        }
+                    ],
+                },
+            ],
+            "exac_filter": {
+                "class": "File",
+                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+            },
+            "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
+            "is_impact": True,
+            "maf_files": [
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                },
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+                },
+            ],
+            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "sample_ids": ["s_C_ALLANT_T001_d", "s_C_ALLANT_T003_d"],
+            "unindexed_bam_files": [
+                {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
+                {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+            ],
+            "unindexed_maf_files": [
+                {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
+                {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+            ],
+            "unindexed_sample_ids": ["P-0000002-T01-IM6", "P-0000001-T01-IM6"],
+        }
         operator_model = Operator.objects.get(id=12)
         job_group = JobGroup()
         job_group.save()
@@ -163,12 +185,12 @@ class TestUltron(TestCase):
             operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
         )
         inputs = ultron_operator._build_inputs(self.run_ids)
-        rep_run_id = self.run_ids[0] # required; because output_dir is arbitrarily set, we assume
-                                     # they're going to be the same for every run, set by one run_id
+        rep_run_id = self.run_ids[0]  # required; because output_dir is arbitrarily set, we assume
+        # they're going to be the same for every run, set by one run_id
         ultron_jobs = [ultron_operator._build_job(inputs, rep_run_id)]
         job_name = ""
         job_input_json = ""
-        self.assertEqual(1, len(ultron_jobs)) # there should only be one batch job; quirk that it must be in a list
+        self.assertEqual(1, len(ultron_jobs))  # there should only be one batch job; quirk that it must be in a list
         for ultron_job in ultron_jobs:
             if ultron_job.is_valid():
                 job_name = ultron_job.name
@@ -179,6 +201,7 @@ class TestUltron(TestCase):
                 self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "analysis"
             )
             from pprint import pprint
+
             print("-----job_input_json")
             pprint(job_input_json)
             print("-----input_json")
