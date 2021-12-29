@@ -319,12 +319,14 @@ NATS_SSL_CERTFILE = os.environ.get('BEAGLE_NATS_SSL_CERTFILE')
 NATS_SSL_KEYFILE = os.environ.get('BEAGLE_NATS_SSL_KEYFILE')
 
 METADB_NATS_URL = os.environ.get('BEAGLE_METADB_NATS_URL')
+METADB_NATS_FILTER_SUBJECT = os.environ.get('BEAGLE_METADB_NATS_FILTER_SUBJECT')
 METADB_NATS_NEW_REQUEST = os.environ.get('BEAGLE_METADB_NATS_NEW_REQUEST',
                                          'MDB_STREAM.server.cpt-gateway.cmo-new-request')
 METADB_NATS_REQUEST_UPDATE = os.environ.get('BEAGLE_METADB_NATS_REQUEST_UPDATE',
                                             'MDB_STREAM.server.cpt-gateway.cmo-request-update')
 METADB_NATS_SAMPLE_UPDATE = os.environ.get('BEAGLE_METADB_NATS_SAMPLE_UPDATE',
                                            'MDB_STREAM.server.cpt-gateway.cmo-sample-update')
+METADB_CLIENT_TIMEOUT = 3600.0
 
 METADB_USERNAME = os.environ.get('BEAGLE_METADB_USERNAME')
 METADB_PASSWORD = os.environ.get('BEAGLE_METADB_PASSWORD')
