@@ -22,7 +22,9 @@ Includecmd: no
     && git clone https://github.com/mskcc/beagle --branch ${BEAGLE_BRANCH}
     cd /usr/bin/beagle \
     && python3 -m pip install python-ldap \
-    && pip3 install -r requirements.txt
+    && python3 -m pip install -r requirements.txt \
+    && pip3 install --upgrade asyncio-nats-client==0.11.5 \
+    && pip3 install git+https://github.com/nats-io/nats.py@v2.0.0rc5
 
 
 ##############################
