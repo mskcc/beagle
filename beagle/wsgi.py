@@ -15,8 +15,5 @@ from concurrent.futures import ThreadPoolExecutor, wait
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beagle.settings')
 
-# Create Endpoint to start this job
-fetch_request_nats.delay()
-
 
 application = Cling(get_wsgi_application())
