@@ -3,7 +3,6 @@ from datetime import datetime as dt
 from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as tempo_sample
 
 

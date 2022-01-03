@@ -52,8 +52,8 @@ class TestAccessQCOperator(TestCase):
 
         self.assertEqual(len(jobs) > 0, True)
         for job in jobs:
-            self.assertEqual(job[0].is_valid(), True)
-            input_json = job[0].initial_data["inputs"]
+            self.assertEqual(job.is_valid(), True)
+            input_json = job.inputs
             self.assertEqual(len(input_json["collapsed_bam"]), 1)
             self.assertEqual(len(input_json["duplex_bam"]), 1)
             self.assertEqual(len(input_json["group_reads_by_umi_bam"]), 1)
