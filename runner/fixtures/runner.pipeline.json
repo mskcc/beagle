@@ -203,7 +203,6 @@
             "operator": 11,
             "default": true
         }
-    }
   },
   {
     "model": "runner.pipeline",
