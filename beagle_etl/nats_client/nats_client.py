@@ -6,7 +6,7 @@ import logging
 import asyncio
 from time import sleep
 from django.conf import settings
-from beagle_etl.jobs.lims_etl_jobs import new_request, update_request_job, update_sample_job
+from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job
 
 
 logger = logging.getLogger(__name__)
@@ -43,11 +43,11 @@ async def run(loop, queue):
         logger.info("Received a message on '{subject} {reply}': {data}".format(
           subject=subject, reply=reply, data=data))
         if queue == settings.METADB_NATS_NEW_REQUEST:
-            new_request(request_data)
+            new_request.delay(request_data)
         elif queue == settings.METADB_NATS_REQUEST_UPDATE:
-            update_request_job(request_data)
+            update_request_job.delay(request_data)
         elif queue == settings.METADB_NATS_SAMPLE_UPDATE:
-            update_sample_job(request_data)
+            update_sample_job.delay(request_data)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE,

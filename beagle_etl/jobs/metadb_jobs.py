@@ -4,6 +4,7 @@ import json
 import logging
 from deepdiff import DeepDiff
 from datetime import datetime
+from celery import shared_task
 from django.conf import settings
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
@@ -31,6 +32,7 @@ from django.contrib.auth.models import User
 logger = logging.getLogger(__name__)
 
 
+@shared_task
 def new_request(input_data):
     data = json.loads(input_data)
     request_id = data.get('requestId')
@@ -292,6 +294,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     return []
 
 
+@shared_task
 def update_request_job(input_data):
     data = json.loads(input_data)
     request_id = data.get('requestId')
@@ -374,6 +377,7 @@ def update_request_job(input_data):
     request_callback(request_id, recipe, sample_status_list, job_group, job_group_notifier)
 
 
+@shared_task
 def update_sample_job(input_data):
     data = json.loads(input_data)
     request_id = data.get('requestId')

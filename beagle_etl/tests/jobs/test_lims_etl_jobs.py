@@ -16,7 +16,7 @@ from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.lims_etl_jobs import create_pooled_normal, fetch_sample_metadata, get_run_id_from_string, fetch_samples, request_callback
+from beagle_etl.jobs.metadb_jobs import create_pooled_normal, fetch_sample_metadata, get_run_id_from_string, fetch_samples, request_callback
 
 # use local execution for Celery tasks
 # if beagle_etl.celery.app.conf['task_always_eager'] == False:
