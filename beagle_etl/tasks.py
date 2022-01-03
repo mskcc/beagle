@@ -6,7 +6,7 @@ from celery import shared_task
 from lib.logger import format_log
 from django.conf import settings
 from beagle_etl.models import JobStatus, Job
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
 from file_system.repository import FileRepository
