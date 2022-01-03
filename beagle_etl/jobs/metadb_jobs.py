@@ -63,7 +63,7 @@ def new_request(input_data):
             sample_status = {
                 'type': 'SAMPLE',
                 'igocomplete': igocomplete,
-                'sample': sample['igoId'],
+                'sample': sample['primaryId'],
                 'status': "COMPLETED",
                 'message': '',
                 'code': None
@@ -74,7 +74,7 @@ def new_request(input_data):
                 sample_status = {
                     'type': 'SAMPLE',
                     'igocomplete': igocomplete,
-                    'sample': sample['igoId'],
+                    'sample': sample['primaryId'],
                     'status': "FAILED",
                     "message": str(e),
                     "code": e.code
@@ -83,7 +83,7 @@ def new_request(input_data):
                 sample_status = {
                     'type': 'SAMPLE',
                     'igocomplete': igocomplete,
-                    'sample': sample['igoId'],
+                    'sample': sample['primaryId'],
                     'status': "FAILED",
                     'message': str(e),
                     'code': None
@@ -133,7 +133,7 @@ def new_request(input_data):
     samples = data.get('samples')
     for idx, sample in enumerate(data.get('samples')):
         # igocomplete = samples[idx]['igocomplete']
-        sample_id = sample['igoId']
+        sample_id = sample['primaryId']
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop('libraries')
         for library in libraries:
@@ -428,7 +428,7 @@ def update_sample_job(input_data):
     samples = data.get('samples')
     for idx, sample in enumerate(data.get('samples')):
         # igocomplete = samples[idx]['igocomplete']
-        sample_id = sample['igoId']
+        sample_id = sample['primaryId']
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop('libraries')
         for library in libraries:
@@ -716,7 +716,7 @@ def format_metadata(original_metadata):
     original_metadata_copy = copy.deepcopy(original_metadata)
     sample_name = original_metadata_copy.pop('cmoSampleName', None)
     external_sample_name = original_metadata_copy.pop('sampleName', None)
-    sample_id = original_metadata_copy.pop('igoId', None)
+    sample_id = original_metadata_copy.pop('primaryId', None)
     patient_id = original_metadata_copy.pop('cmoPatientId', None)
     sample_class = original_metadata_copy.pop('cmoSampleClass', None)
     specimen_type = original_metadata_copy.pop('specimenType', None)
