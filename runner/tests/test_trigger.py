@@ -1,15 +1,13 @@
 """
 Tests for Operator Trigger
 """
-import os
-import uuid
 from mock import patch, call
 from django.test import TestCase
-from runner.models import OperatorRun, RunStatus, TriggerRunType, OperatorTrigger, Run
-from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
+from runner.models import OperatorRun, RunStatus, TriggerRunType, Run
+from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator
 
 
 class TestOperatorTriggers(TestCase):
@@ -34,14 +32,7 @@ class TestOperatorTriggers(TestCase):
         self, get_pipeline_id, get_jobs, send_notification, create_run_task, memcache_task_lock, set_for_restart
     ):
         argos_jobs = list()
-        argos_jobs.append(
-            (
-                APIRunCreateSerializer(
-                    data={"app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5", "inputs": None, "name": None, "tags": {}}
-                ),
-                None,
-            )
-        )
+        argos_jobs.append(RunCreator(app="cb5d793b-e650-4b7d-bfcd-882858e29cc5", inputs=None, name=None, tags={}))
         set_for_restart.return_value = None
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
@@ -53,7 +44,7 @@ class TestOperatorTriggers(TestCase):
         operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
         create_jobs_from_operator(operator, None)
         self.assertEqual(len(Run.objects.all()), 1)
-        self.assertEqual(Run.objects.first().status, RunStatus.FAILED)
+        self.assertEqual(RunStatus(Run.objects.first().status), RunStatus.FAILED)
 
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")

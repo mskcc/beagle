@@ -63,15 +63,15 @@ class TestUltron(TestCase):
         self.first_dmp_bam_metadata_id = "638dbd71-0d7d-46bb-833d-25b7d90651c7"
         self.first_dmp_mutations_extended_id = "92a88d6d-92cc-4107-a334-d11c75efd8d6"
         self.first_dmp_mutations_extended = "/path/to/P-0000000-T01-IM6.txt"
-        self.first_dmp_dmp_sample_name = "s_REDACTED"
+        self.first_dmp_dmp_sample_name = "P-0000001-T01-IM6"
         self.first_run_expected_inputs = {
             "unindexed_bam_files": [
-                {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+                {"class": "File", "location": "juno:///path/to/P-00000001-T.bam"},
                 {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
             ],
-            "unindexed_sample_ids": ["s_REDACTED", "s_REDACTED"],
+            "unindexed_sample_ids": ["P-0000001-T01-IM6", "P-0000000-T01-IM6"],
             "unindexed_maf_files": [
-                {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+                {"class": "File", "location": "juno:///path/to/P-0000001-T01-IM6.txt"},
                 {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
             ],
             "maf_files": [
@@ -99,12 +99,14 @@ class TestUltron(TestCase):
                 "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
-        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.0.0-rc5/"
+        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.1.2/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
     def test_construct_output_directory(self):
         """
-        Test the creation of the output directory and project prefix tag
+        Test the creation of the output directory
+
+        Since this tests per run_id, this also tests project prefix retrieval (part of output dir path)
         """
         job_group = JobGroup()
         job_group.save()
@@ -112,42 +114,95 @@ class TestUltron(TestCase):
         ultron_operator = UltronOperator(
             operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
         )
-        ultron_operator._get_output_directory(self.run_ids)
-        expected_output_directory_with_timestamp = os.path.join(
-            self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f")
-        )
-        self.assertEqual(ultron_operator.output_directory, expected_output_directory_with_timestamp)
-        self.assertEqual(ultron_operator.project_prefix, self.expected_project_prefix)
+        for run_id in self.run_ids:
+            output_directory = ultron_operator._get_output_directory(run_id)
+            expected_output_directory_with_timestamp = os.path.join(
+                self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "analysis"
+            )
+            self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
     def test_construct_ultron_job(self):
         """
         Test the creation of an ultron job
         """
         sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata["sampleId"]
-        input_json = {"sample_ids": [sample]}
-        ultron_run_name = "Sample %s ULTRON PHASE1 run" % sample
+        input_json = {
+            "argos_version_string": "1.1.2",
+            "bam_files": [
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bai",
+                        }
+                    ],
+                },
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
+                        }
+                    ],
+                },
+            ],
+            "exac_filter": {
+                "class": "File",
+                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+            },
+            "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
+            "is_impact": True,
+            "maf_files": [
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                },
+                {
+                    "class": "File",
+                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+                },
+            ],
+            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "sample_ids": ["s_C_ALLANT_T001_d", "s_C_ALLANT_T003_d"],
+            "unindexed_bam_files": [
+                {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
+                {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+            ],
+            "unindexed_maf_files": [
+                {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
+                {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+            ],
+            "unindexed_sample_ids": ["P-0000002-T01-IM6", "P-0000001-T01-IM6"],
+        }
         operator_model = Operator.objects.get(id=12)
         job_group = JobGroup()
         job_group.save()
         ultron_operator = UltronOperator(
             operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
         )
-        ultron_operator._get_output_directory(self.run_ids)
-        ultron_job = ultron_operator._build_job(input_json)
+        inputs = ultron_operator._build_inputs(self.run_ids)
+        rep_run_id = self.run_ids[0]  # required; because output_dir is arbitrarily set, we assume
+        # they're going to be the same for every run, set by one run_id
+        ultron_jobs = [ultron_operator._build_job(inputs, rep_run_id)]
         job_name = ""
         job_input_json = ""
-        if ultron_job[0].is_valid():
-            job_name = ultron_job[0].data["name"]
-            job_input_json = ultron_job[0].data["inputs"]
-            tags = ultron_job[0].data["tags"]
-            output_directory = ultron_job[0].data["output_directory"]
-        expected_output_directory_with_timestamp = os.path.join(
-            self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f")
-        )
-        self.assertEqual(job_name, ultron_run_name)
-        self.assertEqual(job_input_json, input_json)
-        self.assertEqual(tags["project_prefix"], self.expected_project_prefix)
-        self.assertEqual(output_directory, expected_output_directory_with_timestamp)
+        self.assertEqual(1, len(ultron_jobs))  # there should only be one batch job; quirk that it must be in a list
+        for ultron_job in ultron_jobs:
+            if ultron_job.is_valid():
+                job_name = ultron_job.name
+                job_input_json = ultron_job.inputs
+                tags = ultron_job.tags
+                output_directory = ultron_job.output_directory
+            expected_output_directory_with_timestamp = os.path.join(
+                self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "analysis"
+            )
+            for key in job_input_json:
+                self.assertEqual(ordered(job_input_json[key]), ordered(input_json[key]))
+            self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
     def test_construct_inputs_obj_no_dmp_bams(self):
         """
@@ -261,16 +316,27 @@ class TestUltron(TestCase):
     def test_construct_batch_input(self):
         """
         Test the construction of batch input
+
+        Samples get deduped
         """
         first_run = Run.objects.get(id=self.run_ids[0])
-        second_run = Run.objects.get(id=self.run_ids[0])
+        second_run = Run.objects.get(id=self.run_ids[1])
         first_input_obj = InputsObj(first_run)
         second_input_obj = InputsObj(second_run)
         batch_input_json = BatchInputObj([first_input_obj, second_input_obj])._build_inputs_json()
-        self.assertEqual(len(batch_input_json["unindexed_bam_files"]), 4)
-        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]), 4)
-        self.assertEqual(len(batch_input_json["unindexed_maf_files"]), 4)
+        self.assertEqual(len(batch_input_json["unindexed_bam_files"]), 2)
+        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]), 2)
+        self.assertEqual(len(batch_input_json["unindexed_maf_files"]), 2)
         self.assertEqual(len(batch_input_json["bam_files"]), 2)
         self.assertEqual(len(batch_input_json["sample_ids"]), 2)
         self.assertEqual(len(batch_input_json["ref_fasta"]), 2)
         self.assertEqual(len(batch_input_json["exac_filter"]), 2)
+
+
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return sorted(ordered(x) for x in obj)
+    else:
+        return obj

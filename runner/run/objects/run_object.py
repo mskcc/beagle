@@ -11,6 +11,8 @@ class RunObject(object):
         self,
         run_id,
         run_obj,
+        app,
+        name,
         inputs,
         outputs,
         status,
@@ -26,6 +28,8 @@ class RunObject(object):
     ):
         self.run_id = run_id
         self.run_obj = run_obj
+        self.app = app
+        self.name = name
         self.output_file_group = run_obj.app.output_file_group
         self.inputs = inputs
         self.outputs = outputs
