@@ -13,7 +13,7 @@ from django.core.management import call_command
 
 FIXTURES = [
     "fixtures/tests/merge_fastqs/10151_F_13.file.json",
-    "fixtures/tests/merge_fastqs/10151_F_13.filemetadata.json"
+    "fixtures/tests/merge_fastqs/10151_F_13.filemetadata.json",
 ]
 
 COMMON_FIXTURES = [
@@ -90,9 +90,7 @@ class TestCMOCHNucleoOperator(TestCase):
             data.append(sample)
         cmo_ch_inputs = construct_sample_inputs(data, "05500_HJ")
         self.assertTrue(len(cmo_ch_inputs) == 18)
-        expected_inputs = json.load(
-            open(os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.input.json"))
-        )
+        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.input.json")))
         cmo_ch_inputs_str = json.dumps(cmo_ch_inputs)
         expected_inputs_str = json.dumps(expected_inputs)
         self.assertTrue(cmo_ch_inputs_str == expected_inputs_str)
