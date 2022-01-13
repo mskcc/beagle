@@ -6,7 +6,7 @@ from jinja2 import Template
 from collections import defaultdict
 
 from runner.operator.operator import Operator
-from runner.run.objects.run_creator_object import RunCreator
+from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
 
 
@@ -104,9 +104,9 @@ def construct_sample_inputs(samples, request_id):
     return sample_inputs
 
 
-class AccessNucleoOperator(Operator):
+class CMOCHNucleoOperator(Operator):
     """
-    Operator for the ACCESS Nucleo workflow:
+    Operator for the CMO-CH Nucleo workflow:
 
     https://github.com/msk-access/nucleo/blob/master/nucleo.cwl
 
@@ -123,14 +123,17 @@ class AccessNucleoOperator(Operator):
         sample_inputs = construct_sample_inputs(data, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [
-            RunCreator(
-                **{
-                    "name": "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                    "app": self.get_pipeline_id(),
-                    "inputs": job,
-                    "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
-                    "tags": {"requestId": self.request_id, "cmoSampleId": metadata["sampleName"]},
-                }
+            (
+                APIRunCreateSerializer(
+                    data={
+                        "name": "CMO-CH Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
+                        "tags": {"requestId": self.request_id, "cmoSampleId": metadata["sampleName"]},
+                    }
+                ),
+                job,
             )
             for i, (job, metadata) in enumerate(sample_inputs)
         ]
