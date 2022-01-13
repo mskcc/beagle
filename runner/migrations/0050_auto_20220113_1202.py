@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0049_run_resume_attempts'),
+        ("runner", "0049_run_resume_attempts"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='run',
-            name='notify_for_outputs',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=40, null=True), size=None),
+            model_name="run",
+            name="notify_for_outputs",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(blank=True, max_length=40, null=True), size=None
+            ),
         ),
     ]
