@@ -61,7 +61,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     valid_jobs, invalid_jobs = [], []
 
     for job in jobs:
-        valid_jobs.append(job) if job[0].is_valid() else invalid_jobs.append(job)
+        valid_jobs.append(job) if job.is_valid() else invalid_jobs.append(job)
 
     try:
         operator_run_parent = OperatorRun.objects.get(id=parent)
@@ -98,10 +98,11 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
     send_notification.delay(set_pipeline_field)
 
     for job in valid_jobs:
-        logger.info(format_log("Creating run", obj=job[0]))
-        run = job[0].save(
-            operator_run_id=operator_run.id, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id
-        )
+        logger.info(format_log("Creating run", obj=job))
+        job.operator_run_id = str(operator_run.id)
+        job.job_group_id = str(job_group_id) if job_group_id else job_group_id
+        job.job_group_notifier_id = str(job_group_notifier_id) if job_group_notifier_id else job_group_notifier_id
+        run = job.create()
         logger.info(format_log("Run created", obj=run))
 
         run_ids.append({"run_id": str(run.id), "tags": run.tags, "output_directory": run.output_directory})
@@ -118,7 +119,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
-            create_run_task.delay(str(run.id), job[1], output_directory)
+            create_run_task.delay(str(run.id), job.inputs, output_directory)
 
     if job_group_id:
         event = OperatorRunEvent(
@@ -128,6 +129,11 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
 
     for job in invalid_jobs:
         # TODO: Report this to JIRA ticket also
+        logger.error(
+            format_log(
+                "Job invalid %s" % job.errors, obj=job, job_group_id=job_group_id, operator_run_id=operator_run.id
+            )
+        )
         logger.error(
             format_log(
                 "Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id, operator_run_id=operator_run.id
@@ -499,6 +505,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 ci_review = SetCIReviewEvent(job_group_notifier_id).to_dict()
                 send_notification.delay(ci_review)
 
+                _upload_qc_report(run.run_obj)
                 _job_finished_notify(run, lsf_log_location, input_json_location)
             else:
                 run_id, output_directory, execution_id = restart_run
@@ -541,6 +548,13 @@ def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_locat
                 )
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
+
+
+def _upload_qc_report(run):
+    operator = OperatorFactory.get_by_model(
+        run.operator_run.operator, job_group_id=run.job_group_id, job_group_notifier_id=run.job_group_notifier_id
+    )
+    operator.on_job_fail(run)
 
 
 def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
