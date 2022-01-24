@@ -9,7 +9,7 @@
             "name": "access merge fastq run",
             "app": "65419097-a2b8-4d57-a8ab-c4c4cdffffff",
             "operator_run": 6,
-            "tags": {"requestId": "access_merge_fastq_test_request"},
+            "tags": {"igoRequestId": "access_merge_fastq_test_request"},
             "status": 4,
             "execution_id": null,
             "notify_for_outputs": "[]"

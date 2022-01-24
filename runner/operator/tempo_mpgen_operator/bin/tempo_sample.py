@@ -1,5 +1,5 @@
 from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
-
+from django.conf import settings
 
 class TempoSample(Sample):
     def __init__(self, sample_name, file_list):
@@ -25,8 +25,8 @@ class TempoSample(Sample):
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict: 
             self.bait_set = self._get_bait_sets().pop()
-            self.specimen_type = self.metadata['specimenType'][0]
-            self.sample_class = self.metadata['sampleClass'][0]
+            self.specimen_type = self.metadata[settings.SAMPLE_CLASS_METADATA_KEY][0]
+            self.sample_class = self.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY][0]
             self.cmo_sample_name = self.metadata['cmoSampleName'][0]
             self.run_mode = self.remapped_run_mode.pop()
             self.patient_id = self.metadata['patientId'][0]
@@ -83,8 +83,8 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [ 'patientId', 'specimenType',
-                    'sampleClass', 'cmoSampleName' ]
+        fields_to_check = ['patientId', settings.SAMPLE_CLASS_METADATA_KEY,
+                           settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'cmoSampleName']
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -146,9 +146,9 @@ class TempoSample(Sample):
 
 
     def __str__(self):
-        keys_for_str = [ 'sampleName', 'requestId', 'sampleId',
-                'patientId', 'specimenType', 'sampleClass',
-                'cmoSampleName']
+        keys_for_str = ['sampleName', settings.REQUEST_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY,
+                        'patientId', settings.SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+                        'cmoSampleName']
         s = ""
         metadata = self.dedupe_metadata_values()
         for key in keys_for_str:

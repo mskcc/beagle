@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 @shared_task
 def new_request(input_data):
     data = json.loads(input_data)
-    request_id = data.get('requestId')
+    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     if data.get('deliveryDate'):
         delivery_date = datetime.fromtimestamp(data['deliveryDate'] / 1000)
     else:
@@ -95,8 +95,8 @@ def new_request(input_data):
     job_group_notifier_id = notifier_start(job_group, request_id)
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
 
-    project_id = data.get('projectId')
-    recipe = data.get('recipe')
+    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    recipe = data.get(settings.RECIPE_METADATA_KEY)
 
     set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
@@ -114,9 +114,9 @@ def new_request(input_data):
     qc_access_email = data.get('qcAccessEmails')
 
     request_metadata = {
-        "requestId": request_id,
-        "projectId": project_id,
-        "recipe": recipe,
+        settings.REQUEST_ID_METADATA_KEY: request_id,
+        settings.PROJECT_ID_METADATA_KEY: project_id,
+        settings.RECIPE_METADATA_KEY: recipe,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
         "labHeadName": lab_head_name,
@@ -233,7 +233,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         send_notification.delay(disabled_assay_event)
         return []
 
-    if len(FileRepository.filter(metadata={'requestId': request_id}, values_metadata='recipe').all()) == 0:
+    if len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY).all()) == 0:
         no_samples_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
         send_notification.delay(no_samples_event)
         return []
@@ -243,7 +243,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
             ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(ci_review_e)
 
-    lab_head_email = FileRepository.filter(metadata={'requestId': request_id}, values_metadata='labHeadEmail').first()
+    lab_head_email = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata='labHeadEmail').first()
     try:
         if lab_head_email.split("@")[1] != "mskcc.org":
             event = ExternalEmailEvent(str(job_group_notifier.id), request_id).to_dict()
@@ -251,7 +251,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     except Exception:
         logger.error("Failed to check labHeadEmail")
 
-    if len(FileRepository.filter(metadata={'requestId': request_id, 'tumorOrNormal': 'Tumor'})) == 0:
+    if len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, 'tumorOrNormal': 'Tumor'})) == 0:
         only_normal_samples_event = OnlyNormalSamplesEvent(str(job_group_notifier.id), request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
@@ -297,11 +297,11 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
 @shared_task
 def update_request_job(input_data):
     data = json.loads(input_data)
-    request_id = data.get('requestId')
-    files = FileRepository.filter(metadata={'requestId': request_id})
+    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
-    project_id = data.get('projectId')
-    recipe = data.get('recipe')
+    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    recipe = data.get(settings.RECIPE_METADATA_KEY)
 
     job_group = JobGroup()
     job_group.save()
@@ -324,9 +324,9 @@ def update_request_job(input_data):
     qc_access_email = data.get('qcAccessEmails')
 
     request_metadata = {
-        "requestId": request_id,
-        "projectId": project_id,
-        "recipe": recipe,
+        settings.REQUEST_ID_METADATA_KEY: request_id,
+        settings.PROJECT_ID_METADATA_KEY: project_id,
+        settings.RECIPE_METADATA_KEY: recipe,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
         "labHeadName": lab_head_name,
@@ -345,16 +345,16 @@ def update_request_job(input_data):
     for f in files:
         new_metadata = f.metadata
         new_metadata.update(request_metadata)
-        if f.metadata['sampleId'] not in samples:
+        if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
                 'type': 'SAMPLE',
                 'igocomplete': f.metadata['igocomplete'],
-                'sample': f.metadata['sampleId'],
+                'sample': f.metadata[settings.SAMPLE_ID_METADATA_KEY],
                 'status': "COMPLETED",
                 "message": "File %s request metadata updated",
                 "code": None
             }
-            samples.append(f.metadata['sampleId'])
+            samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
             sample_status_list.append(sample_status)
         ddiff = DeepDiff(f.metadata,
                          new_metadata,
@@ -380,12 +380,12 @@ def update_request_job(input_data):
 @shared_task
 def update_sample_job(input_data):
     data = json.loads(input_data)
-    request_id = data.get('requestId')
-    files = FileRepository.filter(metadata={'requestId': request_id}).all()
+    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).all()
     file_paths = [f.file.path for f in files]
 
-    recipe = data.get('recipe')
-    project_id = data.get('projectId')
+    recipe = data.get(settings.RECIPE_METADATA_KEY)
+    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
 
     project_manager_name = data.get('projectManagerName')
     pi_email = data.get('piEmail')
@@ -400,9 +400,9 @@ def update_sample_job(input_data):
     qc_access_email = data.get('qcAccessEmails')
 
     request_metadata = {
-        "requestId": request_id,
-        "projectId": project_id,
-        "recipe": recipe,
+        settings.REQUEST_ID_METADATA_KEY: request_id,
+        settings.PROJECT_ID_METADATA_KEY: project_id,
+        settings.RECIPE_METADATA_KEY: recipe,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
         "labHeadName": lab_head_name,
@@ -535,7 +535,7 @@ def create_pooled_normal(filepath, file_group_id):
     metadata = {
         "runId": run_id,
         "preservation": preservation_type,
-        "recipe": recipe
+        settings.RECIPE_METADATA_KEY: recipe
     }
     try:
         new_path = CopyService.remap(recipe, filepath)
@@ -672,7 +672,7 @@ def create_or_update_file(path,
         file_type_obj = FileType.objects.filter(name=file_type).first()
         lims_metadata = copy.deepcopy(data)
         library_copy = copy.deepcopy(library)
-        lims_metadata['requestId'] = request_id
+        lims_metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
         lims_metadata['igocomplete'] = igocomplete
         lims_metadata['R'] = r
         for k, v in library_copy.items():
@@ -693,7 +693,7 @@ def create_or_update_file(path,
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
-        recipe = metadata.get('recipe', '')
+        recipe = metadata.get(settings.RECIPE_METADATA_KEY, '')
         new_path = CopyService.remap(recipe, path) # Get copied file path
         f = FileRepository.filter(path=new_path).first()
         if not f:
@@ -718,17 +718,16 @@ def format_metadata(original_metadata):
     external_sample_name = original_metadata_copy.pop('sampleName', None)
     sample_id = original_metadata_copy.pop('primaryId', None)
     patient_id = original_metadata_copy.pop('cmoPatientId', None)
-    sample_class = original_metadata_copy.pop('cmoSampleClass', None)
-    specimen_type = original_metadata_copy.pop('specimenType', None)
+    sample_class = original_metadata_copy.pop(settings.SAMPLE_CLASS_METADATA_KEY, None)  # old specimenType
     # ciTag is the new field which needs to be used for the operators
-    metadata['ciTag'] = format_sample_name(sample_name, specimen_type)
-    metadata['cmoSampleName'] = format_sample_name(sample_name, specimen_type)
-    metadata['specimenType'] = specimen_type
+    metadata['ciTag'] = format_sample_name(sample_name, sample_class)
+    metadata['cmoSampleName'] = format_sample_name(sample_name, sample_class)
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = sample_class
     metadata['sampleName'] = sample_name
     metadata['externalSampleId'] = external_sample_name
-    metadata['sampleId'] = sample_id
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_id
     metadata['patientId'] = format_patient_id(patient_id)
-    metadata['sampleClass'] = sample_class
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = sample_class
     metadata['sequencingCenter'] = 'MSKCC'
     metadata['platform'] = 'Illumina'
     metadata['libraryId'] = original_metadata_copy.pop('libraryIgoId', None)
@@ -804,11 +803,11 @@ def _generate_ticket_description(request_id,
     all_jobs.extend(pooled_normal_list)
 
     number_of_tumors = FileRepository.filter(
-        metadata={'requestId': request_id, 'tumorOrNormal': 'Tumor'}, values_metadata='sampleId').count()
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id, 'tumorOrNormal': 'Tumor'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
     number_of_normals = FileRepository.filter(
-        metadata={'requestId': request_id, 'tumorOrNormal': 'Normal'}, values_metadata='sampleId').count()
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id, 'tumorOrNormal': 'Normal'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
 
-    recipe = request_metadata.get('recipe')
+    recipe = request_metadata.get(settings.RECIPE_METADATA_KEY)
     data_analyst_email = request_metadata.get('dataAnalystEmail', '')
     data_analyst_name = request_metadata.get('dataAnalystName', '')
     investigator_email = request_metadata.get('investigatorEmail', '')

@@ -9,7 +9,7 @@ def add_lab_head_email(apps, _):
         tags = run.tags
         if 'project_prefix' in tags:
             project_prefix = tags['project_prefix']
-            metadata = FileMetadata.objects.filter(metadata__requestId=project_prefix).first()
+            metadata = FileMetadata.objects.filter(metadata__igoRequestId=project_prefix).first()
             if metadata:
                 labHeadEmail = metadata.metadata.get('labHeadEmail')
                 if labHeadEmail:

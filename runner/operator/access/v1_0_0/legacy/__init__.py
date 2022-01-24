@@ -4,6 +4,7 @@
 """""""""""""""""""""""""""""
 
 import logging
+from django.conf import settings
 from collections import defaultdict
 from itertools import groupby
 from runner.operator.operator import Operator
@@ -20,7 +21,7 @@ from jinja2 import Template
 logger = logging.getLogger(__name__)
 
 REQUIRED_META_FIELDS = [
-    'sampleId',
+    settings.SAMPLE_ID_METADATA_KEY,
     'captureName',
     'baitSet',
     'sampleName',
@@ -160,7 +161,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the metadata: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"]
+                    meta[settings.SAMPLE_ID_METADATA_KEY]
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -217,7 +218,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the input: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"]
+                    meta[settings.SAMPLE_ID_METADATA_KEY]
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -242,7 +243,7 @@ class AccessLegacyOperator(Operator):
             for f in p.files.all()
         ]
 
-        request_id = data[0]["metadata"]["requestId"]
+        request_id = data[0]["metadata"][settings.REQUEST_ID_METADATA_KEY]
         (sample_inputs, no_of_errors) = construct_sample_inputs(data, request_id, self.job_group_id)
 
         if no_of_errors:
@@ -258,7 +259,7 @@ class AccessLegacyOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': request_id,
+                            settings.REQUEST_ID_METADATA_KEY: request_id,
                             'cmoSampleIds': job["add_rg_ID"],
                             'reference_version': 'HG19'
                         }
@@ -278,6 +279,6 @@ def chunks(lst, n):
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs

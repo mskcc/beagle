@@ -3,6 +3,7 @@ import json
 import logging
 from jinja2 import Template
 
+from django.conf import settings
 from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
@@ -97,7 +98,7 @@ class AccessLegacyCNVOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': self.request_id,
+                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': sample_ids[i],
                             'patientId': '-'.join(sample_ids[i].split('-')[0:2])
                         }

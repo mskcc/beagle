@@ -99,7 +99,7 @@ class AccessLegacySNVOperator(Operator):
             self.fillout_unfiltered_normals = File.objects.filter(
                 file_name__contains=NORMAL_SAMPLE_SEARCH,
                 file_name__endswith=UNFILTERED_BAM_SEARCH,
-                port__run__tags__requestId__startswith=self.request_id.split('_')[0]
+                port__run__tags__igoRequestId__startswith=self.request_id.split('_')[0]
             ) \
             .distinct('file_name') \
             .order_by('file_name', '-created_date')
@@ -107,7 +107,7 @@ class AccessLegacySNVOperator(Operator):
             self.fillout_duplex_tumors = File.objects.filter(
                 file_name__contains=TUMOR_SAMPLE_SEARCH,
                 file_name__endswith=DUPLEX_BAM_SEARCH,
-                port__run__tags__requestId=self.request_id
+                port__run__tags__igoRequestId=self.request_id
             ) \
             .distinct('file_name') \
             .order_by('file_name', '-created_date')
@@ -115,7 +115,7 @@ class AccessLegacySNVOperator(Operator):
             self.fillout_simplex_tumors = File.objects.filter(
                 file_name__contains=TUMOR_SAMPLE_SEARCH,
                 file_name__endswith=SIMPLEX_BAM_SEARCH,
-                port__run__tags__requestId=self.request_id
+                port__run__tags__igoRequestId=self.request_id
             ) \
             .distinct('file_name') \
             .order_by('file_name', '-created_date')
@@ -422,7 +422,7 @@ class AccessLegacySNVOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': self.request_id,
+                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["tumor_sample_names"],
                             'patientId': '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
                         }

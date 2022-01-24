@@ -50,7 +50,7 @@ def get_samples_from_patient_id(patient_id):
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample['metadata']['sampleId']
+        igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)
@@ -76,12 +76,12 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
     descriptor = None
     for pooled_normal in pooled_normals:
-        bset_data = pooled_normal.metadata['recipe']
+        bset_data = pooled_normal.metadata[settings.RECIPE_METADATA_KEY]
         if bset_data.lower() in bait_set.lower():
             descriptor = bset_data
 
     if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor})
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
@@ -222,14 +222,14 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     sample['path'] = pooled_normal.file.path
     sample['file_name'] = pooled_normal.file.file_name
     metadata = init_metadata()
-    metadata['sampleId'] = sample_name
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata['sampleName'] = sample_name
     metadata['cmoSampleName'] = sample_name
-    metadata['requestId'] = sample_name
+    metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = "MSKCC"
     metadata['platform'] = "Illumina"
     metadata['baitSet'] = bait_set 
-    metadata['recipe'] = bait_set
+    metadata[settings.RECIPE_METADATA_KEY] = bait_set
     metadata['runId'] = run_ids
     metadata['preservation'] = preservation_types
     metadata['libraryId'] = sample_name + "_1"
@@ -241,9 +241,9 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['flowCellId'] = 'PN_FCID'
     metadata['tumorOrNormal'] = 'Normal'
     metadata['patientId'] = 'PN_PATIENT_ID'
-    metadata['specimenType'] = specimen_type
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata['runMode'] = ""
-    metadata['sampleClass'] = ""
+    metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
     sample['metadata'] = metadata
     return sample
 
@@ -278,14 +278,14 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     sample['file_name'] = dmp_bam.file.file_name
     sample['file_type'] = dmp_bam.file.file_type
     metadata = init_metadata()
-    metadata['sampleId'] = sample_name
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
     metadata['cmoSampleName'] = metadata['sampleName']
-    metadata['requestId'] = sample_name
+    metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = sequencingCenter
     metadata['platform'] = platform
     metadata['baitSet'] = bait_set
-    metadata['recipe'] = bait_set
+    metadata[settings.RECIPE_METADATA_KEY] = bait_set
     metadata['run_id'] = ""
     metadata['preservation'] = ""
     metadata['libraryId'] = sample_name + "_1"
@@ -297,9 +297,9 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata['flowCellId'] = 'DMP_FCID'
     metadata['tumorOrNormal'] = tumor_type
     metadata['patientId'] = patient_id
-    metadata['specimenType'] = specimen_type
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata['runMode'] = ""
-    metadata['sampleClass'] = ""
+    metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
     sample['metadata'] = metadata
     return sample
 
