@@ -1,5 +1,6 @@
 import uuid
 from django.db.models import Q
+from django.conf import settings
 from file_system.models import File, FileGroup
 from rest_framework import serializers
 from runner.operator.operator import Operator
@@ -24,12 +25,12 @@ class ArgosOperator(Operator):
 
         if self.request_id:
             files = FileRepository.filter(queryset=self.files,
-                                          metadata={'requestId': self.request_id,
+                                          metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
                                                     'igocomplete': True},
                                           filter_redact=True)
 
             cnt_tumors = FileRepository.filter(queryset=self.files,
-                                               metadata={'requestId': self.request_id,
+                                               metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
                                                          'tumorOrNormal': 'Tumor',
                                                          'igocomplete': True},
                                                filter_redact=True).count()
@@ -57,7 +58,7 @@ class ArgosOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
+            igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
@@ -172,7 +173,7 @@ class ArgosOperator(Operator):
 
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
-            tags = {'requestId': self.request_id,
+            tags = {settings.REQUEST_ID_METADATA_KEY: self.request_id,
                     'sampleNameTumor': tumor_sample_name,
                     'sampleNameNormal': normal_sample_name,
                     'labHeadName': pi,

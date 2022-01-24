@@ -3,6 +3,7 @@ import json
 import logging
 
 from jinja2 import Template
+from django.conf import settings
 from collections import defaultdict
 
 from runner.operator.operator import Operator
@@ -30,15 +31,15 @@ METADATA_OUTPUT_FIELDS = [
     'captureName',
     'libraryConcentrationNgul',
     'captureConcentrationNm',
-    'sampleId',
-    'requestId'
+    settings.SAMPLE_ID_METADATA_KEY,
+    settings.REQUEST_ID_METADATA_KEY
 ]
 
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
     return sample_pairs
 
 
@@ -73,7 +74,7 @@ def construct_sample_inputs(samples, request_id):
             "libraryVolume": calc_avg(sample_group, "libraryVolume"),
             "libraryConcentrationNgul": calc_avg(sample_group, "libraryConcentrationNgul"),
             "captureConcentrationNm": calc_avg(sample_group, "captureConcentrationNm"),
-            "requestId": request_id
+            settings.REQUEST_ID_METADATA_KEY: request_id
         })
 
         sample_group = list(sample_group)
@@ -115,7 +116,7 @@ class AccessNucleoOperator(Operator):
         files = FileRepository.filter(
             queryset=self.files,
             metadata={
-                'requestId': self.request_id,
+                settings.REQUEST_ID_METADATA_KEY: self.request_id,
                 'igocomplete': True
             }
         )
@@ -141,7 +142,7 @@ class AccessNucleoOperator(Operator):
                         'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
                                             key in metadata},
                         'tags': {
-                            'requestId': self.request_id,
+                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleId': metadata['sampleName']
                         }
                     }

@@ -43,13 +43,13 @@ async def run(loop, queue):
         logger.info("Received a message on '{subject} {reply}': {data}".format(
           subject=subject, reply=reply, data=data))
         if queue == settings.METADB_NATS_NEW_REQUEST:
-            logger.info("Sending request: %s to new_request function" % request_data['requestId'])
+            logger.info("Sending request: %s to new_request function" % request_data[settings.REQUEST_ID_METADATA_KEY])
             new_request.delay(request_data)
         elif queue == settings.METADB_NATS_REQUEST_UPDATE:
-            logger.info("Sending request: %s to update_request_job function" % request_data['requestId'])
+            logger.info("Sending request: %s to update_request_job function" % request_data[settings.REQUEST_ID_METADATA_KEY])
             update_request_job.delay(request_data)
         elif queue == settings.METADB_NATS_SAMPLE_UPDATE:
-            logger.info("Sending request: %s to update_sample_job function" % request_data['requestId'])
+            logger.info("Sending request: %s to update_sample_job function" % request_data[settings.REQUEST_ID_METADATA_KEY])
             update_sample_job.delay(request_data)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)

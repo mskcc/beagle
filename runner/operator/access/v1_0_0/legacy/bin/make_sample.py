@@ -1,6 +1,7 @@
 import sys,os
 import json
 from pprint import pprint
+from django.conf import settings
 
 
 def format_sample_name(sample_name):
@@ -25,7 +26,7 @@ def generate_results(results):
         bid = v['id']
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['sampleId']
+        igo_id = meta[settings.SAMPLE_ID_METADATA_KEY]
         lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
@@ -49,7 +50,7 @@ def generate_results(results):
         if rg_id not in samples:
             samples[rg_id] = dict()
             sample = dict()
-            sample['request_id'] = meta['requestId']
+            sample['request_id'] = meta[settings.REQUEST_ID_METADATA_KEY]
             sample['read_group_sequnecing_center'] = CN
             sample['read_group_sequencing_platform'] = PL
             sample['read_group_platform_unit'] = pu

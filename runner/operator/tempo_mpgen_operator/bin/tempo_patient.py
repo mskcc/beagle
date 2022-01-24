@@ -4,6 +4,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
+from django.conf import settings
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as tempo_sample
 
 
@@ -199,7 +200,7 @@ class Patient:
             conflicts = []
             if "sampleNameMalformed" in sample.metadata['cmoSampleName']:
                 conflicts.append("incorrect CMO Sample Name")
-            if not "".join(sample.metadata['sampleClass']):
+            if not "".join(sample.metadata[settings.SAMPLE_CLASS_METADATA_KEY]):
                     conflicts.append("no sample class")
             multiple_values = [ "" + field + "[" + ";".join(list(set(sample.metadata[field]))).strip() + "]" for field in sample.conflict_fields ]
             conflicts = conflicts + multiple_values
