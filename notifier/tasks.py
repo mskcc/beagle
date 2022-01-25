@@ -41,15 +41,15 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
         notifier_id = eh.start(request_id)
         job_group_notifier.jira_id = notifier_id
         if notifier_id.startswith(settings.JIRA_PREFIX):
-            file_obj = FileRepository.filter(metadata={'requestId': request_id}).first()
+            file_obj = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
             if file_obj:
                 job_group_notifier.PI = file_obj.metadata.get('labHeadName')
                 job_group_notifier.investigator = file_obj.metadata.get('investigatorName')
-                job_group_notifier.assay = file_obj.metadata.get('recipe')
+                job_group_notifier.assay = file_obj.metadata.get(settings.RECIPE_METADATA_KEY)
             else:
                 job_group_notifier.PI = metadata.get('labHeadName')
                 job_group_notifier.investigator = metadata.get('investigatorName')
-                job_group_notifier.assay = metadata.get('recipe')
+                job_group_notifier.assay = metadata.get(settings.RECIPE_METADATA_KEY)
         job_group_notifier.save()
         return str(job_group_notifier.id)
     logger.info("Notifier Inactive")

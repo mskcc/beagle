@@ -19,16 +19,16 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
 meta_fields = [
-    'igoId',
+    'igoId', ## TODO: Change this
     'cmoSampleName',
     'sampleName',
-    'cmoSampleClass',
+    settings.CMO_SAMPLE_CLASS_METADATA_KEY,
     'cmoPatientId',
     'investigatorSampleId',
     'oncoTreeCode',
     'tumorOrNormal',
     'tissueLocation',
-    'specimenType',
+    settings.SAMPLE_CLASS_METADATA_KEY,
     'sampleOrigin',
     'preservation',
     'collectionYear',
@@ -69,7 +69,7 @@ class AccessQCOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': self.request_id,
+                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleId': job['sample_name']
                         }
                     }
@@ -83,7 +83,7 @@ class AccessQCOperator(Operator):
         # Use most recent set of runs that completed successfully
         most_recent_runs_for_request = Run.objects.filter(
             app__name='access nucleo',
-            tags__requestId=self.request_id,
+            tags__igoRequestId=self.request_id,
             status=RunStatus.COMPLETED,
             operator_run__status=RunStatus.COMPLETED
         ).order_by('-created_date').first().operator_run.runs.all()

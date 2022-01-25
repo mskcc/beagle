@@ -42,8 +42,8 @@ class Migration(migrations.Migration):
             except Exception:
                 print("Failed to extract requestId for Run:%s" % run.name)
                 continue
-            if request_id and not run.tags.get('requestId'):
-                run.tags = {'requestId': request_id}
+            if request_id and not run.tags.get(settings.REQUEST_ID_METADATA_KEY):
+                run.tags = {settings.REQUEST_ID_METADATA_KEY: request_id}
                 run.save()
 
     operations = [

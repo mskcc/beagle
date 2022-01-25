@@ -128,7 +128,7 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
-            assay = self.metadata.get(settings.ASSAY_METADATA_KEY, '')
+            assay = self.metadata.get(settings.RECIPE_METADATA_KEY, '')
             investigator = self.metadata.get(settings.INVESTIGATOR_METADATA_KEY, '')
             pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, '')
             populate_job_group_notifier_metadata.delay(request_id,

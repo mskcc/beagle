@@ -1,5 +1,6 @@
 import logging
 import re
+from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
@@ -86,14 +87,14 @@ def build_sample(data):
     for i,v in enumerate(data):
         meta = v['metadata']
         bid = v['id']
-        request_id = meta['requestId']
+        request_id = meta[settings.REQUEST_ID_METADATA_KEY]
         fpath = v['path']
         fname = v['file_name']
-        igo_id = meta['sampleId']
+        igo_id = meta[settings.SAMPLE_ID_METADATA_KEY]
         lb = meta['libraryId']
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
-        specimen_type = meta['specimenType']
+        specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
         species = meta['species']
         cmo_sample_name = format_sample_name(meta['sampleName'])
         flowcell_id = meta['flowCellId']

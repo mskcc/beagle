@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from runner.models import Run, RunStatus, Port
 from file_system.models import File, FileMetadata
 
@@ -22,8 +23,8 @@ def get_request_id(run_ids, request_id=None):
 
     if run_ids:
         run = Run.objects.get(pk=run_ids[0])
-        if run.tags.get('requestId'):
-            return run.tags.get('requestId')
+        if run.tags.get(settings.REQUEST_ID_METADATA_KEY):
+            return run.tags.get(settings.REQUEST_ID_METADATA_KEY)
 
     raise Exception("Could not get find request id")
 
@@ -35,7 +36,7 @@ def get_request_id_runs(request_id):
     :return: List[str] - List of most recent runs from given request ID
     """
     operator_run_id = Run.objects.filter(
-        tags__requestId=request_id,
+        tags__igoRequestId=request_id,
         app__name__in=['access legacy', 'access nucleo'],
         operator_run__status=RunStatus.COMPLETED
     ).exclude(finished_date__isnull=True).order_by('-finished_date').first().operator_run_id
@@ -94,7 +95,7 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
         unfiltered_matched_normal_bam = File.objects.filter(
             file_name__startswith=patient_normals_search,
             file_name__endswith=IGO_UNFILTERED_REGEX,
-            port__run__tags__requestId__startswith=request_id.split('_')[0]
+            port__run__tags__igoRequestId__startswith=request_id.split('_')[0]
         ).order_by('-created_date').first()
 
         if unfiltered_matched_normal_bam:

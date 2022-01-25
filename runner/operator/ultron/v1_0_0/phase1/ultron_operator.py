@@ -7,6 +7,7 @@ submits them as runs
 import os
 import datetime
 import logging
+from django.conf import settings
 from notifier.models import JobGroup
 from runner.models import Port, Run
 from runner.operator.operator import Operator
@@ -171,7 +172,7 @@ class InputsObj:
         if f:
             # retrieve metadata from first record (should only be one)
             meta = f[0].metadata
-            sample_id = meta['sampleId']
+            sample_id = meta[settings.SAMPLE_ID_METADATA_KEY]
             sample = SampleData(sample_id)
         return sample
 
@@ -279,7 +280,7 @@ class SampleData:
     def _get_sample_metadata(self):
         # gets patient id and cmo sample name from sample id query
         # condensed in this one  fucntion to reduce amount of queriesd
-        files = FileRepository.filter(metadata={'sampleId': self.sample_id,
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: self.sample_id,
                                                 'igocomplete': True},
                                       filter_redact=True)
         # there should only be one patient ID

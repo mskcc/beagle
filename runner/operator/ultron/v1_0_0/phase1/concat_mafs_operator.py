@@ -42,7 +42,7 @@ class ConcatMafsOperator(Operator):
         pipeline_version = pipeline.version
         request_id = self._get_request_id()
         input_json['output_filename'] = request_id + ".rez.maf"
-        tags = {'requestId': request_id}
+        tags = {settings.REQUEST_ID_METADATA_KEY: request_id}
         # add tags, name
         output_job_data = {
             'app': app,
@@ -64,8 +64,8 @@ class ConcatMafsOperator(Operator):
             sample_files = FileRepository.filter(queryset=files, metadata = {'cmoSampleName': sample_name})
             for f in sample_files:
                 metadata = f.metadata
-                if 'requestId' in metadata:
-                    request_ids.add(metadata['requestId'])
+                if settings.REQUEST_ID_METADATA_KEY in metadata:
+                    request_ids.add(metadata[settings.REQUEST_ID_METADATA_KEY])
         request_id = "_".join(list(request_ids))
         return request_id
 

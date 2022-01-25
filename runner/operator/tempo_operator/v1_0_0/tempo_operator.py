@@ -4,12 +4,14 @@ from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
+from django.conf import settings
 from .bin.make_sample import build_sample
 
 
 class TempoOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True).all()
+        files = self.files.filter(filemetadata__metadata__igoRequestId=self.request_id,
+                                  filemetadata__metadata__igocomplete=True).all()
         tempo_jobs = list()
 
         data = list()
@@ -25,7 +27,7 @@ class TempoOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
+            igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
@@ -40,6 +42,6 @@ class TempoOperator(Operator):
             name = "FLATBUSH: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             tempo_jobs.append((APIRunCreateSerializer(
                 data={'app': self.get_pipeline_id(), 'inputs': tempo_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id}}), job))
+                      'tags': {settings.REQUEST_ID_METADATA_KEY: self.request_id}}), job))
 
         return tempo_jobs
