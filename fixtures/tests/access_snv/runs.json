@@ -9,7 +9,7 @@
             "name": "access legacy run",
             "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
             "operator_run": 4,
-            "tags": {"requestId": "access_legacy_test_request"},
+            "tags": {"igoRequestId": "access_legacy_test_request"},
             "status": 4,
             "execution_id": null,
             "notify_for_outputs": "[]"
@@ -25,7 +25,7 @@
             "name": "access legacy fake run (to simulate imported bams)",
             "app": "65419097-a2b8-4d57-a8ab-c4c4cddcbeac",
             "operator_run": 5,
-            "tags": {"requestId": "access_legacy_test_request_imported_bams"},
+            "tags": {"igoRequestId": "access_legacy_test_request_imported_bams"},
             "status": 4,
             "execution_id": null,
             "notify_for_outputs": "[]"

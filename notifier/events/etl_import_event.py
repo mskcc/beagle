@@ -39,7 +39,7 @@ class ETLImportEvent(Event):
         ETL_IMPORT_MESSAGE_TEMPLATE = """
         Request imported: {request_id}
         Number of samples: {cnt_samples}
-        Recipe: {recipe}
+        Gene Panel: {recipe}
         Data Analyst Name: {data_analyst_name}
         Data Analyst e-mail: {data_analyst_email}
         Investigator Name: {investigator_name}

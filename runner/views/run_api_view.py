@@ -92,7 +92,7 @@ class RunApiViewSet(mixins.ListModelMixin,
             if tags:
                 queryset = query_from_dict("tags__%s__contains", queryset, tags)
             if request_ids:
-                queryset = queryset.filter(tags__requestId__in=request_ids)
+                queryset = queryset.filter(tags__igoRequestId__in=request_ids)
             if apps:
                 queryset = queryset.filter(app__in=apps)
             if run:
@@ -401,7 +401,7 @@ class RunOperatorViewSet(GenericAPIView):
                 get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
             try:
                 run = Run.objects.get(id=run_ids[0])
-                req = run.tags.get('requestId', 'Unknown')
+                req = run.tags.get(settings.REQUEST_ID_METADATA_KEY, 'Unknown')
             except Run.DoesNotExist:
                 req = 'Unknown'
 
@@ -520,7 +520,7 @@ class CWLJsonViewSet(GenericAPIView):
             if jira_ids:
                 queryset = queryset.filter(job_group_notifier__jira_id__in=jira_ids)
             if request_ids:
-                queryset = queryset.filter(tags__requestId__in=request_ids)
+                queryset = queryset.filter(tags__igoRequestId__in=request_ids)
             if runs:
                 queryset = queryset.filter(id__in=runs)
             if cwl_inputs:

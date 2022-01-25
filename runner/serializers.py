@@ -137,7 +137,7 @@ class CreateRunSerializer(serializers.Serializer):
         run = Run(run_type=pipeline.pipeline_type,
                   name=name,
                   app=pipeline,
-                  tags={"requestId": validated_data.get('request_id')},
+                  tags={settings.REQUEST_ID_METADATA_KEY: validated_data.get(settings.REQUEST_ID_METADATA_KEY)},
                   status=RunStatus.CREATING,
                   job_statuses=dict(),
                   resume=validated_data.get('resume'))
@@ -165,7 +165,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
         return RunStatus(obj.status).name
 
     def get_request_id(self, obj):
-        return obj.tags.get('requestId')
+        return obj.tags.get(settings.REQUEST_ID_METADATA_KEY)
 
     def get_status_url(self, obj):
         return settings.BEAGLE_URL + '/v0/run/api/%s' % obj.id

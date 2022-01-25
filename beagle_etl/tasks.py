@@ -190,9 +190,9 @@ class JobObject(object):
                                               run=TYPES['SAMPLE']).order_by('-created_date').first()
 
         number_of_tumors = FileRepository.filter(
-            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata='sampleId').count()
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
         number_of_normals = FileRepository.filter(
-            metadata={'requestId': self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, values_metadata='sampleId').count()
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
 
         data_analyst_email = ""
         data_analyst_name = ""
@@ -207,7 +207,7 @@ class JobObject(object):
 
         if request_metadata:
             metadata = request_metadata.args.get('request_metadata', {})
-            recipe = metadata['recipe']
+            recipe = metadata[settings.RECIPE_METADATA_KEY]
             data_analyst_email = metadata['dataAnalystEmail']
             data_analyst_name = metadata['dataAnalystName']
             investigator_email = metadata['investigatorEmail']
@@ -285,7 +285,7 @@ class JobObject(object):
                 if isinstance(child_job.message, dict) and child_job.message.get("code", 0) == 108:
                     logger.error(format_log("ETL job failed because of permission denied error",
                                             obj=self.job))
-                    recipe = child_job.args.get('request_metadata', {}).get('recipe')
+                    recipe = child_job.args.get('request_metadata', {}).get(settings.RECIPE_METADATA_KEY)
                     permission_denied = True
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False

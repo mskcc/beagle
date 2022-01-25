@@ -19,12 +19,12 @@ def populate_missing_info_in_notifier(apps, _):
             jira_ticket = jira_client.get_ticket(jgn.jira_id).json()
             request_id = jira_ticket.get('fields', {}).get('summary')
             if request_id:
-                file_obj = FileRepository.filter(metadata={'requestId': request_id}).first()
+                file_obj = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
                 if file_obj:
                     jgn.request_id = request_id
                     jgn.PI = file_obj.metadata['labHeadName']
                     jgn.investigator = file_obj.metadata['investigatorName']
-                    jgn.assay = file_obj.metadata['recipe']
+                    jgn.assay = file_obj.metadata[settings.RECIPE_METADATA_KEY]
                     jgn.save(update_fields=('request_id', 'PI', 'investigator', 'assay'))
                 else:
                     print("Metadata can't be found")
