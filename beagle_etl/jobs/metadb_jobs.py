@@ -441,9 +441,9 @@ def update_sample_job(input_data):
                     logger.info("Adding file %s" % fastq)
                     try:
                         f = FileRepository.filter(path=fastq).first()
-                        new_metadata = f.metadata
-                        new_metadata.update(request_metadata)
-
+                        if f:
+                            new_metadata = f.metadata
+                            new_metadata.update(request_metadata)
                         create_or_update_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq',
                                               igocomplete, sample, library, run, request_metadata, R1_or_R2(fastq))
                     except Exception as e:
