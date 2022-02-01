@@ -32,7 +32,7 @@ class TestNewRequest(TestCase):
                              settings.RECIPE_METADATA_KEY]
         self.file_keys = ["R"]
         self.alias_dict = {"sampleName": "cmoSampleName", "externalSampleId": "sampleName",
-                           "sampleId": "primaryId", "patientId": "cmoPatientId"}
+                           "sampleId": "primaryId", "patientId": "cmoPatientId", "libraryId": "libraryIgoId"}
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "10075_D_2.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
