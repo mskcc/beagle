@@ -24,8 +24,8 @@
                 "captureName": "Pool-09483_R-10151_F-Tube7_1",
                 "libraryConcentrationNgul": 10.6,
                 "captureConcentrationNm": 10.377358490566039,
-                "sampleId": "10151_F_13",
-                "requestId": "10151_F"
+                "primaryId": "10151_F_13",
+                "igoRequestId": "10151_F"
             },
             "user": null
         }
@@ -55,8 +55,8 @@
                 "captureName": "Pool-09483_R-10151_F-Tube7_1",
                 "libraryConcentrationNgul": 10.6,
                 "captureConcentrationNm": 10.377358490566039,
-                "sampleId": "10151_F_13",
-                "requestId": "10151_F"
+                "primaryId": "10151_F_13",
+                "igoRequestId": "10151_F"
             },
             "user": null
         }

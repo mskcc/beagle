@@ -34,7 +34,7 @@ def get_samples_from_patient_id(patient_id):
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample['metadata']['sampleId']
+        igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)
@@ -54,7 +54,7 @@ def get_descriptor(bait_set, pooled_normals):
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
     """
     for pooled_normal in pooled_normals:
-        descriptor = pooled_normal.metadata['recipe']
+        descriptor = pooled_normal.metadata[settings.RECIPE_METADATA_KEY]
         if descriptor.lower() in bait_set.lower():
             return descriptor
     return None
@@ -115,7 +115,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     if not descriptor: # i.e., no pooled normal
         return None
 
-    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={'recipe': descriptor})
+    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor})
     sample_files = list()
 
     # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
@@ -136,13 +136,13 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             sample['path'] = pooled_normal.file.path
             sample['file_name'] = pooled_normal.file.file_name
             metadata = init_metadata()
-            metadata['sampleId'] = sample_name
+            metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
             metadata['sampleName'] = sample_name
-            metadata['requestId'] = sample_name
+            metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
             metadata['sequencingCenter'] = "MSKCC"
             metadata['platform'] = "Illumina"
             metadata['baitSet'] = descriptor
-            metadata['recipe'] = descriptor
+            metadata[settings.RECIPE_METADATA_KEY] = descriptor
             metadata['run_id'] = run_ids
             metadata['preservation'] = preservation_types
             metadata['libraryId'] = sample_name + "_1"
@@ -154,7 +154,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['flowCellId'] = 'PN_FCID'
             metadata['tumorOrNormal'] = 'Normal'
             metadata['patientId'] = 'PN_PATIENT_ID'
-            metadata['specimenType'] = specimen_type
+            metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
             sample['metadata'] = metadata
             sample_files.append(sample)
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
@@ -184,13 +184,13 @@ def get_dmp_normal(patient_id, bait_set):
         sample['file_name'] = dmp_bam.file.file_name
         sample['file_type'] = dmp_bam.file.file_type
         metadata = init_metadata()
-        metadata['sampleId'] = sample_name
+        metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
         metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
-        metadata['requestId'] = sample_name
+        metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
         metadata['sequencingCenter'] = sequencingCenter
         metadata['platform'] = platform
         metadata['baitSet'] = bait_set
-        metadata['recipe'] = bait_set
+        metadata[settings.RECIPE_METADATA_KEY] = bait_set
         metadata['run_id'] = ""
         metadata['preservation'] = ""
         metadata['libraryId'] = sample_name + "_1"
@@ -202,7 +202,7 @@ def get_dmp_normal(patient_id, bait_set):
         metadata['flowCellId'] = 'DMP_FCID'
         metadata['tumorOrNormal'] = 'Normal'
         metadata['patientId'] = patient_id
-        metadata['specimenType'] = specimen_type
+        metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
         sample['metadata'] = metadata
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample
@@ -278,12 +278,12 @@ def init_metadata():
     This just instantiates it.
     """
     metadata = dict()
-    metadata['requestId'] = ""
-    metadata['sampleId'] = ""
+    metadata[settings.REQUEST_ID_METADATA_KEY] = ""
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = ""
     metadata['libraryId'] = ""
     metadata['baitSet'] = ""
     metadata['tumorOrNormal'] = ""
-    metadata['specimenType'] = ""
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
     metadata['species'] = ""
     metadata['sampleName'] = ""
     metadata['flowCellId'] = ""
