@@ -87,7 +87,7 @@ class TestUltron(TestCase):
         Test the creation of an ultron job
         """
         sample = FileMetadata.objects.get(
-            id=self.file_metadata_ids[0][0]).metadata["sampleId"]
+            id=self.file_metadata_ids[0][0]).metadata[settings.SAMPLE_ID_METADATA_KEY]
         input_json = {"sample_ids": [sample]}
         ultron_run_name = "Sample %s ULTRON PHASE1 run" % sample
         operator_model = Operator.objects.get(id=12)
@@ -175,7 +175,7 @@ class TestUltron(TestCase):
             id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][1])
-        sample_id = sample_metadata_1.metadata["sampleId"]
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
         sample_metadata_1.metadata["patientId"] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata["patientId"] = None
@@ -194,7 +194,7 @@ class TestUltron(TestCase):
             id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][1])
-        sample_id = sample_metadata_1.metadata["sampleId"]
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata["patientId"]
         sample_metadata_1.metadata["cmoSampleName"] = None
         sample_metadata_1.save()
@@ -213,7 +213,7 @@ class TestUltron(TestCase):
         """
         sample_metadata_1 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][0])
-        sample_id = sample_metadata_1.metadata["sampleId"]
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata["patientId"]
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(),

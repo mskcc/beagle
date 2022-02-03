@@ -7,7 +7,7 @@ import os
 import json
 import logging
 from jinja2 import Template
-
+from django.conf import settings
 from file_system.models import File
 from runner.operator.operator import Operator
 from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
@@ -106,7 +106,7 @@ class AccessLegacyMSIOperator(Operator):
                         'app': self.get_pipeline_id(),
                         'inputs': job,
                         'tags': {
-                            'requestId': self.request_id,
+                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["sample_name"],
                             'patientId': '-'.join(job["sample_name"][0].split('-')[0:2])
                         }

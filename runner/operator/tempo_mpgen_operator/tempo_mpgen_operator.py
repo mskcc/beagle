@@ -38,7 +38,7 @@ class TempoMPGenOperator(Operator):
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
-        data_query_set = [Q(metadata__recipe=value) for value in set(data)]
+        data_query_set = [Q(metadata__genePanel=value) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -63,10 +63,10 @@ class TempoMPGenOperator(Operator):
 
     def filter_out_missing_fields_query(self):
         """
-        This is for legacy purposes - if FileMetadata don't contain sampleClass or cmoSampleName,
+        This is for legacy purposes - if FileMetadata don't contain sampleTy[e or cmoSampleName,
         remove them from the file set
         """
-        query = Q(metadata__cmoSampleName__isnull=False) & Q(metadata__sampleClass__isnull=False)
+        query = Q(metadata__cmoSampleName__isnull=False) & Q(metadata__sampleType__isnull=False)
         return query
 
 
@@ -233,7 +233,7 @@ class TempoMPGenOperator(Operator):
 
     def create_unpaired_txt_file(self):
         # Add runDate
-        fields = ['cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet', 'runDate']
+        fields = ['cmoSampleName', 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         unpaired_string = "\t".join(fields) + "\tPossible Reason?"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
@@ -282,9 +282,8 @@ class TempoMPGenOperator(Operator):
             mapping_string += patient.create_mapping_string()
         return self.write_to_file('sample_mapping.txt', mapping_string)
 
-
     def create_conflict_samples_txt_file(self):       
-        fields = ['cmoSampleName', 'patientId', 'sampleId', 'specimenType', 'runMode', 'sampleClass', 'baitSet', 'runDate']
+        fields = ['cmoSampleName', 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
@@ -304,9 +303,9 @@ class TempoMPGenOperator(Operator):
         q = None
         for i in l:
             if q:
-                q |= Q(metadata__requestId=i)
+                q |= Q(metadata__igoRequestId=i)
             else:
-                q = Q(metadata__requestId=i)
+                q = Q(metadata__igoRequestId=i)
         return q
     
     def get_exclusions(self):
@@ -339,9 +338,9 @@ class TempoMPGenOperator(Operator):
         extra_keys values are the metadata field names in the database, used as headers
         """
         tracker = ""
-        key_order = ["investigatorSampleId", "externalSampleId", "sampleClass"]
-        key_order += ["baitSet", "requestId"]
-        extra_keys = ["tumorOrNormal", "species", "recipe", "specimenType", "sampleId", "patientId"]
+        key_order = ["investigatorSampleId", "externalSampleId", settings.CMO_SAMPLE_CLASS_METADATA_KEY]
+        key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
+        extra_keys = ["tumorOrNormal", "species", settings.RECIPE_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, "patientId"]
         extra_keys += ["investigatorName", "investigatorEmail", "piEmail", "labHeadName", "labHeadEmail", "preservation"]
         extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
 

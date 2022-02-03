@@ -1,3 +1,4 @@
+from django.conf import settings
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from .construct_argos_pair import construct_argos_jobs
@@ -14,12 +15,12 @@ from .bin.make_sample import format_sample_name
 class ArgosOperator(Operator):
     def get_jobs(self):
         files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
+                                      metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
                                                 'igocomplete': True})
         argos_jobs = list()
 
         cnt_tumors = FileRepository.filter(queryset=self.files,
-                                           metadata={'requestId': self.request_id,
+                                           metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
                                                      'tumorOrNormal': 'Tumor',
                                                      'igocomplete': True}).count()
         if cnt_tumors == 0:
@@ -43,7 +44,7 @@ class ArgosOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample['metadata']['sampleId']
+            igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
@@ -132,7 +133,7 @@ class ArgosOperator(Operator):
 
             argos_jobs.append((APIRunCreateSerializer(
                 data={'app': pipeline, 'inputs': argos_inputs, 'name': name,
-                      'tags': {'requestId': self.request_id,
+                      'tags': {settings.REQUEST_ID_METADATA_KEY: self.request_id,
                           'sampleNameTumor': tumor_sample_name,
                           'sampleNameNormal': normal_sample_name,
                           'labHeadName': pi,

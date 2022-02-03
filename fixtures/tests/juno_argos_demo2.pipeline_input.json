@@ -1,7 +1,7 @@
 {
   "app": "cb5d793b-e650-4b7d-bfcd-882858e29cc5",
   "name": "ARGOS Test API run",
-  "tags": {"requestId": "DemoRequest1"},
+  "tags": {"igoRequestId": "DemoRequest1"},
   "inputs": {
     "dbsnp": {
       "class": "File",

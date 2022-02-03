@@ -1,6 +1,7 @@
 import os
 from collections import defaultdict
 from itertools import groupby
+from django.conf import settings
 from runner.operator.operator import Operator
 from runner.serializers import APIRunCreateSerializer
 from file_system.repository.file_repository import FileRepository
@@ -27,8 +28,8 @@ METADATA_OUTPUT_FIELDS = [
     'captureName',
     'libraryConcentrationNgul',
     'captureConcentrationNm',
-    'sampleId',
-    'requestId'
+    settings.SAMPLE_ID_METADATA_KEY,
+    settings.REQUEST_ID_METADATA_KEY
 ]
 def construct_inputs(samples, request_id):
     with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
@@ -47,7 +48,7 @@ def construct_inputs(samples, request_id):
             "libraryVolume": calc_avg(sample_files, "libraryVolume"),
             "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
             "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
-            "requestId": request_id
+            settings.REQUEST_ID_METADATA_KEY: request_id
         })
 
         fastq1s = [{
@@ -72,7 +73,7 @@ def construct_inputs(samples, request_id):
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
         files = FileRepository.filter(queryset=self.files,
-                                      metadata={'requestId': self.request_id,
+                                      metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
                                                 'igocomplete': True})
         data = [
             {
@@ -96,13 +97,15 @@ class AccessLegacyFastqMergeOperator(Operator):
                         'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
                                             key in metadata},
                         'inputs': job,
-                        'tags': {'requestId': self.request_id, 'sampleId': metadata["sampleId"]}}
+                        'tags': {settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                                 settings.SAMPLE_ID_METADATA_KEY: metadata[settings.SAMPLE_ID_METADATA_KEY]}}
                 ),
                 job
              )
 
             for i, (job, metadata) in enumerate(inputs)
         ]
+
 
 def calc_avg(sample_files, field):
     fields = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
@@ -112,12 +115,14 @@ def calc_avg(sample_files, field):
 
     return sum([float(s["metadata"][field]) for s in fields])/field_count
 
+
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs
+
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
