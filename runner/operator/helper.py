@@ -22,7 +22,7 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
     ignore_sample_formatting is applied if we want to return a sample name regardless of
     formatting
     """
-    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w')
+    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w(\w{2})?')
 
     if not ignore_sample_formatting:
         try:
@@ -119,7 +119,7 @@ def init_metadata():
     metadata = dict()
     metadata[settings.REQUEST_ID_METADATA_KEY] = ""
     metadata[settings.SAMPLE_ID_METADATA_KEY] = ""
-    metadata['libraryId'] = ""
+    metadata[settings.LIBRARY_ID_METADATA_KEY] = ""
     metadata['baitSet'] = ""
     metadata['tumorOrNormal'] = ""
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""

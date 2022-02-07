@@ -2,6 +2,7 @@
 Tests for METADB ETL jobs
 """
 
+from math import exp
 import os
 from mock import patch
 import json
@@ -31,8 +32,6 @@ class TestNewRequest(TestCase):
                              settings.PROJECT_ID_METADATA_KEY,
                              settings.RECIPE_METADATA_KEY]
         self.file_keys = ["R"]
-        self.alias_dict = {"sampleName": "cmoSampleName", "externalSampleId": "sampleName",
-                           "sampleId": "primaryId", "patientId": "cmoPatientId", "libraryId": "libraryIgoId"}
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "10075_D_2.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
@@ -226,8 +225,9 @@ class TestNewRequest(TestCase):
         for single_key in file.metadata:
             if single_key in self.file_keys or single_key not in sample_metadata:
                 continue
-            if single_key in self.alias_dict:
-                expected_value = sample_metadata[self.alias_dict[single_key]]
+            if single_key == 'ciTag':
+                sample_name = sample_metadata['cmoSampleName']
+                expected_value = "s_" + sample_name.replace("-", "_")
             else:
                 expected_value = sample_metadata[single_key]
             current_value = file.metadata[single_key]

@@ -19,7 +19,7 @@
     {
       "metaDbSampleId": "afe750e6-8756-11eb-81b0-acde48001122",
       "metaDbPatientId": "6cc9f242-875a-11eb-ae91-acde48001122",
-      "cmoSampleName": "s_C-MP789JR-X001-d",
+      "cmoSampleName": "C-MP789J-X001-d",
       "sampleName": "XXX002_P3_12345_L1",
       "sampleType": "Primary",
       "oncotreeCode": "CLL",
@@ -85,7 +85,7 @@
     {
       "metaDbSampleId": "afe75123-8756-11eb-8f14-acde48001122",
       "metaDbPatientId": "6cc9f242-875a-11eb-ae91-acde48001122",
-      "cmoSampleName": "s_C-MP789JR-N001-d",
+      "cmoSampleName": "C-MP789J-N001-d",
       "sampleName": "01-0012345a",
       "sampleType": "Normal",
       "oncotreeCode": "CLL",
@@ -151,7 +151,7 @@
     {
       "metaDbSampleId": "afe75161-8756-11eb-96c5-acde48001122",
       "metaDbPatientId": "6cc9f745-875a-11eb-a134-acde48001122",
-      "cmoSampleName": "s_C-8DH24X-X001-d",
+      "cmoSampleName": "C-8DH24X-X001-d",
       "sampleName": "XXX002_P1_12348a_R_43",
       "sampleType": "Primary",
       "oncotreeCode": "COAD",
@@ -217,7 +217,7 @@
     {
       "metaDbSampleId": "afe7519c-8756-11eb-ac58-acde48001122",
       "metaDbPatientId": "6cc9f745-875a-11eb-a134-acde48001122",
-      "cmoSampleName": "s_C-8DH24X-N001-d",
+      "cmoSampleName": "C-8DH24X-N001-d",
       "sampleName": "01-XXXXXXXa",
       "sampleType": "Normal",
       "oncotreeCode": "COAD",
