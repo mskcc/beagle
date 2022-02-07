@@ -31,7 +31,7 @@ def _revert_metadata(metadata):
     lims_metadata = copy.deepcopy(metadata)
     lims_metadata['cmoSampleName'] = lims_metadata.pop('sampleName', None)
     lims_metadata['sampleName'] = lims_metadata.pop('externalSampleId', None)
-    lims_metadata['libraryIgoId'] = lims_metadata.pop('libraryId', None)
+    lims_metadata[settings.LIBRARY_ID_METADATA_KEY] = lims_metadata.pop('libraryId', None)
     lims_metadata['cmoPatientId'] = lims_metadata.pop('patientId', None)
     lims_metadata.pop('platform')
     lims_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = lims_metadata.pop(settings.CMO_SAMPLE_CLASS_METADATA_KEY, None)

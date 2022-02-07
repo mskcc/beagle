@@ -91,7 +91,7 @@ def build_sample(data):
         fpath = v['path']
         fname = v['file_name']
         igo_id = meta[settings.SAMPLE_ID_METADATA_KEY]
-        lb = meta['libraryId']
+        lb = meta[settings.LIBRARY_ID_METADATA_KEY]
         bait_set = meta['baitSet']
         tumor_type = meta['tumorOrNormal']
         specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]

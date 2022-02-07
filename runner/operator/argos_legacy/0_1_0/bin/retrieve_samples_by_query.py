@@ -232,7 +232,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['recipe'] = bait_set
     metadata['runId'] = run_ids
     metadata['preservation'] = preservation_types
-    metadata['libraryId'] = sample_name + "_1"
+    metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_legacy.bin
@@ -288,7 +288,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata['recipe'] = bait_set
     metadata['run_id'] = ""
     metadata['preservation'] = ""
-    metadata['libraryId'] = sample_name + "_1"
+    metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
     metadata['R'] = 'Not applicable'
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see

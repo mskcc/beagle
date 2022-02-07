@@ -702,37 +702,27 @@ def create_or_update_file(path,
                     CopyService.copy(path, new_path)
             except Exception as e:
                 if "Permission denied" in str(e):
-                    raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
+                    raise FailedToCopyFilePermissionDeniedException(
+                        "Failed to copy file %s. Error %s" % (path, str(e)))
                 else:
-                    raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
-            create_file_object(new_path, file_group_obj, metadata, file_type_obj)
+                    raise FailedToCopyFileException(
+                        "Failed to copy file %s. Error %s" % (path, str(e)))
+            create_file_object(new_path, file_group_obj,
+                               metadata, file_type_obj)
         else:
 
             update_file_object(f.file, f.file.path, metadata)
 
 
 def format_metadata(original_metadata):
-    metadata = dict()
-    original_metadata_copy = copy.deepcopy(original_metadata)
-    sample_name = original_metadata_copy.pop('cmoSampleName', None)
-    external_sample_name = original_metadata_copy.pop('sampleName', None)
-    sample_id = original_metadata_copy.pop('primaryId', None)
-    patient_id = original_metadata_copy.pop('cmoPatientId', None)
-    sample_class = original_metadata_copy.pop(settings.SAMPLE_CLASS_METADATA_KEY, None)  # old specimenType
+    metadata = copy.deepcopy(original_metadata)
+    sample_name = original_metadata.get("cmoSampleName", None)
+    sample_class = original_metadata.get(
+        settings.SAMPLE_CLASS_METADATA_KEY, None)
     # ciTag is the new field which needs to be used for the operators
     metadata['ciTag'] = format_sample_name(sample_name, sample_class)
-    metadata['cmoSampleName'] = format_sample_name(sample_name, sample_class)
-    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = sample_class
-    metadata['sampleName'] = sample_name
-    metadata['externalSampleId'] = external_sample_name
-    metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_id
-    metadata['patientId'] = format_patient_id(patient_id)
-    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = sample_class
     metadata['sequencingCenter'] = 'MSKCC'
     metadata['platform'] = 'Illumina'
-    metadata['libraryId'] = original_metadata_copy.pop('libraryIgoId', None)
-    for k, v in original_metadata_copy.items():
-        metadata[k] = v
     return metadata
 
 
