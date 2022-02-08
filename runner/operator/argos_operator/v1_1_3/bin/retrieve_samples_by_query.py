@@ -33,7 +33,7 @@ def get_samples_from_patient_id(patient_id):
     Only retrieve patients from LIMS file group
     """
     all_files = FileRepository.all()
-    q_pid = Q(metadata__patientId=patient_id)
+    q_pid = Q(metadata__cmoPatientId=patient_id)
     q_fg = build_argos_file_groups_query()
     q = q_pid & q_fg
     files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
@@ -240,7 +240,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
     metadata['flowCellId'] = 'PN_FCID'
     metadata['tumorOrNormal'] = 'Normal'
-    metadata['patientId'] = 'PN_PATIENT_ID'
+    metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata['runMode'] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
@@ -296,7 +296,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
     metadata['flowCellId'] = 'DMP_FCID'
     metadata['tumorOrNormal'] = tumor_type
-    metadata['patientId'] = patient_id
+    metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata['runMode'] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""

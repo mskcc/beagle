@@ -16,7 +16,7 @@ METADATA_OUTPUT_FIELDS = [
     'barcodeId',
     'sampleName',
     'investigatorSampleId',
-    'patientId',
+    settings.PATIENT_ID_METADATA_KEY,
     'tumorOrNormal',
     'sampleOrigin',
     'dnaInputNg',

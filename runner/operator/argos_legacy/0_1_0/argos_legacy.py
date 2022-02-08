@@ -315,7 +315,7 @@ class ArgosOperator(Operator):
         for sample in error_samples:
             sample_name = sample.get('SM', "missingSampleName")
             sample_id = sample.get('sample_id', 'missingSampleId')
-            patient_id = sample.get('patient_id', 'missingPatientId')
+            patient_id = sample.get(settings.PATIENT_ID_METADATA_KEY, 'missingPatientId')
             specimen_type = sample.get('specimen_type', 'missingSpecimenType')
             s.append("| " + sample_id + " | " + sample_name + " |" + patient_id + " |" + specimen_type + " |")
             unformatted_s.append(sample_id  + "\t" + sample_name + "\t" + patient_id + "\t" + specimen_type + "\n")

@@ -22,7 +22,7 @@ def construct_sample_inputs(samples):
             cmo_sample_name=meta[settings.CMO_SAMPLE_TAG_METADATA_KEY],
             tumor_type=meta[settings.SAMPLE_CLASS_METADATA_KEY],
             igo_id=sample_id,
-            patient_id=meta["patientId"],
+            patient_id=meta[settings.PATIENT_ID_METADATA_KEY],
 
             barcode_index=meta["barcodeIndex"],
 

@@ -20,7 +20,7 @@ def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id})
+    files = FileRepository.filter(metadata={settings.PATIENT_ID_METADATA_KEY: patient_id})
     data = list()
     for current_file in files:
         sample = dict()
@@ -153,7 +153,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
             metadata['flowCellId'] = 'PN_FCID'
             metadata['tumorOrNormal'] = 'Normal'
-            metadata['patientId'] = 'PN_PATIENT_ID'
+            metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
             metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
             sample['metadata'] = metadata
             sample_files.append(sample)
@@ -201,7 +201,7 @@ def get_dmp_normal(patient_id, bait_set):
         metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
         metadata['flowCellId'] = 'DMP_FCID'
         metadata['tumorOrNormal'] = 'Normal'
-        metadata['patientId'] = patient_id
+        metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
         metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
         sample['metadata'] = metadata
         built_sample = build_sample([sample], ignore_sample_formatting=True)
@@ -288,7 +288,7 @@ def init_metadata():
     metadata['sampleName'] = ""
     metadata['flowCellId'] = ""
     metadata['barcodeIndex'] = ""
-    metadata['patientId'] = ""
+    metadata[settings.PATIENT_ID_METADATA_KEY] = ""
     metadata['runDate'] = ""
     metadata['R'] = ""
     metadata['labHeadName'] = ""

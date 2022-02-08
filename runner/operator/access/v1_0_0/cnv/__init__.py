@@ -100,7 +100,7 @@ class AccessLegacyCNVOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': sample_ids[i],
-                            'patientId': '-'.join(sample_ids[i].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(sample_ids[i].split('-')[0:2])
                         }
                     }
                 ),

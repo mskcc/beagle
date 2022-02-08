@@ -29,7 +29,7 @@ class TempoSample(Sample):
             self.sample_class = self.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY][0]
             self.cmo_sample_name = self.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY][0]
             self.run_mode = self.remapped_run_mode.pop()
-            self.patient_id = self.metadata['patientId'][0]
+            self.patient_id = self.metadata[settings.PATIENT_ID_METADATA_KEY][0]
 
     def _resolve_target(self, bait_set):
         """
@@ -83,7 +83,7 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = ['patientId', settings.SAMPLE_CLASS_METADATA_KEY,
+        fields_to_check = [settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY,
                            settings.CMO_SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_TAG_METADATA_KEY]
         for key in fields_to_check:
             values = self.metadata[key]
@@ -147,7 +147,7 @@ class TempoSample(Sample):
 
     def __str__(self):
         keys_for_str = ['sampleName', settings.REQUEST_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY,
-                        'patientId', settings.SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+                        settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_CLASS_METADATA_KEY,
                         settings.CMO_SAMPLE_TAG_METADATA_KEY]
         s = ""
         metadata = self.dedupe_metadata_values()

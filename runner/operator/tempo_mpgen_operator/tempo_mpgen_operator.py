@@ -119,7 +119,7 @@ class TempoMPGenOperator(Operator):
         patient_files = dict()
         no_patient_samples = list()
         for entry in tempo_files:
-            patient_id = entry.metadata['patientId']
+            patient_id = entry.metadata[settings.PATIENT_ID_METADATA_KEY]
             if patient_id:
                 patient_ids.add(patient_id)
                 if patient_id not in patient_files:
@@ -233,7 +233,7 @@ class TempoMPGenOperator(Operator):
 
     def create_unpaired_txt_file(self):
         # Add runDate
-        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         unpaired_string = "\t".join(fields) + "\tPossible Reason?"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
@@ -283,7 +283,7 @@ class TempoMPGenOperator(Operator):
         return self.write_to_file('sample_mapping.txt', mapping_string)
 
     def create_conflict_samples_txt_file(self):       
-        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
@@ -340,7 +340,7 @@ class TempoMPGenOperator(Operator):
         tracker = ""
         key_order = ["investigatorSampleId", "externalSampleId", settings.CMO_SAMPLE_CLASS_METADATA_KEY]
         key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
-        extra_keys = ["tumorOrNormal", "species", settings.RECIPE_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, "patientId"]
+        extra_keys = ["tumorOrNormal", "species", settings.RECIPE_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY]
         extra_keys += ["investigatorName", "investigatorEmail", "piEmail", "labHeadName", "labHeadEmail", "preservation"]
         extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
 

@@ -26,7 +26,7 @@ REQUIRED_META_FIELDS = [
     'baitSet',
     'sampleName',
     'tumorOrNormal',
-    'patientId',
+    settings.PATIENT_ID_METADATA_KEY,
     'sex',
     'barcodeId',
     'investigatorSampleId',
@@ -106,7 +106,7 @@ def generate_title_file_content(sample_group):
             pool_info,
             meta['sampleName'],
             meta['investigatorSampleId'],
-            meta['patientId'],
+            meta[settings.PATIENT_ID_METADATA_KEY],
             meta['tumorOrNormal'],
             'Plasma' if meta['tumorOrNormal'] == 'Tumor' else 'Buffy Coat',
             meta['dnaInputNg'] if meta['dnaInputNg'] else '-',
@@ -167,11 +167,11 @@ def construct_sample_inputs(samples, request_id, group_id):
                 errors += 1
                 continue
 
-            patient_id_count[meta["patientId"]] += 1
+            patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]] += 1
             cmo_sample_names.append(meta["sampleName"])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
-            patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
+            patient_ids.append(meta[settings.PATIENT_ID_METADATA_KEY] + "_" + str(patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]]))
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
             r1_fastq = sample_pair[0] if '_R1_.fastq.gz' in sample_pair[0]["path"] else sample_pair[1]
