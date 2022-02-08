@@ -216,7 +216,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata['sampleName'] = sample_name
-    metadata['cmoSampleName'] = sample_name
+    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = sample_name
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = "MSKCC"
     metadata['platform'] = "Illumina"
@@ -272,7 +272,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
-    metadata['cmoSampleName'] = metadata['sampleName']
+    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata['sampleName']
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = sequencingCenter
     metadata['platform'] = platform

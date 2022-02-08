@@ -20,7 +20,7 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
     for sample in samples:
         metadata = sample.metadata
         result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-            metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
+            metadata.get(settings.CMO_SAMPLE_TAG_METADATA_KEY, format_sample_name(metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
             metadata[settings.REQUEST_ID_METADATA_KEY],
             get_project_id(metadata[settings.REQUEST_ID_METADATA_KEY]),
             metadata['patientId'],

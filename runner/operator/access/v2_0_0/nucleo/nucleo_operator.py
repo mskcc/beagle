@@ -17,7 +17,6 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 METADATA_OUTPUT_FIELDS = [
     'barcodeId',
     'sampleName',
-    'cmoSampleName',
     'investigatorSampleId',
     'patientId',
     'tumorOrNormal',
@@ -31,6 +30,7 @@ METADATA_OUTPUT_FIELDS = [
     'captureName',
     'libraryConcentrationNgul',
     'captureConcentrationNm',
+    settings.CMO_SAMPLE_TAG_METADATA_KEY,
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY
 ]

@@ -28,7 +28,8 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
         try:
             if "s_" in sample_name[:2]:
                 return sample_name
-            elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():  # cmoSampleName is formatted properly
+            # ciTag is formatted properly
+            elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
             LOGGER.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
@@ -58,7 +59,8 @@ def generate_sample_data_content(request_ids):
         for sample in samples:
             metadata = sample.metadata
             result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                metadata.get('cmoSampleName', format_sample_name(metadata['sampleName'], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
+                metadata.get(settings.CMO_SAMPLE_TAG_METADATA_KEY, format_sample_name(
+                    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
                 metadata['patientId'],
                 metadata['investigatorSampleId'],
                 metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY],
