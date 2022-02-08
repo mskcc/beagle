@@ -24,7 +24,7 @@ REQUIRED_META_FIELDS = [
     settings.SAMPLE_ID_METADATA_KEY,
     'captureName',
     'baitSet',
-    'sampleName',
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     'tumorOrNormal',
     settings.PATIENT_ID_METADATA_KEY,
     'sex',
@@ -104,7 +104,7 @@ def generate_title_file_content(sample_group):
         title_file_content += line_content.format(
             meta['barcodeId'] if meta['barcodeId'] else '-',
             pool_info,
-            meta['sampleName'],
+            meta[settings.CMO_SAMPLE_NAME_METADATA_KEY],
             meta['investigatorSampleId'],
             meta[settings.PATIENT_ID_METADATA_KEY],
             meta['tumorOrNormal'],
@@ -168,7 +168,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                 continue
 
             patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]] += 1
-            cmo_sample_names.append(meta["sampleName"])
+            cmo_sample_names.append(meta[settings.CMO_SAMPLE_NAME_METADATA_KEY])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
             patient_ids.append(meta[settings.PATIENT_ID_METADATA_KEY] + "_" + str(patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]]))

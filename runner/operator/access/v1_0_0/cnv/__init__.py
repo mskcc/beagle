@@ -66,7 +66,7 @@ class AccessLegacyCNVOperator(Operator):
                 file_type='fastq',
                 metadata={
                     'tumorOrNormal': 'Tumor',
-                    'sampleName': sample_id
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY : sample_id
                 }
             )
             sample_sex = tumor_fastqs[0].metadata['sex']

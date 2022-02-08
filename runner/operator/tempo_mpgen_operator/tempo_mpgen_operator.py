@@ -342,7 +342,7 @@ class TempoMPGenOperator(Operator):
         key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
         extra_keys = ["tumorOrNormal", "species", settings.RECIPE_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY]
         extra_keys += ["investigatorName", "investigatorEmail", "piEmail", "labHeadName", "labHeadEmail", "preservation"]
-        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
+        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
 
         tracker = "CMO_Sample_ID\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"

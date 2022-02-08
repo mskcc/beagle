@@ -106,7 +106,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
-        q = query & Q(metadata__sampleName=sample_name)
+        q = query & Q(metadata__cmoSampleName=sample_name)
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
             LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
@@ -125,7 +125,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
-        q = query & Q(metadata__sampleName=sample_name)
+        q = query & Q(metadata__cmoSampleName=sample_name)
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
             LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)
@@ -223,7 +223,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     sample['file_name'] = pooled_normal.file.file_name
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
-    metadata['sampleName'] = sample_name
+    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = sample_name
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = "MSKCC"
@@ -279,7 +279,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     sample['file_type'] = dmp_bam.file.file_type
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
-    metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
+    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata['sampleName']
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata['sequencingCenter'] = sequencingCenter

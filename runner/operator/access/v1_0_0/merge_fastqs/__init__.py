@@ -14,7 +14,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
     'barcodeId',
-    'sampleName',
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     'investigatorSampleId',
     settings.PATIENT_ID_METADATA_KEY,
     'tumorOrNormal',
