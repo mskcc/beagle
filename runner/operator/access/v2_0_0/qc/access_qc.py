@@ -21,7 +21,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 meta_fields = [
     'igoId', ## TODO: Change this
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
-    'sampleName',
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,
     settings.PATIENT_ID_METADATA_KEY,
     'investigatorSampleId',
@@ -136,7 +136,7 @@ class AccessQCOperator(Operator):
             bams[i] = json.dumps(bam)
 
         sample_sex = 'unknown'
-        sample_name = run.output_metadata['sampleName']
+        sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         sample_group = '-'.join(sample_name.split('-')[0:2])
         samples_json_content = self.create_sample_json(run)
 
@@ -160,7 +160,7 @@ class AccessQCOperator(Operator):
     def create_sample_json(self, run):
         j = run.output_metadata
         # todo: value of CMO_SAMPLE_TAG_METADATA_KEY in output_metadata for Nucleo appears to be the igo ID?
-        j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = run.output_metadata['sampleName']
+        j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
         for f in meta_fields:
             # Use None for missing fields

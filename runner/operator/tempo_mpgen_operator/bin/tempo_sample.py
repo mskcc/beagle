@@ -146,7 +146,7 @@ class TempoSample(Sample):
 
 
     def __str__(self):
-        keys_for_str = ['sampleName', settings.REQUEST_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY,
+        keys_for_str = [settings.CMO_SAMPLE_NAME_METADATA_KEY, settings.REQUEST_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY,
                         settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_CLASS_METADATA_KEY,
                         settings.CMO_SAMPLE_TAG_METADATA_KEY]
         s = ""

@@ -33,7 +33,7 @@ class FileRunMapAdmin(admin.ModelAdmin):
 class FileMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('file', 'version', 'metadata','created_date')
     autocomplete_fields = ['file']
-    search_fields = ('id', 'file__id', 'metadata__igoRequestId', 'metadata__sampleName')
+    search_fields = ('id', 'file__id', 'metadata__igoRequestId', 'metadata__cmoSampleName')
 
 
 class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):

@@ -137,7 +137,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             sample['file_name'] = pooled_normal.file.file_name
             metadata = init_metadata()
             metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
-            metadata['sampleName'] = sample_name
+            metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = sample_name
             metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
             metadata['sequencingCenter'] = "MSKCC"
             metadata['platform'] = "Illumina"
@@ -185,7 +185,7 @@ def get_dmp_normal(patient_id, bait_set):
         sample['file_type'] = dmp_bam.file.file_type
         metadata = init_metadata()
         metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
-        metadata['sampleName'] = format_sample_name(sample_name, specimen_type)
+        metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
         metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
         metadata['sequencingCenter'] = sequencingCenter
         metadata['platform'] = platform
@@ -285,7 +285,7 @@ def init_metadata():
     metadata['tumorOrNormal'] = ""
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
     metadata['species'] = ""
-    metadata['sampleName'] = ""
+    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = ""
     metadata['flowCellId'] = ""
     metadata['barcodeIndex'] = ""
     metadata[settings.PATIENT_ID_METADATA_KEY] = ""

@@ -32,12 +32,13 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
             elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
-            LOGGER.error('Missing or malformed sampleName: %s', sample_name, exc_info=True)
+            LOGGER.error('Missing or malformed sampleName: %s',
+                         sample_name, exc_info=True)
             return 'sampleNameMalformed'
         except TypeError:
             LOGGER.error(
                 "sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'."
-                )
+            )
             return "sampleNameMalformed"
     else:
         return sample_name
@@ -126,7 +127,7 @@ def init_metadata():
     metadata['tumorOrNormal'] = ""
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
     metadata['species'] = ""
-    metadata['sampleName'] = ""
+    metadata[settings.SAMPLE_NAME_METADATA_KEY] = ""
     metadata['flowCellId'] = ""
     metadata['barcodeIndex'] = ""
     metadata[settings.PATIENT_ID_METADATA_KEY] = ""

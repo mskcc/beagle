@@ -65,7 +65,7 @@ class ArgosOperator(Operator):
 
         for igo_id in igo_id_group:
             sample = igo_id_group[igo_id][0]
-            sample_name = sample['metadata']['sampleName']
+            sample_name = sample['metadata'][settings.CMO_SAMPLE_NAME_METADATA_KEY]
             samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
 
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)

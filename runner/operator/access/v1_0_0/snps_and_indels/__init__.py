@@ -220,7 +220,7 @@ class AccessLegacySNVOperator(Operator):
         if '_cl_aln_srt' in s.file_name:
             ret = s.file_name.split('_cl_aln_srt')[0]
         else:
-            ret = s.filemetadata_set.first().metadata['sampleName']
+            ret = s.filemetadata_set.first().metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         return ret
 
     def _remove_normal_dups(self, geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids,
@@ -278,7 +278,7 @@ class AccessLegacySNVOperator(Operator):
         sample_ids = []
         sample_fastq = FileRepository.filter(
             file_type='fastq',
-            metadata={'sampleName': tumor_sample_id}
+            metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id}
         )
         if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata['captureName']
@@ -289,7 +289,7 @@ class AccessLegacySNVOperator(Operator):
                     file_type='fastq',
                     metadata={'captureName': capture_id}
                 )
-                sample_ids = list(set([f.metadata['sampleName'] for f in sample_id_fastqs]))
+                sample_ids = list(set([f.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] for f in sample_id_fastqs]))
                 # Don't double-genotype the main sample
                 sample_ids.remove(tumor_sample_id)
 
