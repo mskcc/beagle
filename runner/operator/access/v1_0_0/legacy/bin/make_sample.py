@@ -34,7 +34,7 @@ def generate_results(results):
         cmo_sample_name = meta['sampleName']
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
-        cmo_patient_id = meta['patientId']
+        cmo_patient_id = meta[settings.PATIENT_ID_METADATA_KEY]
         r_orientation = meta['R']
         pu = flowcell_id
         run_date = meta['runDate']

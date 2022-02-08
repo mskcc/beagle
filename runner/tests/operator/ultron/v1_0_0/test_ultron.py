@@ -176,9 +176,9 @@ class TestUltron(TestCase):
         sample_metadata_2 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
-        sample_metadata_1.metadata["patientId"] = None
+        sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_1.save()
-        sample_metadata_2.metadata["patientId"] = None
+        sample_metadata_2.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_2.save()
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), None)
@@ -195,7 +195,7 @@ class TestUltron(TestCase):
         sample_metadata_2 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
-        patient_id = sample_metadata_1.metadata["patientId"]
+        patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
@@ -214,7 +214,7 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(
             id=self.file_metadata_ids[0][0])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
-        patient_id = sample_metadata_1.metadata["patientId"]
+        patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(),
                          patient_id.lstrip('C-'))

@@ -23,7 +23,7 @@ meta_fields = [
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
     'sampleName',
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,
-    'cmoPatientId',
+    settings.PATIENT_ID_METADATA_KEY,
     'investigatorSampleId',
     'oncoTreeCode',
     'tumorOrNormal',

@@ -108,7 +108,7 @@ class AccessLegacyMSIOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["sample_name"],
-                            'patientId': '-'.join(job["sample_name"][0].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["sample_name"][0].split('-')[0:2])
                         }
                     }
                 ),

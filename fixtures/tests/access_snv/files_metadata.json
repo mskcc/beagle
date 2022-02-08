@@ -112,7 +112,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "06302_AG_2",
-                "patientId": "DONOR22-TP",
+                "cmoPatientId": "DONOR22-TP",
                 "igoRequestId": "06302_AB",
                 "sampleName": "DONOR22-TP",
                 "genePanel": "-",
@@ -146,7 +146,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "06302_AG_2",
-                "patientId": "DONOR22-TP",
+                "cmoPatientId": "DONOR22-TP",
                 "igoRequestId": "06302_AB",
                 "sampleName": "DONOR22-TP",
                 "genePanel": "-",
@@ -180,7 +180,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "06302_AB_1",
-                "patientId": "C-000884",
+                "cmoPatientId": "C-000884",
                 "sampleName": "C-000884-L011-d",
                 "igoRequestId": "06302_AB",
                 "captureName": "Pool-06302_AH-D1_1",
@@ -276,7 +276,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "06302_AB_2",
-                "patientId": "C-000884",
+                "cmoPatientId": "C-000884",
                 "sampleName": "C-000884-N004-d",
                 "igoRequestId": "06302_AB",
                 "captureName": "Pool-06302_AH-D1_1",
@@ -336,7 +336,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "06302_AB_1",
-                "patientId": "C-000884",
+                "cmoPatientId": "C-000884",
                 "sampleName": "C-000884-L010-d",
                 "igoRequestId": "06302_AB",
                 "captureName": "Pool-06302_AH-D1_1",

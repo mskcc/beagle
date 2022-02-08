@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_samples_from_patient_id(patient_id):
-    files = FileRepository.filter(metadata={'patientId': patient_id})
+    files = FileRepository.filter(metadata={settings.PATIENT_ID_METADATA_KEY: patient_id})
 
     data = list()
     for f in files:

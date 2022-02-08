@@ -289,8 +289,8 @@ class SampleData:
         sample_name = None
         for f in files:
             metadata = f.metadata
-            if 'patientId' in metadata:
-                pid = metadata['patientId']
+            if settings.PATIENT_ID_METADATA_KEY in metadata:
+                pid = metadata[settings.PATIENT_ID_METADATA_KEY]
                 if pid:
                     patient_id = pid
             if settings.CMO_SAMPLE_TAG_METADATA_KEY in metadata:

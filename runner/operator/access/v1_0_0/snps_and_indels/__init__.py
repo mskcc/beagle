@@ -6,6 +6,8 @@
 import os
 import json
 import logging
+
+from django.conf import settings
 from jinja2 import Template
 from django.db.models import Q
 
@@ -424,7 +426,7 @@ class AccessLegacySNVOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["tumor_sample_names"],
-                            'patientId': '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
                         }
                     }
                 ),

@@ -61,7 +61,7 @@ def generate_sample_data_content(request_ids):
             result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
                 metadata.get(settings.CMO_SAMPLE_TAG_METADATA_KEY, format_sample_name(
                     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
-                metadata['patientId'],
+                metadata[settings.PATIENT_ID_METADATA_KEY],
                 metadata['investigatorSampleId'],
                 metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY],
                 metadata[settings.RECIPE_METADATA_KEY],
@@ -129,7 +129,7 @@ def init_metadata():
     metadata['sampleName'] = ""
     metadata['flowCellId'] = ""
     metadata['barcodeIndex'] = ""
-    metadata['patientId'] = ""
+    metadata[settings.PATIENT_ID_METADATA_KEY] = ""
     metadata['runDate'] = ""
     metadata['R'] = ""
     metadata['labHeadName'] = ""

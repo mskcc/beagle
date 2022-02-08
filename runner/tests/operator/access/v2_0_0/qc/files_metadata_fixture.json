@@ -10,7 +10,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "05500_FH_1",
-                "patientId": "C-261TDL",
+                "cmoPatientId": "C-261TDL",
                 "igoRequestId": "05500_FH",
                 "sampleName": "C-261TDL-N001-d",
                 "genePanel": "-",
@@ -41,7 +41,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "05500_FH_1",
-                "patientId": "C-261TDL",
+                "cmoPatientId": "C-261TDL",
                 "igoRequestId": "05500_FH",
                 "sampleName": "C-261TDL-N001-d",
                 "genePanel": "-",
@@ -71,7 +71,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "05500_FH_1",
-                "patientId": "C-261TDL",
+                "cmoPatientId": "C-261TDL",
                 "igoRequestId": "05500_FH",
                 "sampleName": "C-261TDL-N001-d",
                 "genePanel": "-",
@@ -102,7 +102,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "05500_FH_1",
-                "patientId": "C-261TDL",
+                "cmoPatientId": "C-261TDL",
                 "igoRequestId": "05500_FH",
                 "sampleName": "C-261TDL-N001-d",
                 "genePanel": "-",
@@ -132,7 +132,7 @@
             "version": 0,
             "metadata": {
                 "primaryId": "05500_FH_1",
-                "patientId": "C-261TDL",
+                "cmoPatientId": "C-261TDL",
                 "igoRequestId": "05500_FH",
                 "sampleName": "C-261TDL-N001-d",
                 "genePanel": "-",

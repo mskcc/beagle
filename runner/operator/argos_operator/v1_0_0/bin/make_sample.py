@@ -125,7 +125,7 @@ def build_sample(data, ignore_sample_formatting=False):
             LOGGER.error("sampleName for %s is malformed", sample_id)
         flowcell_id = meta['flowCellId']
         barcode_index = meta['barcodeIndex']
-        cmo_patient_id = meta['patientId']
+        cmo_patient_id = meta[settings.PATIENT_ID_METADATA_KEY]
         platform_unit = flowcell_id
         run_date = meta['runDate']
         r_orientation = meta['R']

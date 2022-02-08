@@ -23,7 +23,7 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
             metadata.get(settings.CMO_SAMPLE_TAG_METADATA_KEY, format_sample_name(metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
             metadata[settings.REQUEST_ID_METADATA_KEY],
             get_project_id(metadata[settings.REQUEST_ID_METADATA_KEY]),
-            metadata['patientId'],
+            metadata[settings.PATIENT_ID_METADATA_KEY],
             metadata['investigatorSampleId'],
             MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY]),
             MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY]),
