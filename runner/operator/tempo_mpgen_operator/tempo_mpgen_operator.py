@@ -63,10 +63,10 @@ class TempoMPGenOperator(Operator):
 
     def filter_out_missing_fields_query(self):
         """
-        This is for legacy purposes - if FileMetadata don't contain sampleTy[e or cmoSampleName,
+        This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(metadata__cmoSampleName__isnull=False) & Q(metadata__sampleType__isnull=False)
+        query = Q(metadata__ciTag__isnull=False) & Q(metadata__sampleType__isnull=False)
         return query
 
 
@@ -233,7 +233,7 @@ class TempoMPGenOperator(Operator):
 
     def create_unpaired_txt_file(self):
         # Add runDate
-        fields = ['cmoSampleName', 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         unpaired_string = "\t".join(fields) + "\tPossible Reason?"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
@@ -283,7 +283,7 @@ class TempoMPGenOperator(Operator):
         return self.write_to_file('sample_mapping.txt', mapping_string)
 
     def create_conflict_samples_txt_file(self):       
-        fields = ['cmoSampleName', 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, 'patientId', settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
         conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
         for patient_id in self.patients:
             patient = self.patients[patient_id]

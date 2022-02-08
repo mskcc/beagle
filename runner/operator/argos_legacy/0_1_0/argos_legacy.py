@@ -242,7 +242,7 @@ class ArgosOperator(Operator):
         data_files = FileRepository.filter(queryset=self.files, q=legacy_fg)
         sample_id = sample_data['sample_id']    
         sample = FileRepository.filter(queryset=data_files,
-                                       metadata={'cmoSampleName': sample_id,
+                                       metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id,
                                                  'igocomplete': True},
                                        filter_redact=True)
         if not sample: # try dmp sample

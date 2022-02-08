@@ -20,7 +20,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 meta_fields = [
     'igoId', ## TODO: Change this
-    'cmoSampleName',
+    settings.CMO_SAMPLE_TAG_METADATA_KEY,
     'sampleName',
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,
     'cmoPatientId',
@@ -159,8 +159,8 @@ class AccessQCOperator(Operator):
 
     def create_sample_json(self, run):
         j = run.output_metadata
-        # todo: cmoSampleName in output_metadata for Nucleo appears to be the igo ID?
-        j['cmoSampleName'] = run.output_metadata['sampleName']
+        # todo: value of CMO_SAMPLE_TAG_METADATA_KEY in output_metadata for Nucleo appears to be the igo ID?
+        j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = run.output_metadata['sampleName']
 
         for f in meta_fields:
             # Use None for missing fields

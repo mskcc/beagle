@@ -184,7 +184,7 @@ class TestUltron(TestCase):
         self.assertEqual(sample_data._get_dmp_patient_id(), None)
         self.assertEqual(sample_data._find_dmp_bams("T"), None)
         self.assertEqual(sample_data._get_sample_metadata(),
-                         (None, sample_metadata_1.metadata["cmoSampleName"]))
+                         (None, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]))
 
     def test_construct_sample_data_null_sample_name(self):
         """
@@ -196,9 +196,9 @@ class TestUltron(TestCase):
             id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata["patientId"]
-        sample_metadata_1.metadata["cmoSampleName"] = None
+        sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_1.save()
-        sample_metadata_2.metadata["cmoSampleName"] = None
+        sample_metadata_2.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_2.save()
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(),
@@ -220,7 +220,7 @@ class TestUltron(TestCase):
                          patient_id.lstrip('C-'))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
         self.assertEqual(sample_data._get_sample_metadata(),
-                         (patient_id, sample_metadata_1.metadata["cmoSampleName"]))
+                         (patient_id, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]))
 
     def test_construct_bam_data_missing_muts(self):
         """

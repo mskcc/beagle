@@ -7,6 +7,8 @@ submits them as runs
 import os
 import datetime
 import logging
+
+from django.conf import settings
 from notifier.models import JobGroup
 from runner.models import Port, Run
 from runner.operator.operator import Operator
@@ -61,7 +63,7 @@ class ConcatMafsOperator(Operator):
         for run_id in self.run_ids:
             run = Run.objects.filter(id=run_id)[0]
             sample_name = run.tags['sampleNameTumor']
-            sample_files = FileRepository.filter(queryset=files, metadata = {'cmoSampleName': sample_name})
+            sample_files = FileRepository.filter(queryset=files, metadata = {settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_name})
             for f in sample_files:
                 metadata = f.metadata
                 if settings.REQUEST_ID_METADATA_KEY in metadata:

@@ -31,7 +31,7 @@ def format_sample_name(sample_name):
     try:
         if "s_" in sample_name[:2]:
             return sample_name
-        elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+        elif bool(sample_pattern.match(sample_name)):  # ciTag is formatted properly
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:

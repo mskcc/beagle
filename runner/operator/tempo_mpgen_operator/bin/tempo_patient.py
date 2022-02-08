@@ -45,7 +45,7 @@ class Patient:
                 self.conflict_samples[sample_name] = sample
             elif not sample_name: # sample name empty
                  self.conflict_samples[sample_name] = sample
-            elif 'sampleNameMalformed' in sample.metadata['cmoSampleName']: # cmo sample name is no good 
+            elif 'sampleNameMalformed' in sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]: # ci tag is no good 
                  self.conflict_samples[sample_name] = sample
             else:
                 if "normal" in sample_class.lower():
@@ -56,7 +56,7 @@ class Patient:
     def _pair_samples(self):
         for tumor_sample_name in self.tumor_samples:
             tumor_sample = self.tumor_samples[tumor_sample_name]
-            tumor_cmo_sample_name = tumor_sample.metadata['cmoSampleName'][0] # they should all be the same
+            tumor_cmo_sample_name = tumor_sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY][0] # they should all be the same
             tumor_baits = tumor_sample.bait_set
             tumor_run_mode = tumor_sample.run_mode
             expected_normal_cmo_sample_name = ""
@@ -75,7 +75,7 @@ class Patient:
             normal_baits = normal_sample.bait_set
             normal_run_mode = normal_sample.run_mode
             if expected_normal_cmo_sample_name: # if this is True, we're using historical pairing info
-                normal_cmo_sample_name = normal_sample.metadata['cmoSampleName'][0] # they should all be the same for this sample
+                normal_cmo_sample_name = normal_sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY][0] # they should all be the same for this sample
                 if normal_cmo_sample_name == expected_normal_cmo_sample_name:
                     normal = normal_sample
                     return normal
@@ -198,7 +198,7 @@ class Patient:
             sample = self.conflict_samples[sample_name]
             data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
             conflicts = []
-            if "sampleNameMalformed" in sample.metadata['cmoSampleName']:
+            if "sampleNameMalformed" in sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]:
                 conflicts.append("incorrect CMO Sample Name")
             if not "".join(sample.metadata[settings.SAMPLE_CLASS_METADATA_KEY]):
                     conflicts.append("no sample class")

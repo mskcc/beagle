@@ -232,7 +232,7 @@ class ArgosOperator(Operator):
     def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data['sample_id']
         sample = FileRepository.filter(queryset=self.files,
-                                       metadata={'cmoSampleName': sample_id,
+                                       metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id,
                                                  'igocomplete': True},
                                        filter_redact=True)
         if not sample: # try dmp sample

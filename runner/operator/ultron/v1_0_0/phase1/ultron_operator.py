@@ -165,7 +165,7 @@ class InputsObj:
     def _get_samples_data(self):
         files = FileRepository.all()
         f = FileRepository.filter(queryset=files,
-                                  metadata={'cmoSampleName': self.tumor_sample_name,
+                                  metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: self.tumor_sample_name,
                                             'igocomplete': True},
                                   filter_redact=True)
         sample = None
@@ -293,8 +293,8 @@ class SampleData:
                 pid = metadata['patientId']
                 if pid:
                     patient_id = pid
-            if 'cmoSampleName' in metadata:
-                sid = metadata['cmoSampleName']
+            if settings.CMO_SAMPLE_TAG_METADATA_KEY in metadata:
+                sid = metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]
                 if sid:
                     sample_name = sid
         return patient_id, sample_name
