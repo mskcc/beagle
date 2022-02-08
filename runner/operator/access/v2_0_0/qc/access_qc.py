@@ -25,7 +25,7 @@ meta_fields = [
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,
     settings.PATIENT_ID_METADATA_KEY,
     'investigatorSampleId',
-    'oncoTreeCode',
+    settings.ONCOTREE_METADATA_KEY,
     'tumorOrNormal',
     'tissueLocation',
     settings.SAMPLE_CLASS_METADATA_KEY,
