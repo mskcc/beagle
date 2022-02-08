@@ -127,7 +127,7 @@ METADATA_SCHEMA = {
                 }
             }
         },
-        "oncoTreeCode": {
+        settings.ONCOTREE_METADATA_KEY: {
             "type": ["null", "string"]
         },
         "preservation": {
@@ -159,7 +159,7 @@ class MetadataValidator(object):
         metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(
             metadata.pop(settings.CMO_SAMPLE_CLASS_METADATA_KEY))
         metadata[settings.RECIPE_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.RECIPE_METADATA_KEY))
-        metadata['oncoTreeCode'] = MetadataValidator.clean_value(metadata.pop('oncoTreeCode'))
+        metadata[settings.ONCOTREE_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.ONCOTREE_METADATA_KEY))
         metadata[settings.SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.SAMPLE_CLASS_METADATA_KEY))
         metadata['preservation'] = MetadataValidator.clean_value(metadata.pop('preservation'))
         metadata['sex'] = MetadataValidator.clean_value(metadata.pop('sex'))

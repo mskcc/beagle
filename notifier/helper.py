@@ -27,7 +27,7 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
             metadata['investigatorSampleId'],
             MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY]),
             MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY]),
-            MetadataValidator.clean_value(metadata['oncoTreeCode']),
+            MetadataValidator.clean_value(metadata[settings.ONCOTREE_METADATA_KEY]),
             MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY]),
             MetadataValidator.clean_value(metadata['preservation']),
             MetadataValidator.clean_value(metadata['sex']),

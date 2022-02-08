@@ -319,7 +319,7 @@ def convert_references(assay):
 def get_oncotree_codes(request_id):
     oncotree_dh = OncotreeDataHandler()
     files = FileRepository.all()
-    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__oncoTreeCode', flat=True))
+    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__oncotreeCode', flat=True))
     oncotree_codes = list()
     for val in oncotree_codes_tmp:
         if val:

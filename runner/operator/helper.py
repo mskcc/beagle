@@ -51,7 +51,8 @@ def format_patient_id(patient_id):
 def generate_sample_data_content(request_ids):
     # TODO: Move this method to some better place
     result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
-    ret_str = 'metadata__{sample_id_key}'.format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY)
+    ret_str = 'metadata__{sample_id_key}'.format(
+        sample_id_key=settings.SAMPLE_ID_METADATA_KEY)
     if isinstance(request_ids, str):
         request_ids = [request_ids]
     for r in request_ids:
@@ -66,7 +67,7 @@ def generate_sample_data_content(request_ids):
                 metadata['investigatorSampleId'],
                 metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY],
                 metadata[settings.RECIPE_METADATA_KEY],
-                metadata['oncoTreeCode'],
+                metadata[settings.ONCOTREE_METADATA_KEY],
                 metadata[settings.SAMPLE_CLASS_METADATA_KEY],
                 metadata['preservation'],
                 metadata['sex'],
