@@ -95,7 +95,7 @@
                 "primaryId": "10075_D_4_3",
                 "barcodeId": null,
                 "libraryIgoId": null,
-                "cmocmoPatientId": "C-8VK0V7",
+                "cmoPatientId": "C-8VK0V7",
                 "igoRequestId": "10075_D_4",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
