@@ -40,7 +40,7 @@ meta_fields = [
     'qcReports',
     'barcodeId',
     'barcodeIndex',
-    'libraryIgoId',
+    settings.LIBRARY_ID_METADATA_KEY,
     'libraryVolume',
     'libraryConcentrationNgul',
     'dnaInputNg',
