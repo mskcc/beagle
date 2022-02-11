@@ -12,7 +12,7 @@ from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
 from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler
 from django.db.models import Q
-
+from django.conf import settings
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
@@ -248,7 +248,7 @@ def build_request_ids_query(data):
        query |= item
 
     """
-    data_query_set = [Q(metadata__igoRequestId=value) for value in set(data)]
+    data_query_set = [Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY),value)) for value in set(data)]
     query = data_query_set.pop()
     for item in data_query_set:
         query |= item
@@ -332,7 +332,7 @@ def get_assay_coverage(assay, helix_filters_resources):
 def get_oncotree_codes(request_id):
     oncotree_dh = OncotreeDataHandler()
     files = FileRepository.all()
-    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__oncotreeCode', flat=True))
+    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__{}'.format(settings.ONCOTREE_METADATA_KEY), flat=True))
     oncotree_codes = list()
     for val in oncotree_codes_tmp:
         if val:

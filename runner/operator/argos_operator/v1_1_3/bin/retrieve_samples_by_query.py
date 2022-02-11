@@ -33,7 +33,7 @@ def get_samples_from_patient_id(patient_id):
     Only retrieve patients from LIMS file group
     """
     all_files = FileRepository.all()
-    q_pid = Q(metadata__cmoPatientId=patient_id)
+    q_pid = Q(("metadata__{}".format(settings.PATIENT_ID_METADATA_KEY),patient_id))
     q_fg = build_argos_file_groups_query()
     q = q_pid & q_fg
     files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
@@ -106,7 +106,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
-        q = query & Q(metadata__cmoSampleName=sample_name)
+        q = query & Q(("metadata__{}".format(settings.CMO_SAMPLE_NAME_METADATA_KEY),sample_name))
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
             LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
@@ -125,7 +125,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
-        q = query & Q(metadata__cmoSampleName=sample_name)
+        q = query & Q(("metadata__{}".format(settings.CMO_SAMPLE_NAME_METADATA_KEY),sample_name))
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
             LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)

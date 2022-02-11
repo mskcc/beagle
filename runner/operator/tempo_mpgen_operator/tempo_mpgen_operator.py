@@ -38,7 +38,7 @@ class TempoMPGenOperator(Operator):
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
-        data_query_set = [Q(metadata__genePanel=value) for value in set(data)]
+        data_query_set = [Q(('metadata__{}'.format(settings.RECIPE_METADATA_KEY),value)) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -66,7 +66,7 @@ class TempoMPGenOperator(Operator):
         This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(metadata__ciTag__isnull=False) & Q(metadata__sampleType__isnull=False)
+        query = Q(('metadata__{}__isnull'.format(settings.CMO_SAMPLE_TAG_METADATA_KEY),False)) & Q(('metadata__{}__isnull'.format(settings.CMO_SAMPLE_CLASS_METADATA_KEY),False))
         return query
 
 
@@ -303,9 +303,9 @@ class TempoMPGenOperator(Operator):
         q = None
         for i in l:
             if q:
-                q |= Q(metadata__igoRequestId=i)
+                q |= Q(('metadata__{}'.format(settings.REQUEST_ID_METADATA_KEY),i))
             else:
-                q = Q(metadata__igoRequestId=i)
+                q = Q(('metadata__{}'.format(settings.REQUEST_ID_METADATA_KEY),i))
         return q
     
     def get_exclusions(self):
