@@ -1,6 +1,6 @@
 # Beagle
 
-Beagle is a backend service for managing files, pipelines and runs.
+Beagle is a backend service for managing files, file metadata, and pipeline and run objects.
 
 ![alt text](docs/pics/voyager.png "Diagram of Voyager project")
 
