@@ -87,8 +87,7 @@ def create_request_job(request_id, redelivery=False):
     except Exception:
         logger.error("Failed to retrieve deliveryDate for request %s" % request_id)
 
-    if not Request.objects.filter(request_id=request_id):
-        Request.objects.create(request_id=request_id, delivery_date=delivery_date)
+    Request.objects.get_or_create(request_id=request_id)
     assays = ETLConfiguration.objects.first()
 
     if request_redelivered and not (assays.redelivery and redelivery):
@@ -323,20 +322,17 @@ def fetch_samples(
                 pass
             patient_id = format_patient_id(data.get("cmoPatientId"))
 
-            if not Patient.objects.filter(patient_id=patient_id):
-                Patient.objects.create(patient_id=patient_id)
+            Patient.objects.get_or_create(patient_id=patient_id)
 
             sample_name = data.get("cmoSampleName", None)
             specimen_type = data.get("specimenType", None)
             cmo_sample_name = format_sample_name(sample_name, specimen_type)
 
-            if not Sample.objects.filter(
-                sample_id=sample["igoSampleId"], sample_name=sample_name, cmo_sample_name=cmo_sample_name
-            ):
-                Sample.objects.create(
-                    sample_id=sample["igoSampleId"], sample_name=sample_name, cmo_sample_name=cmo_sample_name
-                )
-
+            Sample.objects.get_or_create(
+                sample_id=sample["igoSampleId"],
+                sample_name=sample_name,
+                cmo_sample_name=cmo_sample_name
+            )
             job = create_sample_job(
                 sample["igoSampleId"], sample["igoComplete"], request_id, request_metadata, redelivery, jg, jgn
             )
