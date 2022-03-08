@@ -222,8 +222,8 @@ class JobObject(object):
             pi_email = metadata["piEmail"]
             project_manager_name = metadata["projectManagerName"]
             qc_access_emails = metadata["qcAccessEmails"]
-            data_access_emails = metadata['dataAccessEmails']
-            other_contact_emails = metadata['otherContactEmails']
+            data_access_emails = metadata["dataAccessEmails"]
+            other_contact_emails = metadata["otherContactEmails"]
 
         event = ETLImportEvent(
             str(self.job.job_group_notifier.id),
@@ -245,7 +245,7 @@ class JobObject(object):
             number_of_normals,
             len(pooled_normal_jobs),
             data_access_emails,
-            other_contact_emails
+            other_contact_emails,
         )
         e = event.to_dict()
         send_notification.delay(e)
