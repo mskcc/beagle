@@ -266,7 +266,7 @@ def generate_description(job_group, job_group_notifier, request):
             num_tumors,
             num_normals,
             data_access_emails,
-            other_contact_emails
+            other_contact_emails,
         ).to_dict()
         send_notification.delay(operator_start_event)
 

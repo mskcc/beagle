@@ -24,7 +24,7 @@ class ETLImportEvent(Event):
         number_of_normals,
         number_of_pool_normals,
         data_access_emails,
-        other_contact_emails
+        other_contact_emails,
     ):
         self.job_notifier = job_notifier
         self.job_group = job_group
@@ -101,5 +101,5 @@ class ETLImportEvent(Event):
             number_of_pool_normals=self.number_of_pool_normals,
             job_group=self.job_group,
             data_access_emails=self.data_access_emails,
-            other_contact_emails=self.other_contact_emails
+            other_contact_emails=self.other_contact_emails,
         )
