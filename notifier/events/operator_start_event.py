@@ -21,7 +21,7 @@ class OperatorStartEvent(Event):
         number_of_tumors,
         number_of_normals,
         data_access_emails,
-        other_contact_emails
+        other_contact_emails,
     ):
         self.job_notifier = job_notifier
         self.job_group = job_group
@@ -91,5 +91,5 @@ class OperatorStartEvent(Event):
             number_of_normals=self.number_of_normals,
             job_group=self.job_group,
             data_access_emails=self.data_access_emails,
-            other_contact_emails=self.other_contact_emails
+            other_contact_emails=self.other_contact_emails,
         )
