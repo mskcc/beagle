@@ -232,6 +232,8 @@ def generate_description(job_group, job_group_notifier, request):
         p_email = data["piEmail"]
         pm_name = data["projectManagerName"]
         qc_emails = data["qcAccessEmails"] if "qcAccessEmails" in data else ""
+        data_access_emails = data["dataAccessEmails"] if "dataAccessEmails" in data else ""
+        other_contact_emails = data["otherContactEmails"] if "otherContactEmails" in data else ""
 
         num_samples = len(files.order_by().values("metadata__cmoSampleName").annotate(n=Count("pk")))
         num_tumors = len(
@@ -263,6 +265,8 @@ def generate_description(job_group, job_group_notifier, request):
             qc_emails,
             num_tumors,
             num_normals,
+            data_access_emails,
+            other_contact_emails
         ).to_dict()
         send_notification.delay(operator_start_event)
 
