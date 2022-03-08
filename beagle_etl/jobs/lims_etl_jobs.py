@@ -329,9 +329,7 @@ def fetch_samples(
             cmo_sample_name = format_sample_name(sample_name, specimen_type)
 
             Sample.objects.get_or_create(
-                sample_id=sample["igoSampleId"],
-                sample_name=sample_name,
-                cmo_sample_name=cmo_sample_name
+                sample_id=sample["igoSampleId"], sample_name=sample_name, cmo_sample_name=cmo_sample_name
             )
             job = create_sample_job(
                 sample["igoSampleId"], sample["igoComplete"], request_id, request_metadata, redelivery, jg, jgn
