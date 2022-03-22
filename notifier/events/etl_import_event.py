@@ -23,6 +23,8 @@ class ETLImportEvent(Event):
         number_of_tumors,
         number_of_normals,
         number_of_pool_normals,
+        data_access_emails,
+        other_contact_emails,
     ):
         self.job_notifier = job_notifier
         self.job_group = job_group
@@ -42,6 +44,8 @@ class ETLImportEvent(Event):
         self.number_of_tumors = number_of_tumors
         self.number_of_normals = number_of_normals
         self.number_of_pool_normals = number_of_pool_normals
+        self.data_access_emails = data_access_emails
+        self.other_contact_emails = other_contact_emails
 
     @classmethod
     def get_type(cls):
@@ -65,6 +69,8 @@ class ETLImportEvent(Event):
         PI E-mail: {pi_email}
         Project Manager Name: {project_manager_name}
         QC E-mails: {qc_access_emails}
+        Data Access Emails: {data_access_emails}
+        Other Contact Emails: {other_contact_emails}
 
         {cnt_samples_completed} samples successfully imported
         {cnt_samples_fail} samples failed
@@ -94,4 +100,6 @@ class ETLImportEvent(Event):
             number_of_normals=self.number_of_normals,
             number_of_pool_normals=self.number_of_pool_normals,
             job_group=self.job_group,
+            data_access_emails=self.data_access_emails,
+            other_contact_emails=self.other_contact_emails,
         )
