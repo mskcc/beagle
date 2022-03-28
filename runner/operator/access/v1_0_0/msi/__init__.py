@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 # Todo: needs to work for Nucleo bams as well
 SAMPLE_ID_SEP = '_cl_aln'
 TUMOR_SEARCH = '-L0'
+TUMOR_SEARCH_NEW = '_L0'
 NORMAL_SEARCH = '-N0'
+NORMAL_SEARCH_NEW = '_N0'
 STANDARD_BAM_SEARCH = '_cl_aln_srt_MD_IR_FX_BR.bam'
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -63,14 +65,24 @@ class AccessLegacyMSIOperator(Operator):
         matched_normal_bams = []
         for standard_tumor_bam in standard_tumor_bams:
             tumor_sample_id = standard_tumor_bam.file_name.split('_cl_aln')[0]
-            patient_id = '-'.join(tumor_sample_id.split('_')[1:3])
-
-            # Find the matched Normal Standard bam (which could be associated with a different request_id)
-            sample_search_start = patient_id + NORMAL_SEARCH
+            patient_id = '_'.join(tumor_sample_id.split('_')[0:3])
+            # Find the matched Normal Standard bam in new format (which could be associated with a different request_id)
+            sample_search_start = patient_id + NORMAL_SEARCH_NEW
             matched_normal_bam = File.objects.filter(
                 file_name__startswith=sample_search_start,
                 file_name__endswith=STANDARD_BAM_SEARCH
             )
+            if not len(matched_normal_bam) > 0:
+                msg = 'No matching standard normal Bam found for patient in new format {}'.format(patient_id)
+                logger.warning(msg)
+                # Find the matched Normal Standard bam in new format (which could be associated with a different request_id)
+                patient_id = '-'.join(tumor_sample_id.split('_')[1:3])
+                sample_search_start = patient_id + NORMAL_SEARCH
+                matched_normal_bam = File.objects.filter(
+                    file_name__startswith=sample_search_start,
+                    file_name__endswith=STANDARD_BAM_SEARCH
+                )
+
             if not len(matched_normal_bam) > 0:
                 msg = 'No matching standard normal Bam found for patient {}'.format(patient_id)
                 logger.warning(msg)
