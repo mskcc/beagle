@@ -426,7 +426,7 @@ class AccessLegacySNVOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["tumor_sample_names"],
-                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["tumor_sample_names"][0].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["tumor_sample_names"][0].split('_')[1:3])
                         }
                     }
                 ),

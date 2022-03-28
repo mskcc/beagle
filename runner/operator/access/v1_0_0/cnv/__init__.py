@@ -66,7 +66,7 @@ class AccessLegacyCNVOperator(Operator):
                 file_type='fastq',
                 metadata={
                     'tumorOrNormal': 'Tumor',
-                    settings.CMO_SAMPLE_NAME_METADATA_KEY : sample_id
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: sample_id
                 }
             )
             sample_sex = tumor_fastqs[0].metadata['sex']
@@ -100,7 +100,7 @@ class AccessLegacyCNVOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': sample_ids[i],
-                            settings.PATIENT_ID_METADATA_KEY: '-'.join(sample_ids[i].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(sample_ids[i].split('_')[1:3])
                         }
                     }
                 ),

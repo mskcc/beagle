@@ -63,7 +63,7 @@ class AccessLegacyMSIOperator(Operator):
         matched_normal_bams = []
         for standard_tumor_bam in standard_tumor_bams:
             tumor_sample_id = standard_tumor_bam.file_name.split('_cl_aln')[0]
-            patient_id = '-'.join(tumor_sample_id.split('-')[0:2])
+            patient_id = '-'.join(tumor_sample_id.split('_')[1:3])
 
             # Find the matched Normal Standard bam (which could be associated with a different request_id)
             sample_search_start = patient_id + NORMAL_SEARCH
@@ -108,7 +108,7 @@ class AccessLegacyMSIOperator(Operator):
                         'tags': {
                             settings.REQUEST_ID_METADATA_KEY: self.request_id,
                             'cmoSampleIds': job["sample_name"],
-                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["sample_name"][0].split('-')[0:2])
+                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["sample_name"][0].split('_')[1:3])
                         }
                     }
                 ),
