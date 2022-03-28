@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0025_auto_20200812_1307'),
+        ("beagle_etl", "0025_auto_20200812_1307"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operator',
-            name='version',
+            model_name="operator",
+            name="version",
             field=models.CharField(default=None, max_length=50, null=True),
             preserve_default=False,
         ),

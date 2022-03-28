@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0009_auto_20210908_0606'),
+        ("notifier", "0009_auto_20210908_0606"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='jobgroupnotifier',
-            name='request_id',
+            model_name="jobgroupnotifier",
+            name="request_id",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
     ]

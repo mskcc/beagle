@@ -7,22 +7,22 @@ from runner.run.processors.port_processor import PortProcessor, PortAction
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0014_port_files'),
+        ("runner", "0014_port_files"),
     ]
 
     def fix_port_db_values_and_populate_files(apps, schema_editor):
-        '''
+        """
         We can't import the Post model directly as it may be a newer
         version than this migration expects. We use the historical version.
-        '''
-        File = apps.get_model('file_system', 'File')
-        Port = apps.get_model('runner', 'Port')
+        """
+        File = apps.get_model("file_system", "File")
+        Port = apps.get_model("runner", "Port")
         for port in Port.objects.all():
             file_list = []
             new_db_value = PortProcessor.process_files(port.db_value, PortAction.FIX_DB_VALUES, file_list=file_list)
             port.db_value = new_db_value
             for file_id in file_list:
-                file_obj = File.objects.get(id=file_id.replace('bid://', ''))
+                file_obj = File.objects.get(id=file_id.replace("bid://", ""))
                 port.files.add(file_obj)
             port.save()
 

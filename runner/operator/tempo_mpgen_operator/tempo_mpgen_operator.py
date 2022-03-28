@@ -14,7 +14,6 @@ from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from runner.models import Pipeline
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as sample_obj
 import runner.operator.tempo_mpgen_operator.bin.tempo_patient as patient_obj
@@ -25,8 +24,9 @@ from notifier.events import UploadAttachmentEvent
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-PAIRING_FILE_LOCATION = os.path.join(WORKDIR, 'reference_jsons/pairing.tsv') # used for historical pairing
-logger = logging.getLogger(__name__)
+PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing.tsv")  # used for historical pairing
+LOGGER = logging.getLogger(__name__)
+
 
 class TempoMPGenOperator(Operator):
     def build_recipe_query(self):
@@ -44,7 +44,6 @@ class TempoMPGenOperator(Operator):
             query |= item
         return query
 
-
     def build_assay_query(self):
         """
         Build complex Q object assay query from given data
@@ -60,7 +59,6 @@ class TempoMPGenOperator(Operator):
             query |= item
         return query
 
-
     def filter_out_missing_fields_query(self):
         """
         This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
@@ -69,9 +67,8 @@ class TempoMPGenOperator(Operator):
         query = Q(('metadata__{}__isnull'.format(settings.CMO_SAMPLE_TAG_METADATA_KEY),False)) & Q(('metadata__{}__isnull'.format(settings.CMO_SAMPLE_CLASS_METADATA_KEY),False))
         return query
 
-
     def get_jobs(self, pairing_override=None):
-        logger.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
+        LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
@@ -88,24 +85,26 @@ class TempoMPGenOperator(Operator):
         tempo_files = FileRepository.filter(queryset=files, q=q)
         tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
-        self.send_message("""
+        self.send_message(
+            """
             Querying database for the following recipes:
                 {recipes}
 
             Querying database for the following assays/bait sets:
                 {assays}
-            """.format(recipes="\t\n".join(self.get_recipes()),
-                       assays="\t\n".join(self.get_assays()))
-                      )
+            """.format(
+                recipes="\t\n".join(self.get_recipes()), assays="\t\n".join(self.get_assays())
+            )
+        )
 
         exclude_query = self.get_exclusions()
         if exclude_query:
             tempo_files = tempo_files.exclude(exclude_query)
         # replace with run operator logic, most recent pairing
-        pre_pairing = self.load_pairing_file(PAIRING_FILE_LOCATION) # pairing.tsv is not in repo
+        pre_pairing = self.load_pairing_file(PAIRING_FILE_LOCATION)  # pairing.tsv is not in repo
         if pairing_override:
-            normal_samples = pairing_override['normal_samples']
-            tumor_samples = pairing_override['tumor_samples']
+            normal_samples = pairing_override["normal_samples"]
+            tumor_samples = pairing_override["tumor_samples"]
             num_ns = len(normal_samples)
             num_ts = len(tumor_samples)
             if num_ns != num_ts:
@@ -138,44 +137,43 @@ class TempoMPGenOperator(Operator):
 
         input_json = dict()
         # output these strings to file
-        input_json['conflict_data'] = self.create_conflict_samples_txt_file()
-        input_json['unpaired_data'] = self.create_unpaired_txt_file()
-        input_json['mapping_data'] = self.create_mapping_file()
-        input_json['pairing_data'] = self.create_pairing_file()
-        input_json['tracker_data'] = self.create_tracker_file()
+        input_json["conflict_data"] = self.create_conflict_samples_txt_file()
+        input_json["unpaired_data"] = self.create_unpaired_txt_file()
+        input_json["mapping_data"] = self.create_mapping_file()
+        input_json["pairing_data"] = self.create_pairing_file()
+        input_json["tracker_data"] = self.create_tracker_file()
 
         pickle_file = os.path.join(self.OUTPUT_DIR, "patients_data_pickle")
-        fh = open(pickle_file, 'wb')
+        fh = open(pickle_file, "wb")
         pickle.dump(self.patients, fh)
         os.chmod(pickle_file, 0o777)
         self.register_tmp_file(pickle_file)
 
-        input_json['pickle_data'] = {'class': 'File', 'location': "juno://" + pickle_file}
+        input_json["pickle_data"] = {"class": "File", "location": "juno://" + pickle_file}
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
 
-        tags = {"beagle_version": beagle_version,
-                "run_date" : run_date}
+        tags = {"beagle_version": beagle_version, "run_date": run_date}
 
-        self.send_message("""
+        self.send_message(
+            """
             Writing files to {file_path}.
 
             Run Date: {run_date}
             Beagle Version: {beagle_version}
-            """.format(file_path=self.OUTPUT_DIR,
-                       run_date=run_date,
-                       beagle_version=beagle_version)
-                )
+            """.format(
+                file_path=self.OUTPUT_DIR, run_date=run_date, beagle_version=beagle_version
+            )
+        )
 
         return []
 
-
     def load_pairing_file(self, tsv_file):
         pairing = dict()
-        with open(tsv_file, 'r') as pairing_file:
-            reader = csv.reader(pairing_file, delimiter='\t')
-            next(reader, None) # consume header
+        with open(tsv_file, "r") as pairing_file:
+            reader = csv.reader(pairing_file, delimiter="\t")
+            next(reader, None)  # consume header
             for row in reader:
                 try:
                     tumor_id = row[1]
@@ -188,8 +186,7 @@ class TempoMPGenOperator(Operator):
                     LOGGER.error("Pairing could not be found from file for row.")
         return pairing
 
-
-    def write_to_file(self,fname,s):
+    def write_to_file(self, fname, s):
         """
         Writes file to temporary location, then registers it to the temp file group
         Also uploads it to notifier if there is a job group id
@@ -202,8 +199,7 @@ class TempoMPGenOperator(Operator):
         if self.job_group_notifier_id:
             upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
             send_notification.delay(upload_file_event)
-        return {'class': 'File', 'location': "juno://" + output}
-
+        return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
         """
@@ -215,7 +211,6 @@ class TempoMPGenOperator(Operator):
             fh.write(pairing_file_str)
         os.chmod(output, 0o777)
 
-
     def register_tmp_file(self, path):
         fname = os.path.basename(path)
         temp_file_group = FileGroup.objects.get(slug="temp")
@@ -224,28 +219,31 @@ class TempoMPGenOperator(Operator):
             File.objects.get(path=path)
         except:
             print("Registering temp file %s" % path)
-            f = File(file_name=fname,
-                    path=path,
-                    file_type=file_type,
-                    file_group=temp_file_group)
+            f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
             f.save()
-
 
     def create_unpaired_txt_file(self):
         # Add runDate
-        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+        fields = [
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            "runMode",
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            "baitSet",
+            "runDate"
+        ]
         unpaired_string = "\t".join(fields) + "\tPossible Reason?"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             unpaired_string += patient.create_unpaired_string(fields)
-        return self.write_to_file('sample_unpaired.txt', unpaired_string)
-
+        return self.write_to_file("sample_unpaired.txt", unpaired_string)
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
-
 
     def get_recipes(self):
         recipe = [
@@ -253,51 +251,56 @@ class TempoMPGenOperator(Operator):
             "IDT_Exome_v1_FP",
             "WholeExomeSequencing",
             "IDT_Exome_v1_FP_Viral_Probes",
-            "IDT_Exome_v2_FP_Viral_Probes"
-       ]
+            "IDT_Exome_v2_FP_Viral_Probes",
+        ]
         return recipe
-
 
     def get_assays(self):
         assays = [
-        "Agilent_v4_51MB_Human_hg19_BAITS",
-        "IDT_Exome_v1_FP_b37_baits",
-        "IDT_Exome_v1_FP_BAITS",
-        "IDT_Exome_v2_FP_b37_baits",
-        "IDT_Exome_v2_GRCh38_BAITS",
-        "SureSelect-All-Exon-V4-hg19",
-        "IDT_Exome_v1_FP_Viral_Probes",
-        "IDT_Exome_v2_FP_Viral_Probes"
-       ]
+            "Agilent_v4_51MB_Human_hg19_BAITS",
+            "IDT_Exome_v1_FP_b37_baits",
+            "IDT_Exome_v1_FP_BAITS",
+            "IDT_Exome_v2_FP_b37_baits",
+            "IDT_Exome_v2_GRCh38_BAITS",
+            "SureSelect-All-Exon-V4-hg19",
+            "IDT_Exome_v1_FP_Viral_Probes",
+            "IDT_Exome_v2_FP_Viral_Probes",
+        ]
         return assays
 
     def set_juno_uri_from_path(self, path):
         return "juno://" + path
-
 
     def create_mapping_file(self):
         mapping_string = "SAMPLE\tTARGET\tFASTQ_PE1\tFASTQ_PE2\tNUM_OF_PAIRS\n"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             mapping_string += patient.create_mapping_string()
-        return self.write_to_file('sample_mapping.txt', mapping_string)
+        return self.write_to_file("sample_mapping.txt", mapping_string)
 
-    def create_conflict_samples_txt_file(self):       
-        fields = [settings.CMO_SAMPLE_TAG_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, 'runMode', settings.CMO_SAMPLE_CLASS_METADATA_KEY, 'baitSet', 'runDate']
+    def create_conflict_samples_txt_file(self):
+        fields = [
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            'runMode',
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            'baitSet',
+            'runDate'
+        ]
         conflict_string = "\t".join(fields) + "\t" + "Conflict Reason"
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             conflict_string += patient.create_conflict_string(fields)
-        return self.write_to_file('sample_conflict.txt', conflict_string)
-
+        return self.write_to_file("sample_conflict.txt", conflict_string)
 
     def create_pairing_file(self):
         pairing_string = "NORMAL_ID\tTUMOR_ID\n"
         for patient_id in self.patients:
             pairing_string += self.patients[patient_id].create_pairing_string()
         self.write_historical_pairing_file(pairing_string)
-        return self.write_to_file('sample_pairing.txt', pairing_string)
-
+        return self.write_to_file("sample_pairing.txt", pairing_string)
 
     def exclude_requests(self, l):
         q = None
@@ -307,11 +310,10 @@ class TempoMPGenOperator(Operator):
             else:
                 q = Q(('metadata__{}'.format(settings.REQUEST_ID_METADATA_KEY),i))
         return q
-    
-    def get_exclusions(self):
-        exclude_reqs = ['09315']
-        return self.exclude_requests(exclude_reqs)
 
+    def get_exclusions(self):
+        exclude_reqs = ["09315"]
+        return self.exclude_requests(exclude_reqs)
 
     def _validate_to_str(self, data):
         """
@@ -329,7 +331,7 @@ class TempoMPGenOperator(Operator):
         Creates the string for tracker
 
         String is tab-delimited; special consideration taken so that the first two columns
-        is the Tumor/Normal pairing (if the row Sample is a tumor) or 
+        is the Tumor/Normal pairing (if the row Sample is a tumor) or
         Normal/"N/A" (if row sample is a normal)
 
         The rest of the columns follow the metadata field names in the order set in lists key_order and extra_keys
@@ -338,12 +340,18 @@ class TempoMPGenOperator(Operator):
         extra_keys values are the metadata field names in the database, used as headers
         """
         tracker = ""
-        key_order = ["investigatorSampleId", "externalSampleId", settings.CMO_SAMPLE_CLASS_METADATA_KEY]
+        key_order = ["investigatorSampleId", "externalSampleId", "sampleClass"]
         key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
         extra_keys = ["tumorOrNormal", "species", settings.RECIPE_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY, settings.PATIENT_ID_METADATA_KEY]
-        extra_keys += ["investigatorName", "investigatorEmail", "piEmail", "labHeadName", "labHeadEmail", "preservation"]
-        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", settings.CMO_SAMPLE_NAME_METADATA_KEY]
-
+        extra_keys += [
+            "investigatorName",
+            "investigatorEmail",
+            "piEmail",
+            "labHeadName",
+            "labHeadEmail",
+            "preservation",
+        ]
+        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
 
         tracker = "CMO_Sample_ID\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"
         for key in extra_keys:
@@ -354,12 +362,12 @@ class TempoMPGenOperator(Operator):
 
         for patient_id in self.patients:
             patient = self.patients[patient_id]
-            for sample_id in patient.all_samples: # must do this to account for unpaired normals
+            for sample_id in patient.all_samples:  # must do this to account for unpaired normals
                 sample = patient.all_samples[sample_id]
                 meta = sample.dedupe_metadata_values()
                 if sample.cmo_sample_name not in seen:
                     seen.add(sample.cmo_sample_name)
-                    if not sample.conflict: # metadata is valid sample
+                    if not sample.conflict:  # metadata is valid sample
                         running = list()
                         running.append(sample.cmo_sample_name)
                         for key in key_order:
@@ -369,4 +377,4 @@ class TempoMPGenOperator(Operator):
                             s = self._validate_to_str(meta[key])
                             running.append(s)
                         tracker += "\t".join(running) + "\n"
-        return self.write_to_file('sample_tracker.txt', tracker)
+        return self.write_to_file("sample_tracker.txt", tracker)

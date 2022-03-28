@@ -130,5 +130,16 @@
       "version": "v1.0.0",
       "slug": "UltronOperator"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 14,
+    "fields": {
+      "active": true,
+      "recipes": "[\"CMO-CH\"]",
+      "class_name": "runner.operator.cmo_ch.v2_0_0.nucleo.CMOCHNucleoOperator",
+      "version": "v2.0.0",
+      "slug": "CMOCHNucleoOperator"
+    }
   }
 ]

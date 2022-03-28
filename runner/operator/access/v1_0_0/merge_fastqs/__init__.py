@@ -1,40 +1,39 @@
 import os
+import json
+from jinja2 import Template
 from collections import defaultdict
 from itertools import groupby
 from django.conf import settings
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
-
-import json
-from jinja2 import Template
-
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
 METADATA_OUTPUT_FIELDS = [
-    'barcodeId',
+    "barcodeId",
     settings.CMO_SAMPLE_NAME_METADATA_KEY,
-    'investigatorSampleId',
+    "investigatorSampleId",
     settings.PATIENT_ID_METADATA_KEY,
-    'tumorOrNormal',
-    'sampleOrigin',
-    'dnaInputNg',
-    'captureInputNg',
-    'baitSet',
-    'sex',
-    'barcodeIndex',
-    'libraryVolume',
-    'captureName',
-    'libraryConcentrationNgul',
-    'captureConcentrationNm',
+    "tumorOrNormal",
+    "sampleOrigin",
+    "dnaInputNg",
+    "captureInputNg",
+    "baitSet",
+    "sex",
+    "barcodeIndex",
+    "libraryVolume",
+    "captureName",
+    "libraryConcentrationNgul",
+    "captureConcentrationNm",
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY
 ]
-def construct_inputs(samples, request_id):
-    with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
-        template = Template(file.read())
 
+
+def construct_inputs(samples, request_id):
+    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+        template = Template(file.read())
 
     samples = list(group_by_sample_id(samples).values())
 
@@ -42,24 +41,20 @@ def construct_inputs(samples, request_id):
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
         metadata = sample_files[0]["metadata"]
-        metadata.update({
-            "dnaInputNg": calc_avg(sample_files, "dnaInputNg"),
-            "captureInputNg": calc_avg(sample_files, "captureInputNg"),
-            "libraryVolume": calc_avg(sample_files, "libraryVolume"),
-            "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
-            "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
-            settings.REQUEST_ID_METADATA_KEY: request_id
-        })
+        metadata.update(
+            {
+                "dnaInputNg": calc_avg(sample_files, "dnaInputNg"),
+                "captureInputNg": calc_avg(sample_files, "captureInputNg"),
+                "libraryVolume": calc_avg(sample_files, "libraryVolume"),
+                "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
+                "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
+                settings.REQUEST_ID_METADATA_KEY: request_id,
+            }
+        )
 
-        fastq1s = [{
-            "class": "File",
-            "location": "juno://" + fastq["path"]
-        } for fastq in fastqs["R1"]]
+        fastq1s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R1"]]
 
-        fastq2s = [{
-            "class": "File",
-            "location": "juno://" + fastq["path"]
-        } for fastq in fastqs["R2"]]
+        fastq2s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R2"]]
 
         input_file = template.render(
             fastq1_files=json.dumps(fastq1s),
@@ -70,18 +65,12 @@ def construct_inputs(samples, request_id):
 
     return inputs
 
+
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                                                'igocomplete': True})
+        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
         data = [
-            {
-                "id": f.file.id,
-                "path": f.file.path,
-                "file_name": f.file.file_name,
-                "metadata": f.metadata
-            } for f in files
+            {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
 
         inputs = construct_inputs(data, self.request_id)
@@ -89,20 +78,15 @@ class AccessLegacyFastqMergeOperator(Operator):
         number_of_inputs = len(inputs)
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                            key in metadata},
-                        'inputs': job,
-                        'tags': {settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                                 settings.SAMPLE_ID_METADATA_KEY: metadata[settings.SAMPLE_ID_METADATA_KEY]}}
-                ),
-                job
-             )
-
+            RunCreator(
+                **{
+                    "name": "LEGACY FASTQ Merge: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "app": self.get_pipeline_id(),
+                    "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
+                    "inputs": job,
+                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.SAMPLE_ID_METADATA_KEY: metadata["sampleId"]},
+                }
+            )
             for i, (job, metadata) in enumerate(inputs)
         ]
 
@@ -113,7 +97,7 @@ def calc_avg(sample_files, field):
     if field_count == 0:
         return 0
 
-    return sum([float(s["metadata"][field]) for s in fields])/field_count
+    return sum([float(s["metadata"][field]) for s in fields]) / field_count
 
 
 def group_by_sample_id(samples):
@@ -126,9 +110,9 @@ def group_by_sample_id(samples):
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
-    samples.sort(key = lambda s: s["path"].split("/")[-1])
+    samples.sort(key=lambda s: s["path"].split("/")[-1])
     for sample in samples:
-        if '_R2_' in sample["path"]:
+        if "_R2_" in sample["path"]:
             fastqs["R2"].append(sample)
         else:
             fastqs["R1"].append(sample)

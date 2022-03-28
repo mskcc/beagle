@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0010_run_output_metadata'),
+        ("runner", "0010_run_output_metadata"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='run',
-            name='name',
+            model_name="run",
+            name="name",
             field=models.CharField(max_length=400),
         ),
     ]

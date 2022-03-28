@@ -2,7 +2,7 @@ from collections import defaultdict
 from itertools import groupby
 from django.conf import settings
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
 import json
@@ -10,7 +10,7 @@ from jinja2 import Template
 
 
 def construct_sample_inputs(samples):
-    with open('runner/operator/access/fastq_to_bam/input_template.json.jinja2') as file:
+    with open("runner/operator/access/fastq_to_bam/input_template.json.jinja2") as file:
         template = Template(file.read())
 
     sample_inputs = list()
@@ -23,14 +23,10 @@ def construct_sample_inputs(samples):
             tumor_type=meta[settings.SAMPLE_CLASS_METADATA_KEY],
             igo_id=sample_id,
             patient_id=meta[settings.PATIENT_ID_METADATA_KEY],
-
             barcode_index=meta["barcodeIndex"],
-
             flowcell_id=meta["flowCellId"],
             run_date=meta["runDate"],
-
             request_id=meta[settings.REQUEST_ID_METADATA_KEY],
-
             fastq1_path="juno://" + sample_group[0]["path"],
             fastq2_path="juno://" + sample_group[1]["path"],
         )
@@ -41,18 +37,12 @@ def construct_sample_inputs(samples):
 
     return sample_inputs
 
+
 class AccessFastqToBamOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files,
-                                      metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                                                'igocomplete': True})
+        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
         data = [
-            {
-                "id": f.file.id,
-                "path": f.file.path,
-                "file_name": f.file.file_name,
-                "metadata": f.metadata
-            } for f in files
+            {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
 
         sample_inputs = construct_sample_inputs(data)
@@ -61,15 +51,14 @@ class AccessFastqToBamOperator(Operator):
 
         return [
             (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {settings.REQUEST_ID_METADATA_KEY: self.request_id}}
+                RunCreator(
+                    **{
+                        "name": "ACCESS M1: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                        "app": self.get_pipeline_id(),
+                        "inputs": job,
+                        "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id},
+                    }
                 ),
-                job
-             )
-
+            )
             for i, job in enumerate(sample_inputs)
         ]

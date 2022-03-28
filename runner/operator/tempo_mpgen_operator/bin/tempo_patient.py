@@ -3,7 +3,6 @@ from datetime import datetime as dt
 from django.db.models import Q
 from rest_framework import serializers
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
 from django.conf import settings
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as tempo_sample
 
@@ -24,7 +23,7 @@ class Patient:
         data = dict()
         for f in file_list:
             metadata = f.metadata
-            sample_name = metadata['sampleName']
+            sample_name = metadata["sampleName"]
             if sample_name not in data:
                 data[sample_name] = list()
             data[sample_name].append(f)
@@ -45,7 +44,7 @@ class Patient:
                 self.conflict_samples[sample_name] = sample
             elif not sample_name: # sample name empty
                  self.conflict_samples[sample_name] = sample
-            elif 'sampleNameMalformed' in sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]: # ci tag is no good 
+            elif 'sampleNameMalformed' in sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]: # ci tag is no good
                  self.conflict_samples[sample_name] = sample
             else:
                 if "normal" in sample_class.lower():
@@ -88,8 +87,8 @@ class Patient:
         return normal
 
     def _return_more_recent_normal(self, n1, n2):
-        n1_run_date = self._most_recent_date(n1.metadata['runDate'])
-        n2_run_date = self._most_recent_date(n2.metadata['runDate'])
+        n1_run_date = self._most_recent_date(n1.metadata["runDate"])
+        n2_run_date = self._most_recent_date(n2.metadata["runDate"])
         recent_normal = n1
         if n2_run_date > n1_run_date:
             recent_normal = n2
@@ -100,9 +99,9 @@ class Patient:
         for d in dates:
             current_date = None
             try:
-                current_date = dt.strptime(d, '%y-%m-%d')
+                current_date = dt.strptime(d, "%y-%m-%d")
             except ValueError:
-                current_date = dt.strptime(d, '%Y-%m-%d')
+                current_date = dt.strptime(d, "%Y-%m-%d")
             if current_date:
                 if not date:
                     date = current_date
@@ -123,9 +122,9 @@ class Patient:
         for pair in self.sample_pairing:
             tumor_sample = pair[0]
             normal_sample = pair[1]
-            s +=  self.get_mapping_string(tumor_sample)
+            s += self.get_mapping_string(tumor_sample)
             if normal_sample not in seen:
-                s +=  self.get_mapping_string(normal_sample)
+                s += self.get_mapping_string(normal_sample)
                 seen.add(normal_sample)
         return s
 
@@ -151,11 +150,12 @@ class Patient:
                 pairing += "%s\t%s\n" % (normal, tumor)
         return pairing
 
-
     def create_unpaired_string(self, fields):
         s = ""
         for sample in self.unpaired_samples:
-            data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
+            data = [
+                ";".join(list(set(sample.metadata[field]))).strip() for field in fields
+            ]  # hack; probably need better way to map fields to unpaired txt file
             possible_reason = self._get_possible_reason(sample)
             s += "\n" + "\t".join(data) + "\t" + possible_reason
         return s
@@ -177,15 +177,15 @@ class Patient:
         if not matching_run_modes:
             return "No normal sample has same bait set and run mode (HiSeq/NovaSeq) as tumor in patient"
         first_half_of_2017 = False
-        run_dates = sample.metadata['runDate']
+        run_dates = sample.metadata["runDate"]
         if run_dates and isinstance(run_dates, str):
             run_dates = run_dates.split(";")
             for run_date in run_dates:
                 if run_date:
                     try:
-                        current_date = dt.strptime(d, '%y-%m-%d')
+                        current_date = dt.strptime(d, "%y-%m-%d")
                     except ValueError:
-                        current_date = dt.strptime(d, '%Y-%m-%d')
+                        current_date = dt.strptime(d, "%Y-%m-%d")
                     if current_date < dt(2017, 6, 1):
                         first_half_of_2017 = True
             if first_half_of_2017:
@@ -196,13 +196,18 @@ class Patient:
         s = ""
         for sample_name in self.conflict_samples:
             sample = self.conflict_samples[sample_name]
-            data = [ ";".join(list(set(sample.metadata[field]))).strip() for field in fields ] # hack; probably need better way to map fields to unpaired txt file
+            data = [
+                ";".join(list(set(sample.metadata[field]))).strip() for field in fields
+            ]  # hack; probably need better way to map fields to unpaired txt file
             conflicts = []
             if "sampleNameMalformed" in sample.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]:
                 conflicts.append("incorrect CMO Sample Name")
             if not "".join(sample.metadata[settings.SAMPLE_CLASS_METADATA_KEY]):
                     conflicts.append("no sample class")
-            multiple_values = [ "" + field + "[" + ";".join(list(set(sample.metadata[field]))).strip() + "]" for field in sample.conflict_fields ]
+            multiple_values = [
+                "" + field + "[" + ";".join(list(set(sample.metadata[field]))).strip() + "]"
+                for field in sample.conflict_fields
+            ]
             conflicts = conflicts + multiple_values
             s += "\n" + "\t".join(data) + "\t" + ";".join(conflicts)
         return s

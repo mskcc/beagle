@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0033_add_lab_head_email_to_helix_filters_runs'),
+        ("runner", "0033_add_lab_head_email_to_helix_filters_runs"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='default',
+            model_name="pipeline",
+            name="default",
             field=models.BooleanField(default=False),
         ),
     ]

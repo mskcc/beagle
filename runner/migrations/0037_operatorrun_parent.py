@@ -7,13 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0036_run_samples'),
+        ("runner", "0036_run_samples"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operatorrun',
-            name='parent',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to='runner.OperatorRun'),
+            model_name="operatorrun",
+            name="parent",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="runner.OperatorRun",
+            ),
         ),
     ]

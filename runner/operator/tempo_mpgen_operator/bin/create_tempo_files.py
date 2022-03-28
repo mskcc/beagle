@@ -8,7 +8,7 @@ def create_pairing(data):
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
-        if "noNormal" not in normal['sample_name']:
+        if "noNormal" not in normal["sample_name"]:
             pairing += "%s\t%s\n" % (normal["sample_name"], tumor["sample_name"])
     return pairing
 
@@ -18,7 +18,7 @@ def get_abnormal_pairing(data):
     for pair in data:
         normal = pair["normal_sample"]
         tumor = pair["tumor_sample"]
-        if "noNormal" in normal['sample_name']:
+        if "noNormal" in normal["sample_name"]:
             pairing += "%s\t%s\n" % (normal["sample_name"], tumor["sample_name"])
     return pairing
 
@@ -41,7 +41,7 @@ def create_mapping_string_from_sample(sample):
     sample_name = sample["sample_name"]
     target = resolve_target(sample["bait_set"])
     num_fastqs = len(sample["R1"])
-    for i,fq in enumerate(sample["R1"]):
+    for i, fq in enumerate(sample["R1"]):
         r1 = fq["location"]
         r2 = sample["R2"][i]["location"]
         mapping_string += "%s\t%s\t%s\t%s\t%i\n" % (sample_name, target, r1, r2, num_fastqs)
@@ -78,14 +78,14 @@ def create_tempo_tracker_example(data):
         running.append(normal["sample_name"])
 
         for key in key_order:
-            running.append(tumor[key]) 
+            running.append(tumor[key])
         for key in extra_keys:
             running.append(tumor[key])
 
         tracker += "\t".join(running) + "\n"
 
-        if normal['sample_name'] not in seen:
-            seen.add(normal['sample_name'])
+        if normal["sample_name"] not in seen:
+            seen.add(normal["sample_name"])
             running_normal = list()
             running_normal.append(normal["sample_name"])
             running_normal.append("N/A")
@@ -107,18 +107,18 @@ def create_mapping(data):
         normal_map = create_mapping_string_from_sample(normal)
         tumor_map = create_mapping_string_from_sample(tumor)
         mapping_string += tumor_map
-        if normal['sample_name'] not in seen:
+        if normal["sample_name"] not in seen:
             mapping_string += normal_map
-        seen.add(normal['sample_name'])
+        seen.add(normal["sample_name"])
     return mapping_string
 
 
 if __name__ == "__main__":
     flist = open(sys.argv[1], "r")
-    
-    data = list() 
+
+    data = list()
     for filename in flist:
-        f = open(filename.strip(), 'r')
+        f = open(filename.strip(), "r")
         data_temp = json.load(f)
         data = data + data_temp
 
@@ -126,6 +126,6 @@ if __name__ == "__main__":
     mapping = create_mapping(data)
     tracker = create_tempo_tracker_example(data)
 
-    open('pairing.txt', 'w').write(pairing)
-    open('mapping.txt', 'w').write(mapping)
-    open('tracker.txt', 'w').write(tracker)
+    open("pairing.txt", "w").write(pairing)
+    open("mapping.txt", "w").write(mapping)
+    open("tracker.txt", "w").write(tracker)

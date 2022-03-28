@@ -11,13 +11,23 @@ def format_log(message, obj=None, obj_id=None, operator_run_id=None, job_group_i
 
     if not request_id:
         request_id = get_tag_from_obj(obj, "igoRequestId") or get_tag_from_obj(obj, "request_id")
-    sample_id = get_tag_from_obj(obj, "primaryId") or get_tag_from_obj(obj, "sample_id") or get_tag_from_obj(obj, "cmoSampleId") or get_tag_from_obj(obj, "cmoSampleIds")
+    sample_id = (
+        get_tag_from_obj(obj, "primaryId")
+        or get_tag_from_obj(obj, "sample_id")
+        or get_tag_from_obj(obj, "cmoSampleId")
+        or get_tag_from_obj(obj, "cmoSampleIds")
+    )
 
-    return "[%s] [%s] [%s] [%s] [%s] [%s] %s" % (str(obj_id),
-                                                 str(operator_run_id),
-                                                 str(job_group_id),
-                                                 str(execution_id), str(request_id),
-                                                 str(sample_id), message)
+    return "[%s] [%s] [%s] [%s] [%s] [%s] %s" % (
+        str(obj_id),
+        str(operator_run_id),
+        str(job_group_id),
+        str(execution_id),
+        str(request_id),
+        str(sample_id),
+        message,
+    )
+
 
 def get_tag_from_obj(obj, tag):
     data = None

@@ -3,11 +3,29 @@ from notifier.event_handler.event import Event
 
 
 class ETLImportEvent(Event):
-
-    def __init__(self, job_notifier, job_group, request_id, sample_list_completed, sample_list_fail, recipe,
-                 data_analyst_email, data_analyst_name, investigator_email, investigator_name, lab_head_email,
-                 lab_head_name, pi_email, project_manager_name, qc_access_emails, number_of_tumors, number_of_normals,
-                 number_of_pool_normals):
+    def __init__(
+        self,
+        job_notifier,
+        job_group,
+        request_id,
+        sample_list_completed,
+        sample_list_fail,
+        recipe,
+        data_analyst_email,
+        data_analyst_name,
+        investigator_email,
+        investigator_name,
+        lab_head_email,
+        lab_head_name,
+        pi_email,
+        project_manager_name,
+        qc_access_emails,
+        number_of_tumors,
+        number_of_normals,
+        number_of_pool_normals,
+        data_access_emails,
+        other_contact_emails,
+    ):
         self.job_notifier = job_notifier
         self.job_group = job_group
         self.request_id = request_id
@@ -26,6 +44,8 @@ class ETLImportEvent(Event):
         self.number_of_tumors = number_of_tumors
         self.number_of_normals = number_of_normals
         self.number_of_pool_normals = number_of_pool_normals
+        self.data_access_emails = data_access_emails
+        self.other_contact_emails = other_contact_emails
 
     @classmethod
     def get_type(cls):
@@ -49,6 +69,8 @@ class ETLImportEvent(Event):
         PI E-mail: {pi_email}
         Project Manager Name: {project_manager_name}
         QC E-mails: {qc_access_emails}
+        Data Access Emails: {data_access_emails}
+        Other Contact Emails: {other_contact_emails}
 
         {cnt_samples_completed} samples successfully imported
         {cnt_samples_fail} samples failed
@@ -59,22 +81,25 @@ class ETLImportEvent(Event):
         Job Group ID: {job_group}
         """
 
-        return ETL_IMPORT_MESSAGE_TEMPLATE.format(request_id=self.request_id,
-                                                  cnt_samples=self.sample_list_completed + self.sample_list_fail,
-                                                  cnt_samples_completed=self.sample_list_completed,
-                                                  cnt_samples_fail=self.sample_list_fail,
-                                                  recipe=self.recipe,
-                                                  data_analyst_name=self.data_analyst_name,
-                                                  data_analyst_email=self.data_analyst_email,
-                                                  investigator_name=self.investigator_name,
-                                                  investigator_email=self.investigator_email,
-                                                  lab_head_name=self.lab_head_name,
-                                                  lab_head_email=self.lab_head_email,
-                                                  pi_email=self.pi_email,
-                                                  project_manager_name=self.project_manager_name,
-                                                  qc_access_emails=self.qc_access_emails,
-                                                  number_of_tumors=self.number_of_tumors,
-                                                  number_of_normals=self.number_of_normals,
-                                                  number_of_pool_normals=self.number_of_pool_normals,
-                                                  job_group=self.job_group
-                                                  )
+        return ETL_IMPORT_MESSAGE_TEMPLATE.format(
+            request_id=self.request_id,
+            cnt_samples=len(self.sample_list_completed) + len(self.sample_list_fail),
+            cnt_samples_completed=len(self.sample_list_completed),
+            cnt_samples_fail=len(self.sample_list_fail),
+            recipe=self.recipe,
+            data_analyst_name=self.data_analyst_name,
+            data_analyst_email=self.data_analyst_email,
+            investigator_name=self.investigator_name,
+            investigator_email=self.investigator_email,
+            lab_head_name=self.lab_head_name,
+            lab_head_email=self.lab_head_email,
+            pi_email=self.pi_email,
+            project_manager_name=self.project_manager_name,
+            qc_access_emails=self.qc_access_emails,
+            number_of_tumors=self.number_of_tumors,
+            number_of_normals=self.number_of_normals,
+            number_of_pool_normals=self.number_of_pool_normals,
+            job_group=self.job_group,
+            data_access_emails=self.data_access_emails,
+            other_contact_emails=self.other_contact_emails,
+        )

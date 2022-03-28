@@ -24,17 +24,17 @@ def get_samples_from_patient_id(patient_id):
     data = list()
     for current_file in files:
         sample = dict()
-        sample['id'] = current_file.file.id
-        sample['path'] = current_file.file.path
-        sample['file_name'] = current_file.file.file_name
-        sample['metadata'] = current_file.metadata
+        sample["id"] = current_file.file.id
+        sample["path"] = current_file.file.path
+        sample["file_name"] = current_file.file.file_name
+        sample["metadata"] = current_file.metadata
         data.append(sample)
 
     samples = list()
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample['metadata'][settings.SAMPLE_ID_METADATA_KEY]
+        igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)
@@ -44,8 +44,7 @@ def get_samples_from_patient_id(patient_id):
     samples, bad_samples = remove_with_caveats(samples)
     number_of_bad_samples = len(bad_samples)
     if number_of_bad_samples > 0:
-        LOGGER.warning('Some samples for patient query %s have invalid %i values',
-                       patient_id, number_of_bad_samples)
+        LOGGER.warning("Some samples for patient query %s have invalid %i values", patient_id, number_of_bad_samples)
     return samples
 
 
@@ -70,7 +69,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        run_ids_suffix_list = [i for i in run_ids if i] # remove empty or false string values
+        run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
         if "ffpe" in preservations_lower_case:
@@ -130,7 +129,9 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
-        sample_file = build_pooled_normal_sample_by_file(pooled_normal_file, run_ids, preservation_types, descriptor, sample_name)
+        sample_file = build_pooled_normal_sample_by_file(
+            pooled_normal_file, run_ids, preservation_types, descriptor, sample_name
+        )
         sample_files.append(sample_file)
     pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
 
@@ -155,35 +156,35 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
 
 def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_name):
-    specimen_type = 'Pooled Normal'
+    specimen_type = "Pooled Normal"
     sample = dict()
-    sample['id'] = pooled_normal.file.id
-    sample['path'] = pooled_normal.file.path
-    sample['file_name'] = pooled_normal.file.file_name
+    sample["id"] = pooled_normal.file.id
+    sample["path"] = pooled_normal.file.path
+    sample["file_name"] = pooled_normal.file.file_name
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = sample_name
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
-    metadata['sequencingCenter'] = "MSKCC"
-    metadata['platform'] = "Illumina"
-    metadata['baitSet'] = bait_set 
+    metadata["sequencingCenter"] = "MSKCC"
+    metadata["platform"] = "Illumina"
+    metadata["baitSet"] = bait_set
     metadata[settings.RECIPE_METADATA_KEY] = bait_set
-    metadata['runId'] = run_ids
-    metadata['preservation'] = preservation_types
+    metadata["runId"] = run_ids
+    metadata["preservation"] = preservation_types
     metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_operator.bin
-    metadata['R'] = get_r_orientation(pooled_normal.file.file_name)
-    metadata['barcodeIndex'] = spoof_barcode(sample['file_name'], metadata['R'])
-    metadata['flowCellId'] = 'PN_FCID'
-    metadata['tumorOrNormal'] = 'Normal'
+    metadata["R"] = get_r_orientation(pooled_normal.file.file_name)
+    metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
+    metadata["flowCellId"] = "PN_FCID"
+    metadata["tumorOrNormal"] = "Normal"
     metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
-    metadata['runMode'] = ""
+    metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
-    sample['metadata'] = metadata
+    sample["metadata"] = metadata
     return sample
 
 
@@ -195,7 +196,7 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
 
     dmp_query = build_dmp_query(patient_id, bait_set)
 
-    dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by('file__file_name').first()
+    dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by("file__file_name").first()
 
     if dmp_bam:
         sample = build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type)
@@ -205,30 +206,30 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
 
 
 def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
-    
+
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
-    sample_name = dmp_metadata['external_id']
+    sample_name = dmp_metadata["external_id"]
     sequencingCenter = "MSKCC"
     platform = "Illumina"
     sample = dict()
-    sample['id'] = dmp_bam.file.id
-    sample['path'] = dmp_bam.file.path
-    sample['file_name'] = dmp_bam.file.file_name
-    sample['file_type'] = dmp_bam.file.file_type
+    sample["id"] = dmp_bam.file.id
+    sample["path"] = dmp_bam.file.path
+    sample["file_name"] = dmp_bam.file.file_name
+    sample["file_type"] = dmp_bam.file.file_type
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata['sampleName']
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
-    metadata['sequencingCenter'] = sequencingCenter
-    metadata['platform'] = platform
-    metadata['baitSet'] = bait_set
+    metadata["sequencingCenter"] = sequencingCenter
+    metadata["platform"] = platform
+    metadata["baitSet"] = bait_set
     metadata[settings.RECIPE_METADATA_KEY] = bait_set
-    metadata['run_id'] = ""
-    metadata['preservation'] = ""
+    metadata["run_id"] = ""
+    metadata["preservation"] = ""
     metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
-    metadata['R'] = 'Not applicable'
+    metadata["R"] = "Not applicable"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_operator.bin
@@ -266,9 +267,9 @@ def build_dmp_query(patient_id, bait_set):
     assay = Q(metadata__cmo_assay=value)
     # formatting to look like CMO patient IDs in dmp2cmo
     if "C-" in patient_id[:2]:
-      patient_id = patient_id[2:]
+        patient_id = patient_id[2:]
     patient = Q(metadata__patient__cmo=patient_id)
-    normal = Q(metadata__type='N')
+    normal = Q(metadata__type="N")
     query = assay & patient & normal
     return query
 
@@ -277,20 +278,20 @@ def get_r_orientation(fastq_filename):
     """
     Retrieve R orientation of fastq filename
     """
-    reversed_filename = ''.join(reversed(fastq_filename))
-    r1_idx = reversed_filename.find('1R')
-    r2_idx = reversed_filename.find('2R')
+    reversed_filename = "".join(reversed(fastq_filename))
+    r1_idx = reversed_filename.find("1R")
+    r2_idx = reversed_filename.find("2R")
     if r1_idx == -1 and r2_idx == -1:
         return "ERROR"
     elif r1_idx > 0 and r2_idx == -1:
         return "R1"
     elif r2_idx > 0 and r1_idx == -1:
-        return 'R2'
+        return "R2"
     elif r1_idx > 0 and r2_idx > 0:
         if r1_idx < r2_idx:
-            return 'R1'
-        return 'R2'
-    return 'ERROR'
+            return "R1"
+        return "R2"
+    return "ERROR"
 
 
 def spoof_barcode(sample_file_name, r_orientation):
@@ -300,12 +301,12 @@ def spoof_barcode(sample_file_name, r_orientation):
 
     We are also assuming there are no periods in the file names other than extensions
     """
-    reversed_str = ''.join(reversed(sample_file_name))
-    if r_orientation == 'R1':
-        reversed_str = reversed_str.replace('1R', '')
+    reversed_str = "".join(reversed(sample_file_name))
+    if r_orientation == "R1":
+        reversed_str = reversed_str.replace("1R", "")
     else:
-        reversed_str = reversed_str.replace('2R', '')
-    reversed_str = ''.join(reversed(reversed_str))
+        reversed_str = reversed_str.replace("2R", "")
+    reversed_str = "".join(reversed(reversed_str))
     spoofed_barcode = reversed_str.split(os.extsep)[0]
     return spoofed_barcode
 
@@ -320,18 +321,18 @@ def init_metadata():
     metadata[settings.REQUEST_ID_METADATA_KEY] = ""
     metadata[settings.SAMPLE_ID_METADATA_KEY] = ""
     metadata[settings.LIBRARY_ID_METADATA_KEY] = ""
-    metadata['baitSet'] = ""
-    metadata['tumorOrNormal'] = ""
+    metadata["baitSet"] = ""
+    metadata["tumorOrNormal"] = ""
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
-    metadata['species'] = ""
+    metadata["species"] = ""
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = ""
-    metadata['flowCellId'] = ""
-    metadata['barcodeIndex'] = ""
+    metadata["flowCellId"] = ""
+    metadata["barcodeIndex"] = ""
     metadata[settings.PATIENT_ID_METADATA_KEY] = ""
-    metadata['runDate'] = ""
-    metadata['R'] = ""
-    metadata['labHeadName'] = ""
-    metadata['labHeadEmail'] = ""
-    metadata['runId'] = ""
-    metadata['preservation'] = ""
+    metadata["runDate"] = ""
+    metadata["R"] = ""
+    metadata["labHeadName"] = ""
+    metadata["labHeadEmail"] = ""
+    metadata["runId"] = ""
+    metadata["preservation"] = ""
     return metadata

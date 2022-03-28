@@ -8,26 +8,26 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0019_lims_import_objects'),
+        ("file_system", "0019_lims_import_objects"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Sample',
+            name="Sample",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('sample_id', models.CharField(max_length=20, unique=True)),
-                ('redact', models.BooleanField(default=False)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("sample_id", models.CharField(max_length=20, unique=True)),
+                ("redact", models.BooleanField(default=False)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='file',
-            name='sample',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='file_system.Sample'),
+            model_name="file",
+            name="sample",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="file_system.Sample"),
         ),
     ]

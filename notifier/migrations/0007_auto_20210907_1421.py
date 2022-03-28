@@ -7,11 +7,11 @@ from notifier.jira.jira_client import JiraClient
 
 
 def _convert_to_status(status):
-    if status == 'Ready For Standard Delivery':
+    if status == "Ready For Standard Delivery":
         return JiraStatus.READY_FOR_STANDARD_DELIVERY
-    elif status == 'Ready For Custom Delivery':
+    elif status == "Ready For Custom Delivery":
         return JiraStatus.READY_FOR_CUSTOM_DELIVERY
-    elif status == 'Not for CI':
+    elif status == "Not for CI":
         return JiraStatus.NOT_FOR_CI
     elif status == "Can't Do":
         return JiraStatus.CANT_DO
@@ -52,39 +52,37 @@ def _convert_to_status(status):
 
 
 def populate_jira_statuses(apps, _):
-    JobGroupNotifier = apps.get_model('notifier', 'JobGroupNotifier')
+    JobGroupNotifier = apps.get_model("notifier", "JobGroupNotifier")
     job_group_notifiers = JobGroupNotifier.objects.all()
     for jgn in job_group_notifiers:
         if jgn.jira_id:
-            project = jgn.jira_id.split('-')[0]
-            jira_client = JiraClient(url=settings.JIRA_URL,
-                                     username=settings.JIRA_USERNAME,
-                                     password=settings.JIRA_PASSWORD,
-                                     project=project)
+            project = jgn.jira_id.split("-")[0]
+            jira_client = JiraClient(
+                url=settings.JIRA_URL, username=settings.JIRA_USERNAME, password=settings.JIRA_PASSWORD, project=project
+            )
             print("Populating status for ticket %s" % jgn.jira_id)
             jira_ticket = jira_client.get_ticket(jgn.jira_id).json()
-            jira_status = jira_ticket.get('fields', {}).get('status', {}).get('name')
+            jira_status = jira_ticket.get("fields", {}).get("status", {}).get("name")
             if jira_status:
                 jgn.status = _convert_to_status(jira_status)
                 print("Status for ticket %s is %s: %s" % (jgn.jira_id, jira_status, jgn.status))
-                jgn.save(update_fields=('status',))
+                jgn.save(update_fields=("status",))
             else:
                 print("Can't fetch status for ticket %s" % jgn.jira_id)
 
 
 def revert_jira_statuses(apps, _):
-    JobGroupNotifier = apps.get_model('notifier', 'JobGroupNotifier')
+    JobGroupNotifier = apps.get_model("notifier", "JobGroupNotifier")
     job_group_notifiers = JobGroupNotifier.objects.all()
     for jgn in job_group_notifiers:
         jgn.status = JiraStatus.UNKNOWN
-        jgn.save(update_fields=('status',))
+        jgn.save(update_fields=("status",))
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0006_jobgroupnotifier_status'),
+        ("notifier", "0006_jobgroupnotifier_status"),
     ]
 
-    operations = [
-    ]
+    operations = []

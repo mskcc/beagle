@@ -7,19 +7,21 @@ from django.utils.functional import cached_property
 
 
 class BeaglePagination(PageNumberPagination):
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
 
     def django_paginator_class(self, queryset, page_size):
         return CountFastPaginator(queryset, page_size)
 
     def get_paginated_response(self, data):
-        return Response({
-            'next': self.get_next_link(),
-            'previous': self.get_previous_link(),
-            'count': self.page.paginator.count,
-            'last': math.ceil(self.page.paginator.count / len(data)) if len(data) != 0 else 1,
-            'results': data
-        })
+        return Response(
+            {
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+                "count": self.page.paginator.count,
+                "last": math.ceil(self.page.paginator.count / len(data)) if len(data) != 0 else 1,
+                "results": data,
+            }
+        )
 
     def get_page_size(self, request):
         if self.page_size_query_param:
@@ -32,19 +34,18 @@ class BeaglePagination(PageNumberPagination):
 
 
 class CountFastPaginator(Paginator):
-
     @cached_property
     def count(self):
-        return self.object_list.values('id').count()
+        return self.object_list.values("id").count()
 
 
-def time_filter(model, query_params, time_modal='created_date', previous_queryset=None):
-    timedelta_query = '%s_timedelta' % time_modal
-    gt_query = '%s_gt' % time_modal
-    gt_query_filter = '%s__gt' % time_modal
-    lt_query = '%s_lt' % time_modal
-    lt_query_filter = '%s__lt' % time_modal
-    order_by = '-%s' % time_modal
+def time_filter(model, query_params, time_modal="created_date", previous_queryset=None):
+    timedelta_query = "%s_timedelta" % time_modal
+    gt_query = "%s_gt" % time_modal
+    gt_query_filter = "%s__gt" % time_modal
+    lt_query = "%s_lt" % time_modal
+    lt_query_filter = "%s__lt" % time_modal
+    order_by = "-%s" % time_modal
     if query_params.get(timedelta_query):
         time_threshold = datetime.now() - timedelta(hours=int(query_params[timedelta_query]))
         queryset = model.objects.filter(**{gt_query_filter: time_threshold}).order_by(order_by)

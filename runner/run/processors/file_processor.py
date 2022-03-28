@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 
 
 class FileProcessor(object):
-
     @staticmethod
     def get_sample(file):
         return file.sample
@@ -24,7 +23,7 @@ class FileProcessor(object):
 
     @staticmethod
     def get_juno_uri_from_file(file):
-        return 'juno://%s' % file.path
+        return "juno://%s" % file.path
 
     @staticmethod
     def get_file_size(file):
@@ -36,16 +35,16 @@ class FileProcessor(object):
 
     @staticmethod
     def get_bid_from_file(file):
-        return 'bid://%s' % str(file.id)
+        return "bid://%s" % str(file.id)
 
     @staticmethod
     def parse_path_from_uri(uri):
-        if uri.startswith('bid://'):
+        if uri.startswith("bid://"):
             raise FileHelperException("Can't parse path from uri %s." % uri)
-        elif uri.startswith('juno://'):
-            return uri.replace('juno://', '')
-        elif uri.startswith('file://'):
-            return uri.replace('file://', '')
+        elif uri.startswith("juno://"):
+            return uri.replace("juno://", "")
+        elif uri.startswith("file://"):
+            return uri.replace("file://", "")
         else:
             raise FileHelperException("Unknown uri schema %s" % uri)
 
@@ -55,21 +54,21 @@ class FileProcessor(object):
         :param uri:
         :return: File model. Throws UriParserException if File doesn't exist
         """
-        if uri.startswith('bid://'):
-            beagle_id = uri.replace('bid://', '')
+        if uri.startswith("bid://"):
+            beagle_id = uri.replace("bid://", "")
             try:
                 file_obj = File.objects.get(id=beagle_id)
             except File.DoesNotExist as e:
                 raise FileHelperException("File with uri %s doesn't exist" % uri)
             return file_obj
-        elif uri.startswith('juno://'):
-            juno_path = uri.replace('juno://', '')
+        elif uri.startswith("juno://"):
+            juno_path = uri.replace("juno://", "")
             file_obj = File.objects.filter(path=juno_path).first()
             if not file_obj:
                 raise FileHelperException("File with uri %s doesn't exist" % uri)
             return file_obj
-        elif uri.startswith('file://'):
-            juno_path = uri.replace('file://', '')
+        elif uri.startswith("file://"):
+            juno_path = uri.replace("file://", "")
             file_obj = File.objects.filter(path=juno_path).first()
             if not file_obj:
                 raise FileHelperException("File with uri %s doesn't exist" % uri)
@@ -85,15 +84,17 @@ class FileProcessor(object):
         try:
             group_id_obj = FileGroup.objects.get(id=group_id)
         except FileGroup.DoesNotExist as e:
-            raise FileHelperException('Invalid FileGroup id: %s' % group_id)
+            raise FileHelperException("Invalid FileGroup id: %s" % group_id)
         if File.objects.filter(path=file_path).first():
             raise FileConflictException("File with path %s already exist" % file_path)
-        file_object = File.objects.create(path=file_path,
-                                          file_name=os.path.basename(file_path),
-                                          checksum=checksum,
-                                          file_type=file_type,
-                                          file_group=group_id_obj,
-                                          size=size)
+        file_object = File.objects.create(
+            path=file_path,
+            file_name=os.path.basename(file_path),
+            checksum=checksum,
+            file_type=file_type,
+            file_group=group_id_obj,
+            size=size,
+        )
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()
         return file_object
@@ -110,7 +111,7 @@ class FileProcessor(object):
             for ext in file_type.fileextension_set.all():
                 if filename.endswith(ext.extension):
                     return file_type
-        return FileType.objects.get(name='unknown')
+        return FileType.objects.get(name="unknown")
 
     @staticmethod
     def update_file(file_object, path, metadata, user=None):
@@ -120,7 +121,7 @@ class FileProcessor(object):
         }
         try:
             user = User.objects.get(username=user)
-            data['user'] = user.id
+            data["user"] = user.id
         except User.DoesNotExist:
             pass
         serializer = UpdateFileSerializer(file_object, data=data)
@@ -128,4 +129,5 @@ class FileProcessor(object):
             serializer.save()
         else:
             raise FileUpdateException(
-                "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors))
+                "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors)
+            )

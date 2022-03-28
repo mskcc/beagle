@@ -16,13 +16,13 @@ FIXTURES = [
 ]
 
 COMMON_FIXTURES = [
-    'runner/fixtures/runner.pipeline.json',
-    'runner/fixtures/runner.run.json',
-    'runner/fixtures/runner.operator_run.json',
-    'file_system/fixtures/file_system.filegroup.json',
-    'file_system/fixtures/file_system.filetype.json',
-    'file_system/fixtures/file_system.storage.json',
-    'beagle_etl/fixtures/beagle_etl.operator.json',
+    "runner/fixtures/runner.pipeline.json",
+    "runner/fixtures/runner.run.json",
+    "runner/fixtures/runner.operator_run.json",
+    "file_system/fixtures/file_system.filegroup.json",
+    "file_system/fixtures/file_system.filetype.json",
+    "file_system/fixtures/file_system.storage.json",
+    "beagle_etl/fixtures/beagle_etl.operator.json",
 ]
 
 
@@ -38,7 +38,7 @@ class TestAccessQCOperator(TestCase):
         self.assertEqual(len(FileMetadata.objects.all()), 5)
 
         # This operator needs to write a temp file, so need to override this env var
-        settings.BEAGLE_SHARED_TMPDIR = '/tmp'
+        settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         request_id = "05500_FH"
 
         operator_model = Operator.objects.get(id=11)
@@ -52,8 +52,8 @@ class TestAccessQCOperator(TestCase):
 
         self.assertEqual(len(jobs) > 0, True)
         for job in jobs:
-            self.assertEqual(job[0].is_valid(), True)
-            input_json = job[0].initial_data["inputs"]
+            self.assertEqual(job.is_valid(), True)
+            input_json = job.inputs
             self.assertEqual(len(input_json["collapsed_bam"]), 1)
             self.assertEqual(len(input_json["duplex_bam"]), 1)
             self.assertEqual(len(input_json["group_reads_by_umi_bam"]), 1)

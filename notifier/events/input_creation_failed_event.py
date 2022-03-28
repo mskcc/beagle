@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class InputCreationFailedEvent(Event):
-
     def __init__(self, message, job_group, request_id, sample_id):
         self.job_group = job_group
         self.request_id = request_id
