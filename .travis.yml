@@ -26,3 +26,4 @@ install:
 script:
   - source travis_env.sh
   - python manage.py test
+  - black --check .

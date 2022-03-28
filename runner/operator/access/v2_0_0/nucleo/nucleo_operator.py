@@ -7,7 +7,7 @@ from django.conf import settings
 from collections import defaultdict
 
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
 
@@ -15,21 +15,21 @@ logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
-    'barcodeId',
+    "barcodeId",
     settings.CMO_SAMPLE_NAME_METADATA_KEY,
-    'investigatorSampleId',
+    "investigatorSampleId",
     settings.PATIENT_ID_METADATA_KEY,
-    'tumorOrNormal',
-    'sampleOrigin',
-    'dnaInputNg',
-    'captureInputNg',
-    'baitSet',
-    'sex',
-    'barcodeIndex',
-    'libraryVolume',
-    'captureName',
-    'libraryConcentrationNgul',
-    'captureConcentrationNm',
+    "tumorOrNormal",
+    "sampleOrigin",
+    "dnaInputNg",
+    "captureInputNg",
+    "baitSet",
+    "sex",
+    "barcodeIndex",
+    "libraryVolume",
+    "captureName",
+    "libraryConcentrationNgul",
+    "captureConcentrationNm",
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY
@@ -44,7 +44,7 @@ def group_by_sample_id(samples):
 
 
 def group_by_run(samples):
-    samples.sort(key = lambda s: s["path"].split("/")[-1])
+    samples.sort(key=lambda s: s["path"].split("/")[-1])
     fastqs = zip(samples[::2], samples[1::2])
     return list(fastqs)
 
@@ -55,12 +55,12 @@ def calc_avg(sample_files, field):
     if field_count == 0:
         return 0
 
-    avg = sum([float(s["metadata"][field]) for s in samples_with_field])/field_count
+    avg = sum([float(s["metadata"][field]) for s in samples_with_field]) / field_count
     return avg
 
 
 def construct_sample_inputs(samples, request_id):
-    with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
+    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
         template = Template(file.read())
 
     sample_inputs = list()
@@ -68,14 +68,16 @@ def construct_sample_inputs(samples, request_id):
 
     for sample_group in samples_groups:
         meta = sample_group[0]["metadata"]
-        meta.update({
-            "dnaInputNg": calc_avg(sample_group, "dnaInputNg"),
-            "captureInputNg": calc_avg(sample_group, "captureInputNg"),
-            "libraryVolume": calc_avg(sample_group, "libraryVolume"),
-            "libraryConcentrationNgul": calc_avg(sample_group, "libraryConcentrationNgul"),
-            "captureConcentrationNm": calc_avg(sample_group, "captureConcentrationNm"),
-            settings.REQUEST_ID_METADATA_KEY: request_id
-        })
+        meta.update(
+            {
+                "dnaInputNg": calc_avg(sample_group, "dnaInputNg"),
+                "captureInputNg": calc_avg(sample_group, "captureInputNg"),
+                "libraryVolume": calc_avg(sample_group, "libraryVolume"),
+                "libraryConcentrationNgul": calc_avg(sample_group, "libraryConcentrationNgul"),
+                "captureConcentrationNm": calc_avg(sample_group, "captureConcentrationNm"),
+                settings.REQUEST_ID_METADATA_KEY: request_id
+            }
+        )
 
         sample_group = list(sample_group)
         sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
@@ -84,7 +86,7 @@ def construct_sample_inputs(samples, request_id):
         fgbio_fastq_to_bam_input = [
             [
                 {"class": "File", "location": "juno://" + s[0]["path"]},
-                {"class": "File", "location": "juno://" + s[1]["path"]}
+                {"class": "File", "location": "juno://" + s[1]["path"]},
             ]
             for s in fgbio_fastq_to_bam_input
         ]
@@ -92,7 +94,7 @@ def construct_sample_inputs(samples, request_id):
         input_file = template.render(
             sample_id=sample_id,
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
-            barcode_id=meta['barcodeId'],
+            barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
             library_id=meta[settings.LIBRARY_ID_METADATA_KEY],
         )
@@ -113,41 +115,23 @@ class AccessNucleoOperator(Operator):
     """
 
     def get_jobs(self):
-        files = FileRepository.filter(
-            queryset=self.files,
-            metadata={
-                settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                'igocomplete': True
-            }
-        )
+        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
 
         data = [
-            {
-                "id": f.file.id,
-                "path": f.file.path,
-                "file_name": f.file.file_name,
-                "metadata": f.metadata
-            } for f in files
+            {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
 
         sample_inputs = construct_sample_inputs(data, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'output_metadata': {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if
-                                            key in metadata},
-                        'tags': {
-                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                            'cmoSampleId': metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-                        }
-                    }
-                ),
-                job
-             )
+            RunCreator(
+                **{
+                    "name": "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
+                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": metadata["sampleName"]},
+                }
+            )
             for i, (job, metadata) in enumerate(sample_inputs)
         ]

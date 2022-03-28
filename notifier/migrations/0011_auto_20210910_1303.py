@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0010_jobgroupnotifier_request_id'),
+        ("notifier", "0010_jobgroupnotifier_request_id"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='jobgroupnotifier',
-            name='PI',
+            model_name="jobgroupnotifier",
+            name="PI",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
         migrations.AddField(
-            model_name='jobgroupnotifier',
-            name='assay',
+            model_name="jobgroupnotifier",
+            name="assay",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
         migrations.AddField(
-            model_name='jobgroupnotifier',
-            name='investigator',
+            model_name="jobgroupnotifier",
+            name="investigator",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
     ]

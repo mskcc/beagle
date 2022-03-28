@@ -7,18 +7,26 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0001_initial'),
+        ("beagle_etl", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='etlerror',
-            name='id',
+            model_name="etlerror",
+            name="id",
         ),
         migrations.AddField(
-            model_name='etlerror',
-            name='basemodel_ptr',
-            field=models.OneToOneField(auto_created=True, default=None, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.BaseModel'),
+            model_name="etlerror",
+            name="basemodel_ptr",
+            field=models.OneToOneField(
+                auto_created=True,
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                parent_link=True,
+                primary_key=True,
+                serialize=False,
+                to="beagle_etl.BaseModel",
+            ),
             preserve_default=False,
         ),
     ]

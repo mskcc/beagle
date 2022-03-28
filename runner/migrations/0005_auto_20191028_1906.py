@@ -7,18 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0004_executionevents'),
+        ("runner", "0004_executionevents"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='output_directory',
+            model_name="pipeline",
+            name="output_directory",
             field=models.CharField(max_length=300, null=True),
         ),
         migrations.AddField(
-            model_name='port',
-            name='db_value',
+            model_name="port",
+            name="db_value",
             field=django.contrib.postgres.fields.jsonb.JSONField(null=True),
         ),
     ]

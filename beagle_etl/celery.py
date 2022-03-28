@@ -6,15 +6,15 @@ from celery.app.log import TaskFormatter
 from celery.signals import after_setup_task_logger, worker_ready
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beagle.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
 
-app = Celery('etl_job')
+app = Celery("etl_job")
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
-app.config_from_object('django.conf:settings', namespace='CELERY')
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
@@ -24,7 +24,8 @@ app.autodiscover_tasks()
 def setup_task_logger(logger, *args, **kwargs):
     for handler in logger.handlers:
         handler.setFormatter(
-            TaskFormatter("%(asctime)s|%(levelname)s|%(name)s|%(task_id)s|%(task_name)s|%(name)s|%(message)s"))
+            TaskFormatter("%(asctime)s|%(levelname)s|%(name)s|%(task_id)s|%(task_name)s|%(name)s|%(message)s")
+        )
 
 
 @worker_ready.connect
@@ -65,16 +66,16 @@ app.conf.beat_schedule = {
     'check_status': {
         "task": "runner.tasks.check_jobs_status",
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,
-        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
     "process_triggers": {
         "task": "runner.tasks.process_triggers",
         "schedule": settings.PROCESS_TRIGGERS_PERIOD,
-        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
     "timeout_runs": {
         "task": "runner.tasks.check_job_timeouts",
         "schedule": settings.CHECK_JOB_TIMEOUTS,
-        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE}
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
 }

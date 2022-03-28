@@ -15,13 +15,13 @@ FIXTURES = [
 ]
 
 COMMON_FIXTURES = [
-    'runner/fixtures/runner.pipeline.json',
-    'runner/fixtures/runner.run.json',
-    'runner/fixtures/runner.operator_run.json',
-    'file_system/fixtures/file_system.filegroup.json',
-    'file_system/fixtures/file_system.filetype.json',
-    'file_system/fixtures/file_system.storage.json',
-    'beagle_etl/fixtures/beagle_etl.operator.json',
+    "runner/fixtures/runner.pipeline.json",
+    "runner/fixtures/runner.run.json",
+    "runner/fixtures/runner.operator_run.json",
+    "file_system/fixtures/file_system.filegroup.json",
+    "file_system/fixtures/file_system.filetype.json",
+    "file_system/fixtures/file_system.storage.json",
+    "beagle_etl/fixtures/beagle_etl.operator.json",
 ]
 
 
@@ -50,17 +50,17 @@ class TestAccessFastqMergeOperator(TestCase):
 
         self.assertEqual(len(jobs) > 0, True)
         for job in jobs:
-            self.assertEqual(job[0].is_valid(), True)
+            self.assertEqual(job.is_valid(), True)
             # Ensure at least 3 of the metadata fields are set, as not all of them are request.
-            self.assertEqual(len(job[0].initial_data["output_metadata"].keys()) > 3, True)
-            job[0].initial_data["output_metadata"]["sampleOrigin"] = "Tissue"
-            self.assertEqual(float(job[0].initial_data["output_metadata"]["captureConcentrationNm"])
-                             > 0, True)
-            self.assertEqual(job[0].initial_data["output_metadata"]["captureConcentrationNm"],
-                             sum([float(f.metadata["captureConcentrationNm"]) for f in list(FileMetadata.objects.all())]) /
-                                 operator_files_count)
+            self.assertEqual(len(job.output_metadata.keys()) > 3, True)
+            job.output_metadata["sampleOrigin"] = "Tissue"
+            self.assertEqual(float(job.output_metadata["captureConcentrationNm"]) > 0, True)
+            self.assertEqual(
+                job.output_metadata["captureConcentrationNm"],
+                sum([float(f.metadata["captureConcentrationNm"]) for f in list(FileMetadata.objects.all())])
+                / operator_files_count,
+            )
 
-            input_json = job[0].initial_data['inputs']
+            input_json = job.inputs
             self.assertEqual(len(input_json["fastq1"]), 2)
             self.assertEqual(len(input_json["fastq2"]), 2)
-

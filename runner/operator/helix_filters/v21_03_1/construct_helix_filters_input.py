@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import json
-from runner.models import Port,Run
+from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
@@ -21,7 +21,7 @@ def load_references():
     """
     Loads reference data from the resources JSON
     """
-    data = json.load(open(os.path.join(WORKDIR, 'reference_jsons/helix_filters_resources.json'), 'rb'))
+    data = json.load(open(os.path.join(WORKDIR, "reference_jsons/helix_filters_resources.json"), "rb"))
     return data
 
 
@@ -29,13 +29,13 @@ def get_baits_and_targets(assay, helix_filters_resources):
     """
     From value in assay, retrieve target files from helix_filters_resources
     """
-    targets = helix_filters_resources['targets']
+    targets = helix_filters_resources["targets"]
 
     target_assay = assay
-    
+
     if assay.find("HemePACT_v4") > -1:
         target_assay = "HemePACT_v4_BAITS"
-        
+
     if assay.find("IMPACT505") > -1:
         target_assay = "IMPACT505_b37"
     if assay.find("IMPACT410") > -1:
@@ -52,7 +52,7 @@ def get_baits_and_targets(assay, helix_filters_resources):
         target_assay = "IMPACT468_08050"
 
     if target_assay in targets:
-        return {"class": "File", 'location': str(targets[target_assay]['targets_list'])}
+        return {"class": "File", "location": str(targets[target_assay]["targets_list"])}
     else:
         error_msg = "ERROR: Targets for Assay not found in helix_filters_resources.json: %s" % assay
         LOGGER.error(error_msg)
@@ -62,7 +62,7 @@ def create_cwl_file_obj(file_path):
     """
     Given a filepath, return a dictionary with class File and JUNO-specific URI
     """
-    cwl_file_obj = {'class': 'File', 'location': "juno://%s" % file_path}
+    cwl_file_obj = {"class": "File", "location": "juno://%s" % file_path}
     return cwl_file_obj
 
 
@@ -73,17 +73,15 @@ def get_file_obj(file_obj):
     JUNO-specific URI file paths
     """
     secondary_file_list = []
-    file_location = file_obj['location'].replace('file://', '')
-    if 'secondaryFiles' in file_obj:
-        for single_secondary_file in file_obj['secondaryFiles']:
-            secondary_file_location = single_secondary_file['location'].replace(
-                'file://', '')
-            secondary_file_cwl_obj = create_cwl_file_obj(
-                secondary_file_location)
+    file_location = file_obj["location"].replace("file://", "")
+    if "secondaryFiles" in file_obj:
+        for single_secondary_file in file_obj["secondaryFiles"]:
+            secondary_file_location = single_secondary_file["location"].replace("file://", "")
+            secondary_file_cwl_obj = create_cwl_file_obj(secondary_file_location)
             secondary_file_list.append(secondary_file_cwl_obj)
     file_cwl_obj = create_cwl_file_obj(file_location)
     if secondary_file_list:
-        file_cwl_obj['secondaryFiles'] = secondary_file_list
+        file_cwl_obj["secondaryFiles"] = secondary_file_list
     return file_cwl_obj
 
 
@@ -105,7 +103,14 @@ def list_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a list of values in the JSON
     """
-    keys = ['mutation_maf_files', 'mutation_svs_maf_files', 'mutation_svs_txt_files','targets_list', 'tumor_bam_files', 'normal_bam_files']
+    keys = [
+        "mutation_maf_files",
+        "mutation_svs_maf_files",
+        "mutation_svs_txt_files",
+        "targets_list",
+        "tumor_bam_files",
+        "normal_bam_files",
+    ]
     return set(keys)
 
 
@@ -114,7 +119,15 @@ def single_keys_for_filters():
     Returns a list of keys expected in the JSON to be submitted to the pipeline; these
     keys will have a single of values in the JSON
     """
-    keys = ['assay', 'project_prefix', 'is_impact', 'analyst_file', 'portal_file', 'portal_CNA_file', 'analysis_gene_cna_file']
+    keys = [
+        "assay",
+        "project_prefix",
+        "is_impact",
+        "analyst_file",
+        "portal_file",
+        "portal_CNA_file",
+        "analysis_gene_cna_file",
+    ]
     return set(keys)
 
 
@@ -143,11 +156,11 @@ def construct_helix_filters_input(argos_run_id_list):
             if name == "snp_pileup":
                 pair_info["snp_pileup"] = get_file_obj(value)
             if name == "pair":
-                normal_id = value[1]['ID']
-                tumor_id = value[0]['ID']
+                normal_id = value[1]["ID"]
+                tumor_id = value[0]["ID"]
                 pair_info["normal_id"] = normal_id
                 pair_info["tumor_id"] = tumor_id
-                pair_info["pair_id"] = "{}.{}".format(tumor_id,normal_id)
+                pair_info["pair_id"] = "{}.{}".format(tumor_id, normal_id)
             if name == "maf_file":
                 input_json["mutation_svs_maf_files"].append(get_file_obj(value))
             if name == "portal_file":
@@ -159,42 +172,42 @@ def construct_helix_filters_input(argos_run_id_list):
                     input_json["is_impact"] = True
                 else:
                     input_json["is_impact"] = False
-                input_json['assay'] = single_port.value
+                input_json["assay"] = single_port.value
             if name == "tumor_bam":
-                input_json['tumor_bam_files'].append(get_file_obj(value))
+                input_json["tumor_bam_files"].append(get_file_obj(value))
             if name == "normal_bam":
-                input_json['normal_bam_files'].append(get_file_obj(value))
+                input_json["normal_bam_files"].append(get_file_obj(value))
         pairs.append(pair_info)
 
-    references = convert_references(input_json['assay'])
+    references = convert_references(input_json["assay"])
     input_json.update(references)
 
     # some default values
-    project_prefix = input_json['project_prefix']
-    input_json['project_id'] = project_prefix
-    input_json['project_short_name'] = project_prefix
-    input_json['project_name'] = project_prefix
-    input_json['project_description'] = project_prefix
-    input_json['cancer_study_identifier'] = project_prefix
+    project_prefix = input_json["project_prefix"]
+    input_json["project_id"] = project_prefix
+    input_json["project_short_name"] = project_prefix
+    input_json["project_name"] = project_prefix
+    input_json["project_description"] = project_prefix
+    input_json["cancer_study_identifier"] = project_prefix
 
     # Gotta retrieve extra info that's not in the run porto have to query the database
     #
     # Get oncotree codes from samples in project_prefix/request_id FileMetadata
     # will need to change project_prefix to request_id values everywhere, but for now we assume
     # there is only one project_prefix/request_id per helix_filters run
-    input_json['cancer_type'] = get_oncotree_codes(project_prefix)
-    input_json['argos_version_string'] = get_argos_pipeline_version(argos_run_id_list)
-    input_json['project_pi'] = get_project_pi(argos_run_id_list)
-    input_json['request_pi'] = get_request_pi(argos_run_id_list)
+    input_json["cancer_type"] = get_oncotree_codes(project_prefix)
+    input_json["argos_version_string"] = get_argos_pipeline_version(argos_run_id_list)
+    input_json["project_pi"] = get_project_pi(argos_run_id_list)
+    input_json["request_pi"] = get_request_pi(argos_run_id_list)
 
     # facets input
-    input_json['pairs'] = pairs
+    input_json["pairs"] = pairs
 
     # generate data_clinical file
-    input_json['data_clinical_file'] = create_data_clinical_file(argos_run_id_list)
+    input_json["data_clinical_file"] = create_data_clinical_file(argos_run_id_list)
 
     # need this for aion
-    input_json['lab_head_email'] = get_lab_head_email(argos_run_id_list)
+    input_json["lab_head_email"] = get_lab_head_email(argos_run_id_list)
 
     return input_json
 
@@ -211,31 +224,29 @@ def create_data_clinical_file(run_id_list):
         pipeline_githubs.add(pipeline.github)
         pipeline_versions.add(pipeline.version)
         files = files + get_files_from_run(argos_run)
-    data_clinical_content = generate_sample_data_content(files,
-            pipeline_name=','.join(pipeline_names),
-            pipeline_github=','.join(pipeline_githubs),
-            pipeline_version=','.join(pipeline_versions))
+    data_clinical_content = generate_sample_data_content(
+        files,
+        pipeline_name=",".join(pipeline_names),
+        pipeline_github=",".join(pipeline_githubs),
+        pipeline_version=",".join(pipeline_versions),
+    )
     data_clinical_content = data_clinical_content.strip()
-    return {
-                "class": "File",
-                "basename": "sample_data_clinical.txt",
-                "contents": data_clinical_content
-            }
+    return {"class": "File", "basename": "sample_data_clinical.txt", "contents": data_clinical_content}
 
 
 def get_files_from_run(r):
     files = list()
-    inp_port = Port.objects.filter(run_id=r.id, name='pair').first()
-    for p in inp_port.db_value[0]['R1']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[0]['R2']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[0]['zR1']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[0]['zR2']:
-        files.append(FileProcessor.get_file_path(p['location']))
-    for p in inp_port.db_value[0]['bam']:
-        files.append(FileProcessor.get_file_path(p['location']))
+    inp_port = Port.objects.filter(run_id=r.id, name="pair").first()
+    for p in inp_port.db_value[0]["R1"]:
+        files.append(FileProcessor.get_file_path(p["location"]))
+    for p in inp_port.db_value[0]["R2"]:
+        files.append(FileProcessor.get_file_path(p["location"]))
+    for p in inp_port.db_value[0]["zR1"]:
+        files.append(FileProcessor.get_file_path(p["location"]))
+    for p in inp_port.db_value[0]["zR2"]:
+        files.append(FileProcessor.get_file_path(p["location"]))
+    for p in inp_port.db_value[0]["bam"]:
+        files.append(FileProcessor.get_file_path(p["location"]))
     return files
 
 
@@ -259,18 +270,18 @@ def get_project_pi(run_id_list):
     project_pis = set()
     for run_id in run_id_list:
         argos_run = Run.objects.get(id=run_id)
-        project_pi = format_msk_id(argos_run.tags['labHeadEmail'])
+        project_pi = format_msk_id(argos_run.tags["labHeadEmail"])
         project_pis.add(project_pi)
-    return ','.join(list(sorted(project_pis)))
+    return ",".join(list(sorted(project_pis)))
 
 
 def get_lab_head_email(run_id_list):
     lab_head_emails = set()
     for run_id in run_id_list:
         argos_run = Run.objects.get(id=run_id)
-        lab_head_email = argos_run.tags['labHeadEmail']
+        lab_head_email = argos_run.tags["labHeadEmail"]
         lab_head_emails.add(lab_head_email)
-    return ','.join(list(sorted(lab_head_emails)))
+    return ",".join(list(sorted(lab_head_emails)))
 
 
 def get_request_pi(run_id_list):
@@ -289,7 +300,7 @@ def get_request_pi(run_id_list):
     for request_pi in request_pis:
         if request_pi:
             request_pis_final.append(format_msk_id(request_pi))
-    return ','.join(request_pis_final)
+    return ",".join(request_pis_final)
 
 
 def get_argos_pipeline_version(run_id_list):
@@ -311,16 +322,19 @@ def convert_references(assay):
     helix_filters_resources = load_references()
     references = dict()
     targets_list = get_baits_and_targets(assay, helix_filters_resources)
-    references['assay_coverage'] = str(get_assay_coverage(assay, helix_filters_resources))
-    references['targets_list'] = targets_list
-    references['known_fusions_file'] = {'class': 'File', 'location': str(helix_filters_resources['known_fusions_file'])}
-    references['IMPACT_gene_list'] = {'class': 'File', 'location': str(helix_filters_resources['IMPACT_gene_list'])}
-    references['microsatellites_file'] =  {'class': 'File', 'location': str(helix_filters_resources['microsatellites_file'])}
+    references["assay_coverage"] = str(get_assay_coverage(assay, helix_filters_resources))
+    references["targets_list"] = targets_list
+    references["known_fusions_file"] = {"class": "File", "location": str(helix_filters_resources["known_fusions_file"])}
+    references["IMPACT_gene_list"] = {"class": "File", "location": str(helix_filters_resources["IMPACT_gene_list"])}
+    references["microsatellites_file"] = {
+        "class": "File",
+        "location": str(helix_filters_resources["microsatellites_file"]),
+    }
     return references
 
 
 def get_assay_coverage(assay, helix_filters_resources):
-    assay_coverages_list = helix_filters_resources['assay_tmb_coverage_values']
+    assay_coverages_list = helix_filters_resources["assay_tmb_coverage_values"]
     assay_coverage = 0
     for key in assay_coverages_list.keys():
         curr_assay = key.lower()
@@ -337,15 +351,16 @@ def get_oncotree_codes(request_id):
     for val in oncotree_codes_tmp:
         if val:
             oncotree_codes.append(val)
-    if not oncotree_codes: # hack; if there are no oncotree codes, just say it's mixed
-        return 'mixed'
+    if not oncotree_codes:  # hack; if there are no oncotree codes, just say it's mixed
+        return "mixed"
     shared_nodes = oncotree_dh.find_shared_nodes_by_code_list(oncotree_codes)
     common_anc = oncotree_dh.get_highest_level_shared_node(shared_nodes)
     if common_anc.code.lower() == "tissue":
-        common_anc.code = 'mixed'
+        common_anc.code = "mixed"
     return common_anc.code.lower()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     RUN_ID_LIST = []
     for single_arg in sys.argv[1:]:
         RUN_ID_LIST.append(single_arg)

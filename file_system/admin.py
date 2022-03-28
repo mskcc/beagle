@@ -1,44 +1,62 @@
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
-from .models import Storage, File, FileType, FileMetadata, FileGroup, FileGroupMetadata, FileRunMap, ImportMetadata, \
-    Sample, Patient, Request, FileExtension
+from .models import (
+    Storage,
+    File,
+    FileType,
+    FileMetadata,
+    FileGroup,
+    FileGroupMetadata,
+    FileRunMap,
+    ImportMetadata,
+    Sample,
+    Patient,
+    Request,
+    FileExtension,
+)
 
 # Register your models here.
 
 
 class FileAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'file_group', 'size', 'created_date')
-    search_fields = ['file_name']
+    list_display = ("id", "file_name", "file_group", "size", "created_date")
+    search_fields = ["file_name"]
 
 
 class SampleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'sample_id', 'sample_name', 'cmo_sample_name', 'redact')
-    search_fields = ['sample_id']
+    list_display = ("id", "sample_id", "sample_name", "cmo_sample_name", "redact")
+    search_fields = ["sample_id"]
 
 
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'request_id',)
-    search_fields = ['request_id']
+    list_display = (
+        "id",
+        "request_id",
+    )
+    search_fields = ["request_id"]
 
 
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'patient_id',)
-    search_fields = ['patient_id']
+    list_display = (
+        "id",
+        "patient_id",
+    )
+    search_fields = ["patient_id"]
 
 
 class FileRunMapAdmin(admin.ModelAdmin):
-    list_display = ('file', 'run')
+    list_display = ("file", "run")
 
 
 class FileMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('file', 'version', 'metadata','created_date')
-    autocomplete_fields = ['file']
-    search_fields = ('id', 'file__id', 'metadata__igoRequestId', 'metadata__cmoSampleName')
+    list_display = ("file", "version", "metadata", "created_date")
+    autocomplete_fields = ["file"]
+    search_fields = ("id", "file__id", "metadata__igoRequestId", "metadata__cmoSampleName")
 
 
 class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ('file',)
-    search_fields = ('file__id',)
+    list_display = ("file",)
+    search_fields = ("file__id",)
 
 
 admin.site.register(File, FileAdmin)

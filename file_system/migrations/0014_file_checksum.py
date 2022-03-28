@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0013_auto_20200127_1931'),
+        ("file_system", "0013_auto_20200127_1931"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='file',
-            name='checksum',
+            model_name="file",
+            name="checksum",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
     ]

@@ -24,7 +24,7 @@ restart.short_description = "Restart"
 
 
 class RecipeFilter(SimpleListFilter):
-    title = 'Recipe'
+    title = "Recipe"
     parameter_name = settings.RECIPE_METADATA_KEY
 
     def lookups(self, request, model_admin):
@@ -42,35 +42,39 @@ class RecipeFilter(SimpleListFilter):
 
 
 class JobAdmin(ModelAdmin):
-    list_display = ('id', 'get_short_run', 'retry_count',
-                    pretty_json('args'),
-                    'children',
-                    'status',
-                    'created_date',
-                    'lock',
-                    pretty_json('message'))
-    search_fields = ('id', 'args__sample_id')
-    readonly_fields = ('message',)
+    list_display = (
+        "id",
+        "get_short_run",
+        "retry_count",
+        pretty_json("args"),
+        "children",
+        "status",
+        "created_date",
+        "lock",
+        pretty_json("message"),
+    )
+    search_fields = ("id", "args__sample_id")
+    readonly_fields = ("message",)
     actions = (restart,)
-    ordering = ('-created_date',)
-    list_filter = (RecipeFilter, )
+    ordering = ("-created_date",)
+    list_filter = (RecipeFilter,)
 
     def get_short_run(self, obj):
         if obj.run:
             (_, run) = os.path.splitext(obj.run)
             return mark_safe("<span title='%s'>%s</span>" % (obj.run, run[1:]))
         else:
-            return '--'
+            return "--"
 
-    get_short_run.short_description = 'Run'
+    get_short_run.short_description = "Run"
 
 
 class OperatorAdmin(ModelAdmin):
-    list_display = ('id', 'slug', 'class_name', 'version', 'recipes', 'active')
+    list_display = ("id", "slug", "class_name", "version", "recipes", "active")
 
 
 class AssayAdmin(ModelAdmin):
-    list_display = ('redelivery', 'all_recipes', 'disabled_recipes')
+    list_display = ("redelivery", "all_recipes", "disabled_recipes")
 
     def has_add_permission(self, request):
         return False

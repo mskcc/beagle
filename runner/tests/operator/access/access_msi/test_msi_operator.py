@@ -19,13 +19,13 @@ FIXTURES = [
 ]
 
 COMMON_FIXTURES = [
-    'runner/fixtures/runner.pipeline.json',
-    'runner/fixtures/runner.run.json',
-    'runner/fixtures/runner.operator_run.json',
-    'file_system/fixtures/file_system.filegroup.json',
-    'file_system/fixtures/file_system.filetype.json',
-    'file_system/fixtures/file_system.storage.json',
-    'beagle_etl/fixtures/beagle_etl.operator.json',
+    "runner/fixtures/runner.pipeline.json",
+    "runner/fixtures/runner.run.json",
+    "runner/fixtures/runner.operator_run.json",
+    "file_system/fixtures/file_system.filegroup.json",
+    "file_system/fixtures/file_system.filetype.json",
+    "file_system/fixtures/file_system.storage.json",
+    "beagle_etl/fixtures/beagle_etl.operator.json",
 ]
 
 
@@ -50,20 +50,22 @@ class TestAccessMSIOperator(TestCase):
 
         pipeline_slug = "AccessLegacyMSIOperator"
         access_legacy_msi_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacyMSIOperator(access_legacy_msi_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacyMSIOperator(
+            access_legacy_msi_model, request_id=request_id, run_ids=["bc23076e-f477-4578-943c-1fbf6f1fca44"]
+        )
 
         self.assertTrue(isinstance(operator, AccessLegacyMSIOperator))
         self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
-        self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        self.assertEqual(operator.run_ids, ["bc23076e-f477-4578-943c-1fbf6f1fca44"])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbeee")
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
         required_input_fields = [
-            'tumor_bam',
-            'normal_bam',
-            'sample_name',
+            "tumor_bam",
+            "normal_bam",
+            "sample_name",
         ]
         self.assertEqual(len(input_data), 1)
         for inputs in input_data:

@@ -22,23 +22,21 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
     ignore_sample_formatting is applied if we want to return a sample name regardless of
     formatting
     """
-    sample_pattern = re.compile(r'C-\w{6}-\w{4}-\w(\w{2})?')
+    sample_pattern = re.compile(r"C-\w{6}-\w{4}-\w")
 
     if not ignore_sample_formatting:
         try:
             if "s_" in sample_name[:2]:
                 return sample_name
-            # ciTag is formatted properly
-            elif bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower():
+            elif (
+                bool(sample_pattern.match(sample_name)) or "cellline" in specimen_type.lower()
+            ):  # cmoSampleName is formatted properly
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
-            LOGGER.error('Missing or malformed sampleName: %s',
-                         sample_name, exc_info=True)
-            return 'sampleNameMalformed'
+            LOGGER.error("Missing or malformed sampleName: %s", sample_name, exc_info=True)
+            return "sampleNameMalformed"
         except TypeError:
-            LOGGER.error(
-                "sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'."
-            )
+            LOGGER.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
             return "sampleNameMalformed"
     else:
         return sample_name
@@ -56,8 +54,7 @@ def generate_sample_data_content(request_ids):
     if isinstance(request_ids, str):
         request_ids = [request_ids]
     for r in request_ids:
-        samples = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: r}).order_by(ret_str).distinct(
-            ret_str).all()
+        samples = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: r}).order_by(ret_str).distinct(ret_str).all()
         for sample in samples:
             metadata = sample.metadata
             result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
@@ -81,20 +78,20 @@ def get_r_orientation(fastq_filename):
     """
     Retrieve R orientation of fastq filename
     """
-    reversed_filename = ''.join(reversed(fastq_filename))
-    r1_idx = reversed_filename.find('1R')
-    r2_idx = reversed_filename.find('2R')
+    reversed_filename = "".join(reversed(fastq_filename))
+    r1_idx = reversed_filename.find("1R")
+    r2_idx = reversed_filename.find("2R")
     if r1_idx == -1 and r2_idx == -1:
         return "ERROR"
     elif r1_idx > 0 and r2_idx == -1:
         return "R1"
     elif r2_idx > 0 and r1_idx == -1:
-        return 'R2'
+        return "R2"
     elif r1_idx > 0 and r2_idx > 0:
         if r1_idx < r2_idx:
-            return 'R1'
-        return 'R2'
-    return 'ERROR'
+            return "R1"
+        return "R2"
+    return "ERROR"
 
 
 def spoof_barcode(sample_file_name, r_orientation):
@@ -104,12 +101,12 @@ def spoof_barcode(sample_file_name, r_orientation):
 
     We are also assuming there are no periods in the file names other than extensions
     """
-    reversed_str = ''.join(reversed(sample_file_name))
-    if r_orientation == 'R1':
-        reversed_str = reversed_str.replace('1R', '')
+    reversed_str = "".join(reversed(sample_file_name))
+    if r_orientation == "R1":
+        reversed_str = reversed_str.replace("1R", "")
     else:
-        reversed_str = reversed_str.replace('2R', '')
-    reversed_str = ''.join(reversed(reversed_str))
+        reversed_str = reversed_str.replace("2R", "")
+    reversed_str = "".join(reversed(reversed_str))
     spoofed_barcode = reversed_str.split(os.extsep)[0]
     return spoofed_barcode
 
@@ -124,18 +121,18 @@ def init_metadata():
     metadata[settings.REQUEST_ID_METADATA_KEY] = ""
     metadata[settings.SAMPLE_ID_METADATA_KEY] = ""
     metadata[settings.LIBRARY_ID_METADATA_KEY] = ""
-    metadata['baitSet'] = ""
-    metadata['tumorOrNormal'] = ""
+    metadata["baitSet"] = ""
+    metadata["tumorOrNormal"] = ""
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
-    metadata['species'] = ""
+    metadata["species"] = ""
     metadata[settings.SAMPLE_NAME_METADATA_KEY] = ""
-    metadata['flowCellId'] = ""
-    metadata['barcodeIndex'] = ""
+    metadata["flowCellId"] = ""
+    metadata["barcodeIndex"] = ""
     metadata[settings.PATIENT_ID_METADATA_KEY] = ""
-    metadata['runDate'] = ""
-    metadata['R'] = ""
-    metadata['labHeadName'] = ""
-    metadata['labHeadEmail'] = ""
-    metadata['runId'] = ""
-    metadata['preservation'] = ""
+    metadata["runDate"] = ""
+    metadata["R"] = ""
+    metadata["labHeadName"] = ""
+    metadata["labHeadEmail"] = ""
+    metadata["runId"] = ""
+    metadata["preservation"] = ""
     return metadata

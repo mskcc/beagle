@@ -12,12 +12,44 @@ from runner.exceptions import PortProcessorException, RunCreateException, RunObj
 class CWLRunObject(RunObject):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, run_id, run_obj, inputs, outputs, status, samples=[], job_statuses=None, message={},
-                 output_metadata={},
-                 execution_id=None, tags={}, job_group=None, job_group_notifier=None, notify_for_outputs=[]):
+    def __init__(
+        self,
+        run_id,
+        run_obj,
+        app,
+        name,
+        inputs,
+        outputs,
+        status,
+        samples=[],
+        job_statuses=None,
+        message={},
+        output_metadata={},
+        execution_id=None,
+        tags={},
+        job_group=None,
+        job_group_notifier=None,
+        notify_for_outputs=[],
+    ):
         self.run_type = ProtocolType.CWL
-        super().__init__(run_id, run_obj, inputs, outputs, status, samples, job_statuses, message, output_metadata,
-                         execution_id, tags, job_group, job_group_notifier, notify_for_outputs)
+        super().__init__(
+            run_id,
+            run_obj,
+            app,
+            name,
+            inputs,
+            outputs,
+            status,
+            samples,
+            job_statuses,
+            message,
+            output_metadata,
+            execution_id,
+            tags,
+            job_group,
+            job_group_notifier,
+            notify_for_outputs,
+        )
 
     @classmethod
     def from_definition(cls, run_id, inputs):
@@ -37,24 +69,30 @@ class CWLRunObject(RunObject):
         except Exception as e:
             raise RunCreateException("Failed to create run. Failed to resolve CWL %s" % str(e))
         try:
-            input_ports = [CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in
-                           app.get('inputs', [])]
-            output_ports = [CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in
-                            app.get('outputs', [])]
+            input_ports = [
+                CWLPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in app.get("inputs", [])
+            ]
+            output_ports = [
+                CWLPortObject.from_definition(run_id, out, PortType.OUTPUT, {}) for out in app.get("outputs", [])
+            ]
         except PortProcessorException as e:
             raise RunCreateException("Failed to create run: %s" % str(e))
-        return cls(run_id,
-                   run,
-                   input_ports,
-                   output_ports,
-                   run.status,
-                   samples=[],
-                   job_statuses=run.job_statuses,
-                   message=run.message,
-                   output_metadata=run.output_metadata,
-                   tags=run.tags,
-                   job_group=run.job_group,
-                   job_group_notifier=run.job_group_notifier)
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            input_ports,
+            output_ports,
+            run.status,
+            samples=[],
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+        )
 
     def ready(self):
         [CWLPortObject.ready(p) for p in self.inputs]
@@ -76,12 +114,28 @@ class CWLRunObject(RunObject):
             raise RunObjectConstructException("Run with id: %s doesn't exist" % str(run_id))
         inputs = [CWLPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.INPUT)]
         outputs = [CWLPortObject.from_db(p.id) for p in Port.objects.filter(run_id=run_id, port_type=PortType.OUTPUT)]
-        return cls(run_id, run, inputs, outputs, run.status, job_statuses=run.job_statuses, message=run.message,
-                   output_metadata=run.output_metadata, tags=run.tags, execution_id=run.execution_id,
-                   job_group=run.job_group, job_group_notifier=run.job_group_notifier,
-                   notify_for_outputs=run.notify_for_outputs, samples=list(run.samples.all()))
+        return cls(
+            run_id,
+            run,
+            run.app,
+            run.name,
+            inputs,
+            outputs,
+            run.status,
+            job_statuses=run.job_statuses,
+            message=run.message,
+            output_metadata=run.output_metadata,
+            tags=run.tags,
+            execution_id=run.execution_id,
+            job_group=run.job_group,
+            job_group_notifier=run.job_group_notifier,
+            notify_for_outputs=run.notify_for_outputs,
+            samples=list(run.samples.all()),
+        )
 
     def to_db(self):
+        self.run_obj.app = self.app
+        self.run_obj.name = self.name
         [CWLPortObject.to_db(p) for p in self.inputs]
         [CWLPortObject.to_db(p) for p in self.outputs]
         self.run_obj.status = self.status
@@ -124,10 +178,9 @@ class CWLRunObject(RunObject):
 
     def complete(self, outputs):
         for out in self.outputs:
-            out.complete(outputs.get(out.name, None),
-                         self.output_file_group,
-                         self.job_group_notifier,
-                         self.output_metadata)
+            out.complete(
+                outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata
+            )
         self.status = RunStatus.COMPLETED
 
     def dump_job(self, output_directory=None):
@@ -135,7 +188,7 @@ class CWLRunObject(RunObject):
             "github": {
                 "repository": self.run_obj.app.github,
                 "entrypoint": self.run_obj.app.entrypoint,
-                "version": self.run_obj.app.version
+                "version": self.run_obj.app.version,
             }
         }
         inputs = dict()
@@ -144,10 +197,10 @@ class CWLRunObject(RunObject):
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
         job = {
-            'type': self.run_type,
-            'app': app,
-            'inputs': inputs,
-            'root_dir': output_directory,
+            "type": self.run_type,
+            "app": app,
+            "inputs": inputs,
+            "root_dir": output_directory,
         }
         return job
 

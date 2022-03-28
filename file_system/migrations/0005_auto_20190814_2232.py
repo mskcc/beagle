@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0004_auto_20190730_2137'),
+        ("file_system", "0004_auto_20190730_2137"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='file',
-            name='lane',
+            model_name="file",
+            name="lane",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='pair_end',
+            model_name="file",
+            name="pair_end",
             field=models.IntegerField(null=True),
         ),
     ]

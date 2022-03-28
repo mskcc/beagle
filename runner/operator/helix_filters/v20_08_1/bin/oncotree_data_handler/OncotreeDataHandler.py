@@ -3,32 +3,33 @@ import os
 import unicodedata
 import requests
 
+
 class OncotreeDataHandler:
     def __init__(self):
         self.oncotree = self.fetch_oncotree_data()
 
     def fetch_oncotree_data(self):
         oncotree_dir = os.path.dirname(__file__)
-        oncotree_json = os.path.join(oncotree_dir, 'data/oncotree.json')
-        request = requests.get('http://oncotree.mskcc.org/api/tumorTypes').json()
-        if 'error' in request: # load from file if error
-            request = json.load(open(oncotree_json, 'r'))
+        oncotree_json = os.path.join(oncotree_dir, "data/oncotree.json")
+        request = requests.get("http://oncotree.mskcc.org/api/tumorTypes").json()
+        if "error" in request:  # load from file if error
+            request = json.load(open(oncotree_json, "r"))
         converted_data = self.convert_data_key(request)
         return converted_data
 
     def convert_data_key(self, data):
-       d = dict()
-       for node in data:
-           name = node['name']
-           level = node['level']
-           parent = node['parent']
-           code = node['code']
-           data_node = OncotreeNode(node)
-           d[code] = data_node
-       return d
+        d = dict()
+        for node in data:
+            name = node["name"]
+            level = node["level"]
+            parent = node["parent"]
+            code = node["code"]
+            data_node = OncotreeNode(node)
+            d[code] = data_node
+        return d
 
     def find_by_code(self, code):
-        code_upper  = code.upper()
+        code_upper = code.upper()
         try:
             return self.oncotree[code_upper]
         except KeyError:
@@ -62,12 +63,13 @@ class OncotreeDataHandler:
                 node_to_return = node
         return node_to_return
 
+
 class OncotreeNode:
     def __init__(self, data):
-        self.code = data['code']
-        self.name = data['name']
-        self.level = data['level']
-        self.parent = data['parent']
+        self.code = data["code"]
+        self.name = data["name"]
+        self.level = data["level"]
+        self.parent = data["parent"]
 
     def __key(self):
         return (self.code, self.name, self.level, self.parent)
@@ -79,4 +81,9 @@ class OncotreeNode:
         return hash(self.__key())
 
     def __repr__(self):
-        return "OncotreeNode(CODE: %s, NAME: %s, LEVEL: %i, PARENT: %s)" % (self.code, self.name, self.level, self.parent)
+        return "OncotreeNode(CODE: %s, NAME: %s, LEVEL: %i, PARENT: %s)" % (
+            self.code,
+            self.name,
+            self.level,
+            self.parent,
+        )

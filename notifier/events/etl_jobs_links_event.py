@@ -4,7 +4,6 @@ from notifier.event_handler.event import Event
 
 
 class ETLJobsLinksEvent(Event):
-
     def __init__(self, job_notifier, request_id, etl_jobs):
         self.job_notifier = job_notifier
         self.request_id = request_id
@@ -30,7 +29,7 @@ class ETLJobsLinksEvent(Event):
 
     def get_message(self, message):
         try:
-            return message.get('message')
+            return message.get("message")
         except Exception as e:
             pass
         return message

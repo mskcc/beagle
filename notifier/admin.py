@@ -3,17 +3,17 @@ from .models import JobGroup, Notifier, JobGroupNotifier
 
 
 class JobGroupAdmin(admin.ModelAdmin):
-    list_display = ('id',)
-    ordering = ('-created_date',)
+    list_display = ("id",)
+    ordering = ("-created_date",)
 
 
 class JobGroupNotifierAdmin(admin.ModelAdmin):
-    list_display = ('id', 'jira_id', 'job_group', 'status', 'notifier_type', 'created_date')
-    ordering = ('-created_date',)
+    list_display = ("id", "jira_id", "job_group", "status", "notifier_type", "created_date")
+    ordering = ("-created_date",)
 
 
 class NotifierAdmin(admin.ModelAdmin):
-    list_display = ('id', 'notifier_type', 'default', 'created_date')
+    list_display = ("id", "notifier_type", "default", "created_date")
 
 
 admin.site.register(JobGroup, JobGroupAdmin)

@@ -6,26 +6,25 @@ from file_system.repository.file_repository import FileRepository
 
 
 def populate_missing_info_in_notifier(apps, _):
-    JobGroupNotifier = apps.get_model('notifier', 'JobGroupNotifier')
+    JobGroupNotifier = apps.get_model("notifier", "JobGroupNotifier")
     job_group_notifiers = JobGroupNotifier.objects.all()
     for jgn in job_group_notifiers:
-        if jgn.jira_id and jgn.startswith('VADEV-'):
-            project = jgn.jira_id.split('-')[0]
-            jira_client = JiraClient(url=settings.JIRA_URL,
-                                     username=settings.JIRA_USERNAME,
-                                     password=settings.JIRA_PASSWORD,
-                                     project=project)
+        if jgn.jira_id and jgn.startswith("VADEV-"):
+            project = jgn.jira_id.split("-")[0]
+            jira_client = JiraClient(
+                url=settings.JIRA_URL, username=settings.JIRA_USERNAME, password=settings.JIRA_PASSWORD, project=project
+            )
             print("Populating status for ticket %s" % jgn.jira_id)
             jira_ticket = jira_client.get_ticket(jgn.jira_id).json()
-            request_id = jira_ticket.get('fields', {}).get('summary')
+            request_id = jira_ticket.get("fields", {}).get("summary")
             if request_id:
-                file_obj = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
+                file_obj = FileRepository.filter(metadata={"requestId": request_id}).first()
                 if file_obj:
                     jgn.request_id = request_id
-                    jgn.PI = file_obj.metadata['labHeadName']
-                    jgn.investigator = file_obj.metadata['investigatorName']
-                    jgn.assay = file_obj.metadata[settings.RECIPE_METADATA_KEY]
-                    jgn.save(update_fields=('request_id', 'PI', 'investigator', 'assay'))
+                    jgn.PI = file_obj.metadata["labHeadName"]
+                    jgn.investigator = file_obj.metadata["investigatorName"]
+                    jgn.assay = file_obj.metadata["recipe"]
+                    jgn.save(update_fields=("request_id", "PI", "investigator", "assay"))
                 else:
                     print("Metadata can't be found")
 
@@ -33,8 +32,7 @@ def populate_missing_info_in_notifier(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0011_auto_20210910_1303'),
+        ("notifier", "0011_auto_20210910_1303"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -11,74 +11,76 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('file_system', '0005_auto_20190814_2232'),
+        ("file_system", "0005_auto_20190814_2232"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FileMetadata',
+            name="FileMetadata",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('version', models.IntegerField()),
-                ('metadata', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("version", models.IntegerField()),
+                ("metadata", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='FileType',
+            name="FileType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ext', models.CharField(max_length=20)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("ext", models.CharField(max_length=20)),
             ],
         ),
         migrations.RemoveField(
-            model_name='samplemetadata',
-            name='sample',
+            model_name="samplemetadata",
+            name="sample",
         ),
         migrations.RemoveField(
-            model_name='samplemetadata',
-            name='user',
+            model_name="samplemetadata",
+            name="user",
         ),
         migrations.RenameField(
-            model_name='filegroupmetadata',
-            old_name='cohort',
-            new_name='file_group',
+            model_name="filegroupmetadata",
+            old_name="cohort",
+            new_name="file_group",
         ),
         migrations.RemoveField(
-            model_name='file',
-            name='lane',
+            model_name="file",
+            name="lane",
         ),
         migrations.RemoveField(
-            model_name='file',
-            name='pair_end',
+            model_name="file",
+            name="pair_end",
         ),
         migrations.RemoveField(
-            model_name='file',
-            name='sample',
+            model_name="file",
+            name="sample",
         ),
         migrations.DeleteModel(
-            name='Sample',
+            name="Sample",
         ),
         migrations.DeleteModel(
-            name='SampleMetadata',
+            name="SampleMetadata",
         ),
         migrations.AddField(
-            model_name='filemetadata',
-            name='file',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file_system.File'),
+            model_name="filemetadata",
+            name="file",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.File"),
         ),
         migrations.AddField(
-            model_name='filemetadata',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="filemetadata",
+            name="user",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='file',
-            name='file_type',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='file_system.FileType'),
+            model_name="file",
+            name="file_type",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="file_system.FileType"),
         ),
     ]

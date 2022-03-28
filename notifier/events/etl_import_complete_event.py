@@ -2,7 +2,6 @@ from notifier.event_handler.event import Event
 
 
 class ETLImportCompleteEvent(Event):
-
     def __init__(self, job_notifier):
         self.job_notifier = job_notifier
 

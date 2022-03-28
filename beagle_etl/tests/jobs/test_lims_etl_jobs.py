@@ -10,7 +10,12 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.tasks import scheduler
 from beagle_etl.models import JobStatus, Job, ETLConfiguration
-from beagle_etl.exceptions import FailedToFetchSampleException, MissingDataException, ErrorInconsistentDataException, FailedToFetchPoolNormalException
+from beagle_etl.exceptions import (
+    FailedToFetchSampleException,
+    MissingDataException,
+    ErrorInconsistentDataException,
+    FailedToFetchPoolNormalException,
+)
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
@@ -25,11 +30,7 @@ from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_st
 
 class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
-    fixtures = [
-        "file_system.filegroup.json",
-        "file_system.filetype.json",
-        "file_system.storage.json"
-    ]
+    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
     # @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
     #         'Skip if username or password for LIMS are not provided')
@@ -90,19 +91,15 @@ class TestFetchSamples(TestCase):
 
 class TestCreatePooledNormal(TestCase):
     # load fixtures for the test case temp db
-    fixtures = [
-        "file_system.filegroup.json",
-        "file_system.filetype.json",
-        "file_system.storage.json"
-    ]
+    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
         self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
         assay = ETLConfiguration.objects.first()
         self.disabled_backup = assay.disabled_recipes
-        assay.all = ['IMPACT468','HemePACT','HemePACT_v4','DisabledAssay']
-        assay.disabled = ['DisabledAssay']
+        assay.all = ["IMPACT468", "HemePACT", "HemePACT_v4", "DisabledAssay"]
+        assay.disabled = ["DisabledAssay"]
         assay.save()
 
     def test_true(self):
@@ -173,17 +170,17 @@ class TestGetRunID(TestCase):
     def test_get_run_id_from_string1(self):
         string = "PITT_0439_BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'PITT_0439')
+        self.assertTrue(runID == "PITT_0439")
 
     def test_get_run_id_from_string2(self):
         string = "foo_BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'foo')
+        self.assertTrue(runID == "foo")
 
     def test_get_run_id_from_string2(self):
         string = "BHFTCNBBXY"
         runID = get_run_id_from_string(string)
-        self.assertTrue(runID == 'BHFTCNBBXY')
+        self.assertTrue(runID == "BHFTCNBBXY")
 
 
 class MockResponse:
@@ -196,19 +193,18 @@ class MockResponse:
 
 
 class TestImportSample(APITestCase):
-
     def setUp(self):
         self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
-        self.fastq = FileType.objects.create(name='fastq')
+        self.fastq = FileType.objects.create(name="fastq")
         self.file_group = FileGroup.objects.create(name="LIMS", storage=self.storage)
         self.old_val = settings.IMPORT_FILE_GROUP
         settings.IMPORT_FILE_GROUP = str(self.file_group.id)
         assay = ETLConfiguration.objects.first()
         self.disabled_backup = assay.disabled_recipes
-        assay.all_recipes.append('DisabledAssay1')
-        assay.all_recipes.append('DisabledAssay2')
-        assay.all_recipes.append('TestAssay')
-        assay.disabled_recipes = ['DisabledAssay1', 'DisabledAssay2']
+        assay.all_recipes.append("DisabledAssay1")
+        assay.all_recipes.append("DisabledAssay2")
+        assay.all_recipes.append("TestAssay")
+        assay.disabled_recipes = ["DisabledAssay1", "DisabledAssay2"]
         assay.save()
         self.data_0_fastq = [
             {
@@ -248,15 +244,12 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
-                                "fastqs": [
-                                ]
+                                "flowCellLanes": [8],
+                                "fastqs": [],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_1_fastq = [
@@ -297,16 +290,63 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
+                                "flowCellLanes": [8],
                                 "fastqs": [
                                     "/path/to/sample/10/sampleName_001-d_IGO_igoId_002_S728_L008_R2_001.fastq.gz",
-                                ]
+                                ],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
+            }
+        ]
+        self.data_2_fastq = [
+            {
+                "igoId": "igoId_002",
+                "cmoSampleName": "sampleName_002-d",
+                "sampleName": "sampleName_002-d",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Normal",
+                settings.PATIENT_ID_METADATA_KEY: "patientId-002",
+                "investigatorSampleId": "InvestigatorSampleId-N01-WES",
+                settings.ONCOTREE_METADATA_KEY: None,
+                "tumorOrNormal": "Normal",
+                "tissueLocation": "na",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Blood",
+                "sampleOrigin": "Whole Blood",
+                "preservation": "Blood",
+                "collectionYear": "2016",
+                "sex": "M",
+                "species": "Human",
+                "cfDNA2dBarcode": None,
+                "baitSet": "SureSelect-All-Exon-V4-hg19",
+                "qcReports": [],
+                "libraries": [
+                    {
+                        "barcodeId": "IDT36",
+                        "barcodeIndex": "CCAGTTCA",
+                        "libraryIgoId": "igoId_002_1",
+                        "libraryVolume": None,
+                        "libraryConcentrationNgul": 2.2051049976353,
+                        "dnaInputNg": None,
+                        "captureConcentrationNm": None,
+                        "captureInputNg": None,
+                        "captureName": None,
+                        "runs": [
+                            {
+                                "runMode": "HiSeq High Output",
+                                "runId": "runId_002",
+                                "flowCellId": "HHJ5HBBXX",
+                                "readLength": "",
+                                "runDate": "2017-04-21",
+                                "flowCellLanes": [8],
+                                "fastqs": [
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
+                                ],
+                            }
+                        ],
+                    }
+                ],
             }
         ]
         self.data_6_fastq = [
@@ -347,16 +387,13 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHGYTBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-25",
-                                "flowCellLanes": [
-                                    6,
-                                    7
-                                ],
+                                "flowCellLanes": [6, 7],
                                 "fastqs": [
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
                                     "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
-                                    "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
+                                ],
                             },
                             {
                                 "runMode": "HiSeq High Output",
@@ -364,17 +401,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHN7YBBXX",
                                 "readLength": "",
                                 "runDate": "2017-05-05",
-                                "flowCellLanes": [
-                                    3
-                                ],
+                                "flowCellLanes": [3],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
-                            }
-                        ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
+                            },
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_2_fastq = [
@@ -466,14 +501,11 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHGYTBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-25",
-                                "flowCellLanes": [
-                                    6,
-                                    7
-                                ],
+                                "flowCellLanes": [6, 7],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
                             },
                             {
                                 "runMode": "HiSeq High Output",
@@ -481,17 +513,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHN7YBBXX",
                                 "readLength": "",
                                 "runDate": "2017-05-05",
-                                "flowCellLanes": [
-                                    3
-                                ],
+                                "flowCellLanes": [3],
                                 "fastqs": [
                                     "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
-                                ]
-                            }
-                        ]
+                                    "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
+                                ],
+                            },
+                        ],
                     }
-                ]
+                ],
             }
         ]
 
@@ -607,10 +637,7 @@ class TestImportSample(APITestCase):
                                             active=True)
         request_callback('test1')
 
-        calls = [
-            call('test1', operator1.id, None),
-            call('test1', operator2.id, None)
-        ]
+        calls = [call("test1", operator1.id, None), call("test1", operator2.id, None)]
 
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
@@ -636,20 +663,9 @@ class TestImportSample(APITestCase):
         request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
-            call({
-                'class': 'SetCIReviewEvent',
-                'job_notifier': str(job_group_notifier.id)
-            }),
-            call({
-                'class': 'SetLabelEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'label': 'unrecognized_assay'
-            }),
-            call({
-                'class': 'UnknownAssayEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'assay': 'UnknownAssay'
-            })
+            call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
+            call({"class": "SetLabelEvent", "job_notifier": str(job_group_notifier.id), "label": "unrecognized_assay"}),
+            call({"class": "UnknownAssayEvent", "job_notifier": str(job_group_notifier.id), "assay": "UnknownAssay"}),
         ]
 
         mock_send_notification.assert_has_calls(calls, any_order=True)
@@ -676,16 +692,10 @@ class TestImportSample(APITestCase):
         request_callback('test1', str(job_group.id), str(job_group_notifier.id))
 
         calls = [
-            call({
-                'class': 'NotForCIReviewEvent',
-                'job_notifier': str(job_group_notifier.id)
-            }),
-            call({
-                'class': 'DisabledAssayEvent',
-                'job_notifier': str(job_group_notifier.id),
-                'assay': 'DisabledAssay1'
-            })
+            call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
+            call(
+                {"class": "DisabledAssayEvent", "job_notifier": str(job_group_notifier.id), "assay": "DisabledAssay1"}
+            ),
         ]
 
         mock_send_notification.assert_has_calls(calls, any_order=True)
-

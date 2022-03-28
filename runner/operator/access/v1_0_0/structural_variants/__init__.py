@@ -4,21 +4,19 @@ import logging
 
 from django.conf import settings
 from jinja2 import Template
-
 from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import File
 from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 
 
-
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-TUMOR_OR_NORMAL_SEARCH = '-L0'
-SAMPLE_ID_SEP = '_cl_aln'
-ACCESS_DEFAULT_SV_NORMAL_ID = 'DONOR22-TP'
-ACCESS_DEFAULT_SV_NORMAL_FILENAME = 'DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam'
+TUMOR_OR_NORMAL_SEARCH = "-L0"
+SAMPLE_ID_SEP = "_cl_aln"
+ACCESS_DEFAULT_SV_NORMAL_ID = "DONOR22-TP"
+ACCESS_DEFAULT_SV_NORMAL_FILENAME = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam"
 
 
 class AccessLegacySVOperator(Operator):
@@ -32,10 +30,10 @@ class AccessLegacySVOperator(Operator):
 
     @staticmethod
     def is_tumor_bam(file):
-        if not file.file_name.endswith('.bam'):
+        if not file.file_name.endswith(".bam"):
             return False
-        t_n_timepoint = file.file_name.split('_')[3]
-        return not t_n_timepoint[0] == 'N'
+        t_n_timepoint = file.file_name.split("_")[3]
+        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
         """
@@ -47,13 +45,11 @@ class AccessLegacySVOperator(Operator):
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
-            name__in=['standard_bams', 'uncollapsed_bam'],
-            run__id__in=run_ids,
-            run__status=RunStatus.COMPLETED
+            name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
         standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
-        sample_ids = [f.file_name.split('_cl_aln')[0] for f in standard_tumor_bams]
+        sample_ids = [f.file_name.split("_cl_aln")[0] for f in standard_tumor_bams]
 
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_SV_NORMAL_FILENAME)
         if not len(normal_bam) == 1:
@@ -64,11 +60,7 @@ class AccessLegacySVOperator(Operator):
 
         sample_inputs = []
         for i, b in enumerate(standard_tumor_bams):
-            sample_input = self.construct_sample_inputs(
-                sample_ids[i],
-                b,
-                normal_bam
-            )
+            sample_input = self.construct_sample_inputs(sample_ids[i], b, normal_bam)
             sample_inputs.append(sample_input)
 
         return sample_inputs
@@ -83,21 +75,18 @@ class AccessLegacySVOperator(Operator):
         sample_inputs = self.get_sample_inputs()
 
         return [
-            (
-                APIRunCreateSerializer(
-                    data={
-                        'name': "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
-                        'app': self.get_pipeline_id(),
-                        'inputs': job,
-                        'tags': {
-                            settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                            'cmoSampleIds': job["sv_sample_id"],
-                            settings.PATIENT_ID_METADATA_KEY: '-'.join(job["sv_sample_id"][0].split('_')[1:3])
-                        }
-                    }
-                ),
-                job
-             )
+            RunCreator(
+                **{
+                    "name": "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "app": self.get_pipeline_id(),
+                    "inputs": job,
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        "cmoSampleIds": job["sv_sample_id"],
+                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["sv_sample_id"][0].split('_')[1:3]),
+                    },
+                }
+            )
             for i, job in enumerate(sample_inputs)
         ]
 
@@ -107,17 +96,14 @@ class AccessLegacySVOperator(Operator):
 
         :return: JSON format sample inputs
         """
-        with open(os.path.join(WORKDIR, 'input_template.json.jinja2')) as file:
+        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
             template = Template(file.read())
 
             tumor_sample_names = [tumor_sample_id]
-            tumor_path = tumor_bam.path.replace('file://', 'juno://')
-            if not tumor_path.startswith('juno://'):
-                tumor_path = 'juno://' + tumor_path
-            tumor_bams = [{
-                "class": "File",
-                "location": tumor_path
-            }]
+            tumor_path = tumor_bam.path.replace("file://", "juno://")
+            if not tumor_path.startswith("juno://"):
+                tumor_path = "juno://" + tumor_path
+            tumor_bams = [{"class": "File", "location": tumor_path}]
 
             normal_bam = create_cwl_file_object(normal_bam.path)
 
@@ -125,7 +111,7 @@ class AccessLegacySVOperator(Operator):
                 tumor_sample_id=tumor_sample_id,
                 tumor_sample_names=json.dumps(tumor_sample_names),
                 tumor_bams=json.dumps(tumor_bams),
-                normal_bam=json.dumps(normal_bam)
+                normal_bam=json.dumps(normal_bam),
             )
 
             sample_input = json.loads(input_file)

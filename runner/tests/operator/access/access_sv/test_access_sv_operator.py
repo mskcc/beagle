@@ -21,13 +21,13 @@ FIXTURES = [
 ]
 
 COMMON_FIXTURES = [
-    'runner/fixtures/runner.pipeline.json',
-    'runner/fixtures/runner.run.json',
-    'runner/fixtures/runner.operator_run.json',
-    'file_system/fixtures/file_system.filegroup.json',
-    'file_system/fixtures/file_system.filetype.json',
-    'file_system/fixtures/file_system.storage.json',
-    'beagle_etl/fixtures/beagle_etl.operator.json',
+    "runner/fixtures/runner.pipeline.json",
+    "runner/fixtures/runner.run.json",
+    "runner/fixtures/runner.operator_run.json",
+    "file_system/fixtures/file_system.filegroup.json",
+    "file_system/fixtures/file_system.filetype.json",
+    "file_system/fixtures/file_system.storage.json",
+    "beagle_etl/fixtures/beagle_etl.operator.json",
 ]
 
 
@@ -52,24 +52,26 @@ class TestAccessSVOperator(TestCase):
 
         pipeline_slug = "AccessLegacySVOperator"
         access_legacy_sv_model = Operator.objects.get(slug=pipeline_slug)
-        operator = AccessLegacySVOperator(access_legacy_sv_model, request_id=request_id, run_ids=['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        operator = AccessLegacySVOperator(
+            access_legacy_sv_model, request_id=request_id, run_ids=["bc23076e-f477-4578-943c-1fbf6f1fca44"]
+        )
 
         self.assertTrue(isinstance(operator, AccessLegacySVOperator))
         self.assertTrue(operator.request_id == request_id)
         self.assertTrue(operator._jobs == [])
-        self.assertEqual(operator.run_ids, ['bc23076e-f477-4578-943c-1fbf6f1fca44'])
+        self.assertEqual(operator.run_ids, ["bc23076e-f477-4578-943c-1fbf6f1fca44"])
         self.assertEqual(operator.get_pipeline_id(), "65419097-a2b8-4d57-a8ab-c4c4cddcbead")
 
         # Create and validate the input data
         input_data = operator.get_sample_inputs()
 
         required_input_fields = [
-            'sv_sample_id',
-            'sv_tumor_bams',
+            "sv_sample_id",
+            "sv_tumor_bams",
         ]
         self.assertEqual(len(input_data), 1)
         for inputs in input_data:
             for field in required_input_fields:
                 self.assertIn(field, inputs)
                 self.assertEqual(len(inputs[field]), 1)
-            self.assertIn('sv_normal_bam', inputs)
+            self.assertIn("sv_normal_bam", inputs)

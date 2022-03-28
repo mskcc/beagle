@@ -7,22 +7,22 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0004_auto_20190930_1703'),
+        ("beagle_etl", "0004_auto_20190930_1703"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='job',
-            name='type',
+            model_name="job",
+            name="type",
         ),
         migrations.AlterField(
-            model_name='job',
-            name='args',
+            model_name="job",
+            name="args",
             field=django.contrib.postgres.fields.jsonb.JSONField(null=True),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='message',
+            model_name="job",
+            name="message",
             field=django.contrib.postgres.fields.jsonb.JSONField(null=True),
         ),
     ]
