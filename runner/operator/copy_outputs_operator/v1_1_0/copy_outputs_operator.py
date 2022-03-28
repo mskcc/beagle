@@ -17,6 +17,7 @@ from .construct_copy_outputs import (
     construct_copy_outputs_input,
     generate_sample_pairing_and_mapping_files,
     get_output_directory_prefix,
+    get_project_prefix
 )
 
 
@@ -105,3 +106,22 @@ class CopyOutputsOperator(Operator):
             print("Registering temp file %s" % path)
             f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
             f.save()
+
+    def get_log_directory(self, run_id):
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        output_directory_prefix = get_project_prefix(self.run_ids)
+        output_directory = os.path.join(
+            pipeline.output_directory,
+            "argos",
+            output_directory_prefix,
+            pipeline.version,
+            jg_created_date,
+            'json',
+            pipeline.name,
+            pipeline.version,
+            run_id
+        )
+        return output_directory

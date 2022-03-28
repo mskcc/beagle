@@ -72,3 +72,6 @@ class Operator(object):
 
     def on_job_fail(self, run):
         pass
+
+    def get_log_directory(self):
+        pass

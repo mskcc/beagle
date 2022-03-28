@@ -39,10 +39,12 @@ logger = logging.getLogger(__name__)
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent)
+    log_directory = operator.get_log_directory()
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
-def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None):
+def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None,
+                                  log_directory=None):
     jg = None
     jgn = None
 
@@ -119,7 +121,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
-            create_run_task.delay(str(run.id), job.inputs, output_directory)
+            create_run_task.delay(str(run.id), job.inputs, output_directory, log_directory)
 
     if job_group_id:
         event = OperatorRunEvent(
@@ -381,12 +383,12 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
     retry_kwargs={"max_retries": 4},
     on_failure=on_failure_to_create_run_task,
 )
-def create_run_task(run_id, inputs, output_directory=None):
+def create_run_task(run_id, inputs, output_directory=None, log_directory=None):
     logger.info(format_log("Creating and validating run", obj_id=run_id))
     run = RunObjectFactory.from_definition(run_id, inputs)
     run.ready()
     run.to_db()
-    submit_job.delay(run_id, output_directory)
+    submit_job.delay(run_id, output_directory, log_directory)
     logger.info(format_log("Run is ready", obj=run))
 
 
@@ -425,6 +427,8 @@ def submit_job(run_id, output_directory=None, execution_id=None):
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = run1.dump_job(output_directory=output_directory)
+    logger.info(
+        format_log("Log output directory {path}".format(path=run.run_obj.job_group.log_output_directory), obj=run))
     logger.info(format_log("Job ready for submitting", obj=run))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
