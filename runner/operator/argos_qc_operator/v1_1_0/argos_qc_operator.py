@@ -10,7 +10,7 @@ from notifier.models import JobGroup
 from runner.models import Pipeline, Run
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .construct_argos_qc_outputs import construct_argos_qc_input, get_output_directory_prefix
+from .construct_argos_qc_outputs import construct_argos_qc_input, get_output_directory_prefix, get_project_prefix
 
 LOGGER = logging.getLogger(__name__)
 
@@ -77,3 +77,22 @@ class ArgosQcOperator(Operator):
             argos_qc_outputs_job_data["output_directory"] = output_directory
         argos_qc_outputs_job = [RunCreator(**argos_qc_outputs_job_data)]
         return argos_qc_outputs_job
+
+    def get_log_directory(self, run_id):
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        output_directory_prefix = get_project_prefix(self.run_ids)
+        output_directory = os.path.join(
+            pipeline.output_directory,
+            "argos",
+            output_directory_prefix,
+            pipeline.version,
+            jg_created_date,
+            'json',
+            pipeline.name,
+            pipeline.version,
+            run_id
+        )
+        return output_directory
