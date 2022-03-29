@@ -42,7 +42,7 @@ class AccessLegacyMSIOperator(Operator):
         # Todo: extract to common fn across 4 downstream operators
         if not file.file_name.endswith(".bam"):
             return False
-        t_n_timepoint = file.file_name.split("_")[3]
+        t_n_timepoint = file.file_name.split("-")[2]
         return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
