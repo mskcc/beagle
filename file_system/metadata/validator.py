@@ -80,10 +80,18 @@ class MetadataValidator(object):
 
     @staticmethod
     def clean(metadata):
-        metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.CMO_SAMPLE_CLASS_METADATA_KEY))
-        metadata[settings.RECIPE_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.RECIPE_METADATA_KEY))
-        metadata[settings.ONCOTREE_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.ONCOTREE_METADATA_KEY))
-        metadata[settings.SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(metadata.pop(settings.SAMPLE_CLASS_METADATA_KEY))
+        metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.CMO_SAMPLE_CLASS_METADATA_KEY)
+        )
+        metadata[settings.RECIPE_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.RECIPE_METADATA_KEY)
+        )
+        metadata[settings.ONCOTREE_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.ONCOTREE_METADATA_KEY)
+        )
+        metadata[settings.SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.SAMPLE_CLASS_METADATA_KEY)
+        )
         metadata["preservation"] = MetadataValidator.clean_value(metadata.pop("preservation"))
         metadata["sex"] = MetadataValidator.clean_value(metadata.pop("sex"))
         metadata["tissueLocation"] = MetadataValidator.clean_value(metadata.pop("tissueLocation"))

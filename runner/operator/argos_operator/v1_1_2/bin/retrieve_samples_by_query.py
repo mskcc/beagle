@@ -79,8 +79,10 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if bset_data.lower() in bait_set.lower():
             descriptor = bset_data
 
-    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor})
+    if descriptor:  # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(
+            queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor}
+        )
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
@@ -234,7 +236,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
     metadata["flowCellId"] = "PN_FCID"
     metadata["tumorOrNormal"] = "Normal"
-    metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
+    metadata[settings.PATIENT_ID_METADATA_KEY] = "PN_PATIENT_ID"
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""

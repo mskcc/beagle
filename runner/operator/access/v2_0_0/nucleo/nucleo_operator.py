@@ -32,7 +32,7 @@ METADATA_OUTPUT_FIELDS = [
     "captureConcentrationNm",
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
     settings.SAMPLE_ID_METADATA_KEY,
-    settings.REQUEST_ID_METADATA_KEY
+    settings.REQUEST_ID_METADATA_KEY,
 ]
 
 
@@ -75,7 +75,7 @@ def construct_sample_inputs(samples, request_id):
                 "libraryVolume": calc_avg(sample_group, "libraryVolume"),
                 "libraryConcentrationNgul": calc_avg(sample_group, "libraryConcentrationNgul"),
                 "captureConcentrationNm": calc_avg(sample_group, "captureConcentrationNm"),
-                settings.REQUEST_ID_METADATA_KEY: request_id
+                settings.REQUEST_ID_METADATA_KEY: request_id,
             }
         )
 
@@ -115,7 +115,9 @@ class AccessNucleoOperator(Operator):
     """
 
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
 
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files

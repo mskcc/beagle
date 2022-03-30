@@ -175,6 +175,7 @@ class AssayViewSet(GenericAPIView):
         error_message_list = ["Assay list is empty"]
         return Response({"errors": error_message_list}, status=status.HTTP_404_NOT_FOUND)
 
+
 ## TODO: Deprecated
 class RequestIdLimsPullViewSet(GenericAPIView):
     serializer_class = RequestIdLimsPullSerializer

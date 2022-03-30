@@ -440,10 +440,14 @@ class FullSampleSerializer(serializers.ModelSerializer):
         return RunSerializerPartial(obj.run_set.order_by("-created_date").all(), many=True).data
 
     def get_tumor_or_normal(self, obj):
-        return FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata='tumorOrNormal').first()
+        return FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata="tumorOrNormal"
+        ).first()
 
     def get_patient_id(self, obj):
-        return FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata='patientId').first()
+        return FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata="patientId"
+        ).first()
 
     class Meta:
         model = Sample

@@ -32,38 +32,38 @@ def setup_task_logger(logger, *args, **kwargs):
 def at_start(sender, **k):
     with sender.app.connection() as conn:
         print(conn)
-        sender.app.send_task('beagle_etl.tasks.fetch_request_nats', connection=conn)
-        sender.app.send_task('beagle_etl.tasks.fetch_request_update_nats', connection=conn)
-        sender.app.send_task('beagle_etl.tasks.fetch_sample_update_nats', connection=conn)
+        sender.app.send_task("beagle_etl.tasks.fetch_request_nats", connection=conn)
+        sender.app.send_task("beagle_etl.tasks.fetch_request_update_nats", connection=conn)
+        sender.app.send_task("beagle_etl.tasks.fetch_sample_update_nats", connection=conn)
 
 
 app.conf.task_routes = {
     # 'beagle_etl.tasks.scheduler': {'queue': settings.BEAGLE_JOB_SCHEDULER_QUEUE},
-    'runner.tasks.process_triggers': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.create_run_task': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.abort_job_task': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.submit_job': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.create_jobs_from_request': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.create_jobs_from_chaining': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.add_pipeline_to_cache': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.running_job': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.abort_job': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.complete_job': {'queue': settings.BEAGLE_RUNNER_QUEUE},
-    'runner.tasks.fail_job': {'queue': settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.process_triggers": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_run_task": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.abort_job_task": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.submit_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_jobs_from_request": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_jobs_from_chaining": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.add_pipeline_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.running_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.abort_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.complete_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     # 'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'notifier.tasks.send_notification': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'file_system.tasks.populate_job_group_notifier_metadata': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.tasks.job_processor': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.tasks.fetch_request_nats': {'queue': settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
-    'beagle_etl.tasks.fetch_request_update_nats': {'queue': settings.BEAGLE_NATS_UPDATE_REQUEST_QUEUE},
-    'beagle_etl.tasks.fetch_sample_update_nats': {'queue': settings.BEAGLE_NATS_UPDATE_SAMPLE_QUEUE},
-    'beagle_etl.jobs.metadb_jobs.new_request': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.jobs.metadb_jobs.update_request_job': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
-    'beagle_etl.jobs.metadb_jobs.update_sample_job': {'queue': settings.BEAGLE_DEFAULT_QUEUE}
+    "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
+    "beagle_etl.tasks.fetch_request_update_nats": {"queue": settings.BEAGLE_NATS_UPDATE_REQUEST_QUEUE},
+    "beagle_etl.tasks.fetch_sample_update_nats": {"queue": settings.BEAGLE_NATS_UPDATE_SAMPLE_QUEUE},
+    "beagle_etl.jobs.metadb_jobs.new_request": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.jobs.metadb_jobs.update_request_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.jobs.metadb_jobs.update_sample_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
 }
 
 app.conf.beat_schedule = {
-    'check_status': {
+    "check_status": {
         "task": "runner.tasks.check_jobs_status",
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},

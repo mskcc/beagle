@@ -7,6 +7,7 @@ from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
+
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -27,7 +28,7 @@ METADATA_OUTPUT_FIELDS = [
     "libraryConcentrationNgul",
     "captureConcentrationNm",
     settings.SAMPLE_ID_METADATA_KEY,
-    settings.REQUEST_ID_METADATA_KEY
+    settings.REQUEST_ID_METADATA_KEY,
 ]
 
 
@@ -68,7 +69,9 @@ def construct_inputs(samples, request_id):
 
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
@@ -84,7 +87,10 @@ class AccessLegacyFastqMergeOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
                     "inputs": job,
-                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.SAMPLE_NAME_METADATA_KEY: metadata[settings.SAMPLE_NAME_METADATA_KEY]},
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        settings.SAMPLE_NAME_METADATA_KEY: metadata[settings.SAMPLE_NAME_METADATA_KEY],
+                    },
                 }
             )
             for i, (job, metadata) in enumerate(inputs)

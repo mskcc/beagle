@@ -137,7 +137,9 @@ def build_sample(data, ignore_sample_formatting=False):
         tumor_type = meta["tumorOrNormal"]
         specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
         species = meta["species"]
-        cmo_sample_name = format_sample_name(meta[settings.CMO_SAMPLE_NAME_METADATA_KEY], specimen_type, ignore_sample_formatting)
+        cmo_sample_name = format_sample_name(
+            meta[settings.CMO_SAMPLE_NAME_METADATA_KEY], specimen_type, ignore_sample_formatting
+        )
         if cmo_sample_name == "sampleNameMalformed":
             LOGGER.error("sampleName for %s is malformed", sample_id)
         flowcell_id = meta["flowCellId"]

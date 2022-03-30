@@ -279,7 +279,9 @@ def get_request_pi(run_id_list):
         run_request_id = argos_run.tags[settings.REQUEST_ID_METADATA_KEY]
         all_request_ids.add(run_request_id)
     for request_id in all_request_ids:
-        investigator_emails = FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__investigatorEmail', flat=True)
+        investigator_emails = FileRepository.filter(
+            queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}
+        ).values_list("metadata__investigatorEmail", flat=True)
         request_pis = request_pis.union(set(investigator_emails))
     request_pis_final = list()
     for request_pi in request_pis:
@@ -325,7 +327,11 @@ def get_assay_coverage(assay, helix_filters_resources):
 def get_oncotree_codes(request_id):
     oncotree_dh = OncotreeDataHandler()
     files = FileRepository.all()
-    oncotree_codes_tmp = set(FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata__oncotreeCode', flat=True))
+    oncotree_codes_tmp = set(
+        FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list(
+            "metadata__oncotreeCode", flat=True
+        )
+    )
     oncotree_codes = list()
     for val in oncotree_codes_tmp:
         if val:

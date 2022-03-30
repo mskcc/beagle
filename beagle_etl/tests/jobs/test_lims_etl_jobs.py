@@ -73,20 +73,20 @@ class TestFetchSamples(TestCase):
     #         print("%s %s" % (job.run, JobStatus(job.status).name))
     #         self.assertTrue(job.status == JobStatus.COMPLETED)
 
-        # check for updated files in the database
-        # files = File.objects.all()
-        # files_metadata = FileMetadata.objects.all()
-        # self.assertTrue(len(files) == 22)
-        # self.assertTrue(len(files_metadata) == 22)
+    # check for updated files in the database
+    # files = File.objects.all()
+    # files_metadata = FileMetadata.objects.all()
+    # self.assertTrue(len(files) == 22)
+    # self.assertTrue(len(files_metadata) == 22)
 
-        # import_files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
-        # import_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in import_files])
-        # pooled_normal_files = File.objects.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
-        # pooled_normal_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in pooled_normal_files])
-        # self.assertTrue(len(import_files) == 10)
-        # self.assertTrue(len(import_files_metadata) == 10)
-        # self.assertTrue(len(pooled_normal_files) == 12)
-        # self.assertTrue(len(pooled_normal_files_metadata) == 12)
+    # import_files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
+    # import_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in import_files])
+    # pooled_normal_files = File.objects.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    # pooled_normal_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in pooled_normal_files])
+    # self.assertTrue(len(import_files) == 10)
+    # self.assertTrue(len(import_files_metadata) == 10)
+    # self.assertTrue(len(pooled_normal_files) == 12)
+    # self.assertTrue(len(pooled_normal_files_metadata) == 12)
 
 
 class TestCreatePooledNormal(TestCase):
@@ -127,9 +127,9 @@ class TestCreatePooledNormal(TestCase):
 
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FFPE')
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'JAX_0397')
+        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FFPE")
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata["runId"] == "JAX_0397")
         # TODO: add more metadata fields?
 
     def test_create_pooled_normal2(self):
@@ -140,9 +140,9 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata['preservation'] == 'FROZEN')
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == 'IMPACT468')
-        self.assertTrue(imported_file_metadata.metadata['runId'] == 'PITT_0439')
+        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FROZEN")
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata["runId"] == "PITT_0439")
 
     def test_create_pooled_normal_recipe(self):
         """
@@ -152,7 +152,7 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == 'HemePACT_v4')
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "HemePACT_v4")
 
     def test_create_pooled_normal_disabled_recipe(self):
         """
@@ -324,7 +324,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT36",
                         "barcodeIndex": "CCAGTTCA",
-                        "libraryIgoId": "igoId_002_1",
+                        "libraryId": "igoId_002_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 2.2051049976353,
                         "dnaInputNg": None,
@@ -450,17 +450,15 @@ class TestImportSample(APITestCase):
                                 "flowCellId": "HHJ5HBBXX",
                                 "readLength": "",
                                 "runDate": "2017-04-21",
-                                "flowCellLanes": [
-                                    8
-                                ],
+                                "flowCellLanes": [8],
                                 "fastqs": [
                                     "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz"
-                                ]
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
+                                ],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.data_conflict_fastq = [
@@ -587,61 +585,62 @@ class TestImportSample(APITestCase):
     #     ]).count()
     #     self.assertEqual(count_files, 1)
 
-    @patch('runner.tasks.create_jobs_from_request.delay')
+    @patch("runner.tasks.create_jobs_from_request.delay")
     # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
     def test_request_callback(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        settings.REQUEST_ID_METADATA_KEY: 'test1',
-                                                        'recipe': 'TestAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        operator1 = Operator.objects.create(slug="Operator1",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        request_callback('test1')
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "TestAssay",
+                "labHeadEmail": "test@email.com",
+            },
+        )
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
+        request_callback("test1", "TestAssay", [], job_group, job_group_notifier)
 
-        mock_create_jobs_from_request.assert_called_once_with('test1', operator1.id, None)
+        mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id))
 
-    @patch('runner.tasks.create_jobs_from_request.delay')
+    @patch("runner.tasks.create_jobs_from_request.delay")
     # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
     def test_request_callback_two_operators(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        settings.REQUEST_ID_METADATA_KEY: 'test1',
-                                                        'recipe': 'TestAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        operator1 = Operator.objects.create(slug="Operator1",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        operator2 = Operator.objects.create(slug="Operator2",
-                                            class_name="Operator",
-                                            recipes=['TestAssay'],
-                                            active=True)
-        request_callback('test1')
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "TestAssay",
+                "labHeadEmail": "test@email.com",
+            },
+        )
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
+        operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
+        request_callback("test1", "TestAssay", [], job_group=job_group, job_group_notifier=job_group_notifier)
 
-        calls = [call("test1", operator1.id, None), call("test1", operator2.id, None)]
+        calls = [call("test1", operator1.id, str(job_group.id)), call("test1", operator2.id, str(job_group.id))]
 
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
-    @patch('notifier.tasks.send_notification.delay')
+    @patch("notifier.tasks.send_notification.delay")
     # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'UnknownAssay'})
     def test_request_callback_unknown_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
@@ -653,14 +652,16 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        settings.REQUEST_ID_METADATA_KEY: 'test1',
-                                                        'recipe': 'UnknownAssay',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "UnknownAssay",
+                "labHeadEmail": "test@email.com",
+            },
+        )
+        request_callback("test1", "UnknownAssay", [], job_group, job_group_notifier)
 
         calls = [
             call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
@@ -670,7 +671,7 @@ class TestImportSample(APITestCase):
 
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
-    @patch('notifier.tasks.send_notification.delay')
+    @patch("notifier.tasks.send_notification.delay")
     # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'DisabledAssay1'})
     def test_request_callback_disabled_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
@@ -682,14 +683,16 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(file=file_conflict,
-                                                    version=1,
-                                                    metadata={
-                                                        settings.REQUEST_ID_METADATA_KEY: 'test1',
-                                                        'recipe': 'DisabledAssay1',
-                                                        'labHeadEmail': 'test@email.com'
-                                                    })
-        request_callback('test1', str(job_group.id), str(job_group_notifier.id))
+        file_metadata = FileMetadata.objects.create(
+            file=file_conflict,
+            version=1,
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "DisabledAssay1",
+                "labHeadEmail": "test@email.com",
+            },
+        )
+        request_callback("test1", "DisabledAssay1", [], job_group, job_group_notifier)
 
         calls = [
             call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),

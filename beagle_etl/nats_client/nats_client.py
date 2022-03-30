@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 async def run(loop, queue):
-
     async def error_cb(e):
         logger.error("Error:", e)
 
@@ -31,7 +30,7 @@ async def run(loop, queue):
         logger.info("Disconnecting...")
         loop.create_task(nc.close())
 
-    for sig in ('SIGINT', 'SIGTERM'):
+    for sig in ("SIGINT", "SIGTERM"):
         loop.add_signal_handler(getattr(signal, sig), signal_handler)
 
     async def subscribe_handler(msg):
@@ -40,21 +39,23 @@ async def run(loop, queue):
         data = msg.data.decode()
         request_data = json.loads(data)
 
-        logger.info("Received a message on '{subject} {reply}': {data}".format(
-          subject=subject, reply=reply, data=data))
+        logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
         if queue == settings.METADB_NATS_NEW_REQUEST:
             logger.info("Sending request: %s to new_request function" % request_data[settings.REQUEST_ID_METADATA_KEY])
             new_request.delay(request_data)
         elif queue == settings.METADB_NATS_REQUEST_UPDATE:
-            logger.info("Sending request: %s to update_request_job function" % request_data[settings.REQUEST_ID_METADATA_KEY])
+            logger.info(
+                "Sending request: %s to update_request_job function" % request_data[settings.REQUEST_ID_METADATA_KEY]
+            )
             update_request_job.delay(request_data)
         elif queue == settings.METADB_NATS_SAMPLE_UPDATE:
-            logger.info("Sending request: %s to update_sample_job function" % request_data[settings.REQUEST_ID_METADATA_KEY])
+            logger.info(
+                "Sending request: %s to update_sample_job function" % request_data[settings.REQUEST_ID_METADATA_KEY]
+            )
             update_sample_job.delay(request_data)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
-    ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE,
-                            keyfile=settings.NATS_SSL_KEYFILE)
+    ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
 
     options = {
         "error_cb": error_cb,
@@ -63,15 +64,16 @@ async def run(loop, queue):
         "servers": settings.METADB_NATS_URL,
         "user": settings.METADB_USERNAME,
         "password": settings.METADB_PASSWORD,
-        "tls": ssl_ctx
+        "tls": ssl_ctx,
     }
 
     nc = await nats.connect(**options)
 
     try:
         js = nc.jetstream()
-        sub = await js.subscribe(queue, durable="durable",
-                                 config={'filter_subject': settings.METADB_NATS_FILTER_SUBJECT})
+        sub = await js.subscribe(
+            queue, durable="durable", config={"filter_subject": settings.METADB_NATS_FILTER_SUBJECT}
+        )
         logger.info(f"Connected to NATS at {nc.connected_url}...")
     except Exception as e:
         logger.error(e)

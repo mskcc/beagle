@@ -43,5 +43,9 @@ class ETLJobsLinksEvent(Event):
         etl_jobs = ""
         for j in self.etl_jobs:
             etl_jobs += "| %s | %s | %s | %s |\n" % (
-                j['type'], j['sample'], self.translate_status(code=j['code'], message=j['status']), j['message'])
+                j["type"],
+                j["sample"],
+                self.translate_status(code=j["code"], message=j["status"]),
+                j["message"],
+            )
         return ETL_COMMENT_MESSAGE_TEMPLATE.format(etl_jobs=etl_jobs)

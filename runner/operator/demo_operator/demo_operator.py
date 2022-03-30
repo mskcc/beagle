@@ -18,10 +18,7 @@ class DemoOperator(Operator):
         """
         file = FileMetadata.objects.filter(metadata__igoRequestId=self.request_id).first().file
         data = {
-            'input_file': {
-                'class': 'File',
-                'location': 'juno://' + file.path # NOTE: hard coded juno location here
-            }
+            "input_file": {"class": "File", "location": "juno://" + file.path}  # NOTE: hard coded juno location here
         }
         return data
 

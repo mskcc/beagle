@@ -83,7 +83,7 @@ class AccessLegacySVOperator(Operator):
                     "tags": {
                         settings.REQUEST_ID_METADATA_KEY: self.request_id,
                         "cmoSampleIds": job["sv_sample_id"],
-                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["sv_sample_id"][0].split('_')[1:3]),
+                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["sv_sample_id"][0].split("_")[1:3]),
                     },
                 }
             )

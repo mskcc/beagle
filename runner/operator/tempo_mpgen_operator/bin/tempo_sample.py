@@ -1,6 +1,7 @@
 from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
 from django.conf import settings
 
+
 class TempoSample(Sample):
     def __init__(self, sample_name, file_list):
         self.sample_name = sample_name
@@ -80,8 +81,12 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = [settings.PATIENT_ID_METADATA_KEY, settings.SAMPLE_CLASS_METADATA_KEY,
-                           settings.CMO_SAMPLE_CLASS_METADATA_KEY, settings.CMO_SAMPLE_TAG_METADATA_KEY]
+        fields_to_check = [
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+        ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -147,7 +152,7 @@ class TempoSample(Sample):
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
             settings.CMO_SAMPLE_CLASS_METADATA_KEY,
-            settings.CMO_SAMPLE_TAG_METADATA_KEY
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
         ]
         s = ""
         metadata = self.dedupe_metadata_values()

@@ -242,7 +242,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
     metadata["flowCellId"] = "PN_FCID"
     metadata["tumorOrNormal"] = "Normal"
-    metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
+    metadata[settings.PATIENT_ID_METADATA_KEY] = "PN_PATIENT_ID"
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
@@ -282,7 +282,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
-    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata['sampleName']
+    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata["sampleName"]
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata["sequencingCenter"] = sequencingCenter
     metadata["platform"] = platform

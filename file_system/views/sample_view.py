@@ -33,7 +33,11 @@ class SampleFullViewSet(mixins.ListModelMixin, GenericViewSet):
         request_id = request.query_params.get("project_id")
         if not request_id:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        sample_ids = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).all())
+        sample_ids = list(
+            FileRepository.filter(
+                metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+            ).all()
+        )
         samples = Sample.objects.filter(sample_id__in=sample_ids)
         response = FullSampleSerializer(samples, many=True)
         return Response(response.data, status=status.HTTP_200_OK)

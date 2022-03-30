@@ -22,12 +22,18 @@ class ArgosOperator(Operator):
 
         if self.request_id:
             files = FileRepository.filter(
-                queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}, filter_redact=True
+                queryset=self.files,
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True},
+                filter_redact=True,
             )
 
             cnt_tumors = FileRepository.filter(
                 queryset=self.files,
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+                metadata={
+                    settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                    "tumorOrNormal": "Tumor",
+                    "igocomplete": True,
+                },
                 filter_redact=True,
             ).count()
         elif self.pairing:
@@ -250,7 +256,9 @@ class ArgosOperator(Operator):
         data_files = FileRepository.filter(queryset=self.files, q=legacy_fg)
         sample_id = sample_data["sample_id"]
         sample = FileRepository.filter(
-            queryset=data_files, metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True}, filter_redact=True
+            queryset=data_files,
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True},
+            filter_redact=True,
         )
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:

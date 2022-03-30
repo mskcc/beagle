@@ -102,7 +102,7 @@ class AccessLegacySNVOperator(Operator):
                 File.objects.filter(
                     file_name__contains=NORMAL_SAMPLE_SEARCH,
                     file_name__endswith=UNFILTERED_BAM_SEARCH,
-                    port__run__tags__igoRequestId__startswith=self.request_id.split("_")[0]
+                    port__run__tags__igoRequestId__startswith=self.request_id.split("_")[0],
                 )
                 .distinct("file_name")
                 .order_by("file_name", "-created_date")
@@ -292,7 +292,9 @@ class AccessLegacySNVOperator(Operator):
         # Get capture ID
         capture_id = None
         sample_ids = []
-        sample_fastq = FileRepository.filter(file_type="fastq", metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id})
+        sample_fastq = FileRepository.filter(
+            file_type="fastq", metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id}
+        )
         if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata["captureName"]
 

@@ -10,8 +10,12 @@ from .bin.make_sample import build_sample
 
 class TempoOperator(Operator):
     def get_jobs(self):
-        files = self.files.filter(**{"filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY):self.request_id,
-                                  "filemetadata__metadata__igocomplete":True}).all()
+        files = self.files.filter(
+            **{
+                "filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY): self.request_id,
+                "filemetadata__metadata__igocomplete": True,
+            }
+        ).all()
         tempo_jobs = list()
 
         data = list()
