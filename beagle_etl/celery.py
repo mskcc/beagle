@@ -51,16 +51,17 @@ app.conf.task_routes = {
 }
 
 app.conf.beat_schedule = {
-    "fetch_requests_from_lims": {
-        "task": "beagle_etl.tasks.fetch_requests_lims",
-        "schedule": crontab(hour="*", minute=5),
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    },
-    "check_missing_requests": {
-        "task": "beagle_etl.tasks.check_missing_requests",
-        "schedule": 22800.0,
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    },
+    # Stop pulling data from LIMS
+    #"fetch_requests_from_lims": {
+    #    "task": "beagle_etl.tasks.fetch_requests_lims",
+    #    "schedule": crontab(hour="*", minute=5),
+    #    "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    #},
+    #"check_missing_requests": {
+    #    "task": "beagle_etl.tasks.check_missing_requests",
+    #    "schedule": 22800.0,
+    #    "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    #},
     "scheduler_tick": {
         "task": "beagle_etl.tasks.scheduler",
         "schedule": 15.0,
