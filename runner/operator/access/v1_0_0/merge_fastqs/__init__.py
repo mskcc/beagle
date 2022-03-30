@@ -84,7 +84,7 @@ class AccessLegacyFastqMergeOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
                     "inputs": job,
-                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.SAMPLE_ID_METADATA_KEY: metadata[settings.SAMPLE_ID_METADATA_KEY]},
+                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.SAMPLE_NAME_METADATA_KEY: metadata[settings.SAMPLE_NAME_METADATA_KEY]},
                 }
             )
             for i, (job, metadata) in enumerate(inputs)
