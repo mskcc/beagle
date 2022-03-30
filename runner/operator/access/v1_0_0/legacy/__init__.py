@@ -163,7 +163,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the metadata: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta[settings.SAMPLE_ID_METADATA_KEY]
+                    meta[settings.SAMPLE_ID_METADATA_KEY],
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -173,7 +173,11 @@ def construct_sample_inputs(samples, request_id, group_id):
             cmo_sample_names.append(meta[settings.SAMPLE_NAME_METADATA_KEY])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
-            patient_ids.append(meta[settings.PATIENT_ID_METADATA_KEY] + "_" + str(patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]]))
+            patient_ids.append(
+                meta[settings.PATIENT_ID_METADATA_KEY]
+                + "_"
+                + str(patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]])
+            )
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
             r1_fastq = sample_pair[0] if "_R1_.fastq.gz" in sample_pair[0]["path"] else sample_pair[1]

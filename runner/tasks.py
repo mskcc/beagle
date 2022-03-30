@@ -236,10 +236,18 @@ def generate_description(job_group, job_group_notifier, request):
         other_contact_emails = data["otherContactEmails"] if "otherContactEmails" in data else ""
 
         num_samples = len(files.order_by().values("metadata__ciTag").annotate(n=Count("pk")))
-        num_tumors = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Tumor'}).order_by().values(
-            'metadata__ciTag').annotate(n=Count("pk")))
-        num_normals = len(FileRepository.filter(queryset=files, metadata={'tumorOrNormal': 'Normal'}).order_by().values(
-            'metadata__ciTag').annotate(n=Count("pk")))
+        num_tumors = len(
+            FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Tumor"})
+            .order_by()
+            .values("metadata__ciTag")
+            .annotate(n=Count("pk"))
+        )
+        num_normals = len(
+            FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Normal"})
+            .order_by()
+            .values("metadata__ciTag")
+            .annotate(n=Count("pk"))
+        )
         operator_start_event = OperatorStartEvent(
             job_group_notifier,
             job_group,
@@ -577,7 +585,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
 
     event = RunFinishedEvent(
         job_group_notifier_id,
-        run.tags.get(settings.REQUEST_ID_METADATA_KEY, 'UNKNOWN REQUEST'),
+        run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
         str(run.run_id),
         pipeline_name,
         pipeline_link,

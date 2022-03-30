@@ -111,7 +111,12 @@ class RunAdmin(admin.ModelAdmin):
         StatusFilter,
         AppFilter,
     )
-    search_fields = ('tags__{sample_id_key}'.format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY), 'tags__igoRequestId', 'tags__cmoSampleIds__contains', 'operator_run__id')
+    search_fields = (
+        "tags__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY),
+        "tags__igoRequestId",
+        "tags__cmoSampleIds__contains",
+        "operator_run__id",
+    )
     readonly_fields = (
         "samples",
         "job_group",

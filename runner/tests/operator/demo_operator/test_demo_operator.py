@@ -121,8 +121,7 @@ class TestDemoOperator(TestCase):
             file_name=os.path.basename(self.tmp_path), path=self.tmp_path, file_group=self.filegroup
         )
         self.fileMetadata1 = FileMetadata.objects.create(
-            file=self.file1,
-            metadata={settings.REQUEST_ID_METADATA_KEY: "1"}
+            file=self.file1, metadata={settings.REQUEST_ID_METADATA_KEY: "1"}
         )
 
         # add a second file to the db
@@ -133,8 +132,7 @@ class TestDemoOperator(TestCase):
             file_name=os.path.basename(self.tmp_path2), path=self.tmp_path2, file_group=self.filegroup
         )
         self.fileMetadata2 = FileMetadata.objects.create(
-            file=self.file2,
-            metadata={settings.REQUEST_ID_METADATA_KEY: '2'}
+            file=self.file2, metadata={settings.REQUEST_ID_METADATA_KEY: "2"}
         )
 
         # Pipeline entry for the Operator
@@ -254,7 +252,9 @@ class TestDemoOperator(TestCase):
 
             # make db entries
             file_instance = File.objects.create(file_name=os.path.basename(path), path=path, file_group=self.filegroup)
-            filemetadata_instance = FileMetadata.objects.create(file=file_instance, metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
+            filemetadata_instance = FileMetadata.objects.create(
+                file=file_instance, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}
+            )
 
             # check the number of files present, there should be two from setUp and a third from this test
             self.assertEqual(len(File.objects.all()), 3)

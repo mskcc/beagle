@@ -214,9 +214,13 @@ class JobObject(object):
         )
 
         number_of_tumors = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args['request_id'], 'tumorOrNormal': 'Tumor'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args["request_id"], "tumorOrNormal": "Tumor"},
+            values_metadata=settings.SAMPLE_ID_METADATA_KEY,
+        ).count()
         number_of_normals = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args['request_id'], 'tumorOrNormal': 'Normal'}, values_metadata=settings.SAMPLE_ID_METADATA_KEY).count()
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args["request_id"], "tumorOrNormal": "Normal"},
+            values_metadata=settings.SAMPLE_ID_METADATA_KEY,
+        ).count()
 
         data_analyst_email = ""
         data_analyst_name = ""

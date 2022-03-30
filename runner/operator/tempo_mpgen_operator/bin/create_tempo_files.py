@@ -58,11 +58,11 @@ def strip_values(data):
 
 def create_tempo_tracker_example(data):
     tracker = "CMO_Sample_ID\tMatching_normal\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"
-    key_order = [ "investigator_sample_id", "external_sample_id", "sample_class" ]
-    key_order += [ "bait_set", "request_id" ]
-    extra_keys = [ "tumor_type", "species", "genePanel", "specimen_type", "sample_id" ]
-    extra_keys += [ "investigator_name", "investigator_email", "pi", "pi_email", "patient_id", "preservation" ]
-    extra_keys += [ "data_analyst", "data_analyst_email" ]
+    key_order = ["investigator_sample_id", "external_sample_id", "sample_class"]
+    key_order += ["bait_set", "request_id"]
+    extra_keys = ["tumor_type", "species", "genePanel", "specimen_type", "sample_id"]
+    extra_keys += ["investigator_name", "investigator_email", "pi", "pi_email", "patient_id", "preservation"]
+    extra_keys += ["data_analyst", "data_analyst_email"]
     for key in extra_keys:
         tracker += key + "\t"
     tracker = tracker.strip() + "\n"

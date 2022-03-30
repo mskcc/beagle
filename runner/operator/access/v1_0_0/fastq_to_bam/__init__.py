@@ -40,7 +40,9 @@ def construct_sample_inputs(samples):
 
 class AccessFastqToBamOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]

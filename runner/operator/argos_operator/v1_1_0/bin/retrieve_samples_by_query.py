@@ -63,8 +63,10 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if bset_data.lower() in bait_set.lower():
             descriptor = bset_data
 
-    if descriptor: # From returned pooled normals, we found the bait set/recipe we're looking for
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor})
+    if descriptor:  # From returned pooled normals, we found the bait set/recipe we're looking for
+        pooled_normals = FileRepository.filter(
+            queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor}
+        )
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
@@ -180,7 +182,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
     metadata["flowCellId"] = "PN_FCID"
     metadata["tumorOrNormal"] = "Normal"
-    metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
+    metadata[settings.PATIENT_ID_METADATA_KEY] = "PN_PATIENT_ID"
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
@@ -220,7 +222,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata = init_metadata()
     metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
-    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata['sampleName']
+    metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata["sampleName"]
     metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
     metadata["sequencingCenter"] = sequencingCenter
     metadata["platform"] = platform
@@ -233,14 +235,14 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_operator.bin
-    metadata['barcodeIndex'] = 'DMP_BARCODEIDX'
-    metadata['flowCellId'] = 'DMP_FCID'
-    metadata['tumorOrNormal'] = tumor_type
+    metadata["barcodeIndex"] = "DMP_BARCODEIDX"
+    metadata["flowCellId"] = "DMP_FCID"
+    metadata["tumorOrNormal"] = tumor_type
     metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
-    metadata['runMode'] = ""
+    metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
-    sample['metadata'] = metadata
+    sample["metadata"] = metadata
     return sample
 
 

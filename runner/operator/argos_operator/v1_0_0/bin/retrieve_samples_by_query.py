@@ -152,7 +152,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
             metadata["flowCellId"] = "PN_FCID"
             metadata["tumorOrNormal"] = "Normal"
-            metadata[settings.PATIENT_ID_METADATA_KEY] = 'PN_PATIENT_ID'
+            metadata[settings.PATIENT_ID_METADATA_KEY] = "PN_PATIENT_ID"
             metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
             sample["metadata"] = metadata
             sample_files.append(sample)

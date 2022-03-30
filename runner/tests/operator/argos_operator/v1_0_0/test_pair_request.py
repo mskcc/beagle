@@ -782,7 +782,7 @@ class TestPairRequest(TestCase):
             metadata={
                 "runId": "PITT_0439",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
-                'bait_set': 'IMPACT468_BAITS',
+                "bait_set": "IMPACT468_BAITS",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
                 "preservation": "Frozen",
@@ -799,7 +799,7 @@ class TestPairRequest(TestCase):
             metadata={
                 "runId": "PITT_0439",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
-                'bait_set': 'IMPACT468_BAITS',
+                "bait_set": "IMPACT468_BAITS",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
                 "preservation": "Frozen",

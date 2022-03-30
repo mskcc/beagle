@@ -49,27 +49,35 @@ def format_patient_id(patient_id):
 def generate_sample_data_content(request_ids):
     # TODO: Move this method to some better place
     result = "SAMPLE_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\n"
-    ret_str = 'metadata__{sample_id_key}'.format(
-        sample_id_key=settings.SAMPLE_ID_METADATA_KEY)
+    ret_str = "metadata__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY)
     if isinstance(request_ids, str):
         request_ids = [request_ids]
     for r in request_ids:
-        samples = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: r}).order_by(ret_str).distinct(ret_str).all()
+        samples = (
+            FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: r})
+            .order_by(ret_str)
+            .distinct(ret_str)
+            .all()
+        )
         for sample in samples:
             metadata = sample.metadata
-            result += '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                metadata.get(settings.CMO_SAMPLE_TAG_METADATA_KEY, format_sample_name(
-                    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY])),
+            result += "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(
+                metadata.get(
+                    settings.CMO_SAMPLE_TAG_METADATA_KEY,
+                    format_sample_name(
+                        metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY]
+                    ),
+                ),
                 metadata[settings.PATIENT_ID_METADATA_KEY],
-                metadata['investigatorSampleId'],
+                metadata["investigatorSampleId"],
                 metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY],
                 metadata[settings.RECIPE_METADATA_KEY],
                 metadata[settings.ONCOTREE_METADATA_KEY],
                 metadata[settings.SAMPLE_CLASS_METADATA_KEY],
-                metadata['preservation'],
-                metadata['sex'],
-                metadata['tissueLocation'],
-                metadata[settings.SAMPLE_ID_METADATA_KEY]
+                metadata["preservation"],
+                metadata["sex"],
+                metadata["tissueLocation"],
+                metadata[settings.SAMPLE_ID_METADATA_KEY],
             )
     return result
 
