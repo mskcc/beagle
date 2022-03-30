@@ -73,7 +73,7 @@ class Pipeline(BaseModel):
         )
 
     def __str__(self):
-        return u"{}".format(self.name)
+        return "{}".format(self.name)
 
 
 class OperatorTrigger(BaseModel):
@@ -86,15 +86,15 @@ class OperatorTrigger(BaseModel):
 
     def __str__(self):
         if self.run_type == TriggerRunType.AGGREGATE:
-            return u"{} -> {} when {}".format(
+            return "{} -> {} when {}".format(
                 self.from_operator,
                 self.to_operator,
                 TriggerAggregateConditionType(self.aggregate_condition).name.title(),
             )
         elif self.run_type == TriggerRunType.INDIVIDUAL:
-            return u"{} -> {} on each run".format(self.from_operator, self.to_operator)
+            return "{} -> {} on each run".format(self.from_operator, self.to_operator)
         else:
-            return u"{} -> {}".format(self.from_operator, self.to_operator)
+            return "{} -> {}".format(self.from_operator, self.to_operator)
 
 
 class OperatorRun(BaseModel):
