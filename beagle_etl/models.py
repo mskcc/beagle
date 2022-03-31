@@ -64,7 +64,7 @@ class Operator(models.Model):
     notifier = models.ForeignKey(Notifier, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return u"{}".format(self.slug)
+        return "{}".format(self.slug)
 
 
 class ETLConfiguration(models.Model):
