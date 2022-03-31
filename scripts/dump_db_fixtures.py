@@ -66,12 +66,15 @@ def dump_request(**kwargs):
     )
 
     # get the File entries that corresponds to the request ID
-    queryset = File.objects.prefetch_related(
-        Prefetch('filemetadata_set', queryset=FileMetadata.objects.select_related('file').order_by('-created_date'))).\
-        order_by('file_name').all()
+    queryset = (
+        File.objects.prefetch_related(
+            Prefetch("filemetadata_set", queryset=FileMetadata.objects.select_related("file").order_by("-created_date"))
+        )
+        .order_by("file_name")
+        .all()
+    )
     queryset = queryset.filter(filemetadata__metadata__igoRequestId=requestID)
-    print(json.dumps(json.loads(serializers.serialize('json', queryset)),
-          indent=4), file=open(output_file_file, "w"))
+    print(json.dumps(json.loads(serializers.serialize("json", queryset)), indent=4), file=open(output_file_file, "w"))
 
 
 def dump_run(**kwargs):
