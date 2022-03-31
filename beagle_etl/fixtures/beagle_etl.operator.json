@@ -137,7 +137,7 @@
     "fields": {
       "active": true,
       "recipes": "[\"CMO-CH\"]",
-      "class_name": "runner.operator.cmo-ch.v2_0_0.nucleo.CMOCHNucleoOperator",
+      "class_name": "runner.operator.cmo_ch.v2_0_0.nucleo.CMOCHNucleoOperator",
       "version": "v2.0.0",
       "slug": "CMOCHNucleoOperator"
     }
