@@ -39,7 +39,7 @@ class TestAccessNucleoOperator(TestCase):
 
         request_id = "10151_F"
 
-        operator_model = Operator.objects.get(id=10)
+        operator_model = Operator.objects.get(id=16)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "514b4f46-e9af-4e36-95bd-956f402ea19e")
         self.assertEqual(str(operator.model), "AccessNucleoOperator_2_1_0")
