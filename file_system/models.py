@@ -32,14 +32,14 @@ class Storage(BaseModel):
         return "ID: %s NAME: %s TYPE: %s" % (self.id, self.name, StorageType(self.type))
 
     def __str__(self):
-        return u"{}".format(self.name)
+        return "{}".format(self.name)
 
 
 class FileType(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self):
-        return u"{}".format(self.name)
+        return "{}".format(self.name)
 
 
 class Request(BaseModel):
@@ -63,7 +63,7 @@ class FileExtension(models.Model):
     file_type = models.ForeignKey(FileType, on_delete=models.CASCADE)
 
     def __str__(self):
-        return u"{}".format(self.extension)
+        return "{}".format(self.extension)
 
 
 class FileGroup(BaseModel):
@@ -76,7 +76,7 @@ class FileGroup(BaseModel):
         super(FileGroup, self).save(*args, **kwargs)
 
     def __str__(self):
-        return u"{}".format(self.name)
+        return "{}".format(self.name)
 
 
 class FileGroupMetadata(BaseModel):
