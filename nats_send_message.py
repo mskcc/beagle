@@ -24,10 +24,10 @@ async def run(loop):
     parser = argparse.ArgumentParser()
 
     # e.g. nats-req hello -d "world" -s nats://127.0.0.1:4222 -s nats://127.0.0.1:4223
-    parser.add_argument('subject', default='hello', nargs='?')
-    parser.add_argument('-d', '--data', default="hello world")
-    parser.add_argument('-s', '--servers', default=[], action='append')
-    parser.add_argument('--creds', default="")
+    parser.add_argument("subject", default="hello", nargs="?")
+    parser.add_argument("-d", "--data", default="hello world")
+    parser.add_argument("-s", "--servers", default=[], action="append")
+    parser.add_argument("--creds", default="")
     args = parser.parse_args()
 
     nc = NATS()
@@ -41,19 +41,14 @@ async def run(loop):
     async def reconnected_cb():
         print(f"ReConnected to NATS at {nc.connected_url.netloc}...")
 
-    options = {
-        "loop": loop,
-        "error_cb": error_cb,
-        "closed_cb": closed_cb,
-        "reconnected_cb": reconnected_cb
-    }
+    options = {"loop": loop, "error_cb": error_cb, "closed_cb": closed_cb, "reconnected_cb": reconnected_cb}
 
     if len(args.creds) > 0:
         options["user_credentials"] = args.creds
 
     try:
         if len(args.servers) > 0:
-            options['servers'] = args.servers
+            options["servers"] = args.servers
 
         await nc.connect(**options)
     except Exception as e:
@@ -67,7 +62,7 @@ async def run(loop):
     # data = msg.data.decode()
     # print("Received a message on '{subject} {reply}': {data}".format(
     #     subject=subject, reply=reply, data=data))
-    with open(args.data, 'r') as f:
+    with open(args.data, "r") as f:
         data = json.load(f)
         data_str = json.dumps(data)
 
@@ -75,7 +70,7 @@ async def run(loop):
     await nc.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(run(loop))
