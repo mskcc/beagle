@@ -41,7 +41,7 @@ class TestCMOCHNucleoOperator(TestCase):
 
         request_id = "10151_F"
 
-        operator_model = Operator.objects.get(id=14)
+        operator_model = Operator.objects.get(id=15)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "46d1a329-c790-45b5-aca0-db1f01df12d9")
         self.assertEqual(str(operator.model), "CMOCHNucleoOperator_2_1_0")
