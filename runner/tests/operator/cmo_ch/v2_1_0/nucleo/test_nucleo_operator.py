@@ -67,10 +67,13 @@ class TestCMOCHNucleoOperator(TestCase):
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"]), 2)
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"][0]), 2)
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"][1]), 2)
-            self.assertEqual(input_json["fastp_read1_adapter_sequence"],
-                             "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG")
-            self.assertEqual(input_json["fastp_read2_adapter_sequence"],
-                             "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")
+            self.assertEqual(
+                input_json["fastp_read1_adapter_sequence"],
+                "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+            )
+            self.assertEqual(
+                input_json["fastp_read2_adapter_sequence"], "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
+            )
 
     def test_construct_cmo_ch_jobs(self):
         """
