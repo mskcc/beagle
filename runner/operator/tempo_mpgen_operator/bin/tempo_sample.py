@@ -1,4 +1,5 @@
 from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
+from collections.abc import Iterable
 from django.conf import settings
 
 
@@ -116,23 +117,25 @@ class TempoSample(Sample):
         that isn't relevant right now
         """
         metadata = dict()
+        meta_orig = self.metadata
         for key in self.metadata:
             values = self.metadata[key]
-            # Removing qcReports, which is a list containing a dictionary
-            if key not in "qcReports":
-                if self._values_are_list(key):
-                    # remove duplicate list values
-                    values_set = set(tuple(x) for x in values)
-                    values = [list(x) for x in values_set]
-                    metadata[key] = values
-                else:
-                    # remove empty strings
-                    values = [str(i) for i in values if i]
-                    if len(set(values)) == 1:
-                        metadata[key] = values[0]
+            if isinstance(values, Iterable):
+                # Removing qcReports, which is a list containing a dictionary
+                if key not in ["qcReports", "sampleAliases", "patientAliases"]:
+                    if self._values_are_list(key):
+                        # remove duplicate list values
+                        values_set = set(tuple(x) for x in values)
+                        values = [list(x) for x in values_set]
+                        metadata[key] = values
                     else:
-                        value = set(values)
-                        metadata[key] = ",".join(value)
+                        # remove empty strings
+                        values = [str(i) for i in values if i]
+                        if len(set(values)) == 1:
+                            metadata[key] = values[0]
+                        else:
+                            value = set(values)
+                            metadata[key] = ",".join(value)
         return metadata
 
     def _values_are_list(self, key):
