@@ -34,6 +34,7 @@ class TestFetchSamples(TestCase):
 
     # @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
     #         'Skip if username or password for LIMS are not provided')
+    # TODO: Refactor test for SMILE integration
     # def test_fetch_samples1(self):
     #     """
     #     Test fetching samples for a request from IGO LIMS
@@ -530,6 +531,7 @@ class TestImportSample(APITestCase):
         settings.IMPORT_FILE_GROUP = self.old_val
 
     # @patch('requests.get')
+    # TODO: Refactor test for SMILE integration
     # def test_zero_fastq_files(self, mock_get_sample):
     #     mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
     #     with self.assertRaises(ErrorInconsistentDataException) as e:
@@ -586,7 +588,6 @@ class TestImportSample(APITestCase):
     #     self.assertEqual(count_files, 1)
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
     def test_request_callback(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         job_group = JobGroup.objects.create()
@@ -612,7 +613,6 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id))
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'TestAssay'})
     def test_request_callback_two_operators(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
         job_group = JobGroup.objects.create()
@@ -641,7 +641,6 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'UnknownAssay'})
     def test_request_callback_unknown_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
         job_group = JobGroup.objects.create()
@@ -672,7 +671,6 @@ class TestImportSample(APITestCase):
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    # @patch('beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples', return_value={'recipe': 'DisabledAssay1'})
     def test_request_callback_disabled_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
         job_group = JobGroup.objects.create()
