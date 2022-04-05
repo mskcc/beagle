@@ -114,8 +114,9 @@ class CMOCHNucleoOperator(Operator):
     """
 
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={
-                                      settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
 
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
@@ -130,7 +131,10 @@ class CMOCHNucleoOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
-                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": metadata[settings.SAMPLE_NAME_METADATA_KEY]},
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        "cmoSampleId": metadata[settings.SAMPLE_NAME_METADATA_KEY],
+                    },
                 }
             )
             for i, (job, metadata) in enumerate(sample_inputs)
