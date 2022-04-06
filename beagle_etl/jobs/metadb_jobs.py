@@ -414,8 +414,8 @@ def update_sample_job(input_data):
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-    additional_properties = data.pop('additionalProperties')
-    request_id = additional_properties['igoRequestId']
+    additional_properties = data.pop("additionalProperties")
+    request_id = additional_properties["igoRequestId"]
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
@@ -503,7 +503,9 @@ def update_sample_job(input_data):
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
                     message = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
                     update = RedeliveryUpdateEvent(job_group_notifier_id, message).to_dict()
-                    diff_details_event = LocalStoreFileEvent(job_group_notifier_id, diff_file_name, str(ddiff)).to_dict()
+                    diff_details_event = LocalStoreFileEvent(
+                        job_group_notifier_id, diff_file_name, str(ddiff)
+                    ).to_dict()
                     send_notification.delay(update)
                     send_notification.delay(diff_details_event)
                 except Exception as e:
@@ -518,6 +520,7 @@ def update_sample_job(input_data):
         "code": None,
     }
     request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
+
 
 def get_run_id_from_string(string):
     """

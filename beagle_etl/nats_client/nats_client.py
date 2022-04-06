@@ -50,9 +50,7 @@ async def run(loop, queue):
             update_sample_job.delay(request_data)
             logger.info("Update sample")
         else:
-            logger.error(
-                "Unknown subject: %s" % subject
-            )
+            logger.error("Unknown subject: %s" % subject)
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
