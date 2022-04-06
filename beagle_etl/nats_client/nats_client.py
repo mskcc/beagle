@@ -40,19 +40,19 @@ async def run(loop, queue):
         request_data = json.loads(data)
 
         logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
-        if queue == settings.METADB_NATS_NEW_REQUEST:
-            logger.info("Sending request: %s to new_request function" % request_data[settings.REQUEST_ID_METADATA_KEY])
+        if subject == settings.METADB_NATS_NEW_REQUEST:
             new_request.delay(request_data)
-        elif queue == settings.METADB_NATS_REQUEST_UPDATE:
-            logger.info(
-                "Sending request: %s to update_request_job function" % request_data[settings.REQUEST_ID_METADATA_KEY]
-            )
+            logger.info("New request")
+        elif subject == settings.METADB_NATS_REQUEST_UPDATE:
             update_request_job.delay(request_data)
-        elif queue == settings.METADB_NATS_SAMPLE_UPDATE:
-            logger.info(
-                "Sending request: %s to update_sample_job function" % request_data[settings.REQUEST_ID_METADATA_KEY]
-            )
+            logger.info("Update request")
+        elif subject == settings.METADB_NATS_SAMPLE_UPDATE:
             update_sample_job.delay(request_data)
+            logger.info("Update sample")
+        else:
+            logger.error(
+                "Unknown subject: %s" % subject
+            )
 
     ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
@@ -72,7 +72,7 @@ async def run(loop, queue):
     try:
         js = nc.jetstream()
         sub = await js.subscribe(
-            queue, durable="durable", config={"filter_subject": settings.METADB_NATS_FILTER_SUBJECT}
+            queue, durable=settings.METADB_NATS_DURABLE, config={"filter_subject": settings.METADB_NATS_FILTER_SUBJECT}
         )
         logger.info(f"Connected to NATS at {nc.connected_url}...")
     except Exception as e:

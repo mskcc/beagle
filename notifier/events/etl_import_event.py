@@ -83,9 +83,9 @@ class ETLImportEvent(Event):
 
         return ETL_IMPORT_MESSAGE_TEMPLATE.format(
             request_id=self.request_id,
-            cnt_samples=len(self.sample_list_completed) + len(self.sample_list_fail),
-            cnt_samples_completed=len(self.sample_list_completed),
-            cnt_samples_fail=len(self.sample_list_fail),
+            cnt_samples=self.sample_list_completed + self.sample_list_fail,
+            cnt_samples_completed=self.sample_list_completed,
+            cnt_samples_fail=self.sample_list_fail,
             recipe=self.recipe,
             data_analyst_name=self.data_analyst_name,
             data_analyst_email=self.data_analyst_email,

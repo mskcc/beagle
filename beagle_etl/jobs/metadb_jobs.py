@@ -156,7 +156,6 @@ def new_request(input_data):
 
     samples = data.get("samples")
     for idx, sample in enumerate(data.get("samples")):
-        # igocomplete = samples[idx]['igocomplete']
         sample_id = sample["primaryId"]
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
@@ -411,24 +410,40 @@ def update_request_job(input_data):
 @shared_task
 def update_sample_job(input_data):
     data = json.loads(input_data)
-    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).all()
+    primary_id = data.get(settings.SAMPLE_ID_METADATA_KEY)
+    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
-
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    additional_properties = data.pop('additionalProperties')
+    request_id = additional_properties['igoRequestId']
 
-    project_manager_name = data.get("projectManagerName")
-    pi_email = data.get("piEmail")
-    lab_head_name = data.get("labHeadName")
-    lab_head_email = data.get("labHeadEmail")
-    investigator_name = data.get("investigatorName")
-    investigator_email = data.get("investigatorEmail")
-    data_analyst_name = data.get("dataAnalystName")
-    data_analyst_email = data.get("dataAnalystEmail")
-    other_contact_emails = data.get("otherContactEmails")
-    data_access_email = data.get("dataAccessEmails")
-    qc_access_email = data.get("qcAccessEmails")
+    if not files:
+        logger.warning("Nothing to update %s. Creating new files." % primary_id)
+        project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+        project_manager_name = data.get("projectManagerName")
+        pi_email = data.get("piEmail")
+        lab_head_name = data.get("labHeadName")
+        lab_head_email = data.get("labHeadEmail")
+        investigator_name = data.get("investigatorName")
+        investigator_email = data.get("investigatorEmail")
+        data_analyst_name = data.get("dataAnalystName")
+        data_analyst_email = data.get("dataAnalystEmail")
+        other_contact_emails = data.get("otherContactEmails")
+        data_access_email = data.get("dataAccessEmails")
+        qc_access_email = data.get("qcAccessEmails")
+    else:
+        project_id = files[0].metadata.get(settings.PROJECT_ID_METADATA_KEY)
+        project_manager_name = files[0].metadata.get("projectManagerName")
+        pi_email = files[0].metadata.get("piEmail")
+        lab_head_name = files[0].metadata.get("labHeadName")
+        lab_head_email = files[0].metadata.get("labHeadEmail")
+        investigator_name = files[0].metadata.get("investigatorName")
+        investigator_email = files[0].metadata.get("investigatorEmail")
+        data_analyst_name = files[0].metadata.get("dataAnalystName")
+        data_analyst_email = files[0].metadata.get("dataAnalystEmail")
+        other_contact_emails = files[0].metadata.get("otherContactEmails")
+        data_access_email = files[0].metadata.get("dataAccessEmails")
+        qc_access_email = files[0].metadata.get("qcAccessEmails")
 
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
@@ -456,40 +471,53 @@ def update_sample_job(input_data):
     send_notification.delay(redelivery_event)
 
     igocomplete = True
-    samples = data.get("samples")
-    for idx, sample in enumerate(data.get("samples")):
-        # igocomplete = samples[idx]['igocomplete']
-        sample_id = sample["primaryId"]
-        logger.info("Parsing sample: %s" % sample_id)
-        libraries = sample.pop("libraries")
-        for library in libraries:
-            logger.info("Processing library %s" % library)
-            runs = library.pop("runs")
-            for run in runs:
-                logger.info("Processing run %s" % run)
-                fastqs = run.pop("fastqs")
-                for fastq in fastqs:
-                    logger.info("Adding file %s" % fastq)
-                    try:
-                        f = FileRepository.filter(path=fastq).first()
-                        if f:
-                            new_metadata = f.metadata
-                            new_metadata.update(request_metadata)
-                        create_or_update_file(
-                            fastq,
-                            request_id,
-                            settings.IMPORT_FILE_GROUP,
-                            "fastq",
-                            igocomplete,
-                            sample,
-                            library,
-                            run,
-                            request_metadata,
-                            R1_or_R2(fastq),
-                        )
-                    except Exception as e:
-                        logger.error(e)
+    primary_id = data["primaryId"]
+    logger.info("Parsing sample: %s" % primary_id)
+    libraries = data.pop("libraries")
+    for library in libraries:
+        logger.info("Processing library %s" % library)
+        runs = library.pop("runs")
+        for run in runs:
+            logger.info("Processing run %s" % run)
+            fastqs = run.pop("fastqs")
+            for fastq in fastqs:
+                logger.info("Adding file %s" % fastq)
+                try:
+                    f = FileRepository.filter(path=fastq).first()
+                    if f:
+                        new_metadata = f.metadata
+                        new_metadata.update(request_metadata)
+                    create_or_update_file(
+                        fastq,
+                        request_id,
+                        settings.IMPORT_FILE_GROUP,
+                        "fastq",
+                        igocomplete,
+                        data,
+                        library,
+                        run,
+                        request_metadata,
+                        R1_or_R2(fastq),
+                    )
+                    ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
+                    diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
+                    message = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
+                    update = RedeliveryUpdateEvent(job_group_notifier_id, message).to_dict()
+                    diff_details_event = LocalStoreFileEvent(job_group_notifier_id, diff_file_name, str(ddiff)).to_dict()
+                    send_notification.delay(update)
+                    send_notification.delay(diff_details_event)
+                except Exception as e:
+                    logger.error(e)
 
+    sample_status = {
+        "type": "SAMPLE",
+        "igocomplete": True,
+        "sample": primary_id,
+        "status": "COMPLETED",
+        "message": "File %s request metadata updated",
+        "code": None,
+    }
+    request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 def get_run_id_from_string(string):
     """
@@ -744,7 +772,6 @@ def create_or_update_file(
                     raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
             create_file_object(new_path, file_group_obj, metadata, file_type_obj)
         else:
-
             update_file_object(f.file, f.file.path, metadata)
 
 
