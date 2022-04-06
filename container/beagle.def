@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: nginx:latest
+From: nginx:1.21.6
 Includecmd: no
 
 %post
@@ -98,8 +98,6 @@ Includecmd: no
     export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
     export BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_REQUEST_QUEUE}.beagle_nats_update_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_SAMPLE_QUEUE}.beagle_nats_update_sample.pid
 
     echo "Starting celery services..."
 
@@ -110,10 +108,6 @@ Includecmd: no
     celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${BEAGLE_CELERY_SCHEDULER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l debug -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_new_request.log --pidfile ${BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE} -n ${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request >/dev/null 2>&1 < /dev/null &
-
-    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l debug -Q ${BEAGLE_NATS_UPDATE_REQUEST_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_update_request.log --pidfile ${BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE} -n ${BEAGLE_NATS_UPDATE_REQUEST_QUEUE}.beagle_nats_update_request >/dev/null 2>&1 < /dev/null &
-
-    celery -A beagle_etl worker --concurrency 1 --workdir ${BEAGLE_PATH} -l debug -Q ${BEAGLE_NATS_UPDATE_SAMPLE_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_update_sample.log --pidfile ${BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE} -n ${BEAGLE_NATS_UPDATE_SAMPLE_QUEUE}.beagle_nats_update_sample >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl worker --workdir ${BEAGLE_PATH} -l debug -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
@@ -156,8 +150,6 @@ Includecmd: no
     export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
     export BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_REQUEST_QUEUE}.beagle_nats_update_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_SAMPLE_QUEUE}.beagle_nats_update_sample.pid
 
     echo "Killing celery services with the following settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
@@ -171,16 +163,12 @@ Includecmd: no
     echo "BEAGLE_CELERY_RUNNER_PID_FILE:"$BEAGLE_CELERY_RUNNER_PID_FILE
     echo "BEAGLE_CELERY_FLOWER_PID_FILE:"$BEAGLE_CELERY_FLOWER_PID_FILE
     echo "BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE:"$BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE
-    echo "BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE:"$BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE
-    echo "BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE:"$BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE
 
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_WORKER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_SCHEDULER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_RUNNER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-    ps auxww | grep 'celery' | grep $BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
     ps auxww | grep 'celery' | grep $BEAGLE_CELERY_FLOWER_PID_FILE | grep -v 'grep' | awk '{print $2}' | xargs kill -9
 
     echo ""
@@ -190,8 +178,6 @@ Includecmd: no
     rm $BEAGLE_CELERY_SCHEDULER_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_RUNNER_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE > /dev/null 2>&1 < /dev/null &
-    rm $BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE > /dev/null 2>&1 < /dev/null &
-    rm $BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_FLOWER_PID_FILE > /dev/null 2>&1 < /dev/null &
     sleep 5
 
@@ -228,8 +214,6 @@ Includecmd: no
     export BEAGLE_CELERY_RUNNER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner.pid
     export BEAGLE_CELERY_FLOWER_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_flower.pid
     export BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_REQUEST_QUEUE}.beagle_nats_update_request.pid
-    export BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE=${BEAGLE_CELERY_PID_PATH}/${BEAGLE_NATS_UPDATE_SAMPLE_QUEUE}.beagle_nats_update_sample.pid
 
     echo "Current celery settings:"
     echo "BEAGLE_PATH:"$BEAGLE_PATH
@@ -243,8 +227,6 @@ Includecmd: no
     echo "BEAGLE_CELERY_RUNNER_PID_FILE:"$BEAGLE_CELERY_RUNNER_PID_FILE
     echo "BEAGLE_CELERY_FLOWER_PID_FILE:"$BEAGLE_CELERY_FLOWER_PID_FILE
     echo "BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE:"$BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE
-    echo "BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE:"$BEAGLE_CELERY_NATS_UPDATE_REQUEST_PID_FILE
-    echo "BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE:"$BEAGLE_CELERY_NATS_UPDATE_SAMPLE_PID_FILE
     echo ""
 
     export BEAGLE_CELERY_BEAT=`ps auxww | grep 'celery' | grep $BEAGLE_CELERY_BEAT_PID_FILE | grep -v 'grep' | awk '{print $2}' | wc -l`
@@ -262,9 +244,6 @@ Includecmd: no
     echo "Scheduler - $BEAGLE_CELERY_SCHEDULER"
     echo "Runner - $BEAGLE_CELERY_RUNNER"
     echo "NATS New Request - $BEAGLE_CELERY_NATS_NEW_REQUEST"
-    echo "NATS Update Request - $BEAGLE_CELERY_NATS_UPDATE_REQUEST"
-    echo "NATS Update Sample - $BEAGLE_CELERY_NATS_UPDATE_SAMPLE"
-
     echo "Flower - $BEAGLE_CELERY_FLOWER"
 
 
