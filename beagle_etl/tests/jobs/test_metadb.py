@@ -145,8 +145,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.request_callback")
-    def test_update_sample_preserve(self, request_callback, populate_job_group, send_notification,
-                                    jobGroupNotifierObjectGet):
+    def test_update_sample_preserve(
+        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+    ):
         """
         Test that other samples are not modified
         """
@@ -158,7 +159,7 @@ class TestNewRequest(TestCase):
         update_sample_job(self.new_sample_data_str)
         sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3"})
         for f in sample_files:
-            self.assertEqual(f.metadata['sampleName'], "XXX002_P3_12345_L1")
+            self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
 
     # @patch("notifier.models.JobGroupNotifier.objects.get")
     # @patch("notifier.tasks.send_notification.delay")
