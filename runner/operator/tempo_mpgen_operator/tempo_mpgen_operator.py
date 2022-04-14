@@ -381,7 +381,7 @@ class TempoMPGenOperator(Operator):
                         running = list()
                         running.append(sample.cmo_sample_name)
                         for key in key_order:
-                            if key == 'externalSampleId':
+                            if key == "externalSampleId":
                                 v = self._get_investigator_id(meta)
                             else:
                                 v = meta[key]
@@ -394,17 +394,17 @@ class TempoMPGenOperator(Operator):
         return self.write_to_file("sample_tracker.txt", tracker)
 
     def _get_investigator_id(self, d):
-        """ 
+        """
         externalSampleId was deprecated and is no longer
         included in new imports; need to return investigatorId value in sampleAliases
         instead
         """
-        if 'externalSampleId' in d:
-            return d['externalSampleId']
-        sample_aliases = d['sampleAliases']
+        if "externalSampleId" in d:
+            return d["externalSampleId"]
+        sample_aliases = d["sampleAliases"]
         for i in sample_aliases:
-            v = i['value']
-            ns = i['namespace']
-            if ns == 'investigatorId':
+            v = i["value"]
+            ns = i["namespace"]
+            if ns == "investigatorId":
                 return v
         return None
