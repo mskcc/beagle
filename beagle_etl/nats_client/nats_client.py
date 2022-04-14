@@ -6,10 +6,21 @@ import logging
 import asyncio
 from time import sleep
 from django.conf import settings
+from beagle_etl.models import SMILEMessage
 from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job
 
 
 logger = logging.getLogger(__name__)
+
+
+def persist_message(topic, message):
+    try:
+        msg = SMILEMessage.objects.create(topic=topic, message=message)
+        request_message = json.loads(message)
+        msg.request_id = request_message.get(settings.REQUEST_ID_METADATA_KEY)
+        msg.save()
+    except Exception as e:
+        logger.error(e)
 
 
 async def run(loop, queue):
@@ -40,6 +51,7 @@ async def run(loop, queue):
         request_data = json.loads(data)
 
         logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
+        persist_message(subject, data)
         if subject == settings.METADB_NATS_NEW_REQUEST:
             new_request.delay(request_data)
             logger.info("New request")
