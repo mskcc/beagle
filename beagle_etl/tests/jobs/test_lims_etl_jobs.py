@@ -325,7 +325,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT36",
                         "barcodeIndex": "CCAGTTCA",
-                        "libraryId": "igoId_002_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_002_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 2.2051049976353,
                         "dnaInputNg": None,
