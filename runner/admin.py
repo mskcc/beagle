@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.urls import reverse
+from django.conf import settings
 from django.utils.translation import ngettext
 from django.utils.html import format_html
 from lib.admin import link_relation, progress_bar
@@ -110,7 +111,12 @@ class RunAdmin(admin.ModelAdmin):
         StatusFilter,
         AppFilter,
     )
-    search_fields = ("tags__sampleId", "tags__requestId", "tags__cmoSampleIds__contains", "operator_run__id")
+    search_fields = (
+        "tags__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY),
+        "tags__igoRequestId",
+        "tags__cmoSampleIds__contains",
+        "operator_run__id",
+    )
     readonly_fields = (
         "samples",
         "job_group",

@@ -2,6 +2,8 @@ import os
 import json
 from jinja2 import Template
 from collections import defaultdict
+from itertools import groupby
+from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
@@ -11,9 +13,9 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
     "barcodeId",
-    "sampleName",
+    settings.SAMPLE_NAME_METADATA_KEY,
     "investigatorSampleId",
-    "patientId",
+    settings.PATIENT_ID_METADATA_KEY,
     "tumorOrNormal",
     "sampleOrigin",
     "dnaInputNg",
@@ -25,8 +27,8 @@ METADATA_OUTPUT_FIELDS = [
     "captureName",
     "libraryConcentrationNgul",
     "captureConcentrationNm",
-    "sampleId",
-    "requestId",
+    settings.SAMPLE_ID_METADATA_KEY,
+    settings.REQUEST_ID_METADATA_KEY,
 ]
 
 
@@ -47,7 +49,7 @@ def construct_inputs(samples, request_id):
                 "libraryVolume": calc_avg(sample_files, "libraryVolume"),
                 "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
                 "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
-                "requestId": request_id,
+                settings.REQUEST_ID_METADATA_KEY: request_id,
             }
         )
 
@@ -67,7 +69,9 @@ def construct_inputs(samples, request_id):
 
 class AccessLegacyFastqMergeOperator(Operator):
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
@@ -83,7 +87,10 @@ class AccessLegacyFastqMergeOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
                     "inputs": job,
-                    "tags": {"requestId": self.request_id, "sampleId": metadata["sampleId"]},
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        settings.SAMPLE_NAME_METADATA_KEY: metadata[settings.SAMPLE_NAME_METADATA_KEY],
+                    },
                 }
             )
             for i, (job, metadata) in enumerate(inputs)
@@ -102,7 +109,7 @@ def calc_avg(sample_files, field):
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs
 

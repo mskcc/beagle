@@ -141,5 +141,27 @@
       "version": "v2.0.0",
       "slug": "CMOCHNucleoOperator"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 15,
+    "fields": {
+      "active": true,
+      "recipes": "[\"CMO-CH\"]",
+      "class_name": "runner.operator.cmo_ch.v2_1_0.nucleo.CMOCHNucleoOperator",
+      "version": "v2.1.0",
+      "slug": "CMOCHNucleoOperator_2_1_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 16,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.access.v2_1_0.nucleo.AccessNucleoOperator",
+      "version": "v2.1.0",
+      "slug": "AccessNucleoOperator_2_1_0"
+    }
   }
 ]

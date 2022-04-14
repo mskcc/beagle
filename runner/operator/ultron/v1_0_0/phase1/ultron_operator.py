@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import logging
+from django.conf import settings
 from notifier.models import JobGroup
 from file_system.models import FileGroup
 from file_system.repository.file_repository import FileRepository
@@ -105,7 +106,7 @@ class UltronOperator(Operator):
 
     def _get_prev_req_id(self, run_id):
         run = Run.objects.filter(id=run_id)[0]
-        request_id = run.tags["requestId"]
+        request_id = run.tags[settings.REQUEST_ID_METADATA_KEY]
         return request_id
 
     def _get_prev_pipeline(self, run_id):
@@ -171,13 +172,15 @@ class InputsObj:
     def _get_samples_data(self):
         files = FileRepository.all()
         f = FileRepository.filter(
-            queryset=files, metadata={"cmoSampleName": self.tumor_sample_name, "igocomplete": True}, filter_redact=True
+            queryset=files,
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: self.tumor_sample_name, "igocomplete": True},
+            filter_redact=True,
         )
         sample = None
         if f:
             # retrieve metadata from first record (should only be one)
             meta = f[0].metadata
-            sample_id = meta["sampleId"]
+            sample_id = meta[settings.SAMPLE_ID_METADATA_KEY]
             sample = SampleData(sample_id)
         return sample
 
@@ -276,19 +279,21 @@ class SampleData:
     def _get_sample_metadata(self):
         # gets patient id and cmo sample name from sample id query
         # condensed in this one  fucntion to reduce amount of queriesd
-        files = FileRepository.filter(metadata={"sampleId": self.sample_id, "igocomplete": True}, filter_redact=True)
+        files = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: self.sample_id, "igocomplete": True}, filter_redact=True
+        )
         # there should only be one patient ID
         # looping through the metadata works here, but it's lazy
         patient_id = None
         sample_name = None
         for f in files:
             metadata = f.metadata
-            if "patientId" in metadata:
-                pid = metadata["patientId"]
+            if settings.PATIENT_ID_METADATA_KEY in metadata:
+                pid = metadata[settings.PATIENT_ID_METADATA_KEY]
                 if pid:
                     patient_id = pid
-            if "cmoSampleName" in metadata:
-                sid = metadata["cmoSampleName"]
+            if settings.CMO_SAMPLE_TAG_METADATA_KEY in metadata:
+                sid = metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]
                 if sid:
                     sample_name = sid
         return patient_id, sample_name
