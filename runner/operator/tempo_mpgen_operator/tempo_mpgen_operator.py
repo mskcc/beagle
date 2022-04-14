@@ -5,6 +5,7 @@ import json
 import csv
 import pickle
 import logging
+import unicodedata
 from django.db.models import Q
 from django.conf import settings
 from pathlib import Path
