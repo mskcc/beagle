@@ -394,12 +394,17 @@ class TempoMPGenOperator(Operator):
         return self.write_to_file("sample_tracker.txt", tracker)
 
     def _get_investigator_id(self, d):
-    # externalSampleId was deprecated; need to return investigatorId value in sampleAliases
-        if 'externalSampleId' not in d.keys():
-            sample_aliases = d['sampleAliases']
-            for i in sample_aliases:
-                v = i['value']
-                ns = i['namespace']
-                if ns == 'investigatorId':
-                    return v
+    '''
+    externalSampleId was deprecated and is no longer
+    included in new imports; need to return investigatorId value in sampleAliases
+    instead
+    '''
+        if 'externalSampleId' in d:
+            return d['externalSampleId']
+        sample_aliases = d['sampleAliases']
+        for i in sample_aliases:
+            v = i['value']
+            ns = i['namespace']
+            if ns == 'investigatorId':
+                return v
         return None
