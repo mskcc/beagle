@@ -10,9 +10,9 @@ def format_log(message, obj=None, obj_id=None, operator_run_id=None, job_group_i
         execution_id = obj.execution_id
 
     if not request_id:
-        request_id = get_tag_from_obj(obj, "requestId") or get_tag_from_obj(obj, "request_id")
+        request_id = get_tag_from_obj(obj, "igoRequestId") or get_tag_from_obj(obj, "request_id")
     sample_id = (
-        get_tag_from_obj(obj, "sampleId")
+        get_tag_from_obj(obj, "primaryId")
         or get_tag_from_obj(obj, "sample_id")
         or get_tag_from_obj(obj, "cmoSampleId")
         or get_tag_from_obj(obj, "cmoSampleIds")

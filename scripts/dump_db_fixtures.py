@@ -73,7 +73,7 @@ def dump_request(**kwargs):
         .order_by("file_name")
         .all()
     )
-    queryset = queryset.filter(filemetadata__metadata__requestId=requestID)
+    queryset = queryset.filter(filemetadata__metadata__igoRequestId=requestID)
     print(json.dumps(json.loads(serializers.serialize("json", queryset)), indent=4), file=open(output_file_file, "w"))
 
 

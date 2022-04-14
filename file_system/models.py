@@ -7,7 +7,6 @@ from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
-from django.db.models.signals import post_save
 from file_system.tasks import populate_job_group_notifier_metadata
 
 
@@ -128,7 +127,7 @@ class FileMetadata(BaseModel):
             sample_name = self.metadata.get(settings.SAMPLE_NAME_METADATA_KEY)
             cmo_sample_name = self.metadata.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
-            assay = self.metadata.get(settings.ASSAY_METADATA_KEY, "")
+            assay = self.metadata.get(settings.RECIPE_METADATA_KEY, "")
             investigator = self.metadata.get(settings.INVESTIGATOR_METADATA_KEY, "")
             pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, "")
             populate_job_group_notifier_metadata.delay(request_id, pi, investigator, assay)

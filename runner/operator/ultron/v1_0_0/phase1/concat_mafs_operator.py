@@ -6,6 +6,10 @@ submits them as runs
 """
 import os
 import logging
+
+from django.conf import settings
+from notifier.models import JobGroup
+from runner.models import Port, Run
 from runner.models import Pipeline, Port, Run
 from runner.operator.operator import Operator
 from file_system.repository.file_repository import FileRepository
@@ -36,7 +40,7 @@ class ConcatMafsOperator(Operator):
         pipeline_version = pipeline.version
         request_id = self._get_request_id()
         input_json["output_filename"] = request_id + ".rez.maf"
-        tags = {"requestId": request_id}
+        tags = {settings.REQUEST_ID_METADATA_KEY: request_id}
         # add tags, name
         output_job_data = {
             "app": app,
@@ -56,7 +60,7 @@ class ConcatMafsOperator(Operator):
             sample_files = FileRepository.filter(queryset=files, metadata={"cmoSampleName": sample_name})
             for f in sample_files:
                 metadata = f.metadata
-                if "requestId" in metadata:
+                if settings.REQUEST_ID_METADATA_KEY in metadata:
                     request_ids.add(metadata["requestId"])
         request_id = "_".join(list(request_ids))
         return request_id

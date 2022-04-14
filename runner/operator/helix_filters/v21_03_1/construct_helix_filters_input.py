@@ -12,6 +12,7 @@ from file_system.repository.file_repository import FileRepository
 from notifier.helper import generate_sample_data_content
 from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler
 from django.db.models import Q
+from django.conf import settings
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -259,7 +260,7 @@ def build_request_ids_query(data):
        query |= item
 
     """
-    data_query_set = [Q(metadata__requestId=value) for value in set(data)]
+    data_query_set = [Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY), value)) for value in set(data)]
     query = data_query_set.pop()
     for item in data_query_set:
         query |= item
@@ -291,12 +292,12 @@ def get_request_pi(run_id_list):
     # reducing number of queries
     for run_id in run_id_list:
         argos_run = Run.objects.get(id=run_id)
-        run_request_id = argos_run.tags["requestId"]
+        run_request_id = argos_run.tags[settings.REQUEST_ID_METADATA_KEY]
         all_request_ids.add(run_request_id)
     for request_id in all_request_ids:
-        investigator_emails = FileRepository.filter(queryset=files, metadata={"requestId": request_id}).values_list(
-            "metadata__investigatorEmail", flat=True
-        )
+        investigator_emails = FileRepository.filter(
+            queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}
+        ).values_list("metadata__investigatorEmail", flat=True)
         request_pis = request_pis.union(set(investigator_emails))
     request_pis_final = list()
     for request_pi in request_pis:
@@ -349,8 +350,8 @@ def get_oncotree_codes(request_id):
     oncotree_dh = OncotreeDataHandler()
     files = FileRepository.all()
     oncotree_codes_tmp = set(
-        FileRepository.filter(queryset=files, metadata={"requestId": request_id}).values_list(
-            "metadata__oncoTreeCode", flat=True
+        FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list(
+            "metadata__{}".format(settings.ONCOTREE_METADATA_KEY), flat=True
         )
     )
     oncotree_codes = list()
