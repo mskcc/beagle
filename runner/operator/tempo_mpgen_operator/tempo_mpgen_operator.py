@@ -5,6 +5,7 @@ import json
 import csv
 import pickle
 import logging
+import unicodedata
 from django.db.models import Q
 from django.conf import settings
 from pathlib import Path
@@ -380,10 +381,30 @@ class TempoMPGenOperator(Operator):
                         running = list()
                         running.append(sample.cmo_sample_name)
                         for key in key_order:
-                            s = self._validate_to_str(meta[key])
+                            if key == "externalSampleId":
+                                v = self._get_investigator_id(meta)
+                            else:
+                                v = meta[key]
+                            s = self._validate_to_str(v)
                             running.append(s)
                         for key in extra_keys:
                             s = self._validate_to_str(meta[key])
                             running.append(s)
                         tracker += "\t".join(running) + "\n"
         return self.write_to_file("sample_tracker.txt", tracker)
+
+    def _get_investigator_id(self, d):
+        """
+        externalSampleId was deprecated and is no longer
+        included in new imports; need to return investigatorId value in sampleAliases
+        instead
+        """
+        if "externalSampleId" in d:
+            return d["externalSampleId"]
+        sample_aliases = d["sampleAliases"]
+        for i in sample_aliases:
+            v = i["value"]
+            ns = i["namespace"]
+            if ns == "investigatorId":
+                return v
+        return None
