@@ -7,18 +7,28 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0029_operator_notifier'),
+        ("beagle_etl", "0029_operator_notifier"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SMILEMessage',
+            name="SMILEMessage",
             fields=[
-                ('basemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.BaseModel')),
-                ('topic', models.CharField(max_length=1000)),
-                ('request_id', models.CharField(max_length=100)),
-                ('message', models.TextField()),
+                (
+                    "basemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.BaseModel",
+                    ),
+                ),
+                ("topic", models.CharField(max_length=1000)),
+                ("request_id", models.CharField(max_length=100)),
+                ("message", models.TextField()),
             ],
-            bases=('beagle_etl.basemodel',),
+            bases=("beagle_etl.basemodel",),
         ),
     ]
