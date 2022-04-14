@@ -18,7 +18,7 @@ METADATA_OUTPUT_FIELDS = [
     "sampleName",
     "cmoSampleName",
     "investigatorSampleId",
-    "patientId",
+    "cmoPatientId",
     "tumorOrNormal",
     "sampleOrigin",
     "dnaInputNg",
