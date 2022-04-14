@@ -72,3 +72,9 @@ class ETLConfiguration(models.Model):
     all_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     disabled_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+
+
+class SMILEMessage(BaseModel):
+    topic = models.CharField(max_length=1000)
+    request_id = models.CharField(max_length=100)
+    message = models.TextField()
