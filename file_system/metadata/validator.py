@@ -1,5 +1,6 @@
 import re
 from jsonschema import validate
+from django.conf import settings
 from jsonschema.exceptions import ValidationError
 from file_system.exceptions import MetadataValidationException
 
@@ -9,11 +10,11 @@ METADATA_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Metadata",
     "type": "object",
-    # "required": ["requestId", "igoSampleId"],
+    # "required": ["igoRequestId", "igoSampleId"],
     "properties": {
         "igoSampleId": {"type": "string"},
-        "requestId": {"type": "string"},
-        "sampleId": {"type": "string", "maxLength": 32},
+        settings.REQUEST_ID_METADATA_KEY: {"type": "string"},
+        settings.SAMPLE_ID_METADATA_KEY: {"type": "string", "maxLength": 32},
         "investigatorSampleId": {"type": "string"},
         "baitSet": {"type": ["null", "string"]},
         "cmoPatientId": {"type": "string"},
@@ -79,10 +80,18 @@ class MetadataValidator(object):
 
     @staticmethod
     def clean(metadata):
-        metadata["sampleClass"] = MetadataValidator.clean_value(metadata.pop("sampleClass"))
-        metadata["recipe"] = MetadataValidator.clean_value(metadata.pop("recipe"))
-        metadata["oncoTreeCode"] = MetadataValidator.clean_value(metadata.pop("oncoTreeCode"))
-        metadata["specimenType"] = MetadataValidator.clean_value(metadata.pop("specimenType"))
+        metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.CMO_SAMPLE_CLASS_METADATA_KEY)
+        )
+        metadata[settings.RECIPE_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.RECIPE_METADATA_KEY)
+        )
+        metadata[settings.ONCOTREE_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.ONCOTREE_METADATA_KEY)
+        )
+        metadata[settings.SAMPLE_CLASS_METADATA_KEY] = MetadataValidator.clean_value(
+            metadata.pop(settings.SAMPLE_CLASS_METADATA_KEY)
+        )
         metadata["preservation"] = MetadataValidator.clean_value(metadata.pop("preservation"))
         metadata["sex"] = MetadataValidator.clean_value(metadata.pop("sex"))
         metadata["tissueLocation"] = MetadataValidator.clean_value(metadata.pop("tissueLocation"))
@@ -108,7 +117,7 @@ class MetadataValidator(object):
 
 if __name__ == "__main__":
     validator = MetadataValidator(METADATA_SCHEMA)
-    test = {"requestId": "REQUEST_ID", "igoSampleId": "SAMPLE"}
+    test = {settings.REQUEST_ID_METADATA_KEY: "REQUEST_ID", "igoSampleId": "SAMPLE"}
     try:
         validator.validate(test)
     except MetadataValidationException as e:

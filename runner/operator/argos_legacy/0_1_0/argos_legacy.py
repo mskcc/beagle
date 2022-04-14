@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.conf import settings
 from file_system.models import File, FileGroup
 from runner.operator.operator import Operator
 from .construct_argos_pair import construct_argos_jobs
@@ -21,12 +22,18 @@ class ArgosOperator(Operator):
 
         if self.request_id:
             files = FileRepository.filter(
-                queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True}, filter_redact=True
+                queryset=self.files,
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True},
+                filter_redact=True,
             )
 
             cnt_tumors = FileRepository.filter(
                 queryset=self.files,
-                metadata={"requestId": self.request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+                metadata={
+                    settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                    "tumorOrNormal": "Tumor",
+                    "igocomplete": True,
+                },
                 filter_redact=True,
             ).count()
         elif self.pairing:
@@ -53,14 +60,14 @@ class ArgosOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample["metadata"]["sampleId"]
+            igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
 
         for igo_id in igo_id_group:
             sample = igo_id_group[igo_id][0]
-            sample_name = sample["metadata"]["sampleName"]
+            sample_name = sample["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
             samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
 
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
@@ -169,7 +176,7 @@ class ArgosOperator(Operator):
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
             tags = {
-                "requestId": self.request_id,
+                settings.REQUEST_ID_METADATA_KEY: self.request_id,
                 "sampleNameTumor": tumor_sample_name,
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
@@ -249,7 +256,9 @@ class ArgosOperator(Operator):
         data_files = FileRepository.filter(queryset=self.files, q=legacy_fg)
         sample_id = sample_data["sample_id"]
         sample = FileRepository.filter(
-            queryset=data_files, metadata={"cmoSampleName": sample_id, "igocomplete": True}, filter_redact=True
+            queryset=data_files,
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True},
+            filter_redact=True,
         )
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:
@@ -320,7 +329,7 @@ class ArgosOperator(Operator):
         for sample in error_samples:
             sample_name = sample.get("SM", "missingSampleName")
             sample_id = sample.get("sample_id", "missingSampleId")
-            patient_id = sample.get("patient_id", "missingPatientId")
+            patient_id = sample.get(settings.PATIENT_ID_METADATA_KEY, "missingPatientId")
             specimen_type = sample.get("specimen_type", "missingSpecimenType")
             s.append("| " + sample_id + " | " + sample_name + " |" + patient_id + " |" + specimen_type + " |")
             unformatted_s.append(sample_id + "\t" + sample_name + "\t" + patient_id + "\t" + specimen_type + "\n")

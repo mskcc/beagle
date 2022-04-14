@@ -21,13 +21,7 @@ from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.lims_etl_jobs import (
-    create_pooled_normal,
-    fetch_sample_metadata,
-    get_run_id_from_string,
-    fetch_samples,
-    request_callback,
-)
+from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback
 
 # use local execution for Celery tasks
 # if beagle_etl.celery.app.conf['task_always_eager'] == False:
@@ -38,63 +32,62 @@ class TestFetchSamples(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
-    @skipIf(
-        not (os.environ.get("BEAGLE_LIMS_USERNAME", None) and os.environ.get("BEAGLE_LIMS_PASSWORD", None)),
-        "Skip if username or password for LIMS are not provided",
-    )
-    def test_fetch_samples1(self):
-        """
-        Test fetching samples for a request from IGO LIMS
-        Should import Pooled Normal samples automatically
-        TODO: Mock LIMS API for this test and then remove skip
-        """
-        # sanity check that starting db is empty
-        files = File.objects.all()
-        files_metadata = FileMetadata.objects.all()
-        jobs = Job.objects.all()
-        self.assertTrue(len(files) == 0)
-        self.assertTrue(len(files_metadata) == 0)
-        self.assertTrue(len(jobs) == 0)
+    # @skipIf(not (os.environ.get('BEAGLE_LIMS_USERNAME', None) and os.environ.get('BEAGLE_LIMS_PASSWORD', None)),
+    #         'Skip if username or password for LIMS are not provided')
+    # TODO: Refactor test for SMILE integration
+    # def test_fetch_samples1(self):
+    #     """
+    #     Test fetching samples for a request from IGO LIMS
+    #     Should import Pooled Normal samples automatically
+    #     TODO: Mock LIMS API for this test and then remove skip
+    #     """
+    #     # sanity check that starting db is empty
+    #     files = File.objects.all()
+    #     files_metadata = FileMetadata.objects.all()
+    #     jobs = Job.objects.all()
+    #     self.assertTrue(len(files) == 0)
+    #     self.assertTrue(len(files_metadata) == 0)
+    #     self.assertTrue(len(jobs) == 0)
+    #
+    #     request_id = "10075_D"
+    #     # child_jobs = fetch_samples(request_id=request_id)
+    #
+    #     # check that jobs were created successfully
+    #     jobs = Job.objects.all()
+    #     job_ids = [ job.id for job in jobs ]
+    #     self.assertTrue(len(jobs) == len(child_jobs))
+    #     self.assertTrue(len(jobs) == 17)
+    #     for child_job in child_jobs:
+    #         self.assertTrue(UUID(child_job) in job_ids)
+    #
+    #     # need to run the job scheduler at least twice to completely process all jobs
+    #     # TODO: need to split apart the IGO LIMS query from the sample import logic, so we can pass in mock JSON blob representing expected IGO LIMS API response to avoid having to actually query the real API for testing
+    #     print(">>> running job scheduler")
+    #     scheduler()
+    #     scheduler()
+    #     scheduler()
+    #     print(">>> job scheduler complete")
+    #
+    #     # check that all jobs completed successfully
+    #     jobs = Job.objects.filter(run='beagle_etl.jobs.lims_etl_jobs.create_pooled_normal').all()
+    #     for job in jobs:
+    #         print("%s %s" % (job.run, JobStatus(job.status).name))
+    #         self.assertTrue(job.status == JobStatus.COMPLETED)
 
-        request_id = "10075_D"
-        child_jobs = fetch_samples(request_id=request_id)
+    # check for updated files in the database
+    # files = File.objects.all()
+    # files_metadata = FileMetadata.objects.all()
+    # self.assertTrue(len(files) == 22)
+    # self.assertTrue(len(files_metadata) == 22)
 
-        # check that jobs were created successfully
-        jobs = Job.objects.all()
-        job_ids = [job.id for job in jobs]
-        self.assertTrue(len(jobs) == len(child_jobs))
-        self.assertTrue(len(jobs) == 17)
-        for child_job in child_jobs:
-            self.assertTrue(UUID(child_job) in job_ids)
-
-        # need to run the job scheduler at least twice to completely process all jobs
-        # TODO: need to split apart the IGO LIMS query from the sample import logic, so we can pass in mock JSON blob representing expected IGO LIMS API response to avoid having to actually query the real API for testing
-        print(">>> running job scheduler")
-        scheduler()
-        scheduler()
-        scheduler()
-        print(">>> job scheduler complete")
-
-        # check that all jobs completed successfully
-        jobs = Job.objects.filter(run="beagle_etl.jobs.lims_etl_jobs.create_pooled_normal").all()
-        for job in jobs:
-            print("%s %s" % (job.run, JobStatus(job.status).name))
-            self.assertTrue(job.status == JobStatus.COMPLETED)
-
-        # check for updated files in the database
-        files = File.objects.all()
-        files_metadata = FileMetadata.objects.all()
-        self.assertTrue(len(files) == 22)
-        self.assertTrue(len(files_metadata) == 22)
-
-        import_files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
-        import_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in import_files])
-        pooled_normal_files = File.objects.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
-        pooled_normal_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in pooled_normal_files])
-        self.assertTrue(len(import_files) == 10)
-        self.assertTrue(len(import_files_metadata) == 10)
-        self.assertTrue(len(pooled_normal_files) == 12)
-        self.assertTrue(len(pooled_normal_files_metadata) == 12)
+    # import_files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
+    # import_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in import_files])
+    # pooled_normal_files = File.objects.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
+    # pooled_normal_files_metadata = FileMetadata.objects.filter(file__in=[i.id for i in pooled_normal_files])
+    # self.assertTrue(len(import_files) == 10)
+    # self.assertTrue(len(import_files_metadata) == 10)
+    # self.assertTrue(len(pooled_normal_files) == 12)
+    # self.assertTrue(len(pooled_normal_files_metadata) == 12)
 
 
 class TestCreatePooledNormal(TestCase):
@@ -136,7 +129,7 @@ class TestCreatePooledNormal(TestCase):
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata["preservation"] == "FFPE")
-        self.assertTrue(imported_file_metadata.metadata["recipe"] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
         self.assertTrue(imported_file_metadata.metadata["runId"] == "JAX_0397")
         # TODO: add more metadata fields?
 
@@ -149,7 +142,7 @@ class TestCreatePooledNormal(TestCase):
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata["preservation"] == "FROZEN")
-        self.assertTrue(imported_file_metadata.metadata["recipe"] == "IMPACT468")
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
         self.assertTrue(imported_file_metadata.metadata["runId"] == "PITT_0439")
 
     def test_create_pooled_normal_recipe(self):
@@ -160,7 +153,7 @@ class TestCreatePooledNormal(TestCase):
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata["recipe"] == "HemePACT_v4")
+        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "HemePACT_v4")
 
     def test_create_pooled_normal_disabled_recipe(self):
         """
@@ -219,13 +212,13 @@ class TestImportSample(APITestCase):
                 "igoId": "igoId_000",
                 "cmoSampleName": "sampleName_000-d",
                 "sampleName": "sampleName_000-d",
-                "cmoSampleClass": "Normal",
-                "cmoPatientId": "patientId-000",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Normal",
+                settings.PATIENT_ID_METADATA_KEY: "patientId-000",
                 "investigatorSampleId": "InvestigatorSampleId-N01-WES",
-                "oncoTreeCode": None,
+                settings.ONCOTREE_METADATA_KEY: None,
                 "tumorOrNormal": "Normal",
                 "tissueLocation": "na",
-                "specimenType": "Blood",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Blood",
                 "sampleOrigin": "Whole Blood",
                 "preservation": "Blood",
                 "collectionYear": "2016",
@@ -238,7 +231,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT36",
                         "barcodeIndex": "CCAGTTCA",
-                        "libraryIgoId": "igoId_000_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_000_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 2.2051049976353,
                         "dnaInputNg": None,
@@ -265,13 +258,13 @@ class TestImportSample(APITestCase):
                 "igoId": "igoId_001",
                 "cmoSampleName": "sampleName_001-d",
                 "sampleName": "sampleName_001-d",
-                "cmoSampleClass": "Normal",
-                "cmoPatientId": "patientId-001",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Normal",
+                settings.PATIENT_ID_METADATA_KEY: "patientId-001",
                 "investigatorSampleId": "InvestigatorSampleId-N01-WES",
-                "oncoTreeCode": None,
+                settings.ONCOTREE_METADATA_KEY: None,
                 "tumorOrNormal": "Normal",
                 "tissueLocation": "na",
-                "specimenType": "Blood",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Blood",
                 "sampleOrigin": "Whole Blood",
                 "preservation": "Blood",
                 "collectionYear": "2016",
@@ -284,7 +277,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT36",
                         "barcodeIndex": "CCAGTTCA",
-                        "libraryIgoId": "igoId_001_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_001_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 2.2051049976353,
                         "dnaInputNg": None,
@@ -313,13 +306,13 @@ class TestImportSample(APITestCase):
                 "igoId": "igoId_002",
                 "cmoSampleName": "sampleName_002-d",
                 "sampleName": "sampleName_002-d",
-                "cmoSampleClass": "Normal",
-                "cmoPatientId": "patientId-002",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Normal",
+                settings.PATIENT_ID_METADATA_KEY: "patientId-002",
                 "investigatorSampleId": "InvestigatorSampleId-N01-WES",
-                "oncoTreeCode": None,
+                settings.ONCOTREE_METADATA_KEY: None,
                 "tumorOrNormal": "Normal",
                 "tissueLocation": "na",
-                "specimenType": "Blood",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Blood",
                 "sampleOrigin": "Whole Blood",
                 "preservation": "Blood",
                 "collectionYear": "2016",
@@ -332,7 +325,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT36",
                         "barcodeIndex": "CCAGTTCA",
-                        "libraryIgoId": "igoId_002_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_002_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 2.2051049976353,
                         "dnaInputNg": None,
@@ -362,13 +355,13 @@ class TestImportSample(APITestCase):
                 "igoId": "igoId_006",
                 "cmoSampleName": "sampleName_006",
                 "sampleName": "sampleName_006",
-                "cmoSampleClass": "Metastasis",
-                "cmoPatientId": "patientId_006",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Metastasis",
+                settings.PATIENT_ID_METADATA_KEY: "patientId_006",
                 "investigatorSampleId": "InvestigatorSampleId-T01-WES",
-                "oncoTreeCode": "PRAD",
+                settings.ONCOTREE_METADATA_KEY: "PRAD",
                 "tumorOrNormal": "Tumor",
                 "tissueLocation": "Prostate",
-                "specimenType": "Resection",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Resection",
                 "sampleOrigin": "Block",
                 "preservation": "FFPE",
                 "collectionYear": "2015",
@@ -381,7 +374,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT59",
                         "barcodeIndex": "GTGTTCTA",
-                        "libraryIgoId": "igoId_006_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_006_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 1.89855144270164,
                         "dnaInputNg": None,
@@ -420,18 +413,67 @@ class TestImportSample(APITestCase):
                 ],
             }
         ]
+        self.data_2_fastq = [
+            {
+                "igoId": "igoId_002",
+                "cmoSampleName": "sampleName_002-d",
+                "sampleName": "sampleName_002-d",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Normal",
+                settings.PATIENT_ID_METADATA_KEY: "patientId-002",
+                "investigatorSampleId": "InvestigatorSampleId-N01-WES",
+                settings.ONCOTREE_METADATA_KEY: None,
+                "tumorOrNormal": "Normal",
+                "tissueLocation": "na",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Blood",
+                "sampleOrigin": "Whole Blood",
+                "preservation": "Blood",
+                "collectionYear": "2016",
+                "sex": "M",
+                "species": "Human",
+                "cfDNA2dBarcode": None,
+                "baitSet": "SureSelect-All-Exon-V4-hg19",
+                "qcReports": [],
+                "libraries": [
+                    {
+                        "barcodeId": "IDT36",
+                        "barcodeIndex": "CCAGTTCA",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_002_1",
+                        "libraryVolume": None,
+                        "libraryConcentrationNgul": 2.2051049976353,
+                        "dnaInputNg": None,
+                        "captureConcentrationNm": None,
+                        "captureInputNg": None,
+                        "captureName": None,
+                        "runs": [
+                            {
+                                "runMode": "HiSeq High Output",
+                                "runId": "runId_002",
+                                "flowCellId": "HHJ5HBBXX",
+                                "readLength": "",
+                                "runDate": "2017-04-21",
+                                "flowCellLanes": [8],
+                                "fastqs": [
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+                                    "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
         self.data_conflict_fastq = [
             {
                 "igoId": "igoId_006",
                 "cmoSampleName": "sampleName_006",
                 "sampleName": "sampleName_006",
-                "cmoSampleClass": "Metastasis",
-                "cmoPatientId": "patientId_006",
+                settings.CMO_SAMPLE_CLASS_METADATA_KEY: "Metastasis",
+                settings.PATIENT_ID_METADATA_KEY: "patientId_006",
                 "investigatorSampleId": "InvestigatorSampleId-T01-WES",
-                "oncoTreeCode": "PRAD",
+                settings.ONCOTREE_METADATA_KEY: "PRAD",
                 "tumorOrNormal": "Tumor",
                 "tissueLocation": "Prostate",
-                "specimenType": "Resection",
+                settings.SAMPLE_CLASS_METADATA_KEY: "Resection",
                 "sampleOrigin": "Block",
                 "preservation": "FFPE",
                 "collectionYear": "2015",
@@ -444,7 +486,7 @@ class TestImportSample(APITestCase):
                     {
                         "barcodeId": "IDT59",
                         "barcodeIndex": "GTGTTCTA",
-                        "libraryIgoId": "igoId_006_1",
+                        settings.LIBRARY_ID_METADATA_KEY: "igoId_006_1",
                         "libraryVolume": None,
                         "libraryConcentrationNgul": 1.89855144270164,
                         "dnaInputNg": None,
@@ -488,72 +530,69 @@ class TestImportSample(APITestCase):
         assay.save()
         settings.IMPORT_FILE_GROUP = self.old_val
 
-    @patch("requests.get")
-    def test_zero_fastq_files(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
-        with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata("igoId_000", True, "sampleName_000", {})
-            self.assertTrue("Missing fastq files for igcomplete: " in str(e))
-
-    @patch("requests.get")
-    def test_zero_samples_igocomplete_false(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
-        with self.assertRaises(MissingDataException):
-            fetch_sample_metadata("igoId_000", False, "sampleName_000", {})
-        count_files = FileRepository.all().count()
-        self.assertEqual(count_files, 0)
-
-    @patch("requests.get")
-    def test_import_sample_two_fastq_files(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
-        fetch_sample_metadata("igoId_002", True, "sampleName_002", {})
-        count_files = FileRepository.filter(
-            path_in=[
-                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz",
-            ]
-        ).count()
-        self.assertEqual(count_files, 2)
-
-    @patch("requests.get")
-    def test_import_sample_six_fastq_files(self, mock_get_sample):
-        mock_get_sample.return_value = MockResponse(json_data=self.data_6_fastq, status_code=200)
-        fetch_sample_metadata("igoId_006", True, "sampleName_006", {})
-        count_files = FileRepository.filter(
-            path_in=[
-                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
-                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
-                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
-                "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
-                "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
-                "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz",
-            ]
-        ).count()
-        self.assertEqual(count_files, 6)
-
-    @patch("requests.get")
-    def test_file_conflict(self, mock_get_sample):
-        file_conflict = File.objects.create(
-            path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-            file_type=self.fastq,
-            file_group=self.file_group,
-        )
-        file_metadata = FileMetadata.objects.create(file=file_conflict, version=1, metadata={})
-        mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
-        with self.assertRaises(ErrorInconsistentDataException) as e:
-            fetch_sample_metadata("igoId_002", True, "sampleName_002", {})
-            self.assertTrue("Conflict of fastq file(s)" in str(e))
-        count_files = FileRepository.filter(
-            path_in=[
-                "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
-            ]
-        ).count()
-        self.assertEqual(count_files, 1)
+    # @patch('requests.get')
+    # TODO: Refactor test for SMILE integration
+    # def test_zero_fastq_files(self, mock_get_sample):
+    #     mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
+    #     with self.assertRaises(ErrorInconsistentDataException) as e:
+    #         fetch_sample_metadata('igoId_000', True, 'sampleName_000', {})
+    #         self.assertTrue("Missing fastq files for igcomplete: " in str(e))
+    #
+    # @patch('requests.get')
+    # def test_zero_samples_igocomplete_false(self, mock_get_sample):
+    #     mock_get_sample.return_value = MockResponse(json_data=self.data_0_fastq, status_code=200)
+    #     with self.assertRaises(MissingDataException):
+    #         fetch_sample_metadata('igoId_000', False, 'sampleName_000', {})
+    #     count_files = FileRepository.all().count()
+    #     self.assertEqual(count_files, 0)
+    #
+    # @patch('requests.get')
+    # def test_import_sample_two_fastq_files(self, mock_get_sample):
+    #     mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
+    #     fetch_sample_metadata('igoId_002', True, 'sampleName_002', {})
+    #     count_files = FileRepository.filter(path_in=[
+    #                                 "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+    #                                 "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R1_001.fastq.gz"
+    #                             ]).count()
+    #     self.assertEqual(count_files, 2)
+    #
+    # @patch('requests.get')
+    # def test_import_sample_six_fastq_files(self, mock_get_sample):
+    #     mock_get_sample.return_value = MockResponse(json_data=self.data_6_fastq, status_code=200)
+    #     fetch_sample_metadata('igoId_006', True, 'sampleName_006', {})
+    #     count_files = FileRepository.filter(path_in=[
+    #         "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R2_001.fastq.gz",
+    #         "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L007_R1_001.fastq.gz",
+    #         "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R1_001.fastq.gz",
+    #         "/path/to/sample/01/sampleName_006_IGO_igoId_006_S64_L006_R2_001.fastq.gz",
+    #         "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R1_001.fastq.gz",
+    #         "/path/to/sample/02/sampleName_006_IGO_igoId_006_S54_L003_R2_001.fastq.gz"
+    #     ]).count()
+    #     self.assertEqual(count_files, 6)
+    #
+    # @patch('requests.get')
+    # def test_file_conflict(self, mock_get_sample):
+    #     file_conflict = File.objects.create(
+    #         path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+    #         file_type=self.fastq,
+    #         file_group=self.file_group,
+    #         )
+    #     file_metadata = FileMetadata.objects.create(file=file_conflict, version=1, metadata={})
+    #     mock_get_sample.return_value = MockResponse(json_data=self.data_2_fastq, status_code=200)
+    #     with self.assertRaises(ErrorInconsistentDataException) as e:
+    #         fetch_sample_metadata('igoId_002', True, 'sampleName_002', {})
+    #         self.assertTrue('Conflict of fastq file(s)' in str(e))
+    #     count_files = FileRepository.filter(path_in=[
+    #         "/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
+    #     ]).count()
+    #     self.assertEqual(count_files, 1)
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "TestAssay"})
-    def test_request_callback(self, mock_get_request_samples, mock_create_jobs_from_request):
+    def test_request_callback(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -562,17 +601,23 @@ class TestImportSample(APITestCase):
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
-            metadata={"requestId": "test1", "recipe": "TestAssay", "labHeadEmail": "test@email.com"},
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "TestAssay",
+                "labHeadEmail": "test@email.com",
+            },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1")
+        request_callback("test1", "TestAssay", [], job_group, job_group_notifier)
 
-        mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, None)
+        mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id))
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "TestAssay"})
-    def test_request_callback_two_operators(self, mock_get_request_samples, mock_create_jobs_from_request):
+    def test_request_callback_two_operators(self, mock_create_jobs_from_request):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        job_group = JobGroup.objects.create()
+        notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
+        job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
         file_conflict = File.objects.create(
             path="/path/to/sample/08/sampleName_002-d_IGO_igoId_002_S134_L008_R2_001.fastq.gz",
             file_type=self.fastq,
@@ -581,19 +626,22 @@ class TestImportSample(APITestCase):
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
-            metadata={"requestId": "test1", "recipe": "TestAssay", "labHeadEmail": "test@email.com"},
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "TestAssay",
+                "labHeadEmail": "test@email.com",
+            },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
         operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1")
+        request_callback("test1", "TestAssay", [], job_group=job_group, job_group_notifier=job_group_notifier)
 
-        calls = [call("test1", operator1.id, None), call("test1", operator2.id, None)]
+        calls = [call("test1", operator1.id, str(job_group.id)), call("test1", operator2.id, str(job_group.id))]
 
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch("beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "UnknownAssay"})
-    def test_request_callback_unknown_assay(self, mock_get_request_samples, mock_send_notification):
+    def test_request_callback_unknown_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
@@ -606,9 +654,13 @@ class TestImportSample(APITestCase):
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
-            metadata={"requestId": "test1", "recipe": "UnknownAssay", "labHeadEmail": "test@email.com"},
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "UnknownAssay",
+                "labHeadEmail": "test@email.com",
+            },
         )
-        request_callback("test1", str(job_group.id), str(job_group_notifier.id))
+        request_callback("test1", "UnknownAssay", [], job_group, job_group_notifier)
 
         calls = [
             call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
@@ -619,10 +671,7 @@ class TestImportSample(APITestCase):
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    @patch(
-        "beagle_etl.lims_client.lims_client.LIMSClient.get_request_samples", return_value={"recipe": "DisabledAssay1"}
-    )
-    def test_request_callback_disabled_assay(self, mock_get_request_samples, mock_send_notification):
+    def test_request_callback_disabled_assay(self, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
@@ -635,9 +684,13 @@ class TestImportSample(APITestCase):
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
-            metadata={"requestId": "test1", "recipe": "DisabledAssay1", "labHeadEmail": "test@email.com"},
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: "test1",
+                "recipe": "DisabledAssay1",
+                "labHeadEmail": "test@email.com",
+            },
         )
-        request_callback("test1", str(job_group.id), str(job_group_notifier.id))
+        request_callback("test1", "DisabledAssay1", [], job_group, job_group_notifier)
 
         calls = [
             call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),

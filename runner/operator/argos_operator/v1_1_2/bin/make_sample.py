@@ -4,6 +4,7 @@ This constructs a sample dictionary from the metadata in the Voyager/Beagle data
 import logging
 import os
 import re
+from django.conf import settings
 from runner.operator.helper import format_sample_name, get_r_orientation, spoof_barcode
 from file_system.repository.file_repository import FileRepository
 from pprint import pprint
@@ -129,19 +130,21 @@ def build_sample(data, ignore_sample_formatting=False):
         bid = value["id"]
         sequencing_center = meta["sequencingCenter"]
         platform = meta["platform"]
-        request_id = meta["requestId"]
-        sample_id = meta["sampleId"]
-        library_id = meta["libraryId"]
+        request_id = meta[settings.REQUEST_ID_METADATA_KEY]
+        sample_id = meta[settings.SAMPLE_ID_METADATA_KEY]
+        library_id = meta[settings.LIBRARY_ID_METADATA_KEY]
         bait_set = meta["baitSet"]
         tumor_type = meta["tumorOrNormal"]
-        specimen_type = meta["specimenType"]
+        specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
         species = meta["species"]
-        cmo_sample_name = format_sample_name(meta["sampleName"], specimen_type, ignore_sample_formatting)
+        cmo_sample_name = format_sample_name(
+            meta[settings.CMO_SAMPLE_NAME_METADATA_KEY], specimen_type, ignore_sample_formatting
+        )
         if cmo_sample_name == "sampleNameMalformed":
             LOGGER.error("sampleName for %s is malformed", sample_id)
         flowcell_id = meta["flowCellId"]
         barcode_index = meta["barcodeIndex"]
-        cmo_patient_id = meta["patientId"]
+        cmo_patient_id = meta[settings.PATIENT_ID_METADATA_KEY]
         platform_unit = flowcell_id
         run_date = meta["runDate"]
         r_orientation = meta["R"]

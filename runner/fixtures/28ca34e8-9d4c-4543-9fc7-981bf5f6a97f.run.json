@@ -15,7 +15,7 @@
       "output_metadata": {},
       "output_directory": "/juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f",
       "tags": {
-        "requestId": "ALN-REQ-ID",
+        "igoRequestId": "ALN-REQ-ID",
         "labHeadName": "Dr. McGee",
         "labHeadEmail": "labhead@test.com",
         "sampleNameTumor": "s_C_ALLANT_T003_d",

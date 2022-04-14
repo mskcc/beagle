@@ -1,4 +1,6 @@
 from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
+from collections.abc import Iterable
+from django.conf import settings
 
 
 class TempoSample(Sample):
@@ -25,11 +27,11 @@ class TempoSample(Sample):
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict:
             self.bait_set = self._get_bait_sets().pop()
-            self.specimen_type = self.metadata["specimenType"][0]
-            self.sample_class = self.metadata["sampleClass"][0]
-            self.cmo_sample_name = self.metadata["cmoSampleName"][0]
+            self.specimen_type = self.metadata[settings.SAMPLE_CLASS_METADATA_KEY][0]
+            self.sample_class = self.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY][0]
+            self.cmo_sample_name = self.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY][0]
             self.run_mode = self.remapped_run_mode.pop()
-            self.patient_id = self.metadata["patientId"][0]
+            self.patient_id = self.metadata[settings.PATIENT_ID_METADATA_KEY][0]
 
     def _resolve_target(self, bait_set):
         """ """
@@ -80,7 +82,12 @@ class TempoSample(Sample):
         Currently even if there are conflicting fields, this TempoSample object will still
         be runnable, as the fastqs are still paired in the Sample object
         """
-        fields_to_check = ["patientId", "specimenType", "sampleClass", "cmoSampleName"]
+        fields_to_check = [
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+        ]
         for key in fields_to_check:
             values = self.metadata[key]
             if not self._values_are_list(key):
@@ -110,23 +117,25 @@ class TempoSample(Sample):
         that isn't relevant right now
         """
         metadata = dict()
+        meta_orig = self.metadata
         for key in self.metadata:
             values = self.metadata[key]
-            # Removing qcReports, which is a list containing a dictionary
-            if key not in "qcReports":
-                if self._values_are_list(key):
-                    # remove duplicate list values
-                    values_set = set(tuple(x) for x in values)
-                    values = [list(x) for x in values_set]
-                    metadata[key] = values
-                else:
-                    # remove empty strings
-                    values = [str(i) for i in values if i]
-                    if len(set(values)) == 1:
-                        metadata[key] = values[0]
+            if isinstance(values, Iterable):
+                # Removing qcReports, which is a list containing a dictionary
+                if key not in ["qcReports", "sampleAliases", "patientAliases"]:
+                    if self._values_are_list(key):
+                        # remove duplicate list values
+                        values_set = set(tuple(x) for x in values)
+                        values = [list(x) for x in values_set]
+                        metadata[key] = values
                     else:
-                        value = set(values)
-                        metadata[key] = ",".join(value)
+                        # remove empty strings
+                        values = [str(i) for i in values if i]
+                        if len(set(values)) == 1:
+                            metadata[key] = values[0]
+                        else:
+                            value = set(values)
+                            metadata[key] = ",".join(value)
         return metadata
 
     def _values_are_list(self, key):
@@ -140,13 +149,13 @@ class TempoSample(Sample):
 
     def __str__(self):
         keys_for_str = [
-            "sampleName",
-            "requestId",
-            "sampleId",
-            "patientId",
-            "specimenType",
-            "sampleClass",
-            "cmoSampleName",
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
+            settings.REQUEST_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
         ]
         s = ""
         metadata = self.dedupe_metadata_values()

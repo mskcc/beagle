@@ -184,7 +184,12 @@ class FileTest(APITestCase):
         response = self.client.get("/v0/fs/files/?file_type=fasta&filename_regex=sample_1_", format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 2)
-        response = self.client.get("/v0/fs/files/?metadata=requestId:request_1", format="json")
+        response = self.client.get(
+            "/v0/fs/files/?metadata={metadata_request_key}:request_1".format(
+                metadata_request_key=settings.REQUEST_ID_METADATA_KEY
+            ),
+            format="json",
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 3)
 
@@ -210,7 +215,7 @@ class FileTest(APITestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["metadata"]["requestId"], "Request_001")
+        self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
 
@@ -247,7 +252,7 @@ class FileTest(APITestCase):
             format="json",
         )
         self.assertEqual(response.data["user"], user1.username)
-        self.assertEqual(response.data["metadata"]["requestId"], "Request_001")
+        self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
 
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
@@ -311,8 +316,8 @@ class FileTest(APITestCase):
         second_file_metadata = (
             FileMetadata.objects.order_by("file", "-version").distinct("file").filter(file=str(second_file.id)).first()
         )
-        self.assertEqual(first_file_metadata.metadata["requestId"], "Request_001")
-        self.assertEqual(second_file_metadata.metadata["requestId"], "Request_002")
+        self.assertEqual(first_file_metadata.metadata[settings.REQUEST_ID_METADATA_KEY], "Request_001")
+        self.assertEqual(second_file_metadata.metadata[settings.REQUEST_ID_METADATA_KEY], "Request_002")
 
     def test_fail_batch_patch_file_metadata(self):
         first_file = self._create_single_file(
@@ -353,8 +358,8 @@ class FileTest(APITestCase):
         second_file_metadata = (
             FileMetadata.objects.order_by("file", "-version").distinct("file").filter(file=str(second_file.id)).first()
         )
-        self.assertEqual(first_file_metadata.metadata["requestId"], "first_request_id")
-        self.assertEqual(second_file_metadata.metadata["requestId"], "second_request_id")
+        self.assertEqual(first_file_metadata.metadata[settings.REQUEST_ID_METADATA_KEY], "first_request_id")
+        self.assertEqual(second_file_metadata.metadata[settings.REQUEST_ID_METADATA_KEY], "second_request_id")
 
     def test_update_file_metadata_users_update(self):
         _file = self._create_single_file(
@@ -380,7 +385,7 @@ class FileTest(APITestCase):
             format="json",
         )
         self.assertEqual(response.data["user"], user1.username)
-        self.assertEqual(response.data["metadata"]["requestId"], "Request_001")
+        self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
 
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
@@ -403,15 +408,25 @@ class FileTest(APITestCase):
             format="json",
         )
         self.assertEqual(response.data["user"], user2.username)
-        self.assertEqual(response.data["metadata"]["requestId"], "Request_002")
+        self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_002")
 
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_002")
 
         # Check listing files as well
-        response = self.client.get("/v0/fs/files/?metadata=requestId:Request_001", format="json")
+        response = self.client.get(
+            "/v0/fs/files/?metadata={request_id_key}:Request_001".format(
+                request_id_key=settings.REQUEST_ID_METADATA_KEY
+            ),
+            format="json",
+        )
         self.assertEqual(len(response.json()["results"]), 0)
-        response = self.client.get("/v0/fs/files/?metadata=requestId:Request_002", format="json")
+        response = self.client.get(
+            "/v0/fs/files/?metadata={request_id_key}:Request_002".format(
+                request_id_key=settings.REQUEST_ID_METADATA_KEY
+            ),
+            format="json",
+        )
         self.assertEqual(len(response.json()["results"]), 1)
 
         # def test_update_file_metadata_invalid(self):
@@ -483,7 +498,10 @@ class FileTest(APITestCase):
         self.assertEqual(len(response.json()["results"]), 1)
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.get(
-            "/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata=requestId", format="json"
+            "/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata={request_id_key}".format(
+                request_id_key=settings.REQUEST_ID_METADATA_KEY
+            ),
+            format="json",
         )
         self.assertEqual(response.json()["results"][0], "1")
 
@@ -503,10 +521,18 @@ class FileTest(APITestCase):
         self._create_single_file("/path/to/file5.fastq", "fastq", str(self.file_group.id), "4", "3")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.get(
-            "/v0/fs/files/?metadata=requestId:1&values_metadata=requestId,sampleId", format="json"
+            "/v0/fs/files/?metadata={request_id_key}:1&values_metadata=igoRequestId,primaryId".format(
+                request_id_key=settings.REQUEST_ID_METADATA_KEY
+            ),
+            format="json",
         )
         self.assertEqual(len(response.json()["results"]), 2)
-        response = self.client.get("/v0/fs/files/?values_metadata=requestId,sampleId", format="json")
+        response = self.client.get(
+            "/v0/fs/files/?values_metadata={request_id_key},{sample_id_key}".format(
+                request_id_key=settings.REQUEST_ID_METADATA_KEY, sample_id_key=settings.SAMPLE_ID_METADATA_KEY
+            ),
+            format="json",
+        )
         self.assertEqual(len(response.json()["results"]), 5)
 
     def test_sample_list(self):
