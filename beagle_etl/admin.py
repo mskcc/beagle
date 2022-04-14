@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
@@ -24,7 +25,7 @@ restart.short_description = "Restart"
 
 class RecipeFilter(SimpleListFilter):
     title = "Recipe"
-    parameter_name = "recipe"
+    parameter_name = settings.RECIPE_METADATA_KEY
 
     def lookups(self, request, model_admin):
         options = set()
@@ -36,7 +37,7 @@ class RecipeFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value():
-            return queryset.filter(args__request_metadata__recipe=self.value())
+            return queryset.filter(args__request_metadata__genePanel=self.value())
         return queryset
 
 

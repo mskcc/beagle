@@ -218,11 +218,11 @@ def _generate_summary(req):
 
 
 def generate_description(job_group, job_group_notifier, request):
-    files = FileRepository.filter(metadata={"requestId": request, "igocomplete": True})
+    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
     if files:
         data = files.first().metadata
-        request_id = data["requestId"]
-        recipe = data["recipe"]
+        request_id = data[settings.REQUEST_ID_METADATA_KEY]
+        recipe = data[settings.RECIPE_METADATA_KEY]
         a_name = data["dataAnalystName"]
         a_email = data["dataAnalystEmail"]
         i_name = data["investigatorName"]
@@ -235,17 +235,17 @@ def generate_description(job_group, job_group_notifier, request):
         data_access_emails = data["dataAccessEmails"] if "dataAccessEmails" in data else ""
         other_contact_emails = data["otherContactEmails"] if "otherContactEmails" in data else ""
 
-        num_samples = len(files.order_by().values("metadata__cmoSampleName").annotate(n=Count("pk")))
+        num_samples = len(files.order_by().values("metadata__ciTag").annotate(n=Count("pk")))
         num_tumors = len(
             FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Tumor"})
             .order_by()
-            .values("metadata__cmoSampleName")
+            .values("metadata__ciTag")
             .annotate(n=Count("pk"))
         )
         num_normals = len(
             FileRepository.filter(queryset=files, metadata={"tumorOrNormal": "Normal"})
             .order_by()
-            .values("metadata__cmoSampleName")
+            .values("metadata__ciTag")
             .annotate(n=Count("pk"))
         )
         operator_start_event = OperatorStartEvent(
@@ -272,10 +272,10 @@ def generate_description(job_group, job_group_notifier, request):
 
 
 def generate_label(job_group_id, request):
-    files = FileRepository.filter(metadata={"requestId": request, "igocomplete": True})
+    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
     if files:
         data = files.first().metadata
-        recipe = data["recipe"]
+        recipe = data[settings.RECIPE_METADATA_KEY]
         recipe_label_event = SetLabelEvent(job_group_id, recipe).to_dict()
         send_notification.delay(recipe_label_event)
 
@@ -585,7 +585,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
 
     event = RunFinishedEvent(
         job_group_notifier_id,
-        run.tags.get("requestId", "UNKNOWN REQUEST"),
+        run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
         str(run.run_id),
         pipeline_name,
         pipeline_link,

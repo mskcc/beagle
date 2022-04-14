@@ -25,7 +25,7 @@ from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEve
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing.tsv")  # used for historical pairing
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class TempoMPGenOperator(Operator):
@@ -38,7 +38,7 @@ class TempoMPGenOperator(Operator):
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
-        data_query_set = [Q(metadata__recipe=value) for value in set(data)]
+        data_query_set = [Q(("metadata__{}".format(settings.RECIPE_METADATA_KEY), value)) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -61,14 +61,16 @@ class TempoMPGenOperator(Operator):
 
     def filter_out_missing_fields_query(self):
         """
-        This is for legacy purposes - if FileMetadata don't contain sampleClass or cmoSampleName,
+        This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(metadata__cmoSampleName__isnull=False) & Q(metadata__sampleClass__isnull=False)
+        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_TAG_METADATA_KEY), False)) & Q(
+            ("metadata__{}__isnull".format(settings.CMO_SAMPLE_CLASS_METADATA_KEY), False)
+        )
         return query
 
     def get_jobs(self, pairing_override=None):
-        logger.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
+        LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
@@ -118,7 +120,7 @@ class TempoMPGenOperator(Operator):
         patient_files = dict()
         no_patient_samples = list()
         for entry in tempo_files:
-            patient_id = entry.metadata["patientId"]
+            patient_id = entry.metadata[settings.PATIENT_ID_METADATA_KEY]
             if patient_id:
                 patient_ids.add(patient_id)
                 if patient_id not in patient_files:
@@ -225,12 +227,12 @@ class TempoMPGenOperator(Operator):
     def create_unpaired_txt_file(self):
         # Add runDate
         fields = [
-            "cmoSampleName",
-            "patientId",
-            "sampleId",
-            "specimenType",
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
             "runMode",
-            "sampleClass",
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
             "baitSet",
             "runDate",
         ]
@@ -280,12 +282,12 @@ class TempoMPGenOperator(Operator):
 
     def create_conflict_samples_txt_file(self):
         fields = [
-            "cmoSampleName",
-            "patientId",
-            "sampleId",
-            "specimenType",
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
             "runMode",
-            "sampleClass",
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
             "baitSet",
             "runDate",
         ]
@@ -306,9 +308,9 @@ class TempoMPGenOperator(Operator):
         q = None
         for i in l:
             if q:
-                q |= Q(metadata__requestId=i)
+                q |= Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY), i))
             else:
-                q = Q(metadata__requestId=i)
+                q = Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY), i))
         return q
 
     def get_exclusions(self):
@@ -341,8 +343,15 @@ class TempoMPGenOperator(Operator):
         """
         tracker = ""
         key_order = ["investigatorSampleId", "externalSampleId", "sampleClass"]
-        key_order += ["baitSet", "requestId"]
-        extra_keys = ["tumorOrNormal", "species", "recipe", "specimenType", "sampleId", "patientId"]
+        key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
+        extra_keys = [
+            "tumorOrNormal",
+            "species",
+            settings.RECIPE_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+        ]
         extra_keys += [
             "investigatorName",
             "investigatorEmail",

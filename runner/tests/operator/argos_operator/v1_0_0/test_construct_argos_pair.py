@@ -31,7 +31,10 @@ class TestConstructPair(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         files = File.objects.filter(
-            filemetadata__metadata__requestId="10075_D", filemetadata__metadata__igocomplete=True
+            {
+                "filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY): "10075_D",
+                "filemetadata__metadata__igocomplete": True,
+            }
         ).all()
         data = list()
         for file in files:
@@ -45,7 +48,7 @@ class TestConstructPair(TestCase):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample["metadata"]["sampleId"]
+            igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)

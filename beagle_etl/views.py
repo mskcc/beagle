@@ -10,7 +10,6 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
 from beagle_etl.models import JobStatus, Job, ETLConfiguration
 from drf_yasg.utils import swagger_auto_schema
-from .jobs.lims_etl_jobs import create_request_job
 from .serializers import (
     JobSerializer,
     CreateJobSerializier,
@@ -177,6 +176,7 @@ class AssayViewSet(GenericAPIView):
         return Response({"errors": error_message_list}, status=status.HTTP_404_NOT_FOUND)
 
 
+## TODO: Deprecated
 class RequestIdLimsPullViewSet(GenericAPIView):
     serializer_class = RequestIdLimsPullSerializer
 

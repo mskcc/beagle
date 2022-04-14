@@ -4,13 +4,17 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_tempo_pair import construct_tempo_jobs
 from .bin.pair_request import compile_pairs
+from django.conf import settings
 from .bin.make_sample import build_sample
 
 
 class TempoOperator(Operator):
     def get_jobs(self):
         files = self.files.filter(
-            filemetadata__metadata__requestId=self.request_id, filemetadata__metadata__igocomplete=True
+            **{
+                "filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY): self.request_id,
+                "filemetadata__metadata__igocomplete": True,
+            }
         ).all()
         tempo_jobs = list()
 
@@ -27,7 +31,7 @@ class TempoOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample["metadata"]["sampleId"]
+            igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
@@ -46,9 +50,8 @@ class TempoOperator(Operator):
                         "app": self.get_pipeline_id(),
                         "inputs": tempo_inputs,
                         "name": name,
-                        "tags": {"requestId": self.request_id},
+                        "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id},
                     }
                 )
             )
-
         return tempo_jobs

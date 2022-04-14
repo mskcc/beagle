@@ -3,12 +3,13 @@ from file_system.models import File, FileMetadata
 from file_system.repository.file_repository import FileRepository
 from .make_sample import build_sample, remove_with_caveats
 import logging
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 def get_samples_from_patient_id(patient_id):
-    files = FileRepository.filter(metadata={"patientId": patient_id})
+    files = FileRepository.filter(metadata={settings.PATIENT_ID_METADATA_KEY: patient_id})
 
     data = list()
     for f in files:
@@ -23,7 +24,7 @@ def get_samples_from_patient_id(patient_id):
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample["metadata"]["sampleId"]
+        igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)

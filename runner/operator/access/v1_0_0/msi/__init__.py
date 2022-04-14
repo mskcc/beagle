@@ -7,7 +7,7 @@ import os
 import json
 import logging
 from jinja2 import Template
-
+from django.conf import settings
 from file_system.models import File
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 # Todo: needs to work for Nucleo bams as well
 SAMPLE_ID_SEP = "_cl_aln"
 TUMOR_SEARCH = "-L0"
+TUMOR_SEARCH_NEW = "_L0"
 NORMAL_SEARCH = "-N0"
+NORMAL_SEARCH_NEW = "_N0"
 STANDARD_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR.bam"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -102,9 +104,9 @@ class AccessLegacyMSIOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {
-                        "requestId": self.request_id,
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
                         "cmoSampleIds": job["sample_name"],
-                        "patientId": "-".join(job["sample_name"][0].split("-")[0:2]),
+                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["sample_name"][0].split("-")[0:2]),
                     },
                 }
             )
