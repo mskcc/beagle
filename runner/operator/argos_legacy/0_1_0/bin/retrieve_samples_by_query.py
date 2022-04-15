@@ -234,7 +234,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata["recipe"] = bait_set
     metadata["runId"] = run_ids
     metadata["preservation"] = preservation_types
-    metadata["libraryId"] = sample_name + "_1"
+    metadata["libraryIgoId"] = sample_name + "_1"
     # because rgid depends on flowCellId and barcodeIndex, we will
     # spoof barcodeIndex so that pairing can work properly; see
     # build_sample in runner.operator.argos_legacy.bin

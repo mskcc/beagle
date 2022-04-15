@@ -90,7 +90,7 @@ class TestMakeSample(TestCase):
                     "labHeadEmail": "email@internet.com",
                     "labHeadName": "John Smith",
                     "libraryConcentrationNgul": 10.6,
-                    "libraryId": None,
+                    "libraryIgoId": None,
                     "libraryVolume": None,
                     settings.ONCOTREE_METADATA_KEY: None,
                     settings.PATIENT_ID_METADATA_KEY: "C-8VK0V7",
