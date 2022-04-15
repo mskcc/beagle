@@ -446,7 +446,7 @@ class FullSampleSerializer(serializers.ModelSerializer):
 
     def get_patient_id(self, obj):
         return FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata="patientId"
+            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata=settings.PATIENT_ID_METADATA_KEY
         ).first()
 
     class Meta:

@@ -18,7 +18,7 @@ METADATA_OUTPUT_FIELDS = [
     "sampleName",
     "cmoSampleName",
     "investigatorSampleId",
-    "patientId",
+    "cmoPatientId",
     "tumorOrNormal",
     "sampleOrigin",
     "dnaInputNg",
@@ -95,7 +95,7 @@ def construct_sample_inputs(samples, request_id):
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
             barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
-            library_id=meta["libraryId"],
+            library_id=meta["libraryIgoId"],
         )
 
         sample = json.loads(input_file)

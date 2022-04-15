@@ -27,7 +27,7 @@
                     "class": "File"
                 },
                 "primaryId": "C-000884-L011-d",
-                "patientId": "C-000884",
+                "cmoPatientId": "C-000884",
                 "tumorOrNormal": "Tumor"
             }],
             "files": [
@@ -102,7 +102,7 @@
                     "location": "bid://fffff52a-0696-48d4-9ca5-6580daa44ab3"
                 },
                 "primaryId": "",
-                "patientId": "",
+                "cmoPatientId": "",
                 "sampleClass": ""
             }],
             "value": [{
@@ -113,7 +113,7 @@
                     "size": 7313069069
                 },
                 "primaryId": "C-000884-L011-d",
-                "patientId": "C-000884",
+                "cmoPatientId": "C-000884",
                 "tumorOrNormal": "Tumor"
             }],
             "files": [
