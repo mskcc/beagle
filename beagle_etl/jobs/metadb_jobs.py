@@ -511,15 +511,16 @@ def update_sample_job(input_data):
                 except Exception as e:
                     logger.error(e)
 
-    sample_status = {
-        "type": "SAMPLE",
-        "igocomplete": True,
-        "sample": primary_id,
-        "status": "COMPLETED",
-        "message": "File %s request metadata updated",
-        "code": None,
-    }
-    request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    # TODO: Send request_callback with the delay
+    # sample_status = {
+    #     "type": "SAMPLE",
+    #     "igocomplete": True,
+    #     "sample": primary_id,
+    #     "status": "COMPLETED",
+    #     "message": "File %s request metadata updated",
+    #     "code": None,
+    # }
+    # request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 
 def get_run_id_from_string(string):
