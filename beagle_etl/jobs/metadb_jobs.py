@@ -410,7 +410,7 @@ def update_request_job(input_data):
 @shared_task
 def update_sample_job(input_data):
     data = json.loads(input_data)
-    latest = data[0]
+    latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
@@ -471,7 +471,27 @@ def update_sample_job(input_data):
     send_notification.delay(redelivery_event)
 
     igocomplete = True
-    primary_id = latest["primaryId"]
+
+    request_metadata[settings.SAMPLE_ID_METADATA_KEY] = latest[settings.SAMPLE_ID_METADATA_KEY]
+    request_metadata[settings.PATIENT_ID_METADATA_KEY] = latest.get(settings.PATIENT_ID_METADATA_KEY)
+    request_metadata['investigatorSampleId'] = latest.get('investigatorSampleId')
+    request_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = latest.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
+    request_metadata[settings.SAMPLE_NAME_METADATA_KEY] = latest.get(settings.SAMPLE_NAME_METADATA_KEY)
+    request_metadata['importDate'] = latest.get('importDate')
+    request_metadata['collectionYear'] = latest.get('collectionYear')
+    request_metadata['tubeId'] = latest.get('tubeId')
+    request_metadata['species'] = latest.get('species')
+    request_metadata['sex'] = latest.get('sex')
+    request_metadata['tumorOrNormal'] = latest.get('tumorOrNormal')
+    request_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = latest.get(settings.CMO_SAMPLE_CLASS_METADATA_KEY)
+    request_metadata['preservation'] = latest.get('preservation')
+    request_metadata[settings.SAMPLE_CLASS_METADATA_KEY] = latest.get(settings.SAMPLE_CLASS_METADATA_KEY)
+    request_metadata['sampleOrigin'] = latest.get('sampleOrigin')
+    request_metadata['tissueLocation'] = latest.get('tissueLocation')
+    request_metadata['baitSet'] = latest.get('baitSet')
+    request_metadata['qcReports'] = latest.get('qcReports')
+    request_metadata['cmoSampleIdFields'] = latest.get('cmoSampleIdFields')
+
     logger.info("Parsing sample: %s" % primary_id)
     libraries = latest.pop("libraries")
     for library in libraries:
@@ -483,7 +503,8 @@ def update_sample_job(input_data):
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 try:
-                    f = FileRepository.filter(path=fastq).first()
+                    new_path = CopyService.remap(recipe, fastq)
+                    f = FileRepository.filter(path=new_path).first()
                     if f:
                         new_metadata = f.metadata
                         new_metadata.update(request_metadata)
