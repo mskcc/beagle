@@ -410,27 +410,27 @@ def update_request_job(input_data):
 @shared_task
 def update_sample_job(input_data):
     data = json.loads(input_data)
-    primary_id = data.get(settings.SAMPLE_ID_METADATA_KEY)
+    latest = data[0]
+    primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
-    recipe = data.get(settings.RECIPE_METADATA_KEY)
-    additional_properties = data.pop("additionalProperties")
-    request_id = additional_properties["igoRequestId"]
+    recipe = latest.get(settings.RECIPE_METADATA_KEY)
+    request_id = latest.get["igoRequestId"]
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
-        project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
-        project_manager_name = data.get("projectManagerName")
-        pi_email = data.get("piEmail")
-        lab_head_name = data.get("labHeadName")
-        lab_head_email = data.get("labHeadEmail")
-        investigator_name = data.get("investigatorName")
-        investigator_email = data.get("investigatorEmail")
-        data_analyst_name = data.get("dataAnalystName")
-        data_analyst_email = data.get("dataAnalystEmail")
-        other_contact_emails = data.get("otherContactEmails")
-        data_access_email = data.get("dataAccessEmails")
-        qc_access_email = data.get("qcAccessEmails")
+        project_id = latest.get(settings.PROJECT_ID_METADATA_KEY)
+        project_manager_name = latest.get("projectManagerName")
+        pi_email = latest.get("piEmail")
+        lab_head_name = latest.get("labHeadName")
+        lab_head_email = latest.get("labHeadEmail")
+        investigator_name = latest.get("investigatorName")
+        investigator_email = latest.get("investigatorEmail")
+        data_analyst_name = latest.get("dataAnalystName")
+        data_analyst_email = latest.get("dataAnalystEmail")
+        other_contact_emails = latest.get("otherContactEmails")
+        data_access_email = latest.get("dataAccessEmails")
+        qc_access_email = latest.get("qcAccessEmails")
     else:
         project_id = files[0].metadata.get(settings.PROJECT_ID_METADATA_KEY)
         project_manager_name = files[0].metadata.get("projectManagerName")
@@ -471,9 +471,9 @@ def update_sample_job(input_data):
     send_notification.delay(redelivery_event)
 
     igocomplete = True
-    primary_id = data["primaryId"]
+    primary_id = latest["primaryId"]
     logger.info("Parsing sample: %s" % primary_id)
-    libraries = data.pop("libraries")
+    libraries = latest.pop("libraries")
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop("runs")
@@ -493,7 +493,7 @@ def update_sample_job(input_data):
                         settings.IMPORT_FILE_GROUP,
                         "fastq",
                         igocomplete,
-                        data,
+                        latest,
                         library,
                         run,
                         request_metadata,
