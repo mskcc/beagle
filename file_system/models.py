@@ -57,6 +57,9 @@ class Sample(BaseModel):
 class Patient(BaseModel):
     patient_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 
+    class Meta:
+        select_on_save = True
+
 
 class FileExtension(models.Model):
     extension = models.CharField(max_length=30, unique=True)
