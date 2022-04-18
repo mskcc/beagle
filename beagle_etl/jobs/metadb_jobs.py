@@ -415,7 +415,7 @@ def update_sample_job(input_data):
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
-    request_id = latest.get["igoRequestId"]
+    request_id = latest.get("igoRequestId")
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
