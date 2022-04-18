@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0029_auto_20220218_1006'),
+        ("file_system", "0029_auto_20220218_1006"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='patient',
-            options={'select_on_save': True},
+            name="patient",
+            options={"select_on_save": True},
         ),
     ]
