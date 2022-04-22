@@ -23,7 +23,7 @@ class Patient:
         data = dict()
         for f in file_list:
             metadata = f.metadata
-            sample_name = metadata["sampleName"]
+            sample_name = metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]
             if sample_name not in data:
                 data[sample_name] = list()
             data[sample_name].append(f)
