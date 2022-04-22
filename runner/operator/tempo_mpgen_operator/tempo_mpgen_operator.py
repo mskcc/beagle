@@ -343,7 +343,7 @@ class TempoMPGenOperator(Operator):
         extra_keys values are the metadata field names in the database, used as headers
         """
         tracker = ""
-        key_order = ["investigatorSampleId", "externalSampleId", "sampleClass"]
+        key_order = ["investigatorSampleId", "sampleName", "sampleClass"]
         key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
         extra_keys = [
             "tumorOrNormal",
@@ -361,7 +361,7 @@ class TempoMPGenOperator(Operator):
             "labHeadEmail",
             "preservation",
         ]
-        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
+        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "investigatorId", "cmoSampleName"]
 
         tracker = "CMO_Sample_ID\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"
         for key in extra_keys:
@@ -381,10 +381,7 @@ class TempoMPGenOperator(Operator):
                         running = list()
                         running.append(sample.cmo_sample_name)
                         for key in key_order:
-                            if key == "externalSampleId":
-                                v = self._get_investigator_id(meta)
-                            else:
-                                v = meta[key]
+                            v = meta[key]
                             s = self._validate_to_str(v)
                             running.append(s)
                         for key in extra_keys:
@@ -392,19 +389,3 @@ class TempoMPGenOperator(Operator):
                             running.append(s)
                         tracker += "\t".join(running) + "\n"
         return self.write_to_file("sample_tracker.txt", tracker)
-
-    def _get_investigator_id(self, d):
-        """
-        externalSampleId was deprecated and is no longer
-        included in new imports; need to return investigatorId value in sampleAliases
-        instead
-        """
-        if "externalSampleId" in d:
-            return d["externalSampleId"]
-        sample_aliases = d["sampleAliases"]
-        for i in sample_aliases:
-            v = i["value"]
-            ns = i["namespace"]
-            if ns == "investigatorId":
-                return v
-        return None
