@@ -36,12 +36,11 @@ class ArgosOperator(Operator):
         data = build_data_list(files)
 
         samples = get_samples_from_data(data)
-        files = list()
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
 
         sample_pairing = get_sample_pairing(argos_inputs)
-        sample_mapping, files = get_sample_mapping(argos_inputs)
+        sample_mapping, filepaths = get_sample_mapping(argos_inputs)
         argos_jobs = get_argos_jobs(argos_inputs, self.request_id)
         pipeline = self.get_pipeline_id()
 
@@ -61,7 +60,7 @@ class ArgosOperator(Operator):
         send_notification.delay(mapping_file_event)
 
         data_clinical = generate_sample_data_content(
-            files,
+            filepaths,
             pipeline_name=pipeline_obj.name,
             pipeline_github=pipeline_obj.github,
             pipeline_version=pipeline_obj.version,
