@@ -343,7 +343,7 @@ class TempoMPGenOperator(Operator):
         extra_keys values are the metadata field names in the database, used as headers
         """
         tracker = ""
-        key_order = ["investigatorSampleId", "investigatorId", "sampleClass"]
+        key_order = ["investigatorSampleId", "sampleName", "sampleClass"]
         key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
         extra_keys = [
             "tumorOrNormal",
@@ -361,7 +361,7 @@ class TempoMPGenOperator(Operator):
             "labHeadEmail",
             "preservation",
         ]
-        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
+        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "investigatorId", "cmoSampleName"]
 
         tracker = "CMO_Sample_ID\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"
         for key in extra_keys:
