@@ -33,15 +33,15 @@ class ArgosOperator(Operator):
             send_notification.delay(all_normals_event)
             return argos_jobs
 
-        data = build_data_list(files)
+        data = self.build_data_list(files)
 
-        samples = get_samples_from_data(data)
+        samples = self.get_samples_from_data(data)
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
 
-        sample_pairing = get_pairing_from_argos_inputs(argos_inputs)
-        sample_mapping, filepaths = get_mapping_from_argos_inputs(argos_inputs)
-        argos_jobs = get_argos_jobs(argos_inputs, self.request_id)
+        sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
+        sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
+        argos_jobs = self.get_argos_jobs(argos_inputs, self.request_id)
         pipeline = self.get_pipeline_id()
 
         try:
