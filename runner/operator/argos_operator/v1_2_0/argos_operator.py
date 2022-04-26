@@ -77,7 +77,7 @@ class ArgosOperator(Operator):
 
     def get_argos_jobs(self, argos_inputs, request_id):
         argos_jobs = list()
-        for i, job in enumerate(argos_inputs, request_id):
+        for i, job in enumerate(argos_inputs):
             tumor_sample_name = job["pair"][0]["ID"]
             normal_sample_name = job["pair"][1]["ID"]
 
