@@ -37,8 +37,6 @@ class ArgosOperator(Operator):
 
         samples = self.get_samples_from_data(data)
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
-        number_of_inputs = len(argos_inputs)
-
         sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
         sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
         argos_jobs = self.get_argos_jobs(argos_inputs, self.request_id)
@@ -77,6 +75,7 @@ class ArgosOperator(Operator):
 
     def get_argos_jobs(self, argos_inputs, request_id):
         argos_jobs = list()
+        number_of_inputs = len(argos_inputs)
         for i, job in enumerate(argos_inputs):
             tumor_sample_name = job["pair"][0]["ID"]
             normal_sample_name = job["pair"][1]["ID"]
