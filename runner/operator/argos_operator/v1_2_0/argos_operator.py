@@ -24,7 +24,7 @@ class ArgosOperator(Operator):
             files, cnt_tumors = self.get_files_for_pairs(self.pairing)
 
         if self.request_id:
-            files, cnt_tumors = get_files(self.request_id)
+            files, cnt_tumors = self.get_files(self.request_id)
 
         if cnt_tumors == 0:
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
