@@ -39,8 +39,8 @@ class ArgosOperator(Operator):
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         number_of_inputs = len(argos_inputs)
 
-        sample_pairing = get_sample_pairing(argos_inputs)
-        sample_mapping, filepaths = get_sample_mapping(argos_inputs)
+        sample_pairing = get_pairing_from_argos_inputs(argos_inputs)
+        sample_mapping, filepaths = get_mapping_from_argos_inputs(argos_inputs)
         argos_jobs = get_argos_jobs(argos_inputs, self.request_id)
         pipeline = self.get_pipeline_id()
 
