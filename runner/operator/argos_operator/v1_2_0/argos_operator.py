@@ -103,6 +103,7 @@ class ArgosOperator(Operator):
     def get_mapping_from_argos_inputs(self, argos_inputs):
         sample_mapping = ""
         check_for_duplicates = list()
+        filepaths = list()
         for i, job in enumerate(argos_inputs):
             tumor_sample_name = job["pair"][0]["ID"]
             for p in job["pair"][0]["R1"]:
@@ -111,40 +112,40 @@ class ArgosOperator(Operator):
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][0]["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][0]["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][0]["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][0]["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
 
             normal_sample_name = job["pair"][1]["ID"]
             for p in job["pair"][1]["R1"]:
@@ -153,41 +154,41 @@ class ArgosOperator(Operator):
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][1]["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][1]["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][1]["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
             for p in job["pair"][1]["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
                     check_for_duplicates.append(file_str)
                     sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-        return sample_mapping, files
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+        return sample_mapping, filepaths
 
     def get_pairing_from_argos_inputs(self, argos_inputs):
         sample_pairing = ""
