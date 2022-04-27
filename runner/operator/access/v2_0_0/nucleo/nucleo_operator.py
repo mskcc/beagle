@@ -16,7 +16,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
     "barcodeId",
-    settings.SAMPLE_NAME_METADATA_KEY,
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     "investigatorSampleId",
     settings.PATIENT_ID_METADATA_KEY,
     "tumorOrNormal",
@@ -80,7 +80,7 @@ def construct_sample_inputs(samples, request_id):
         )
 
         sample_group = list(sample_group)
-        sample_id = sample_group[0]["metadata"][settings.SAMPLE_NAME_METADATA_KEY]
+        sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
         fgbio_fastq_to_bam_input = group_by_run(sample_group)
         fgbio_fastq_to_bam_input = [
@@ -132,7 +132,10 @@ class AccessNucleoOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
-                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": metadata["sampleName"]},
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        "cmoSampleId": metadata["cmoSampleName"],
+                    },
                 }
             )
             for i, (job, metadata) in enumerate(sample_inputs)
