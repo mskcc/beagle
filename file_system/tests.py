@@ -1,5 +1,6 @@
 import os
 import uuid
+from mock import patch
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
@@ -219,7 +220,11 @@ class FileTest(APITestCase):
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
 
-    def test_update_file_metadata_updates_request_sample_and_patient_objects(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_update_file_metadata_updates_request_sample_and_patient_objects(
+        self, populate_job_group_notifier_metadata
+    ):
+        populate_job_group_notifier_metadata.return_value = True
         _file = self._create_single_file(
             "/path/to/sample_file.bam",
             "bam",
@@ -244,8 +249,6 @@ class FileTest(APITestCase):
                     settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
                         settings.SAMPLE_ID_METADATA_KEY
                     ],
-                    settings.SAMPLE_NAME_METADATA_KEY: "Sample_Name_001",
-                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "CMO_Sample_Name_001",
                     settings.PATIENT_ID_METADATA_KEY: "Patient_001",
                 },
             },
@@ -256,8 +259,6 @@ class FileTest(APITestCase):
 
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
-        self.assertEqual(_file.sample.sample_name, "Sample_Name_001")
-        self.assertEqual(_file.sample.cmo_sample_name, "CMO_Sample_Name_001")
         self.assertEqual(_file.patient.patient_id, "Patient_001")
 
     def test_patch_file_metadata(self):
