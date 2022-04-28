@@ -13,7 +13,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
     "barcodeId",
-    settings.SAMPLE_NAME_METADATA_KEY,
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     "investigatorSampleId",
     settings.PATIENT_ID_METADATA_KEY,
     "tumorOrNormal",
@@ -89,7 +89,7 @@ class AccessLegacyFastqMergeOperator(Operator):
                     "inputs": job,
                     "tags": {
                         settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                        settings.SAMPLE_NAME_METADATA_KEY: metadata[settings.SAMPLE_NAME_METADATA_KEY],
+                        settings.CMO_SAMPLE_NAME_METADATA_KEY: metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY],
                     },
                 }
             )

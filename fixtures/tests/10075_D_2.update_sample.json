@@ -1,4 +1,4 @@
-{
+[{
   "additionalProperties": {
     "igoRequestId": "10075_D_2",
     "isCmoSample": "true"
@@ -77,4 +77,4 @@
       "value": "MOCKREQUEST1_B_1"
     }
   ]
-}
+}]

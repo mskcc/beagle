@@ -121,8 +121,10 @@ class TempoSample(Sample):
         for key in self.metadata:
             values = self.metadata[key]
             if isinstance(values, Iterable):
-                # Removing qcReports, which is a list containing a dictionary
-                if key not in ["qcReports", "sampleAliases", "patientAliases"]:
+                # expanding sampleAliases/investigatorId to investigatorId for tempo sample
+                if key in "sampleAliases":
+                    metadata["investigatorId"] = self._get_investigator_id(meta_orig[key])
+                elif key not in ["qcReports", "patientAliases"]:
                     if self._values_are_list(key):
                         # remove duplicate list values
                         values_set = set(tuple(x) for x in values)
@@ -166,3 +168,17 @@ class TempoSample(Sample):
                 data = metadata[key]
             s += "%s: %s\n" % (key, data)
         return s
+
+    def _get_investigator_id(self, sample_aliases):
+        """
+        externalSampleId was deprecated and is no longer
+        included in new imports; need to return investigatorId value in sampleAliases
+        instead
+        """
+        for l1 in sample_aliases:
+            for l2 in l1:
+                v = l2["value"]
+                ns = l2["namespace"]
+                if ns == "investigatorId":
+                    return v
+        return None
