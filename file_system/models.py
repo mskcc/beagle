@@ -135,37 +135,23 @@ class FileMetadata(BaseModel):
             pi = self.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, "")
             populate_job_group_notifier_metadata.delay(request_id, pi, investigator, assay)
             if sample_id:
-                if not self.file.sample:
-                    sample, _ = Sample.objects.get_or_create(
-                        sample_id=sample_id, defaults={"cmo_sample_name": cmo_sample_name, "sample_name": sample_name}
-                    )
+                sample, _ = Sample.objects.get_or_create(
+                    sample_id=sample_id, defaults={"cmo_sample_name": cmo_sample_name, "sample_name": sample_name}
+                )
 
-                    self.file.sample = sample
-                    self.file.save(update_fields=("sample",))
-                else:
-                    self.file.sample.sample_id = sample_id
-                    self.file.sample.sample_name = sample_name
-                    self.file.sample.cmo_sample_name = cmo_sample_name
-                    self.file.sample.save()
+                self.file.sample = sample
+                self.file.save(update_fields=("sample",))
 
             if request_id:
-                if not self.file.request:
-                    request, _ = Request.objects.get_or_create(request_id=request_id)
-
-                    self.file.request = request
-                    self.file.save(update_fields=("request",))
-                else:
-                    self.file.request.request_id = request_id
-                    self.file.request.save()
+                request, _ = Request.objects.get_or_create(request_id=request_id)
+                self.file.request = request
+                self.file.save(update_fields=("request",))
 
             if patient_id:
-                if not self.file.patient:
-                    patient, _ = Patient.objects.get_or_create(patient_id=patient_id)
-                    self.file.patient = patient
-                    self.file.save(update_fields=("patient",))
-                else:
-                    self.file.patient.patient_id = patient_id
-                    self.file.patient.save()
+                patient, _ = Patient.objects.get_or_create(patient_id=patient_id)
+                self.file.patient = patient
+                self.file.save(update_fields=("patient",))
+
             versions = FileMetadata.objects.filter(file_id=self.file.id).values_list("version", flat=True)
             version = max(versions) + 1 if versions else 0
             self.version = version
