@@ -3,6 +3,7 @@ import logging
 from time import sleep
 from file_system.models import File
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
+from beagle_etl.exceptions import FailedToCopyFilePermissionDeniedException
 
 
 logger = logging.getLogger(__name__)
@@ -52,3 +53,8 @@ def calculate_file_checksum(file_id):
         except FailedToCalculateChecksum as e:
             logger.info("Failed to calculate checksum. Error:%s", f.path)
     return []
+
+
+def check_file_permissions(path):
+    if not os.access(path, os.R_OK):
+        raise FailedToCopyFilePermissionDeniedException()
