@@ -10,6 +10,7 @@ import copy
 from django.test import TestCase
 from django.conf import settings
 from file_system.repository import FileRepository
+from beagle_etl.models import SMILEMessage, SmileMessageStatus
 from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job
 from django.core.management import call_command
 from file_system.repository import FileRepository
@@ -70,7 +71,8 @@ class TestNewRequest(TestCase):
         populate_job_group.return_value = None
         jobGroupNotifierObjectGet.return_value = None
         send_notification.return_value = None
-        update_request_job(self.request_data_str)
+        msg = SMILEMessage.objects.create(topic='update_request', message=self.request_data_str)
+        update_request_job(str(msg.id))
         files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
         for file in files:
             for single_request_key in self.request_keys:
@@ -91,7 +93,8 @@ class TestNewRequest(TestCase):
         populate_job_group.return_value = None
         jobGroupNotifierObjectGet.return_value = None
         send_notification.return_value = None
-        update_request_job(self.request_data_str)
+        msg = SMILEMessage.objects.create(topic='update_request', message=self.request_data_str)
+        update_request_job(str(msg.id))
         files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
         sample_names = []
         for file in files:
@@ -126,7 +129,8 @@ class TestNewRequest(TestCase):
             sample_name = single_file.metadata[settings.SAMPLE_ID_METADATA_KEY]
             if sample_name not in sample_metadata:
                 sample_metadata[sample_name] = single_file.metadata
-        update_request_job(self.request_data_str)
+        msg = SMILEMessage.objects.create(topic='update_request', message=self.request_data_str)
+        update_request_job(str(msg.id))
         files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
         for file in files:
             metadata_keys = file.metadata.keys()
@@ -156,7 +160,8 @@ class TestNewRequest(TestCase):
         jobGroupNotifierObjectGet.return_value = None
         send_notification.return_value = None
         sample_metadata = {}
-        update_sample_job(self.new_sample_data_str)
+        msg = SMILEMessage.objects.create(topic='update_sample', message=self.new_sample_data_str)
+        update_sample_job(str(msg.id))
         sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3"})
         for f in sample_files:
             self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
