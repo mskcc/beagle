@@ -31,7 +31,7 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.exceptions import ETLExceptions
-from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
+from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration, SMILEMessage, SmileMessageStatus
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -50,6 +50,7 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.copy_service import CopyService
+from beagle_etl.jobs.helper_jobs import check_file_permissions
 from django.contrib.auth.models import User
 
 
@@ -57,31 +58,23 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def new_request(input_data):
-    data = json.loads(input_data)
+def new_request(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     if data.get("deliveryDate"):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    try:
-        request = Request.objects.get(request_id=request_id)
-        request.delivery_date = delivery_date
-        request.save()
-    except Request.DoesNotExist:
-        Request.objects.create(request_id=request_id, delivery_date=delivery_date)
-
+    Request.objects.get_or_create(request_id=request_id, defaults={"delivery_date": delivery_date})
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
 
-    igocomplete = True
-    """
-    Fix until igoComplete is in the MetaDB
-    """
     samples = data.get("samples")
-    for idx, sample in enumerate(data.get("sampleManifestList", [])):
-        igocomplete = samples[idx]["igocomplete"]
+    check_files_permissions(samples)
+    for idx, sample in enumerate(samples):
+        igocomplete = sample.get("igoComplete")
         try:
             validate_sample(sample, sample.get("libraries", []), igocomplete)
             sample_status = {
@@ -154,9 +147,9 @@ def new_request(input_data):
         "qcAccessEmails": qc_access_email,
     }
 
-    samples = data.get("samples")
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
+        igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
         for library in libraries:
@@ -199,7 +192,8 @@ def new_request(input_data):
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
-
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
     request_callback(request_id, recipe, sample_jobs, job_group, job_group_notifier)
 
 
@@ -330,8 +324,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
 
 
 @shared_task
-def update_request_job(input_data):
-    data = json.loads(input_data)
+def update_request_job(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
@@ -404,18 +399,22 @@ def update_request_job(input_data):
         request_id, str(job_group.id), job_group_notifier_id, sample_status_list, [], request_metadata
     )
 
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
     request_callback(request_id, recipe, sample_status_list, job_group, job_group_notifier)
 
 
 @shared_task
-def update_sample_job(input_data):
-    data = json.loads(input_data)
+def update_sample_job(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
     request_id = latest.get("igoRequestId")
+    igocomplete = latest.get("igoComplete")
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
@@ -470,8 +469,6 @@ def update_sample_job(input_data):
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
-    igocomplete = True
-
     request_metadata[settings.SAMPLE_ID_METADATA_KEY] = latest[settings.SAMPLE_ID_METADATA_KEY]
     request_metadata[settings.PATIENT_ID_METADATA_KEY] = latest.get(settings.PATIENT_ID_METADATA_KEY)
     request_metadata["investigatorSampleId"] = latest.get("investigatorSampleId")
@@ -491,6 +488,7 @@ def update_sample_job(input_data):
     request_metadata["baitSet"] = latest.get("baitSet")
     request_metadata["qcReports"] = latest.get("qcReports")
     request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
+    request_metadata["igocomplete"] = igocomplete
 
     logger.info("Parsing sample: %s" % primary_id)
     libraries = latest.pop("libraries")
@@ -532,6 +530,8 @@ def update_sample_job(input_data):
                 except Exception as e:
                     logger.error(e)
 
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
     # TODO: Send request_callback with the delay
     # sample_status = {
     #     "type": "SAMPLE",
@@ -928,3 +928,17 @@ def _generate_ticket_description(
     etl_event = ETLJobsLinksEvent(job_group_notifier_id, request_id, all_jobs)
     etl_e = etl_event.to_dict()
     send_notification.delay(etl_e)
+
+
+def check_files_permissions(samples):
+    for sample in samples:
+        libraries = sample.get("libraries", [])
+        for library in libraries:
+            runs = library.get("runs")
+            if runs:
+                run_dict = convert_to_dict(runs)
+                for run in run_dict.values():
+                    fastqs = run.get("fastqs", [])
+                    for fastq_path in fastqs:
+                        logger.info("Checking file permissions for %s" % fastq_path)
+                        check_file_permissions(fastq_path)
