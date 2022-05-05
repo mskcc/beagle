@@ -62,7 +62,7 @@ async def run(loop, queue):
     if settings.NATS_SSL_CERTFILE and settings.NATS_SSL_KEYFILE:
         ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
         ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
-        options['tls'] = ssl_ctx
+        options["tls"] = ssl_ctx
 
     nc = await nats.connect(**options)
 
