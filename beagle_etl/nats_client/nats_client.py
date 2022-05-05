@@ -7,7 +7,6 @@ import asyncio
 from time import sleep
 from django.conf import settings
 from beagle_etl.models import SMILEMessage
-from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job
 
 
 logger = logging.getLogger(__name__)
@@ -48,24 +47,8 @@ async def run(loop, queue):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        request_data = json.loads(data)
-
         logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
         persist_message(subject, data)
-        if subject == settings.METADB_NATS_NEW_REQUEST:
-            new_request.delay(request_data)
-            logger.info("New request")
-        elif subject == settings.METADB_NATS_REQUEST_UPDATE:
-            update_request_job.delay(request_data)
-            logger.info("Update request")
-        elif subject == settings.METADB_NATS_SAMPLE_UPDATE:
-            update_sample_job.delay(request_data)
-            logger.info("Update sample")
-        else:
-            logger.error("Unknown subject: %s" % subject)
-
-    ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
-    ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
 
     options = {
         "error_cb": error_cb,
@@ -74,8 +57,12 @@ async def run(loop, queue):
         "servers": settings.METADB_NATS_URL,
         "user": settings.METADB_USERNAME,
         "password": settings.METADB_PASSWORD,
-        "tls": ssl_ctx,
     }
+
+    if settings.NATS_SSL_CERTFILE and settings.NATS_SSL_KEYFILE:
+        ssl_ctx = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
+        ssl_ctx.load_cert_chain(certfile=settings.NATS_SSL_CERTFILE, keyfile=settings.NATS_SSL_KEYFILE)
+        options['tls'] = ssl_ctx
 
     nc = await nats.connect(**options)
 

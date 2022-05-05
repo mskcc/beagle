@@ -84,7 +84,7 @@ class AssayAdmin(ModelAdmin):
 
 
 class SMILEMessagesAdmin(ModelAdmin):
-    list_display = ("topic", "message")
+    list_display = ("created_date", "request_id", "topic", "status")
 
 
 admin.site.register(Job, JobAdmin)
