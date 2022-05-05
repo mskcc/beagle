@@ -83,5 +83,8 @@ class SMILEMessage(BaseModel):
     topic = models.CharField(max_length=1000)
     request_id = models.CharField(max_length=100)
     message = models.TextField()
-    status = models.IntegerField(choices=[(status.value, status.name) for status in SmileMessageStatus],
-                                 default=SmileMessageStatus.PENDING, db_index=True)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in SmileMessageStatus],
+        default=SmileMessageStatus.PENDING,
+        db_index=True,
+    )
