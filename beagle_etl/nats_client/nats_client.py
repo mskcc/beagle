@@ -46,7 +46,7 @@ async def run(loop, queue):
     async def subscribe_handler(msg):
         subject = msg.subject
         reply = msg.reply
-        data = msg.data.decode()
+        data = json.loads(msg.data.decode())
         logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
         persist_message(subject, data)
 

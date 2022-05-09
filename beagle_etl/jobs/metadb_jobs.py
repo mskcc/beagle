@@ -544,6 +544,13 @@ def update_sample_job(message_id):
     # request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 
+@shared_task
+def not_supported(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    message.status = SmileMessageStatus.NOT_SUPPORTED
+    message.save()
+
+
 def get_run_id_from_string(string):
     """
     Parse the runID from a character string
