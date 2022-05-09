@@ -77,6 +77,7 @@ class ETLConfiguration(models.Model):
 class SmileMessageStatus(IntEnum):
     PENDING = 0
     COMPLETED = 1
+    NOT_SUPPORTED = 2
 
 
 class SMILEMessage(BaseModel):

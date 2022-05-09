@@ -39,6 +39,7 @@ def process_smile_events():
             update_sample_job.delay(str(message.id))
             logger.info("Update sample")
         else:
+            not_supported.delay(str(message.id))
             logger.error("Unknown subject: %s" % message.topic)
 
 
