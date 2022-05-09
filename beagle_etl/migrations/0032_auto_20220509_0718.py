@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0031_smilemessage_status'),
+        ("beagle_etl", "0031_smilemessage_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='smilemessage',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'PENDING'), (1, 'COMPLETED'), (2, 'NOT_SUPPORTED')], db_index=True, default=beagle_etl.models.SmileMessageStatus(0)),
+            model_name="smilemessage",
+            name="status",
+            field=models.IntegerField(
+                choices=[(0, "PENDING"), (1, "COMPLETED"), (2, "NOT_SUPPORTED")],
+                db_index=True,
+                default=beagle_etl.models.SmileMessageStatus(0),
+            ),
         ),
     ]
