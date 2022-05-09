@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator, ETLConfiguration
+from .models import Job, JobStatus, Operator, ETLConfiguration, SMILEMessage
 from lib.admin import pretty_json
 
 
@@ -83,6 +83,11 @@ class AssayAdmin(ModelAdmin):
         return False
 
 
+class SMILEMessagesAdmin(ModelAdmin):
+    list_display = ("created_date", "request_id", "topic", "status")
+
+
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
+admin.site.register(SMILEMessage, SMILEMessagesAdmin)
