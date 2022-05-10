@@ -195,7 +195,7 @@ class RunApiViewSet(
         if run_creator.is_valid():
             run = run_creator.create()
             response = RunSerializerFull(run)
-            create_run_task.delay(response.data["id"], request.data["inputs"])
+            create_run_task.delay(str(run.id), run_creator.inputs, run.output_directory)
             job_group_notifier_id = str(run.job_group_notifier_id)
             if job_group_notifier_id:
                 self._send_notifications(job_group_notifier_id, run)
