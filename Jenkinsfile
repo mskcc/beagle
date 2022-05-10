@@ -3,9 +3,9 @@ remote.name = "silo.mskcc.org"
 remote.host = "silo.mskcc.org"
 remote.allowAnyHosts = true
 pipeline {
-  {any
+  agent any
 
-  }
+
   stages {
   stage{
     node{
