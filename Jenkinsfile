@@ -3,8 +3,11 @@ remote.name = "silo.mskcc.org"
 remote.host = "silo.mskcc.org"
 remote.allowAnyHosts = true
 pipeline {
+  {any
 
+  }
   stages {
+  stage{
     node{
     withCredentials([sshUserPrivateKey(credentialsId: 'fc553c62-8e84-4a2c-b012-db1b9c58195d', keyFileVariable: 'identity', passphraseVariable: 'passphrase', usernameVariable: 'userName')]) {
         remote.user = userName
@@ -18,6 +21,6 @@ pipeline {
           }
 
        }
-
+       }
    }
 }
