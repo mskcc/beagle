@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
 from .models import Job, JobStatus, Operator, ETLConfiguration, SMILEMessage
+from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
 
 
@@ -69,8 +70,10 @@ class JobAdmin(ModelAdmin):
     get_short_run.short_description = "Run"
 
 
-class OperatorAdmin(ModelAdmin):
+class OperatorAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
     list_display = ("id", "slug", "class_name", "version", "recipes", "active")
+    list_filter = ("active",)
+    advanced_filter_fields = ("active",)
 
 
 class AssayAdmin(ModelAdmin):

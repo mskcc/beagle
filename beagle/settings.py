@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_multiple_model",
     "drf_yasg",
+    "advanced_filters",
 ]
 
 
