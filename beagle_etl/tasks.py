@@ -9,7 +9,7 @@ from beagle_etl.models import JobStatus, Job, SMILEMessage, SmileMessageStatus
 from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
-from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job
+from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job, not_supported
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
