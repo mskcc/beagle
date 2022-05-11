@@ -61,7 +61,7 @@ class AccessLegacyCNVOperator(Operator):
             # Use the initial fastq metadata to get the sex of the sample
             # Todo: Need to store this info on the bams themselves
             tumor_fastqs = FileRepository.filter(
-                file_type="fastq", metadata={"tumorOrNormal": "Tumor", "sampleName": sample_id}
+                file_type="fastq", metadata={"tumorOrNormal": "Tumor", settings.CMO_SAMPLE_NAME_METADATA_KEY: sample_id}
             )
             sample_sex = tumor_fastqs[0].metadata["sex"]
             tumor_bams.append(tumor_bam)
