@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   triggers {
-    pollSCM('') // Enabling being build on Push
+    githubPush() // Enabling being build on Push
   }
   stages {
     stage("SSH Steps") {
