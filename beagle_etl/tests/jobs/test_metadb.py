@@ -60,7 +60,7 @@ class TestNewRequest(TestCase):
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    @patch("beagle_etl.jobs.metadb_jobs.request_callback")
+    @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
     def test_update_request_metadata(
         self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):
@@ -81,7 +81,7 @@ class TestNewRequest(TestCase):
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    @patch("beagle_etl.jobs.metadb_jobs.request_callback")
+    @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
     @patch("beagle_etl.jobs.metadb_jobs._generate_ticket_description")
     def test_update_request_ticket(
         self, ticket_description, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
@@ -112,7 +112,7 @@ class TestNewRequest(TestCase):
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    @patch("beagle_etl.jobs.metadb_jobs.request_callback")
+    @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
     def test_update_request_sample(
         self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):
@@ -148,7 +148,7 @@ class TestNewRequest(TestCase):
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    @patch("beagle_etl.jobs.metadb_jobs.request_callback")
+    @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
     def test_update_sample_preserve(
         self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):

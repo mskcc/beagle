@@ -566,7 +566,6 @@ def update_sample_job(message_id):
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    # TODO: Send request_callback with the delay
     sample_status = {
         "type": "SAMPLE",
         "igocomplete": True,

@@ -608,7 +608,7 @@ class TestImportSample(APITestCase):
             },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1", "TestAssay", [], job_group, job_group_notifier)
+        request_callback("test1", "TestAssay", [], str(job_group.id), str(job_group_notifier.id))
 
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id))
 
@@ -634,7 +634,8 @@ class TestImportSample(APITestCase):
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
         operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1", "TestAssay", [], job_group=job_group, job_group_notifier=job_group_notifier)
+        request_callback("test1", "TestAssay", [], job_group_id=str(job_group.id),
+                         job_group_notifier_id=str(job_group_notifier.id))
 
         calls = [call("test1", operator1.id, str(job_group.id)), call("test1", operator2.id, str(job_group.id))]
 
@@ -660,7 +661,7 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "UnknownAssay", [], job_group, job_group_notifier)
+        request_callback("test1", "UnknownAssay", [], str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
@@ -690,7 +691,7 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "DisabledAssay1", [], job_group, job_group_notifier)
+        request_callback("test1", "DisabledAssay1", [], str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
