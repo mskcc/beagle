@@ -67,10 +67,8 @@ logger = logging.getLogger(__name__)
 
 
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
-    print("Create Request Callback")
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING)
     if not request:
-        print("Create Request Callback")
         RequestCallbackJob.objects.create(
             request_id=request_id,
             recipe=recipe,
@@ -218,7 +216,6 @@ def new_request(message_id):
     )
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    print("Message SAVE")
     create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
 
 
