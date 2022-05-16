@@ -634,8 +634,9 @@ class TestImportSample(APITestCase):
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
         operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1", "TestAssay", [], job_group_id=str(job_group.id),
-                         job_group_notifier_id=str(job_group_notifier.id))
+        request_callback(
+            "test1", "TestAssay", [], job_group_id=str(job_group.id), job_group_notifier_id=str(job_group_notifier.id)
+        )
 
         calls = [call("test1", operator1.id, str(job_group.id)), call("test1", operator2.id, str(job_group.id))]
 
