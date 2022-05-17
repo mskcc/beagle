@@ -1,3 +1,4 @@
+import pytz
 import logging
 import importlib
 import datetime
@@ -5,11 +6,24 @@ import asyncio
 from celery import shared_task
 from lib.logger import format_log
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job, SMILEMessage, SmileMessageStatus
+from beagle_etl.models import (
+    JobStatus,
+    Job,
+    SMILEMessage,
+    SmileMessageStatus,
+    RequestCallbackJobStatus,
+    RequestCallbackJob,
+)
 from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
-from beagle_etl.jobs.metadb_jobs import new_request, update_request_job, update_sample_job, not_supported
+from beagle_etl.jobs.metadb_jobs import (
+    new_request,
+    update_request_job,
+    update_sample_job,
+    not_supported,
+    request_callback,
+)
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
@@ -29,18 +43,39 @@ def fetch_request_nats():
 def process_smile_events():
     messages = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING)
     for message in messages:
-        if message.topic == settings.METADB_NATS_NEW_REQUEST:
-            new_request.delay(str(message.id))
-            logger.info("New request")
-        elif message.topic == settings.METADB_NATS_REQUEST_UPDATE:
-            update_request_job.delay(str(message.id))
-            logger.info("Update request")
-        elif message.topic == settings.METADB_NATS_SAMPLE_UPDATE:
-            update_sample_job.delay(str(message.id))
-            logger.info("Update sample")
-        else:
-            not_supported.delay(str(message.id))
-            logger.error("Unknown subject: %s" % message.topic)
+        process_smile_message(message)
+
+
+def process_smile_message(msg):
+    if msg.topic == settings.METADB_NATS_NEW_REQUEST:
+        new_request.delay(str(msg.id))
+        logger.info("New request")
+    elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
+        update_request_job.delay(str(msg.id))
+        logger.info("Update request")
+    elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
+        update_sample_job.delay(str(msg.id))
+        logger.info("Update sample")
+    else:
+        not_supported.delay(str(msg.id))
+        logger.error("Unknown subject: %s" % msg.topic)
+
+
+@shared_task
+def process_request_callback_jobs():
+    requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
+    for request in requests:
+        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+            logger.info("Submitting request callback %s" % request.request_id)
+            request_callback.delay(
+                request.request_id,
+                request.recipe,
+                request.samples,
+                str(request.job_group.id),
+                str(request.job_group_notifier.id),
+            )
+        request.status = RequestCallbackJobStatus.COMPLETED
+        request.save()
 
 
 @shared_task
