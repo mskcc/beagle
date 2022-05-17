@@ -89,3 +89,22 @@ class SMILEMessage(BaseModel):
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+
+class RequestCallbackJobStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+
+
+class RequestCallbackJob(BaseModel):
+    request_id = models.CharField(max_length=100)
+    recipe = models.CharField(max_length=100)
+    samples = JSONField(null=True, blank=True)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in RequestCallbackJobStatus],
+        default=SmileMessageStatus.PENDING,
+        db_index=True,
+    )
+    delay = models.IntegerField(default=0)
