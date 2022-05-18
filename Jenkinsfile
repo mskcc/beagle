@@ -8,7 +8,7 @@ pipeline {
   stages {
   stage("reading env variables"){
   steps{
-  echo 'The branch name is $[env.BRANCH-NAME]'
+  echo 'The branch name is ${env.BRANCH-NAME}'
   }
   }
   /*  stage("Deploy") {
