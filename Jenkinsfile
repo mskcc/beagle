@@ -31,7 +31,7 @@ pipeline {
                   }
               }
               steps {
-              //sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+              sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
                sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd ${DEPLOY_LOCATION} && git checkout develop && git pull && source run_restart.sh"'
               //sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org cd /srv/services/staging_voyager/beagle'
 
