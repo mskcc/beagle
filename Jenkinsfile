@@ -19,11 +19,6 @@ pipeline {
 
         }
       }
-       stage("reading env variables") {
-          steps {
-            echo "The branch name is ${env.BRANCH_NAME}"
-            echo "The build number is ${env.BUILD_NUMBER}"
-          }
-        } 
+
   }
 }
