@@ -19,13 +19,11 @@ pipeline {
 
         }
       }
-      stage('Example') {
+      stage('Input Example') {
               input {
                   message "Should we continue to stage?"
                   ok "Yes"
-                //  submitter "alice,bob"
                   parameters {
-                      //string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
                       string(name: 'DEPLOY_LOCATION', defaultValue: 'cd /srv/services/beagle_dev/beagle', description: 'Where do you want to deploy?')
 
                   }
