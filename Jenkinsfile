@@ -2,12 +2,6 @@ pipeline {
   agent any
 
   stages {
-   stage("reading env variables") {
-      steps {
-        echo "The branch name is ${env.BRANCH_NAME}"
-        echo "The build number is ${env.BUILD_NUMBER}"
-      }
-    }
       stage("Deploy to Dev") {
         steps {
         echo "deply to dev"
@@ -19,7 +13,7 @@ pipeline {
 
         }
       }
-      stage('Input Example') {
+      stage('Deploy to Stage') {
               input {
                   message "Should we continue to stage?"
                   ok "Yes"
@@ -30,7 +24,7 @@ pipeline {
               }
               steps {
               sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
-               sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd ${DEPLOY_LOCATION} && git checkout develop && git pull && source run_restart.sh"'
+               sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd $DEPLOY_LOCATION && git checkout develop && git pull && source run_restart.sh"'
               //sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org cd /srv/services/staging_voyager/beagle'
 
              }
