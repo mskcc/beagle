@@ -18,7 +18,7 @@ pipeline {
                   message "Should we continue to stage?"
                   ok "Yes"
                   parameters {
-                      string(name: 'DEPLOY_LOCATION', defaultValue: 'cd /srv/services/beagle_dev/beagle', description: 'Where do you want to deploy?')
+                      string(name: 'DEPLOY_LOCATION', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Where do you want to deploy?')
 
                   }
               }
