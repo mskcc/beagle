@@ -1,14 +1,14 @@
 pipeline {
   agent any
-
+  properties([
+  parameters ([
+    string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory'),
+    choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
+   ])
+])
   stages {
       stage("Deploy") {
-      properties([
-      parameters ([
-        string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory'),
-        choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
-       ])
-    ])
+
     steps {
         echo "Starting deployment"
           sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
