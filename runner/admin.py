@@ -7,6 +7,7 @@ from lib.admin import link_relation, progress_bar
 from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
 from runner.tasks import abort_job_task, add_pipeline_to_cache
+from advanced_filters.admin import AdminAdvancedFiltersMixin
 from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
 
 
@@ -18,11 +19,13 @@ def action_add_pipeline_to_cache(modeladmin, request, queryset):
 action_add_pipeline_to_cache.short_description = "Add Pipeline to Cache"
 
 
-class PipelineAdmin(admin.ModelAdmin):
+class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
     list_display = ("id", "name", "version", "default", "output_directory", link_relation("operator"))
     actions = [
         action_add_pipeline_to_cache,
     ]
+    list_filter = ("default",)
+    advanced_filter_fields = ("default",)
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

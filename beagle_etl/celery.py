@@ -36,7 +36,6 @@ def at_start(sender, **k):
 
 
 app.conf.task_routes = {
-    # 'beagle_etl.tasks.scheduler': {'queue': settings.BEAGLE_JOB_SCHEDULER_QUEUE},
     "runner.tasks.process_triggers": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_run_task": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.abort_job_task": {"queue": settings.BEAGLE_RUNNER_QUEUE},
@@ -48,17 +47,29 @@ app.conf.task_routes = {
     "runner.tasks.abort_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.complete_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
-    # 'beagle_etl.tasks.fetch_requests_lims': {'queue': settings.BEAGLE_DEFAULT_QUEUE},
     "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
     "beagle_etl.jobs.metadb_jobs.new_request": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.update_request_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.update_sample_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
 }
 
 app.conf.beat_schedule = {
+    "process_request_callback_jobs": {
+        "task": "beagle_etl.tasks.process_request_callback_jobs",
+        "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
+        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    },
+    "process_smile_imports": {
+        "task": "beagle_etl.tasks.process_smile_events",
+        "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
+        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    },
     "check_status": {
         "task": "runner.tasks.check_jobs_status",
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,

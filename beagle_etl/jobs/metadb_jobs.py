@@ -31,7 +31,16 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.exceptions import ETLExceptions
-from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration
+from beagle_etl.models import (
+    JobStatus,
+    Job,
+    Operator,
+    ETLConfiguration,
+    SMILEMessage,
+    SmileMessageStatus,
+    RequestCallbackJob,
+    RequestCallbackJobStatus,
+)
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -50,38 +59,44 @@ from runner.tasks import create_jobs_from_request
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.copy_service import CopyService
+from beagle_etl.jobs.helper_jobs import check_file_permissions
 from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
 
 
+def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
+    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING)
+    if not request:
+        RequestCallbackJob.objects.create(
+            request_id=request_id,
+            recipe=recipe,
+            samples=sample_jobs,
+            job_group=job_group,
+            job_group_notifier=job_group_notifier,
+            delay=delay,
+        )
+
+
 @shared_task
-def new_request(input_data):
-    data = json.loads(input_data)
+def new_request(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     if data.get("deliveryDate"):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    try:
-        request = Request.objects.get(request_id=request_id)
-        request.delivery_date = delivery_date
-        request.save()
-    except Request.DoesNotExist:
-        Request.objects.create(request_id=request_id, delivery_date=delivery_date)
-
+    Request.objects.get_or_create(request_id=request_id, defaults={"delivery_date": delivery_date})
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
 
-    igocomplete = True
-    """
-    Fix until igoComplete is in the MetaDB
-    """
     samples = data.get("samples")
-    for idx, sample in enumerate(data.get("sampleManifestList", [])):
-        igocomplete = samples[idx]["igocomplete"]
+    check_files_permissions(samples)
+    for idx, sample in enumerate(samples):
+        igocomplete = sample.get("igoComplete")
         try:
             validate_sample(sample, sample.get("libraries", []), igocomplete)
             sample_status = {
@@ -154,9 +169,9 @@ def new_request(input_data):
         "qcAccessEmails": qc_access_email,
     }
 
-    samples = data.get("samples")
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
+        igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
         for library in libraries:
@@ -199,11 +214,13 @@ def new_request(input_data):
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
+    create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
 
-    request_callback(request_id, recipe, sample_jobs, job_group, job_group_notifier)
 
-
-def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_notifier=None):
+@shared_task
+def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
     :param request_id: 08944_B
     :param recipe: IMPACT438
@@ -214,10 +231,20 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     """
     assays = ETLConfiguration.objects.first()
 
+    try:
+        job_group = JobGroup.objects.get(id=job_group_id)
+    except JobGroup.DoesNotExist:
+        job_group = None
+
+    try:
+        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    except JobGroupNotifier.DoesNotExist:
+        job_group_notifier = None
+
     if recipe in settings.WES_ASSAYS:
         for job in sample_jobs:
             if job["igocomplete"] and job["status"] != "COMPLETED":
-                wes_job_failed = WESJobFailedEvent(str(job_group_notifier.id), recipe)
+                wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
                 send_notification.delay(wes_job_failed.to_dict())
 
     if not recipe:
@@ -226,18 +253,18 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         )
 
     if not all(item in assays.all_recipes for item in (recipe,)):
-        ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
-        set_unknown_assay_label = SetLabelEvent(str(job_group_notifier.id), "unrecognized_assay").to_dict()
+        set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, "unrecognized_assay").to_dict()
         send_notification.delay(set_unknown_assay_label)
-        unknown_assay_event = UnknownAssayEvent(str(job_group_notifier.id), recipe).to_dict()
+        unknown_assay_event = UnknownAssayEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
 
     if any(item in assays.hold_recipes for item in (recipe,)):
-        admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
+        admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(admin_hold_event)
-        custom_capture_event = CustomCaptureCCEvent(str(job_group_notifier.id), recipe).to_dict()
+        custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(custom_capture_event)
         return []
 
@@ -247,9 +274,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
             recipe,
         ]
     ):
-        not_for_ci = NotForCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(not_for_ci)
-        disabled_assay_event = DisabledAssayEvent(str(job_group_notifier.id), recipe).to_dict()
+        disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
 
@@ -261,13 +288,13 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         )
         == 0
     ):
-        no_samples_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
+        no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
     for job in sample_jobs:
         if job["igocomplete"] and job["status"] != "COMPLETED":
-            ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+            ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review_e)
 
     lab_head_email = FileRepository.filter(
@@ -275,7 +302,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     ).first()
     try:
         if lab_head_email.split("@")[1] != "mskcc.org":
-            event = ExternalEmailEvent(str(job_group_notifier.id), request_id).to_dict()
+            event = ExternalEmailEvent(job_group_notifier_id, request_id).to_dict()
             send_notification.delay(event)
     except Exception:
         logger.error("Failed to check labHeadEmail")
@@ -284,7 +311,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
-        only_normal_samples_event = OnlyNormalSamplesEvent(str(job_group_notifier.id), request_id).to_dict()
+        only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
@@ -297,32 +324,30 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
         logger.error(msg)
-        e = OperatorRequestEvent(str(job_group_notifier.id), "[CIReviewEvent] %s" % msg).to_dict()
+        e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
-        ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException(msg)
     for operator in operators:
         if not operator.active:
             msg = "Operator not active: %s" % operator.class_name
             logger.info(msg)
-            e = OperatorRequestEvent(str(job_group_notifier.id), "[CIReviewEvent] %s" % msg).to_dict()
+            e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
             send_notification.delay(e)
-            error_label = SetLabelEvent(str(job_group_notifier.id), "operator_inactive").to_dict()
+            error_label = SetLabelEvent(job_group_notifier_id, "operator_inactive").to_dict()
             send_notification.delay(error_label)
-            ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+            ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
             if Job.objects.filter(
                 job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
             ).all():
-                partialy_complete_event = ETLImportPartiallyCompleteEvent(
-                    job_notifier=str(job_group_notifier.id)
-                ).to_dict()
+                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(partialy_complete_event)
             else:
-                complete_event = ETLImportCompleteEvent(job_notifier=str(job_group_notifier.id)).to_dict()
+                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(complete_event)
 
             create_jobs_from_request.delay(request_id, operator.id, str(job_group.id))
@@ -330,8 +355,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
 
 
 @shared_task
-def update_request_job(input_data):
-    data = json.loads(input_data)
+def update_request_job(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
@@ -393,8 +419,8 @@ def update_request_job(input_data):
             sample_status_list.append(sample_status)
         ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
         diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
-        message = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
-        update = RedeliveryUpdateEvent(job_group_notifier_id, message).to_dict()
+        msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
+        update = RedeliveryUpdateEvent(job_group_notifier_id, msg).to_dict()
         diff_details_event = LocalStoreFileEvent(job_group_notifier_id, diff_file_name, str(ddiff)).to_dict()
         send_notification.delay(update)
         send_notification.delay(diff_details_event)
@@ -404,18 +430,22 @@ def update_request_job(input_data):
         request_id, str(job_group.id), job_group_notifier_id, sample_status_list, [], request_metadata
     )
 
-    request_callback(request_id, recipe, sample_status_list, job_group, job_group_notifier)
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
+    create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier)
 
 
 @shared_task
-def update_sample_job(input_data):
-    data = json.loads(input_data)
+def update_sample_job(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
     request_id = latest.get("igoRequestId")
+    igocomplete = latest.get("igoComplete")
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
@@ -470,8 +500,6 @@ def update_sample_job(input_data):
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
-    igocomplete = True
-
     request_metadata[settings.SAMPLE_ID_METADATA_KEY] = latest[settings.SAMPLE_ID_METADATA_KEY]
     request_metadata[settings.PATIENT_ID_METADATA_KEY] = latest.get(settings.PATIENT_ID_METADATA_KEY)
     request_metadata["investigatorSampleId"] = latest.get("investigatorSampleId")
@@ -491,6 +519,7 @@ def update_sample_job(input_data):
     request_metadata["baitSet"] = latest.get("baitSet")
     request_metadata["qcReports"] = latest.get("qcReports")
     request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
+    request_metadata["igocomplete"] = igocomplete
 
     logger.info("Parsing sample: %s" % primary_id)
     libraries = latest.pop("libraries")
@@ -522,8 +551,8 @@ def update_sample_job(input_data):
                     )
                     ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
-                    message = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
-                    update = RedeliveryUpdateEvent(job_group_notifier_id, message).to_dict()
+                    msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
+                    update = RedeliveryUpdateEvent(job_group_notifier_id, msg).to_dict()
                     diff_details_event = LocalStoreFileEvent(
                         job_group_notifier_id, diff_file_name, str(ddiff)
                     ).to_dict()
@@ -532,16 +561,24 @@ def update_sample_job(input_data):
                 except Exception as e:
                     logger.error(e)
 
-    # TODO: Send request_callback with the delay
-    # sample_status = {
-    #     "type": "SAMPLE",
-    #     "igocomplete": True,
-    #     "sample": primary_id,
-    #     "status": "COMPLETED",
-    #     "message": "File %s request metadata updated",
-    #     "code": None,
-    # }
-    # request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    message.status = SmileMessageStatus.COMPLETED
+    message.save()
+    sample_status = {
+        "type": "SAMPLE",
+        "igocomplete": True,
+        "sample": primary_id,
+        "status": "COMPLETED",
+        "message": "File %s request metadata updated",
+        "code": None,
+    }
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier, delay=60)
+
+
+@shared_task
+def not_supported(message_id):
+    message = SMILEMessage.objects.get(id=message_id)
+    message.status = SmileMessageStatus.NOT_SUPPORTED
+    message.save()
 
 
 def get_run_id_from_string(string):
@@ -928,3 +965,17 @@ def _generate_ticket_description(
     etl_event = ETLJobsLinksEvent(job_group_notifier_id, request_id, all_jobs)
     etl_e = etl_event.to_dict()
     send_notification.delay(etl_e)
+
+
+def check_files_permissions(samples):
+    for sample in samples:
+        libraries = sample.get("libraries", [])
+        for library in libraries:
+            runs = library.get("runs")
+            if runs:
+                run_dict = convert_to_dict(runs)
+                for run in run_dict.values():
+                    fastqs = run.get("fastqs", [])
+                    for fastq_path in fastqs:
+                        logger.info("Checking file permissions for %s" % fastq_path)
+                        check_file_permissions(fastq_path)

@@ -31,7 +31,7 @@ def generate_results(results):
         bait_set = meta["baitSet"]
         tumor_type = meta["tumorOrNormal"]
         species = meta["species"]
-        cmo_sample_name = meta["sampleName"]
+        cmo_sample_name = meta[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         flowcell_id = meta["flowCellId"]
         barcode_index = meta["barcodeIndex"]
         cmo_patient_id = meta[settings.PATIENT_ID_METADATA_KEY]

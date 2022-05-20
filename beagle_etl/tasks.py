@@ -1,3 +1,4 @@
+import pytz
 import logging
 import importlib
 import datetime
@@ -5,42 +6,30 @@ import asyncio
 from celery import shared_task
 from lib.logger import format_log
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job
+from beagle_etl.models import (
+    JobStatus,
+    Job,
+    SMILEMessage,
+    SmileMessageStatus,
+    RequestCallbackJobStatus,
+    RequestCallbackJob,
+)
 from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
+from beagle_etl.jobs.metadb_jobs import (
+    new_request,
+    update_request_job,
+    update_sample_job,
+    not_supported,
+    request_callback,
+)
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
 
 
 logger = logging.getLogger(__name__)
-
-
-@shared_task
-def fetch_requests_lims():
-    logger.info("ETL fetching requestIDs")
-    running = Job.objects.filter(
-        run=TYPES["DELIVERY"], status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN)
-    )
-    if len(running) > 0:
-        logger.info(format_log("ETL job already in progress", obj=running.first()))
-        return
-    latest = Job.objects.filter(run=TYPES["DELIVERY"]).order_by("-created_date").first()
-    timestamp = None
-    if latest:
-        timestamp = int(latest.created_date.timestamp()) * 1000
-    else:
-        timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=120)).timestamp()) * 1000
-    job = Job(
-        run="beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
-        args={"timestamp": timestamp},
-        status=JobStatus.CREATED,
-        max_retry=3,
-        children=[],
-    )
-    job.save()
-    logger.info(format_log("ETL fetch_new_requests_lims job created", obj=job))
 
 
 @shared_task
@@ -51,17 +40,42 @@ def fetch_request_nats():
 
 
 @shared_task
-def fetch_request_update_nats():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop, settings.METADB_NATS_REQUEST_UPDATE))
-    loop.run_forever()
+def process_smile_events():
+    messages = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING)
+    for message in messages:
+        process_smile_message(message)
+
+
+def process_smile_message(msg):
+    if msg.topic == settings.METADB_NATS_NEW_REQUEST:
+        new_request.delay(str(msg.id))
+        logger.info("New request")
+    elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
+        update_request_job.delay(str(msg.id))
+        logger.info("Update request")
+    elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
+        update_sample_job.delay(str(msg.id))
+        logger.info("Update sample")
+    else:
+        not_supported.delay(str(msg.id))
+        logger.error("Unknown subject: %s" % msg.topic)
 
 
 @shared_task
-def fetch_sample_update_nats():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop, settings.METADB_NATS_SAMPLE_UPDATE))
-    loop.run_forever()
+def process_request_callback_jobs():
+    requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
+    for request in requests:
+        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+            logger.info("Submitting request callback %s" % request.request_id)
+            request_callback.delay(
+                request.request_id,
+                request.recipe,
+                request.samples,
+                str(request.job_group.id),
+                str(request.job_group_notifier.id),
+            )
+        request.status = RequestCallbackJobStatus.COMPLETED
+        request.save()
 
 
 @shared_task

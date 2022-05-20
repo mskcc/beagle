@@ -58,13 +58,14 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_multiple_model",
     "drf_yasg",
+    "advanced_filters",
 ]
 
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=365),
+    "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": "secret_key",
@@ -398,6 +399,7 @@ BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_qu
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 
+PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
