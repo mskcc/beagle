@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-    choice(name: 'AERVER', choices: ['silo', 'voyager'], description: 'Server')
+    choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
     string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory')
 
    }
