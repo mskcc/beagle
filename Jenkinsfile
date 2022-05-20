@@ -14,7 +14,7 @@ pipeline {
                       parameters([
                       [$class: 'ChoiceParameter',
                                       choiceType: 'PT_SINGLE_SELECT',
-                                      description: 'Select the Environemnt from the Dropdown List',
+                                      description: 'Select the Server from the Dropdown List',
                                       filterLength: 1,
                                       filterable: false,
                                       name: 'SERVER',
@@ -24,7 +24,7 @@ pipeline {
                                               classpath: [],
                                               sandbox: false,
                                               script:
-                                                  "return['Could not get The environemnts']"
+                                                  "return['Could not get the server']"
                                           ],
                                           script: [
                                               classpath: [],
