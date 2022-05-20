@@ -39,6 +39,7 @@ router.register("register", UserRequestViewSet)
 urlpatterns = [
     url(r"^$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     url(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
+    url(r"^advanced_filters/", include("advanced_filters.urls")),
     path("", include(router.urls)),
     path("v0/fs/", include("file_system.urls")),
     path("v0/run/", include("runner.urls")),

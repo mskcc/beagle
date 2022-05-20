@@ -72,3 +72,39 @@ class ETLConfiguration(models.Model):
     all_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     disabled_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+
+
+class SmileMessageStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+    NOT_SUPPORTED = 2
+
+
+class SMILEMessage(BaseModel):
+    topic = models.CharField(max_length=1000)
+    request_id = models.CharField(max_length=100)
+    message = models.TextField()
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in SmileMessageStatus],
+        default=SmileMessageStatus.PENDING,
+        db_index=True,
+    )
+
+
+class RequestCallbackJobStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+
+
+class RequestCallbackJob(BaseModel):
+    request_id = models.CharField(max_length=100)
+    recipe = models.CharField(max_length=100)
+    samples = JSONField(null=True, blank=True)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in RequestCallbackJobStatus],
+        default=SmileMessageStatus.PENDING,
+        db_index=True,
+    )
+    delay = models.IntegerField(default=0)
