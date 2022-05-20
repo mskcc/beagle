@@ -2,21 +2,21 @@ pipeline {
   agent any
 
   stages {
-      stage("Deploy to Dev") {
-      input {
-          message "Do you want to deploy to dev?"
-          parameters {
-              string(name: 'DEV_LOCATION', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Where do you want to deploy?')
+      stage("Deploy") {
+      parameters {
+        string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory')
 
-          }
-      }
+
+        choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
+
+    }
         steps {
-        echo "deply to dev"
-          sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
-            sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd $DEV_LOCATION && git checkout $BRANCH_NAME"'
+        echo "Starting deployment"
+          //sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+          //  sh 'ssh  -o StrictHostKeyChecking=no  voyager@$SERVER.mskcc.org "cd $DIRECTORY && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
           //sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org cd /srv/services/staging_voyager/beagle'
 
-         }
+        //  }
 
         }
       }
