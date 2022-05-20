@@ -13,7 +13,7 @@ pipeline {
     properties([
                       parameters([
                       [$class: 'ChoiceParameter',
-                                      choiceType: 'PT_SINGLE_SELECT',
+                                      //choiceType: 'PT_SINGLE_SELECT',
                                       description: 'Select the Server from the Dropdown List',
                                       filterLength: 1,
                                       filterable: false,
