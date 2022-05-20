@@ -9,7 +9,7 @@ pipeline {
       stage("Deploy") {
 
     steps {
-    options([
+    properties([
                       parameters([
                       [$class: 'ChoiceParameter',
                                       choiceType: 'PT_SINGLE_SELECT',
