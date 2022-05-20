@@ -2,7 +2,7 @@ pipeline {
   agent any
 //  properties([
   parameters {
-    string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory'),
+    string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory')
     choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
    }
 //])
