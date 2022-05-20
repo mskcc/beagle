@@ -6,12 +6,10 @@ pipeline {
       properties([
       parameters ([
         string(name: 'DIRECTORY', defaultValue: '/srv/services/beagle_dev/beagle', description: 'Directory')
-
-
         choice(name: 'SERVER', choices: ['silo', 'voyager'], description: 'Server')
-
+       ])
     ])
-    ])    steps {
+    steps {
         echo "Starting deployment"
           sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
             sh 'ssh  -o StrictHostKeyChecking=no  voyager@$params.SERVER.mskcc.org "cd $params.DIRECTORY && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
