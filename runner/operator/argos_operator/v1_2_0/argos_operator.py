@@ -98,7 +98,6 @@ class ArgosOperator(Operator):
             argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
         return argos_jobs
 
-
     def get_mapping_from_argos_inputs(self, argos_inputs):
         sample_mapping = ""
         check_for_duplicates = list()
@@ -283,7 +282,6 @@ class ArgosOperator(Operator):
             sample["metadata"] = f.metadata
             data.append(sample)
         return data
-
 
     def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data["sample_id"]
