@@ -20,7 +20,7 @@ pipeline {
         //  }
 
         }
-      }
+
       stage('Deploy to Stage') {
       when {
             expression { params.SERVER == 'STAGE' }
