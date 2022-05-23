@@ -40,7 +40,7 @@ from beagle_etl.models import (
     SmileMessageStatus,
     RequestCallbackJob,
     RequestCallbackJobStatus,
-    initialize_normalizer
+    initialize_normalizer,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException

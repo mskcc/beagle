@@ -8,17 +8,27 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0033_requestcallbackjob'),
+        ("beagle_etl", "0033_requestcallbackjob"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='NormalizerModel',
+            name="NormalizerModel",
             fields=[
-                ('basemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='beagle_etl.BaseModel')),
-                ('condition', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('normalizer', django.contrib.postgres.fields.jsonb.JSONField()),
+                (
+                    "basemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="beagle_etl.BaseModel",
+                    ),
+                ),
+                ("condition", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("normalizer", django.contrib.postgres.fields.jsonb.JSONField()),
             ],
-            bases=('beagle_etl.basemodel',),
+            bases=("beagle_etl.basemodel",),
         ),
     ]
