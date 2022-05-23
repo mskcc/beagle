@@ -4,7 +4,7 @@ from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
-from beagle_etl.validator.normalizer import Normalizer
+from beagle_etl.normalizer.normalizer import Normalizer
 
 
 class JobStatus(IntEnum):
