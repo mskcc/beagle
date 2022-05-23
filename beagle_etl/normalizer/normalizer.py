@@ -1,5 +1,4 @@
 class Normalizer(object):
-
     def __init__(self, condition, normalizer):
         """
         :param condition: {recipe: IMPACT341, baitSet: IMPACT341}

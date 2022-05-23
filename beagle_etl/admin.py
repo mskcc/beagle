@@ -108,7 +108,10 @@ class RequestCallbackJobAdmin(ModelAdmin):
 
 
 class NormalizerAdmin(ModelAdmin):
-    list_display = ("condition", "normalizer",)
+    list_display = (
+        "condition",
+        "normalizer",
+    )
 
 
 admin.site.register(Job, JobAdmin)
