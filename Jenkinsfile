@@ -21,7 +21,7 @@ pipeline {
       }
       stage('Deploy to Stage') {
       when {
-      expression { params.SERVER == 'DEV' }
+      expression { params.SERVER == 'STAGE' }
     }
             steps {
               echo "deply to stage"
