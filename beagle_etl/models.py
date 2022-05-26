@@ -4,6 +4,7 @@ from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
+from beagle_etl.normalizer.normalizer import Normalizer
 
 
 class JobStatus(IntEnum):
@@ -108,3 +109,15 @@ class RequestCallbackJob(BaseModel):
         db_index=True,
     )
     delay = models.IntegerField(default=0)
+
+
+class NormalizerModel(BaseModel):
+    condition = JSONField(null=False, blank=False)
+    normalizer = JSONField(null=False, blank=False)
+
+
+def initialize_normalizer():
+    normalizers = []
+    for normalizer in NormalizerModel.objects.all():
+        normalizers.append(Normalizer(normalizer.condition, normalizer.normalizer))
+    return normalizers
