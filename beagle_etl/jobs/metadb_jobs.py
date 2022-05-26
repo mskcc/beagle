@@ -40,6 +40,7 @@ from beagle_etl.models import (
     SmileMessageStatus,
     RequestCallbackJob,
     RequestCallbackJobStatus,
+    initialize_normalizer,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -809,6 +810,7 @@ def create_or_update_file(
         for k, v in request_metadata.items():
             lims_metadata[k] = v
         metadata = format_metadata(lims_metadata)
+        metadata = normalize_metadata(metadata)
         # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
@@ -845,6 +847,14 @@ def format_metadata(original_metadata):
     metadata["ciTag"] = format_sample_name(sample_name, sample_class)
     metadata["sequencingCenter"] = "MSKCC"
     metadata["platform"] = "Illumina"
+    return metadata
+
+
+def normalize_metadata(original_metadata):
+    metadata = copy.deepcopy(original_metadata)
+    normalizers = initialize_normalizer()
+    for n in normalizers:
+        metadata = n.normalize(metadata)
     return metadata
 
 

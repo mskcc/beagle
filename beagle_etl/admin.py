@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator, ETLConfiguration, SMILEMessage, RequestCallbackJob
+from .models import Job, JobStatus, Operator, ETLConfiguration, SMILEMessage, RequestCallbackJob, NormalizerModel
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
 from beagle_etl.tasks import process_smile_message
@@ -107,8 +107,16 @@ class RequestCallbackJobAdmin(ModelAdmin):
     list_display = ("created_date", "request_id", "recipe", "status")
 
 
+class NormalizerAdmin(ModelAdmin):
+    list_display = (
+        "condition",
+        "normalizer",
+    )
+
+
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
 admin.site.register(SMILEMessage, SMILEMessagesAdmin)
 admin.site.register(RequestCallbackJob, RequestCallbackJobAdmin)
+admin.site.register(NormalizerModel, NormalizerAdmin)
