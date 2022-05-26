@@ -2,9 +2,10 @@ import uuid
 from enum import IntEnum
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
-from beagle_etl.normalizer.normalizer import Normalizer
+from beagle_etl.metadata.normalizer import Normalizer
 
 
 class JobStatus(IntEnum):
@@ -121,3 +122,17 @@ def initialize_normalizer():
     for normalizer in NormalizerModel.objects.all():
         normalizers.append(Normalizer(normalizer.condition, normalizer.normalizer))
     return normalizers
+
+
+class ValidatorModel(BaseModel):
+    name = models.CharField(null=False, blank=False, max_length=30, default="Metadata Schema")
+    schema = JSONField(null=False, blank=False)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ValidatorModel.objects.exists():
+            raise ValidationError("There is can be only one ValidatorModel instance")
+        return super(ValidatorModel, self).save(*args, **kwargs)
+
+
+def get_metadata_schema():
+    return ValidatorModel.objects.first()
