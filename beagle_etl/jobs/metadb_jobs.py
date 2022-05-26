@@ -41,6 +41,7 @@ from beagle_etl.models import (
     RequestCallbackJob,
     RequestCallbackJobStatus,
     initialize_normalizer,
+    get_metadata_schema,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -811,13 +812,12 @@ def create_or_update_file(
             lims_metadata[k] = v
         metadata = format_metadata(lims_metadata)
         metadata = normalize_metadata(metadata)
-        # validator = MetadataValidator(METADATA_SCHEMA)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
         logger.info(metadata)
-        # validator.validate(metadata)
+        # validator.validate(get_metadata_schema().schema)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
