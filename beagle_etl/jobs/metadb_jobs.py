@@ -31,7 +31,18 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.exceptions import ETLExceptions
-from beagle_etl.models import JobStatus, Job, Operator, ETLConfiguration, SMILEMessage, SmileMessageStatus
+from beagle_etl.models import (
+    JobStatus,
+    Job,
+    Operator,
+    ETLConfiguration,
+    SMILEMessage,
+    SmileMessageStatus,
+    RequestCallbackJob,
+    RequestCallbackJobStatus,
+    initialize_normalizer,
+    get_metadata_schema,
+)
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
@@ -55,6 +66,19 @@ from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
+
+
+def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
+    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING)
+    if not request:
+        RequestCallbackJob.objects.create(
+            request_id=request_id,
+            recipe=recipe,
+            samples=sample_jobs,
+            job_group=job_group,
+            job_group_notifier=job_group_notifier,
+            delay=delay,
+        )
 
 
 @shared_task
@@ -194,10 +218,11 @@ def new_request(message_id):
     )
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    request_callback(request_id, recipe, sample_jobs, job_group, job_group_notifier)
+    create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
 
 
-def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_notifier=None):
+@shared_task
+def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
     :param request_id: 08944_B
     :param recipe: IMPACT438
@@ -208,10 +233,20 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     """
     assays = ETLConfiguration.objects.first()
 
+    try:
+        job_group = JobGroup.objects.get(id=job_group_id)
+    except JobGroup.DoesNotExist:
+        job_group = None
+
+    try:
+        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    except JobGroupNotifier.DoesNotExist:
+        job_group_notifier = None
+
     if recipe in settings.WES_ASSAYS:
         for job in sample_jobs:
             if job["igocomplete"] and job["status"] != "COMPLETED":
-                wes_job_failed = WESJobFailedEvent(str(job_group_notifier.id), recipe)
+                wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
                 send_notification.delay(wes_job_failed.to_dict())
 
     if not recipe:
@@ -220,18 +255,18 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         )
 
     if not all(item in assays.all_recipes for item in (recipe,)):
-        ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
-        set_unknown_assay_label = SetLabelEvent(str(job_group_notifier.id), "unrecognized_assay").to_dict()
+        set_unknown_assay_label = SetLabelEvent(job_group_notifier_id, "unrecognized_assay").to_dict()
         send_notification.delay(set_unknown_assay_label)
-        unknown_assay_event = UnknownAssayEvent(str(job_group_notifier.id), recipe).to_dict()
+        unknown_assay_event = UnknownAssayEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(unknown_assay_event)
         return []
 
     if any(item in assays.hold_recipes for item in (recipe,)):
-        admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
+        admin_hold_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(admin_hold_event)
-        custom_capture_event = CustomCaptureCCEvent(str(job_group_notifier.id), recipe).to_dict()
+        custom_capture_event = CustomCaptureCCEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(custom_capture_event)
         return []
 
@@ -241,9 +276,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
             recipe,
         ]
     ):
-        not_for_ci = NotForCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        not_for_ci = NotForCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(not_for_ci)
-        disabled_assay_event = DisabledAssayEvent(str(job_group_notifier.id), recipe).to_dict()
+        disabled_assay_event = DisabledAssayEvent(job_group_notifier_id, recipe).to_dict()
         send_notification.delay(disabled_assay_event)
         return []
 
@@ -255,13 +290,13 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         )
         == 0
     ):
-        no_samples_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
+        no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
         return []
 
     for job in sample_jobs:
         if job["igocomplete"] and job["status"] != "COMPLETED":
-            ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+            ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review_e)
 
     lab_head_email = FileRepository.filter(
@@ -269,7 +304,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
     ).first()
     try:
         if lab_head_email.split("@")[1] != "mskcc.org":
-            event = ExternalEmailEvent(str(job_group_notifier.id), request_id).to_dict()
+            event = ExternalEmailEvent(job_group_notifier_id, request_id).to_dict()
             send_notification.delay(event)
     except Exception:
         logger.error("Failed to check labHeadEmail")
@@ -278,7 +313,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
-        only_normal_samples_event = OnlyNormalSamplesEvent(str(job_group_notifier.id), request_id).to_dict()
+        only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
@@ -291,32 +326,30 @@ def request_callback(request_id, recipe, sample_jobs, job_group=None, job_group_
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
         logger.error(msg)
-        e = OperatorRequestEvent(str(job_group_notifier.id), "[CIReviewEvent] %s" % msg).to_dict()
+        e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
         send_notification.delay(e)
-        ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+        ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
         send_notification.delay(ci_review_e)
         raise FailedToSubmitToOperatorException(msg)
     for operator in operators:
         if not operator.active:
             msg = "Operator not active: %s" % operator.class_name
             logger.info(msg)
-            e = OperatorRequestEvent(str(job_group_notifier.id), "[CIReviewEvent] %s" % msg).to_dict()
+            e = OperatorRequestEvent(job_group_notifier_id, "[CIReviewEvent] %s" % msg).to_dict()
             send_notification.delay(e)
-            error_label = SetLabelEvent(str(job_group_notifier.id), "operator_inactive").to_dict()
+            error_label = SetLabelEvent(job_group_notifier_id, "operator_inactive").to_dict()
             send_notification.delay(error_label)
-            ci_review_e = SetCIReviewEvent(str(job_group_notifier.id)).to_dict()
+            ci_review_e = SetCIReviewEvent(job_group_notifier_id).to_dict()
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
             if Job.objects.filter(
                 job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
             ).all():
-                partialy_complete_event = ETLImportPartiallyCompleteEvent(
-                    job_notifier=str(job_group_notifier.id)
-                ).to_dict()
+                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(partialy_complete_event)
             else:
-                complete_event = ETLImportCompleteEvent(job_notifier=str(job_group_notifier.id)).to_dict()
+                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(complete_event)
 
             create_jobs_from_request.delay(request_id, operator.id, str(job_group.id))
@@ -401,7 +434,7 @@ def update_request_job(message_id):
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    request_callback(request_id, recipe, sample_status_list, job_group, job_group_notifier)
+    create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier)
 
 
 @shared_task
@@ -532,16 +565,15 @@ def update_sample_job(message_id):
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    # TODO: Send request_callback with the delay
-    # sample_status = {
-    #     "type": "SAMPLE",
-    #     "igocomplete": True,
-    #     "sample": primary_id,
-    #     "status": "COMPLETED",
-    #     "message": "File %s request metadata updated",
-    #     "code": None,
-    # }
-    # request_callback(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    sample_status = {
+        "type": "SAMPLE",
+        "igocomplete": True,
+        "sample": primary_id,
+        "status": "COMPLETED",
+        "message": "File %s request metadata updated",
+        "code": None,
+    }
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier, delay=60)
 
 
 @shared_task
@@ -779,13 +811,13 @@ def create_or_update_file(
         for k, v in request_metadata.items():
             lims_metadata[k] = v
         metadata = format_metadata(lims_metadata)
-        # validator = MetadataValidator(METADATA_SCHEMA)
+        metadata = normalize_metadata(metadata)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
         logger.info(metadata)
-        # validator.validate(metadata)
+        # validator.validate(get_metadata_schema().schema)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
@@ -815,6 +847,14 @@ def format_metadata(original_metadata):
     metadata["ciTag"] = format_sample_name(sample_name, sample_class)
     metadata["sequencingCenter"] = "MSKCC"
     metadata["platform"] = "Illumina"
+    return metadata
+
+
+def normalize_metadata(original_metadata):
+    metadata = copy.deepcopy(original_metadata)
+    normalizers = initialize_normalizer()
+    for n in normalizers:
+        metadata = n.normalize(metadata)
     return metadata
 
 
