@@ -2,8 +2,10 @@ import uuid
 from enum import IntEnum
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
+from beagle_etl.metadata.normalizer import Normalizer
 
 
 class JobStatus(IntEnum):
@@ -89,3 +91,48 @@ class SMILEMessage(BaseModel):
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+
+class RequestCallbackJobStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+
+
+class RequestCallbackJob(BaseModel):
+    request_id = models.CharField(max_length=100)
+    recipe = models.CharField(max_length=100)
+    samples = JSONField(null=True, blank=True)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in RequestCallbackJobStatus],
+        default=SmileMessageStatus.PENDING,
+        db_index=True,
+    )
+    delay = models.IntegerField(default=0)
+
+
+class NormalizerModel(BaseModel):
+    condition = JSONField(null=False, blank=False)
+    normalizer = JSONField(null=False, blank=False)
+
+
+def initialize_normalizer():
+    normalizers = []
+    for normalizer in NormalizerModel.objects.all():
+        normalizers.append(Normalizer(normalizer.condition, normalizer.normalizer))
+    return normalizers
+
+
+class ValidatorModel(BaseModel):
+    name = models.CharField(null=False, blank=False, max_length=30, default="Metadata Schema")
+    schema = JSONField(null=False, blank=False)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ValidatorModel.objects.exists():
+            raise ValidationError("There is can be only one ValidatorModel instance")
+        return super(ValidatorModel, self).save(*args, **kwargs)
+
+
+def get_metadata_schema():
+    return ValidatorModel.objects.first()

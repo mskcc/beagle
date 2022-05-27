@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
-from file_system.metadata.validator import MetadataValidator
+from beagle_etl.metadata.validator import MetadataValidator
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample
 
 

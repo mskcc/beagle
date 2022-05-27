@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
-from file_system.metadata.validator import MetadataValidator
+from beagle_etl.metadata.validator import MetadataValidator
 from runner.operator.helper import format_sample_name
 
 
