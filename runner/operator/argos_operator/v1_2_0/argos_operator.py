@@ -1,6 +1,8 @@
 import uuid
 
 from django.conf import settings
+from django.db.models import Q
+from file_system.models import File, FileMetadata, FileGroup
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
@@ -296,7 +298,9 @@ class ArgosOperator(Operator):
             if "bait_set" in sample_data:
                 bait_set = sample_data["bait_set"]
             dmp_bam_id = sample_id.replace("s_", "").replace("_", "-")
-            data = FileRepository.filter(queryset=self.files, metadata={"external_id": dmp_bam_id})
+            dmp_bam_slug = Q(file__file_group=FileGroup.objects.get(slug="dmp-bams"))
+            dmp_bam_files = FileRepository.filter(q=dmp_bam_slug)
+            data = FileRepository.filter(queryset=dmp_bam_files, metadata={"external_id": dmp_bam_id})
             sample = list()
             for i in data:
                 s = i

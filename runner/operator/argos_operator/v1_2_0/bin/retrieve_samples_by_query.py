@@ -300,6 +300,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata["barcodeIndex"] = "DMP_BARCODEIDX"
     metadata["flowCellId"] = "DMP_FCID"
     metadata["tumorOrNormal"] = tumor_type
+    metadata["sampleType"] = tumor_type
     metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
