@@ -297,6 +297,10 @@ class ArgosOperator(Operator):
                 patient_id = sample_data["patient_id"]
             if "bait_set" in sample_data:
                 bait_set = sample_data["bait_set"]
+            if "pi" in sample_data:
+                pi = sample_data["pi"]
+            if "pi_email" in sample_data:
+                pi_email = sample_data["pi_email"]
             dmp_bam_id = sample_id.replace("s_", "").replace("_", "-")
             dmp_bam_slug = Q(file__file_group=FileGroup.objects.get(slug="dmp-bams"))
             dmp_bam_files = FileRepository.filter(q=dmp_bam_slug)
@@ -304,7 +308,7 @@ class ArgosOperator(Operator):
             sample = list()
             for i in data:
                 s = i
-                metadata = build_dmp_sample(i, patient_id, bait_set, tumor_type)["metadata"]
+                metadata = build_dmp_sample(i, patient_id, bait_set, tumor_type, pi, pi_email)["metadata"]
                 s.metadata = metadata
                 sample.append(i)
         return sample
