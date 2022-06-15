@@ -269,7 +269,7 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
     return None
 
 
-def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
+def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, pi=None, pi_email=None):
 
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
@@ -305,6 +305,10 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type):
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
+    if pi:
+        metadata["pi"] = pi
+    if pi_email:
+        metadata["pi_email"] = pi_email
     sample["metadata"] = metadata
     return sample
 
