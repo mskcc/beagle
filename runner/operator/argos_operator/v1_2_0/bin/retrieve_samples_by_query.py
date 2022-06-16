@@ -269,7 +269,7 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
     return None
 
 
-def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, pi=None, pi_email=None):
+def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id, pi=None, pi_email=None):
 
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
@@ -282,10 +282,11 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, pi=None, pi_emai
     sample["file_name"] = dmp_bam.file.file_name
     sample["file_type"] = dmp_bam.file.file_type
     metadata = init_metadata()
-    metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-    metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
+    metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
+    metadata["investigatorSampleId"] = dmp_metadata["sample"]
     metadata["sequencingCenter"] = sequencingCenter
     metadata["platform"] = platform
     metadata["baitSet"] = bait_set
@@ -304,6 +305,9 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, pi=None, pi_emai
     metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
     metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
     metadata["runMode"] = ""
+    metadata["sex"] = ""
+    metadata["tissueLocation"] = dmp_metadata.get("tissue_type", "")
+    metadata[settings.ONCOTREE_METADATA_KEY] = dmp_metadata.get("tumor_type", "")
     metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = ""
     if pi:
         metadata["pi"] = pi
