@@ -41,7 +41,7 @@ class ArgosOperator(Operator):
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
         sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
-        argos_jobs = self.get_argos_jobs(argos_inputs, self.request_id)
+        argos_jobs = self.get_argos_jobs(argos_inputs)
         pipeline = self.get_pipeline_id()
 
         try:
@@ -76,14 +76,14 @@ class ArgosOperator(Operator):
 
         return argos_jobs
 
-    def get_argos_jobs(self, argos_inputs, request_id):
+    def get_argos_jobs(self, argos_inputs):
         argos_jobs = list()
         number_of_inputs = len(argos_inputs)
         for i, job in enumerate(argos_inputs):
             tumor_sample_name = job["pair"][0]["ID"]
             normal_sample_name = job["pair"][1]["ID"]
 
-            name = "ARGOS %s, %i of %i" % (request_id, i + 1, number_of_inputs)
+            name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job["assay"]
             pi = job["pi"]
             pi_email = job["pi_email"]
@@ -94,6 +94,7 @@ class ArgosOperator(Operator):
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
                 "labHeadEmail": pi_email,
+                "pairing": self.pairing
             }
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:
