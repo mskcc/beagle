@@ -286,6 +286,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id, pi=N
     metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
     metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
     metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
+    metadata['request_id'] = request_id
     metadata["investigatorSampleId"] = dmp_metadata["sample"]
     metadata["sequencingCenter"] = sequencingCenter
     metadata["platform"] = platform

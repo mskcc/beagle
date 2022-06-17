@@ -25,7 +25,6 @@ class ArgosOperator(Operator):
         dmp_samples = list()
         if self.pairing:
             files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
-            self.request_id = self.pairing["requestId"]
         elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
@@ -301,6 +300,7 @@ class ArgosOperator(Operator):
             filter_redact=True,
         )
         is_dmp_sample = False
+        request_id = self.request_id
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:
                 patient_id = sample_data["patient_id"]
@@ -317,7 +317,7 @@ class ArgosOperator(Operator):
             sample = list()
             if len(data) > 0:
                 s = data[0]
-                metadata = build_dmp_sample(s, patient_id, bait_set, tumor_type, self.request_id, pi, pi_email)["metadata"]
+                metadata = build_dmp_sample(s, patient_id, bait_set, tumor_type, request_id, pi, pi_email)["metadata"]
                 s.metadata = metadata
                 if s:
                     is_dmp_sample = True
