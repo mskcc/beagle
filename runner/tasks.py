@@ -392,7 +392,7 @@ def create_run_task(run_id, inputs, output_directory=None, log_directory=None):
     run = RunObjectFactory.from_definition(run_id, inputs)
     run.ready()
     run.to_db()
-    submit_job.delay(run_id, output_directory, log_directory)
+    submit_job.delay(run_id, output_directory, log_directory=log_directory)
     logger.info(format_log("Run is ready", obj=run))
 
 
@@ -408,7 +408,7 @@ def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     retry_kwargs={"max_retries": 4},
     on_failure=on_failure_to_submit_job,
 )
-def submit_job(run_id, output_directory=None, execution_id=None):
+def submit_job(run_id, output_directory=None, execution_id=None, log_directory=None):
     resume = None
     try:
         run = Run.objects.get(id=run_id)
@@ -432,7 +432,7 @@ def submit_job(run_id, output_directory=None, execution_id=None):
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = run1.dump_job(output_directory=output_directory)
     logger.info(
-        format_log("Log output directory {path}".format(path=run1.run_obj.job_group.log_output_directory), obj=run1))
+        format_log("Log output directory {path}".format(path=log_directory), obj=run1))
     logger.info(format_log("Job ready for submitting", obj=run1))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
