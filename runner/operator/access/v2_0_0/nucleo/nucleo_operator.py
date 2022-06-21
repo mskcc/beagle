@@ -3,6 +3,7 @@ import json
 import logging
 
 from jinja2 import Template
+from django.conf import settings
 from collections import defaultdict
 
 from runner.operator.operator import Operator
@@ -15,10 +16,9 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 METADATA_OUTPUT_FIELDS = [
     "barcodeId",
-    "sampleName",
-    "cmoSampleName",
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     "investigatorSampleId",
-    "patientId",
+    settings.PATIENT_ID_METADATA_KEY,
     "tumorOrNormal",
     "sampleOrigin",
     "dnaInputNg",
@@ -30,15 +30,16 @@ METADATA_OUTPUT_FIELDS = [
     "captureName",
     "libraryConcentrationNgul",
     "captureConcentrationNm",
-    "sampleId",
-    "requestId",
+    settings.CMO_SAMPLE_TAG_METADATA_KEY,
+    settings.SAMPLE_ID_METADATA_KEY,
+    settings.REQUEST_ID_METADATA_KEY,
 ]
 
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
     return sample_pairs
 
 
@@ -74,12 +75,12 @@ def construct_sample_inputs(samples, request_id):
                 "libraryVolume": calc_avg(sample_group, "libraryVolume"),
                 "libraryConcentrationNgul": calc_avg(sample_group, "libraryConcentrationNgul"),
                 "captureConcentrationNm": calc_avg(sample_group, "captureConcentrationNm"),
-                "requestId": request_id,
+                settings.REQUEST_ID_METADATA_KEY: request_id,
             }
         )
 
         sample_group = list(sample_group)
-        sample_id = sample_group[0]["metadata"]["sampleName"]
+        sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
         fgbio_fastq_to_bam_input = group_by_run(sample_group)
         fgbio_fastq_to_bam_input = [
@@ -95,7 +96,7 @@ def construct_sample_inputs(samples, request_id):
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
             barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
-            library_id=meta["libraryId"],
+            library_id=meta[settings.LIBRARY_ID_METADATA_KEY],
         )
 
         sample = json.loads(input_file)
@@ -114,7 +115,9 @@ class AccessNucleoOperator(Operator):
     """
 
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+        )
 
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
@@ -129,7 +132,10 @@ class AccessNucleoOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
-                    "tags": {"requestId": self.request_id, "cmoSampleId": metadata["sampleName"]},
+                    "tags": {
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                        "cmoSampleId": metadata["cmoSampleName"],
+                    },
                 }
             )
             for i, (job, metadata) in enumerate(sample_inputs)

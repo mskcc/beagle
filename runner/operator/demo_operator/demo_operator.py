@@ -16,7 +16,7 @@ class DemoOperator(Operator):
 
         TODO: right now run_api_view does not support creating input directly from File.id; so need to use request_id, at some point just use File.id instead
         """
-        file = FileMetadata.objects.filter(metadata__requestId=self.request_id).first().file
+        file = FileMetadata.objects.filter(metadata__igoRequestId=self.request_id).first().file
         data = {
             "input_file": {"class": "File", "location": "juno://" + file.path}  # NOTE: hard coded juno location here
         }

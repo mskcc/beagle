@@ -6,6 +6,8 @@
 import os
 import json
 import logging
+
+from django.conf import settings
 from jinja2 import Template
 from django.db.models import Q
 
@@ -100,7 +102,7 @@ class AccessLegacySNVOperator(Operator):
                 File.objects.filter(
                     file_name__contains=NORMAL_SAMPLE_SEARCH,
                     file_name__endswith=UNFILTERED_BAM_SEARCH,
-                    port__run__tags__requestId__startswith=self.request_id.split("_")[0],
+                    port__run__tags__igoRequestId__startswith=self.request_id.split("_")[0],
                 )
                 .distinct("file_name")
                 .order_by("file_name", "-created_date")
@@ -110,7 +112,7 @@ class AccessLegacySNVOperator(Operator):
                 File.objects.filter(
                     file_name__contains=TUMOR_SAMPLE_SEARCH,
                     file_name__endswith=DUPLEX_BAM_SEARCH,
-                    port__run__tags__requestId=self.request_id,
+                    port__run__tags__igoRequestId=self.request_id,
                 )
                 .distinct("file_name")
                 .order_by("file_name", "-created_date")
@@ -120,7 +122,7 @@ class AccessLegacySNVOperator(Operator):
                 File.objects.filter(
                     file_name__contains=TUMOR_SAMPLE_SEARCH,
                     file_name__endswith=SIMPLEX_BAM_SEARCH,
-                    port__run__tags__requestId=self.request_id,
+                    port__run__tags__igoRequestId=self.request_id,
                 )
                 .distinct("file_name")
                 .order_by("file_name", "-created_date")
@@ -224,7 +226,7 @@ class AccessLegacySNVOperator(Operator):
         if "_cl_aln_srt" in s.file_name:
             ret = s.file_name.split("_cl_aln_srt")[0]
         else:
-            ret = s.filemetadata_set.first().metadata["sampleName"]
+            ret = s.filemetadata_set.first().metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         return ret
 
     def _remove_normal_dups(
@@ -290,14 +292,16 @@ class AccessLegacySNVOperator(Operator):
         # Get capture ID
         capture_id = None
         sample_ids = []
-        sample_fastq = FileRepository.filter(file_type="fastq", metadata={"sampleName": tumor_sample_id})
+        sample_fastq = FileRepository.filter(
+            file_type="fastq", metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id}
+        )
         if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata["captureName"]
 
             if capture_id:
                 # Get samples IDs from this capture from fastqs with this capture ID
                 sample_id_fastqs = FileRepository.filter(file_type="fastq", metadata={"captureName": capture_id})
-                sample_ids = list(set([f.metadata["sampleName"] for f in sample_id_fastqs]))
+                sample_ids = list(set([f.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] for f in sample_id_fastqs]))
                 # Don't double-genotype the main sample
                 sample_ids.remove(tumor_sample_id)
 
@@ -447,9 +451,9 @@ class AccessLegacySNVOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {
-                        "requestId": self.request_id,
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
                         "cmoSampleIds": job["tumor_sample_names"],
-                        "patientId": "-".join(job["tumor_sample_names"][0].split("-")[0:2]),
+                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["tumor_sample_names"][0].split("-")[0:2]),
                     },
                 }
             )

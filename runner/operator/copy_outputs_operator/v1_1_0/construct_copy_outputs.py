@@ -3,6 +3,7 @@ from pprint import pprint
 from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
 from notifier.helper import generate_sample_data_content
+from django.conf import settings
 
 
 def get_argos_output_description():
@@ -117,7 +118,7 @@ def generate_sample_pairing_and_mapping_files(run_ids):
         pipeline = runs[0].app
 
     for r in runs:
-        request_id_set.add(r.tags["requestId"])
+        request_id_set.add(r.tags[settings.REQUEST_ID_METADATA_KEY])
         inp_port = Port.objects.filter(run_id=r.id, name="pair").first()
         tumor_sample_name = inp_port.db_value[0]["ID"]
         for p in inp_port.db_value[0]["R1"]:

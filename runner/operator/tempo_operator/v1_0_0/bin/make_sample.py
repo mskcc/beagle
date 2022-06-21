@@ -1,5 +1,6 @@
 import logging
 import re
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ def format_sample_name(sample_name):
     try:
         if "s_" in sample_name[:2]:
             return sample_name
-        elif bool(sample_pattern.match(sample_name)):  # cmoSampleName is formatted properly
+        elif bool(sample_pattern.match(sample_name)):  # ciTag is formatted properly
             sample_name = "s_" + sample_name.replace("-", "_")
             return sample_name
         else:
@@ -87,19 +88,19 @@ def build_sample(data):
     for i, v in enumerate(data):
         meta = v["metadata"]
         bid = v["id"]
-        request_id = meta["requestId"]
+        request_id = meta[settings.REQUEST_ID_METADATA_KEY]
         fpath = v["path"]
         fname = v["file_name"]
-        igo_id = meta["sampleId"]
-        lb = meta["libraryId"]
+        igo_id = meta[settings.SAMPLE_ID_METADATA_KEY]
+        lb = meta[settings.LIBRARY_ID_METADATA_KEY]
         bait_set = meta["baitSet"]
         tumor_type = meta["tumorOrNormal"]
-        specimen_type = meta["specimenType"]
+        specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
         species = meta["species"]
-        cmo_sample_name = format_sample_name(meta["sampleName"])
+        cmo_sample_name = format_sample_name(meta[settings.CMO_SAMPLE_NAME_METADATA_KEY])
         flowcell_id = meta["flowCellId"]
         barcode_index = meta["barcodeIndex"]
-        cmo_patient_id = meta["patientId"]
+        cmo_patient_id = meta[settings.PATIENT_ID_METADATA_KEY]
         pu = flowcell_id
         run_date = meta["runDate"]
         r_orientation = meta["R"]

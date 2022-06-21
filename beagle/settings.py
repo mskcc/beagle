@@ -58,13 +58,14 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_multiple_model",
     "drf_yasg",
+    "advanced_filters",
 ]
 
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=365),
+    "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": "secret_key",
@@ -93,6 +94,7 @@ ELASTIC_APM = {
     "SERVER_URL": "http://bic-dockerapp01.mskcc.org:8200/",
     # Set the service environment
     "ENVIRONMENT": ENVIRONMENT,
+    "ENABLED": False,
 }
 
 MIDDLEWARE = [
@@ -300,6 +302,29 @@ LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
+# NATS
+
+# SSL
+NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
+NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
+
+METADB_NATS_URL = os.environ.get("BEAGLE_METADB_NATS_URL")
+METADB_NATS_FILTER_SUBJECT = os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT")
+METADB_NATS_NEW_REQUEST = os.environ.get(
+    "BEAGLE_METADB_NATS_NEW_REQUEST", "MDB_STREAM.server.cpt-gateway.cmo-new-request"
+)
+METADB_NATS_REQUEST_UPDATE = os.environ.get(
+    "BEAGLE_METADB_NATS_REQUEST_UPDATE", "MDB_STREAM.server.cpt-gateway.cmo-request-update"
+)
+METADB_NATS_SAMPLE_UPDATE = os.environ.get(
+    "BEAGLE_METADB_NATS_SAMPLE_UPDATE", "MDB_STREAM.server.cpt-gateway.cmo-sample-update"
+)
+METADB_CLIENT_TIMEOUT = 3600.0
+METADB_NATS_DURABLE = "voyager"
+
+METADB_USERNAME = os.environ.get("BEAGLE_METADB_USERNAME")
+METADB_PASSWORD = os.environ.get("BEAGLE_METADB_PASSWORD")
+
 LIMS_URL = os.environ.get("BEAGLE_LIMS_URL", "https://igolims.mskcc.org:8443")
 
 IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
@@ -364,11 +389,17 @@ JIRA_DELIVERY_DATE_FIELD_ID = os.environ.get("JIRA_DELIVERY_DATE_FIELD_ID", "cus
 
 BEAGLE_URL = os.environ.get("BEAGLE_URL", "http://silo:5001")
 
+BEAGLE_NATS_NEW_REQUEST_QUEUE = os.environ.get("BEAGLE_NATS_NEW_REQUEST_QUEUE", "beagle_nats_queue")
+BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get(
+    "BEAGLE_NATS_UPDATE_REQUEST_QUEUE", "beagle_nats_update_request_queue"
+)
+BEAGLE_NATS_UPDATE_SAMPLE_QUEUE = os.environ.get("BEAGLE_NATS_UPDATE_SAMPLE_QUEUE", "beagle_nats_update_sample_queue")
 BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue")
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 
+PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
@@ -382,14 +413,20 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-REQUEST_ID_METADATA_KEY = "requestId"
-SAMPLE_ID_METADATA_KEY = "sampleId"
+REQUEST_ID_METADATA_KEY = "igoRequestId"
+PROJECT_ID_METADATA_KEY = "igoProjectId"
+LIBRARY_ID_METADATA_KEY = "libraryIgoId"
+SAMPLE_ID_METADATA_KEY = "primaryId"
 SAMPLE_NAME_METADATA_KEY = "sampleName"
+SAMPLE_CLASS_METADATA_KEY = "sampleClass"
+CMO_SAMPLE_CLASS_METADATA_KEY = "sampleType"
 CMO_SAMPLE_NAME_METADATA_KEY = "cmoSampleName"
-PATIENT_ID_METADATA_KEY = "patientId"
+CMO_SAMPLE_TAG_METADATA_KEY = "ciTag"
+PATIENT_ID_METADATA_KEY = "cmoPatientId"
 LAB_HEAD_NAME_METADATA_KEY = "labHeadName"
 INVESTIGATOR_METADATA_KEY = "investigatorName"
-ASSAY_METADATA_KEY = "recipe"
+RECIPE_METADATA_KEY = "genePanel"
+ONCOTREE_METADATA_KEY = "oncotreeCode"
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get("BEAGLE_NOTIFIER_EMAIL_GROUP", "946a922c-8c6b-4cba-8754-16df02f05d2a")
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get("BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS")

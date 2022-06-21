@@ -1,6 +1,8 @@
 import os
 import json
 import logging
+
+from django.conf import settings
 from jinja2 import Template
 from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
@@ -79,9 +81,9 @@ class AccessLegacySVOperator(Operator):
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {
-                        "requestId": self.request_id,
+                        settings.REQUEST_ID_METADATA_KEY: self.request_id,
                         "cmoSampleIds": job["sv_sample_id"],
-                        "patientId": "-".join(job["sv_sample_id"][0].split("-")[0:2]),
+                        settings.PATIENT_ID_METADATA_KEY: "-".join(job["sv_sample_id"][0].split("-")[0:2]),
                     },
                 }
             )

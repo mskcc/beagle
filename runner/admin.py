@@ -1,11 +1,13 @@
 from django.contrib import admin, messages
 from django.urls import reverse
+from django.conf import settings
 from django.utils.translation import ngettext
 from django.utils.html import format_html
 from lib.admin import link_relation, progress_bar
 from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
 from runner.tasks import abort_job_task, add_pipeline_to_cache
+from advanced_filters.admin import AdminAdvancedFiltersMixin
 from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
 
 
@@ -17,11 +19,13 @@ def action_add_pipeline_to_cache(modeladmin, request, queryset):
 action_add_pipeline_to_cache.short_description = "Add Pipeline to Cache"
 
 
-class PipelineAdmin(admin.ModelAdmin):
+class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
     list_display = ("id", "name", "version", "default", "output_directory", link_relation("operator"))
     actions = [
         action_add_pipeline_to_cache,
     ]
+    list_filter = ("default",)
+    advanced_filter_fields = ("default",)
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -110,7 +114,12 @@ class RunAdmin(admin.ModelAdmin):
         StatusFilter,
         AppFilter,
     )
-    search_fields = ("tags__sampleId", "tags__requestId", "tags__cmoSampleIds__contains", "operator_run__id")
+    search_fields = (
+        "tags__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY),
+        "tags__igoRequestId",
+        "tags__cmoSampleIds__contains",
+        "operator_run__id",
+    )
     readonly_fields = (
         "samples",
         "job_group",

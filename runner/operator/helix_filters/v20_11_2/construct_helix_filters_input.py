@@ -6,6 +6,7 @@ import logging
 import os
 import sys
 import json
+from django.conf import settings
 from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
@@ -243,7 +244,7 @@ def build_request_ids_query(data):
        query |= item
 
     """
-    data_query_set = [Q(metadata__requestId=value) for value in set(data)]
+    data_query_set = [Q(metadata__igoRequestId=value) for value in set(data)]
     query = data_query_set.pop()
     for item in data_query_set:
         query |= item
@@ -275,12 +276,12 @@ def get_request_pi(run_id_list):
     # reducing number of queries
     for run_id in run_id_list:
         argos_run = Run.objects.get(id=run_id)
-        run_request_id = argos_run.tags["requestId"]
+        run_request_id = argos_run.tags[settings.REQUEST_ID_METADATA_KEY]
         all_request_ids.add(run_request_id)
     for request_id in all_request_ids:
-        investigator_emails = FileRepository.filter(queryset=files, metadata={"requestId": request_id}).values_list(
-            "metadata__investigatorEmail", flat=True
-        )
+        investigator_emails = FileRepository.filter(
+            queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}
+        ).values_list("metadata__investigatorEmail", flat=True)
         request_pis = request_pis.union(set(investigator_emails))
     request_pis_final = list()
     for request_pi in request_pis:
@@ -318,7 +319,7 @@ def get_oncotree_codes(request_id):
     oncotree_dh = OncotreeDataHandler()
     files = FileRepository.all()
     oncotree_codes_tmp = set(
-        FileRepository.filter(queryset=files, metadata={"requestId": request_id}).values_list(
+        FileRepository.filter(queryset=files, metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list(
             "metadata__oncoTreeCode", flat=True
         )
     )

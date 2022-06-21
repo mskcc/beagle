@@ -7,7 +7,7 @@ from rest_framework.validators import UniqueValidator
 from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
-from file_system.metadata.validator import MetadataValidator
+from beagle_etl.metadata.validator import MetadataValidator
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -375,7 +375,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
         return RunStatus(obj.status).name
 
     def get_request_id(self, obj):
-        return obj.tags.get("requestId")
+        return obj.tags.get(settings.REQUEST_ID_METADATA_KEY)
 
     def get_jira_id(self, obj):
         jgn = (
@@ -410,7 +410,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
         return jgn.assay if jgn else None
 
     def get_delivery_date(self, obj):
-        return Request.objects.filter(request_id=obj.tags.get("requestId")).first().delivery_date
+        return Request.objects.filter(request_id=obj.tags.get(settings.REQUEST_ID_METADATA_KEY)).first().delivery_date
 
     class Meta:
         model = Run
@@ -440,10 +440,14 @@ class FullSampleSerializer(serializers.ModelSerializer):
         return RunSerializerPartial(obj.run_set.order_by("-created_date").all(), many=True).data
 
     def get_tumor_or_normal(self, obj):
-        return FileRepository.filter(metadata={"sampleId": obj.sample_id}, values_metadata="tumorOrNormal").first()
+        return FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata="tumorOrNormal"
+        ).first()
 
     def get_patient_id(self, obj):
-        return FileRepository.filter(metadata={"sampleId": obj.sample_id}, values_metadata="patientId").first()
+        return FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: obj.sample_id}, values_metadata=settings.PATIENT_ID_METADATA_KEY
+        ).first()
 
     class Meta:
         model = Sample
