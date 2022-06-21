@@ -6,19 +6,24 @@ from notifier.events import (
 from runner.models import Run
 from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
-from notifier.events import VoyagerIsProcessingPartialRequestEvent, \
-    VoyagerIsProcessingWholeRequestEvent, \
-    VoyagerCantProcessRequestAllNormalsEvent
+from notifier.events import (
+    VoyagerIsProcessingPartialRequestEvent,
+    VoyagerIsProcessingWholeRequestEvent,
+    VoyagerCantProcessRequestAllNormalsEvent,
+)
 
 
 def _voyager_start_processing(request_id, runs):
     job_group = settings.BEAGLE_NOTIFIER_EMAIL_GROUP
-    sample_ids = FileRepository.objects.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                               values_metadata=settings.SAMPLE_ID_METADATA_KEY)
-    investigator_email = FileRepository.objects.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                                       values_metadata='investigatorEmail').first()
-    lab_head_email = FileRepository.objects.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                                   values_metadata='labHeadEmail').first()
+    sample_ids = FileRepository.objects.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+    )
+    investigator_email = FileRepository.objects.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
+    ).first()
+    lab_head_email = FileRepository.objects.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
+    ).first()
     sent_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
     if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
         sent_to.add(investigator_email)
@@ -27,11 +32,13 @@ def _voyager_start_processing(request_id, runs):
 
     if not runs:
         for email in sent_to:
-            event = VoyagerCantProcessRequestAllNormalsEvent(job_notifier=job_group,
-                                                             email_to=email,
-                                                             email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                                                             subject="Voyager Status",
-                                                             content="All Normals").to_dict()
+            event = VoyagerCantProcessRequestAllNormalsEvent(
+                job_notifier=job_group,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject="Voyager Status",
+                content="All Normals",
+            ).to_dict()
             send_notification.delay(event)
 
     else:
@@ -47,24 +54,28 @@ def _voyager_start_processing(request_id, runs):
 
         if unprocessed_samples:
             for email in sent_to:
-                event = VoyagerIsProcessingPartialRequestEvent(job_notifier=job_group,
-                                                               email_to=email,
-                                                               email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                                                               subject="Voyager Status",
-                                                               content=unprocessed_samples).to_dict()
+                event = VoyagerIsProcessingPartialRequestEvent(
+                    job_notifier=job_group,
+                    email_to=email,
+                    email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                    subject="Voyager Status",
+                    content=unprocessed_samples,
+                ).to_dict()
                 send_notification.delay(event)
         else:
             for email in sent_to:
-                event = VoyagerIsProcessingWholeRequestEvent(job_notifier=job_group,
-                                                             email_to=email,
-                                                             email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                                                             subject="Voyager Status",
-                                                             content=request_id).to_dict()
+                event = VoyagerIsProcessingWholeRequestEvent(
+                    job_notifier=job_group,
+                    email_to=email,
+                    email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                    subject="Voyager Status",
+                    content=request_id,
+                ).to_dict()
                 send_notification.delay(event)
 
 
 def _generate_ticket_description(
-        request_id, job_group_id, job_group_notifier_id, sample_list, pooled_normal_list, request_metadata
+    request_id, job_group_id, job_group_notifier_id, sample_list, pooled_normal_list, request_metadata
 ):
     all_jobs = []
 
