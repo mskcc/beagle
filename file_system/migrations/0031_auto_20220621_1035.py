@@ -18,12 +18,11 @@ def _remap_metadata(metadata):
         new_metadata["igoComplete"] = new_metadata.pop("igocomplete")
     return new_metadata
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0030_auto_20220418_1737'),
+        ("file_system", "0030_auto_20220418_1737"),
     ]
 
-    operations = [
-        migrations.RunPython(migrate_metadata)
-    ]
+    operations = [migrations.RunPython(migrate_metadata)]
