@@ -1,7 +1,8 @@
+import os
 from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .construct_argos_pair import construct_argos_jobs
+from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
 from notifier.models import JobGroup
 from .bin.make_sample import build_sample
