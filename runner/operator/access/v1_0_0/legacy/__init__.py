@@ -4,6 +4,7 @@
 """ """""" """""" """""" """""" ""
 
 import logging
+from django.conf import settings
 from collections import defaultdict
 from runner.models import Port, PortType
 from runner.operator.operator import Operator
@@ -18,12 +19,12 @@ from jinja2 import Template
 logger = logging.getLogger(__name__)
 
 REQUIRED_META_FIELDS = [
-    "sampleId",
+    settings.SAMPLE_ID_METADATA_KEY,
     "captureName",
     "baitSet",
-    "sampleName",
+    settings.CMO_SAMPLE_NAME_METADATA_KEY,
     "tumorOrNormal",
-    "patientId",
+    settings.PATIENT_ID_METADATA_KEY,
     "sex",
     "barcodeId",
     "investigatorSampleId",
@@ -104,9 +105,9 @@ def generate_title_file_content(sample_group):
         title_file_content += line_content.format(
             meta["barcodeId"] if meta["barcodeId"] else "-",
             pool_info,
-            meta["sampleName"],
+            meta[settings.CMO_SAMPLE_NAME_METADATA_KEY],
             meta["investigatorSampleId"],
-            meta["patientId"],
+            meta[settings.PATIENT_ID_METADATA_KEY],
             meta["tumorOrNormal"],
             "Plasma" if meta["tumorOrNormal"] == "Tumor" else "Buffy Coat",
             meta["dnaInputNg"] if meta["dnaInputNg"] else "-",
@@ -162,17 +163,21 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the metadata: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"],
+                    meta[settings.SAMPLE_ID_METADATA_KEY],
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
                 continue
 
-            patient_id_count[meta["patientId"]] += 1
-            cmo_sample_names.append(meta["sampleName"])
+            patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]] += 1
+            cmo_sample_names.append(meta[settings.CMO_SAMPLE_NAME_METADATA_KEY])
             barcode_ids.append(meta["barcodeId"])
             tumor_or_normals.append(meta["tumorOrNormal"])
-            patient_ids.append(meta["patientId"] + "_" + str(patient_id_count[meta["patientId"]]))
+            patient_ids.append(
+                meta[settings.PATIENT_ID_METADATA_KEY]
+                + "_"
+                + str(patient_id_count[meta[settings.PATIENT_ID_METADATA_KEY]])
+            )
 
             # Todo: need to add metadata for "Read 1" and "Read 2" to fastq files
             r1_fastq = sample_pair[0] if "_R1_.fastq.gz" in sample_pair[0]["path"] else sample_pair[1]
@@ -216,7 +221,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                     "The following fields are missing from the input: {}".format(",".join(missing_fields)),
                     group_id,
                     request_id,
-                    meta["sampleId"],
+                    meta[settings.SAMPLE_ID_METADATA_KEY],
                 ).to_dict()
                 send_notification.delay(ic_error)
                 errors += 1
@@ -236,7 +241,7 @@ class AccessLegacyOperator(Operator):
             for f in p.files.all()
         ]
 
-        request_id = data[0]["metadata"]["requestId"]
+        request_id = data[0]["metadata"][settings.REQUEST_ID_METADATA_KEY]
         (sample_inputs, no_of_errors) = construct_sample_inputs(data, request_id, self.job_group_id)
 
         if no_of_errors:
@@ -252,7 +257,7 @@ class AccessLegacyOperator(Operator):
                         "app": self.get_pipeline_id(),
                         "inputs": job,
                         "tags": {
-                            "requestId": request_id,
+                            settings.REQUEST_ID_METADATA_KEY: request_id,
                             "cmoSampleIds": job["add_rg_ID"],
                             "reference_version": "HG19",
                         },
@@ -271,6 +276,6 @@ def chunks(lst, n):
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
-        sample_pairs[sample["metadata"]["sampleId"]].append(sample)
+        sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs

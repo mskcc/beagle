@@ -5,6 +5,7 @@ import datetime
 from functools import reduce
 from django.shortcuts import get_object_or_404
 from beagle.pagination import time_filter
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
@@ -129,7 +130,7 @@ class RunApiViewSet(
             if tags:
                 queryset = query_from_dict("tags__%s__contains", queryset, tags)
             if request_ids:
-                queryset = queryset.filter(tags__requestId__in=request_ids)
+                queryset = queryset.filter(tags__igoRequestId__in=request_ids)
             if apps:
                 queryset = queryset.filter(app__in=apps)
             if run:
@@ -194,7 +195,7 @@ class RunApiViewSet(
         if run_creator.is_valid():
             run = run_creator.create()
             response = RunSerializerFull(run)
-            create_run_task.delay(response.data["id"], request.data["inputs"])
+            create_run_task.delay(str(run.id), run_creator.inputs, run.output_directory)
             job_group_notifier_id = str(run.job_group_notifier_id)
             if job_group_notifier_id:
                 self._send_notifications(job_group_notifier_id, run)
@@ -456,7 +457,7 @@ class RunOperatorViewSet(GenericAPIView):
                 get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
             try:
                 run = Run.objects.get(id=run_ids[0])
-                req = run.tags.get("requestId", "Unknown")
+                req = run.tags.get(settings.REQUEST_ID_METADATA_KEY, "Unknown")
             except Run.DoesNotExist:
                 req = "Unknown"
 
@@ -586,7 +587,7 @@ class CWLJsonViewSet(GenericAPIView):
             if jira_ids:
                 queryset = queryset.filter(job_group_notifier__jira_id__in=jira_ids)
             if request_ids:
-                queryset = queryset.filter(tags__requestId__in=request_ids)
+                queryset = queryset.filter(tags__igoRequestId__in=request_ids)
             if runs:
                 queryset = queryset.filter(id__in=runs)
             if cwl_inputs:

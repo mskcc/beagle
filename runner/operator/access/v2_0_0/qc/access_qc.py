@@ -18,15 +18,15 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 meta_fields = [
     "igoId",
-    "cmoSampleName",
-    "sampleName",
-    "cmoSampleClass",
-    "cmoPatientId",
+    settings.CMO_SAMPLE_TAG_METADATA_KEY,
+    settings.SAMPLE_NAME_METADATA_KEY,
+    settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+    settings.PATIENT_ID_METADATA_KEY,
     "investigatorSampleId",
-    "oncoTreeCode",
+    settings.ONCOTREE_METADATA_KEY,
     "tumorOrNormal",
     "tissueLocation",
-    "specimenType",
+    settings.SAMPLE_CLASS_METADATA_KEY,
     "sampleOrigin",
     "preservation",
     "collectionYear",
@@ -38,7 +38,7 @@ meta_fields = [
     "qcReports",
     "barcodeId",
     "barcodeIndex",
-    "libraryIgoId",
+    settings.LIBRARY_ID_METADATA_KEY,
     "libraryVolume",
     "libraryConcentrationNgul",
     "dnaInputNg",
@@ -67,7 +67,7 @@ class AccessQCOperator(Operator):
                     "name": "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
-                    "tags": {"requestId": self.request_id, "cmoSampleId": job["sample_name"]},
+                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
             for i, job in enumerate(sample_inputs)
@@ -78,7 +78,7 @@ class AccessQCOperator(Operator):
         most_recent_runs_for_request = (
             Run.objects.filter(
                 app__name="access nucleo",
-                tags__requestId=self.request_id,
+                tags__igoRequestId=self.request_id,
                 status=RunStatus.COMPLETED,
                 operator_run__status=RunStatus.COMPLETED,
             )
@@ -135,7 +135,7 @@ class AccessQCOperator(Operator):
             bams[i] = json.dumps(bam)
 
         sample_sex = "unknown"
-        sample_name = run.output_metadata["sampleName"]
+        sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         sample_group = "-".join(sample_name.split("-")[0:2])
         samples_json_content = self.create_sample_json(run)
 
@@ -156,7 +156,7 @@ class AccessQCOperator(Operator):
     def create_sample_json(self, run):
         j = run.output_metadata
         # todo: cmoSampleName in output_metadata for Nucleo appears to be the igo ID?
-        j["cmoSampleName"] = run.output_metadata["sampleName"]
+        j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
         for f in meta_fields:
             # Use None for missing fields

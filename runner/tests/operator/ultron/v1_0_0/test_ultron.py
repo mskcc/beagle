@@ -125,7 +125,7 @@ class TestUltron(TestCase):
         """
         Test the creation of an ultron job
         """
-        sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata["sampleId"]
+        sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata[settings.SAMPLE_ID_METADATA_KEY]
         input_json = {
             "argos_version_string": "1.1.2",
             "bam_files": [
@@ -254,15 +254,17 @@ class TestUltron(TestCase):
         """
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
-        sample_id = sample_metadata_1.metadata["sampleId"]
-        sample_metadata_1.metadata["patientId"] = None
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_1.save()
-        sample_metadata_2.metadata["patientId"] = None
+        sample_metadata_2.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_2.save()
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), None)
         self.assertEqual(sample_data._find_dmp_bams("T"), None)
-        self.assertEqual(sample_data._get_sample_metadata(), (None, sample_metadata_1.metadata["cmoSampleName"]))
+        self.assertEqual(
+            sample_data._get_sample_metadata(), (None, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY])
+        )
 
     def test_construct_sample_data_null_sample_name(self):
         """
@@ -270,11 +272,11 @@ class TestUltron(TestCase):
         """
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
-        sample_id = sample_metadata_1.metadata["sampleId"]
-        patient_id = sample_metadata_1.metadata["patientId"]
-        sample_metadata_1.metadata["cmoSampleName"] = None
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
+        sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_1.save()
-        sample_metadata_2.metadata["cmoSampleName"] = None
+        sample_metadata_2.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_2.save()
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
@@ -286,12 +288,15 @@ class TestUltron(TestCase):
         Test the creation of sample data with a null sample name
         """
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
-        sample_id = sample_metadata_1.metadata["sampleId"]
-        patient_id = sample_metadata_1.metadata["patientId"]
+        sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_data = SampleData(sample_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
-        self.assertEqual(sample_data._get_sample_metadata(), (patient_id, sample_metadata_1.metadata["cmoSampleName"]))
+        self.assertEqual(
+            sample_data._get_sample_metadata(),
+            (patient_id, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]),
+        )
 
     def test_construct_bam_data_missing_muts(self):
         """

@@ -5,6 +5,7 @@ import json
 import csv
 import pickle
 import logging
+import unicodedata
 from django.db.models import Q
 from django.conf import settings
 from pathlib import Path
@@ -25,7 +26,7 @@ from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEve
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing.tsv")  # used for historical pairing
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class TempoMPGenOperator(Operator):
@@ -38,7 +39,7 @@ class TempoMPGenOperator(Operator):
         can't be sent as a value, so had to make a semi-redundant function
         """
         data = self.get_recipes()
-        data_query_set = [Q(metadata__recipe=value) for value in set(data)]
+        data_query_set = [Q(("metadata__{}".format(settings.RECIPE_METADATA_KEY), value)) for value in set(data)]
         query = data_query_set.pop()
         for item in data_query_set:
             query |= item
@@ -61,14 +62,16 @@ class TempoMPGenOperator(Operator):
 
     def filter_out_missing_fields_query(self):
         """
-        This is for legacy purposes - if FileMetadata don't contain sampleClass or cmoSampleName,
+        This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(metadata__cmoSampleName__isnull=False) & Q(metadata__sampleClass__isnull=False)
+        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_TAG_METADATA_KEY), False)) & Q(
+            ("metadata__{}__isnull".format(settings.CMO_SAMPLE_CLASS_METADATA_KEY), False)
+        )
         return query
 
     def get_jobs(self, pairing_override=None):
-        logger.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
+        LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
@@ -118,7 +121,7 @@ class TempoMPGenOperator(Operator):
         patient_files = dict()
         no_patient_samples = list()
         for entry in tempo_files:
-            patient_id = entry.metadata["patientId"]
+            patient_id = entry.metadata[settings.PATIENT_ID_METADATA_KEY]
             if patient_id:
                 patient_ids.add(patient_id)
                 if patient_id not in patient_files:
@@ -225,12 +228,12 @@ class TempoMPGenOperator(Operator):
     def create_unpaired_txt_file(self):
         # Add runDate
         fields = [
-            "cmoSampleName",
-            "patientId",
-            "sampleId",
-            "specimenType",
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
             "runMode",
-            "sampleClass",
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
             "baitSet",
             "runDate",
         ]
@@ -263,8 +266,7 @@ class TempoMPGenOperator(Operator):
             "IDT_Exome_v2_FP_b37_baits",
             "IDT_Exome_v2_GRCh38_BAITS",
             "SureSelect-All-Exon-V4-hg19",
-            "IDT_Exome_v1_FP_Viral_Probes",
-            "IDT_Exome_v2_FP_Viral_Probes",
+            "IDT_Exome_v2_BAITS",
         ]
         return assays
 
@@ -280,12 +282,12 @@ class TempoMPGenOperator(Operator):
 
     def create_conflict_samples_txt_file(self):
         fields = [
-            "cmoSampleName",
-            "patientId",
-            "sampleId",
-            "specimenType",
+            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
             "runMode",
-            "sampleClass",
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
             "baitSet",
             "runDate",
         ]
@@ -306,9 +308,9 @@ class TempoMPGenOperator(Operator):
         q = None
         for i in l:
             if q:
-                q |= Q(metadata__requestId=i)
+                q |= Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY), i))
             else:
-                q = Q(metadata__requestId=i)
+                q = Q(("metadata__{}".format(settings.REQUEST_ID_METADATA_KEY), i))
         return q
 
     def get_exclusions(self):
@@ -340,9 +342,16 @@ class TempoMPGenOperator(Operator):
         extra_keys values are the metadata field names in the database, used as headers
         """
         tracker = ""
-        key_order = ["investigatorSampleId", "externalSampleId", "sampleClass"]
-        key_order += ["baitSet", "requestId"]
-        extra_keys = ["tumorOrNormal", "species", "recipe", "specimenType", "sampleId", "patientId"]
+        key_order = ["investigatorSampleId", "sampleName", "sampleClass"]
+        key_order += ["baitSet", settings.REQUEST_ID_METADATA_KEY]
+        extra_keys = [
+            "tumorOrNormal",
+            "species",
+            settings.RECIPE_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.SAMPLE_ID_METADATA_KEY,
+            settings.PATIENT_ID_METADATA_KEY,
+        ]
         extra_keys += [
             "investigatorName",
             "investigatorEmail",
@@ -351,7 +360,7 @@ class TempoMPGenOperator(Operator):
             "labHeadEmail",
             "preservation",
         ]
-        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "sampleName"]
+        extra_keys += ["dataAnalystName", "dataAnalystEmail", "projectManagerName", "investigatorId", "cmoSampleName"]
 
         tracker = "CMO_Sample_ID\tCollaborator_ID_(or_DMP_Sample_ID)\tHistorical_Investigator_ID_(for_CCS_use)\tSample_Class_(T/N)\tBait_set_(Agilent/_IDT/WGS)\tIGO_Request_ID_(Project_ID)\t"
         for key in extra_keys:
@@ -371,7 +380,8 @@ class TempoMPGenOperator(Operator):
                         running = list()
                         running.append(sample.cmo_sample_name)
                         for key in key_order:
-                            s = self._validate_to_str(meta[key])
+                            v = meta[key]
+                            s = self._validate_to_str(v)
                             running.append(s)
                         for key in extra_keys:
                             s = self._validate_to_str(meta[key])

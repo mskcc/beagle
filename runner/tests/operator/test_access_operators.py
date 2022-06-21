@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+from django.conf import settings
 from file_system.models import File, FileMetadata, FileGroup
 from runner.models import Run, Port, PortType, Pipeline, RunStatus
 from runner.operator.access import get_unfiltered_matched_normal, DMP_IMPACT_ASSAYS, ACCESS_ASSAY
@@ -21,7 +21,7 @@ class TestMatchedNormalSearch(TestCase):
         pipeline = Pipeline.objects.create(name="pipeline", output_directory="/tmp", output_file_group=fg)
 
         run = Run.objects.create(
-            tags={"requestId": REQUEST_ID},
+            tags={settings.REQUEST_ID_METADATA_KEY: REQUEST_ID},
             app=pipeline,
             output_directory="/test",
             status=RunStatus.FAILED,
@@ -45,7 +45,7 @@ class TestMatchedNormalSearch(TestCase):
         pipeline = Pipeline.objects.create(name="pipeline", output_directory="/tmp", output_file_group=fg)
 
         run = Run.objects.create(
-            tags={"requestId": REQUEST_ID},
+            tags={settings.REQUEST_ID_METADATA_KEY: REQUEST_ID},
             app=pipeline,
             output_directory="/test",
             status=RunStatus.FAILED,

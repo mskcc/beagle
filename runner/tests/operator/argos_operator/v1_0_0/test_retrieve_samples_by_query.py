@@ -296,7 +296,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
             file=poolednormal_R1_file_instance,
             metadata={
-                "recipe": "IMPACT468",
+                settings.RECIPE_METADATA_KEY: "IMPACT468",
             },
         )
         poolednormal_R2_file_instance = File.objects.create(
@@ -308,7 +308,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
             file=poolednormal_R2_file_instance,
             metadata={
-                "recipe": "IMPACT468",
+                settings.RECIPE_METADATA_KEY: "IMPACT468",
             },
         )
         pooled_normals = FileMetadata.objects.all()
@@ -335,7 +335,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
             file=poolednormal_R1_file_instance,
             metadata={
-                "recipe": "foo_IMPACT468_bar",
+                settings.RECIPE_METADATA_KEY: "foo_IMPACT468_bar",
             },
         )
         poolednormal_R2_file_instance = File.objects.create(
@@ -347,7 +347,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
             file=poolednormal_R2_file_instance,
             metadata={
-                "recipe": "foo_IMPACT468_bar",
+                settings.RECIPE_METADATA_KEY: "foo_IMPACT468_bar",
             },
         )
         pooled_normals = FileMetadata.objects.all()
@@ -386,7 +386,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file=poolednormal_R1_file_instance,
             metadata={
                 "runId": "PITT_0439",
-                "recipe": "IMPACT468",
+                settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
                 "baitSet": "IMPACT468_BAITS",
@@ -403,7 +403,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file=poolednormal_R2_file_instance,
             metadata={
                 "runId": "PITT_0439",
-                "recipe": "IMPACT468",
+                settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
                 "baitSet": "IMPACT468_BAITS",

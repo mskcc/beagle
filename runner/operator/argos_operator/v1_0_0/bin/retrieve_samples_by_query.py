@@ -20,7 +20,7 @@ def get_samples_from_patient_id(patient_id):
     """
     Retrieves samples from the database based on the patient_id
     """
-    files = FileRepository.filter(metadata={"patientId": patient_id})
+    files = FileRepository.filter(metadata={settings.PATIENT_ID_METADATA_KEY: patient_id})
     data = list()
     for current_file in files:
         sample = dict()
@@ -34,7 +34,7 @@ def get_samples_from_patient_id(patient_id):
     # group by igoId
     igo_id_group = dict()
     for sample in data:
-        igo_id = sample["metadata"]["sampleId"]
+        igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
         if igo_id not in igo_id_group:
             igo_id_group[igo_id] = list()
         igo_id_group[igo_id].append(sample)
@@ -53,7 +53,7 @@ def get_descriptor(bait_set, pooled_normals):
     Need descriptor to match pooled normal "recipe", which might need to be re-labeled as bait_set
     """
     for pooled_normal in pooled_normals:
-        descriptor = pooled_normal.metadata["recipe"]
+        descriptor = pooled_normal.metadata[settings.RECIPE_METADATA_KEY]
         if descriptor.lower() in bait_set.lower():
             return descriptor
     return None
@@ -114,7 +114,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     if not descriptor:  # i.e., no pooled normal
         return None
 
-    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={"recipe": descriptor})
+    pooled_normals = FileRepository.filter(queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor})
     sample_files = list()
 
     # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
@@ -135,16 +135,16 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             sample["path"] = pooled_normal.file.path
             sample["file_name"] = pooled_normal.file.file_name
             metadata = init_metadata()
-            metadata["sampleId"] = sample_name
-            metadata["sampleName"] = sample_name
-            metadata["requestId"] = sample_name
+            metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
+            metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = sample_name
+            metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
             metadata["sequencingCenter"] = "MSKCC"
             metadata["platform"] = "Illumina"
             metadata["baitSet"] = descriptor
-            metadata["recipe"] = descriptor
+            metadata[settings.RECIPE_METADATA_KEY] = descriptor
             metadata["run_id"] = run_ids
             metadata["preservation"] = preservation_types
-            metadata["libraryId"] = sample_name + "_1"
+            metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
             # because rgid depends on flowCellId and barcodeIndex, we will
             # spoof barcodeIndex so that pairing can work properly; see
             # build_sample in runner.operator.argos_operator.bin
@@ -152,8 +152,8 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
             metadata["barcodeIndex"] = spoof_barcode(sample["file_name"], metadata["R"])
             metadata["flowCellId"] = "PN_FCID"
             metadata["tumorOrNormal"] = "Normal"
-            metadata["patientId"] = "PN_PATIENT_ID"
-            metadata["specimenType"] = specimen_type
+            metadata[settings.PATIENT_ID_METADATA_KEY] = "PN_PATIENT_ID"
+            metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
             sample["metadata"] = metadata
             sample_files.append(sample)
         pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
@@ -183,16 +183,16 @@ def get_dmp_normal(patient_id, bait_set):
         sample["file_name"] = dmp_bam.file.file_name
         sample["file_type"] = dmp_bam.file.file_type
         metadata = init_metadata()
-        metadata["sampleId"] = sample_name
-        metadata["sampleName"] = format_sample_name(sample_name, specimen_type)
-        metadata["requestId"] = sample_name
+        metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
+        metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = format_sample_name(sample_name, specimen_type)
+        metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
         metadata["sequencingCenter"] = sequencingCenter
         metadata["platform"] = platform
         metadata["baitSet"] = bait_set
-        metadata["recipe"] = bait_set
+        metadata[settings.RECIPE_METADATA_KEY] = bait_set
         metadata["run_id"] = ""
         metadata["preservation"] = ""
-        metadata["libraryId"] = sample_name + "_1"
+        metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
         metadata["R"] = "Not applicable"
         # because rgid depends on flowCellId and barcodeIndex, we will
         # spoof barcodeIndex so that pairing can work properly; see
@@ -200,8 +200,8 @@ def get_dmp_normal(patient_id, bait_set):
         metadata["barcodeIndex"] = "DMP_BARCODEIDX"
         metadata["flowCellId"] = "DMP_FCID"
         metadata["tumorOrNormal"] = "Normal"
-        metadata["patientId"] = patient_id
-        metadata["specimenType"] = specimen_type
+        metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
+        metadata[settings.SAMPLE_CLASS_METADATA_KEY] = specimen_type
         sample["metadata"] = metadata
         built_sample = build_sample([sample], ignore_sample_formatting=True)
         return built_sample
@@ -277,17 +277,17 @@ def init_metadata():
     This just instantiates it.
     """
     metadata = dict()
-    metadata["requestId"] = ""
-    metadata["sampleId"] = ""
-    metadata["libraryId"] = ""
+    metadata[settings.REQUEST_ID_METADATA_KEY] = ""
+    metadata[settings.SAMPLE_ID_METADATA_KEY] = ""
+    metadata[settings.LIBRARY_ID_METADATA_KEY] = ""
     metadata["baitSet"] = ""
     metadata["tumorOrNormal"] = ""
-    metadata["specimenType"] = ""
+    metadata[settings.SAMPLE_CLASS_METADATA_KEY] = ""
     metadata["species"] = ""
-    metadata["sampleName"] = ""
+    metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = ""
     metadata["flowCellId"] = ""
     metadata["barcodeIndex"] = ""
-    metadata["patientId"] = ""
+    metadata[settings.PATIENT_ID_METADATA_KEY] = ""
     metadata["runDate"] = ""
     metadata["R"] = ""
     metadata["labHeadName"] = ""

@@ -1,0 +1,80 @@
+[{
+  "additionalProperties": {
+    "igoRequestId": "10075_D_2",
+    "isCmoSample": "true"
+  },
+  "cfDNA2dBarcode": null,
+  "cmoInfoIgoId": null,
+  "baitSet": "GENESET101_BAITS",
+  "cmoSampleIdFields": {
+    "naToExtract": "",
+    "normalizedPatientId": "ALLAJV_HCISCLC002",
+    "recipe": "IMPACT468",
+    "sampleType": "DNA"
+  },
+  "importDate": "2022-03-23",
+  "smileSampleId": "afe750e6-8756-11eb-81b0-acde48001122",
+  "smilePatientId": "6cc9f242-875a-11eb-ae91-acde48001122",
+  "primaryId": "10075_D_2_3",
+  "cmoPatientId": "C-MP789JR",
+  "cmoSampleName": "C-MP789J-X001-d",
+  "ciTag": "C-MP789J-X001-d",
+  "sampleName": "XXX002_P3_12345_L1",
+  "sampleType": "Primary",
+  "oncotreeCode": "CLL",
+  "collectionYear": "",
+  "tubeId": "",
+  "qcReports": [],
+  "libraries": [
+    {
+      "libraryIgoId": "10075_D_2_3",
+      "libraryVolume": 35.0,
+      "libraryConcentrationNgul": 34.8,
+      "captureConcentrationNm": "11.49425287356322",
+      "captureInputNg": "400.0",
+      "captureName": "Pool-MOCKREQUEST1_B-Tube7_1",
+      "runs": [
+        {
+          "runMode": "HiSeq High Output",
+          "runId": "RUNID_0123",
+          "flowCellId": "X5KL2KKAY",
+          "readLength": "",
+          "runDate": "2018-06-05",
+          "flowCellLanes": [
+            5
+          ],
+          "fastqs": [
+            "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R1_001.fastq.gz",
+            "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz"
+          ]
+        }
+      ]
+    }
+  ],
+  "investigatorSampleId": "XXX002_P3_12345_L1",
+  "species": "Human",
+  "sex": "F",
+  "tumorOrNormal": "Tumor",
+  "preservation": "Frozen",
+  "sampleClass": "PDX",
+  "sampleOrigin": "Tissue",
+  "tissueLocation": "",
+  "genePanel": "GENESET101_BAITS",
+  "datasource": "igo",
+  "patientAliases": [
+    {
+      "namespace": "cmo",
+      "value": "C-MP789JR"
+    }
+  ],
+  "sampleAliases": [
+    {
+      "namespace": "investigatorId",
+      "value": "XXX002_P3_12345_L1"
+    },
+    {
+      "namespace": "igoId",
+      "value": "MOCKREQUEST1_B_1"
+    }
+  ]
+}]

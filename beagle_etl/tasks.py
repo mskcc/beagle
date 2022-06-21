@@ -1,44 +1,81 @@
+import pytz
 import logging
 import importlib
 import datetime
+import asyncio
 from celery import shared_task
+from lib.logger import format_log
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job
-from beagle_etl.jobs.lims_etl_jobs import TYPES
+from beagle_etl.models import (
+    JobStatus,
+    Job,
+    SMILEMessage,
+    SmileMessageStatus,
+    RequestCallbackJobStatus,
+    RequestCallbackJob,
+)
+from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
+from beagle_etl.nats_client.nats_client import run
+from beagle_etl.jobs.metadb_jobs import (
+    new_request,
+    update_request_job,
+    update_sample_job,
+    not_supported,
+    request_callback,
+)
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
-from notifier.events import ETLImportEvent, ETLJobsLinksEvent, ETLJobFailedEvent, PermissionDeniedEvent, SendEmailEvent
-from lib.logger import format_log
+from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
 
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def fetch_requests_lims():
-    logger.info("ETL fetching requestIDs")
-    running = Job.objects.filter(
-        run=TYPES["DELIVERY"], status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN)
-    )
-    if len(running) > 0:
-        logger.info(format_log("ETL job already in progress", obj=running.first()))
-        return
-    latest = Job.objects.filter(run=TYPES["DELIVERY"]).order_by("-created_date").first()
-    timestamp = None
-    if latest:
-        timestamp = int(latest.created_date.timestamp()) * 1000
+def fetch_request_nats():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(run(loop, settings.METADB_NATS_NEW_REQUEST))
+    loop.run_forever()
+
+
+@shared_task
+def process_smile_events():
+    messages = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING)
+    for message in messages:
+        process_smile_message(message)
+
+
+def process_smile_message(msg):
+    if msg.topic == settings.METADB_NATS_NEW_REQUEST:
+        new_request.delay(str(msg.id))
+        logger.info("New request")
+    elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
+        update_request_job.delay(str(msg.id))
+        logger.info("Update request")
+    elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
+        update_sample_job.delay(str(msg.id))
+        logger.info("Update sample")
     else:
-        timestamp = int((datetime.datetime.now() - datetime.timedelta(hours=120)).timestamp()) * 1000
-    job = Job(
-        run="beagle_etl.jobs.lims_etl_jobs.fetch_new_requests_lims",
-        args={"timestamp": timestamp},
-        status=JobStatus.CREATED,
-        max_retry=3,
-        children=[],
-    )
-    job.save()
-    logger.info(format_log("ETL fetch_new_requests_lims job created", obj=job))
+        not_supported.delay(str(msg.id))
+        logger.error("Unknown subject: %s" % msg.topic)
+
+
+@shared_task
+def process_request_callback_jobs():
+    requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
+    for request in requests:
+        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+            logger.info("Submitting request callback %s" % request.request_id)
+            request_callback.delay(
+                request.request_id,
+                request.recipe,
+                request.samples,
+                str(request.job_group.id),
+                str(request.job_group_notifier.id),
+            )
+        request.status = RequestCallbackJobStatus.COMPLETED
+        request.save()
 
 
 @shared_task
@@ -191,10 +228,12 @@ class JobObject(object):
         )
 
         number_of_tumors = FileRepository.filter(
-            metadata={"requestId": self.job.args["request_id"], "tumorOrNormal": "Tumor"}, values_metadata="sampleId"
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args["request_id"], "tumorOrNormal": "Tumor"},
+            values_metadata=settings.SAMPLE_ID_METADATA_KEY,
         ).count()
         number_of_normals = FileRepository.filter(
-            metadata={"requestId": self.job.args["request_id"], "tumorOrNormal": "Normal"}, values_metadata="sampleId"
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.job.args["request_id"], "tumorOrNormal": "Normal"},
+            values_metadata=settings.SAMPLE_ID_METADATA_KEY,
         ).count()
 
         data_analyst_email = ""
@@ -207,10 +246,12 @@ class JobObject(object):
         project_manager_name = ""
         recipe = ""
         qc_access_emails = ""
+        data_access_emails = ""
+        other_contact_emails = ""
 
         if request_metadata:
             metadata = request_metadata.args.get("request_metadata", {})
-            recipe = metadata["recipe"]
+            recipe = metadata[settings.RECIPE_METADATA_KEY]
             data_analyst_email = metadata["dataAnalystEmail"]
             data_analyst_name = metadata["dataAnalystName"]
             investigator_email = metadata["investigatorEmail"]
@@ -220,6 +261,8 @@ class JobObject(object):
             pi_email = metadata["piEmail"]
             project_manager_name = metadata["projectManagerName"]
             qc_access_emails = metadata["qcAccessEmails"]
+            data_access_emails = metadata["dataAccessEmails"]
+            other_contact_emails = metadata["otherContactEmails"]
 
         event = ETLImportEvent(
             str(self.job.job_group_notifier.id),
@@ -240,6 +283,8 @@ class JobObject(object):
             number_of_tumors,
             number_of_normals,
             len(pooled_normal_jobs),
+            data_access_emails,
+            other_contact_emails,
         )
         e = event.to_dict()
         send_notification.delay(e)
@@ -291,7 +336,7 @@ class JobObject(object):
                 failed.append(child_id)
                 if isinstance(child_job.message, dict) and child_job.message.get("code", 0) == 108:
                     logger.error(format_log("ETL job failed because of permission denied error", obj=self.job))
-                    recipe = child_job.args.get("request_metadata", {}).get("recipe")
+                    recipe = child_job.args.get("request_metadata", {}).get(settings.RECIPE_METADATA_KEY)
                     permission_denied = True
             if child_job.status in (JobStatus.IN_PROGRESS, JobStatus.CREATED, JobStatus.WAITING_FOR_CHILDREN):
                 finished = False

@@ -1,9 +1,21 @@
 import os
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, SimpleListFilter
 from django.utils.safestring import mark_safe
-from .models import Job, JobStatus, Operator, ETLConfiguration
+from .models import (
+    Job,
+    JobStatus,
+    Operator,
+    ETLConfiguration,
+    SMILEMessage,
+    RequestCallbackJob,
+    NormalizerModel,
+    ValidatorModel,
+)
+from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
+from beagle_etl.tasks import process_smile_message
 
 
 def restart(modeladmin, request, queryset):
@@ -24,7 +36,7 @@ restart.short_description = "Restart"
 
 class RecipeFilter(SimpleListFilter):
     title = "Recipe"
-    parameter_name = "recipe"
+    parameter_name = settings.RECIPE_METADATA_KEY
 
     def lookups(self, request, model_admin):
         options = set()
@@ -36,7 +48,7 @@ class RecipeFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value():
-            return queryset.filter(args__request_metadata__recipe=self.value())
+            return queryset.filter(args__request_metadata__genePanel=self.value())
         return queryset
 
 
@@ -68,8 +80,10 @@ class JobAdmin(ModelAdmin):
     get_short_run.short_description = "Run"
 
 
-class OperatorAdmin(ModelAdmin):
+class OperatorAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
     list_display = ("id", "slug", "class_name", "version", "recipes", "active")
+    list_filter = ("active",)
+    advanced_filter_fields = ("active",)
 
 
 class AssayAdmin(ModelAdmin):
@@ -82,6 +96,41 @@ class AssayAdmin(ModelAdmin):
         return False
 
 
+def action_process_messages(modeladmin, request, queryset):
+    for job in queryset:
+        process_smile_message(job)
+
+
+action_process_messages.short_description = "Process SMILE messages"
+
+
+class SMILEMessagesAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
+    list_filter = ("request_id", "topic", "status")
+    actions = (action_process_messages,)
+    advanced_filter_fields = ("request_id", "topic", "status")
+    ordering = ("-created_date",)
+    list_display = ("created_date", "request_id", "topic", "status")
+
+
+class RequestCallbackJobAdmin(ModelAdmin):
+    list_display = ("created_date", "request_id", "recipe", "status")
+
+
+class NormalizerAdmin(ModelAdmin):
+    list_display = (
+        "condition",
+        "normalizer",
+    )
+
+
+class ValidatorAdmin(ModelAdmin):
+    list_display = ("name",)
+
+
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
+admin.site.register(SMILEMessage, SMILEMessagesAdmin)
+admin.site.register(RequestCallbackJob, RequestCallbackJobAdmin)
+admin.site.register(NormalizerModel, NormalizerAdmin)
+admin.site.register(ValidatorModel, ValidatorAdmin)

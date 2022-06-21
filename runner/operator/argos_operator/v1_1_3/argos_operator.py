@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs, get_project_prefix
@@ -21,12 +22,18 @@ class ArgosOperator(Operator):
 
         if self.request_id:
             files = FileRepository.filter(
-                queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True}, filter_redact=True
+                queryset=self.files,
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True},
+                filter_redact=True,
             )
 
             cnt_tumors = FileRepository.filter(
                 queryset=self.files,
-                metadata={"requestId": self.request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+                metadata={
+                    settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                    "tumorOrNormal": "Tumor",
+                    "igocomplete": True,
+                },
                 filter_redact=True,
             ).count()
         elif self.pairing:
@@ -53,14 +60,14 @@ class ArgosOperator(Operator):
         # group by igoId
         igo_id_group = dict()
         for sample in data:
-            igo_id = sample["metadata"]["sampleId"]
+            igo_id = sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]
             if igo_id not in igo_id_group:
                 igo_id_group[igo_id] = list()
             igo_id_group[igo_id].append(sample)
 
         for igo_id in igo_id_group:
             sample = igo_id_group[igo_id][0]
-            sample_name = sample["metadata"]["sampleName"]
+            sample_name = sample["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
             if "poolednormal" in sample_name.lower():
                 samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
             else:
@@ -172,7 +179,7 @@ class ArgosOperator(Operator):
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
 
             tags = {
-                "requestId": self.request_id,
+                settings.REQUEST_ID_METADATA_KEY: self.request_id,
                 "sampleNameTumor": tumor_sample_name,
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
@@ -250,7 +257,9 @@ class ArgosOperator(Operator):
     def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data["sample_id"]
         sample = FileRepository.filter(
-            queryset=self.files, metadata={"cmoSampleName": sample_id, "igocomplete": True}, filter_redact=True
+            queryset=self.files,
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True},
+            filter_redact=True,
         )
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:
