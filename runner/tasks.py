@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
     log_directory = operator.get_log_directory()
+    print(log_directory)
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
@@ -430,7 +431,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         resume = execution_id
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = run1.dump_job(output_directory=output_directory)
+    job = run1.dump_job(output_directory=output_directory, log_directory=log_directory)
     logger.info(
         format_log("Log output directory {path}".format(path=log_directory), obj=run1))
     logger.info(format_log("Job ready for submitting", obj=run1))

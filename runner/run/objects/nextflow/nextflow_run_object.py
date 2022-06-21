@@ -197,7 +197,7 @@ class NextflowRunObject(RunObject):
                "app": app,
                "inputs": inputs,
                "root_dir": output_directory,
-               "log_dir": log_directory}
+               "log_dir": log_directory % str(self.run_id)}
         return job
 
     def __repr__(self):
