@@ -9,6 +9,7 @@ def migrate_metadata(apps, schema_editor):
     files = FileRepository.all()
     for f in files:
         f.metadata = _remap_metadata(f.metadata)
+        f.save()
 
 
 def _remap_metadata(metadata):
