@@ -64,7 +64,7 @@ class ArgosOperator(Operator):
             pipeline_name=pipeline_obj.name,
             pipeline_github=pipeline_obj.github,
             pipeline_version=pipeline_obj.version,
-            dmp_samples=dmp_samples
+            dmp_samples=dmp_samples,
         )
         sample_data_clinical_event = UploadAttachmentEvent(
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
@@ -94,7 +94,7 @@ class ArgosOperator(Operator):
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
                 "labHeadEmail": pi_email,
-                "pairing": self.pairing
+                "pairing": self.pairing,
             }
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:

@@ -9,7 +9,7 @@ def get_project_id(request_id):
     return request_id.split("_")[0]
 
 
-def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline_version, dmp_samples = None):
+def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline_version, dmp_samples=None):
     result = "SAMPLE_ID\tREQUEST_ID\tPROJECT_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\tRUN_MODE\tPIPELINE\tPIPELINE_GITHUB_LINK\tPIPELINE_VERSION\n"
     ret_str = "metadata__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY)
     query = Q(file__file_group_id=settings.IMPORT_FILE_GROUP)
@@ -24,10 +24,13 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
         for sample in dmp_samples:
             metadata = sample[0].metadata
             project_id = metadata[settings.REQUEST_ID_METADATA_KEY]
-            result += generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id)
+            result += generate_sample_data_content_str(
+                metadata, pipeline_name, pipeline_github, pipeline_version, project_id
+            )
     return result
 
-def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id = None):
+
+def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id=None):
     if project_id:
         project_id = get_project_id(metadata[settings.REQUEST_ID_METADATA_KEY])
     result = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(
@@ -55,4 +58,3 @@ def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, p
         pipeline_version,
     )
     return result
-    
