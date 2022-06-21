@@ -20,10 +20,11 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
     for sample in samples:
         metadata = sample.metadata
         result += generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version)
-    for sample in dmp_samples:
-        metadata = sample[0].metadata
-        project_id = metadata[settings.REQUEST_ID_METADATA_KEY]
-        result += generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id)
+    if dmp_samples:
+        for sample in dmp_samples:
+            metadata = sample[0].metadata
+            project_id = metadata[settings.REQUEST_ID_METADATA_KEY]
+            result += generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id)
     return result
 
 def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id = None):
