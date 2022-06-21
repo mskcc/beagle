@@ -5,6 +5,7 @@ import logging
 from pprint import pprint
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
+from file_system.repository.file_repository import FileRepository
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -232,6 +233,17 @@ def convert_references(project_id, assay, pi, pi_email):
     }
     out_dict.update({"runparams": params})
     return out_dict
+
+
+def get_project_prefix(request_id):
+    project_prefix = set()
+    tumors = FileRepository.filter(
+        metadata={"requestId": request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+        filter_redact=True,
+    )
+    for tumor in tumors:
+        project_prefix.add(tumor.metadata['request_id'])
+    return "_".join(sorted(project_prefix))
 
 
 if __name__ == "__main__":
