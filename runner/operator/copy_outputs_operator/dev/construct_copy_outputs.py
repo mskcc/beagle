@@ -154,7 +154,11 @@ def generate_sample_pairing_and_mapping_files(run_ids, dmp_samples):
 
     if runs:
         data_clinical = generate_sample_data_content(
-            files, pipeline_name=pipeline.name, pipeline_github=pipeline.github, pipeline_version=pipeline.version, dmp_samples
+            files,
+            pipeline_name=pipeline.name,
+            pipeline_github=pipeline.github,
+            pipeline_version=pipeline.version,
+            dmp_samples=dmp_samples,
         )
 
     return sample_mapping, sample_pairing, data_clinical
