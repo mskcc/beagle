@@ -193,11 +193,13 @@ class NextflowRunObject(RunObject):
         inputs["profile"] = "juno"
         inputs["params"] = params
         inputs["outputs"] = output_file_path
-        job = {"type": self.run_type.value,
-               "app": app,
-               "inputs": inputs,
-               "root_dir": output_directory,
-               "log_dir": log_directory % str(self.run_id)}
+        job = {
+            "type": self.run_type.value,
+            "app": app,
+            "inputs": inputs,
+            "root_dir": output_directory,
+            "log_dir": log_directory % str(self.run_id),
+        }
         return job
 
     def __repr__(self):

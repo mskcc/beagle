@@ -201,7 +201,7 @@ class CWLRunObject(RunObject):
             "app": app,
             "inputs": inputs,
             "root_dir": output_directory,
-            "log_dir": log_directory % str(self.run_id)
+            "log_dir": log_directory % str(self.run_id),
         }
         return job
 
