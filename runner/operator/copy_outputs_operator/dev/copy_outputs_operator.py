@@ -34,7 +34,7 @@ class CopyOutputsOperator(Operator):
         """
         run_ids = self.run_ids
         if self.dmp_samples:
-            dmp_samples = self.dmp_samples # data structure, like in ArgosOperator v1.2.0
+            dmp_samples = self.dmp_samples  # data structure, like in ArgosOperator v1.2.0
         input_json = construct_copy_outputs_input(run_ids)
 
         mapping_file_content, pairing_file_content, data_clinical_content = generate_sample_pairing_and_mapping_files(
