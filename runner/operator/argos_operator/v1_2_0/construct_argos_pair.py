@@ -3,6 +3,7 @@ import argparse
 import json
 import logging
 from pprint import pprint
+from django.conf import settings
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
 from file_system.repository.file_repository import FileRepository
@@ -238,7 +239,7 @@ def convert_references(project_id, assay, pi, pi_email):
 def get_project_prefix(request_id):
     project_prefix = set()
     tumors = FileRepository.filter(
-        metadata={"requestId": request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"},
         filter_redact=True,
     )
     for tumor in tumors:
