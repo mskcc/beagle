@@ -3342,7 +3342,7 @@
         "sampleOrigin": "Cells",
         "specimenType": "Blood",
         "cmoSampleName": "s_C_ALLANT_T001_d",
-        "ciTag":"s_C_ALLANT_T001_d",
+        "ciTag": "s_C_ALLANT_T001_d",
         "flowCellLanes": [],
         "libraryVolume": null,
         "pooledNormals": null,
