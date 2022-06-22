@@ -80,7 +80,7 @@ class HelixFiltersOperator(Operator):
         json_data["analysis_mutations_share_filename"] = project_prefix + ".muts.share.maf"
         return json_data
 
-    def get_log_directory(self, run_id):
+    def get_log_directory(self):
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
@@ -92,9 +92,9 @@ class HelixFiltersOperator(Operator):
             output_directory_prefix,
             pipeline.version,
             jg_created_date,
-            'json',
+            "json",
             pipeline.name,
             pipeline.version,
-            run_id
+            "%s",
         )
         return output_directory

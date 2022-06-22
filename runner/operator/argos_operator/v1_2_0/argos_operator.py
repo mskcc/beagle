@@ -429,9 +429,9 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             get_project_prefix(self.request_id),
             pipeline.version,
             jg_created_date,
-            'json',
+            "json",
             pipeline.name,
             pipeline.version,
-            '%s'
+            "%s",
         )
         return output_directory

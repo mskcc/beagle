@@ -78,7 +78,7 @@ class ArgosQcOperator(Operator):
         argos_qc_outputs_job = [RunCreator(**argos_qc_outputs_job_data)]
         return argos_qc_outputs_job
 
-    def get_log_directory(self, run_id):
+    def get_log_directory(self):
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
@@ -90,9 +90,9 @@ class ArgosQcOperator(Operator):
             output_directory_prefix,
             pipeline.version,
             jg_created_date,
-            'json',
+            "json",
             pipeline.name,
             pipeline.version,
-            run_id
+            "%s",
         )
         return output_directory

@@ -44,8 +44,9 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
-def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None,
-                                  log_directory=None):
+def create_operator_run_from_jobs(
+    operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None, log_directory=None
+):
     jg = None
     jgn = None
 
@@ -432,8 +433,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
     job = run1.dump_job(output_directory=output_directory, log_directory=log_directory)
-    logger.info(
-        format_log("Log output directory {path}".format(path=log_directory), obj=run1))
+    logger.info(format_log("Log output directory {path}".format(path=log_directory), obj=run1))
     logger.info(format_log("Job ready for submitting", obj=run1))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
