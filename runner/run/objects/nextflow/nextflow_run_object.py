@@ -197,9 +197,10 @@ class NextflowRunObject(RunObject):
             "type": self.run_type.value,
             "app": app,
             "inputs": inputs,
-            "root_dir": output_directory,
-            "log_dir": log_directory % str(self.run_id),
+            "root_dir": output_directory
         }
+        if log_directory:
+            job["log_dir"] = log_directory % str(self.run_id)
         return job
 
     def __repr__(self):
