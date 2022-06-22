@@ -33,7 +33,7 @@ class TestConstructPair(TestCase):
         files = File.objects.filter(
             {
                 "filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY): "10075_D",
-                "filemetadata__metadata__igocomplete": True,
+                "filemetadata__metadata__{}".format(settings.IGO_COMPLETE_METADATA_KEY): True,
             }
         ).all()
         data = list()

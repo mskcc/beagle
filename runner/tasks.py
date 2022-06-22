@@ -218,7 +218,8 @@ def _generate_summary(req):
 
 
 def generate_description(job_group, job_group_notifier, request):
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True})
     if files:
         data = files.first().metadata
         request_id = data[settings.REQUEST_ID_METADATA_KEY]
@@ -272,7 +273,8 @@ def generate_description(job_group, job_group_notifier, request):
 
 
 def generate_label(job_group_id, request):
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True})
     if files:
         data = files.first().metadata
         recipe = data[settings.RECIPE_METADATA_KEY]

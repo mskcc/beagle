@@ -78,7 +78,7 @@ class TestCMOCHNucleoOperator(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         files = File.objects.filter(
-            filemetadata__metadata__requestId="05500_HJ", filemetadata__metadata__igocomplete=True
+            filemetadata__metadata__requestId="05500_HJ", filemetadata__metadata__igoComplete=True
         ).all()
         data = list()
         for file in files:
