@@ -15,13 +15,15 @@ from .bin.make_sample import format_sample_name
 class ArgosOperator(Operator):
     def get_jobs(self):
         files = FileRepository.filter(
-            queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True}
+            queryset=self.files, metadata={
+                settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True}
         )
         argos_jobs = list()
 
         cnt_tumors = FileRepository.filter(
             queryset=self.files,
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor", "igocomplete": True},
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                      "tumorOrNormal": "Tumor", settings.IGO_COMPLETE_METADATA_KEY: True},
         ).count()
         if cnt_tumors == 0:
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()

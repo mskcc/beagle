@@ -173,7 +173,8 @@ class InputsObj:
         files = FileRepository.all()
         f = FileRepository.filter(
             queryset=files,
-            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: self.tumor_sample_name, "igocomplete": True},
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: self.tumor_sample_name,
+                      settings.IGO_COMPLETE_METADATA_KEY: True},
             filter_redact=True,
         )
         sample = None
@@ -280,7 +281,7 @@ class SampleData:
         # gets patient id and cmo sample name from sample id query
         # condensed in this one  fucntion to reduce amount of queriesd
         files = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: self.sample_id, "igocomplete": True}, filter_redact=True
+            metadata={settings.SAMPLE_ID_METADATA_KEY: self.sample_id, settings.IGO_COMPLETE_METADATA_KEY: True}, filter_redact=True
         )
         # there should only be one patient ID
         # looping through the metadata works here, but it's lazy
