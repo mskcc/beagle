@@ -240,10 +240,10 @@ def get_project_prefix(request_id):
     project_prefix = set()
     tumors = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"},
-        filter_redact=True,
+        filter_redact=True, values_metadata=settings.REQUEST_ID_METADATA_KEY
     )
     for tumor in tumors:
-        project_prefix.add(tumor.metadata['request_id'])
+        project_prefix.add(tumor)
     return "_".join(sorted(project_prefix))
 
 
