@@ -193,12 +193,7 @@ class NextflowRunObject(RunObject):
         inputs["profile"] = "juno"
         inputs["params"] = params
         inputs["outputs"] = output_file_path
-        job = {
-            "type": self.run_type.value,
-            "app": app,
-            "inputs": inputs,
-            "root_dir": output_directory
-        }
+        job = {"type": self.run_type.value, "app": app, "inputs": inputs, "root_dir": output_directory}
         if log_directory:
             job["log_dir"] = log_directory % str(self.run_id)
         return job
