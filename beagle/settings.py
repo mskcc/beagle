@@ -88,7 +88,7 @@ ELASTIC_APM = {
     "SERVICE_NAME": "beagle",
     "TRANSACTION_SAMPLE_RATE": 0.3,
     # Use if APM Server requires a secret token
-    #'SECRET_TOKEN': '',
+    # 'SECRET_TOKEN': '',
     # Set the custom APM Server URL (default: http://localhost:8200)
     "SERVER_URL": "http://bic-dockerapp01.mskcc.org:8200/",
     # Set the service environment
@@ -440,7 +440,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
 PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
 PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
 
-## Tempo
+# Tempo
 
 WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing").split(",")
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
