@@ -9,7 +9,7 @@ def remap_metadata(metadata):
     return new_metadata
 
 
-files = FileRepository.filter(file_group=('1a1b29cf-3bc2-4f6c-b376-d4c5d701166a')).all()
+files = FileRepository.filter(file_group=("1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")).all()
 
 for f in files:
     try:
