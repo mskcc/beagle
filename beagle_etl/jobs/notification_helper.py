@@ -13,7 +13,7 @@ from notifier.events import (
 )
 
 
-def _voyager_start_processing(request_id, runs):
+def _voyager_start_processing(request_id, run_ids):
     job_group = settings.BEAGLE_NOTIFIER_EMAIL_GROUP
     sample_ids = FileRepository.objects.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
@@ -25,10 +25,13 @@ def _voyager_start_processing(request_id, runs):
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
     ).first()
     sent_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
-    if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-        sent_to.add(investigator_email)
-    if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-        sent_to.add(lab_head_email)
+    if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
+        if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+            sent_to.add(investigator_email)
+        if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+            sent_to.add(lab_head_email)
+
+    runs = Run.objects.filter(id__in=run_ids)
 
     if not runs:
         for email in sent_to:
