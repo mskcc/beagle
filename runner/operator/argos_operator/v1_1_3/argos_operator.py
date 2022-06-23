@@ -23,7 +23,7 @@ class ArgosOperator(Operator):
         if self.request_id:
             files = FileRepository.filter(
                 queryset=self.files,
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "igocomplete": True},
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
                 filter_redact=True,
             )
 
@@ -32,7 +32,7 @@ class ArgosOperator(Operator):
                 metadata={
                     settings.REQUEST_ID_METADATA_KEY: self.request_id,
                     "tumorOrNormal": "Tumor",
-                    "igocomplete": True,
+                    settings.IGO_COMPLETE_METADATA_KEY: True,
                 },
                 filter_redact=True,
             ).count()
@@ -258,7 +258,7 @@ class ArgosOperator(Operator):
         sample_id = sample_data["sample_id"]
         sample = FileRepository.filter(
             queryset=self.files,
-            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True},
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
             filter_redact=True,
         )
         if not sample:  # try dmp sample
