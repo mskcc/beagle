@@ -26,6 +26,7 @@ from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
+from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from file_system.models import Request
 from file_system.repository import FileRepository
@@ -139,6 +140,9 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
                 "Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id, operator_run_id=operator_run.id
             )
         )
+
+    if not operator_run_parent:
+        _voyager_start_processing(request_id=operator.request_id, run_ids=[r["run_id"] for r in run_ids])
 
     operator_run.status = RunStatus.RUNNING
     operator_run.save()
