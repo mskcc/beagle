@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 from file_system.models import File, FileMetadata
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
@@ -72,3 +73,6 @@ class Operator(object):
 
     def on_job_fail(self, run):
         pass
+
+    def get_log_directory(self):
+        return settings.DEFAULT_LOG_PATH

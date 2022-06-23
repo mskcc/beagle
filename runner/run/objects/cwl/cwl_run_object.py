@@ -183,7 +183,7 @@ class CWLRunObject(RunObject):
             )
         self.status = RunStatus.COMPLETED
 
-    def dump_job(self, output_directory=None):
+    def dump_job(self, output_directory=None, log_directory=None):
         app = {
             "github": {
                 "repository": self.run_obj.app.github,
@@ -202,6 +202,8 @@ class CWLRunObject(RunObject):
             "inputs": inputs,
             "root_dir": output_directory,
         }
+        if log_directory:
+            job["log_dir"] = log_directory % str(self.run_id)
         return job
 
     def __repr__(self):
