@@ -164,7 +164,7 @@ class NextflowRunObject(RunObject):
             )
         self.status = RunStatus.COMPLETED
 
-    def dump_job(self, output_directory=None):
+    def dump_job(self, output_directory=None, log_directory=None):
         app = {
             "github": {
                 "repository": self.run_obj.app.github,
@@ -194,6 +194,8 @@ class NextflowRunObject(RunObject):
         inputs["params"] = params
         inputs["outputs"] = output_file_path
         job = {"type": self.run_type.value, "app": app, "inputs": inputs, "root_dir": output_directory}
+        if log_directory:
+            job["log_dir"] = log_directory % str(self.run_id)
         return job
 
     def __repr__(self):

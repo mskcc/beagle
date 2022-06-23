@@ -115,7 +115,9 @@ class CMOCHNucleoOperator(Operator):
     """
 
     def get_jobs(self):
-        files = FileRepository.filter(queryset=self.files, metadata={"requestId": self.request_id, "igocomplete": True})
+        files = FileRepository.filter(
+            queryset=self.files, metadata={"requestId": self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True}
+        )
 
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files

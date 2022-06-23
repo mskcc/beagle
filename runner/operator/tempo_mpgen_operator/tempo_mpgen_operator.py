@@ -80,7 +80,7 @@ class TempoMPGenOperator(Operator):
 
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
-        igocomplete_query = Q(metadata__igocomplete=True)
+        igocomplete_query = Q(metadata__igoComplete=True)
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
         files = FileRepository.all()
@@ -267,6 +267,7 @@ class TempoMPGenOperator(Operator):
             "IDT_Exome_v2_GRCh38_BAITS",
             "SureSelect-All-Exon-V4-hg19",
             "IDT_Exome_v2_BAITS",
+            "IDT_Exome_v2_FP_BAITS",
         ]
         return assays
 

@@ -10,7 +10,7 @@ from .bin.make_sample import generate_results
 class AccessOperator(Operator):
     def get_jobs(self):
         files = self.files.filter(
-            filemetadata__metadata__igoRequestId=self.request_id, filemetadata__metadata__igocomplete=True
+            filemetadata__metadata__igoRequestId=self.request_id, filemetadata__metadata__igoComplete=True
         ).all()
         access_jobs = list()  # [RunCreator(app=self.get_pipeline_id(), inputs=inputs})]
 
