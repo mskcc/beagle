@@ -267,6 +267,7 @@ class TempoMPGenOperator(Operator):
             "IDT_Exome_v2_GRCh38_BAITS",
             "SureSelect-All-Exon-V4-hg19",
             "IDT_Exome_v2_BAITS",
+            "IDT_Exome_v2_FP_BAITS",
         ]
         return assays
 
