@@ -1,11 +1,10 @@
-import uuid
-
+import os
 from django.conf import settings
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .construct_argos_pair import construct_argos_jobs
+from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
+from notifier.models import JobGroup
 from .bin.make_sample import build_sample
 from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
 from notifier.tasks import send_notification
@@ -418,3 +417,21 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             file_name = "{cmo_sample_name}_igo_qc_report".format(cmo_sample_name=cmo_sample_name)
             sample_errors_event = UploadAttachmentEvent(self.job_group_notifier_id, file_name, msg).to_dict()
             send_notification.delay(sample_errors_event)
+
+    def get_log_directory(self):
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        app = self.get_pipeline_id()
+        pipeline = Pipeline.objects.get(id=app)
+        output_directory = os.path.join(
+            pipeline.output_directory,
+            "argos",
+            get_project_prefix(self.request_id),
+            pipeline.version,
+            jg_created_date,
+            "json",
+            pipeline.name,
+            pipeline.version,
+            "%s",
+        )
+        return output_directory
