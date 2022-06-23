@@ -2,12 +2,12 @@ from notifier.event_handler.event import Event
 
 
 class VoyagerCantProcessRequestAllNormalsEvent(Event):
-    def __init__(self, job_notifier, email_to, email_from, subject, content):
+    def __init__(self, job_notifier, email_to, email_from, subject, request_id):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
         self.subject = subject
-        self.content = content
+        self.request_id = request_id
 
     @classmethod
     def get_type(cls):
@@ -19,7 +19,9 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
 
     def __str__(self):
         """
-        TODO: Fill the content of the email
         :return: email body
         """
-        return self.content
+        body = "Project {igo_request_id} can't be run because it contains only normal samples.".format(
+            igo_request_id=self.request_id
+        )
+        return body

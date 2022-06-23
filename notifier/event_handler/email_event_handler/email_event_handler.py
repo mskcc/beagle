@@ -11,5 +11,5 @@ class EmailEventHandler(EventHandler):
 
     def process_send_email_event(self, event):
         self.logger.info("Email sent")
-        client = EmailClient(event.email_to, event.email_from, event.subject, event.content)
+        client = EmailClient(event.email_to, event.email_from, event.subject, str(event))
         client.send()
