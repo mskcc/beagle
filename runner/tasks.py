@@ -142,7 +142,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
         )
 
     if not operator_run_parent:
-        _voyager_start_processing(request_id=operator.request_id, run_ids=[r['run_id'] for r in run_ids])
+        _voyager_start_processing(request_id=operator.request_id, run_ids=[r["run_id"] for r in run_ids])
 
     operator_run.status = RunStatus.RUNNING
     operator_run.save()

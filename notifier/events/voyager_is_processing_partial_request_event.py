@@ -2,12 +2,13 @@ from notifier.event_handler.event import Event
 
 
 class VoyagerIsProcessingPartialRequestEvent(Event):
-    def __init__(self, job_notifier, email_to, email_from, subject, content):
+    def __init__(self, job_notifier, email_to, email_from, subject, request_id, unpaired):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
         self.subject = subject
-        self.content = content
+        self.request_id = request_id
+        self.unpaired = unpaired
 
     @classmethod
     def get_type(cls):
@@ -19,7 +20,9 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
 
     def __str__(self):
         """
-        TODO: Fill the content of the email
         :return: email body
         """
-        return self.content
+        body = "Project {igo_request_id} is partially running. Samples unpaired: {samples}.".format(
+            igo_request_id=self.request_id, samples=", ".join(self.unpaired)
+        )
+        return body
