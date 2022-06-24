@@ -12,7 +12,7 @@ files = FileRepository.filter(file_group=("1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
 
 for f in files:
     try:
-        if "igocomplete" in new_metadata:
+        if "igocomplete" in f.metadata::
             new_metadata = remap_metadata(f.metadata)
             f.metadata = new_metadata
             f.save()
