@@ -89,7 +89,7 @@ ELASTIC_APM = {
     "SERVICE_NAME": "beagle",
     "TRANSACTION_SAMPLE_RATE": 0.3,
     # Use if APM Server requires a secret token
-    #'SECRET_TOKEN': '',
+    # 'SECRET_TOKEN': '',
     # Set the custom APM Server URL (default: http://localhost:8200)
     "SERVER_URL": "http://bic-dockerapp01.mskcc.org:8200/",
     # Set the service environment
@@ -427,10 +427,15 @@ LAB_HEAD_NAME_METADATA_KEY = "labHeadName"
 INVESTIGATOR_METADATA_KEY = "investigatorName"
 RECIPE_METADATA_KEY = "genePanel"
 ONCOTREE_METADATA_KEY = "oncotreeCode"
+IGO_COMPLETE_METADATA_KEY = "igoComplete"
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get("BEAGLE_NOTIFIER_EMAIL_GROUP", "946a922c-8c6b-4cba-8754-16df02f05d2a")
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get("BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS")
 BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get("BEAGLE_NOTIFIER_EMAIL_FROM")
+
+BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO = os.environ.get("BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO", "").split(",")
+BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST = os.environ.get("BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST", "").split(",")
+BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL = False
 
 ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
     "BEAGLE_ASSAYS_ADMIN_HOLD_ONLY_NORMALS",
@@ -440,7 +445,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
 PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
 PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
 
-## Tempo
+# Tempo
 
 WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing").split(",")
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
@@ -449,5 +454,7 @@ DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
+
+DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp/%s")
 
 APP_CACHE = os.environ.get("BEAGLE_APP_CACHE", "/tmp")

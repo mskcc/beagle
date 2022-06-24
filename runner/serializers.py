@@ -257,6 +257,7 @@ class RestartRunSerializer(serializers.Serializer):
     clean = serializers.BooleanField(default=False)
 
 
+# TODO: Delete this
 class RequestIdOperatorSerializer(serializers.Serializer):
     request_ids = serializers.ListField(child=serializers.CharField(max_length=30), allow_empty=True)
     run_ids = serializers.ListField(child=serializers.UUIDField(), allow_empty=True)
