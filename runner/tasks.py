@@ -26,6 +26,7 @@ from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
 from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
+from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from file_system.models import Request
 from file_system.repository import FileRepository
@@ -39,10 +40,14 @@ logger = logging.getLogger(__name__)
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
     jobs = operator.get_jobs()
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent)
+    log_directory = operator.get_log_directory()
+    print(log_directory)
+    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
-def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None):
+def create_operator_run_from_jobs(
+    operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None, log_directory=None
+):
     jg = None
     jgn = None
 
@@ -119,7 +124,7 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
             error_message = dict(details="Pipeline [ id: %s ] was not found.".format(pipeline_id))
             fail_job(run.id, error_message)
         else:
-            create_run_task.delay(str(run.id), job.inputs, output_directory)
+            create_run_task.delay(str(run.id), job.inputs, output_directory, log_directory)
 
     if job_group_id:
         event = OperatorRunEvent(
@@ -139,6 +144,9 @@ def create_operator_run_from_jobs(operator, jobs, job_group_id=None, job_group_n
                 "Job invalid %s" % job[0].errors, obj=job[0], job_group_id=job_group_id, operator_run_id=operator_run.id
             )
         )
+
+    if not operator_run_parent:
+        _voyager_start_processing(request_id=operator.request_id, run_ids=[r["run_id"] for r in run_ids])
 
     operator_run.status = RunStatus.RUNNING
     operator_run.save()
@@ -218,7 +226,9 @@ def _generate_summary(req):
 
 
 def generate_description(job_group, job_group_notifier, request):
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True}
+    )
     if files:
         data = files.first().metadata
         request_id = data[settings.REQUEST_ID_METADATA_KEY]
@@ -272,7 +282,9 @@ def generate_description(job_group, job_group_notifier, request):
 
 
 def generate_label(job_group_id, request):
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request, "igocomplete": True})
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True}
+    )
     if files:
         data = files.first().metadata
         recipe = data[settings.RECIPE_METADATA_KEY]
@@ -385,12 +397,12 @@ def on_failure_to_create_run_task(self, exc, task_id, args, kwargs, einfo):
     retry_kwargs={"max_retries": 4},
     on_failure=on_failure_to_create_run_task,
 )
-def create_run_task(run_id, inputs, output_directory=None):
+def create_run_task(run_id, inputs, output_directory=None, log_directory=None):
     logger.info(format_log("Creating and validating run", obj_id=run_id))
     run = RunObjectFactory.from_definition(run_id, inputs)
     run.ready()
     run.to_db()
-    submit_job.delay(run_id, output_directory)
+    submit_job.delay(run_id, output_directory, log_directory=log_directory)
     logger.info(format_log("Run is ready", obj=run))
 
 
@@ -406,7 +418,7 @@ def on_failure_to_submit_job(self, exc, task_id, args, kwargs, einfo):
     retry_kwargs={"max_retries": 4},
     on_failure=on_failure_to_submit_job,
 )
-def submit_job(run_id, output_directory=None, execution_id=None):
+def submit_job(run_id, output_directory=None, execution_id=None, log_directory=None):
     resume = None
     try:
         run = Run.objects.get(id=run_id)
@@ -428,8 +440,9 @@ def submit_job(run_id, output_directory=None, execution_id=None):
         resume = execution_id
     if not output_directory:
         output_directory = os.path.join(run.app.output_directory, str(run_id))
-    job = run1.dump_job(output_directory=output_directory)
-    logger.info(format_log("Job ready for submitting", obj=run))
+    job = run1.dump_job(output_directory=output_directory, log_directory=log_directory)
+    logger.info(format_log("Log output directory {path}".format(path=log_directory), obj=run1))
+    logger.info(format_log("Job ready for submitting", obj=run1))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
         job = {"root_dir": output_directory}

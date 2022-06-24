@@ -4,6 +4,7 @@
 """ """""" """""" """""" """""" ""
 
 import logging
+import os
 from django.conf import settings
 from collections import defaultdict
 from runner.models import Port, PortType
@@ -17,6 +18,7 @@ import json
 from jinja2 import Template
 
 logger = logging.getLogger(__name__)
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 REQUIRED_META_FIELDS = [
     settings.SAMPLE_ID_METADATA_KEY,
@@ -125,7 +127,7 @@ def generate_title_file_content(sample_group):
 
 
 def construct_sample_inputs(samples, request_id, group_id):
-    with open("runner/operator/access/v1_0_0/legacy/input_template.json.jinja2") as file:
+    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
         template = Template(file.read())
 
     sample_inputs = list()
