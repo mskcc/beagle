@@ -1,5 +1,8 @@
 import os
 from django.conf import settings
+from django.db.models import Q
+from file_system.models import File, FileMetadata, FileGroup
+from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs, get_project_prefix
@@ -19,10 +22,10 @@ class ArgosOperator(Operator):
     def get_jobs(self):
 
         argos_jobs = list()
+        dmp_samples = list()
         if self.pairing:
-            files, cnt_tumors = self.get_files_for_pairs(self.pairing)
-
-        if self.request_id:
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
+        elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
         if cnt_tumors == 0:
@@ -38,7 +41,7 @@ class ArgosOperator(Operator):
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
         sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
         sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
-        argos_jobs = self.get_argos_jobs(argos_inputs, self.request_id)
+        argos_jobs = self.get_argos_jobs(argos_inputs)
         pipeline = self.get_pipeline_id()
 
         try:
@@ -61,6 +64,7 @@ class ArgosOperator(Operator):
             pipeline_name=pipeline_obj.name,
             pipeline_github=pipeline_obj.github,
             pipeline_version=pipeline_obj.version,
+            dmp_samples=dmp_samples,
         )
         sample_data_clinical_event = UploadAttachmentEvent(
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
@@ -72,14 +76,14 @@ class ArgosOperator(Operator):
 
         return argos_jobs
 
-    def get_argos_jobs(self, argos_inputs, request_id):
+    def get_argos_jobs(self, argos_inputs):
         argos_jobs = list()
         number_of_inputs = len(argos_inputs)
         for i, job in enumerate(argos_inputs):
             tumor_sample_name = job["pair"][0]["ID"]
             normal_sample_name = job["pair"][1]["ID"]
 
-            name = "ARGOS %s, %i of %i" % (request_id, i + 1, number_of_inputs)
+            name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job["assay"]
             pi = job["pi"]
             pi_email = job["pi_email"]
@@ -90,6 +94,7 @@ class ArgosOperator(Operator):
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
                 "labHeadEmail": pi_email,
+                "pairing": self.pairing,
             }
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:
@@ -217,14 +222,14 @@ class ArgosOperator(Operator):
     def get_files_for_pairs(self, pairing):
         all_files = []
         cnt_tumors = 0
+        dmp_samples = list()
         for pair in pairing.get("pairs"):
             tumor_sample = pair["tumor"]
             normal_sample = pair["normal"]
-            tumors = self.get_regular_sample(tumor_sample, "Tumor")
-            current_cnt_tumors = len(tumors)
-            cnt_tumors += current_cnt_tumors
-            normals = self.get_regular_sample(normal_sample, "Normal")
-            if not normals and current_cnt_tumors > 0:  # get from pooled normal
+            tumor, is_dmp_tumor_sample = self.get_regular_sample(tumor_sample, "Tumor")
+            cnt_tumors += 1
+            normal, is_dmp_normal_sample = self.get_regular_sample(normal_sample, "Normal")
+            if not normal and current_cnt_tumors > 0:  # get from pooled normal
                 bait_set = tumors[0].metadata["baitSet"]
                 run_ids = list()
                 for tumor in tumors:
@@ -245,13 +250,19 @@ class ArgosOperator(Operator):
                     sample = f
                     sample.metadata = metadata
                     normals.append(sample)
-            for file in list(tumors):
+            for file in list(tumor):
                 if file not in all_files:
                     all_files.append(file)
-            for file in list(normals):
+                if tumor not in dmp_samples:
+                    if is_dmp_tumor_sample:
+                        dmp_samples.append(tumor)
+            for file in list(normal):
                 if file not in all_files:
                     all_files.append(file)
-        return all_files, cnt_tumors
+                if normal not in dmp_samples:
+                    if is_dmp_normal_sample:
+                        dmp_samples.append(normal)
+        return all_files, cnt_tumors, dmp_samples
 
     def get_files(self, request_id):
         files = FileRepository.filter(
@@ -289,20 +300,30 @@ class ArgosOperator(Operator):
             metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, "igocomplete": True},
             filter_redact=True,
         )
+        is_dmp_sample = False
+        request_id = self.request_id
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:
                 patient_id = sample_data["patient_id"]
             if "bait_set" in sample_data:
                 bait_set = sample_data["bait_set"]
+            if "pi" in sample_data:
+                pi = sample_data["pi"]
+            if "pi_email" in sample_data:
+                pi_email = sample_data["pi_email"]
             dmp_bam_id = sample_id.replace("s_", "").replace("_", "-")
-            data = FileRepository.filter(queryset=self.files, metadata={"external_id": dmp_bam_id})
+            dmp_bam_slug = Q(file__file_group=FileGroup.objects.get(slug="dmp-bams"))
+            dmp_bam_files = FileRepository.filter(q=dmp_bam_slug)
+            data = FileRepository.filter(queryset=dmp_bam_files, metadata={"external_id": dmp_bam_id})
             sample = list()
-            for i in data:
-                s = i
-                metadata = build_dmp_sample(i, patient_id, bait_set, tumor_type)["metadata"]
+            if len(data) > 0:
+                s = data[0]
+                metadata = build_dmp_sample(s, patient_id, bait_set, tumor_type, request_id, pi, pi_email)["metadata"]
                 s.metadata = metadata
-                sample.append(i)
-        return sample
+                if s:
+                    is_dmp_sample = True
+                    sample.append(s)
+        return sample, is_dmp_sample
 
     def summarize_pairing_info(self, argos_inputs):
         num_pairs = len(argos_inputs)
