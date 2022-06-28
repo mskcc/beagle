@@ -5,7 +5,7 @@ pipeline {
 
      }
   stages {
-      stage("Config file "){
+    /*  stage("Config file "){
       steps {
 
       configFileProvider(
@@ -18,7 +18,7 @@ pipeline {
       }
    }
     }
-      }
+      }*/
       stage("Deploy to Dev") {
       when {
       expression { params.SERVER == 'DEV' }
