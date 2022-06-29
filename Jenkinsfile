@@ -5,14 +5,13 @@ pipeline {
 
      }
   stages {
-      stage("Config file "){
+     stage("Config file "){
       steps {
 
       configFileProvider(
       [configFile(fileId: 'd5f1bfe7-5ec7-4916-86b5-e024a30c78f8', variable: 'CONFIG_FILE')]) {
-      sh 'cat $CONFIG_FILE'
 
-      }
+      sh 'cat $CONFIG_FILE'
    }
     }
       }
