@@ -11,7 +11,7 @@ pipeline {
       configFileProvider(
       [configFile(fileId: 'd5f1bfe7-5ec7-4916-86b5-e024a30c78f8', variable: 'CONFIG_FILE')]) {
 
-      sh 'scp $CONFIG_FILE voyager@silo.mskcc.org:/home/pankeyd'
+      sh 'scp jenkins@voyager.mskcc.org:/$CONFIG_FILE voyager@silo.mskcc.org:/home/pankeyd'
    }
    }
     }
