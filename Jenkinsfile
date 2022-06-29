@@ -7,11 +7,12 @@ pipeline {
   stages {
      stage("Config file "){
       steps {
-
+      sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
       configFileProvider(
       [configFile(fileId: 'd5f1bfe7-5ec7-4916-86b5-e024a30c78f8', variable: 'CONFIG_FILE')]) {
 
-      sh 'cat $CONFIG_FILE'
+      sh 'scp $CONFIG_FILE voyager@silo.mskcc.org:/home/pankeyd'
+   }
    }
     }
       }
