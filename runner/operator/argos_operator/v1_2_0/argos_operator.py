@@ -267,7 +267,7 @@ class ArgosOperator(Operator):
     def get_files(self, request_id):
         files = FileRepository.filter(
             queryset=self.files,
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "igoComplete": True},
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
             filter_redact=True,
         )
 
