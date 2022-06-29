@@ -370,7 +370,7 @@ def get_oncotree_codes(request_id):
 def get_project_prefix(run_id_list):
     project_prefix = set()
     for single_run_id in run_id_list:
-        project_prefix_port = Port.objects.filter(run=single_run_id, name="project_prefix")[0]
+        project_prefix_port = Port.objects.filter(run=single_run_id, name="project_prefix").first()
         project_prefix.add(project_prefix_port.value)
     return "_".join(sorted(project_prefix))
 
