@@ -229,7 +229,7 @@ class ArgosOperator(Operator):
             tumor, is_dmp_tumor_sample = self.get_regular_sample(tumor_sample, "Tumor")
             cnt_tumors += 1
             normal, is_dmp_normal_sample = self.get_regular_sample(normal_sample, "Normal")
-            if not normal and current_cnt_tumors > 0:  # get from pooled normal
+            if not normal and tumor:  # get from pooled normal
                 bait_set = tumors[0].metadata["baitSet"]
                 run_ids = list()
                 for tumor in tumors:
