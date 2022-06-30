@@ -5,14 +5,15 @@ Constructs input JSON for the Ultron pipeline and then
 submits them as runs
 """
 import os
+import datetime
 import logging
-from django.conf import settings
 from notifier.models import JobGroup
-from file_system.models import FileGroup
-from file_system.repository.file_repository import FileRepository
-from runner.models import Pipeline, Port, Run
+from runner.models import Port, Run
 from runner.operator.operator import Operator
-from runner.run.objects.run_creator_object import RunCreator
+from runner.serializers import APIRunCreateSerializer
+from runner.models import Pipeline
+from file_system.repository.file_repository import FileRepository
+from file_system.models import FileGroup
 import json
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,12 +47,13 @@ class UltronOperator(Operator):
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
         name = "ULTRON PHASE1 run"
-        inputs = self._build_inputs(run_ids)
-        rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
-        ultron_output_job = list()
-        ultron_output_job = [self._build_job(inputs, rid)]
+        ultron_output_jobs = list()
+        for run_id in run_ids:
+            input_json = self._build_inputs(run_id)
+            output_job = self._build_job(input_json, run_id)
+            ultron_output_jobs.append(output_job)
 
-        return ultron_output_job
+        return ultron_output_jobs
 
     def _get_output_directory(self, run_id):
         project_prefix = get_project_prefix(run_id)
@@ -67,31 +69,26 @@ class UltronOperator(Operator):
             )
         return output_directory
 
-    def _build_inputs(self, run_ids):
-        input_objs = list()
-        prev_pipeline_version = set()
-        req_id = set()
-        for rid in set(run_ids):
-            run = Run.objects.filter(id=rid)[0]
-            input_objs.append(InputsObj(run))
-            prev_pipe = self._get_prev_pipeline(rid)
-            prev_pipeline_version.add(prev_pipe.version)
-            req_id.add(self._get_prev_req_id(rid))
-        prev_version_string = "_".join(sorted(prev_pipeline_version))
-        req_id_string = "_".join(sorted(req_id))
-        batch_input_json = BatchInputObj(input_objs)
-        batch_input_json.inputs_json["argos_version_string"] = prev_version_string
-        batch_input_json.inputs_json["is_impact"] = True  # assume True
-        batch_input_json.inputs_json["fillout_output_fname"] = req_id_string + ".fillout.maf"
-        return batch_input_json.inputs_json
+    def _get_prev_pipeline(self, run_id):
+        run = Run.objects.filter(id=run_id)[0]
+        pipeline = run.app
+        return pipeline
+
+    def _build_inputs(self, run_id):
+        run = Run.objects.filter(id=run_id)[0]
+        pipeline = self._get_prev_pipeline(run_id)
+        pipeline_version = pipeline.version
+        input_data = InputsObj(run)
+        input_json = input_data.inputs_json
+        input_json["is_impact"] = True
+        input_json["argos_version_string"] = pipeline_version
+        return input_json
 
     def _build_job(self, input_json, run_id):
         app = self.get_pipeline_id()
-        pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
-        project_prefix = get_project_prefix(run_id)
         output_directory = self._get_output_directory(run_id)
-        sample_name = input_json["sample_ids"]
+        project_prefix = get_project_prefix(run_id)
+        sample_name = input_json["sample_ids"][0]  # should only be one
         tags = {"sampleNameTumor": sample_name, "project_prefix": project_prefix}
         # add tags, name
         output_job_data = {
@@ -101,54 +98,8 @@ class UltronOperator(Operator):
             "output_directory": output_directory,
             "inputs": input_json,
         }
-        output_job = RunCreator(**output_job_data)
+        output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
         return output_job
-
-    def _get_prev_req_id(self, run_id):
-        run = Run.objects.filter(id=run_id)[0]
-        request_id = run.tags[settings.REQUEST_ID_METADATA_KEY]
-        return request_id
-
-    def _get_prev_pipeline(self, run_id):
-        run = Run.objects.filter(id=run_id)[0]
-        pipeline = run.app
-        return pipeline
-
-
-class BatchInputObj:
-    def __init__(self, inputObjList):
-        self.inputObjList = inputObjList
-        self.inputs_json = self._build_inputs_json()
-
-    def _build_inputs_json(self):
-        batch_input_json = {
-            "unindexed_bam_files": [],
-            "unindexed_sample_ids": [],
-            "unindexed_maf_files": [],
-            "maf_files": [],
-            "bam_files": [],
-            "sample_ids": [],
-            "ref_fasta": None,
-            "exac_filter": None,
-        }
-        for single_input_obj in self.inputObjList:
-            single_input_data = single_input_obj.inputs_data
-            if single_input_data["tumor_sample_name"] not in batch_input_json["sample_ids"]:
-                batch_input_json["maf_files"] += single_input_data["maf"]
-                batch_input_json["bam_files"] += single_input_data["tumor_bam"]
-                batch_input_json["sample_ids"] += single_input_data["tumor_sample_name"]
-                if not batch_input_json["ref_fasta"]:
-                    batch_input_json["ref_fasta"] = single_input_obj.load_reference_fasta()
-                if not batch_input_json["exac_filter"]:
-                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()
-                # dedupe dmp samples
-                dmp_tumor_sample_names = single_input_data["dmp_bams_tumor_sample_name"]
-                for i in dmp_tumor_sample_names:
-                    if i not in batch_input_json["unindexed_sample_ids"]:
-                        batch_input_json["unindexed_bam_files"] += single_input_data["dmp_bams_tumor"]
-                        batch_input_json["unindexed_sample_ids"] += single_input_data["dmp_bams_tumor_sample_name"]
-                        batch_input_json["unindexed_maf_files"] += single_input_data["dmp_bams_tumor_muts"]
-        return batch_input_json
 
 
 class InputsObj:
@@ -283,7 +234,7 @@ class SampleData:
         # gets patient id and cmo sample name from sample id query
         # condensed in this one  fucntion to reduce amount of queriesd
         files = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: self.sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
+            metadata={settings.SAMPLE_ID_MEATADATA_KEY: self.sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
             filter_redact=True,
         )
         # there should only be one patient ID
