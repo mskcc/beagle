@@ -12,7 +12,7 @@ pipeline {
       [configFile(fileId: 'd5f1bfe7-5ec7-4916-86b5-e024a30c78f8', variable: 'CONFIG_FILE')]) {
       sh 'chmod u+x $CONFIG_FILE'
       sh 'mv $CONFIG_FILE $CONFIG_FILE.sh'
-      sh 'scp --backup=t -o StrictHostKeyChecking=no $CONFIG_FILE.sh voyager@silo.mskcc.org:/home/pankeyd/test/Config.sh'
+      sh 'scp -o StrictHostKeyChecking=no $CONFIG_FILE.sh voyager@silo.mskcc.org:/home/pankeyd/test/Config.sh'
    }
   }
     }
