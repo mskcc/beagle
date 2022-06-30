@@ -10,7 +10,7 @@ import logging
 from notifier.models import JobGroup
 from runner.models import Port, Run
 from runner.operator.operator import Operator
-from runner.serializers import APIRunCreateSerializer
+from runner.run.objects.run_creator_object import RunCreator
 from runner.models import Pipeline
 from file_system.repository.file_repository import FileRepository
 from file_system.models import FileGroup
@@ -91,14 +91,7 @@ class UltronOperator(Operator):
         sample_name = input_json["sample_ids"][0]  # should only be one
         tags = {"sampleNameTumor": sample_name, "project_prefix": project_prefix}
         # add tags, name
-        output_job_data = {
-            "app": app,
-            "tags": tags,
-            "name": "Sample %s ULTRON PHASE1 run" % sample_name,
-            "output_directory": output_directory,
-            "inputs": input_json,
-        }
-        output_job = (APIRunCreateSerializer(data=output_job_data), input_json)
+        output_job = RunCreator(app=app, inputs=input_json, name=name, tags=tags, output_directory=output_directory)
         return output_job
 
 
