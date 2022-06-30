@@ -17,7 +17,7 @@ pipeline {
   }
     }
       }
-      stage("Deploy to Dev") {
+      /* stage("Deploy to Dev") {
       when {
       expression { params.SERVER == 'DEV' }
     }
@@ -53,6 +53,6 @@ pipeline {
 
                  } */
                   }
-              }
+              } */
   }
 }
