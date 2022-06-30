@@ -17,16 +17,16 @@ pipeline {
   }
     }
       }
-      /* stage("Deploy to Dev") {
+      stage("Deploy to Dev") {
       when {
       expression { params.SERVER == 'DEV' }
     }
       steps {
         echo "deply to dev"
-           sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+        /*   sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
             sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/beagle_dev/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
 
-          }
+          } */
 
         }
       }
@@ -53,6 +53,6 @@ pipeline {
 
                  } */
                   }
-              } */
+              }
   }
 }
