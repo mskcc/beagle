@@ -10,8 +10,8 @@ pipeline {
       sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
       configFileProvider(
       [configFile(fileId: 'd5f1bfe7-5ec7-4916-86b5-e024a30c78f8', variable: 'CONFIG_FILE')]) {
-      sh 'chmod u+x $CONFIG_FILE'
-      sh 'scp -o StrictHostKeyChecking=no $CONFIG_FILE voyager@silo.mskcc.org:/home/pankeyd/test'
+      sh 'mv $CONFIG_FILE $CONFIG_FILE.sh'
+      sh 'scp -o StrictHostKeyChecking=no $CONFIG_FILE.sh voyager@silo.mskcc.org:/home/pankeyd/test'
    }
   }
     }
