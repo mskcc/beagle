@@ -212,7 +212,7 @@ def get_output_directory_prefix(run_id_list):
 def get_project_prefix(run_id_list):
     project_prefix = set()
     for single_run_id in run_id_list:
-        project_prefix_port = Port.objects.filter(run=single_run_id, name="project_prefix")
+        project_prefix_port = Port.objects.filter(run=single_run_id, name="project_prefix").first()
         project_prefix.add(project_prefix_port.value)
     return "_".join(sorted(project_prefix))
 
