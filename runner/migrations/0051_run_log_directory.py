@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0050_auto_20220113_1202'),
+        ("runner", "0050_auto_20220113_1202"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='run',
-            name='log_directory',
+            model_name="run",
+            name="log_directory",
             field=models.CharField(blank=True, max_length=1000, null=True),
         ),
     ]
