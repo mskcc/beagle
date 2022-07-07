@@ -45,11 +45,11 @@ class UltronOperator(Operator):
         """ """
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
-        name = "ULTRON PHASE1 run"
-        inputs = self._build_inputs(run_ids)
+        name = "ULTRON run"
+        sample_groups = self._build_sample_groups(run_ids)
         rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
         ultron_output_job = list()
-        ultron_output_job = [self._build_job(inputs, rid)]
+        ultron_output_job = [self._build_job(sample_groups.json, rid)]
 
         return ultron_output_job
 
@@ -67,23 +67,12 @@ class UltronOperator(Operator):
             )
         return output_directory
 
-    def _build_inputs(self, run_ids):
-        input_objs = list()
-        prev_pipeline_version = set()
-        req_id = set()
+    def _build_sample_groups(self, run_ids):
+        sample_groups = list()
         for rid in set(run_ids):
-            run = Run.objects.filter(id=rid)[0]
-            input_objs.append(InputsObj(run))
-            prev_pipe = self._get_prev_pipeline(rid)
-            prev_pipeline_version.add(prev_pipe.version)
-            req_id.add(self._get_prev_req_id(rid))
-        prev_version_string = "_".join(sorted(prev_pipeline_version))
-        req_id_string = "_".join(sorted(req_id))
-        batch_input_json = BatchInputObj(input_objs)
-        batch_input_json.inputs_json["argos_version_string"] = prev_version_string
-        batch_input_json.inputs_json["is_impact"] = True  # assume True
-        batch_input_json.inputs_json["fillout_output_fname"] = req_id_string + ".fillout.maf"
-        return batch_input_json.inputs_json
+            run = Run.objects.filter(id=rid).first()
+            sample_groups.append(SampleGroup(run))
+        return sample_groups
 
     def _build_job(self, input_json, run_id):
         app = self.get_pipeline_id()
@@ -115,59 +104,18 @@ class UltronOperator(Operator):
         return pipeline
 
 
-class BatchInputObj:
-    def __init__(self, inputObjList):
-        self.inputObjList = inputObjList
-        self.inputs_json = self._build_inputs_json()
-
-    def _build_inputs_json(self):
-        batch_input_json = {
-            "unindexed_bam_files": [],
-            "unindexed_sample_ids": [],
-            "unindexed_maf_files": [],
-            "maf_files": [],
-            "bam_files": [],
-            "sample_ids": [],
-            "ref_fasta": None,
-            "exac_filter": None,
-        }
-        for single_input_obj in self.inputObjList:
-            single_input_data = single_input_obj.inputs_data
-            if single_input_data["tumor_sample_name"] not in batch_input_json["sample_ids"]:
-                batch_input_json["maf_files"] += single_input_data["maf"]
-                batch_input_json["bam_files"] += single_input_data["tumor_bam"]
-                batch_input_json["sample_ids"] += single_input_data["tumor_sample_name"]
-                if not batch_input_json["ref_fasta"]:
-                    batch_input_json["ref_fasta"] = single_input_obj.load_reference_fasta()
-                if not batch_input_json["exac_filter"]:
-                    batch_input_json["exac_filter"] = single_input_obj.load_exac_filter()
-                # dedupe dmp samples
-                dmp_tumor_sample_names = single_input_data["dmp_bams_tumor_sample_name"]
-                for i in dmp_tumor_sample_names:
-                    if i not in batch_input_json["unindexed_sample_ids"]:
-                        batch_input_json["unindexed_bam_files"] += single_input_data["dmp_bams_tumor"]
-                        batch_input_json["unindexed_sample_ids"] += single_input_data["dmp_bams_tumor_sample_name"]
-                        batch_input_json["unindexed_maf_files"] += single_input_data["dmp_bams_tumor_muts"]
-        return batch_input_json
-
-
-class InputsObj:
-    # This inputs object will represent the input json used for the pipeline
-    #
-    # There should only be a single tumor sample, mathced against DMP bam tumors
-    # provided they exist
+class SampleGroup:
     def __init__(self, run):
         self.run = run
         self.port_list = Port.objects.filter(run=run.id)
         self.tumor_sample_name = run.tags["sampleNameTumor"]
-        self.sample = self._get_samples_data()
-        self.tumor_bam = self._get_port("tumor_bam")
-        self.normal_bam = self._get_port("normal_bam")
         self.normal_sample_name = run.tags["sampleNameNormal"]
-        self.maf_file = self._get_port("maf_file")
-        self.maf = self._get_port("maf")
-        self.inputs_data = self._set_inputs_data()
-        self.inputs_json = self._build_inputs_json()
+        self.sample = self._get_samples_data()
+        self.tumor_bam = self._get_port("tumor_bam")[0]
+        self.normal_bam = self._get_port("normal_bam")[0]
+        self.maf_file = self._get_port("maf_file")[0]
+        self.maf = self._get_port("maf")[0]
+        self.json = self._build_sample_group_dict()
 
     def _get_samples_data(self):
         files = FileRepository.all()
@@ -184,7 +132,7 @@ class InputsObj:
             # retrieve metadata from first record (should only be one)
             meta = f[0].metadata
             sample_id = meta[settings.SAMPLE_ID_METADATA_KEY]
-            sample = SampleData(sample_id)
+            sample = SampleData(sample_id, self.normal_sample_name)
         return sample
 
     def _get_port(self, port_name):
@@ -202,6 +150,42 @@ class InputsObj:
         elif isinstance(port_obj, dict):
             file_list.append(self._get_file_obj(port_obj))
         return file_list
+
+    def _build_sample_group_dict(self):
+        sample_group = list()
+        json_research = self._init_research_sample_json()
+        clin_jsons = self._init_clinical_samples_jsons()
+        sample_group.append(json_research)
+        for json_clin in clin_jsons:
+            sample_group.append(json_clin)
+        return sample_group
+
+    def _init_research_sample_json(self):
+        d = {
+            "sample_id": self.tumor_sample_name,
+            "normal_id": self.normal_sample_name,
+            "sample_type": "research",
+            "prefilter": True,
+            "maf_file": {"class": "File", "path": self.maf},
+            "bam_file": {"class": "File", "path": self.tumor_bam},
+        }
+        return d
+
+    def _init_clinical_sample_json(self):
+        clin_jsons = list()
+        tumor_dmp_bams = sample.dmp_bams_tumor
+        for bam_data in tumor_dmp_bams:
+
+            d = {
+                "sample_id": bam_data.dmp_sample_name,
+                "normal_id": "DMP_NORMAL",
+                "sample_type": "clinical",
+                "prefilter": False,
+                "maf_file": {"class": "File", "path": bam_data.bam_path},
+                "bam_file": {"class": "File", "path": bam_data.mutations_extended},
+            }
+            clin_jsons.append(d)
+        return clin_jsons
 
     def _get_file_obj(self, file_obj):
         """
@@ -225,54 +209,14 @@ class InputsObj:
         cwl_file_obj = {"class": "File", "location": "juno://%s" % file_path}
         return cwl_file_obj
 
-    def _set_inputs_data(self):
-        sample = self.sample
-        inputs_data = dict()
-        inputs_data["tumor_bam"] = self.tumor_bam
-        inputs_data["normal_bam"] = self.normal_bam
-        inputs_data["maf"] = self.maf
-        inputs_data["dmp_bams_tumor"] = list()
-        inputs_data["dmp_bams_tumor_muts"] = list()
-        inputs_data["dmp_bams_tumor_sample_name"] = list()
-        inputs_data["tumor_sample_name"] = list()
-        inputs_data["tumor_sample_name"].append(sample.cmo_sample_name)
-        if sample.dmp_bams_tumor:
-            for f in sample.dmp_bams_tumor:
-                inputs_data["dmp_bams_tumor"].append(self._create_cwl_file_obj(f.bam_path))
-                inputs_data["dmp_bams_tumor_sample_name"].append(f.dmp_sample_name)
-                if f.mutations_extended:
-                    inputs_data["dmp_bams_tumor_muts"].append(self._create_cwl_file_obj(f.mutations_extended))
-        return inputs_data
-
-    def _build_inputs_json(self):
-        inputs_json = dict()
-        inputs_json["unindexed_bam_files"] = self.inputs_data["dmp_bams_tumor"]
-        inputs_json["unindexed_sample_ids"] = self.inputs_data["dmp_bams_tumor_sample_name"]
-        inputs_json["unindexed_maf_files"] = self.inputs_data["dmp_bams_tumor_muts"]
-        inputs_json["maf_files"] = self.inputs_data["maf"]
-        inputs_json["bam_files"] = self.inputs_data["tumor_bam"]
-        inputs_json["sample_ids"] = self.inputs_data["tumor_sample_name"]
-        inputs_json["ref_fasta"] = self.load_reference_fasta()
-        inputs_json["exac_filter"] = self.load_exac_filter()
-        return inputs_json
-
-    def load_reference_fasta(self):
-        ref_fasta_path = json.load(open(os.path.join(WORKDIR, "reference_json/genomic_resources.json"), "rb"))
-        ref_fasta = {"class": "File", "location": str(ref_fasta_path["ref_fasta"])}
-        return ref_fasta
-
-    def load_exac_filter(self):
-        exac_filter_path = json.load(open(os.path.join(WORKDIR, "reference_json/genomic_resources.json"), "rb"))
-        exac_filter = {"class": "File", "location": str(exac_filter_path["exac_filter"])}
-        return exac_filter
-
 
 class SampleData:
     # Retrieves a sample's data and its corresponding DMP clinical samples
     # Limitation: tumor sample must be research sample, not clinical for now
-    def __init__(self, sample_id):
+    def __init__(self, sample_id, normal_id):
         self.files = FileRepository.all()
         self.sample_id = sample_id
+        self.normal_id = normal_id  # paired normal sample name
         self.dmp_bam_file_group = get_file_group("DMP BAMs")
         self.patient_id, self.cmo_sample_name = self._get_sample_metadata()
         self.dmp_patient_id = self._get_dmp_patient_id()
