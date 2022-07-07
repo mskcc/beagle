@@ -1,0 +1,853 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "5c8869c8-f57f-4145-bf58-bc9051df72b6",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.706Z",
+            "modified_date": "2022-04-26T01:18:28.128Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_json_output",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 119956,
+                "class": "File",
+                "location": "bid://372b5016-f57a-4370-a393-b3c7d1a94898"
+            },
+            "value": {
+                "size": 119956,
+                "class": "File",
+                "nameext": ".json",
+                "basename": "A-000000_fastp_report.json",
+                "checksum": "sha1$b41d1a153ce33da56e250fe43c58b3c44b387e12",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_fastp_report.json",
+                "nameroot": "A-000000_fastp_report"
+            },
+            "notify": false,
+            "files": [
+                "372b5016-f57a-4370-a393-b3c7d1a94898"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5361d3af-a5c0-483b-8e8c-bebb93462009",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.722Z",
+            "modified_date": "2022-04-26T01:18:28.183Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_alignment_summary_metrics_txt_duplex",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 2425,
+                "class": "File",
+                "location": "bid://b692e6a6-b274-4475-a78e-b270ba8e7559"
+            },
+            "value": {
+                "size": 2425,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000_collapsed_duplex_aln_metrics.txt",
+                "checksum": "sha1$39349fb7548bd41dcc424d0bcb6abf4a79789a9c",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_duplex_aln_metrics.txt",
+                "nameroot": "A-000000_collapsed_duplex_aln_metrics"
+            },
+            "notify": false,
+            "files": [
+                "b692e6a6-b274-4475-a78e-b270ba8e7559"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "cba0f1dc-1286-4803-afbc-5d4027d79bcd",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.736Z",
+            "modified_date": "2022-04-26T01:18:28.234Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_group_reads_by_umi_histogram",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 2147,
+                "class": "File",
+                "location": "bid://055b62b1-edd7-4c92-8384-2731e760b8e1"
+            },
+            "value": {
+                "size": 2147,
+                "class": "File",
+                "nameext": ".hist",
+                "basename": "A-000000_umi_family_size.hist",
+                "checksum": "sha1$300fe2ea3bf4097629140721028cc691eeca4226",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_umi_family_size.hist",
+                "nameroot": "A-000000_umi_family_size"
+            },
+            "notify": false,
+            "files": [
+                "055b62b1-edd7-4c92-8384-2731e760b8e1"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1da59002-18c6-4979-a70a-45c1043691fc",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.751Z",
+            "modified_date": "2022-04-26T01:18:28.297Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_family_size",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 11188,
+                "class": "File",
+                "location": "bid://13b3d13e-8884-436c-8877-a4b07fad85c0"
+            },
+            "value": {
+                "size": 11188,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000.family_sizes.txt",
+                "checksum": "sha1$f48ddac6e09361c189a47bdc57909338f4624cd8",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000.family_sizes.txt",
+                "nameroot": "A-000000.family_sizes"
+            },
+            "notify": false,
+            "files": [
+                "13b3d13e-8884-436c-8877-a4b07fad85c0"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6bda02cc-ad59-4e64-8994-b80447759cda",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.762Z",
+            "modified_date": "2022-04-26T01:18:28.337Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_duplex_qc",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "acfbcce0-74bf-497c-bba1-2b9ef792a5e6",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.702Z",
+            "modified_date": "2022-04-26T01:18:28.114Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_html_output",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 461501,
+                "class": "File",
+                "location": "bid://8e61df96-6471-4181-b407-0dfa6ea86c37"
+            },
+            "value": {
+                "size": 461501,
+                "class": "File",
+                "nameext": ".html",
+                "basename": "A-000000_fastp_report.html",
+                "checksum": "sha1$77f1b3a3dc7af4443ae2919a862370f8a35b1e8a",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_fastp_report.html",
+                "nameroot": "A-000000_fastp_report"
+            },
+            "notify": false,
+            "files": [
+                "8e61df96-6471-4181-b407-0dfa6ea86c37"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "202acb69-6b59-46a8-bc4b-7b333a84b65e",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.744Z",
+            "modified_date": "2022-04-26T01:18:28.268Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_reads_duplex_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 317845532,
+                "class": "File",
+                "location": "bid://f4979046-71ce-47c9-b8d6-952eed533b9d",
+                "secondaryFiles": [
+                    {
+                        "size": 1715328,
+                        "class": "File",
+                        "location": "bid://1541fcc1-224b-43da-8fb4-6079ebadc4a5"
+                    }
+                ]
+            },
+            "value": {
+                "size": 317845532,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_collapsed_duplex.bam",
+                "checksum": "sha1$eb5c1e63215c1db33b01ea8ba83bd1b5a6edabe4",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_duplex.bam",
+                "nameroot": "A-000000_collapsed_duplex",
+                "secondaryFiles": [
+                    {
+                        "size": 1715328,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "A-000000_collapsed_duplex.bai",
+                        "checksum": "sha1$3cc36216890fe81c613fde5fffda5e314283ed93",
+                        "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_duplex.bai",
+                        "nameroot": "A-000000_collapsed_duplex"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "1541fcc1-224b-43da-8fb4-6079ebadc4a5",
+                "f4979046-71ce-47c9-b8d6-952eed533b9d"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "13fa9884-fe70-40ed-bbdd-68c667ef66d0",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.748Z",
+            "modified_date": "2022-04-26T01:18:28.283Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_umi_counts",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 4576,
+                "class": "File",
+                "location": "bid://f1751e4f-703d-4791-b6b4-944418767ba9"
+            },
+            "value": {
+                "size": 4576,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000.umi_counts.txt",
+                "checksum": "sha1$b5794a9fc79fd87faaa20f7494393a0a560ceff7",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000.umi_counts.txt",
+                "nameroot": "A-000000.umi_counts"
+            },
+            "notify": false,
+            "files": [
+                "f1751e4f-703d-4791-b6b4-944418767ba9"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "4920e0b5-195b-4375-9b51-ac18431f5675",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.755Z",
+            "modified_date": "2022-04-26T01:18:28.312Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_duplex_yield_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 1376,
+                "class": "File",
+                "location": "bid://65a6de66-fd47-4124-a945-0527750c8827"
+            },
+            "value": {
+                "size": 1376,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000.duplex_yield_metrics.txt",
+                "checksum": "sha1$fb9754fb8edc908a2ebbe0d8315066a02831a9d3",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000.duplex_yield_metrics.txt",
+                "nameroot": "A-000000.duplex_yield_metrics"
+            },
+            "notify": false,
+            "files": [
+                "65a6de66-fd47-4124-a945-0527750c8827"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "90029e73-1ac7-4848-a219-d539ce58e525",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.758Z",
+            "modified_date": "2022-04-26T01:18:28.329Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_duplex_umi_counts_txt",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 481606,
+                "class": "File",
+                "location": "bid://e45077b4-382f-4526-86c7-56e03c093a09"
+            },
+            "value": {
+                "size": 481606,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000.duplex_umi_counts.txt",
+                "checksum": "sha1$0f20a3c4de068bfca8345cf46f6b1493f82a2cce",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000.duplex_umi_counts.txt",
+                "nameroot": "A-000000.duplex_umi_counts"
+            },
+            "notify": false,
+            "files": [
+                "e45077b4-382f-4526-86c7-56e03c093a09"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "07128da5-3b9c-4a93-bd74-701879c9733e",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.710Z",
+            "modified_date": "2022-04-26T01:18:28.140Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_alignment_summary_metrics_txt_uncollapsed",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 2479,
+                "class": "File",
+                "location": "bid://2ec63ecb-7941-452e-8acb-f996fff24867"
+            },
+            "value": {
+                "size": 2479,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000_uncollapsed_BR_alignment_summary_metrics.txt",
+                "checksum": "sha1$7d79458a6fecafb362fa29acbdd9dfcd5fc137a6",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_BR_alignment_summary_metrics.txt",
+                "nameroot": "A-000000_uncollapsed_BR_alignment_summary_metrics"
+            },
+            "notify": false,
+            "files": [
+                "2ec63ecb-7941-452e-8acb-f996fff24867"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "830ed960-fbe6-4682-a719-b4e4042253c2",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.714Z",
+            "modified_date": "2022-04-26T01:18:28.155Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "indel_realignment_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 7423408592,
+                "class": "File",
+                "location": "bid://e4168c27-dc3f-4231-a88a-70b8d50d4588",
+                "secondaryFiles": [
+                    {
+                        "size": 6420696,
+                        "class": "File",
+                        "location": "bid://fbcc4978-f04a-45a1-8e38-f5ad0e559db0"
+                    }
+                ]
+            },
+            "value": {
+                "size": 7423408592,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_uncollapsed_FM.bam",
+                "checksum": "sha1$8ba451ad272066fd3a3cc4e0219413232b6bf413",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_FM.bam",
+                "nameroot": "A-000000_uncollapsed_FM",
+                "secondaryFiles": [
+                    {
+                        "size": 6420696,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "A-000000_uncollapsed_FM.bai",
+                        "checksum": "sha1$4737eaf2c09fca6b86553a7976c35ddbbfc46f5b",
+                        "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_FM.bai",
+                        "nameroot": "A-000000_uncollapsed_FM"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "e4168c27-dc3f-4231-a88a-70b8d50d4588",
+                "fbcc4978-f04a-45a1-8e38-f5ad0e559db0"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "07a0083d-698e-4956-9178-856a48fd3e65",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.718Z",
+            "modified_date": "2022-04-26T01:18:28.168Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "picard_mark_duplicates_metrics",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 5350,
+                "class": "File",
+                "location": "bid://0af65313-ee37-4df7-8693-1531f888f770"
+            },
+            "value": {
+                "size": 5350,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000_uncollapsed_MD_metrics.txt",
+                "checksum": "sha1$048f0c86cddc98e087df9ecab6878c2827d26d81",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_MD_metrics.txt",
+                "nameroot": "A-000000_uncollapsed_MD_metrics"
+            },
+            "notify": false,
+            "files": [
+                "0af65313-ee37-4df7-8693-1531f888f770"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "aa2c2cc8-fd7c-4c1c-b4d9-deb65209bcdb",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.726Z",
+            "modified_date": "2022-04-26T01:18:28.199Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_alignment_summary_metrics_txt_collapsed",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 2429,
+                "class": "File",
+                "location": "bid://87a4aeb8-f9f7-4abc-b2e0-75a04dfeb25b"
+            },
+            "value": {
+                "size": 2429,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000_collapsed_aln_metrics.txt",
+                "checksum": "sha1$bc57bf12b7b6378def9bc4315640eb73c7aaef10",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_aln_metrics.txt",
+                "nameroot": "A-000000_collapsed_aln_metrics"
+            },
+            "notify": false,
+            "files": [
+                "87a4aeb8-f9f7-4abc-b2e0-75a04dfeb25b"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5fb27812-af3f-4ebd-9dd6-395978ebf96b",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.731Z",
+            "modified_date": "2022-04-26T01:18:28.218Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_postprocessing_simplex_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 449353830,
+                "class": "File",
+                "location": "bid://56c3c58a-3a83-472f-acd4-c6bacca63ca4",
+                "secondaryFiles": [
+                    {
+                        "size": 4207872,
+                        "class": "File",
+                        "location": "bid://bf6a29ae-9e82-4499-9582-5139c2ae150a"
+                    }
+                ]
+            },
+            "value": {
+                "size": 449353830,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_collapsed_simplex.bam",
+                "checksum": "sha1$ef9099348dd8394069bdff07660eabd6f6144997",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_simplex.bam",
+                "nameroot": "A-000000_collapsed_simplex",
+                "secondaryFiles": [
+                    {
+                        "size": 4207872,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "A-000000_collapsed_simplex.bai",
+                        "checksum": "sha1$bae77c45a07104122c97dafccea087ef41d7f73f",
+                        "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_simplex.bai",
+                        "nameroot": "A-000000_collapsed_simplex"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "56c3c58a-3a83-472f-acd4-c6bacca63ca4",
+                "bf6a29ae-9e82-4499-9582-5139c2ae150a"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "eb683509-c5cc-4d68-bf98-b4ceef9d6281",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.740Z",
+            "modified_date": "2022-04-26T01:18:28.250Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_group_reads_by_umi_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 4397888559,
+                "class": "File",
+                "location": "bid://a823cd02-7c6b-400d-aea3-0ed14d78e172"
+            },
+            "value": {
+                "size": 4397888559,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_collapsed_grouped.bam",
+                "checksum": "sha1$21a54e5c798eecc571aeceeccf41a49cd1a2e6ad",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_grouped.bam",
+                "nameroot": "A-000000_collapsed_grouped"
+            },
+            "notify": false,
+            "files": [
+                "a823cd02-7c6b-400d-aea3-0ed14d78e172"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d3f052a9-c7a2-4211-9ec3-19e697c8b24c",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.811Z",
+            "modified_date": "2022-04-26T01:18:28.353Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_alignment_summary_metrics_txt_simplex",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 2427,
+                "class": "File",
+                "location": "bid://6a2f1fea-70a1-466d-8601-791a22b3453f"
+            },
+            "value": {
+                "size": 2427,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000_collapsed_simplex_aln_metrics.txt",
+                "checksum": "sha1$3d33bcd188b75fe5c8d230cd3e0d1c7c658ed2ed",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_simplex_aln_metrics.txt",
+                "nameroot": "A-000000_collapsed_simplex_aln_metrics"
+            },
+            "notify": false,
+            "files": [
+                "6a2f1fea-70a1-466d-8601-791a22b3453f"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "18ebeaf3-daa1-4f3d-865d-1ad6b3f5684a",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.765Z",
+            "modified_date": "2022-04-26T01:18:28.370Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_duplex_family_size",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 55588,
+                "class": "File",
+                "location": "bid://ed3f9b27-53fd-4c02-9e7a-4bbe2ccc92da"
+            },
+            "value": {
+                "size": 55588,
+                "class": "File",
+                "nameext": ".txt",
+                "basename": "A-000000.duplex_family_sizes.txt",
+                "checksum": "sha1$cee56c9688a59cfdba33b87f1f0fd41feb6dbe97",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000.duplex_family_sizes.txt",
+                "nameroot": "A-000000.duplex_family_sizes"
+            },
+            "notify": false,
+            "files": [
+                "ed3f9b27-53fd-4c02-9e7a-4bbe2ccc92da"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "29bc9e97-71cd-41fb-9216-1f8891ef6df7",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.769Z",
+            "modified_date": "2022-04-26T01:18:28.389Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collapsed_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 2512057602,
+                "class": "File",
+                "location": "bid://2b9e1a76-2a10-4c0f-979d-39322e765351",
+                "secondaryFiles": [
+                    {
+                        "size": 6325608,
+                        "class": "File",
+                        "location": "bid://bc9e35b2-c8e2-41d7-9db2-2e8489e68967"
+                    }
+                ]
+            },
+            "value": {
+                "size": 2512057602,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_collapsed_FM.bam",
+                "checksum": "sha1$f5d129f8af5c5c80e6bd3e8ba7f1a84a4bc7fd7b",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_FM.bam",
+                "nameroot": "A-000000_collapsed_FM",
+                "secondaryFiles": [
+                    {
+                        "size": 6325608,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "A-000000_collapsed_FM.bai",
+                        "checksum": "sha1$8a888ab7e83d0f078f73bc70df435e72553b18bd",
+                        "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_collapsed_FM.bai",
+                        "nameroot": "A-000000_collapsed_FM"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "2b9e1a76-2a10-4c0f-979d-39322e765351",
+                "bc9e35b2-c8e2-41d7-9db2-2e8489e68967"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "aa66d1c1-a970-4789-9e6c-59cd8528f504",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.772Z",
+            "modified_date": "2022-04-26T01:18:28.416Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "uncollapsed_bam",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": {
+                "size": 12142155967,
+                "class": "File",
+                "location": "bid://41fe9c6b-67ab-446f-b011-3455ea92c1b5",
+                "secondaryFiles": [
+                    {
+                        "size": 6433944,
+                        "class": "File",
+                        "location": "bid://e721bb49-19c8-4d80-a0d8-e71807041782"
+                    }
+                ]
+            },
+            "value": {
+                "size": 12142155967,
+                "class": "File",
+                "nameext": ".bam",
+                "basename": "A-000000_uncollapsed_BR.bam",
+                "checksum": "sha1$a801b9f0eb93fb401902b8f5df55d54c58506a2b",
+                "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_BR.bam",
+                "nameroot": "A-000000_uncollapsed_BR",
+                "secondaryFiles": [
+                    {
+                        "size": 6433944,
+                        "class": "File",
+                        "nameext": ".bai",
+                        "basename": "A-000000_uncollapsed_BR.bai",
+                        "checksum": "sha1$9a0e6fc2676c777011ed5f2ab9cc600db183327f",
+                        "location": "file:///work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41/A-000000_uncollapsed_BR.bai",
+                        "nameroot": "A-000000_uncollapsed_BR"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "41fe9c6b-67ab-446f-b011-3455ea92c1b5",
+                "e721bb49-19c8-4d80-a0d8-e71807041782"
+            ]
+        }
+    }
+]

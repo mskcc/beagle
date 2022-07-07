@@ -10,9 +10,9 @@ from runner.operator.operator_factory import OperatorFactory
 
 
 FIXTURES = [
-    "runner/tests/operator/access/v2_0_0/qc/files_fixture.json",
-    "runner/tests/operator/access/v2_0_0/qc/files_metadata_fixture.json",
-    "runner/tests/operator/access/v2_0_0/qc/ports_fixture.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/files_fixture.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/files_metadata_fixture.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/ports_fixture.json",
 ]
 
 COMMON_FIXTURES = [
@@ -41,9 +41,9 @@ class TestAccessQCOperator(TestCase):
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         request_id = "05500_FH"
 
-        operator_model = Operator.objects.get(id=11)
+        operator_model = Operator.objects.get(id=17)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-        self.assertEqual(operator.get_pipeline_id(), "05419097-a2b8-4d57-a8ab-c4c4cddcbabc")
+        self.assertEqual(operator.get_pipeline_id(), "74339fe0-adc5-404d-9e19-8d9ce965109d")
         self.assertEqual(str(operator.model), "AccessQCOperator")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
