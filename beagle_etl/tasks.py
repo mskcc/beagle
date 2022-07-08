@@ -47,6 +47,10 @@ def process_smile_events():
 
 
 def process_smile_message(msg):
+    ## TODO: Remove this when SMILE stops sending old messages
+    msg.status = SmileMessageStatus.COMPLETED
+    msg.save()
+
     if msg.topic == settings.METADB_NATS_NEW_REQUEST:
         new_request.delay(str(msg.id))
         logger.info("New request")
