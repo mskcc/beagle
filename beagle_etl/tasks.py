@@ -50,19 +50,19 @@ def process_smile_message(msg):
     ## TODO: Remove this when SMILE stops sending old messages
     msg.status = SmileMessageStatus.COMPLETED
     msg.save()
-
-    if msg.topic == settings.METADB_NATS_NEW_REQUEST:
-        new_request.delay(str(msg.id))
-        logger.info("New request")
-    elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
-        update_request_job.delay(str(msg.id))
-        logger.info("Update request")
-    elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
-        update_sample_job.delay(str(msg.id))
-        logger.info("Update sample")
-    else:
-        not_supported.delay(str(msg.id))
-        logger.error("Unknown subject: %s" % msg.topic)
+    #
+    # if msg.topic == settings.METADB_NATS_NEW_REQUEST:
+    #     new_request.delay(str(msg.id))
+    #     logger.info("New request")
+    # elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
+    #     update_request_job.delay(str(msg.id))
+    #     logger.info("Update request")
+    # elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
+    #     update_sample_job.delay(str(msg.id))
+    #     logger.info("Update sample")
+    # else:
+    #     not_supported.delay(str(msg.id))
+    #     logger.error("Unknown subject: %s" % msg.topic)
 
 
 @shared_task
