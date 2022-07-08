@@ -26,7 +26,7 @@ COMMON_FIXTURES = [
 ]
 
 
-class TestAccessQCOperator(TestCase):
+class TestNucleoQCOperator(TestCase):
 
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
