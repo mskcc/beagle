@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import logging
+from functools import reduce
 from django.conf import settings
 from notifier.models import JobGroup
 from file_system.models import FileGroup
