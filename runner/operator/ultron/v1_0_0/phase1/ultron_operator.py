@@ -47,7 +47,7 @@ class UltronOperator(Operator):
         run_ids = self.run_ids
         number_of_runs = len(run_ids)
         name = "ULTRON run"
-        sample_groups = [self._build_sample_groups(run_ids)]
+        sample_groups = self._build_sample_groups(run_ids)
         rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
         input_json = dict(sample_group=sample_groups)
         ultron_output_job = list()
@@ -82,13 +82,17 @@ class UltronOperator(Operator):
         pipeline_version = pipeline.version
         project_prefix = get_project_prefix(run_id)
         output_directory = self._get_output_directory(run_id)
+        prev_pipeline_version = self._get_prev_pipeline(run_id).version
+        input_json['is_impact'] = True # assume True for now
+        input_json['argos_version'] = prev_pipeline_version
+        input_json['ref_fasta'] = self.load_reference_fasta()
         num_sample_groups = reduce(lambda count, l: count + len(l), input_json, 0)
         tags = {"project_prefix": project_prefix, "num_sample_groups": num_sample_groups}
         # add tags, name
         output_job_data = {
             "app": app,
             "tags": tags,
-            "name": "Sample %s ULTRON PHASE1 run",
+            "name": "ULTRON PHASE1 run",
             "output_directory": output_directory,
             "inputs": input_json,
         }
@@ -104,6 +108,12 @@ class UltronOperator(Operator):
         run = Run.objects.filter(id=run_id)[0]
         pipeline = run.app
         return pipeline
+
+    def load_reference_fasta(self):
+        resources_path = json.load(open(os.path.join(WORKDIR, "reference_json/genomic_resources.json"), "rb"))
+        ref_fasta = {"class": "File", "location": str(resources_path["ref_fasta"])}
+        return ref_fasta
+
 
 
 class SampleGroup:
