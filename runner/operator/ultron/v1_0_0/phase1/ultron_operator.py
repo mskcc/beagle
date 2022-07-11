@@ -154,7 +154,7 @@ class SampleGroup:
     def _build_sample_group_dict(self):
         sample_group = list()
         json_research = self._init_research_sample_json()
-        clin_jsons = self._init_clinical_samples_jsons()
+        clin_jsons = self._init_clinical_samples_json()
         sample_group.append(json_research)
         for json_clin in clin_jsons:
             sample_group.append(json_clin)
@@ -171,7 +171,7 @@ class SampleGroup:
         }
         return d
 
-    def _init_clinical_sample_jsons(self):
+    def _init_clinical_samples_json(self):
         clin_jsons = list()
         tumor_dmp_bams = sample.dmp_bams_tumor
         for bam_data in tumor_dmp_bams:
