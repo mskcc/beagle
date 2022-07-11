@@ -50,7 +50,7 @@ class UltronOperator(Operator):
         rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
         input_json = dict(sample_group=sample_groups)
         ultron_output_job = list()
-        ultron_output_job = self._build_job(input_json, rid)
+        ultron_output_job = [self._build_job(input_json, rid)]
 
         return ultron_output_job
 
