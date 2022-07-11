@@ -93,9 +93,11 @@ class UltronOperator(Operator):
             "app": app,
             "tags": tags,
             "name": "ULTRON PHASE1 run",
-            "output_directory": output_directory,
             "inputs": input_json,
         }
+        if output_directory:
+            output_job_data["output_directory"] = output_directory
+            
         output_job = RunCreator(**output_job_data)
         return output_job
 
