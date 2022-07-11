@@ -171,7 +171,7 @@ class SampleGroup:
         }
         return d
 
-    def _init_clinical_sample_json(self):
+    def _init_clinical_sample_jsons(self):
         clin_jsons = list()
         tumor_dmp_bams = sample.dmp_bams_tumor
         for bam_data in tumor_dmp_bams:
