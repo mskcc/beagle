@@ -72,7 +72,7 @@ class UltronOperator(Operator):
         sample_groups = list()
         for rid in set(run_ids):
             run = Run.objects.filter(id=rid).first()
-            sample_groups.append(SampleGroup(run))
+            sample_groups.append(SampleGroup(run).json)
         return sample_groups
 
     def _build_job(self, input_json, run_id):
