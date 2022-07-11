@@ -81,7 +81,8 @@ class UltronOperator(Operator):
         pipeline_version = pipeline.version
         project_prefix = get_project_prefix(run_id)
         output_directory = self._get_output_directory(run_id)
-        tags = {"sampleNameTumor": sample_name, "project_prefix": project_prefix}
+        num_sample_groups = len(input_json)
+        tags = {"project_prefix": project_prefix, "num_sample_groups": num_sample_groups}
         # add tags, name
         output_job_data = {
             "app": app,
