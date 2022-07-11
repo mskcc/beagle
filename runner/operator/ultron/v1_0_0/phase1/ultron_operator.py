@@ -174,17 +174,17 @@ class SampleGroup:
     def _init_clinical_samples_json(self):
         clin_jsons = list()
         tumor_dmp_bams = self.sample.dmp_bams_tumor
-        for bam_data in tumor_dmp_bams:
-
-            d = {
-                "sample_id": bam_data.dmp_sample_name,
-                "normal_id": "DMP_NORMAL",
-                "sample_type": "clinical",
-                "prefilter": False,
-                "maf_file": {"class": "File", "path": bam_data.bam_path},
-                "bam_file": {"class": "File", "path": bam_data.mutations_extended},
-            }
-            clin_jsons.append(d)
+        if tumor_dmp_bams:
+            for bam_data in tumor_dmp_bams:
+                d = {
+                    "sample_id": bam_data.dmp_sample_name,
+                    "normal_id": "DMP_NORMAL",
+                    "sample_type": "clinical",
+                    "prefilter": False,
+                    "maf_file": {"class": "File", "path": bam_data.bam_path},
+                    "bam_file": {"class": "File", "path": bam_data.mutations_extended},
+                }
+                clin_jsons.append(d)
         return clin_jsons
 
     def _get_file_obj(self, file_obj):
