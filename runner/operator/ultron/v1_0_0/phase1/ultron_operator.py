@@ -49,7 +49,7 @@ class UltronOperator(Operator):
         name = "ULTRON run"
         sample_groups = self._build_sample_groups(run_ids)
         rid = run_ids[0]  # get representative run_id from list; assumes ALL run ids use same pipeline
-        input_json = dict(sample_group=sample_groups)
+        input_json = dict(sample_groups=sample_groups)
         ultron_output_job = list()
         ultron_output_job = [self._build_job(input_json, rid)]
 
