@@ -180,8 +180,8 @@ class SampleGroup:
             "normal_id": self.normal_sample_name,
             "sample_type": "research",
             "prefilter": True,
-            "maf_file": {"class": "File", "path": self.maf},
-            "bam_file": {"class": "File", "path": self.tumor_bam},
+            "maf_file": {"class": "File", "location": self.maf},
+            "bam_file": {"class": "File", "location": self.tumor_bam},
         }
         return d
 
@@ -195,8 +195,8 @@ class SampleGroup:
                     "normal_id": "DMP_NORMAL",
                     "sample_type": "clinical",
                     "prefilter": False,
-                    "maf_file": {"class": "File", "path": bam_data.bam_path},
-                    "bam_file": {"class": "File", "path": bam_data.mutations_extended},
+                    "maf_file": {"class": "File", "location": bam_data.bam_path},
+                    "bam_file": {"class": "File", "location": bam_data.mutations_extended},
                 }
                 clin_jsons.append(d)
         return clin_jsons
