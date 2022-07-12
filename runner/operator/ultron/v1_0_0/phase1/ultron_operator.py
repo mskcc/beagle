@@ -180,8 +180,8 @@ class SampleGroup:
             "normal_id": self.normal_sample_name,
             "sample_type": "research",
             "prefilter": True,
-            "maf_file": {"class": "File", "location": "juno://" + self.maf},
-            "bam_file": {"class": "File", "location": "juno://" + self.tumor_bam},
+            "maf_file": self.maf,
+            "bam_file": self.tumor_bam,
         }
         return d
 
