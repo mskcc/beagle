@@ -10,12 +10,15 @@ class CWLResolver(PipelineResolver):
     def __init__(self, github, entrypoint, version=None):
         super().__init__(github, entrypoint, version)
 
+
     def resolve(self):
         dir = self._dir_name()
         location = self._git_clone(dir)
         output_name = os.path.join(location, "%s.cwl" % str(uuid.uuid4()))
         with open(output_name, "w") as out:
-            subprocess.check_call([settings.RABIX_PATH, "-r", os.path.join(location, self.entrypoint)], stdout=out)
+            subprocess.check_call(["cwltool",
+           "--print-pre",
+           os.path.join(location, self.entrypoint)], stdout=out)
         with open(output_name) as f:
             pipeline = json.load(f)
         self._cleanup(location)
