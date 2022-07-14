@@ -75,6 +75,9 @@ class CMOCHNucleoOperatorQC(Operator):
 
     def get_nucleo_outputs(self):
         # Use most recent set of runs that completed successfully
+        print('TEST START HERE----------------------------------------------------')
+        print(self.request_id)
+        print(RunStatus.COMPLETED)
         most_recent_runs_for_request = (
             Run.objects.filter(
                 app__name="cmo-ch nucleo 2",
