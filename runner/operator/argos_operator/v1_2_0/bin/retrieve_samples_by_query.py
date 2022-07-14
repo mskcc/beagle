@@ -269,7 +269,7 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
     return None
 
 
-def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id, pi=None, pi_email=None):
+def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id=None, pi=None, pi_email=None):
 
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
