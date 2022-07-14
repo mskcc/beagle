@@ -39,7 +39,7 @@ class TestNucleoQCOperator(TestCase):
 
         # This operator needs to write a temp file, so need to override this env var
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
-        request_id = "A-000000"
+        request_id = "12405_C"
 
         operator_model = Operator.objects.get(id=17)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)

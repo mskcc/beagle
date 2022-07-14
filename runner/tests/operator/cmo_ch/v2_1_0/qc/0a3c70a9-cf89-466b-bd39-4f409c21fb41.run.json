@@ -17,12 +17,12 @@
                 "ciTag": "A-000000",
                 "baitSet": "null",
                 "barcodeId": null,
-                "primaryId": "A-000000",
+                "primaryID": "12405_C_25",
                 "dnaInputNg": 0,
                 "captureName": null,
                 "barcodeIndex": null,
                 "cmoPatientId": "A-000000",
-                "igoRequestId": "A-000000",
+                "igoRequestId": "12405_C",
                 "sampleOrigin": "Whole Blood",
                 "cmoSampleName": "A-000000-N001-d",
                 "libraryVolume": 0,
@@ -35,7 +35,7 @@
             "output_directory": "/work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41",
             "tags": {
                 "cmoSampleId": "A-000000-N001-d",
-                "igoRequestId": "A-000000"
+                "igoRequestId": "12405_C"
             },
             "operator_run": "962f4d0f-43cf-48de-ae7f-7f1a0aa4340f",
             "job_group": "d485de7b-1841-45a0-9685-20f91b9807cf",
