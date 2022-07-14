@@ -21,6 +21,7 @@ class CWLResolver(PipelineResolver):
             "--json"], stdout=out)
         with open(output_name) as f:
             pipeline = json.load(f)
+        self._cleanup(location)
         return pipeline
 
     def create_file(self):
