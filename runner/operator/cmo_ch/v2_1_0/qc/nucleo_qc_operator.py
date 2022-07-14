@@ -64,7 +64,7 @@ class CMOCHNucleoOperatorQC(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "CMO-CH Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
