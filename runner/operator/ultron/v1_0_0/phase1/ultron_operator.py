@@ -203,8 +203,8 @@ class SampleGroup:
                     "normal_id": "DMP_NORMAL",
                     "sample_type": "clinical",
                     "prefilter": False,
-                    "maf_file": {"class": "File", "location": "juno://" + bam_data.bam_path},
-                    "bam_file": {"class": "File", "location": "juno://" + bam_data.mutations_extended},
+                    "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path},
+                    "maf_file": {"class": "File", "location": "juno://" + bam_data.mutations_extended},
                 }
                 clin_jsons.append(d)
         return clin_jsons
