@@ -188,7 +188,7 @@ class SampleGroup:
             "normal_id": self.normal_sample_name,
             "sample_type": "research",
             "prefilter": True,
-            "maf_file": self.maf_file,
+            "maf_file": self.maf,
             "bam_file": self.tumor_bam,
         }
         return d
