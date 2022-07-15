@@ -212,19 +212,10 @@ class SampleGroup:
     def _get_file_obj(self, file_obj):
         """
         Given file_obj, construct a dictionary of class File, that file's
-        JUNO-specific URI file path, and a list of secondary files with
-        JUNO-specific URI file paths
+        JUNO-specific URI file path
         """
-        secondary_file_list = []
         file_location = file_obj["location"].replace("file://", "")
-        if "secondaryFiles" in file_obj:
-            for single_secondary_file in file_obj["secondaryFiles"]:
-                secondary_file_location = single_secondary_file["location"].replace("file://", "")
-                secondary_file_cwl_obj = self._create_cwl_file_obj(secondary_file_location)
-                secondary_file_list.append(secondary_file_cwl_obj)
         file_cwl_obj = self._create_cwl_file_obj(file_location)
-        if secondary_file_list:
-            file_cwl_obj["secondaryFiles"] = secondary_file_list
         return file_cwl_obj
 
     def _create_cwl_file_obj(self, file_path):
