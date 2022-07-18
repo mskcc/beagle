@@ -42,12 +42,32 @@ sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/b
       when {
       expression { params.SERVER == 'STAGE' }
     }
+    stages{
+          stage("Update Stage Config File"){
+          steps {
+      sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+      sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cp -p /srv/services/staging_voyager/beagle/env_beagle.sh /srv/services/staging_voyager/beagle/config_backups/config_$(date +"%m-%d-%y-%T").sh"'
+
+      configFileProvider(
+      [configFile(fileId: 'dbd63d24-a881-4309-befb-b3501f98662d', variable: 'CONFIG_FILE_STAGE')]) {
+      sh 'chmod 755 $CONFIG_FILE_STAGE'
+      sh 'mv $CONFIG_FILE_STAGE $CONFIG_FILE_STAGE.sh'
+      sh 'scp -p -o StrictHostKeyChecking=no $CONFIG_FILE_STAGE.sh voyager@silo.mskcc.org:/srv/services/staging_voyager/beagle/env_beagle.sh'
+      sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/staging_voyager/beagle && source run_restart.sh"'
+
+   }
+  }
+    }
+          }
+          stage("Stage Deployment"){
             steps {
               echo "deply to stage"
               sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
                sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/beagle_dev/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
 
              }
+              }
+              }
               }
           }
           stage('Deploy to Prod') {
