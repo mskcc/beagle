@@ -7,11 +7,12 @@
       "modified_date": "2022-04-26T01:18:28.431Z",
       "run_type": 0,
       "name": "CMO-CH Nucleo: A-000000, 62 of 111 (04/21/2022, 17:40:17)",
-      "app": "46d1a329-c790-45b5-aca0-db1f01df12d9",
+      "app": "279b1691-7f43-4c1d-80c0-fae1453cc8a6",
       "status": 4,
       "execution_id": "e6c8b874-7145-47fb-aceb-bb97e73cf7d2",
       "job_statuses": {},
       "message": null,
+      "operator_run": 8,
       "output_metadata": {
         "sex": "F",
         "ciTag": "A-000000",
