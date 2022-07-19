@@ -62,10 +62,10 @@ sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/b
           stage("Stage Deployment"){
             steps {
               echo "deply to stage"
-              sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
-               sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/beagle_dev/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
+            /*  sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+              sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/beagle_dev/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
 
-             }
+             }*/
               }
               }
               }
@@ -74,12 +74,34 @@ sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/b
           when {
           expression { params.SERVER == 'PROD' }
         }
+        stages{
+        stage("Update Prod Config file"){
+        steps {
+      sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+
+      sh 'ssh  -o StrictHostKeyChecking=no  voyager@voyager.mskcc.org "cp -p /srv/services/beagle/config/config.sh /srv/services/beagle/config_backups/config_$(date +"%m-%d-%y-%T").sh"'
+
+      configFileProvider(
+      [configFile(fileId: 'd7b82e90-6c47-4228-a237-ae23d85bbd68', variable: 'CONFIG_FILE_PROD')]) {
+      sh 'chmod 755 $CONFIG_FILE_PROD'
+      sh 'mv $CONFIG_FILE_PROD $CONFIG_FILE_PROD.sh'
+      sh 'scp -p -o StrictHostKeyChecking=no $CONFIG_FILE_PROD.sh voyager@voyager.mskcc.org:/srv/services/beagle/config/config.sh'
+      sh 'ssh  -o StrictHostKeyChecking=no  voyager@voyager.mskcc.org "cd /srv/services/beagle && source run_restart.sh"'
+
+   }
+  }
+    }
+
+        }
+          stage("Prod Deployment"){
                 steps {
                   echo "deply to PROD"
                 /*  sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
-                   sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/staging_voyager/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
+                   sh 'ssh  -o StrictHostKeyChecking=no  voyager@voyager.mskcc.org "cd /srv/services/beagle/code/beagle && git checkout $BRANCH_NAME && git pull && source run_restart.sh"'
 
                  } */
+                  }
+                  }
                   }
               }
   }
