@@ -10,14 +10,15 @@ from runner.operator.operator_factory import OperatorFactory
 
 
 FIXTURES = [
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/files_fixture.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/files_metadata_fixture.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/ports_fixture.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.samples.json",
 ]
 
 COMMON_FIXTURES = [
     "runner/fixtures/runner.pipeline.json",
-    "runner/fixtures/runner.run_test.json",
     "runner/fixtures/runner.operator_run.json",
     "file_system/fixtures/file_system.filegroup.json",
     "file_system/fixtures/file_system.filetype.json",
