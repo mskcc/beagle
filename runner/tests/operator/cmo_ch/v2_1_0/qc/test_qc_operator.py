@@ -35,8 +35,8 @@ class TestNucleoQCOperator(TestCase):
         """
         Test that an ACCESS QC operator instance can be created and validated
         """
-        self.assertEqual(len(File.objects.all()), 10)
-        self.assertEqual(len(FileMetadata.objects.all()), 5)
+        self.assertEqual(len(File.objects.all()), 35)
+        self.assertEqual(len(FileMetadata.objects.all()), 35)
 
         # This operator needs to write a temp file, so need to override this env var
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
