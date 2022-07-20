@@ -108,10 +108,6 @@ class CopyOutputsOperator(Operator):
             f.save()
 
     def get_log_directory(self):
-        if self.run_ids:
-            run = Run.objects.get(id=self.run_ids[0])
-            if run.log_directory:
-                return run.log_directory
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
