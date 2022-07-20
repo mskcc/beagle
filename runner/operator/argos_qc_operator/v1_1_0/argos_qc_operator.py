@@ -21,6 +21,9 @@ class ArgosQcOperator(Operator):
     submits them as runs
     """
 
+    ARGOS_NAME = "argos"
+    ARGOS_VERSION = "1.1.2"
+
     def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
@@ -90,9 +93,9 @@ class ArgosQcOperator(Operator):
         output_directory_prefix = get_project_prefix(self.run_ids)
         output_directory = os.path.join(
             pipeline.output_directory,
-            "argos",
+            self.ARGOS_NAME,
             output_directory_prefix,
-            pipeline.version,
+            self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
