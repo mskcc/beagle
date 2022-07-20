@@ -520,7 +520,7 @@ def update_sample_job(message_id):
     request_metadata["baitSet"] = latest.get("baitSet")
     request_metadata["qcReports"] = latest.get("qcReports")
     request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
-    request_metadata["igocomplete"] = igocomplete
+    request_metadata["igoComplete"] = igocomplete
 
     logger.info("Parsing sample: %s" % primary_id)
     libraries = latest.pop("libraries")
@@ -801,7 +801,7 @@ def create_or_update_file(
         lims_metadata = copy.deepcopy(data)
         library_copy = copy.deepcopy(library)
         lims_metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
-        lims_metadata["igocomplete"] = igocomplete
+        lims_metadata["igoComplete"] = igocomplete
         lims_metadata["R"] = r
         for k, v in library_copy.items():
             lims_metadata[k] = v
