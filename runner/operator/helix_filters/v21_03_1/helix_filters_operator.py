@@ -21,6 +21,9 @@ class HelixFiltersOperator(Operator):
     submits them as runs
     """
 
+    ARGOS_NAME = "argos"
+    ARGOS_VERSION = "1.1.2"
+
     def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
@@ -81,10 +84,6 @@ class HelixFiltersOperator(Operator):
         return json_data
 
     def get_log_directory(self):
-        if self.run_ids:
-            run = Run.objects.get(id=self.run_ids[0])
-            if run.log_directory:
-                return run.log_directory
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
@@ -92,9 +91,9 @@ class HelixFiltersOperator(Operator):
         output_directory_prefix = get_project_prefix(self.run_ids)
         output_directory = os.path.join(
             pipeline.output_directory,
-            "argos",
+            self.ARGOS_NAME,
             output_directory_prefix,
-            pipeline.version,
+            self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
