@@ -19,6 +19,9 @@ from .bin.make_sample import format_sample_name
 
 
 class ArgosOperator(Operator):
+    ARGOS_NAME = "argos"
+    ARGOS_VERSION = "1.1.2"
+
     def get_jobs(self):
 
         argos_jobs = list()
@@ -446,9 +449,9 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
         pipeline = Pipeline.objects.get(id=app)
         output_directory = os.path.join(
             pipeline.output_directory,
-            "argos",
+            self.ARGOS_NAME,
             get_project_prefix(self.request_id),
-            pipeline.version,
+            self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
