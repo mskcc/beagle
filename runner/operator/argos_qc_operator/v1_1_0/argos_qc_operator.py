@@ -20,6 +20,7 @@ class ArgosQcOperator(Operator):
     Constructs input JSON for the argos QC pipeline and then
     submits them as runs
     """
+
     ARGOS_NAME = "argos"
     ARGOS_VERSION = "1.1.2"
 
