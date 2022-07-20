@@ -83,10 +83,10 @@ class UltronOperator(Operator):
         project_prefix = get_project_prefix(run_id)
         output_directory = self._get_output_directory(run_id)
         prev_pipeline_version = self._get_prev_pipeline(run_id).version
-        input_json['is_impact'] = True # assume True for now
-        input_json['argos_version_string'] = prev_pipeline_version
-        input_json['ref_fasta'] = self.load_reference_fasta()
-        input_json['exac_filter'] = self.load_exac_filter()
+        input_json["is_impact"] = True  # assume True for now
+        input_json["argos_version_string"] = prev_pipeline_version
+        input_json["ref_fasta"] = self.load_reference_fasta()
+        input_json["exac_filter"] = self.load_exac_filter()
         num_sample_groups = reduce(lambda count, l: count + len(l), input_json, 0)
         tags = {"project_prefix": project_prefix, "num_sample_groups": num_sample_groups}
         # add tags, name
@@ -98,7 +98,7 @@ class UltronOperator(Operator):
         }
         if output_directory:
             output_job_data["output_directory"] = output_directory
-            
+
         output_job = RunCreator(**output_job_data)
         return output_job
 
@@ -117,13 +117,10 @@ class UltronOperator(Operator):
         ref_fasta = {"class": "File", "location": str(resources_path["ref_fasta"])}
         return ref_fasta
 
-
     def load_exac_filter(self):
         resources_path = json.load(open(os.path.join(WORKDIR, "reference_json/genomic_resources.json"), "rb"))
         exac_filter = {"class": "File", "location": str(resources_path["exac_filter"])}
-        return exac_filter 
-
-
+        return exac_filter
 
 
 class SampleGroup:
