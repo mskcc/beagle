@@ -230,50 +230,23 @@ class TestUltron(TestCase):
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
 
-'''
     def test_construct_inputs_obj_no_dmp_bams(self):
         """
         Test the creation of the inputs obj with no dmp bams
         """
         file_group_id = FileGroup.objects.get(name="DMP BAMs").pk
         files = FileRepository.filter(file_group=file_group_id)
+        operator_model = Operator.objects.get(id=12)
+        job_group = JobGroup()
+        job_group.save()
+        ultron_operator = UltronOperator(
+            operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
+        ) 
         for single_file in files:
             single_file.delete()
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json["unindexed_bam_files"], [])
-        self.assertEqual(input_json["unindexed_sample_ids"], [])
-        self.assertEqual(input_json["unindexed_maf_files"], [])
-
-    def test_construct_inputs_obj_no_dmp_muts(self):
-        """
-        Test the creation of the inputs obj with no dmp muts
-        """
-        file_group_id = FileGroup.objects.get(name="DMP Data Mutations Extended").pk
-        files = FileRepository.filter(file_group=file_group_id)
-        for single_file in files:
-            single_file.delete()
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        expected_input_json = self.first_run_expected_inputs
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json["unindexed_maf_files"], [])
-
-    def test_construct_inputs_obj(self):
-        """
-        Test the creation of the inputs obj
-        """
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(len(input_json["unindexed_bam_files"]), 2)
-        self.assertEqual(len(input_json["unindexed_sample_ids"]), 2)
-        self.assertEqual(len(input_json["unindexed_maf_files"]), 2)
-        self.assertEqual(len(input_json["bam_files"]), 1)
-        self.assertEqual(len(input_json["sample_ids"]), 1)
-        self.assertEqual(len(input_json["ref_fasta"]), 2)
-        self.assertEqual(len(input_json["exac_filter"]), 2)
+        single_run_id = self.run_ids[0]
+        sample_groups = ultron_operator._build_sample_groups([single_run_id])
+        self.assertEqual(len(sample_groups[0]), 1)
 
     def test_construct_sample_data_null_patient_id(self):
         """
@@ -282,11 +255,12 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_2.save()
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), None)
         self.assertEqual(sample_data._find_dmp_bams("T"), None)
         self.assertEqual(
@@ -300,12 +274,13 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_2.save()
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
         self.assertEqual(sample_data._get_sample_metadata(), (patient_id, None))
@@ -315,9 +290,11 @@ class TestUltron(TestCase):
         Test the creation of sample data with a null sample name
         """
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
+        sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY] 
         patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
         self.assertEqual(
@@ -325,16 +302,6 @@ class TestUltron(TestCase):
             (patient_id, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]),
         )
 
-    def test_construct_bam_data_missing_muts(self):
-        """
-        Test the creation of bam data when the mutation files are missing
-        """
-        single_bam = FileMetadata.objects.get(id=self.first_dmp_bam_metadata_id)
-        mutation_file = FileMetadata.objects.get(id=self.first_dmp_mutations_extended_id)
-        mutation_file.delete()
-        bam_data = BamData(single_bam)
-        self.assertEqual(bam_data._set_data_muts_txt(), [])
-        self.assertEqual(bam_data._set_dmp_sample_name(), self.first_dmp_dmp_sample_name)
 
     def test_construct_bam_data(self):
         """
@@ -344,7 +311,6 @@ class TestUltron(TestCase):
         bam_data = BamData(single_bam)
         self.assertEqual(bam_data._set_data_muts_txt(), self.first_dmp_mutations_extended)
         self.assertEqual(bam_data._set_dmp_sample_name(), self.first_dmp_dmp_sample_name)
-'''
 
 
 def ordered(obj):
