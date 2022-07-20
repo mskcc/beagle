@@ -3,7 +3,7 @@ import shutil
 
 
 def sync_dir(src, dst):
-    if os.path.isfile('src'):
+    if os.path.isfile("src"):
         return
     src_dirs = os.listdir(src)
     dst_dirs = os.listdir(dst)
