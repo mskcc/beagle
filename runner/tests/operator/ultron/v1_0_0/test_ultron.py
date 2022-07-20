@@ -229,7 +229,6 @@ class TestUltron(TestCase):
                 self.assertEqual(ordered(job_input_json[key]), ordered(input_json[key]))
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
-
     def test_construct_inputs_obj_no_dmp_bams(self):
         """
         Test the creation of the inputs obj with no dmp bams
@@ -241,7 +240,7 @@ class TestUltron(TestCase):
         job_group.save()
         ultron_operator = UltronOperator(
             operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
-        ) 
+        )
         for single_file in files:
             single_file.delete()
         single_run_id = self.run_ids[0]
@@ -292,7 +291,7 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
-        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY] 
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
@@ -301,7 +300,6 @@ class TestUltron(TestCase):
             sample_data._get_sample_metadata(),
             (patient_id, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]),
         )
-
 
     def test_construct_bam_data(self):
         """
