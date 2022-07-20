@@ -10,15 +10,12 @@ class CWLResolver(PipelineResolver):
     def __init__(self, github, entrypoint, version=None):
         super().__init__(github, entrypoint, version)
 
-
     def resolve(self):
         dir = self._dir_name()
         location = self._git_clone(dir)
         output_name = os.path.join(location, "%s.cwl" % str(uuid.uuid4()))
         with open(output_name, "w") as out:
-            subprocess.check_call(["cwlpack",
-            os.path.join(location, self.entrypoint),
-            "--json"], stdout=out)
+            subprocess.check_call(["cwlpack", os.path.join(location, self.entrypoint), "--json"], stdout=out)
         with open(output_name) as f:
             pipeline = json.load(f)
         self._cleanup(location)
@@ -29,9 +26,7 @@ class CWLResolver(PipelineResolver):
         location = self._git_clone(dir)
         output_name = os.path.join(location, "%s.cwl" % str(uuid.uuid4()))
         with open(output_name, "w") as out:
-            subprocess.check_call(["cwlpack",
-            os.path.join(location, self.entrypoint),
-            "--json"], stdout=out)
+            subprocess.check_call(["cwlpack", os.path.join(location, self.entrypoint), "--json"], stdout=out)
         return output_name
 
     def load(self):

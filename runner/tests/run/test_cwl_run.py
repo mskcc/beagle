@@ -236,7 +236,7 @@ class CWLRunObjectTest(APITestCase):
                         }
                     ],
                 }
-                ],
+            ],
             "tumor_bam": [
                 {
                     "size": 6163808009,
@@ -319,7 +319,7 @@ class CWLRunObjectTest(APITestCase):
         complete_job(run.run_id, self.outputs)
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_completed_runs, num_completed_runs + 1)
-        run_obj = RunObjectFactory.from_db(run.run_id) 
+        run_obj = RunObjectFactory.from_db(run.run_id)
         file_obj = File.objects.filter(path=self.outputs["maf"]["location"].replace("file://", "")).first()
         run_obj.to_db()
         for out in run_obj.outputs:
