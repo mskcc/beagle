@@ -422,8 +422,6 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
     resume = None
     try:
         run = Run.objects.get(id=run_id)
-        run.log_directory = log_directory
-        run.save()
     except Run.DoesNotExist:
         raise Exception("Failed to submit a run")
 
