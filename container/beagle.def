@@ -107,7 +107,7 @@ Includecmd: no
 
     celery -A beagle_etl --workdir ${BEAGLE_PATH} worker --concurrency 1 -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_scheduler.log --pidfile ${BEAGLE_CELERY_SCHEDULER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_scheduler >/dev/null 2>&1 < /dev/null &
 
-    celery -A beagle_etl --workdir worker --concurrency 1 -l debug -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_new_request.log --pidfile ${BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE} -n ${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request >/dev/null 2>&1 < /dev/null &
+    celery -A beagle_etl --workdir ${BEAGLE_PATH} worker --concurrency 1 -l debug -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_nats_new_request.log --pidfile ${BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE} -n ${BEAGLE_NATS_NEW_REQUEST_QUEUE}.beagle_nats_new_request >/dev/null 2>&1 < /dev/null &
 
     celery -A beagle_etl  --workdir ${BEAGLE_PATH} worker -l debug -Q ${BEAGLE_RUNNER_QUEUE} -f ${BEAGLE_CELERY_LOG_PATH}/beagle_runner.log --pidfile ${BEAGLE_CELERY_RUNNER_PID_FILE} -n ${BEAGLE_CELERY_EVENT_QUEUE_PREFIX}.beagle_runner >/dev/null 2>&1 < /dev/null &
 
