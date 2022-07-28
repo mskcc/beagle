@@ -15,7 +15,7 @@ class CWLResolver(PipelineResolver):
         location = self._git_clone(dir)
         output_name = os.path.join(location, "%s.cwl" % str(uuid.uuid4()))
         with open(output_name, "w") as out:
-            subprocess.check_call([settings.RABIX_PATH, "-r", os.path.join(location, self.entrypoint)], stdout=out)
+            subprocess.check_call(["cwlpack", os.path.join(location, self.entrypoint), "--json"], stdout=out)
         with open(output_name) as f:
             pipeline = json.load(f)
         self._cleanup(location)
@@ -26,7 +26,7 @@ class CWLResolver(PipelineResolver):
         location = self._git_clone(dir)
         output_name = os.path.join(location, "%s.cwl" % str(uuid.uuid4()))
         with open(output_name, "w") as out:
-            subprocess.check_call([settings.RABIX_PATH, "-r", os.path.join(location, self.entrypoint)], stdout=out)
+            subprocess.check_call(["cwlpack", os.path.join(location, self.entrypoint), "--json"], stdout=out)
         return output_name
 
     def load(self):
