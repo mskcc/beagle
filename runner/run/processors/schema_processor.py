@@ -21,8 +21,10 @@ class SchemaProcessor(object):
             port_type = input_type.get("type")
             if port_type == "record":
                 t = {"type": "record", "fields": {}}
-                for k, v in input_type.get("fields").items():
-                    t["fields"][k] = SchemaProcessor.resolve_cwl_type(v)
+                for item in input_type.get("fields"):
+                    for key in item:
+                        value = item[key]
+                        t["fields"][key] = SchemaProcessor.resolve_cwl_type(value)
                 return t if required else ["null", t]
             elif port_type == "array":
                 t = {"type": "array", "items": SchemaProcessor.resolve_cwl_type(input_type.get("items")).get("type")}
