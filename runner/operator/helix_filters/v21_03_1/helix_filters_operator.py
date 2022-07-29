@@ -73,7 +73,7 @@ class HelixFiltersOperator(Operator):
         Adds strings that's used by the CWL for output file names
         """
         project_prefix = json_data["project_prefix"]
-        json_data["argos_version_string"] = pipeline_version
+        json_data["argos_version_string"] = self.ARGOS_VERSION 
         json_data["analysis_mutations_filename"] = project_prefix + ".muts.maf"
         json_data["analysis_gene_cna_filename"] = project_prefix + ".gene.cna.txt"
         json_data["analysis_sv_filename"] = project_prefix + ".svs.maf"
