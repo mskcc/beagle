@@ -639,7 +639,7 @@ class TempoMPGenViewSet(GenericAPIView):
     def post(self, request):
         normals_override = request.data.get("normals_override", [])
         tumors_override = request.data.get("tumors_override", [])
-        operator_model = Operator.objects.get(slug="tempo_mpgen_operator")
+        operator_model = Operator.objects.get(slug="tempo_mpgen_operator_nextflow")
         pairing_override = None
         heading = "TempoMPGen Run %s" % datetime.datetime.now().isoformat()
         job_group = JobGroup()
