@@ -131,27 +131,41 @@ class TempoMPGenOperatorNextflow(Operator):
             else:
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
-        input_json = dict()
         # output these strings to file
         # input_json["conflict_data"] = self.create_conflict_samples_txt_file()
         # input_json["unpaired_data"] = self.create_unpaired_txt_file()
-        input_json["mapping"] = self.create_mapping_input()
-        input_json["pairing"] = self.create_pairing_input()
-
-        print(input_json)
+        mapping_all = self.create_mapping_input()
+        pairing_all = self.create_pairing_input()
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         tags = {"beagle_version": beagle_version, "run_date": run_date}
 
-        name = "Tempo Run: {date}".format(date=run_date)
+        tumors = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
+            values_metadata='ciTag')
 
-        job_json = {
-            "app": app,
-            "inputs": input_json,
-            "name": name,
-            "tags": tags
-        }
+        jobs = []
+        for tumor in tumors:
+            pairing = self.get_pairing_for_sample(tumor, pairing_all)
+            mapping = self.get_mapping_for_sample(tumor, pairing['normal'], mapping_all)
+
+            name = "Tempo Run T:{tumor}, N:{normal}: {run_date}".format(tumor=pairing['tumor'],
+                                                                        normal=pairing['normal'],
+                                                                        run_date=run_date)
+
+            input_json = {
+                "pairing": pairing,
+                "mapping": mapping
+            }
+
+            job_json = {
+                "name": name,
+                "app": app,
+                "inputs": input_json,
+                "tags": tags
+            }
+            jobs.append(job_json)
 
         # self.send_message(
         #     """
@@ -164,7 +178,21 @@ class TempoMPGenOperatorNextflow(Operator):
         #     )
         # )
 
-        return [RunCreator(**job_json)]
+        return [RunCreator(**job) for job in jobs]
+
+    def get_pairing_for_sample(self, tumor, pairing):
+        for p in pairing:
+            if p['tumor'] == tumor:
+                return p['normal']
+
+    def get_mapping_for_sample(self, tumor, normal, mapping):
+        map = []
+        for m in mapping:
+            if m['sample'] == tumor:
+                map.append(m)
+            if m['sample'] == normal:
+                map.append(m)
+        return map
 
     def load_pairing_file(self, tsv_file):
         pairing = dict()
@@ -221,6 +249,7 @@ class TempoMPGenOperatorNextflow(Operator):
 
     def create_unpaired_txt_file(self):
         # Add runDate
+        # TODO: Check is this needed
         fields = [
             settings.CMO_SAMPLE_TAG_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
@@ -274,6 +303,10 @@ class TempoMPGenOperatorNextflow(Operator):
         return mapping
 
     def create_conflict_samples_txt_file(self):
+        """
+        TODO: Check is this needed
+        :return:
+        """
         fields = [
             settings.CMO_SAMPLE_TAG_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
@@ -295,7 +328,7 @@ class TempoMPGenOperatorNextflow(Operator):
         for patient_id in self.patients:
             pairing_json.extend(self.patients[patient_id].create_pairing_json())
         # self.write_historical_pairing_file(json.dumps(pairing_json))
-        self.write_to_file("sample_pairing_json.json", pairing_json)
+        self.write_to_file("sample_pairing_json.json", json.dumps(pairing_json))
         return pairing_json
 
     def exclude_requests(self, l):
