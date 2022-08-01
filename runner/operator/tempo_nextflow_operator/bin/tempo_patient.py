@@ -130,17 +130,12 @@ class Patient:
         target = sample.bait_set
         fastqs = sample.fastqs
         cmo_sample_name = sample.cmo_sample_name
-        mapping_sample = {
-            "sample": cmo_sample_name,
-            "target": target,
-            "fastq_pe1": [],
-            "fastq_pe2": []
-        }
+        mapping_sample = {"sample": cmo_sample_name, "target": target, "fastq_pe1": [], "fastq_pe2": []}
         if fastqs.paired:
             num_fq_pairs = len(fastqs.r1)
             for i in range(0, num_fq_pairs):
-                mapping_sample['fastq_pe1'].append('juno://' + fastqs.r1[i].path)
-                mapping_sample['fastq_pe2'].append('juno://' + fastqs.r2[i].path)
+                mapping_sample["fastq_pe1"].append("juno://" + fastqs.r1[i].path)
+                mapping_sample["fastq_pe2"].append("juno://" + fastqs.r2[i].path)
             mapping_sample["num_fq_pairs"] = num_fq_pairs
         return mapping_sample
 
@@ -150,10 +145,7 @@ class Patient:
             for pair in self.sample_pairing:
                 tumor = pair[0].cmo_sample_name
                 normal = pair[1].cmo_sample_name
-                pairing.append({
-                    "tumor": tumor,
-                    "normal": normal
-                })
+                pairing.append({"tumor": tumor, "normal": normal})
         return pairing
 
     def create_unpaired_string(self, fields):

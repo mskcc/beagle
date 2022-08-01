@@ -143,28 +143,21 @@ class TempoMPGenOperatorNextflow(Operator):
 
         tumors = FileRepository.filter(
             metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
-            values_metadata='ciTag')
+            values_metadata="ciTag",
+        )
 
         jobs = []
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            mapping = self.get_mapping_for_sample(tumor, pairing['normal'], mapping_all)
+            mapping = self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all)
 
-            name = "Tempo Run T:{tumor}, N:{normal}: {run_date}".format(tumor=pairing['tumor'],
-                                                                        normal=pairing['normal'],
-                                                                        run_date=run_date)
+            name = "Tempo Run T:{tumor}, N:{normal}: {run_date}".format(
+                tumor=pairing["tumor"], normal=pairing["normal"], run_date=run_date
+            )
 
-            input_json = {
-                "pairing": pairing,
-                "mapping": mapping
-            }
+            input_json = {"pairing": pairing, "mapping": mapping}
 
-            job_json = {
-                "name": name,
-                "app": app,
-                "inputs": input_json,
-                "tags": tags
-            }
+            job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags}
             jobs.append(job_json)
 
         # self.send_message(
@@ -182,15 +175,15 @@ class TempoMPGenOperatorNextflow(Operator):
 
     def get_pairing_for_sample(self, tumor, pairing):
         for p in pairing:
-            if p['tumor'] == tumor:
-                return p['normal']
+            if p["tumor"] == tumor:
+                return p
 
     def get_mapping_for_sample(self, tumor, normal, mapping):
         map = []
         for m in mapping:
-            if m['sample'] == tumor:
+            if m["sample"] == tumor:
                 map.append(m)
-            if m['sample'] == normal:
+            if m["sample"] == normal:
                 map.append(m)
         return map
 
