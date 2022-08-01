@@ -2,18 +2,27 @@ import os
 import git
 import uuid
 import shutil
+import logging
+from runner.cache.github_cache import GithubCache
 
 
 class PipelineResolver(object):
+    logger = logging.getLogger(__name__)
+
     def __init__(self, github, entrypoint, version=None):
         self.github = github
         self.entrypoint = entrypoint
         self.version = version
 
     def _git_clone(self, location):
-        git.Git(location).clone(self.github, "--branch", self.version, "--recurse-submodules")
-        dirname = self._extract_dirname_from_github_link()
-        return os.path.join(location, dirname)
+        dirname = os.path.join(location, self._extract_dirname_from_github_link())
+        cached = GithubCache.get(self.github, self.version)
+        if cached:
+            self.logger.info("App found in cache %s" % cached)
+            os.symlink(cached, dirname)
+        else:
+            git.Git(location).clone(self.github, "--branch", self.version, "--recurse-submodules")
+        return dirname
 
     def _dir_name(self):
         dirname = "/tmp/" + str(uuid.uuid4())
@@ -27,6 +36,7 @@ class PipelineResolver(object):
         return dirname
 
     def _cleanup(self, location):
+
         shutil.rmtree(location)
 
     def load(self):
