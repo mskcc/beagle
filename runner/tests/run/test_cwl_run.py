@@ -215,7 +215,7 @@ class CWLRunObjectTest(APITestCase):
                 "location": "file:///outputs/test_1.muts.maf",
                 "nameroot": "test_1.muts.maf",
             },
-            "bams": [
+            "normal_bam": [
                 {
                     "size": 56524168530,
                     "class": "File",
@@ -235,7 +235,9 @@ class CWLRunObjectTest(APITestCase):
                             "nameroot": "test_1.rg.md.abra.printreads.bai",
                         }
                     ],
-                },
+                }
+            ],
+            "tumor_bam": [
                 {
                     "size": 6163808009,
                     "class": "File",
@@ -324,18 +326,20 @@ class CWLRunObjectTest(APITestCase):
             if out.name == "maf":
                 self.assertEqual(out.value["location"], self.outputs["maf"]["location"])
                 self.assertEqual(FileProcessor.get_bid_from_file(file_obj), out.db_value["location"])
-        port = Port.objects.filter(run_id=run_obj.run_id, name="bams").first()
-        self.assertEqual(len(port.files.all()), 4)
+        port1 = Port.objects.filter(run_id=run_obj.run_id, name="normal_bam").first()
+        port2 = Port.objects.filter(run_id=run_obj.run_id, name="tumor_bam").first()
+        self.assertEqual(len(port1.files.all()), 2)
+        self.assertEqual(len(port2.files.all()), 2)
         expected_result = (
             "/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bam",
             "/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_1.rg.md.abra.printreads.bai",
             "/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bam",
             "/output/argos_pair_workflow/425194f6-a974-4c2f-995f-f27d7ba54ddc/outputs/test_2.rg.md.abra.printreads.bai",
         )
-        self.assertTrue(port.files.all()[0].path in expected_result)
-        self.assertTrue(port.files.all()[1].path in expected_result)
-        self.assertTrue(port.files.all()[2].path in expected_result)
-        self.assertTrue(port.files.all()[3].path in expected_result)
+        self.assertTrue(port1.files.all()[0].path in expected_result)
+        self.assertTrue(port1.files.all()[1].path in expected_result)
+        self.assertTrue(port2.files.all()[0].path in expected_result)
+        self.assertTrue(port2.files.all()[1].path in expected_result)
 
     @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
