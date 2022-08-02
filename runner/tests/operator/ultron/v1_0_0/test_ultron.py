@@ -6,7 +6,7 @@ import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, InputsObj, SampleData, BamData, BatchInputObj
+from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, SampleData, BamData
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
 from runner.models import Run
@@ -128,55 +128,79 @@ class TestUltron(TestCase):
         sample = FileMetadata.objects.get(id=self.file_metadata_ids[0][0]).metadata[settings.SAMPLE_ID_METADATA_KEY]
         input_json = {
             "argos_version_string": "1.1.2",
-            "bam_files": [
-                {
-                    "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
-                    "secondaryFiles": [
-                        {
-                            "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bai",
-                        }
-                    ],
-                },
-                {
-                    "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
-                    "secondaryFiles": [
-                        {
-                            "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
-                        }
-                    ],
-                },
-            ],
             "exac_filter": {
                 "class": "File",
                 "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
             "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
             "is_impact": True,
-            "maf_files": [
-                {
-                    "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
-                },
-                {
-                    "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
-                },
-            ],
             "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
-            "sample_ids": ["s_C_ALLANT_T001_d", "s_C_ALLANT_T003_d"],
-            "unindexed_bam_files": [
-                {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
-                {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+            "sample_groups": [
+                [
+                    {
+                        "bam_file": {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                        },
+                        "maf_file": {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                        },
+                        "normal_id": "s_C_ALLANT_N002_d",
+                        "prefilter": True,
+                        "sample_id": "s_C_ALLANT_T001_d",
+                        "sample_type": "research",
+                    },
+                    {
+                        "bam_file": {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
+                        "maf_file": {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
+                        "normal_id": "DMP_NORMAL",
+                        "prefilter": False,
+                        "sample_id": "P-0000002-T01-IM6",
+                        "sample_type": "clinical",
+                    },
+                    {
+                        "bam_file": {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+                        "maf_file": {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+                        "normal_id": "DMP_NORMAL",
+                        "prefilter": False,
+                        "sample_id": "P-0000001-T01-IM6",
+                        "sample_type": "clinical",
+                    },
+                ],
+                [
+                    {
+                        "bam_file": {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+                        },
+                        "maf_file": {
+                            "class": "File",
+                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+                        },
+                        "normal_id": "s_C_ALLANT_N002_d",
+                        "prefilter": True,
+                        "sample_id": "s_C_ALLANT_T003_d",
+                        "sample_type": "research",
+                    },
+                    {
+                        "bam_file": {"class": "File", "location": "juno:///path/to/P-00000002-T.bam"},
+                        "maf_file": {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
+                        "normal_id": "DMP_NORMAL",
+                        "prefilter": False,
+                        "sample_id": "P-0000002-T01-IM6",
+                        "sample_type": "clinical",
+                    },
+                    {
+                        "bam_file": {"class": "File", "location": "juno:///path/to/00000001-T.bam"},
+                        "maf_file": {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
+                        "normal_id": "DMP_NORMAL",
+                        "prefilter": False,
+                        "sample_id": "P-0000001-T01-IM6",
+                        "sample_type": "clinical",
+                    },
+                ],
             ],
-            "unindexed_maf_files": [
-                {"class": "File", "location": "juno:///path/to/P-0000002-T01-IM6.txt"},
-                {"class": "File", "location": "juno:///path/to/P-0000000-T01-IM6.txt"},
-            ],
-            "unindexed_sample_ids": ["P-0000002-T01-IM6", "P-0000001-T01-IM6"],
         }
         operator_model = Operator.objects.get(id=12)
         job_group = JobGroup()
@@ -184,7 +208,8 @@ class TestUltron(TestCase):
         ultron_operator = UltronOperator(
             operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
         )
-        inputs = ultron_operator._build_inputs(self.run_ids)
+        sample_groups = ultron_operator._build_sample_groups(self.run_ids)
+        inputs = dict(sample_groups=sample_groups)
         rep_run_id = self.run_ids[0]  # required; because output_dir is arbitrarily set, we assume
         # they're going to be the same for every run, set by one run_id
         ultron_jobs = [ultron_operator._build_job(inputs, rep_run_id)]
@@ -210,43 +235,17 @@ class TestUltron(TestCase):
         """
         file_group_id = FileGroup.objects.get(name="DMP BAMs").pk
         files = FileRepository.filter(file_group=file_group_id)
+        operator_model = Operator.objects.get(id=12)
+        job_group = JobGroup()
+        job_group.save()
+        ultron_operator = UltronOperator(
+            operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
+        )
         for single_file in files:
             single_file.delete()
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json["unindexed_bam_files"], [])
-        self.assertEqual(input_json["unindexed_sample_ids"], [])
-        self.assertEqual(input_json["unindexed_maf_files"], [])
-
-    def test_construct_inputs_obj_no_dmp_muts(self):
-        """
-        Test the creation of the inputs obj with no dmp muts
-        """
-        file_group_id = FileGroup.objects.get(name="DMP Data Mutations Extended").pk
-        files = FileRepository.filter(file_group=file_group_id)
-        for single_file in files:
-            single_file.delete()
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        expected_input_json = self.first_run_expected_inputs
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(input_json["unindexed_maf_files"], [])
-
-    def test_construct_inputs_obj(self):
-        """
-        Test the creation of the inputs obj
-        """
-        single_run = Run.objects.get(id=self.run_ids[0])
-        input_obj = InputsObj(single_run)
-        input_json = input_obj._build_inputs_json()
-        self.assertEqual(len(input_json["unindexed_bam_files"]), 2)
-        self.assertEqual(len(input_json["unindexed_sample_ids"]), 2)
-        self.assertEqual(len(input_json["unindexed_maf_files"]), 2)
-        self.assertEqual(len(input_json["bam_files"]), 1)
-        self.assertEqual(len(input_json["sample_ids"]), 1)
-        self.assertEqual(len(input_json["ref_fasta"]), 2)
-        self.assertEqual(len(input_json["exac_filter"]), 2)
+        single_run_id = self.run_ids[0]
+        sample_groups = ultron_operator._build_sample_groups([single_run_id])
+        self.assertEqual(len(sample_groups[0]), 1)
 
     def test_construct_sample_data_null_patient_id(self):
         """
@@ -255,11 +254,12 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata[settings.PATIENT_ID_METADATA_KEY] = None
         sample_metadata_2.save()
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), None)
         self.assertEqual(sample_data._find_dmp_bams("T"), None)
         self.assertEqual(
@@ -273,12 +273,13 @@ class TestUltron(TestCase):
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
         sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
         sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_1.save()
         sample_metadata_2.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = None
         sample_metadata_2.save()
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
         self.assertEqual(sample_data._get_sample_metadata(), (patient_id, None))
@@ -288,26 +289,17 @@ class TestUltron(TestCase):
         Test the creation of sample data with a null sample name
         """
         sample_metadata_1 = FileMetadata.objects.get(id=self.file_metadata_ids[0][0])
+        sample_metadata_2 = FileMetadata.objects.get(id=self.file_metadata_ids[0][1])
         sample_id = sample_metadata_1.metadata[settings.SAMPLE_ID_METADATA_KEY]
+        normal_id = sample_metadata_2.metadata[settings.SAMPLE_ID_METADATA_KEY]
         patient_id = sample_metadata_1.metadata[settings.PATIENT_ID_METADATA_KEY]
-        sample_data = SampleData(sample_id)
+        sample_data = SampleData(sample_id, normal_id)
         self.assertEqual(sample_data._get_dmp_patient_id(), patient_id.lstrip("C-"))
         self.assertEqual(len(sample_data._find_dmp_bams("T")), 2)
         self.assertEqual(
             sample_data._get_sample_metadata(),
             (patient_id, sample_metadata_1.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]),
         )
-
-    def test_construct_bam_data_missing_muts(self):
-        """
-        Test the creation of bam data when the mutation files are missing
-        """
-        single_bam = FileMetadata.objects.get(id=self.first_dmp_bam_metadata_id)
-        mutation_file = FileMetadata.objects.get(id=self.first_dmp_mutations_extended_id)
-        mutation_file.delete()
-        bam_data = BamData(single_bam)
-        self.assertEqual(bam_data._set_data_muts_txt(), [])
-        self.assertEqual(bam_data._set_dmp_sample_name(), self.first_dmp_dmp_sample_name)
 
     def test_construct_bam_data(self):
         """
@@ -317,25 +309,6 @@ class TestUltron(TestCase):
         bam_data = BamData(single_bam)
         self.assertEqual(bam_data._set_data_muts_txt(), self.first_dmp_mutations_extended)
         self.assertEqual(bam_data._set_dmp_sample_name(), self.first_dmp_dmp_sample_name)
-
-    def test_construct_batch_input(self):
-        """
-        Test the construction of batch input
-
-        Samples get deduped
-        """
-        first_run = Run.objects.get(id=self.run_ids[0])
-        second_run = Run.objects.get(id=self.run_ids[1])
-        first_input_obj = InputsObj(first_run)
-        second_input_obj = InputsObj(second_run)
-        batch_input_json = BatchInputObj([first_input_obj, second_input_obj])._build_inputs_json()
-        self.assertEqual(len(batch_input_json["unindexed_bam_files"]), 2)
-        self.assertEqual(len(batch_input_json["unindexed_sample_ids"]), 2)
-        self.assertEqual(len(batch_input_json["unindexed_maf_files"]), 2)
-        self.assertEqual(len(batch_input_json["bam_files"]), 2)
-        self.assertEqual(len(batch_input_json["sample_ids"]), 2)
-        self.assertEqual(len(batch_input_json["ref_fasta"]), 2)
-        self.assertEqual(len(batch_input_json["exac_filter"]), 2)
 
 
 def ordered(obj):
