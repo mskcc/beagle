@@ -13,19 +13,19 @@
 
     "multiqc_config": {
       "class": "File",
-      "location": "juno:///work/bergerm1/bergerlab/charalk/projects/nucleo_qc/repos/220730_nucleo_qc/nucleo_qc_generation/multiqc_configs/config_ch.yaml"
+      "location": "juno:///work/cch/production/resources/cmo-ch/versions/v1.0/multiqc_config/versions/v1.0/config_ch.yaml"
     },
+    "mosdepth_bed": {
+      "class": File
+      "location": "juno:///work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/panel_bed_file_athena_CH_nodup.bed"
+    }
     "biometrics_bed_file": {
       "class": "File",
-      "location": "juno:///juno/home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.bed"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed"
     },
     "biometrics_vcf_file": {
       "class": "File",
-      "location": "juno:///juno/home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/fp_tiling_snps.vcf"
-    },
-    "mosdepth_bed": {
-      "class": "File",
-      "location": "juno:///juno/work/bergerm1/bergerlab/charalk/projects/nucleo_qc/qc_generation_testing/CH_target_3bp.bed"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf"
     },
     "biometrics_json": true,
     "biometrics_plot": true,
@@ -36,34 +36,29 @@
 
     "noise_sites_bed": {
       "class": "File",
-      "location": "juno:///juno/home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.bed"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed"
     },
     "bait_intervals": {
       "class": "File",
-      "location": "juno:///juno/home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list"
     },
     "target_intervals": {
       "class": "File",
-      "location": "juno:///juno/home/shahr2/bergerlab/MSK-CH_v1/region_of_interest/picard_baits.interval_list"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list"
     },
 
     "reference": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+      "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
       "secondaryFiles": [
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.amb"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.ann"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.bwt"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.sa"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.pac"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict"}
+        {"class": "File", "location": "juno:///work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta.fai"},
+        {"class": "File", "location": "juno:///work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.dict"}
       ]
     },
 
     "hotspots_maf": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.maf"
+      "location": "juno:///juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.maf"
     },
 
     "sequence_qc_min_basq": 1,
