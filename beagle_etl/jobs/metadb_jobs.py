@@ -331,7 +331,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 
         for email in sent_to:
             event = VoyagerCantProcessRequestAllNormalsEvent(
-                job_notifier=job_group,
+                job_notifier=str(job_group.id),
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
