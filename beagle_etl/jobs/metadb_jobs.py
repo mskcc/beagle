@@ -26,6 +26,7 @@ from notifier.events import (
     ExternalEmailEvent,
     OnlyNormalSamplesEvent,
     WESJobFailedEvent,
+    VoyagerCantProcessRequestAllNormalsEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from beagle_etl.exceptions import ETLExceptions
@@ -314,6 +315,30 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     ):
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
+        investigator_email = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
+        ).first()
+        lab_head_email = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
+        ).first()
+
+        sent_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
+        if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
+            if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+                sent_to.add(investigator_email)
+            if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+                sent_to.add(lab_head_email)
+
+        for email in sent_to:
+            event = VoyagerCantProcessRequestAllNormalsEvent(
+                job_notifier=str(job_group.id),
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject="Voyager Status: All Normals",
+                request_id=request_id,
+            ).to_dict()
+            send_notification.delay(event)
+
         if recipe in settings.ASSAYS_ADMIN_HOLD_ONLY_NORMALS:
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
