@@ -33,18 +33,7 @@ def _voyager_start_processing(request_id, run_ids):
 
     runs = Run.objects.filter(id__in=run_ids)
 
-    if not runs:
-        for email in sent_to:
-            event = VoyagerCantProcessRequestAllNormalsEvent(
-                job_notifier=job_group,
-                email_to=email,
-                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                subject="Voyager Status: All Normals",
-                request_id=request_id,
-            ).to_dict()
-            send_notification.delay(event)
-
-    else:
+    if runs:
         used_samples = set()
         unprocessed_samples = set()
 
@@ -61,7 +50,7 @@ def _voyager_start_processing(request_id, run_ids):
                     job_notifier=job_group,
                     email_to=email,
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject="Voyager Status: request_id} is partial running".format(request_id=request_id),
+                    subject="Voyager Status: {request_id} is partial running".format(request_id=request_id),
                     request_id=request_id,
                     unpaired=list(unprocessed_samples),
                 ).to_dict()
