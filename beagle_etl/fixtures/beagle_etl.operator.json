@@ -163,5 +163,16 @@
       "version": "v2.1.0",
       "slug": "AccessNucleoOperator_2_1_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 17,
+    "fields": {
+      "active": true,
+      "recipes": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
+      "class_name": "runner.operator.alignment_pair_operator.v1_0_0.alignment_pair_operator.AlignmentPairOperator",
+      "version": "v1.0.0",
+      "slug": "AlignmentPairOperator"
+    }
   }
 ]
