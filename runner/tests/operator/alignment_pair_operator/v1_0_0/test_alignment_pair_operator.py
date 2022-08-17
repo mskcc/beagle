@@ -22,7 +22,7 @@ class TestAlignmentPairOperator(TestCase):
 
     def test_operator_factory_alignment_pair1(self):
         """
-        Test that a Argos operator can be created
+        Test that a Alignment Pair operator can be created
         This test uses an empty database
         """
 
@@ -38,8 +38,8 @@ class TestAlignmentPairOperator(TestCase):
 
     def test_operator_factory_alignment_pair2(self):
         """
-        Test that a Argos operator can be created
-        This test loads some Argos fixtures and checks the number of Files available to the Operator
+        Test that a Alignment Pair operator can be created
+        This test loads some Alignment Pair fixtures and checks the number of Files available to the Operator
         """
         # Load fixtures; 4 fastq files for 2 patient samples
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
@@ -58,7 +58,7 @@ class TestAlignmentPairOperator(TestCase):
 
     def test_operator_factory_alignment_pair3(self):
         """
-        Test that a Argos operator has access to all files in the database, even non-Argos files
+        Test that a Alignment Pair operator has access to all files in the database, even non-Argos files
         """
         # Load fixtures; 4 fastq files for 2 patient samples
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
@@ -80,13 +80,13 @@ class TestAlignmentPairOperator(TestCase):
         self.assertEqual(len(File.objects.all()), 5)
         self.assertEqual(len(FileMetadata.objects.all()), 5)
 
-        # create Argos operator
+        # create Alignment Pair operator
         request_id = "bar"
 
-        operator_model = Operator.objects.get(id=1)
+        operator_model = Operator.objects.get(id=17)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "a84c74ea-e129-496d-abb3-17a90dfe230b")
-        self.assertEqual(str(operator.model), "argos")
+        self.assertEqual(str(operator.model), "AlignmentPair")
         self.assertEqual(operator.request_id, "bar")
         self.assertEqual(operator._jobs, [])
         self.assertEqual(len(operator.files), 5)
