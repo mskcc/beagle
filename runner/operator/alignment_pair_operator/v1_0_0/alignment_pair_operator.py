@@ -18,7 +18,7 @@ from .bin.make_sample import format_sample_name
 
 
 class AlignmentPairOperator(Operator):
-    ARGOS_NAME = "argos"
+    ARGOS_NAME = "argos_alignment"
     ARGOS_VERSION = "1.1.3"
 
     def get_jobs(self):
