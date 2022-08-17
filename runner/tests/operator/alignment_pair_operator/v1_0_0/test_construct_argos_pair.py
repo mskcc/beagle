@@ -6,7 +6,9 @@ import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.alignment_pair_operator.v1_0_0.construct_alignment_argos_inputs import construct_alignment_pair_jobs
+from runner.operator.alignment_pair_operator.v1_0_0.construct_alignment_argos_inputs import (
+    construct_alignment_pair_jobs,
+)
 from runner.operator.alignment_pair_operator.v1_0_0.bin.make_sample import build_sample
 from file_system.models import File
 from django.conf import settings
