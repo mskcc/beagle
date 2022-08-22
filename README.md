@@ -75,6 +75,17 @@ cd beagle
 make install
 ```
 
+Or for a m1 mac: 
+```
+make install-m1
+```
+
+- If using a mac m1, activate the `conda` virtual environment:
+
+```
+conda activate beagle
+```
+
 - Initialize the PostgreSQL database:
 
 ```
