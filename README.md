@@ -80,7 +80,7 @@ make install
 make install-m1
 ```
 
-- If using a mac m1, activate the `conda` virtual environment:
+and activate the conda environment: 
 
 ```
 conda activate beagle
