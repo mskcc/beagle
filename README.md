@@ -75,7 +75,7 @@ cd beagle
 make install
 ```
 
-- If using a m1 mac, use: 
+- If using a m1 mac, install with: 
 ```
 make install-m1
 ```
