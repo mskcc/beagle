@@ -14,7 +14,11 @@ Basic dev instance setup instructions:
 1. install dependencies in the current directory with:
 make install
 
-- NOTE: For an m1 mac, use make `install-m1`, and then activate the virtual environment conda activate beagle
+1a. For an m1 mac, install dependencies in the current directory with: 
+make install-m1 
+
+Then activate the virtual environment with: 
+conda activate beagle 
 
 2a. initialize the database with:
 make db-init
@@ -87,7 +91,7 @@ PATH:=$(CURDIR)/conda/bin:$(PATH)
 unexport PYTHONPATH
 unexport PYTHONHOME
 
-# install versions of conda for Mac or Linux, Python 2 or 3
+# install versions of conda for Mac, M1 Mac or Linux, Python 2 or 3
 
 ifeq ($(UNAME), Darwin)
 	ifeq ($(UNAME_P), Darwin_arm)
