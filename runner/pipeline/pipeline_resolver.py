@@ -36,8 +36,10 @@ class PipelineResolver(object):
         return dirname
 
     def _cleanup(self, location):
-
-        shutil.rmtree(location)
+        if os.path.islink(location):
+            os.unlink(location)
+        else:
+            shutil.rmtree(location)
 
     def load(self):
         pass
