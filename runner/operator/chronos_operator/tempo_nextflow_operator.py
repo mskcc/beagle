@@ -1,7 +1,6 @@
 import os
 import json
 import csv
-import pickle
 import logging
 import unicodedata
 from django.db.models import Q
@@ -12,10 +11,9 @@ from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.tempo_nextflow_operator.bin.tempo_patient as patient_obj
+import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
 from notifier.events import OperatorRequestEvent
 from notifier.tasks import send_notification
-from notifier.events import UploadAttachmentEvent
 from runner.run.objects.run_creator_object import RunCreator
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +21,7 @@ PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing_json.tsv"
 LOGGER = logging.getLogger(__name__)
 
 
-class TempoMPGenOperatorNextflow(Operator):
+class ChronosOperator(Operator):
     def build_recipe_query(self):
         """
         Build complex Q object assay query from given data
