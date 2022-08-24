@@ -1,8 +1,4 @@
-import re
 from datetime import datetime as dt
-from django.db.models import Q
-from rest_framework import serializers
-from runner.operator.operator import Operator
 from django.conf import settings
 import runner.operator.tempo_mpgen_operator.bin.tempo_sample as tempo_sample
 
@@ -120,9 +116,9 @@ class Patient:
         for pair in self.sample_pairing:
             tumor_sample = pair[0]
             normal_sample = pair[1]
-            mapping.append(self.get_mapping_for_sample(tumor_sample))
+            mapping.extend(self.get_mapping_for_sample(tumor_sample))
             if normal_sample not in seen:
-                mapping.append(self.get_mapping_for_sample(normal_sample))
+                mapping.extend(self.get_mapping_for_sample(normal_sample))
                 seen.add(normal_sample)
         return mapping
 
@@ -130,13 +126,19 @@ class Patient:
         target = sample.bait_set
         fastqs = sample.fastqs
         cmo_sample_name = sample.cmo_sample_name
-        mapping_sample = {"sample": cmo_sample_name, "target": target, "fastq_pe1": [], "fastq_pe2": []}
+        mapping_sample = []
         if fastqs.paired:
             num_fq_pairs = len(fastqs.r1)
             for i in range(0, num_fq_pairs):
-                mapping_sample["fastq_pe1"].append("juno://" + fastqs.r1[i].path)
-                mapping_sample["fastq_pe2"].append("juno://" + fastqs.r2[i].path)
-            mapping_sample["num_fq_pairs"] = num_fq_pairs
+                mapping_sample.append(
+                    {
+                        "sample": cmo_sample_name,
+                        "target": target,
+                        "fastq_pe1": {"class": "File", "location": f"juno://{fastqs.r1[i].path}"},
+                        "fastq_pe2": {"class": "File", "location": f"juno://{fastqs.r2[i].path}"},
+                        "num_fq_pairs": num_fq_pairs,
+                    }
+                )
         return mapping_sample
 
     def create_pairing_json(self):
