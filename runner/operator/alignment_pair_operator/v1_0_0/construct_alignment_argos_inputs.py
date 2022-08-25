@@ -71,9 +71,14 @@ def construct_alignment_pair_jobs(samples, pairs=None):
     for i in range(0, number_of_tumors):
         tumor = pairs["tumor"][i]
         normal = pairs["normal"][i]
+        assay = tumor["bait_set"]
+        pi = tumor["pi"]
+        pi_email = tumor["pi_email"]
         job = dict()
         job["normal"] = format_sample(normal)
         job["tumor"] = format_sample(tumor)
+        job["pi"] = pi
+        job["pi_email"] = pi_email
         references = convert_references(assay)
         job.update(references)
         argos_jobs.append(job)
