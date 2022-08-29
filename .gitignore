@@ -11,3 +11,8 @@ input.json
 beagle-server.log
 runner/tests/operator/copy_operator/tmp*
 runner/tests/operator/demo_operator/tmp*
+.vscode/configurationCache.log
+.vscode/dryrun.log
+.vscode/settings.json
+.vscode/targets.log
+.DS_Store
