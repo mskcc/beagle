@@ -174,5 +174,16 @@
       "version": "v2.1.0",
       "slug": "CMOCHNucleoOperatorQC_2_1_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 18,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_1_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+      "version": "v2.1.0",
+      "slug": "CMOCHNucleoOperatorQcAgg_2_1_0"
+    }
   }
 ]
