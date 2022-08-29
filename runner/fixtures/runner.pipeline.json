@@ -451,7 +451,7 @@
       "name": "cmo-ch nucleo 2 qc",
       "github": "git@github.com:msk-access/nucleo_qc_generation",
       "version": "2.1.0",
-      "entrypoint": "access_qc.cwl",
+      "entrypoint": "nucleo_qc.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
       "output_directory": "/work/access/production/runs/voyager/bam_qc",
       "operator": 17,
