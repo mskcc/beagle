@@ -1,6 +1,6 @@
-from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
-from collections.abc import Iterable
 from django.conf import settings
+from collections.abc import Iterable
+from runner.operator.tempo_mpgen_operator.bin.sample_object import Sample
 
 
 class TempoSample(Sample):

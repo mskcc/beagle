@@ -1,5 +1,6 @@
 SHELL:=/bin/bash
 UNAME:=$(shell uname)
+UNAME_P:=$(shell UNAME)_$(shell uname -p)
 CURDIR_BASE:=$(shell basename "$(CURDIR)")
 export LOG_DIR_ABS:=$(shell python -c 'import os; print(os.path.realpath("logs"))')
 
@@ -12,6 +13,12 @@ Basic dev instance setup instructions:
 
 1. install dependencies in the current directory with:
 make install
+
+1a. For an m1 mac, install dependencies in the current directory with: 
+make install-m1 
+
+Then activate the virtual environment with: 
+conda activate beagle 
 
 2a. initialize the database with:
 make db-init
@@ -84,9 +91,22 @@ PATH:=$(CURDIR)/conda/bin:$(PATH)
 unexport PYTHONPATH
 unexport PYTHONHOME
 
-# install versions of conda for Mac or Linux, Python 2 or 3
+# install versions of conda for Mac, M1 Mac or Linux, Python 2 or 3
+
 ifeq ($(UNAME), Darwin)
-CONDASH:=Miniconda3-4.7.12.1-MacOSX-x86_64.sh
+	ifeq ($(UNAME_P), Darwin_arm)
+	CONDASH:=Miniconda3-latest-MacOSX-arm64.sh
+	endif
+endif
+
+ifeq ($(UNAME), Darwin)
+	ifneq ($(UNAME_P), Darwin_arm)
+	CONDASH:=Miniconda3-4.7.12.1-MacOSX-x86_64.sh
+	endif
+endif
+
+ifeq ($(UNAME), Linux)
+CONDASH:=Miniconda3-4.7.12.1-Linux-x86_64.sh
 endif
 
 ifeq ($(UNAME), Linux)
@@ -113,6 +133,21 @@ install: conda
 	pip install -r requirements-dev.txt
 # pip install git+https://github.com/mskcc/beagle_cli.git@develop
 # pip install -r requirements-cli.txt # <- what happened to this file?
+
+# install the Beagle requirements, m1 friendly 
+install-m1: conda
+	CONDA_SUBDIR=osx-64 conda create -y -n beagle python=3.8
+	$(shell conda/bin/activate beagle && \
+	conda config --system --set subdir osx-64 && \
+	conda install -y \
+		conda-forge::ncurses=6.1 \
+		rabbitmq-server=3.7.16 \
+		anaconda::postgresql=11.2 \
+		conda-forge::python-ldap=3.2.0 \
+		bioconda::rabix-bunny=1.0.4 \
+		conda-forge::jq && \
+		pip install -r requirements.txt && \
+		pip install -r requirements-dev.txt)
 
 export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
