@@ -1,0 +1,54 @@
+[
+    {
+        "model": "runner.run",
+        "pk": "6638089e-7d0b-42cb-8097-3d9ef0152a9a",
+        "fields": {
+            "created_date": "2022-07-27T20:09:41.235Z",
+            "modified_date": "2022-07-28T19:33:18.011Z",
+            "run_type": 0,
+            "name": "CMO-CH Nucleo: 12405_C, 111 of 111 (07/27/2022, 16:09:41)",
+            "app": "d067413d-6bf0-4294-9224-eeb25934d49f",
+            "status": 4,
+            "execution_id": "c71ba836-8f7f-4074-9858-a40f21874d3e",
+            "job_statuses": {},
+            "message": {},
+            "output_metadata": {
+                "sex": "F",
+                "ciTag": "s_C_59X3XA_N001_d",
+                "baitSet": "null",
+                "barcodeId": "IDTdual138",
+                "primaryId": "12405_C_50",
+                "dnaInputNg": 0,
+                "captureName": null,
+                "barcodeIndex": "GTGCTTAC-AGGAGGAA",
+                "cmoPatientId": "C-59X3XA",
+                "igoRequestId": "12405_C",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-59X3XA-N001-d",
+                "libraryVolume": 0,
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": 0,
+                "investigatorSampleId": "P-0035682-T",
+                "captureConcentrationNm": 0,
+                "libraryConcentrationNgul": 3.092911494370685
+            },
+            "output_directory": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/6638089e-7d0b-42cb-8097-3d9ef0152a9a",
+            "tags": {
+                "cmoSampleId": "C-59X3XA-N001-d",
+                "igoRequestId": "12405_C"
+            },
+            "operator_run": "ec5de64b-15ec-49b6-a826-ee7ca2e9e81a",
+            "job_group": "b5d26e15-5841-46e4-a0a0-26257231eea8",
+            "job_group_notifier": "f58b8d51-bbb2-415f-a5d6-2b9f43a67d8e",
+            "notify_for_outputs": "[]",
+            "started": null,
+            "submitted": null,
+            "finished_date": "2022-07-28T19:33:18.011Z",
+            "resume": null,
+            "resume_attempts": 5,
+            "samples": [
+                "83048206-c228-407a-a9be-aae655c09bab"
+            ]
+        }
+    }
+]
