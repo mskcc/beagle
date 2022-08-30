@@ -27,7 +27,7 @@ class TestAlignmentPairOperator(TestCase):
         """
 
         request_id = "bar"
-        operator_model = Operator.objects.get(id=17)
+        operator_model = Operator.objects.get(id=18)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "a84c74ea-e129-496d-abb3-17a90dfe230b")
         self.assertEqual(str(operator.model), "argos")
