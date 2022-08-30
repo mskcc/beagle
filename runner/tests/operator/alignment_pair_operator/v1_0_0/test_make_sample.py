@@ -4,7 +4,7 @@ Test for constructing Argos samples
 from uuid import UUID
 from django.conf import settings
 from django.test import TestCase
-from runner.operator.argos_operator.v1_0_0.bin.make_sample import build_sample
+from runner.operator.alignment_pair_operator.v1_0_0.bin.make_sample import build_sample
 import json
 
 
