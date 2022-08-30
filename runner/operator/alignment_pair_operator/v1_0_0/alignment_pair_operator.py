@@ -82,8 +82,8 @@ class AlignmentPairOperator(Operator):
         alignment_pair_jobs = list()
         number_of_inputs = len(alignment_pair_inputs)
         for i, job in enumerate(alignment_pair_inputs):
-            tumor_sample_name = job["pair"][0]["ID"]
-            normal_sample_name = job["pair"][1]["ID"]
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
 
             name = "ARGOS ALIGNMENT %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             pi = job["pi"]
@@ -108,8 +108,9 @@ class AlignmentPairOperator(Operator):
         check_for_duplicates = list()
         filepaths = list()
         for i, job in enumerate(alignment_pair_inputs):
-            tumor_sample_name = job["pair"][0]["ID"]
-            for p in job["pair"][0]["R1"]:
+            tumor_sample = job["tumor"]
+            tumor_sample_name = tumor_sample["ID"]
+            for p in tumor_sample["R1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -117,7 +118,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][0]["R2"]:
+            for p in tumor_sample["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -125,7 +126,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][0]["zR1"]:
+            for p in tumor_sample["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -133,7 +134,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][0]["zR2"]:
+            for p in tumor_sample["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -141,7 +142,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][0]["bam"]:
+            for p in tumor_sample["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -149,9 +150,9 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-
-            normal_sample_name = job["pair"][1]["ID"]
-            for p in job["pair"][1]["R1"]:
+            normal_sample = job["normal"]
+            normal_sample_name = normal_sample["ID"]
+            for p in normal_sample["R1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -159,7 +160,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][1]["R2"]:
+            for p in normal_sample["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -167,7 +168,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][1]["zR1"]:
+            for p in normal_sample["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -175,7 +176,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][1]["zR2"]:
+            for p in normal_sample["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -183,7 +184,7 @@ class AlignmentPairOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["pair"][1]["bam"]:
+            for p in normal_sample["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -195,9 +196,10 @@ class AlignmentPairOperator(Operator):
 
     def get_pairing_from_argos_inputs(self, alignment_pair_inputs):
         sample_pairing = ""
+        print(alignment_pair_inputs)
         for i, job in enumerate(alignment_pair_inputs):
-            tumor_sample_name = job["pair"][0]["ID"]
-            normal_sample_name = job["pair"][1]["ID"]
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
         return sample_pairing
 
@@ -333,8 +335,8 @@ class AlignmentPairOperator(Operator):
         num_within_req = 0
         other_requests_matched = list()
         for i, job in enumerate(alignment_pair_inputs):
-            tumor = job["pair"][0]
-            normal = job["pair"][1]
+            tumor = job["tumor"]
+            normal = job["normal"]
             req_t = tumor["request_id"]
             req_n = normal["request_id"]
             specimen_type_n = normal["specimen_type"]
