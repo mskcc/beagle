@@ -13,25 +13,25 @@ from file_system.helper.checksum import sha1
 from runner.operator.helper import format_sample_name
 
 
-DIRECTORY = '/home/voyager/OLD_FILES_COPIED_FROM_LIMS/REQUESTS'
+DIRECTORY = "/home/voyager/OLD_FILES_COPIED_FROM_LIMS/REQUESTS"
 
-LIMS_URL = 'https://igolims.mskcc.org:8443'
-LIMS_USERNAME = ''
-LIMS_PASSWORD = ''
+LIMS_URL = "https://igolims.mskcc.org:8443"
+LIMS_USERNAME = ""
+LIMS_PASSWORD = ""
 
 
 def get_file_name(diretory, requestId):
-    return os.path.join(diretory, f'request_{requestId}.json')
+    return os.path.join(diretory, f"request_{requestId}.json")
 
 
 def get_request_smile(directory, requestId):
-    response = requests.get(f'http://smile.mskcc.org:3000/request/{requestId}/')
+    response = requests.get(f"http://smile.mskcc.org:3000/request/{requestId}/")
     if response.status_code == 200:
-        with open(get_file_name(directory, requestId), 'w') as f:
+        with open(get_file_name(directory, requestId), "w") as f:
             json.dump(response.json(), f)
     else:
         print(f"Fail to import {requestId}")
-        with open(os.path.join(directory, 'missing_requests.txt'), 'w+') as f:
+        with open(os.path.join(directory, "missing_requests.txt"), "w+") as f:
             f.write(f"{requestId}\n")
 
 
@@ -39,21 +39,24 @@ def get_request_lims(directory, requestId):
     request_data = get_request_samples(requestId)
     if not request_data:
         print(f"Fail to import request {requestId}")
-        with open(os.path.join(directory, 'missing_requests.txt'), 'a') as f:
+        with open(os.path.join(directory, "missing_requests.txt"), "a") as f:
             f.write(f"{requestId}\n")
         return
     samples = []
-    for sample in request_data.get('samples', []):
-        samples.extend(get_sample_manifest(directory, sample['igoSampleId']))
-    request_data['limsSampleManifests'] = samples
-    with open(get_file_name(directory, requestId), 'w') as f:
+    for sample in request_data.get("samples", []):
+        samples.extend(get_sample_manifest(directory, sample["igoSampleId"]))
+    request_data["limsSampleManifests"] = samples
+    with open(get_file_name(directory, requestId), "w") as f:
         json.dump(request_data, f)
 
 
 def get_request_samples(request_id):
-    sample_ids = requests.get(f'{LIMS_URL}/LimsRest/api/getRequestSamples',
-                              params={"request": request_id},
-                              auth=(LIMS_USERNAME, LIMS_PASSWORD), verify=False)
+    sample_ids = requests.get(
+        f"{LIMS_URL}/LimsRest/api/getRequestSamples",
+        params={"request": request_id},
+        auth=(LIMS_USERNAME, LIMS_PASSWORD),
+        verify=False,
+    )
     if sample_ids.status_code == 200:
         return sample_ids.json()
     print(f"LIMS ERROR {request_id}")
@@ -61,19 +64,22 @@ def get_request_samples(request_id):
 
 
 def get_sample_manifest(directory, sample_id):
-    sample_metadata = requests.get('%s/LimsRest/api/getSampleManifest' % LIMS_URL,
-                                   params={"igoSampleId": sample_id},
-                                   auth=(LIMS_USERNAME, LIMS_PASSWORD), verify=False)
+    sample_metadata = requests.get(
+        "%s/LimsRest/api/getSampleManifest" % LIMS_URL,
+        params={"igoSampleId": sample_id},
+        auth=(LIMS_USERNAME, LIMS_PASSWORD),
+        verify=False,
+    )
     if sample_metadata.status_code == 200:
         try:
             return sample_metadata.json()
         except Exception as e:
             print(f"LIMS ERROR {sample_id}")
-            with open(os.path.join(directory, 'missing_samples.txt'), 'a') as f:
+            with open(os.path.join(directory, "missing_samples.txt"), "a") as f:
                 f.write(f"{sample_id}\n")
             return [{"ERROR_JSON": sample_id}]
     print(f"LIMS ERROR {sample_id}")
-    with open(os.path.join(directory, 'missing_samples.txt'), 'a') as f:
+    with open(os.path.join(directory, "missing_samples.txt"), "a") as f:
         f.write(f"{sample_id}\n")
     return [{"ERROR": sample_id}]
 
@@ -105,16 +111,11 @@ def format_metadata(original_metadata):
         {"namespace": "igoId", "value": metadata["primaryId"]},
         {"namespace": "investigatorId", "value": metadata["investigatorSampleId"]},
     ]
-    metadata["additionalProperties"]= {
-        "igoRequestId": metadata['igoRequestId'],
-        "isCmoSample": True
-    }
+    metadata["additionalProperties"] = {"igoRequestId": metadata["igoRequestId"], "isCmoSample": True}
     return metadata
 
 
-def create_file(
-        path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
-):
+def create_file(path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r):
     try:
         file_group_obj = FileGroup.objects.get(id=file_group_id)
         file_type_obj = FileType.objects.filter(name=file_type).first()
@@ -139,8 +140,13 @@ def create_file(
     if not f:
         try:
             checksum = sha1(new_path)
-            f = File.objects.create(file_name=os.path.basename(new_path), path=new_path, file_group=file_group_obj,
-                                    file_type=file_type_obj, checksum=checksum)
+            f = File.objects.create(
+                file_name=os.path.basename(new_path),
+                path=new_path,
+                file_group=file_group_obj,
+                file_type=file_type_obj,
+                checksum=checksum,
+            )
             f.save()
             fm = FileMetadata(file=f, metadata=metadata)
             fm.save()
@@ -196,7 +202,7 @@ def import_request(data):
         igocomplete = sample.get("igoComplete")
         sample_data = sampleManifests[idx]
         sample_id = sample_data.pop("igoId")
-        sample_data['primaryId'] = sample_id
+        sample_data["primaryId"] = sample_id
         sample_data["oncotreeCode"] = sample_data.pop("oncoTreeCode")
         libraries = sample_data.pop("libraries")
         for library in libraries:
@@ -204,8 +210,18 @@ def import_request(data):
             for run in runs:
                 fastqs = run.pop("fastqs")
                 for fastq in fastqs:
-                    create_file(fastq, request_id, settings.IMPORT_FILE_GROUP, 'fastq', igocomplete, sample_data,
-                                library, run, request_metadata, R1_or_R2(fastq))
+                    create_file(
+                        fastq,
+                        request_id,
+                        settings.IMPORT_FILE_GROUP,
+                        "fastq",
+                        igocomplete,
+                        sample_data,
+                        library,
+                        run,
+                        request_metadata,
+                        R1_or_R2(fastq),
+                    )
 
     pooled_normal = data.get("pooledNormals", [])
     for pn in pooled_normal:
@@ -216,16 +232,16 @@ def import_request(data):
 
 
 def format_request(req):
-    if '_' in req:
-        f, s = req.split('_')
-        pre = ''
+    if "_" in req:
+        f, s = req.split("_")
+        pre = ""
         if len(f) < 5:
-            pre = '0'*(5-len(f))
-        return f'{pre}{f}_{s}'
+            pre = "0" * (5 - len(f))
+        return f"{pre}{f}_{s}"
     else:
-        pre = ''
+        pre = ""
         if len(req) < 5:
-            pre = '0'*(5-len(req))
+            pre = "0" * (5 - len(req))
         return f"{pre}{req}"
 
 
@@ -234,8 +250,8 @@ def check_is_cmo(directory, missing):
     for request in missing:
         req = format_request(request)
         data = get_request_samples(req)
-        if data.get('isCmoRequest', False):
-            filename = f'request_{req}.json'
+        if data.get("isCmoRequest", False):
+            filename = f"request_{req}.json"
             print(filename)
             if not os.path.exists(os.path.join(directory, filename)):
                 print(f"Missing {filename}")
