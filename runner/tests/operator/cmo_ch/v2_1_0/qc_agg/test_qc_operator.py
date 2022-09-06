@@ -10,11 +10,16 @@ from runner.operator.operator_factory import OperatorFactory
 
 
 FIXTURES = [
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.files.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.input.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.output.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.run.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.samples.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.files.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.files.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.files.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.files.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.files.samples.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.samples.json",
 ]
 
 COMMON_FIXTURES = [
@@ -42,7 +47,7 @@ class TestNucleoQCOperator(TestCase):
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         request_id = "12405_C"
 
-        operator_model = Operator.objects.get(id=17)
+        operator_model = Operator.objects.get(id=18)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "8c256be3-21b7-4640-9d54-bb5bba42db50")
         self.assertEqual(str(operator.model), "CMOCHNucleoOperatorQcAgg_2_1_0")
