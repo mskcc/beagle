@@ -273,6 +273,9 @@ class TestCWLJsonView(APITestCase):
         self.assertTrue("inputs" in response.json()["results"][0])
 
     def test_get_runs_sample_id(self):
-        response = self.client.get(self.run_api_root + "?sample_ids=08944_B_3")
+        response = self.client.get(self.run_api_root + "?sample_ids=08944_B_4")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["count"], 1)
+        response = self.client.get(self.run_api_root + "?sample_ids=08944_B_3,08944_B_4")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["count"], 2)
