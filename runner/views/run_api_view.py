@@ -134,7 +134,7 @@ class RunApiViewSet(
             if request_ids:
                 queryset = queryset.filter(tags__igoRequestId__in=request_ids)
             if sample_ids:
-                queryset = queryset.filter(samples__sample_id__in=sample_ids)
+                queryset = queryset.filter(samples__sample_id__in=sample_ids).distinct()
             if apps:
                 queryset = queryset.filter(app__in=apps)
             if run:
