@@ -15,11 +15,11 @@ FIXTURES = [
     "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.port.output.json",
     "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.run.json",
     "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6638089e-7d0b-42cb-8097-3d9ef0152a9a.samples.json",
-    # "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.json",
-    # "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.port.input.json",
-    # "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.port.output.json",
-    # "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.run.json",
-    # "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.samples.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e.samples.json",
 ]
 
 COMMON_FIXTURES = [
