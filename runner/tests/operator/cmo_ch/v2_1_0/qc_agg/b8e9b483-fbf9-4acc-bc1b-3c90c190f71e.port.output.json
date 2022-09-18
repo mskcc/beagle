@@ -28,7 +28,7 @@
                 "nameext": ".txt",
                 "basename": "A-000001_uncollapsed_MD_metrics.txt",
                 "checksum": "sha1$b28125699dfc5a91d9bb8ca4c46a4ff470bca281",
-                "location": "file:///path/to/A-000001_uncollapsed_MD_metrics.txt",
+                "location": "file:///path/to/A-000002_uncollapsed_MD_metrics.txt",
                 "nameroot": "A-000001_uncollapsed_MD_metrics"
             },
             "notify": false,
