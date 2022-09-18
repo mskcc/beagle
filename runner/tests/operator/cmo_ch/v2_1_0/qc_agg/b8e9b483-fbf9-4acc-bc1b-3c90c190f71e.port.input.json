@@ -35,8 +35,8 @@
             "schema": null,
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_IR.bam",
-            "value": "A-000001-d_uncollapsed_IR.bam",
+            "db_value": "A-000002-d_uncollapsed_IR.bam",
+            "value": "A-000002-d_uncollapsed_IR.bam",
             "notify": false,
             "files": []
         }
@@ -227,8 +227,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed.sam",
-            "value": "A-000001-d_uncollapsed.sam",
+            "db_value": "A-000002-d_uncollapsed.sam",
+            "value": "A-000002-d_uncollapsed.sam",
             "notify": false,
             "files": []
         }
@@ -275,8 +275,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_merged.bam",
-            "value": "A-000001-d_uncollapsed_merged.bam",
+            "db_value": "A-000002-d_uncollapsed_merged.bam",
+            "value": "A-000002-d_uncollapsed_merged.bam",
             "notify": false,
             "files": []
         }
@@ -323,8 +323,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_MD.bam",
-            "value": "A-000001-d_uncollapsed_MD.bam",
+            "db_value": "A-000002-d_uncollapsed_MD.bam",
+            "value": "A-000002-d_uncollapsed_MD.bam",
             "notify": false,
             "files": []
         }
@@ -347,8 +347,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_MD_metrics.txt",
-            "value": "A-000001-d_uncollapsed_MD_metrics.txt",
+            "db_value": "A-000002-d_uncollapsed_MD_metrics.txt",
+            "value": "A-000002-d_uncollapsed_MD_metrics.txt",
             "notify": false,
             "files": []
         }
@@ -419,8 +419,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_BR.bam",
-            "value": "A-000001-d_uncollapsed_BR.bam",
+            "db_value": "A-000002-d_uncollapsed_BR.bam",
+            "value": "A-000002-d_uncollapsed_BR.bam",
             "notify": false,
             "files": []
         }
@@ -562,8 +562,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d",
-            "value": "A-000001-d",
+            "db_value": "A-000002-d",
+            "value": "A-000002-d",
             "notify": false,
             "files": []
         }
@@ -610,8 +610,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d",
-            "value": "A-000001-d",
+            "db_value": "A-000002-d",
+            "value": "A-000002-d",
             "notify": false,
             "files": []
         }
@@ -754,8 +754,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_R1_fastq.gz",
-            "value": "A-000001-d_uncollapsed_R1_fastq.gz",
+            "db_value": "A-000002-d_uncollapsed_R1_fastq.gz",
+            "value": "A-000002-d_uncollapsed_R1_fastq.gz",
             "notify": false,
             "files": []
         }
@@ -778,8 +778,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_R2_fastq.gz",
-            "value": "A-000001-d_uncollapsed_R2_fastq.gz",
+            "db_value": "A-000002-d_uncollapsed_R2_fastq.gz",
+            "value": "A-000002-d_uncollapsed_R2_fastq.gz",
             "notify": false,
             "files": []
         }
@@ -802,8 +802,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_trimmed_R2.fastq.gz",
-            "value": "A-000001-d_trimmed_R2.fastq.gz",
+            "db_value": "A-000002-d_trimmed_R2.fastq.gz",
+            "value": "A-000002-d_trimmed_R2.fastq.gz",
             "notify": false,
             "files": []
         }
@@ -850,8 +850,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_trimmed_R1.fastq.gz",
-            "value": "A-000001-d_trimmed_R1.fastq.gz",
+            "db_value": "A-000002-d_trimmed_R1.fastq.gz",
+            "value": "A-000002-d_trimmed_R1.fastq.gz",
             "notify": false,
             "files": []
         }
@@ -922,8 +922,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_fastp_report.html",
-            "value": "A-000001-d_fastp_report.html",
+            "db_value": "A-000002-d_fastp_report.html",
+            "value": "A-000002-d_fastp_report.html",
             "notify": false,
             "files": []
         }
@@ -946,8 +946,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_fastp_report.json",
-            "value": "A-000001-d_fastp_report.json",
+            "db_value": "A-000002-d_fastp_report.json",
+            "value": "A-000002-d_fastp_report.json",
             "notify": false,
             "files": []
         }
@@ -1042,8 +1042,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed.bam",
-            "value": "A-000001-d_uncollapsed.bam",
+            "db_value": "A-000002-d_uncollapsed.bam",
+            "value": "A-000002-d_uncollapsed.bam",
             "notify": false,
             "files": []
         }
@@ -1066,8 +1066,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_FM.bam",
-            "value": "A-000001-d_uncollapsed_FM.bam",
+            "db_value": "A-000002-d_uncollapsed_FM.bam",
+            "value": "A-000002-d_uncollapsed_FM.bam",
             "notify": false,
             "files": []
         }
@@ -1114,8 +1114,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_uncollapsed_merged.sam",
-            "value": "A-000001-d_uncollapsed_merged.sam",
+            "db_value": "A-000002-d_uncollapsed_merged.sam",
+            "value": "A-000002-d_uncollapsed_merged.sam",
             "notify": false,
             "files": []
         }
@@ -1186,8 +1186,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_grouped.bam",
-            "value": "A-000001-d_collapsed_grouped.bam",
+            "db_value": "A-000002-d_collapsed_grouped.bam",
+            "value": "A-000002-d_collapsed_grouped.bam",
             "notify": false,
             "files": []
         }
@@ -1210,8 +1210,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_umi_family_size.hist",
-            "value": "A-000001-d_umi_family_size.hist",
+            "db_value": "A-000002-d_umi_family_size.hist",
+            "value": "A-000002-d_umi_family_size.hist",
             "notify": false,
             "files": []
         }
@@ -1234,8 +1234,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d",
-            "value": "A-000001-d",
+            "db_value": "A-000002-d",
+            "value": "A-000002-d",
             "notify": false,
             "files": []
         }
@@ -1282,8 +1282,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_unmapped.bam",
-            "value": "A-000001-d_collapsed_unmapped.bam",
+            "db_value": "A-000002-d_collapsed_unmapped.bam",
+            "value": "A-000002-d_collapsed_unmapped.bam",
             "notify": false,
             "files": []
         }
@@ -1330,8 +1330,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_R2_fastq.gz",
-            "value": "A-000001-d_collapsed_R2_fastq.gz",
+            "db_value": "A-000002-d_collapsed_R2_fastq.gz",
+            "value": "A-000002-d_collapsed_R2_fastq.gz",
             "notify": false,
             "files": []
         }
@@ -1354,8 +1354,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_R1_fastq.gz",
-            "value": "A-000001-d_collapsed_R1_fastq.gz",
+            "db_value": "A-000002-d_collapsed_R1_fastq.gz",
+            "value": "A-000002-d_collapsed_R1_fastq.gz",
             "notify": false,
             "files": []
         }
@@ -1378,8 +1378,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_FM.bam",
-            "value": "A-000001-d_collapsed_FM.bam",
+            "db_value": "A-000002-d_collapsed_FM.bam",
+            "value": "A-000002-d_collapsed_FM.bam",
             "notify": false,
             "files": []
         }
@@ -1402,8 +1402,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed.bam",
-            "value": "A-000001-d_collapsed.bam",
+            "db_value": "A-000002-d_collapsed.bam",
+            "value": "A-000002-d_collapsed.bam",
             "notify": false,
             "files": []
         }
@@ -1426,8 +1426,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_merged.bam",
-            "value": "A-000001-d_collapsed_merged.bam",
+            "db_value": "A-000002-d_collapsed_merged.bam",
+            "value": "A-000002-d_collapsed_merged.bam",
             "notify": false,
             "files": []
         }
@@ -1450,8 +1450,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_simplex.bam",
-            "value": "A-000001-d_collapsed_simplex.bam",
+            "db_value": "A-000002-d_collapsed_simplex.bam",
+            "value": "A-000002-d_collapsed_simplex.bam",
             "notify": false,
             "files": []
         }
@@ -1474,8 +1474,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_aln_metrics.txt",
-            "value": "A-000001-d_collapsed_aln_metrics.txt",
+            "db_value": "A-000002-d_collapsed_aln_metrics.txt",
+            "value": "A-000002-d_collapsed_aln_metrics.txt",
             "notify": false,
             "files": []
         }
@@ -1516,8 +1516,8 @@
             "schema": null,
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collasped_IR.bam",
-            "value": "A-000001-d_collasped_IR.bam",
+            "db_value": "A-000002-d_collasped_IR.bam",
+            "value": "A-000002-d_collasped_IR.bam",
             "notify": false,
             "files": []
         }
@@ -1564,8 +1564,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_simplex-duplex.bam",
-            "value": "A-000001-d_collapsed_simplex-duplex.bam",
+            "db_value": "A-000002-d_collapsed_simplex-duplex.bam",
+            "value": "A-000002-d_collapsed_simplex-duplex.bam",
             "notify": false,
             "files": []
         }
@@ -1588,8 +1588,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_simplex_aln_metrics.txt",
-            "value": "A-000001-d_collapsed_simplex_aln_metrics.txt",
+            "db_value": "A-000002-d_collapsed_simplex_aln_metrics.txt",
+            "value": "A-000002-d_collapsed_simplex_aln_metrics.txt",
             "notify": false,
             "files": []
         }
@@ -1612,8 +1612,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_duplex_aln_metrics.txt",
-            "value": "A-000001-d_collapsed_duplex_aln_metrics.txt",
+            "db_value": "A-000002-d_collapsed_duplex_aln_metrics.txt",
+            "value": "A-000002-d_collapsed_duplex_aln_metrics.txt",
             "notify": false,
             "files": []
         }
@@ -1636,8 +1636,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed_duplex.bam",
-            "value": "A-000001-d_collapsed_duplex.bam",
+            "db_value": "A-000002-d_collapsed_duplex.bam",
+            "value": "A-000002-d_collapsed_duplex.bam",
             "notify": false,
             "files": []
         }
@@ -1732,8 +1732,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_collapsed.sam",
-            "value": "A-000001-d_collapsed.sam",
+            "db_value": "A-000002-d_collapsed.sam",
+            "value": "A-000002-d_collapsed.sam",
             "notify": false,
             "files": []
         }
@@ -1924,8 +1924,8 @@
             },
             "template": null,
             "secondary_files": [],
-            "db_value": "A-000001-d_BR_data.txt",
-            "value": "A-000001-d_BR_data.txt",
+            "db_value": "A-000002-d_BR_data.txt",
+            "value": "A-000002-d_BR_data.txt",
             "notify": false,
             "files": []
         }
@@ -2126,41 +2126,41 @@
             "value": [
                 [
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S125_L002_R1_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S125_L002_R1_001.fastq.gz",
                         "class": "File"
                     },
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S125_L002_R2_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S125_L002_R2_001.fastq.gz",
                         "class": "File"
                     }
                 ],
                 [
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L002_R1_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L002_R1_001.fastq.gz",
                         "class": "File"
                     },
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L002_R2_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L002_R2_001.fastq.gz",
                         "class": "File"
                     }
                 ],
                 [
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L003_R1_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L003_R1_001.fastq.gz",
                         "class": "File"
                     },
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L003_R2_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L003_R2_001.fastq.gz",
                         "class": "File"
                     }
                 ],
                 [
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L004_R1_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L004_R1_001.fastq.gz",
                         "class": "File"
                     },
                     {
-                        "path": "/path/to/A-000001_IGO_12405_C_112_S262_L004_R2_001.fastq.gz",
+                        "path": "/path/to/A-000002_IGO_12405_C_112_S262_L004_R2_001.fastq.gz",
                         "class": "File"
                     }
                 ]

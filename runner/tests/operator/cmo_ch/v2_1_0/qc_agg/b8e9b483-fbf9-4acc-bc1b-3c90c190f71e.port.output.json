@@ -26,10 +26,10 @@
                 "size": 5244,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001_uncollapsed_MD_metrics.txt",
+                "basename": "A-000002_uncollapsed_MD_metrics.txt",
                 "checksum": "sha1$b28125699dfc5a91d9bb8ca4c46a4ff470bca281",
                 "location": "file:///path/to/A-000002_uncollapsed_MD_metrics.txt",
-                "nameroot": "A-000001_uncollapsed_MD_metrics"
+                "nameroot": "A-000002_uncollapsed_MD_metrics"
             },
             "notify": false,
             "files": [
@@ -64,10 +64,10 @@
                 "size": 2446,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001_collapsed_aln_metrics.txt",
+                "basename": "A-000002_collapsed_aln_metrics.txt",
                 "checksum": "sha1$18f69871b4c746f38ab6c53bd52988b9750b284f",
-                "location": "file:///path/to/A-000001_collapsed_aln_metrics.txt",
-                "nameroot": "A-000001_collapsed_aln_metrics"
+                "location": "file:///path/to/A-000002_collapsed_aln_metrics.txt",
+                "nameroot": "A-000002_collapsed_aln_metrics"
             },
             "notify": false,
             "files": [
@@ -102,10 +102,10 @@
                 "size": 4591,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001.umi_counts.txt",
+                "basename": "A-000002.umi_counts.txt",
                 "checksum": "sha1$7a57f12c3086f5392f10e4d1a05001d64caf8f0c",
-                "location": "file:///path/to/A-000001.umi_counts.txt",
-                "nameroot": "A-000001.umi_counts"
+                "location": "file:///path/to/A-000002.umi_counts.txt",
+                "nameroot": "A-000002.umi_counts"
             },
             "notify": false,
             "files": [
@@ -140,10 +140,10 @@
                 "size": 473156,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001.duplex_umi_counts.txt",
+                "basename": "A-000002.duplex_umi_counts.txt",
                 "checksum": "sha1$dec527ee8ebb0a26df5d0af08400c97095fd591c",
-                "location": "file:///path/to/A-000001.duplex_umi_counts.txt",
-                "nameroot": "A-000001.duplex_umi_counts"
+                "location": "file:///path/to/A-000002.duplex_umi_counts.txt",
+                "nameroot": "A-000002.duplex_umi_counts"
             },
             "notify": false,
             "files": [
@@ -202,10 +202,10 @@
                 "size": 10015,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001.family_sizes.txt",
+                "basename": "A-000002.family_sizes.txt",
                 "checksum": "sha1$16e9431ce8bec99b818481198ed0766c34e1aeb9",
-                "location": "file:///path/to/A-000001.family_sizes.txt",
-                "nameroot": "A-000001.family_sizes"
+                "location": "file:///path/to/A-000002.family_sizes.txt",
+                "nameroot": "A-000002.family_sizes"
             },
             "notify": false,
             "files": [
@@ -240,10 +240,10 @@
                 "size": 462523,
                 "class": "File",
                 "nameext": ".html",
-                "basename": "A-000001_fastp_report.html",
+                "basename": "A-000002_fastp_report.html",
                 "checksum": "sha1$b251fb27b9f2b60fc6133c796fc0ab1562c1e3ae",
-                "location": "file:///path/to/A-000001_fastp_report.html",
-                "nameroot": "A-000001_fastp_report"
+                "location": "file:///path/to/A-000002_fastp_report.html",
+                "nameroot": "A-000002_fastp_report"
             },
             "notify": false,
             "files": [
@@ -278,10 +278,10 @@
                 "size": 120938,
                 "class": "File",
                 "nameext": ".json",
-                "basename": "A-000001_fastp_report.json",
+                "basename": "A-000002_fastp_report.json",
                 "checksum": "sha1$ad84cec9d4c83198b7f29ecfa3fb3c82c13fcaf2",
-                "location": "file:///path/to/A-000001_fastp_report.json",
-                "nameroot": "A-000001_fastp_report"
+                "location": "file:///path/to/A-000002_fastp_report.json",
+                "nameroot": "A-000002_fastp_report"
             },
             "notify": false,
             "files": [
@@ -316,10 +316,10 @@
                 "size": 2473,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001_uncollapsed_BR_alignment_summary_metrics.txt",
+                "basename": "A-000002_uncollapsed_BR_alignment_summary_metrics.txt",
                 "checksum": "sha1$cb2bf1a952add1f4381bd6474e8d95fd5468dcd0",
-                "location": "file:///path/to/A-000001_uncollapsed_BR_alignment_summary_metrics.txt",
-                "nameroot": "A-000001_uncollapsed_BR_alignment_summary_metrics"
+                "location": "file:///path/to/A-000002_uncollapsed_BR_alignment_summary_metrics.txt",
+                "nameroot": "A-000002_uncollapsed_BR_alignment_summary_metrics"
             },
             "notify": false,
             "files": [
@@ -354,10 +354,10 @@
                 "size": 1408,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001.duplex_yield_metrics.txt",
+                "basename": "A-000002.duplex_yield_metrics.txt",
                 "checksum": "sha1$c6e3fa3b820af06a682b90e0946ea648e3d4a839",
-                "location": "file:///path/to/A-000001.duplex_yield_metrics.txt",
-                "nameroot": "A-000001.duplex_yield_metrics"
+                "location": "file:///path/to/A-000002.duplex_yield_metrics.txt",
+                "nameroot": "A-000002.duplex_yield_metrics"
             },
             "notify": false,
             "files": [
@@ -401,19 +401,19 @@
                 "size": 9426743755,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_uncollapsed_FM.bam",
+                "basename": "A-000002_uncollapsed_FM.bam",
                 "checksum": "sha1$ccfb282a8bb68811a818d02cff10af6f7713d675",
-                "location": "file:///path/to/A-000001_uncollapsed_FM.bam",
-                "nameroot": "A-000001_uncollapsed_FM",
+                "location": "file:///path/to/A-000002_uncollapsed_FM.bam",
+                "nameroot": "A-000002_uncollapsed_FM",
                 "secondaryFiles": [
                     {
                         "size": 6471592,
                         "class": "File",
                         "nameext": ".bai",
-                        "basename": "A-000001_uncollapsed_FM.bai",
+                        "basename": "A-000002_uncollapsed_FM.bai",
                         "checksum": "sha1$87e930200b80aefc129defe805e150e959032159",
-                        "location": "file:///path/to/A-000001_uncollapsed_FM.bai",
-                        "nameroot": "A-000001_uncollapsed_FM"
+                        "location": "file:///path/to/A-000002_uncollapsed_FM.bai",
+                        "nameroot": "A-000002_uncollapsed_FM"
                     }
                 ]
             },
@@ -451,10 +451,10 @@
                 "size": 2432,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001_collapsed_simplex_aln_metrics.txt",
+                "basename": "A-000002_collapsed_simplex_aln_metrics.txt",
                 "checksum": "sha1$db8601cf30add0cff68b9bc5350e7d3464664afc",
-                "location": "file:///path/to/A-000001_collapsed_simplex_aln_metrics.txt",
-                "nameroot": "A-000001_collapsed_simplex_aln_metrics"
+                "location": "file:///path/to/A-000002_collapsed_simplex_aln_metrics.txt",
+                "nameroot": "A-000002_collapsed_simplex_aln_metrics"
             },
             "notify": false,
             "files": [
@@ -489,10 +489,10 @@
                 "size": 2424,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001_collapsed_duplex_aln_metrics.txt",
+                "basename": "A-000002_collapsed_duplex_aln_metrics.txt",
                 "checksum": "sha1$7877aa0a0735a6f670b17b824f8e3ef8aa217ee7",
-                "location": "file:///path/to/A-000001_collapsed_duplex_aln_metrics.txt",
-                "nameroot": "A-000001_collapsed_duplex_aln_metrics"
+                "location": "file:///path/to/A-000002_collapsed_duplex_aln_metrics.txt",
+                "nameroot": "A-000002_collapsed_duplex_aln_metrics"
             },
             "notify": false,
             "files": [
@@ -536,19 +536,19 @@
                 "size": 655799567,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_collapsed_simplex.bam",
+                "basename": "A-000002_collapsed_simplex.bam",
                 "checksum": "sha1$46b2b5660a70ff303db0e710fa51232f9fae2705",
-                "location": "file:///path/to/A-000001_collapsed_simplex.bam",
-                "nameroot": "A-000001_collapsed_simplex",
+                "location": "file:///path/to/A-000002_collapsed_simplex.bam",
+                "nameroot": "A-000002_collapsed_simplex",
                 "secondaryFiles": [
                     {
                         "size": 3922328,
                         "class": "File",
                         "nameext": ".bai",
-                        "basename": "A-000001_collapsed_simplex.bai",
+                        "basename": "A-000002_collapsed_simplex.bai",
                         "checksum": "sha1$b439e896a50224546909caed83fb030ec5f22c3b",
-                        "location": "file:///path/to/A-000001_collapsed_simplex.bai",
-                        "nameroot": "A-000001_collapsed_simplex"
+                        "location": "file:///path/to/A-000002_collapsed_simplex.bai",
+                        "nameroot": "A-000002_collapsed_simplex"
                     }
                 ]
             },
@@ -586,10 +586,10 @@
                 "size": 1969,
                 "class": "File",
                 "nameext": ".hist",
-                "basename": "A-000001_umi_family_size.hist",
+                "basename": "A-000002_umi_family_size.hist",
                 "checksum": "sha1$e4475b82c9b77a7912c0c83a5333b2ca2fd9c341",
-                "location": "file:///path/to/A-000001_umi_family_size.hist",
-                "nameroot": "A-000001_umi_family_size"
+                "location": "file:///path/to/A-000002_umi_family_size.hist",
+                "nameroot": "A-000002_umi_family_size"
             },
             "notify": false,
             "files": [
@@ -624,10 +624,10 @@
                 "size": 5524986806,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_collapsed_grouped.bam",
+                "basename": "A-000002_collapsed_grouped.bam",
                 "checksum": "sha1$abd447385ecfb50f7cfbcbc2f92bd5bd2cdb4aeb",
-                "location": "file:///path/to/A-000001_collapsed_grouped.bam",
-                "nameroot": "A-000001_collapsed_grouped"
+                "location": "file:///path/to/A-000002_collapsed_grouped.bam",
+                "nameroot": "A-000002_collapsed_grouped"
             },
             "notify": false,
             "files": [
@@ -671,19 +671,19 @@
                 "size": 544629478,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_collapsed_duplex.bam",
+                "basename": "A-000002_collapsed_duplex.bam",
                 "checksum": "sha1$06467c1ddda92442e3af02b5ca0ea7afa59e689a",
-                "location": "file:///path/to/A-000001_collapsed_duplex.bam",
-                "nameroot": "A-000001_collapsed_duplex",
+                "location": "file:///path/to/A-000002_collapsed_duplex.bam",
+                "nameroot": "A-000002_collapsed_duplex",
                 "secondaryFiles": [
                     {
                         "size": 1706104,
                         "class": "File",
                         "nameext": ".bai",
-                        "basename": "A-000001_collapsed_duplex.bai",
+                        "basename": "A-000002_collapsed_duplex.bai",
                         "checksum": "sha1$2dbc001872a5fd0938c6996331e15e1be5db353e",
-                        "location": "file:///path/to/A-000001_collapsed_duplex.bai",
-                        "nameroot": "A-000001_collapsed_duplex"
+                        "location": "file:///path/to/A-000002_collapsed_duplex.bai",
+                        "nameroot": "A-000002_collapsed_duplex"
                     }
                 ]
             },
@@ -721,10 +721,10 @@
                 "size": 44461,
                 "class": "File",
                 "nameext": ".txt",
-                "basename": "A-000001.duplex_family_sizes.txt",
+                "basename": "A-000002.duplex_family_sizes.txt",
                 "checksum": "sha1$c4a17242292828c9ff1e33b83a5d9bab02d7fc16",
-                "location": "file:///path/to/A-000001.duplex_family_sizes.txt",
-                "nameroot": "A-000001.duplex_family_sizes"
+                "location": "file:///path/to/A-000002.duplex_family_sizes.txt",
+                "nameroot": "A-000002.duplex_family_sizes"
             },
             "notify": false,
             "files": [
@@ -768,19 +768,19 @@
                 "size": 3101287950,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_collapsed_FM.bam",
+                "basename": "A-000002_collapsed_FM.bam",
                 "checksum": "sha1$9000ec3d81606fc5e25b2de92402a9dd76a4e123",
-                "location": "file:///path/to/A-000001_collapsed_FM.bam",
-                "nameroot": "A-000001_collapsed_FM",
+                "location": "file:///path/to/A-000002_collapsed_FM.bam",
+                "nameroot": "A-000002_collapsed_FM",
                 "secondaryFiles": [
                     {
                         "size": 6379672,
                         "class": "File",
                         "nameext": ".bai",
-                        "basename": "A-000001_collapsed_FM.bai",
+                        "basename": "A-000002_collapsed_FM.bai",
                         "checksum": "sha1$6d77f97f60f3ade53bfda92faa0c87b61927489c",
-                        "location": "file:///path/to/A-000001_collapsed_FM.bai",
-                        "nameroot": "A-000001_collapsed_FM"
+                        "location": "file:///path/to/A-000002_collapsed_FM.bai",
+                        "nameroot": "A-000002_collapsed_FM"
                     }
                 ]
             },
@@ -827,19 +827,19 @@
                 "size": 14910028253,
                 "class": "File",
                 "nameext": ".bam",
-                "basename": "A-000001_uncollapsed_BR.bam",
+                "basename": "A-000002_uncollapsed_BR.bam",
                 "checksum": "sha1$f5d140645fced09abf2277e2f051af23799dd7c1",
-                "location": "file:///path/to/A-000001_uncollapsed_BR.bam",
-                "nameroot": "A-000001_uncollapsed_BR",
+                "location": "file:///path/to/A-000002_uncollapsed_BR.bam",
+                "nameroot": "A-000002_uncollapsed_BR",
                 "secondaryFiles": [
                     {
                         "size": 6483336,
                         "class": "File",
                         "nameext": ".bai",
-                        "basename": "A-000001_uncollapsed_BR.bai",
+                        "basename": "A-000002_uncollapsed_BR.bai",
                         "checksum": "sha1$b46a54db9ecefe2c0f928b4f80fd8d0324d542f4",
-                        "location": "file:///path/to/A-000001_uncollapsed_BR.bai",
-                        "nameroot": "A-000001_uncollapsed_BR"
+                        "location": "file:///path/to/A-000002_uncollapsed_BR.bai",
+                        "nameroot": "A-000002_uncollapsed_BR"
                     }
                 ]
             },
