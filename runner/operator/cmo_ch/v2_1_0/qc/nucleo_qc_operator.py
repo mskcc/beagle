@@ -90,6 +90,8 @@ class CMOCHNucleoOperatorQC(Operator):
         if not len(most_recent_runs_for_request):
             raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
 
+            
+
         inputs = []
         for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
