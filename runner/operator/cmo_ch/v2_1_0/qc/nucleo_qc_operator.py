@@ -74,6 +74,16 @@ class CMOCHNucleoOperatorQC(Operator):
         ]
 
     def get_nucleo_outputs(self):
+        # Test case for if user passed run id, or not 
+        if not self.request_id: 
+            self.request_id = self.run_ids
+        else: 
+            self.request_id = Run.objects.filter(
+                app__name="cmo-ch nucleo",
+                tags__igoRequestId=self.request_id,
+                status=RunStatus.COMPLETED,
+                operator_run__status=RunStatus.COMPLETED,
+            )
         # Use most recent set of runs that completed successfully
         most_recent_runs_for_request = (
             Run.objects.filter(
