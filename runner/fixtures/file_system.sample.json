@@ -1,0 +1,26 @@
+[
+  {
+    "model": "file_system.sample",
+    "pk": "3b7292b2-4405-4ff7-84f6-e1876547e702",
+    "fields": {
+      "created_date": "2020-10-07T16:03:56.488Z",
+      "modified_date": "2022-04-27T19:58:14.058Z",
+      "sample_id": "08944_B_4",
+      "sample_name": "C-4LM16H-N001-d",
+      "cmo_sample_name": "s_C_4LM16H_N001_d",
+      "redact": false
+    }
+  },
+  {
+    "model": "file_system.sample",
+    "pk": "140d5efd-bd5a-44d6-be57-5287d40cd1e4",
+    "fields": {
+      "created_date": "2020-10-07T16:03:56.493Z",
+      "modified_date": "2022-04-27T19:24:43.595Z",
+      "sample_id": "08944_B_3",
+      "sample_name": "C-4LM16H-X001-d",
+      "cmo_sample_name": "s_C_4LM16H_X001_d",
+      "redact": false
+    }
+  }
+]
