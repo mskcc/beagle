@@ -76,29 +76,23 @@ class CMOCHNucleoOperatorQC(Operator):
     def get_nucleo_outputs(self):
         # Test case for if user passed run id, or not 
         if not self.request_id: 
-            self.request_id = self.run_ids
+            most_recent_runs_for_request = self.run_ids
         else: 
-            self.request_id = Run.objects.filter(
-                app__name="cmo-ch nucleo",
-                tags__igoRequestId=self.request_id,
-                status=RunStatus.COMPLETED,
-                operator_run__status=RunStatus.COMPLETED,
+            # Use most recent set of runs that completed successfully
+            most_recent_runs_for_request = (
+                Run.objects.filter(
+                    app__name="cmo-ch nucleo",
+                    tags__igoRequestId=self.request_id,
+                    status=RunStatus.COMPLETED,
+                    operator_run__status=RunStatus.COMPLETED,
+                )
+                .order_by("-created_date")
+                .first()
+                .operator_run.runs.all()
             )
-        # Use most recent set of runs that completed successfully
-        most_recent_runs_for_request = (
-            Run.objects.filter(
-                app__name="cmo-ch nucleo",
-                tags__igoRequestId=self.request_id,
-                status=RunStatus.COMPLETED,
-                operator_run__status=RunStatus.COMPLETED,
-            )
-            .order_by("-created_date")
-            .first()
-            .operator_run.runs.all()
-        )
 
-        if not len(most_recent_runs_for_request):
-            raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
+            if not len(most_recent_runs_for_request):
+                raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
 
         inputs = []
         for r in most_recent_runs_for_request:
