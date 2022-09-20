@@ -11,7 +11,11 @@
       "tags": { "tag": "value", "igoRequestId": "request1" },
       "status": 0,
       "execution_id": null,
-      "notify_for_outputs": "[]"
+      "notify_for_outputs": "[]",
+      "samples": [
+        "3b7292b2-4405-4ff7-84f6-e1876547e702",
+        "140d5efd-bd5a-44d6-be57-5287d40cd1e4"
+      ]
     }
   },
   {
@@ -149,7 +153,10 @@
       "tags": { "igoRequestId": "timed out" },
       "status": 0,
       "execution_id": null,
-      "notify_for_outputs": "[]"
+      "notify_for_outputs": "[]",
+      "samples": [
+        "140d5efd-bd5a-44d6-be57-5287d40cd1e4"
+      ]
     }
   },
   {

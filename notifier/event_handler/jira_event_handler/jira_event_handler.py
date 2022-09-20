@@ -63,6 +63,9 @@ class JiraEventHandler(EventHandler):
     def process_only_normal_samples_event(self, event):
         self._add_comment_event(event)
 
+    def process_not_all_normals_used_event(self, event):
+        self._add_comment_event(event)
+
     def process_custom_capture_cc_event(self, event):
         self._add_comment_event(event)
 

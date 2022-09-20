@@ -1,18 +1,14 @@
 import os
 from django.conf import settings
+from django.db.models import Q
+from file_system.models import FileGroup
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .construct_argos_pair import construct_argos_jobs, get_project_prefix
+from .construct_alignment_argos_inputs import construct_alignment_pair_jobs, get_project_prefix
 from runner.models import Pipeline
 from notifier.models import JobGroup
 from .bin.make_sample import build_sample
-from notifier.events import (
-    UploadAttachmentEvent,
-    OperatorRequestEvent,
-    CantDoEvent,
-    SetLabelEvent,
-    NotAllNormalsUsedEvent,
-)
+from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
@@ -21,50 +17,193 @@ from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_f
 from .bin.make_sample import format_sample_name
 
 
-class ArgosOperator(Operator):
-    ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.1.2"
+class AlignmentPairOperator(Operator):
+    ARGOS_NAME = "argos_alignment"
+    ARGOS_VERSION = "1.1.3"
 
     def get_jobs(self):
 
-        argos_jobs = list()
-
-        if self.request_id:
-            files = FileRepository.filter(
-                queryset=self.files,
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
-                filter_redact=True,
-            )
-
-            cnt_tumors = FileRepository.filter(
-                queryset=self.files,
-                metadata={
-                    settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                    "tumorOrNormal": "Tumor",
-                    settings.IGO_COMPLETE_METADATA_KEY: True,
-                },
-                filter_redact=True,
-            ).count()
-        elif self.pairing:
-            files, cnt_tumors = self.get_files_for_pairs()
+        alignment_pair_jobs = list()
+        dmp_samples = list()
+        if self.pairing:
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
+        elif self.request_id:
+            files, cnt_tumors = self.get_files(self.request_id)
 
         if cnt_tumors == 0:
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
             send_notification.delay(cant_do)
             all_normals_event = SetLabelEvent(self.job_group_notifier_id, "all_normals").to_dict()
             send_notification.delay(all_normals_event)
-            return argos_jobs
+            return alignment_pair_jobs
 
-        data = list()
-        for f in files:
-            sample = dict()
-            sample["id"] = f.file.id
-            sample["path"] = f.file.path
-            sample["file_name"] = f.file.file_name
-            sample["metadata"] = f.metadata
-            data.append(sample)
+        data = self.build_data_list(files)
 
-        files = list()
+        samples = self.get_samples_from_data(data)
+        alignment_pair_inputs, error_samples = construct_alignment_pair_jobs(samples, self.pairing)
+        sample_pairing = self.get_pairing_from_argos_inputs(alignment_pair_inputs)
+        sample_mapping, filepaths = self.get_mapping_from_argos_inputs(alignment_pair_inputs)
+        alignment_pair_jobs = self.get_alignment_pair_jobs(alignment_pair_inputs)
+        pipeline = self.get_pipeline_id()
+
+        try:
+            pipeline_obj = Pipeline.objects.get(id=pipeline)
+        except Pipeline.DoesNotExist:
+            pass
+
+        operator_run_summary = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
+        ).to_dict()
+        send_notification.delay(operator_run_summary)
+
+        mapping_file_event = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
+        ).to_dict()
+        send_notification.delay(mapping_file_event)
+
+        data_clinical = generate_sample_data_content(
+            filepaths,
+            pipeline_name=pipeline_obj.name,
+            pipeline_github=pipeline_obj.github,
+            pipeline_version=pipeline_obj.version,
+            dmp_samples=dmp_samples,
+        )
+        sample_data_clinical_event = UploadAttachmentEvent(
+            self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
+        ).to_dict()
+        send_notification.delay(sample_data_clinical_event)
+
+        self.evaluate_sample_errors(error_samples)
+        self.summarize_pairing_info(alignment_pair_inputs)
+
+        return alignment_pair_jobs
+
+    def get_alignment_pair_jobs(self, alignment_pair_inputs):
+        alignment_pair_jobs = list()
+        number_of_inputs = len(alignment_pair_inputs)
+        for i, job in enumerate(alignment_pair_inputs):
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
+
+            name = "ARGOS ALIGNMENT %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            pi = job["pi"]
+            pi_email = job["pi_email"]
+
+            tags = {
+                settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                "sampleNameTumor": tumor_sample_name,
+                "sampleNameNormal": normal_sample_name,
+                "labHeadName": pi,
+                "labHeadEmail": pi_email,
+                "pairing": self.pairing,
+            }
+            pipeline = self.get_pipeline_id()
+            if self.output_directory_prefix:
+                tags["output_directory_prefix"] = self.output_directory_prefix
+            alignment_pair_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+        return alignment_pair_jobs
+
+    def get_mapping_from_argos_inputs(self, alignment_pair_inputs):
+        sample_mapping = ""
+        check_for_duplicates = list()
+        filepaths = list()
+        for i, job in enumerate(alignment_pair_inputs):
+            tumor_sample = job["tumor"]
+            tumor_sample_name = tumor_sample["ID"]
+            for p in tumor_sample["R1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in tumor_sample["R2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in tumor_sample["zR1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in tumor_sample["zR2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in tumor_sample["bam"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            normal_sample = job["normal"]
+            normal_sample_name = normal_sample["ID"]
+            for p in normal_sample["R1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in normal_sample["R2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in normal_sample["zR1"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in normal_sample["zR2"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+            for p in normal_sample["bam"]:
+                filepath = FileProcessor.parse_path_from_uri(p["location"])
+                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
+                if file_str not in check_for_duplicates:
+                    check_for_duplicates.append(file_str)
+                    sample_mapping += file_str
+                if filepath not in filepaths:
+                    filepaths.append(filepath)
+        return sample_mapping, filepaths
+
+    def get_pairing_from_argos_inputs(self, alignment_pair_inputs):
+        sample_pairing = ""
+        print(alignment_pair_inputs)
+        for i, job in enumerate(alignment_pair_inputs):
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
+            sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
+        return sample_pairing
+
+    def get_samples_from_data(self, data):
         samples = list()
         # group by igoId
         igo_id_group = dict()
@@ -81,160 +220,19 @@ class ArgosOperator(Operator):
                 samples.append(build_sample(igo_id_group[igo_id], ignore_sample_formatting=True))
             else:
                 samples.append(build_sample(igo_id_group[igo_id]))
+        return samples
 
-        argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
-        number_of_inputs = len(argos_inputs)
-
-        sample_pairing = ""
-        sample_mapping = ""
-        pipeline = self.get_pipeline_id()
-
-        try:
-            pipeline_obj = Pipeline.objects.get(id=pipeline)
-        except Pipeline.DoesNotExist:
-            pass
-
-        check_for_duplicates = list()
-        for i, job in enumerate(argos_inputs):
-            tumor_sample_name = job["pair"][0]["ID"]
-            for p in job["pair"][0]["R1"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][0]["R2"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][0]["zR1"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][0]["zR2"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][0]["bam"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-
-            normal_sample_name = job["pair"][1]["ID"]
-            for p in job["pair"][1]["R1"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][1]["R2"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][1]["zR1"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][1]["zR2"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-            for p in job["pair"][1]["bam"]:
-                filepath = FileProcessor.parse_path_from_uri(p["location"])
-                file_str = "\t".join([normal_sample_name, filepath]) + "\n"
-                if file_str not in check_for_duplicates:
-                    check_for_duplicates.append(file_str)
-                    sample_mapping += file_str
-                if filepath not in files:
-                    files.append(filepath)
-
-            name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
-            assay = job["assay"]
-            pi = job["pi"]
-            pi_email = job["pi_email"]
-
-            sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
-
-            tags = {
-                settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                "sampleNameTumor": tumor_sample_name,
-                "sampleNameNormal": normal_sample_name,
-                "labHeadName": pi,
-                "labHeadEmail": pi_email,
-            }
-            if self.output_directory_prefix:
-                tags["output_directory_prefix"] = self.output_directory_prefix
-            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
-
-        operator_run_summary = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
-        ).to_dict()
-        send_notification.delay(operator_run_summary)
-
-        mapping_file_event = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
-        ).to_dict()
-        send_notification.delay(mapping_file_event)
-
-        data_clinical = generate_sample_data_content(
-            files,
-            pipeline_name=pipeline_obj.name,
-            pipeline_github=pipeline_obj.github,
-            pipeline_version=pipeline_obj.version,
-        )
-        sample_data_clinical_event = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
-        ).to_dict()
-        send_notification.delay(sample_data_clinical_event)
-
-        self.evaluate_sample_errors(error_samples)
-        self.summarize_pairing_info(argos_inputs)
-
-        return argos_jobs
-
-    def get_files_for_pairs(self):
+    def get_files_for_pairs(self, pairing):
         all_files = []
         cnt_tumors = 0
-        for pair in self.pairing.get("pairs"):
+        dmp_samples = list()
+        for pair in pairing.get("pairs"):
             tumor_sample = pair["tumor"]
             normal_sample = pair["normal"]
-            tumors = self.get_regular_sample(tumor_sample, "Tumor")
-            current_cnt_tumors = len(tumors)
-            cnt_tumors += current_cnt_tumors
-            normals = self.get_regular_sample(normal_sample, "Normal")
-            if not normals and current_cnt_tumors > 0:  # get from pooled normal
+            tumor, is_dmp_tumor_sample = self.get_regular_sample(tumor_sample, "Tumor")
+            cnt_tumors += 1
+            normal, is_dmp_normal_sample = self.get_regular_sample(normal_sample, "Normal")
+            if not normal and tumor:  # get from pooled normal
                 bait_set = tumors[0].metadata["baitSet"]
                 run_ids = list()
                 for tumor in tumors:
@@ -243,7 +241,6 @@ class ArgosOperator(Operator):
                         run_ids.append(run_id)
                 run_ids.sort()
                 preservation_types = tumors[0].metadata["preservation"]
-                normal_sample_id = normal_sample["sample_id"]
                 normals = list()
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
                     run_ids, preservation_types, bait_set
@@ -255,13 +252,48 @@ class ArgosOperator(Operator):
                     sample = f
                     sample.metadata = metadata
                     normals.append(sample)
-            for file in list(tumors):
+            for file in list(tumor):
                 if file not in all_files:
                     all_files.append(file)
-            for file in list(normals):
+                if tumor not in dmp_samples:
+                    if is_dmp_tumor_sample:
+                        dmp_samples.append(tumor)
+            for file in list(normal):
                 if file not in all_files:
                     all_files.append(file)
-        return all_files, cnt_tumors
+                if normal not in dmp_samples:
+                    if is_dmp_normal_sample:
+                        dmp_samples.append(normal)
+        return all_files, cnt_tumors, dmp_samples
+
+    def get_files(self, request_id):
+        files = FileRepository.filter(
+            queryset=self.files,
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
+            filter_redact=True,
+        )
+
+        cnt_tumors = FileRepository.filter(
+            queryset=self.files,
+            metadata={
+                settings.REQUEST_ID_METADATA_KEY: request_id,
+                "tumorOrNormal": "Tumor",
+                settings.IGO_COMPLETE_METADATA_KEY: True,
+            },
+            filter_redact=True,
+        ).count()
+        return files, cnt_tumors
+
+    def build_data_list(self, files):
+        data = list()
+        for f in files:
+            sample = dict()
+            sample["id"] = f.file.id
+            sample["path"] = f.file.path
+            sample["file_name"] = f.file.file_name
+            sample["metadata"] = f.metadata
+            data.append(sample)
+        return data
 
     def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data["sample_id"]
@@ -270,32 +302,41 @@ class ArgosOperator(Operator):
             metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
             filter_redact=True,
         )
+        is_dmp_sample = False
+        request_id = self.request_id
         if not sample:  # try dmp sample
             if "patient_id" in sample_data:
                 patient_id = sample_data["patient_id"]
             if "bait_set" in sample_data:
                 bait_set = sample_data["bait_set"]
+            if "pi" in sample_data:
+                pi = sample_data["pi"]
+            if "pi_email" in sample_data:
+                pi_email = sample_data["pi_email"]
             dmp_bam_id = sample_id.replace("s_", "").replace("_", "-")
-            data = FileRepository.filter(queryset=self.files, metadata={"external_id": dmp_bam_id})
+            dmp_bam_slug = Q(file__file_group=FileGroup.objects.get(slug="dmp-bams"))
+            dmp_bam_files = FileRepository.filter(q=dmp_bam_slug)
+            data = FileRepository.filter(queryset=dmp_bam_files, metadata={"external_id": dmp_bam_id})
             sample = list()
-            for i in data:
-                s = i
-                metadata = build_dmp_sample(i, patient_id, bait_set, tumor_type)["metadata"]
+            if len(data) > 0:
+                s = data[0]
+                metadata = build_dmp_sample(s, patient_id, bait_set, tumor_type, request_id, pi, pi_email)["metadata"]
                 s.metadata = metadata
-                sample.append(i)
-        return sample
+                if s:
+                    is_dmp_sample = True
+                    sample.append(s)
+        return sample, is_dmp_sample
 
-    def summarize_pairing_info(self, argos_inputs):
-        num_pairs = len(argos_inputs)
+    def summarize_pairing_info(self, alignment_pair_inputs):
+        num_pairs = len(alignment_pair_inputs)
         num_dmp_normals = 0
         num_pooled_normals = 0
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
-        request_id = argos_inputs[0]["request_id"]
-        for i, job in enumerate(argos_inputs):
-            tumor = job["pair"][0]
-            normal = job["pair"][1]
+        for i, job in enumerate(alignment_pair_inputs):
+            tumor = job["tumor"]
+            normal = job["normal"]
             req_t = tumor["request_id"]
             req_n = normal["request_id"]
             specimen_type_n = normal["specimen_type"]
@@ -325,13 +366,6 @@ class ArgosOperator(Operator):
                 matched_sample = i["matched_sample_name"]
                 normal_request = i["normal_request"]
                 s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
-
-        number_of_normals_in_req = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Normal"}
-        ).count()
-        if number_of_normals_in_req != len(argos_inputs):
-            event = NotAllNormalsUsedEvent(self.job_group_notifier_id, request_id)
-            send_notification.delay(event.to_dict())
 
         self.send_message(s)
 
