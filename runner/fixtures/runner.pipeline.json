@@ -486,7 +486,7 @@
       "entrypoint": "nucleo_aggregate_visualize.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
       "output_directory": "/work/access/production/runs/voyager/bam_qc",
-      "operator": 18,
+      "operator": 19,
       "default": true
     }
   }
