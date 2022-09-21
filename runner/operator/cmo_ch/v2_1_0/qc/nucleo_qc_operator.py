@@ -89,7 +89,7 @@ class CMOCHNucleoOperatorQC(Operator):
                 .order_by("-created_date")
                 .first()
                 .operator_run.runs.all()
-                
+            )
         inputs = []
         for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
