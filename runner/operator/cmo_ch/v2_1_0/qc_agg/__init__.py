@@ -1,1 +1,1 @@
-from .nucleo_qc_operator import CMOCHNucleoOperatorQcAgg
+from .nucleo_qc_operator_agg import CMOCHNucleoOperatorQcAgg
