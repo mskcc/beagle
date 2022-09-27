@@ -694,8 +694,10 @@ def check_jobs_status():
             status = remote_statuses[str(run.execution_id)]
             if status["started"] and not run.started:
                 run.started = status["started"]
+                run.save(update_fields=("started",))
             if status["submitted"] and not run.submitted:
                 run.submitted = status["submitted"]
+                run.save(update_fields=("submitted",))
 
             if status["commandlinetooljob_set"]:
                 update_commandline_job_status(run, status["commandlinetooljob_set"])
