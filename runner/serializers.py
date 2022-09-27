@@ -47,6 +47,7 @@ class RunApiListSerializer(serializers.Serializer):
         child=serializers.CharField(validators=[ValidateDict]), allow_empty=True, required=False
     )
     request_ids = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
+    sample_ids = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
     jira_ids = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
 
     run_ids = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)

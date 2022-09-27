@@ -19,6 +19,7 @@ class TestOperatorTriggers(TestCase):
         "beagle_etl.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
+        "file_system.sample.json",
         "runner.operator_trigger.json",
     ]
 

@@ -6,7 +6,13 @@ from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
 from notifier.models import JobGroup
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
+from notifier.events import (
+    UploadAttachmentEvent,
+    OperatorRequestEvent,
+    CantDoEvent,
+    SetLabelEvent,
+    NotAllNormalsUsedEvent,
+)
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
@@ -286,10 +292,13 @@ class ArgosOperator(Operator):
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
+        request_id = None
         for i, job in enumerate(argos_inputs):
             tumor = job["pair"][0]
             normal = job["pair"][1]
             req_t = tumor["request_id"]
+            if not request_id:
+                request_id = tumor["request_id"]
             req_n = normal["request_id"]
             specimen_type_n = normal["specimen_type"]
             if specimen_type_n.lower() in "DMP Normal".lower():
@@ -318,6 +327,13 @@ class ArgosOperator(Operator):
                 matched_sample = i["matched_sample_name"]
                 normal_request = i["normal_request"]
                 s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
+
+        number_of_normals_in_req = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Normal"}
+        ).count()
+        if number_of_normals_in_req != len(argos_inputs):
+            event = NotAllNormalsUsedEvent(self.job_group_notifier_id, request_id)
+            send_notification.delay(event.to_dict())
 
         self.send_message(s)
 

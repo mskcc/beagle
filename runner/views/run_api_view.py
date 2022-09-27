@@ -93,6 +93,7 @@ class RunApiViewSet(
             "run",
             "values_run",
             "ports",
+            "sample_ids",
         ]
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = RunApiListSerializer(data=fixed_query_params)
@@ -107,6 +108,7 @@ class RunApiViewSet(
             tags = fixed_query_params.get("tags")
             operator_run = fixed_query_params.get("operator_run")
             request_ids = fixed_query_params.get("request_ids")
+            sample_ids = fixed_query_params.get("sample_ids")
             apps = fixed_query_params.get("apps")
             values_run = fixed_query_params.get("values_run")
             run = fixed_query_params.get("run")
@@ -131,6 +133,8 @@ class RunApiViewSet(
                 queryset = query_from_dict("tags__%s__contains", queryset, tags)
             if request_ids:
                 queryset = queryset.filter(tags__igoRequestId__in=request_ids)
+            if sample_ids:
+                queryset = queryset.filter(samples__sample_id__in=sample_ids).distinct()
             if apps:
                 queryset = queryset.filter(app__in=apps)
             if run:
