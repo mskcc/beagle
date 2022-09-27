@@ -185,5 +185,16 @@
       "version": "v1.0.0",
       "slug": "AlignmentPairOperator"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 19,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_1_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+      "version": "v2.1.0",
+      "slug": "CMOCHNucleoOperatorQcAgg_2_1_0"
+    }
   }
 ]
