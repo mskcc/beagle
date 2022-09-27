@@ -1,0 +1,54 @@
+[
+    {
+        "model": "runner.run",
+        "pk": "b8e9b483-fbf9-4acc-bc1b-3c90c190f71e",
+        "fields": {
+            "created_date": "2022-07-27T20:09:41.229Z",
+            "modified_date": "2022-07-28T17:32:16.644Z",
+            "run_type": 0,
+            "name": "CMO-CH Nucleo: 12405_C, 110 of 111 (07/27/2022, 16:09:41)",
+            "app": "279b1691-7f43-4c1d-80c0-fae1453cc8a6",
+            "status": 4,
+            "execution_id": "60f06cf6-cd3e-482e-abe2-dda02f8db0b7",
+            "job_statuses": {},
+            "message": {},
+            "output_metadata": {
+                "sex": "F",
+                "ciTag": "A-000002",
+                "baitSet": "null",
+                "barcodeId": "IDTdual200",
+                "primaryId": "12405_C_112",
+                "dnaInputNg": 0,
+                "captureName": null,
+                "barcodeIndex": "GCACGTAA-ACCATGTG",
+                "cmoPatientId": "A-000002",
+                "igoRequestId": "12405_C",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "A-000002",
+                "libraryVolume": 0,
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": 0,
+                "investigatorSampleId": "A-000002",
+                "captureConcentrationNm": 0,
+                "libraryConcentrationNgul": 3.1737743325576746
+            },
+            "output_directory": "/path/to/b8e9b483-fbf9-4acc-bc1b-3c90c190f71e",
+            "tags": {
+                "cmoSampleId": "A-000002",
+                "igoRequestId": "12405_C"
+            },
+            "operator_run": 8,
+            "job_group": null,
+            "job_group_notifier": null,
+            "notify_for_outputs": "[]",
+            "started": null,
+            "submitted": null,
+            "finished_date": "2022-07-28T17:32:16.644Z",
+            "resume": null,
+            "resume_attempts": 5,
+            "samples": [
+                "a40e9e9e-4cb3-4152-873e-d6499849bf0a"
+            ]
+        }
+    }
+]
