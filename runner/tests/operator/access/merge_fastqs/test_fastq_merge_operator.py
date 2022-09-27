@@ -17,6 +17,7 @@ FIXTURES = [
 COMMON_FIXTURES = [
     "runner/fixtures/runner.pipeline.json",
     "runner/fixtures/runner.run.json",
+    "runner/fixtures/file_system.sample.json",
     "runner/fixtures/runner.operator_run.json",
     "file_system/fixtures/file_system.filegroup.json",
     "file_system/fixtures/file_system.filetype.json",

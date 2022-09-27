@@ -37,6 +37,7 @@ class TestRunAPIList(APITestCase):
         "beagle_etl.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
+        "file_system.sample.json",
         "runner.operator_trigger.json",
     ]
 
@@ -224,6 +225,7 @@ class TestCWLJsonView(APITestCase):
         "runner.operator_run.json",
         "runner.run.json",
         "runner.operator_trigger.json",
+        "file_system.sample.json",
     ]
 
     def setUp(self):
@@ -244,28 +246,37 @@ class TestCWLJsonView(APITestCase):
         self.run2.job_group = self.jobgroup1
         self.run2.job_group_notifier = self.job_group_notifier_1
         self.run2.save()
-        self.api_root = "/v0/run/cwljson"
+        self.run_cwl_json_root = "/v0/run/cwljson"
+        self.run_api_root = "/v0/run/api/"
 
     def test_get_runs_job_group(self):
-        response = self.client.get(self.api_root + "/?job_groups=" + str(self.jobgroup1.id))
+        response = self.client.get(self.run_cwl_json_root + "/?job_groups=" + str(self.jobgroup1.id))
         self.assertEqual(response.json()["count"], 2)
 
     def test_get_runs_jira_id(self):
-        response = self.client.get(self.api_root + "/?jira_ids=jira_id_1")
+        response = self.client.get(self.run_cwl_json_root + "/?jira_ids=jira_id_1")
         self.assertEqual(response.json()["count"], 2)
 
     def test_get_runs_run_ids(self):
-        response = self.client.get(self.api_root + "/?runs=" + str(self.run1.id) + "," + str(self.run2.id))
+        response = self.client.get(self.run_cwl_json_root + "/?runs=" + str(self.run1.id) + "," + str(self.run2.id))
         self.assertEqual(response.json()["count"], 2)
 
     def test_get_runs_request_id(self):
-        response = self.client.get(self.api_root + "/?request_ids=request1")
+        response = self.client.get(self.run_cwl_json_root + "/?request_ids=request1")
         self.assertEqual(response.json()["count"], 1)
 
     def test_get_output(self):
-        response = self.client.get(self.api_root + "/?runs=" + str(self.run1.id))
+        response = self.client.get(self.run_cwl_json_root + "/?runs=" + str(self.run1.id))
         self.assertTrue("outputs" in response.json()["results"][0])
 
     def test_get_input(self):
-        response = self.client.get(self.api_root + "/?cwl_inputs=true&runs=" + str(self.run1.id))
+        response = self.client.get(self.run_cwl_json_root + "/?cwl_inputs=true&runs=" + str(self.run1.id))
         self.assertTrue("inputs" in response.json()["results"][0])
+
+    def test_get_runs_sample_id(self):
+        response = self.client.get(self.run_api_root + "?sample_ids=08944_B_4")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["count"], 1)
+        response = self.client.get(self.run_api_root + "?sample_ids=08944_B_3,08944_B_4")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["count"], 2)
