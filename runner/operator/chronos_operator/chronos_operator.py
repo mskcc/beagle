@@ -71,8 +71,8 @@ class ChronosOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        output_directory = pipeline.output_directory
-        self.OUTPUT_DIR = output_directory
+        output_directory_base = pipeline.output_directory
+        self.OUTPUT_DIR = output_directory_base
 
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
@@ -162,7 +162,7 @@ class ChronosOperator(Operator):
             input_json = {"pairing": pairing, "mapping": mapping}
 
             output_directory = os.path.join(
-                output_directory, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
+                output_directory_base, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
             )
             job_json = {
                 "name": name,
