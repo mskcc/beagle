@@ -164,11 +164,13 @@ class ChronosOperator(Operator):
             output_directory = os.path.join(
                 output_directory, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
             )
-            job_json = {"name": name,
-                        "app": app,
-                        "inputs": input_json,
-                        "tags": tags,
-                        "output_directory": output_directory}
+            job_json = {
+                "name": name,
+                "app": app,
+                "inputs": input_json,
+                "tags": tags,
+                "output_directory": output_directory,
+            }
             jobs.append(job_json)
 
         # self.send_message(
