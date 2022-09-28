@@ -12,6 +12,7 @@ from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
 import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
+from notifier.models import JobGroup
 from notifier.events import OperatorRequestEvent
 from notifier.tasks import send_notification
 from runner.run.objects.run_creator_object import RunCreator
@@ -22,6 +23,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 class ChronosOperator(Operator):
+    CHRONOS_NAME = "chronos"
+    CHRONOS_VERSION = "0.1.0"
+
     def build_recipe_query(self):
         """
         Build complex Q object assay query from given data
@@ -145,6 +149,8 @@ class ChronosOperator(Operator):
         )
 
         jobs = []
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
             mapping = self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all)
@@ -155,7 +161,14 @@ class ChronosOperator(Operator):
 
             input_json = {"pairing": pairing, "mapping": mapping}
 
-            job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags}
+            output_directory = os.path.join(
+                output_directory, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
+            )
+            job_json = {"name": name,
+                        "app": app,
+                        "inputs": input_json,
+                        "tags": tags,
+                        "output_directory": output_directory}
             jobs.append(job_json)
 
         # self.send_message(
