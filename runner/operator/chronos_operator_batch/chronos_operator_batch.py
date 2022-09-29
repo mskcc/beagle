@@ -161,11 +161,7 @@ class ChronosOperatorBatch(Operator):
 
         input_json = {"pairing": pairing_for_request, "mapping": mapping_for_request}
 
-        job_json = {"name": name,
-                    "app": app,
-                    "inputs": input_json,
-                    "tags": tags,
-                    "output_directory": output_directory}
+        job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
         jobs.append(job_json)
         return [RunCreator(**job) for job in jobs]
 
