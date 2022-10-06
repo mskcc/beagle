@@ -22,7 +22,7 @@ PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing_json.tsv"
 LOGGER = logging.getLogger(__name__)
 
 
-class ChronosOperator(Operator):
+class ChronosOperatorBatch(Operator):
     CHRONOS_NAME = "chronos"
     CHRONOS_VERSION = "0.1.0"
 
@@ -71,8 +71,8 @@ class ChronosOperator(Operator):
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         pipeline_version = pipeline.version
-        output_directory_base = pipeline.output_directory
-        self.OUTPUT_DIR = output_directory_base
+        output_directory = pipeline.output_directory
+        self.OUTPUT_DIR = output_directory
 
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
@@ -133,57 +133,36 @@ class ChronosOperator(Operator):
             else:
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
-        # output these strings to file
-        # input_json["conflict_data"] = self.create_conflict_samples_txt_file()
-        # input_json["unpaired_data"] = self.create_unpaired_txt_file()
         mapping_all = self.create_mapping_input()
         pairing_all = self.create_pairing_input()
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         tags = {"beagle_version": beagle_version, "run_date": run_date}
+        jobs = []
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        output_directory = os.path.join(
+            output_directory, self.CHRONOS_NAME, self.request_id, self.CHRONOS_VERSION, jg_created_date
+        )
 
+        name = f"Tempo Run requestId:{self.request_id} {run_date}"
+
+        pairing_for_request = []
+        mapping_for_request = []
         tumors = FileRepository.filter(
             metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
             values_metadata="ciTag",
         )
-
-        jobs = []
-        jg = JobGroup.objects.get(id=self.job_group_id)
-        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            mapping = self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all)
+            pairing_for_request.append(pairing)
+            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all))
 
-            name = "Tempo Run T:{tumor}, N:{normal}: {run_date}".format(
-                tumor=pairing["tumor"], normal=pairing["normal"], run_date=run_date
-            )
+        input_json = {"pairing": pairing_for_request, "mapping": mapping_for_request}
 
-            input_json = {"pairing": pairing, "mapping": mapping}
-
-            output_directory = os.path.join(
-                output_directory_base, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
-            )
-            job_json = {
-                "name": name,
-                "app": app,
-                "inputs": input_json,
-                "tags": tags,
-                "output_directory": output_directory,
-            }
-            jobs.append(job_json)
-
-        # self.send_message(
-        #     """
-        #     Writing files to {file_path}.
-        #
-        #     Run Date: {run_date}
-        #     Beagle Version: {beagle_version}
-        #     """.format(
-        #         file_path=self.OUTPUT_DIR, run_date=run_date, beagle_version=beagle_version
-        #     )
-        # )
-
+        job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
+        jobs.append(job_json)
         return [RunCreator(**job) for job in jobs]
 
     def get_pairing_for_sample(self, tumor, pairing):
