@@ -34,7 +34,8 @@ RUN apt-get clean \
     && cd /usr/bin/beagle \
     && python3 -m pip install python-ldap \
     && python3 -m pip install -r requirements.txt \
-    && set -x\
+    && python3 -m pip install -r requirements-dev.txt \
+    && set -x \
     && mkdir -p /var/lib/postgresql/data \
     && chmod 775 /var/lib/postgresql \
     && chown postgres /var/lib/postgresql \
