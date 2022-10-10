@@ -15,6 +15,9 @@ ENV BEAGLE_DB_URL=0.0.0.0
 ENV PGLOG=postgres.log
 ENV PGPORT=${BEAGLE_DB_PORT}
 ENV POSTGRES_HOST_AUTH_METHOD=trust
+ENV MOCK_NUM_REQUESTS=300
+ENV MOCK_NUM_RUNS=100
+ENV BEAGLE_BRANCH=feature/add_mock_data
 
 RUN apt-get clean \ 
     && apt-get update -qq \
@@ -27,7 +30,7 @@ RUN apt-get clean \
         default-jdk \
         procps \
     && cd /usr/bin \
-    && git clone https://github.com/mskcc/beagle --branch develop \
+    && git clone https://github.com/mskcc/beagle --branch ${BEAGLE_BRANCH} \
     && cd /usr/bin/beagle \
     && python3 -m pip install python-ldap \
     && python3 -m pip install -r requirements.txt \
@@ -52,20 +55,7 @@ RUN mkdir -p /usr/bin/beagle/static \
     && python3 manage.py migrate \
 	&& python3 manage.py collectstatic \
 	&& echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${BEAGLE_DB_USERNAME}', '', '${BEAGLE_DB_PASSWORD}')" | python3 manage.py shell \
-	&& python3 manage.py loaddata \
-    runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.files.json \
-    runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.input.json \
-    runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.output.json \
-    runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.run.json \
-    runner/tests/operator/cmo_ch/v2_1_0/qc/0a3c70a9-cf89-466b-bd39-4f409c21fb41.samples.json \
-    runner/fixtures/runner.pipeline.json \
-    runner/fixtures/runner.operator_run.json \
-    file_system.sample.json \
-    runner/fixtures/runner.run.json \
-    file_system/fixtures/file_system.filegroup.json \
-    file_system/fixtures/file_system.filetype.json \
-    file_system/fixtures/file_system.storage.json \
-    beagle_etl/fixtures/beagle_etl.operator.json \
+	&& python3 manage.py runscript create_mock_database --script-args requests=${MOCK_NUM_REQUESTS} runs=${MOCK_NUM_RUNS} \
     && echo "cd /usr/bin/beagle && pg_ctl -D /var/lib/postgresql/data -l /var/lib/postgresql/log start && gunicorn beagle.wsgi --log-file /usr/bin/beagle/log --bind 0.0.0.0:8081 --threads 10 --pythonpath /usr/bin/beagle" >> /usr/bin/beagle/start.sh \
     && chmod +x /usr/bin/beagle/start.sh
 
