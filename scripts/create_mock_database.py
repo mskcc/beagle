@@ -179,7 +179,8 @@ def create_pipeline(faker, recipie=None):
     github = "https://github.com/mskcc/mock_pipeline"
     version = "{}.{}.{}".format(randint(0, 9), randint(0, 9), randint(0, 9))
     entrypoint = faker.file_name(extension='cwl')
-    output_file_group = get_or_create_file_group()
+    output_file_group_name = "{}-outputs".format(name)
+    output_file_group = get_or_create_file_group(name=output_file_group_name)
     new_operator = create_new_operator(faker, recipie=recipie)
     default = faker.boolean()
     walltime = randint(1, 1000)
