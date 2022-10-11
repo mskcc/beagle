@@ -677,6 +677,6 @@ def run(*args):
         print("Please specify the number of runs. Example: runs=100")
     request_param = int(num_req.findall(request_param_list[0])[0])
     create_request(faker, request_param, user)
-    run_param = int(runs_req.findall(run_param_list[0])[0])
+    run_param = int(num_req.findall(run_param_list[0])[0])
     create_all_reference_files(faker, user)
     create_run_from_request(faker, user, run_param)
