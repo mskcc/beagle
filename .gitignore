@@ -16,3 +16,4 @@ runner/tests/operator/demo_operator/tmp*
 .vscode/settings.json
 .vscode/targets.log
 .DS_Store
+Miniconda3*
