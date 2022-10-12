@@ -59,21 +59,20 @@ class CMOCHNucleoOperatorQcAgg(Operator):
 
     def get_jobs(self):
 
-        sample_inputs = self.get_nucleo_outputs()
+        job = self.get_qc_outputs()
 
         return [
             RunCreator(
                 **{
-                    "name": "CMO-CH Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "CMO-CH QC Aggregate: %s" % (self.request_id),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
-            for i, job in enumerate(sample_inputs)
         ]
 
-    def get_nucleo_outputs(self):
+    def get_qc_outputs(self):
         # Test case for if user passed run id, or not
         if not self.request_id:
             most_recent_runs_for_request = self.run_ids
@@ -81,7 +80,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="cmo-ch nucleo",
+                    app__name="CMO-CH QC",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
@@ -91,7 +90,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
+                raise Exception("No matching CMO-CH QC runs found for request {}".format(self.request_id))
 
         inputs = []
         for r in most_recent_runs_for_request:
@@ -99,7 +98,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             inputs.append(inp)
         return inputs
 
-    def parse_nucleo_output_ports(self, run, port_name):
+    def parse_qc_output_ports(self, run, port_name):
         bam_bai = Port.objects.get(name=port_name, run=run.pk)
         if not len(bam_bai.files.all()) in [1, 2]:
             raise Exception("Port {} for run {} should have just 1 bam or 1 (bam/bai) pair".format(port_name, run.id))
