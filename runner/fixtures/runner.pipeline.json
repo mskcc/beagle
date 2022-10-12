@@ -473,5 +473,21 @@
       "operator": 17,
       "default": true
     }
+  },
+  {
+    "model": "runner.pipeline",
+    "pk": "8c256be3-21b7-4640-9d54-bb5bba42db50",
+    "fields": {
+      "created_date": "2019-11-18T17:46:45.118Z",
+      "modified_date": "2019-12-05T01:12:39.854Z",
+      "name": "cmo-ch nucleo 2 qc agg",
+      "github": "git@github.com:msk-access/nucleo_qc_generation",
+      "version": "2.1.0",
+      "entrypoint": "nucleo_aggregate_visualize.cwl",
+      "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+      "output_directory": "/work/access/production/runs/voyager/bam_qc",
+      "operator": 19,
+      "default": true
+    }
   }
 ]
