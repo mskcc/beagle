@@ -100,11 +100,11 @@ class CMOCHNucleoOperatorQcAgg(Operator):
 
     def process_listing(self, listing, name):
         for directory in listing:
-            if directory['basename'] == name:
+            if directory["basename"] == name:
                 return directory
-            self.process_listing(directory['listing'], name)
-            if 'listing' in directory:
-                item = self.process_listing(directory['listing'], name)
+            self.process_listing(directory["listing"], name)
+            if "listing" in directory:
+                item = self.process_listing(directory["listing"], name)
                 if item:
                     return item
         return None
@@ -113,7 +113,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         directory_list = []
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
-            directory_folder = self.process_listing(port.value['listing'], directory_name)
+            directory_folder = self.process_listing(port.value["listing"], directory_name)
             if not directory_folder:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             directory_list.append(directory_folder)
@@ -141,11 +141,12 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             "duplex_bam_stats_dir",
             "gatk_mean_quality_by_cycle_recal_dir",
             "simplex_bam_stats_dir",
-            "uncollapsed_bam_stats_dir"]
+            "uncollapsed_bam_stats_dir",
+        ]
 
         file_regex_dict = {
             "collapsed_extraction_files": ("collapsed_bam_biometrics_dir", ".*collapsed.pickle"),
-            "duplex_extraction_files": ("duplex_bam_biometrics_dir", ".*duplex.pickle")
+            "duplex_extraction_files": ("duplex_bam_biometrics_dir", ".*duplex.pickle"),
         }
 
         job = {}
@@ -160,13 +161,11 @@ class CMOCHNucleoOperatorQcAgg(Operator):
 
         job["samples-json"] = samples_json_content
 
-        input_file = template.render(
-            **job
-        )
+        input_file = template.render(**job)
         sample_input = json.loads(input_file)
         return sample_input
 
-    @ staticmethod
+    @staticmethod
     def create_cwl_file_object(file_path):
         return {"class": "File", "location": "juno://" + file_path}
 
