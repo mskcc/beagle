@@ -102,7 +102,6 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         for directory in listing:
             if directory['basename'] == name:
                 return directory
-            self.process_listing(directory['listing'], name)
             if 'listing' in directory:
                 item = self.process_listing(directory['listing'], name)
                 if item:
