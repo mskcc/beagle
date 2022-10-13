@@ -172,22 +172,13 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         return {"class": "File", "location": "juno://" + file_path}
 
     def create_sample_json(self, runs):
+        samples_json = []
         for single_run in runs:
             j = single_run.output_metadata
-            # todo: cmoSampleName in output_metadata for Nucleo appears to be the igo ID?
-            j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-
-            for f in meta_fields:
-                # Use None for missing fields
-                if not f in j:
-                    j[f] = None
-            for f in j:
-                # MultiQC cannot handle cells with ","
-                if type(j[f]) is str and "," in j[f]:
-                    j[f] = j[f].replace(",", ";")
-        # Use some double quotes to make JSON compatible
-        j["qcReports"] = "na"
-        out = json.dumps([j])
+            # Use some double quotes to make JSON compatible
+            j["qcReports"] = "na"
+            samples_json.append(j)
+        out = json.dumps(samples_json)
 
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         Path(tmpdir).mkdir(parents=True, exist_ok=True)
