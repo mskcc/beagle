@@ -52,7 +52,7 @@ class CMOCHNucleoOperatorQC(Operator):
     """
     Operator for the ACCESS QC workflow:
 
-    https://github.com/msk-access/access_qc_generation/blob/master/access_qc.cwl
+    https://github.com/msk-access/nucleo_qc/blob/develop/nucleo_qc.cwl
 
     This Operator will search for Nucleo Bam files based on an IGO Request ID
     """
