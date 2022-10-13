@@ -158,11 +158,12 @@ class CMOCHNucleoOperatorQcAgg(Operator):
 
         samples_json_content = self.create_sample_json(runs)
 
-        job["samples-json"] = samples_json_content
+        job["samples_json"] = samples_json_content
 
         input_file = template.render(
             **job
         )
+        input_file = input_file.replace("'", '"')
         sample_input = json.loads(input_file)
         return sample_input
 
