@@ -125,7 +125,8 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             files = port.files.filter(path__regex=file_regex)
             if not files:
                 raise Exception("Run {} does not have files matching {}".format(single_run.pk, file_regex))
-            file_list.append(files)
+            for single_file in files:
+                file_list.append(self.create_cwl_file_object(single_file.path))
         return file_list
 
     def construct_sample_input(self, runs):
