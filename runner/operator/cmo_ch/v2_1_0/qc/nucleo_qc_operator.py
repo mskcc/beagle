@@ -67,10 +67,11 @@ class CMOCHNucleoOperatorQC(Operator):
                     "name": "CMO-CH Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
+                    "output_metadata": output_metadata,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
-            for i, job in enumerate(sample_inputs)
+            for i, (job, output_metadata) in enumerate(sample_inputs)
         ]
 
     def get_nucleo_outputs(self):
@@ -95,7 +96,8 @@ class CMOCHNucleoOperatorQC(Operator):
         inputs = []
         for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
-            inputs.append(inp)
+            output_metadata = r.output_metadata
+            inputs.append((inp, output_metadata))
         return inputs
 
     def parse_nucleo_output_ports(self, run, port_name):
