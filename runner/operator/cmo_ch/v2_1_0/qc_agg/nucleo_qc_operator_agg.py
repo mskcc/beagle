@@ -50,30 +50,29 @@ meta_fields = [
 
 class CMOCHNucleoOperatorQcAgg(Operator):
     """
-    Operator for the ACCESS QC workflow:
+    Operator for the CMO CH QC AGGREGATE workflow:
 
-    https://github.com/msk-access/access_qc_generation/blob/master/access_qc.cwl
+    https://github.com/msk-access/nucleo_qc/blob/develop/nucleo_aggregate_visualize.cwl
 
-    This Operator will search for Nucleo Bam files based on an IGO Request ID
+    This Operator will search for CMO-CH QC files based on an IGO Request ID
     """
 
     def get_jobs(self):
 
-        sample_inputs = self.get_nucleo_outputs()
+        job, sample_list = self.get_qc_outputs()
 
         return [
             RunCreator(
                 **{
-                    "name": "CMO-CH Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "CMO-CH QC Aggregate: %s" % (self.request_id),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
-                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
+                    "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleIds": sample_list},
                 }
             )
-            for i, job in enumerate(sample_inputs)
         ]
 
-    def get_nucleo_outputs(self):
+    def get_qc_outputs(self):
         # Test case for if user passed run id, or not
         if not self.request_id:
             most_recent_runs_for_request = self.run_ids
@@ -81,7 +80,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="cmo-ch nucleo",
+                    app__name="CMO-CH QC",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
@@ -91,64 +90,79 @@ class CMOCHNucleoOperatorQcAgg(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
+                raise Exception("No matching CMO-CH QC runs found for request {}".format(self.request_id))
 
-        inputs = []
-        for r in most_recent_runs_for_request:
-            inp = self.construct_sample_inputs(r)
-            inputs.append(inp)
-        return inputs
+        input = self.construct_sample_input(most_recent_runs_for_request)
+        sample_list = []
+        for single_run in most_recent_runs_for_request:
+            sample_list.append(single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY])
+        return input, sample_list
 
-    def parse_nucleo_output_ports(self, run, port_name):
-        bam_bai = Port.objects.get(name=port_name, run=run.pk)
-        if not len(bam_bai.files.all()) in [1, 2]:
-            raise Exception("Port {} for run {} should have just 1 bam or 1 (bam/bai) pair".format(port_name, run.id))
+    def process_listing(self, listing, name):
+        for directory in listing:
+            if directory["basename"] == name:
+                return directory
+            if "listing" in directory:
+                item = self.process_listing(directory["listing"], name)
+                if item:
+                    return item
+        return None
 
-        bam = [b for b in bam_bai.files.all() if b.file_name.endswith(".bam")][0]
-        bai = [b for b in bam_bai.files.all() if b.file_name.endswith(".bai")]
-        bam = self.create_cwl_file_object(bam.path)
-        if len(bai):
-            bam["secondaryFiles"] = [self.create_cwl_file_object(bai[0].path)]
+    def get_directory_ports(self, run_list, port_input, directory_name):
+        directory_list = []
+        for single_run in run_list:
+            port = Port.objects.get(name=port_input, run=single_run.pk)
+            directory_folder = self.process_listing(port.value["listing"], directory_name)
+            if not directory_folder:
+                raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
+            directory_list.append(directory_folder)
+        return directory_list
 
-        return bam
+    def get_file_ports(self, run_list, port_input, file_regex):
+        file_list = []
+        for single_run in run_list:
+            port = Port.objects.get(name=port_input, run=single_run.pk)
+            files = port.files.filter(path__regex=file_regex)
+            if not files:
+                raise Exception("Run {} does not have files matching {}".format(single_run.pk, file_regex))
+            for single_file in files:
+                file_list.append(self.create_cwl_file_object(single_file.path))
+        return file_list
 
-    def construct_sample_inputs(self, run):
+    def construct_sample_input(self, runs):
         with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
             template = Template(file.read())
 
-        nucleo_output_port_names = [
-            "uncollapsed_bam",
-            "fgbio_group_reads_by_umi_bam",
-            "fgbio_collapsed_bam",
-            "fgbio_filter_consensus_reads_duplex_bam",
-            "fgbio_postprocessing_simplex_bam",
+        qc_output_port_directory_names = [
+            "athena_coverage_report_dir",
+            "collapsed_bam_duplex_metrics_dir",
+            "collapsed_bam_stats_dir",
+            "duplex_bam_sequence_qc_dir",
+            "duplex_bam_stats_dir",
+            "gatk_mean_quality_by_cycle_recal_dir",
+            "simplex_bam_stats_dir",
+            "uncollapsed_bam_stats_dir",
         ]
-        qc_input_port_names = [
-            "uncollapsed_bam_base_recal",
-            "group_reads_by_umi_bam",
-            "collapsed_bam",
-            "duplex_bam",
-            "simplex_bam",
-        ]
-        bams = {}
-        for o, i in zip(nucleo_output_port_names, qc_input_port_names):
-            # We are running a multi-sample workflow on just one sample,
-            # so we create single-element lists here
-            bam = [self.parse_nucleo_output_ports(run, o)]
-            bams[i] = json.dumps(bam)
 
-        sample_sex = "unknown"
-        sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-        sample_group = "-".join(sample_name.split("-")[0:2])
-        samples_json_content = self.create_sample_json(run)
+        file_regex_dict = {
+            "collapsed_extraction_files": ("collapsed_bam_biometrics_dir", ".*collapsed.pickle"),
+            "duplex_extraction_files": ("duplex_bam_biometrics_dir", ".*duplex.pickle"),
+        }
 
-        input_file = template.render(
-            sample_sex=json.dumps([sample_sex]),
-            sample_name=json.dumps([sample_name]),
-            sample_group=json.dumps([sample_group]),
-            samples_json_content=json.dumps(samples_json_content),
-            **bams,
-        )
+        job = {}
+        for single_directory in qc_output_port_directory_names:
+            job[single_directory] = self.get_directory_ports(runs, "multiqc_output_dir", single_directory)
+
+        for single_file in file_regex_dict:
+            port_name, regex = file_regex_dict[single_file]
+            job[single_file] = self.get_file_ports(runs, port_name, regex)
+
+        samples_json_content = self.create_sample_json(runs)
+
+        job["samples_json"] = samples_json_content
+
+        input_file = template.render(**job)
+        input_file = input_file.replace("'", '"')
         sample_input = json.loads(input_file)
         return sample_input
 
@@ -156,22 +170,14 @@ class CMOCHNucleoOperatorQcAgg(Operator):
     def create_cwl_file_object(file_path):
         return {"class": "File", "location": "juno://" + file_path}
 
-    def create_sample_json(self, run):
-        j = run.output_metadata
-        # todo: cmoSampleName in output_metadata for Nucleo appears to be the igo ID?
-        j[settings.CMO_SAMPLE_TAG_METADATA_KEY] = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-
-        for f in meta_fields:
-            # Use None for missing fields
-            if not f in j:
-                j[f] = None
-        for f in j:
-            # MultiQC cannot handle cells with ","
-            if type(j[f]) is str and "," in j[f]:
-                j[f] = j[f].replace(",", ";")
-        # Use some double quotes to make JSON compatible
-        j["qcReports"] = "na"
-        out = json.dumps([j])
+    def create_sample_json(self, runs):
+        samples_json = []
+        for single_run in runs:
+            j = single_run.output_metadata
+            # Use some double quotes to make JSON compatible
+            j["qcReports"] = "na"
+            samples_json.append(j)
+        out = json.dumps(samples_json)
 
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         Path(tmpdir).mkdir(parents=True, exist_ok=True)
