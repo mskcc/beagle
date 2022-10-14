@@ -50,9 +50,9 @@ meta_fields = [
 
 class CMOCHNucleoOperatorQcAgg(Operator):
     """
-    Operator for the ACCESS QC workflow:
+    Operator for the CMO CH QC AGGREGATE workflow:
 
-    https://github.com/msk-access/access_qc_generation/blob/master/access_qc.cwl
+    https://github.com/msk-access/nucleo_qc/blob/develop/nucleo_aggregate_visualize.cwl
 
     This Operator will search for CMO-CH QC files based on an IGO Request ID
     """

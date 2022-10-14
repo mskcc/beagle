@@ -36,9 +36,9 @@ class TestNucleoQCOperator(TestCase):
 
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
-    def test_access_qc_operator(self):
+    def test_cmo_qc_agg_operator(self):
         """
-        Test that an ACCESS QC operator instance can be created and validated
+        Test that an CMO CH QC AGGREGATE operator instance can be created and validated
         """
         # self.assertEqual(len(File.objects.all()), 35)
         # self.assertEqual(len(FileMetadata.objects.all()), 35)

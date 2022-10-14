@@ -50,7 +50,7 @@ meta_fields = [
 
 class CMOCHNucleoOperatorQC(Operator):
     """
-    Operator for the ACCESS QC workflow:
+    Operator for the CMO CH QC workflow:
 
     https://github.com/msk-access/nucleo_qc/blob/develop/nucleo_qc.cwl
 
