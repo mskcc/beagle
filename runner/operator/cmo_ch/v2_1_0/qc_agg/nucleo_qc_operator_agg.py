@@ -75,7 +75,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
     def get_qc_outputs(self):
         # Test case for if user passed run id, or not
         if not self.request_id:
-            most_recent_runs_for_request = self.run_ids
+            most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
         else:
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
