@@ -28,7 +28,7 @@ class SchemaProcessor(object):
                 return t if required else ["null", t]
             elif port_type == "array":
                 resolved_items = (
-                    [SchemaProcessor.resolve_cwl_type(item.get("type")) for item in input_type.get("items")]
+                    [SchemaProcessor.resolve_cwl_type(item) for item in input_type.get("items")]
                     if isinstance(input_type.get("items"), list)
                     else SchemaProcessor.resolve_cwl_type(input_type.get("items")).get("type")
                 )
