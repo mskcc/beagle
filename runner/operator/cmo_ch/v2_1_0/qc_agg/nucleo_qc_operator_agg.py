@@ -112,7 +112,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         directory_list = []
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
-            directory_folder = self.process_listing(port.value["listing"], directory_name)
+            directory_folder = self.process_listing(port.value["listing"], directory_name)['listing'][0]
             if not directory_folder:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             directory_list.append(directory_folder)
@@ -158,12 +158,13 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             job[single_file] = self.get_file_ports(runs, port_name, regex)
 
         samples_json_content = self.create_sample_json(runs)
-
+        breakpoint()
         job["samples_json"] = samples_json_content
 
         input_file = template.render(**job)
         input_file = input_file.replace("'", '"')
         sample_input = json.loads(input_file)
+        breakpoint()
         return sample_input
 
     @staticmethod
