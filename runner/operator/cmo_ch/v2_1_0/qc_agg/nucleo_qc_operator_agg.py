@@ -112,7 +112,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         directory_list = []
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
-            directory_folder = self.process_listing(port.value["listing"], directory_name)['listing'][0]
+            directory_folder = self.process_listing(port.value["listing"], directory_name)["listing"][0]
             if not directory_folder:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             directory_list.append(directory_folder)
