@@ -158,13 +158,11 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             job[single_file] = self.get_file_ports(runs, port_name, regex)
 
         samples_json_content = self.create_sample_json(runs)
-        breakpoint()
         job["samples_json"] = samples_json_content
 
         input_file = template.render(**job)
         input_file = input_file.replace("'", '"')
         sample_input = json.loads(input_file)
-        breakpoint()
         return sample_input
 
     @staticmethod
