@@ -546,7 +546,7 @@ def save_metadata(metadata_list):
         single_metadata.save()
 
 
-def create_run_from_file(faker, user, first_file, second_file, operator_run, job_group, requestId, num, total, start_date, end_date):
+def create_run_from_file(faker, user, first_file, second_file, status, operator_run, job_group, requestId, num, total, start_date, end_date):
     assay = first_file.metadata['genePanel']
     name = "{} run {} of {}".format(assay, num, total)
     lab_head_name = first_file.metadata['labHeadName']
@@ -566,7 +566,7 @@ def create_run_from_file(faker, user, first_file, second_file, operator_run, job
         sample_id = single_file.metadata['primaryId']
         sample = Sample.objects.get(sample_id=sample_id)
         samples.append(sample)
-    status = get_status()
+
     run = create_run_obj(faker, name, pipeline, samples, status, tags, operator_run, job_group, start_date, end_date)
     reference_files_group = get_or_create_file_group(name="reference files")
     assay_group_name = "{}_references".format(assay)
