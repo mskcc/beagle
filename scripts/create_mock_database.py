@@ -120,7 +120,7 @@ def get_status():
         return RunStatus.COMPLETED
     if prob <= .55:
         return RunStatus.READY
-    if prob <= .8:
+    if prob <= .87:
         return RunStatus.RUNNING
     if prob <= .9:
         return RunStatus.FAILED
