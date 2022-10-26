@@ -26,6 +26,8 @@ class CopyOutputsOperator(Operator):
     Constructs input JSON for the argos QC pipeline and then
     submits them as runs
     """
+    ARGOS_NAME = "argos"
+    ARGOS_VERSION = "1.1.2"
 
     def get_jobs(self):
         """
@@ -115,9 +117,9 @@ class CopyOutputsOperator(Operator):
         output_directory_prefix = get_project_prefix(self.run_ids)
         output_directory = os.path.join(
             pipeline.output_directory,
-            "argos",
-            output_directory_prefix,
-            pipeline.version,
+            self.ARGOS_NAME,
+            get_project_prefix(self.request_id),
+            self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
