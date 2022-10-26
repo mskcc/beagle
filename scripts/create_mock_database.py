@@ -655,10 +655,19 @@ def create_run_from_request(faker, user, num_requests):
                                    num_completed_runs=num_completed, num_failed_runs=num_failed, job_group=job_group, finished_date=end_date)
         job_group.save()
         operator_run.save()
+        count = 0
         for single_pair in pairs:
-            count = 0
-            start_date = end_date - timedelta(hours=randint(1, 120))
-            create_run_from_file(faker, user, single_pair[0], single_pair[1], operator_run,
+            status = single_pair[2]
+            if status != RunStatus.COMPLETED and status != RunStatus.FAILED and status != RunStatus.ABORTED:
+                start_date = NOW - timedelta(hours=randint(1, 120))
+                end_date = None
+            else:
+                if not end_date:
+                    start_date = NOW - timedelta(hours=randint(1, 120))
+                    end_date = start_date + timedelta(hours=randint(1, 60))
+                else:
+                    start_date = end_date - timedelta(hours=randint(1, 120))
+            create_run_from_file(faker, user, single_pair[0], single_pair[1], single_pair[2], operator_run,
                                  job_group, curr_request, count, len(pairs), start_date, end_date)
             count += 1
         current_request_num += 1
