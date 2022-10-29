@@ -129,13 +129,6 @@ def get_status():
     return RunStatus.ABORTED
 
 
-def create_multiple_objects(object_number, object_method, **method_kwargs):
-    object_count = 0
-    while object_count < object_number:
-        object_method(method_kwargs)
-        object_count += 1
-
-
 def get_or_create_file_group(name=None):
     if not name:
         name = generate_slug()
