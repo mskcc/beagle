@@ -137,7 +137,7 @@ def get_or_create_file_group(name=None):
 
 
 def create_notifier(faker):
-    default = faker.boolean()  # sample(TRUE_OR_FALSE, 1)[0]
+    default = faker.boolean()
     notifier_type = faker.notifier_type()
     board = "ALL"
     if notifier_type != "EMAIL":
@@ -539,14 +539,14 @@ def save_metadata(metadata_list):
         single_metadata.save()
 
 
-def create_run_from_file(faker, user, first_file, second_file, status, operator_run, job_group, requestId, num, total, start_date, end_date):
+def create_run_from_file(faker, user, first_file, second_file, status, operator_run, job_group, request_id, num, total, start_date, end_date):
     assay = first_file.metadata['genePanel']
     name = "{} run {} of {}".format(assay, num, total)
     lab_head_name = first_file.metadata['labHeadName']
     lab_head_email = first_file.metadata['labHeadEmail']
     sample_name_normal = first_file.metadata['primaryId']
     sample_name_tumor = second_file.metadata['primaryId']
-    tags = {"assay": assay, 'labHeadName': lab_head_name, 'igoRequestId': requestId,
+    tags = {"assay": assay, 'labHeadName': lab_head_name, 'igoRequestId': request_id,
             'labHeadEmail': lab_head_email, 'sampleNameNormal': sample_name_normal, 'sampleNameTumor': sample_name_tumor}
     pipeline_list = list(Pipeline.objects.filter(name__regex=r'.*{}.*'.format(assay)))
     if not pipeline_list:
@@ -572,12 +572,12 @@ def create_run_from_file(faker, user, first_file, second_file, status, operator_
         port_obj.files.add(single_file)
     pair_name = "{}_{}".format(sample_name_normal, sample_name_tumor)
     if status == RunStatus.COMPLETED:
-        file_1, metadata_1 = create_output_file(faker, user, PIPELINE_PAIR_OUTPUT_FILES, pair_name, requestId, assay, [
+        file_1, metadata_1 = create_output_file(faker, user, PIPELINE_PAIR_OUTPUT_FILES, pair_name, request_id, assay, [
                                                 sample_name_normal, sample_name_tumor])
         file_2, metadata_2 = create_output_file(
-            faker, user, PIPELINE_SAMPLE_OUTPUT_FILES, sample_name_normal, requestId, assay, [sample_name_normal])
+            faker, user, PIPELINE_SAMPLE_OUTPUT_FILES, sample_name_normal, request_id, assay, [sample_name_normal])
         file_3, metadata_3 = create_output_file(
-            faker, user, PIPELINE_SAMPLE_OUTPUT_FILES, sample_name_tumor, requestId, assay, [sample_name_tumor])
+            faker, user, PIPELINE_SAMPLE_OUTPUT_FILES, sample_name_tumor, request_id, assay, [sample_name_tumor])
         files_list = [file_1, file_2, file_3]
         metadata_list = [metadata_1, metadata_2, metadata_3]
         output_metadata_list = functools.reduce(operator.iconcat, metadata_list, [])
