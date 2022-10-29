@@ -646,6 +646,7 @@ def create_run_from_file(faker, user, first_file, second_file, status, operator_
         port_obj = Port(run=run, name=single_file.file_name, port_type=PortType.INPUT)
         port_obj.save()
         port_obj.files.add(single_file)
+        port_obj.save()
     pair_name = "{}_{}".format(sample_name_normal, sample_name_tumor)
     if status == RunStatus.COMPLETED:
         file_1, metadata_1 = create_output_file(faker, user, PIPELINE_PAIR_OUTPUT_FILES, pair_name, request_id, assay, [
@@ -664,6 +665,7 @@ def create_run_from_file(faker, user, first_file, second_file, status, operator_
             port_obj = Port(run=run, name=single_file.file_name, port_type=PortType.OUTPUT)
             port_obj.save()
             port_obj.files.add(single_file)
+            port_obj.save()
 
 
 def get_pairs(request):
