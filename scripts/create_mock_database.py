@@ -552,6 +552,69 @@ def save_metadata(metadata_list):
         single_metadata.save()
 
 
+def create_qc_run(faker, user, first_file_list, second_file_list, status, operator_run, job_group, request_id, start_date, end_date):
+    normal_sample_list = []
+    tumor_sample_list = []
+    assay = first_file_list[0].metadata['genePanel']
+    lab_head_name = first_file_list[0].metadata['labHeadName']
+    lab_head_email = first_file_list[0].metadata['labHeadEmail']
+    name = "{} QC for {}".format(assay, request_id)
+    for single_file in first_file_list:
+        normal_sample_list.append(single_file.metadata['primaryId'])
+    for single_file in second_file_list:
+        tumor_sample_list.append(single_file.metadata['primaryId'])
+    normal_sample_list = list(set(normal_sample_list))
+    tumor_sample_list = list(set(tumor_sample_list))
+    tags = {"assay": assay, 'labHeadName': lab_head_name, 'igoRequestId': request_id,
+            'labHeadEmail': lab_head_email, 'sampleNameNormal': normal_sample_list, 'sampleNameTumor': tumor_sample_list}
+    pipeline_name = "{}-QC".format(assay)
+    pipeline_list = list(Pipeline.objects.filter(name__regex=r'.*{}-pipeline'.format(pipeline_name)))
+    if not pipeline_list:
+        pipeline = create_pipeline(faker, recipie=pipeline_name)
+    else:
+        pipeline = pipeline_list[0]
+    samples = []
+    all_samples = normal_sample_list + tumor_sample_list
+    for single_sample in all_samples:
+        sample = Sample.objects.get(sample_id=single_sample)
+        samples.append(sample)
+    run = create_run_obj(faker, name, pipeline, samples, status, tags, operator_run, job_group, start_date, end_date)
+    maf_files = []
+    bam_files = []
+    runs = Run.objects.filter(operator_run=operator_run)
+    for single_run in runs:
+        run_pk = single_run.pk
+        maf_ports = Port.objects.filter(name__regex=".*maf", run=run_pk)
+        bam_ports = Port.objects.filter(name__regex=".*bam", run=run_pk)
+        for single_port in maf_ports:
+            maf_files.append(list(single_port.files.all()))
+        for single_port in bam_ports:
+            bam_files.append(list(single_port.files.all()))
+    maf_port_obj = Port(run=run, name="MAF files", port_type=PortType.INPUT)
+    bam_port_obj = Port(run=run, name="BAM files", port_type=PortType.INPUT)
+    maf_port_obj.save()
+    bam_port_obj.save()
+    maf_files_flattened = functools.reduce(operator.iconcat, maf_files, [])
+    bam_files_flattened = functools.reduce(operator.iconcat, bam_files, [])
+    for single_file in maf_files_flattened:
+        maf_port_obj.files.add(single_file)
+        maf_port_obj.save()
+    for single_file in bam_files_flattened:
+        bam_port_obj.files.add(single_file)
+        bam_port_obj.save()
+    if status == RunStatus.COMPLETED:
+        project_name = "Request_{}".format(request_id)
+        file_list, metadata_list = create_output_file(
+            faker, user, PIPELINE_QC_OUTPUT_FILES, project_name, request_id, assay, all_samples)
+        File.objects.bulk_create(file_list)
+        save_metadata(metadata_list)
+        for single_file in file_list:
+            port_obj = Port(run=run, name=single_file.file_name, port_type=PortType.OUTPUT)
+            port_obj.save()
+            port_obj.files.add(single_file)
+            port_obj.save()
+
+
 def create_run_from_file(faker, user, first_file, second_file, status, operator_run, job_group, request_id, num, total, start_date, end_date):
     assay = first_file.metadata['genePanel']
     name = "{} run {} of {}".format(assay, num, total)
@@ -662,21 +725,40 @@ def create_run_from_request(faker, user, num_requests):
         job_group.save()
         operator_run.save()
         count = 0
+        latest_end_date = RUN_START
         for single_pair in pairs:
             status = single_pair[2]
             if status != RunStatus.COMPLETED and status != RunStatus.FAILED and status != RunStatus.ABORTED:
                 start_date = NOW - timedelta(hours=randint(1, 120))
                 end_date = None
+                latest_end_date = NOW
             else:
                 if not end_date:
                     start_date = NOW - timedelta(hours=randint(1, 120))
                     end_date = start_date + timedelta(hours=randint(1, 60))
                 else:
                     start_date = end_date - timedelta(hours=randint(1, 120))
+            if end_date and end_date < latest_end_date:
+                latest_end_date = end_date
             create_run_from_file(faker, user, single_pair[0], single_pair[1], single_pair[2], operator_run,
                                  job_group, curr_request, count, len(pairs), start_date, end_date)
             count += 1
         current_request_num += 1
+        if operator_status == RunStatus.COMPLETED:
+            normal_sample_list = []
+            tumor_sample_list = []
+            for single_pair in pairs:
+                normal_sample_list.append(single_pair[0])
+                tumor_sample_list.append(single_pair[1])
+            status = get_status()
+            create_qc_run(faker, user, normal_sample_list, tumor_sample_list, status,
+                          operator_run, job_group, curr_request, latest_end_date, end_date)
+            if status != RunStatus.COMPLETED:
+                if status == RunStatus.FAILED or status == RunStatus.ABORTED:
+                    operator_run.status = status
+                else:
+                    operator_run.status = RunStatus.RUNNING
+                operator_run.save()
 
 
 def run(*args):
