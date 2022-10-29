@@ -624,7 +624,7 @@ def create_run_from_file(faker, user, first_file, second_file, status, operator_
     sample_name_tumor = second_file.metadata['primaryId']
     tags = {"assay": assay, 'labHeadName': lab_head_name, 'igoRequestId': request_id,
             'labHeadEmail': lab_head_email, 'sampleNameNormal': sample_name_normal, 'sampleNameTumor': sample_name_tumor}
-    pipeline_list = list(Pipeline.objects.filter(name__regex=r'.*{}.*'.format(assay)))
+    pipeline_list = list(Pipeline.objects.filter(name__regex=r'.*{}-pipeline'.format(assay)))
     if not pipeline_list:
         pipeline = create_pipeline(faker, recipie=assay)
     else:
