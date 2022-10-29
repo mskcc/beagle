@@ -339,7 +339,7 @@ def create_patient(faker, user, file_group, request, genePanel, investigator, la
     patient_samples = []
     patient_metadata = []
     while count <= num_patients:
-        num_normals = randint(5, 20)
+        num_normals = randint(2, 10)
         patient = 'C-{}'.format(uuid.uuid4().hex[:6])
         sex = faker.male_or_female()
         sample_list, metadata_list = create_sample(faker, user, file_group, request, patient, sex, num_normals,
