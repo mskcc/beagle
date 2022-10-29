@@ -136,12 +136,25 @@ def get_or_create_file_group(name=None):
     return new_file_group
 
 
+def generate_length_limited_slug(num, length):
+    count = 0
+    limit = 20
+    while True:
+        slug = generate_slug(num)
+        if len(slug) < length:
+            return slug
+        else:
+            count += 1
+        if count > limit:
+            raise Exception("Could not find the right length slug of num {} at length {}".format(num, length))
+
+
 def create_notifier(faker):
     default = faker.boolean()
     notifier_type = faker.notifier_type()
     board = "ALL"
     if notifier_type != "EMAIL":
-        board = generate_slug(2)
+        board = generate_length_limited_slug(2, 20)
     new_notifier = Notifier(default=default, notifier_type=notifier_type, board=board)
     new_notifier.save()
     return new_notifier
