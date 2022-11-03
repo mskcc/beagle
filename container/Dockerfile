@@ -36,16 +36,17 @@ RUN apt-get clean \
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install -r requirements-dev.txt \
     && set -x \
-    && mkdir -p /var/lib/postgresql/data \
-    && chmod 775 /var/lib/postgresql \
-    && chown postgres /var/lib/postgresql \
+    && mkdir -p /home/postgresql \
+    && chmod 775 /home/postgresql \
+    && chown postgres /home/postgresql \
     && chown postgres /usr/bin/beagle \
     && chmod 775 -R /usr/bin/beagle
 
 USER postgres
 RUN mkdir -p /usr/bin/beagle/static \
-    && pg_ctl -D /var/lib/postgresql/data initdb \
-	&& pg_ctl -D /var/lib/postgresql/data -l /var/lib/postgresql/log start \
+    && mkdir -p /home/postgresql/data \
+    && pg_ctl -D /home/postgresql/data initdb \
+    && pg_ctl -D /home/postgresql/data -l /home/postgresql/log start \
     && unset PGUSER \
     && unset PGPASSWORD \
     && createdb db \
@@ -57,7 +58,7 @@ RUN mkdir -p /usr/bin/beagle/static \
 	&& python3 manage.py collectstatic \
 	&& echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${BEAGLE_DB_USERNAME}', '', '${BEAGLE_DB_PASSWORD}')" | python3 manage.py shell \
 	&& python3 manage.py runscript create_mock_database --script-args requests=${MOCK_NUM_REQUESTS} runs=${MOCK_NUM_RUNS} \
-    && echo "cd /usr/bin/beagle && pg_ctl -D /var/lib/postgresql/data -l /var/lib/postgresql/log start && gunicorn beagle.wsgi --log-file /usr/bin/beagle/log --bind 0.0.0.0:8081 --threads 10 --pythonpath /usr/bin/beagle" >> /usr/bin/beagle/start.sh \
+    && echo "cd /usr/bin/beagle && pg_ctl -D /home/postgresql/data -l /home/postgresql/log start && gunicorn beagle.wsgi --log-file /usr/bin/beagle/log --bind 0.0.0.0:8081 --threads 10 --pythonpath /usr/bin/beagle" >> /usr/bin/beagle/start.sh \
     && chmod +x /usr/bin/beagle/start.sh
 
 
