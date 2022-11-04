@@ -520,7 +520,7 @@ class PairsOperatorViewSet(GenericAPIView):
         investigatorName = request.data.get("investigatorName")
         assay = request.data.get("assay")
         job_group_id = request.data.get("job_group_id", None)
-        request_id = request.data / get("request_id", "missing_request_id")
+        request_id = request.data.get("request_id", "missing_request_id")
         output_directory_prefix = request.data.get("output_directory_prefix", None)
 
         if not job_group_id:
