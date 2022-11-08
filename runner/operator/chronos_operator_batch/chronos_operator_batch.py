@@ -154,10 +154,11 @@ class ChronosOperatorBatch(Operator):
             metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
             values_metadata="ciTag",
         )
+        used_normals = set()
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
             pairing_for_request.append(pairing)
-            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all))
+            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
         input_json = {"pairing": pairing_for_request, "mapping": mapping_for_request}
 
@@ -170,13 +171,15 @@ class ChronosOperatorBatch(Operator):
             if p["tumor"] == tumor:
                 return p
 
-    def get_mapping_for_sample(self, tumor, normal, mapping):
+    def get_mapping_for_sample(self, tumor, normal, mapping, used_normals):
         map = []
         for m in mapping:
             if m["sample"] == tumor:
                 map.append(m)
             if m["sample"] == normal:
-                map.append(m)
+                if normal not in used_normals:
+                    map.append(m)
+                    used_normals.add(m)
         return map
 
     def load_pairing_file(self, tsv_file):
