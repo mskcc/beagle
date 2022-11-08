@@ -179,7 +179,7 @@ class ChronosOperatorBatch(Operator):
             if m["sample"] == normal:
                 if normal not in used_normals:
                     map.append(m)
-                    used_normals.add(m)
+                    used_normals.add(normal)
         return map
 
     def load_pairing_file(self, tsv_file):
