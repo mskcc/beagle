@@ -15,7 +15,7 @@ from file_system.serializers import (
     FileSerializer,
     FileQuerySerializer,
     BatchPatchFileSerializer,
-    CopyFilesSerializer
+    CopyFilesSerializer,
 )
 from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
@@ -249,7 +249,6 @@ class BatchPatchFiles(GenericAPIView):
 
 
 class CopyFilesView(GenericAPIView):
-
     def _copy_files(self, files, file_group):
         for f in files:
             new_file = f.file
@@ -263,15 +262,17 @@ class CopyFilesView(GenericAPIView):
     def post(self, request):
         serializer = CopyFilesSerializer(data=request.data)
         if serializer.is_valid():
-            request_id = serializer.data.get('request_id')
-            primary_id = serializer.data.get('primary_id')
-            file_group_from = serializer.data['file_group_from']
-            file_group_to = serializer.data['file_group_to']
+            request_id = serializer.data.get("request_id")
+            primary_id = serializer.data.get("primary_id")
+            file_group_from = serializer.data["file_group_from"]
+            file_group_to = serializer.data["file_group_to"]
             if primary_id:
-                files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
-                                              file_group=file_group_from)
+                files = FileRepository.filter(
+                    metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, file_group=file_group_from
+                )
             elif request_id:
-                files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                              file_group=file_group_from)
+                files = FileRepository.filter(
+                    metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=file_group_from
+                )
             self._copy_files(files, file_group_to)
         return Response(status=status.HTTP_200_OK)

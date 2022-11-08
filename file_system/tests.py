@@ -614,17 +614,17 @@ class FileTest(APITestCase):
         self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_3")
         self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_4")
         test_json = dict(
-            request_id="TEST_B",
-            file_group_from=str(self.file_group.id),
-            file_group_to=str(self.file_group_2.id)
+            request_id="TEST_B", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
         )
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.post("/v0/fs/copy-files", test_json, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        files_count_original = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"},
-                                                     file_group=str(self.file_group.id)).count()
-        files_count_copy = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"},
-                                                 file_group=str(self.file_group_2.id)).count()
+        files_count_original = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"}, file_group=str(self.file_group.id)
+        ).count()
+        files_count_copy = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"}, file_group=str(self.file_group_2.id)
+        ).count()
         self.assertEqual(files_count_original, files_count_copy)
 
     def test_copy_files_by_sample_id_to_different_file_group(self):
@@ -632,17 +632,17 @@ class FileTest(APITestCase):
         request_id = Request.objects.create(request_id="TEST_B")
         self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1")
         test_json = dict(
-            primary_id="TEST_B_1",
-            file_group_from=str(self.file_group.id),
-            file_group_to=str(self.file_group_2.id)
+            primary_id="TEST_B_1", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
         )
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.post("/v0/fs/copy-files", test_json, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        files_count_original = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"},
-                                                     file_group=str(self.file_group.id)).count()
-        files_count_copy = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"},
-                                                 file_group=str(self.file_group_2.id)).count()
+        files_count_original = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}, file_group=str(self.file_group.id)
+        ).count()
+        files_count_copy = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}, file_group=str(self.file_group_2.id)
+        ).count()
         self.assertEqual(files_count_original, files_count_copy)
         files_count = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}).count()
-        self.assertEqual(files_count, 2*files_count_original)
+        self.assertEqual(files_count, 2 * files_count_original)

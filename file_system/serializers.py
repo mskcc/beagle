@@ -227,9 +227,7 @@ class DistributionQuerySerializer(serializers.Serializer):
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-    path = serializers.CharField(
-        max_length=400, required=True
-    )
+    path = serializers.CharField(max_length=400, required=True)
     size = serializers.IntegerField(required=False)
     file_type = serializers.CharField(max_length=30, required=True)
     metadata = serializers.JSONField(allow_null=True)
@@ -480,8 +478,8 @@ class CopyFilesSerializer(serializers.Serializer):
     file_group_to = serializers.UUIDField(required=True)
 
     def validate(self, data):
-        request_id = data.get('request_id')
-        primary_id = data.get('primary_id')
+        request_id = data.get("request_id")
+        primary_id = data.get("primary_id")
         if not request_id and not primary_id:
             raise serializers.ValidationError("Either request_id or primary_id input is required.")
         return data

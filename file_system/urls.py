@@ -27,6 +27,8 @@ router.register("patient", PatientViewSet)
 router.register("distribution", DistributionView)
 router.register("project-details", SampleFullViewSet)
 
-urlpatterns = [path("", include(router.urls)),
-               path("batch-patch-files", BatchPatchFiles.as_view()),
-               path("copy-files", CopyFilesView.as_view())]
+urlpatterns = [
+    path("", include(router.urls)),
+    path("batch-patch-files", BatchPatchFiles.as_view()),
+    path("copy-files", CopyFilesView.as_view()),
+]
