@@ -632,7 +632,7 @@ def running_job(self, run_id):
 
 
 @shared_task(bind=True)
-def abort_job(self, run_id):
+def abort_job(self, run_id, lsf_log_location, inputs_json_location):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -641,6 +641,8 @@ def abort_job(self, run_id):
             if run.status != RunStatus.ABORTED:
                 run.status = RunStatus.ABORTED
                 run.save()
+                run_obj = RunObjectFactory.from_db(run_id)
+                _job_finished_notify(run_obj, lsf_log_location, inputs_json_location)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
@@ -694,8 +696,10 @@ def check_jobs_status():
             status = remote_statuses[str(run.execution_id)]
             if status["started"] and not run.started:
                 run.started = status["started"]
+                run.save(update_fields=("started",))
             if status["submitted"] and not run.submitted:
                 run.submitted = status["submitted"]
+                run.save(update_fields=("submitted",))
 
             if status["commandlinetooljob_set"]:
                 update_commandline_job_status(run, status["commandlinetooljob_set"])
@@ -728,7 +732,11 @@ def check_jobs_status():
                 continue
             if status["status"] == "ABORTED":
                 logger.info(format_log("Job aborted", obj=run))
-                abort_job.delay(str(run.id))
+                lsf_log_location = status.get("message", {}).get("log")
+                inputs_location = None
+                if lsf_log_location:
+                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
+                abort_job.delay(str(run.id), lsf_log_location, inputs_location)
             else:
                 logger.info("Run lock not acquired for run: %s" % str(run.id))
 
