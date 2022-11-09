@@ -688,7 +688,7 @@ def get_pairs(request):
             else:
                 n_file = pooled_normal_query.first()
         status = get_status()
-        pairs.append((t_file, n_file, status))
+        pairs.append((n_file, t_file, status))
     return pairs
 
 
