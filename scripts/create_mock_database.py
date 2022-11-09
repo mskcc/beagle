@@ -559,9 +559,9 @@ def create_qc_run(faker, user, first_file_list, second_file_list, status, operat
     lab_head_name = first_file_list[0].metadata['labHeadName']
     lab_head_email = first_file_list[0].metadata['labHeadEmail']
     name = "{} QC for {}".format(assay, request_id)
-    for single_file in first_file_list:
-        normal_sample_list.append(single_file.metadata['primaryId'])
     for single_file in second_file_list:
+        normal_sample_list.append(single_file.metadata['primaryId'])
+    for single_file in first_file_list:
         tumor_sample_list.append(single_file.metadata['primaryId'])
     normal_sample_list = list(set(normal_sample_list))
     tumor_sample_list = list(set(tumor_sample_list))
@@ -620,8 +620,8 @@ def create_run_from_file(faker, user, first_file, second_file, status, operator_
     name = "{} run {} of {}".format(assay, num, total)
     lab_head_name = first_file.metadata['labHeadName']
     lab_head_email = first_file.metadata['labHeadEmail']
-    sample_name_normal = first_file.metadata['primaryId']
-    sample_name_tumor = second_file.metadata['primaryId']
+    sample_name_normal = second_file.metadata['primaryId']
+    sample_name_tumor = first_file.metadata['primaryId']
     tags = {"assay": assay, 'labHeadName': lab_head_name, 'igoRequestId': request_id,
             'labHeadEmail': lab_head_email, 'sampleNameNormal': sample_name_normal, 'sampleNameTumor': sample_name_tumor}
     pipeline_list = list(Pipeline.objects.filter(name__regex=r'.*{}-pipeline'.format(assay)))
