@@ -1,0 +1,26 @@
+{
+  "conpair_markers_txt": {
+    "path": "/juno/work/ci/concordance-workflow/markers/IMPACT468/FP_tiling_genotypes_for_Conpair.txt",
+    "class": "File"
+  },
+  "conpair_markers_bed": {
+    "path": "/juno/work/ci/concordance-workflow/markers/IMPACT468/FP_tiling_genotypes_for_Conpair.bed",
+    "class": "File"
+  },
+  "ref_fasta": {
+    "path": "/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+    "class": "File"
+  },
+  "runparams": {
+    "tmp_dir": "/scratch",
+    "gatk_jar_path": "/usr/bin/gatk.jar"
+  },
+  "tumor_bam": {
+    "path": "path/to/tumor.bam",
+    "class": "File"
+  },
+  "dmp_dir": {
+    "class": "Directory",
+    "path": "/work/ci/dmp/likelihoods"
+  }
+}
