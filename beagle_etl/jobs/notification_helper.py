@@ -32,6 +32,10 @@ def _voyager_start_processing(request_id, run_ids):
             sent_to.add(lab_head_email)
 
     runs = Run.objects.filter(id__in=run_ids)
+    pipeline = runs.first().app
+    # TODO: When this is tested add inform flag to pipeline model
+    if str(pipeline.id) not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_PIPELINES:
+        return
 
     if runs:
         used_samples = set()
