@@ -30,8 +30,11 @@ class Operator(object):
         self.job_group_id = job_group_id
         self.job_group_notifier_id = job_group_notifier_id
         self.run_ids = run_ids
-        self.file_group = file_group if file_group else default_file_group()
-        self.files = FileRepository.filter(file_group=self.file_group).all()
+        self.file_group = file_group
+        if self.file_group:
+            self.files = FileRepository.filter(file_group=self.file_group).all()
+        else:
+            self.files = FileRepository.filter().all()
         self.pairing = pairing
         # {"pairs": [{"tumor": "tumorSampleName", "normal": "normalSampleName"}]}
         self.output_directory_prefix = output_directory_prefix
