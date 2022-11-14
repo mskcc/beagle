@@ -20,7 +20,7 @@ class Operator(object):
         pipeline=None,
         pairing=None,
         output_directory_prefix=None,
-        file_group=None
+        file_group=None,
     ):
         if not isinstance(model, OperatorModel):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
