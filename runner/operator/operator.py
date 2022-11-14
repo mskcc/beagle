@@ -1,7 +1,7 @@
 import logging
 from django.conf import settings
-from file_system.models import File, FileMetadata
 from file_system.repository.file_repository import FileRepository
+from file_system.helper.file_group_helper import default_file_group
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
@@ -20,6 +20,7 @@ class Operator(object):
         pipeline=None,
         pairing=None,
         output_directory_prefix=None,
+        file_group=None
     ):
         if not isinstance(model, OperatorModel):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
@@ -29,7 +30,8 @@ class Operator(object):
         self.job_group_id = job_group_id
         self.job_group_notifier_id = job_group_notifier_id
         self.run_ids = run_ids
-        self.files = FileRepository.all()
+        self.file_group = file_group if file_group else default_file_group()
+        self.files = FileRepository.filter(file_group=self.file_group).all()
         self.pairing = pairing
         # {"pairs": [{"tumor": "tumorSampleName", "normal": "normalSampleName"}]}
         self.output_directory_prefix = output_directory_prefix
