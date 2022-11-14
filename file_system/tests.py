@@ -47,14 +47,21 @@ class FileTest(APITestCase):
         file_metadata.save()
         return file
 
-    def _create_files(self, file_type, amount, file_group_id=None, request_id=None, sample_id=None):
+    def _create_files(self, file_type, amount):
         for i in range(amount):
-            if not request_id:
-                request_id = "request_%s" % str(i)
-            if not sample_id:
-                sample_id = "sample_%s" % str(i)
-            if not file_group_id:
-                file_group_id = str(self.file_group.id)
+            request_id = "request_%s" % str(i)
+            sample_id = "sample_%s" % str(i)
+            file_group_id = str(self.file_group.id)
+            if file_type == "fasta":
+                file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
+                self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
+                file_path_R2 = "/path/to/%s_R2.%s" % (sample_id, file_type)
+                self._create_single_file(file_path_R2, file_type, file_group_id, request_id, sample_id)
+            else:
+                file_path = "/path/to/%s.%s" % (sample_id, file_type)
+                self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
+
+    def _create_files_with_details_specified(self, file_type, file_group_id=None, request_id=None, sample_id=None):
             if file_type == "fasta":
                 file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
                 self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
@@ -609,10 +616,10 @@ class FileTest(APITestCase):
         sample_3 = Sample.objects.create(sample_id="TEST_B_3")
         sample_4 = Sample.objects.create(sample_id="TEST_B_4")
         request_id = Request.objects.create(request_id="TEST_B")
-        self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1")
-        self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_2")
-        self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_3")
-        self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_4")
+        self._create_files_with_details_specified("fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1")
+        self._create_files_with_details_specified("fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_2")
+        self._create_files_with_details_specified("fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_3")
+        self._create_files_with_details_specified("fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_4")
         test_json = dict(
             request_id="TEST_B", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
         )
@@ -630,7 +637,7 @@ class FileTest(APITestCase):
     def test_copy_files_by_sample_id_to_different_file_group(self):
         sample_1 = Sample.objects.create(sample_id="TEST_B_1")
         request_id = Request.objects.create(request_id="TEST_B")
-        self._create_files("fasta", 1, file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1")
+        self._create_files_with_details_specified("fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1")
         test_json = dict(
             primary_id="TEST_B_1", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
         )
