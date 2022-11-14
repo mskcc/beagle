@@ -74,6 +74,7 @@ class FileGroup(BaseModel):
     slug = models.SlugField(unique=True)
     storage = models.ForeignKey(Storage, blank=True, null=True, on_delete=models.SET_NULL)
     default = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
