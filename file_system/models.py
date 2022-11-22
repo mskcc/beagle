@@ -73,6 +73,8 @@ class FileGroup(BaseModel):
     name = models.CharField(max_length=40, editable=True)
     slug = models.SlugField(unique=True)
     storage = models.ForeignKey(Storage, blank=True, null=True, on_delete=models.SET_NULL)
+    default = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -90,7 +92,7 @@ class FileGroupMetadata(BaseModel):
 
 class File(BaseModel):
     file_name = models.CharField(max_length=500)
-    path = models.CharField(max_length=1500, unique=True, db_index=True)
+    path = models.CharField(max_length=1500, db_index=True)
     file_type = models.ForeignKey(FileType, null=True, on_delete=models.SET_NULL)
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
