@@ -316,7 +316,7 @@ class UpdateFileSerializer(serializers.Serializer):
             settings.RECIPE_METADATA_KEY,
             settings.PRESERVATION_METADATA_KEY,
         )
-        if not user.id == settings.ETL_USER:
+        if not user.username == settings.ETL_USER:
             updated_keys = [
                 key.replace("root['", "").replace("']", "") for key in metadata_diff.get("values_changed", {}).keys()
             ]
