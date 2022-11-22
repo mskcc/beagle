@@ -21,7 +21,7 @@ class RunStatus(IntEnum):
     RUNNING = 2
     FAILED = 3
     COMPLETED = 4
-    ABORTED = 5
+    TERMINATED = 5
 
 
 class PortType(IntEnum):
@@ -269,9 +269,9 @@ class Run(BaseModel):
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
                 self.finished_date = now()
-            elif self.status == RunStatus.ABORTED:
+            elif self.status == RunStatus.TERMINATED:
                 self.operator_run.increment_failed_run()
-                self.original["status"] = RunStatus.ABORTED
+                self.original["status"] = RunStatus.TERMINATED
                 self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 

@@ -151,37 +151,37 @@ class TestRunAPIView(APITestCase):
         number_of_runs = len(Run.objects.all())
         self.assertEqual(number_of_runs, 1)
 
-    @patch("runner.tasks.abort_job_task.delay")
-    def test_abort_job_group(self, abort_job_task):
+    @patch("runner.tasks.terminate_job_task.delay")
+    def test_terminate_job_group(self, terminate_job_task):
         fg = FileGroup.objects.create(name="test", slug="test")
         pipeline = Pipeline.objects.create(name="pipeline", output_directory="/tmp", output_file_group=fg)
         job_group = JobGroup.objects.create()
         run1 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
         run2 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
         response = self.client.post(
-            "/v0/run/api/abort/", {"job_group_id": str(job_group.id), "runs": []}, format="json"
+            "/v0/run/api/terminate/", {"job_group_id": str(job_group.id), "runs": []}, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
         calls = [call(str(job_group.id), [])]
 
-        abort_job_task.assert_has_calls(calls, any_order=True)
+        terminate_job_task.assert_has_calls(calls, any_order=True)
 
-    @patch("runner.tasks.abort_job_task.delay")
-    def test_abort_runs(self, abort_job_task):
+    @patch("runner.tasks.terminate_job_task.delay")
+    def test_terminate_runs(self, terminate_job_task):
         fg = FileGroup.objects.create(name="test", slug="test")
         pipeline = Pipeline.objects.create(name="pipeline", output_directory="/tmp", output_file_group=fg)
         job_group = JobGroup.objects.create()
         run1 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
         run2 = Run.objects.create(app=pipeline, status=RunStatus.RUNNING, job_group=job_group, notify_for_outputs=[])
         response = self.client.post(
-            "/v0/run/api/abort/", {"job_group_id": None, "runs": [str(run1.id), str(run2.id)]}, format="json"
+            "/v0/run/api/terminate/", {"job_group_id": None, "runs": [str(run1.id), str(run2.id)]}, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
         calls = [call(None, [str(run1.id), str(run2.id)])]
 
-        abort_job_task.assert_has_calls(calls, any_order=True)
+        terminate_job_task.assert_has_calls(calls, any_order=True)
 
     @patch("runner.tasks.submit_job.delay")
     def test_restart_run(self, submit_job_task):
