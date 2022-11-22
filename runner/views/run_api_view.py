@@ -16,7 +16,7 @@ from runner.tasks import (
     create_run_task,
     create_jobs_from_operator,
     run_routine_operator_job,
-    abort_job_task,
+    terminate_job_task,
     submit_job,
     create_jobs_from_request,
     create_aion_job,
@@ -42,7 +42,7 @@ from runner.serializers import (
     OperatorRunSerializer,
     OperatorLatestSamplesQuerySerializer,
     OperatorSampleQuerySerializer,
-    AbortRunSerializer,
+    TerminateRunSerializer,
 )
 from rest_framework.generics import GenericAPIView
 from runner.operator.operator_factory import OperatorFactory
@@ -206,16 +206,16 @@ class RunApiViewSet(
             return Response(response.data, status=status.HTTP_201_CREATED)
         return Response("Error", status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=AbortRunSerializer)
+    @swagger_auto_schema(request_body=TerminateRunSerializer)
     @action(detail=False, methods=["post"])
-    def abort(self, request, *args, **kwargs):
-        serializer = AbortRunSerializer(data=request.data)
+    def terminate(self, request, *args, **kwargs):
+        serializer = TerminateRunSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         job_group_id = request.data.get("job_group_id", None)
         runs = request.data.get("runs", [])
-        abort_job_task.delay(job_group_id, runs)
-        return Response("Abort task submitted", status=status.HTTP_202_ACCEPTED)
+        terminate_job_task.delay(job_group_id, runs)
+        return Response("Terminate task submitted", status=status.HTTP_202_ACCEPTED)
 
     def _send_notifications(self, job_group_notifier_id, run):
         pipeline_name = run.app.name
@@ -257,10 +257,10 @@ class RunApiRestartViewSet(GenericAPIView):
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.ABORTED]))
+        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.TERMINATED]))
         if runs_in_progress:
             return Response(
-                "There are runs still in progress, please abort them to restart", status=status.HTTP_400_BAD_REQUEST
+                "There are runs still in progress, please terminate them to restart", status=status.HTTP_400_BAD_REQUEST
             )
 
         runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
@@ -520,6 +520,7 @@ class PairsOperatorViewSet(GenericAPIView):
         investigatorName = request.data.get("investigatorName")
         assay = request.data.get("assay")
         job_group_id = request.data.get("job_group_id", None)
+        request_id = request.data.get("request_id", "missing_request_id")
         output_directory_prefix = request.data.get("output_directory_prefix", None)
 
         if not job_group_id:
@@ -546,6 +547,7 @@ class PairsOperatorViewSet(GenericAPIView):
                 pairing={"pairs": pairs},
                 job_group_id=job_group_id,
                 job_group_notifier_id=job_group_notifier_id,
+                request_id=request_id,
                 output_directory_prefix=output_directory_prefix,
             )
             create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
