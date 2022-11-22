@@ -292,11 +292,13 @@ class ArgosOperator(Operator):
         num_outside_req = 0
         num_within_req = 0
         other_requests_matched = list()
-        request_id = argos_inputs[0]["request_id"]
+        request_id = None
         for i, job in enumerate(argos_inputs):
             tumor = job["pair"][0]
             normal = job["pair"][1]
             req_t = tumor["request_id"]
+            if not request_id:
+                request_id = tumor["request_id"]
             req_n = normal["request_id"]
             specimen_type_n = normal["specimen_type"]
             if specimen_type_n.lower() in "DMP Normal".lower():

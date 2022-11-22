@@ -269,6 +269,10 @@ class Run(BaseModel):
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
                 self.finished_date = now()
+            elif self.status == RunStatus.ABORTED:
+                self.operator_run.increment_failed_run()
+                self.original["status"] = RunStatus.ABORTED
+                self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 
 

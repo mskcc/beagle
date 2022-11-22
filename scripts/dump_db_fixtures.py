@@ -113,9 +113,10 @@ def dump_run(**kwargs):
         for single_file in files:
             filemetadata_instance = FileMetadata.objects.filter(file=single_file).last()
             file_data = json.loads(serializers.serialize("json", [single_file]))
-            filemetadata_data = json.loads(serializers.serialize("json", [filemetadata_instance]))
+            if filemetadata_instance:
+                filemetadata_data = json.loads(serializers.serialize("json", [filemetadata_instance]))
+                all_data.append(filemetadata_data[0])
             all_data.append(file_data[0])
-            all_data.append(filemetadata_data[0])
             if single_file.sample:
                 sample_data = json.loads(serializers.serialize("json", [single_file.sample]))
                 all_samples.append(sample_data[0])
@@ -124,9 +125,10 @@ def dump_run(**kwargs):
         for single_file in files:
             filemetadata_instance = FileMetadata.objects.filter(file=single_file).last()
             file_data = json.loads(serializers.serialize("json", [single_file]))
-            filemetadata_data = json.loads(serializers.serialize("json", [filemetadata_instance]))
+            if filemetadata_instance:
+                filemetadata_data = json.loads(serializers.serialize("json", [filemetadata_instance]))
+                all_data.append(filemetadata_data[0])
             all_data.append(file_data[0])
-            all_data.append(filemetadata_data[0])
             if single_file.sample:
                 sample_data = json.loads(serializers.serialize("json", [single_file.sample]))
                 all_samples.append(sample_data[0])
