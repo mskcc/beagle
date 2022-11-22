@@ -1,3 +1,4 @@
+import json
 from django.conf import settings
 from notifier.event_handler.event import Event
 
@@ -33,7 +34,7 @@ class RunStartedEvent(Event):
         link = "%s%s%s\n" % (settings.BEAGLE_URL, "/v0/run/api/", self.run_id)
         tags = ""
         for k, v in self.tags.items():
-            tags += "%s: %s\n" % (k, str(v))
+            tags += f"{k}: {json.dumps(v) if isinstance(v, list) or isinstance(v, dict) else str(v)}\n"
         return RUN_TEMPLATE.format(
             run_id=self.run_id,
             pipeline_name=self.pipeline,

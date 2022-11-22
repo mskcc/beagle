@@ -227,13 +227,21 @@ class DistributionQuerySerializer(serializers.Serializer):
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-    path = serializers.CharField(
-        max_length=400, required=True, validators=[UniqueValidator(queryset=File.objects.all())]
-    )
+    path = serializers.CharField(max_length=400, required=True)
     size = serializers.IntegerField(required=False)
-    # file_group_id = serializers.UUIDField(required=True)
     file_type = serializers.CharField(max_length=30, required=True)
     metadata = serializers.JSONField(allow_null=True)
+
+    def validate(self, attrs):
+        path = attrs.get("path")
+        file_group = attrs.get("file_group")
+        try:
+            File.objects.get(path=path, file_group=file_group)
+        except File.DoesNotExist:
+            pass
+        else:
+            raise serializers.ValidationError(f"File with path: {path} already exists in file_group: {file_group}")
+        return attrs
 
     def validate_file_type(self, file_type):
         try:
@@ -461,3 +469,17 @@ class FullSampleSerializer(serializers.ModelSerializer):
             "tumor_or_normal",
             "patient_id",
         )
+
+
+class CopyFilesSerializer(serializers.Serializer):
+    request_id = serializers.CharField(max_length=50, required=False)
+    primary_id = serializers.CharField(max_length=50, required=False)
+    file_group_from = serializers.UUIDField(required=True)
+    file_group_to = serializers.UUIDField(required=True)
+
+    def validate(self, data):
+        request_id = data.get("request_id")
+        primary_id = data.get("primary_id")
+        if not request_id and not primary_id:
+            raise serializers.ValidationError("Either request_id or primary_id input is required.")
+        return data

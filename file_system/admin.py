@@ -15,7 +15,10 @@ from .models import (
     FileExtension,
 )
 
-# Register your models here.
+
+class FileGroupAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "slug", "default", "owner")
+    search_fields = ("name", "owner")
 
 
 class FileAdmin(ExportActionMixin, admin.ModelAdmin):
@@ -64,7 +67,7 @@ admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
 admin.site.register(Request, RequestAdmin)
 admin.site.register(Patient, PatientAdmin)
-admin.site.register(FileGroup)
+admin.site.register(FileGroup, FileGroupAdmin)
 admin.site.register(FileType)
 admin.site.register(FileExtension)
 admin.site.register(FileMetadata, FileMetadataAdmin)

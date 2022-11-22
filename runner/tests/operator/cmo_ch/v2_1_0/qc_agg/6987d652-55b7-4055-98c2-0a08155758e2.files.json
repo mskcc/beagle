@@ -1,0 +1,4420 @@
+[
+  {
+    "model": "file_system.file",
+    "pk": "014e0a9f-b1e4-4576-bba9-aeacc5c773e2",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.162Z",
+      "modified_date": "2022-10-05T16:56:53.162Z",
+      "file_name": "sequence_qc_mqc.yaml",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.yaml",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ac258f9062b675eeaf4b11a26053746426664b70",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c738cd11-96a3-4d80-a8c2-0faec878d46f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.169Z",
+      "modified_date": "2022-10-05T16:56:53.169Z",
+      "file": "014e0a9f-b1e4-4576-bba9-aeacc5c773e2",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0205124e-8356-45fe-ae3e-f9545c5c7c58",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.774Z",
+      "modified_date": "2022-10-05T16:56:51.774Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex_per_target_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_simplex_per_target_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c6206baa98603bd45b792f02770000ba8970a34a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "50e9b047-432a-42be-a316-99831d259670",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.778Z",
+      "modified_date": "2022-10-05T16:56:51.778Z",
+      "file": "0205124e-8356-45fe-ae3e-f9545c5c7c58",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "02452e7e-2ad3-483a-b9dc-d1286a86e876",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.382Z",
+      "modified_date": "2022-10-05T16:56:52.382Z",
+      "file_name": "C-NFKNJL-N001-d01_noise_by_substitution.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise_by_substitution.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e4dbf5142f3ed1c947e1e743ddf4748799819b92",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6d929656-2bf8-471d-ae4a-2a9d87677804",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.388Z",
+      "modified_date": "2022-10-05T16:56:52.388Z",
+      "file": "02452e7e-2ad3-483a-b9dc-d1286a86e876",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0757c4c9-6d1e-4abd-b6d8-78d7ea81d927",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.903Z",
+      "modified_date": "2022-10-05T16:56:50.903Z",
+      "file_name": "C-NFKNJL-N001-d01.mosdepth.region.dist.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01.mosdepth.region.dist.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$92bc68ff77989aae80ef1d24e7cec227f2763e18",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5a9f6e2f-999a-468e-b71c-989e75e2621e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.908Z",
+      "modified_date": "2022-10-05T16:56:50.908Z",
+      "file": "0757c4c9-6d1e-4abd-b6d8-78d7ea81d927",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0899661b-3677-4d83-831b-362728553c25",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.311Z",
+      "modified_date": "2022-10-05T16:56:51.311Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM_per_target_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_FM_per_target_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ce345ef1369346f20da64f9f75badf28ec30fefb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c0a2be89-b5f0-49d8-93c7-06ab164b0c16",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.316Z",
+      "modified_date": "2022-10-05T16:56:51.316Z",
+      "file": "0899661b-3677-4d83-831b-362728553c25",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0ba3ef2c-8cbc-4f6e-8764-a13934e0ce7f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.238Z",
+      "modified_date": "2022-10-05T16:56:50.238Z",
+      "file_name": "multiqc_noise_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_noise_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c09b5e173926c7519c4449e3d4db95a7c7f2738d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b99d8ba1-6076-49b3-a0fb-97c805c09fb8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.244Z",
+      "modified_date": "2022-10-05T16:56:50.244Z",
+      "file": "0ba3ef2c-8cbc-4f6e-8764-a13934e0ce7f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "10c682a2-bdcb-4067-af79-9d0317da6aeb",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.310Z",
+      "modified_date": "2022-10-05T16:56:50.310Z",
+      "file_name": "multiqc_picard_insertSize_duplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_duplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e57ee092951d5a25ebfd7d62d59dfef1e2f9b48a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b4e6a1aa-421d-442e-b50a-1a465c836d34",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.316Z",
+      "modified_date": "2022-10-05T16:56:50.316Z",
+      "file": "10c682a2-bdcb-4067-af79-9d0317da6aeb",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "12de0792-c6b2-4b6f-b30f-5cff91d0f5ad",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.739Z",
+      "modified_date": "2022-10-05T16:56:52.739Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$31d9a6197785a913031b1afbcdf9c8d15cd7933d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2942e6ae-4876-4b45-81a0-4a621cf08572",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.745Z",
+      "modified_date": "2022-10-05T16:56:52.745Z",
+      "file": "12de0792-c6b2-4b6f-b30f-5cff91d0f5ad",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1341fb7c-26df-4abf-a029-02d9e2d8bf5d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.039Z",
+      "modified_date": "2022-10-05T16:56:50.039Z",
+      "file_name": "multiqc_sample_clusters.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sample_clusters.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$cf2a03f1edb8156ec5b3f1cb015c7d7d114f0862",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3934df47-486c-4d85-96f2-4d43b6de9009",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.045Z",
+      "modified_date": "2022-10-05T16:56:50.045Z",
+      "file": "1341fb7c-26df-4abf-a029-02d9e2d8bf5d",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "15a1428c-dfbf-4d2c-bc15-b157c7bde5d4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.700Z",
+      "modified_date": "2022-10-05T16:56:52.700Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_hs_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_hs_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ae46e1c2302731d5b8e00379fb85052c10224e10",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "eed71b62-6cce-4283-8a08-b78e693f21e6",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.706Z",
+      "modified_date": "2022-10-05T16:56:52.706Z",
+      "file": "15a1428c-dfbf-4d2c-bc15-b157c7bde5d4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "15a4d675-0b15-4579-b346-45e5ba5a2a79",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.173Z",
+      "modified_date": "2022-10-05T16:56:49.173Z",
+      "file_name": "multiqc_picard_insertSize_collapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$759603753ff7accaea1d8a68ef2fb73991a6ae35",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f9f63ff4-0c3a-4d83-b62a-9b92c4da591c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.178Z",
+      "modified_date": "2022-10-05T16:56:49.178Z",
+      "file": "15a4d675-0b15-4579-b346-45e5ba5a2a79",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "19072522-f963-43c8-aadb-0e6be35c8963",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.995Z",
+      "modified_date": "2022-10-05T16:56:49.995Z",
+      "file_name": "multiqc_picard_target_coverage_duplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_duplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7b549dd0-564d-4a47-8c0f-d09869907fae",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.000Z",
+      "modified_date": "2022-10-05T16:56:50.000Z",
+      "file": "19072522-f963-43c8-aadb-0e6be35c8963",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "199d5289-8e93-4b13-8e99-c3b389ca36bd",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.582Z",
+      "modified_date": "2022-10-05T16:56:50.582Z",
+      "file_name": "multiqc_picard_insertSize_collapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$759603753ff7accaea1d8a68ef2fb73991a6ae35",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "ce3f8654-a168-4aeb-9419-929af626e485",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.586Z",
+      "modified_date": "2022-10-05T16:56:50.586Z",
+      "file": "199d5289-8e93-4b13-8e99-c3b389ca36bd",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1acf9bef-fe32-4579-9be3-107f0a52db80",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.835Z",
+      "modified_date": "2022-10-05T16:56:50.835Z",
+      "file_name": "C-NFKNJL-N001-d01_duplex_hotspots_fillout.maf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_duplex_hotspots_fillout.maf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e1a0d19dcd285daa20ad08a84e0f265ec38b9a34",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "de93ed9d-ca5a-4bde-aa0a-e6e330db1466",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.840Z",
+      "modified_date": "2022-10-05T16:56:50.840Z",
+      "file": "1acf9bef-fe32-4579-9be3-107f0a52db80",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1e4432a7-f975-4f36-a4d8-ea6d4121a390",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.824Z",
+      "modified_date": "2022-10-05T16:56:52.824Z",
+      "file_name": "minor_contamination.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e2b53c13bd5e1644406d60b8dc6e0a3d9eca4c8e",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "bb082285-0bd3-4683-9102-3cbc6132bcba",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.830Z",
+      "modified_date": "2022-10-05T16:56:52.830Z",
+      "file": "1e4432a7-f975-4f36-a4d8-ea6d4121a390",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "26d512ed-5cd8-466a-839f-f6681b287c28",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.471Z",
+      "modified_date": "2022-10-05T16:56:51.471Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_grouped.duplex_yield_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_grouped.duplex_yield_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c438de94446731b099e28d201cc462048d9aac6d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "feaa59f9-6dcc-4e9c-9822-756e986fd7f7",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.476Z",
+      "modified_date": "2022-10-05T16:56:51.476Z",
+      "file": "26d512ed-5cd8-466a-839f-f6681b287c28",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "27af8abc-93d3-415f-8a2a-b04f69693bcf",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.393Z",
+      "modified_date": "2022-10-05T16:56:51.393Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_hotspots_fillout.maf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_hotspots_fillout.maf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$67f819b757c14dde11645c27825ba7cb9a53acf7",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c05dddac-488f-4325-aac3-3343a4077cca",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.399Z",
+      "modified_date": "2022-10-05T16:56:51.399Z",
+      "file": "27af8abc-93d3-415f-8a2a-b04f69693bcf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "28ce4a1d-be8a-4bac-b4a5-f1d03ffbf4e2",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.193Z",
+      "modified_date": "2022-10-05T16:56:51.193Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM_hs_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_FM_hs_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$1e4ee8946f2b75826be4c8e4550b551142ffcea5",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c3236b3a-aa45-45fe-9445-c83abeed9146",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.200Z",
+      "modified_date": "2022-10-05T16:56:51.200Z",
+      "file": "28ce4a1d-be8a-4bac-b4a5-f1d03ffbf4e2",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "29d92653-3733-406f-a734-98c8ee6cc5f4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.201Z",
+      "modified_date": "2022-10-05T16:56:50.201Z",
+      "file_name": "multiqc_picard_HsMetrics_simplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_simplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e22fd48c20ff1251317ee50c7e720347c625328c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "73104f6c-e7f8-4b37-b81b-2909a9bf917a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.207Z",
+      "modified_date": "2022-10-05T16:56:50.207Z",
+      "file": "29d92653-3733-406f-a734-98c8ee6cc5f4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "2d87c1ae-13ae-4d4a-904e-b29cece5cbc4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.707Z",
+      "modified_date": "2022-10-05T16:56:49.707Z",
+      "file_name": "multiqc_picard_target_coverage_simplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_simplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "db52f817-d422-4480-b3b1-8f9652739d60",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.712Z",
+      "modified_date": "2022-10-05T16:56:49.712Z",
+      "file": "2d87c1ae-13ae-4d4a-904e-b29cece5cbc4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "310e9972-25e6-49b3-8398-75fd146baceb",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.275Z",
+      "modified_date": "2022-10-05T16:56:50.275Z",
+      "file_name": "multiqc_major_contamination.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_major_contamination.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$eefdcf13a5a392730aa8007acc2bb634d89f0531",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4748cb62-f9da-4094-8572-ea870cc0eb41",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.281Z",
+      "modified_date": "2022-10-05T16:56:50.281Z",
+      "file": "310e9972-25e6-49b3-8398-75fd146baceb",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "31858124-212c-4de8-ad60-1dbc87b7fe2e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.112Z",
+      "modified_date": "2022-10-05T16:56:50.112Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ca2f9a03a0c67fe3b0665aaa7aa33724cce721ca",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "62328b84-6b35-47d9-afa3-4eb00be086a5",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.117Z",
+      "modified_date": "2022-10-05T16:56:50.117Z",
+      "file": "31858124-212c-4de8-ad60-1dbc87b7fe2e",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "31b8ff63-f839-4fc6-851e-8b471947a808",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.949Z",
+      "modified_date": "2022-10-05T16:56:51.949Z",
+      "file_name": "collapsed_genotype_comparison.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_comparison.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$054ac484f1d4519dd097046fb6bb4b92adbf0fae",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "cb1ba258-2dd7-47fb-9e29-b41d948a4c32",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.955Z",
+      "modified_date": "2022-10-05T16:56:51.955Z",
+      "file": "31b8ff63-f839-4fc6-851e-8b471947a808",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3221900c-c233-43b8-b313-3331976054f8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.971Z",
+      "modified_date": "2022-10-05T16:56:52.971Z",
+      "file_name": "duplex_minor_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$30f32298334c318c25973cd0f365f90e96a825d2",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3def72e0-c4cc-4288-8bf0-dba61bc802fa",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.976Z",
+      "modified_date": "2022-10-05T16:56:52.976Z",
+      "file": "3221900c-c233-43b8-b313-3331976054f8",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "34786493-b42c-4fbf-b0dd-cb7969ee1ebd",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.865Z",
+      "modified_date": "2022-10-05T16:56:52.865Z",
+      "file_name": "duplex_minor_contamination.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$dc831e523bfd0e2367384a0b569f162cfefa3627",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3bf2cc28-0419-462c-979f-e595d0e68b6f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.870Z",
+      "modified_date": "2022-10-05T16:56:52.870Z",
+      "file": "34786493-b42c-4fbf-b0dd-cb7969ee1ebd",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "35c1781e-cf5b-4a59-bf7f-abc624d2c723",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.776Z",
+      "modified_date": "2022-10-05T16:56:52.776Z",
+      "file_name": "duplex_genotype_clusters_input.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_clusters_input.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$594348643114572e4309e93282f12c0db8d70ff0",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "183a13d5-a650-427c-a879-86aca10de67f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.783Z",
+      "modified_date": "2022-10-05T16:56:52.783Z",
+      "file": "35c1781e-cf5b-4a59-bf7f-abc624d2c723",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3656610e-a72a-474a-bae7-614b16b0ff18",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.867Z",
+      "modified_date": "2022-10-05T16:56:49.867Z",
+      "file_name": "multiqc_picard_target_coverage_uncollapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "aa15d8b7-4fe9-494e-88ba-dbce1aa38227",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.871Z",
+      "modified_date": "2022-10-05T16:56:49.871Z",
+      "file": "3656610e-a72a-474a-bae7-614b16b0ff18",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3df6a14f-1924-4348-b86f-4e030beb2572",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.841Z",
+      "modified_date": "2022-10-05T16:56:51.841Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex_hs_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_simplex_hs_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$47ef0e8aa5314bf2c1effc1c2f46a54d141e20a8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "528fc1cd-9cf5-4018-8580-2e84bec4a6e4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.846Z",
+      "modified_date": "2022-10-05T16:56:51.846Z",
+      "file": "3df6a14f-1924-4348-b86f-4e030beb2572",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3f5ee007-75c7-4f78-bd0d-58d1d35256c3",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.065Z",
+      "modified_date": "2022-10-05T16:56:51.065Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex_per_target_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_duplex_per_target_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$11aac9b41923b33010b287fb387fb22750a81c6b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "92e77dda-b121-4ce6-8788-fbb2abe24e8b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.070Z",
+      "modified_date": "2022-10-05T16:56:51.070Z",
+      "file": "3f5ee007-75c7-4f78-bd0d-58d1d35256c3",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "41324e71-4a44-45fd-b1a0-5fa81aa3005f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.696Z",
+      "modified_date": "2022-10-05T16:56:50.696Z",
+      "file_name": "genstats_qc_status.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/genstats_qc_status.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$4cdee3061f11184625742b1728f25c63654f69b6",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "88ccf0e0-9836-417c-b33d-daa202bf50f7",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.700Z",
+      "modified_date": "2022-10-05T16:56:50.700Z",
+      "file": "41324e71-4a44-45fd-b1a0-5fa81aa3005f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "432b1c44-0682-4373-b16a-ffd2e2b0571e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.156Z",
+      "modified_date": "2022-10-05T16:56:50.156Z",
+      "file_name": "multiqc_hotspots_in_normals.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_hotspots_in_normals.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$2d689c17788e1e3a5478bdc146021b4e53d8bde6",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "ebe7c4b8-0380-4960-8dba-229c51dfb4f1",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.162Z",
+      "modified_date": "2022-10-05T16:56:50.162Z",
+      "file": "432b1c44-0682-4373-b16a-ffd2e2b0571e",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4333c077-ea1f-4316-9e8c-ce90c6eafadf",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.242Z",
+      "modified_date": "2022-10-05T16:56:52.242Z",
+      "file_name": "collapsed_minor_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$db4e2ae6d033696cbcca87181983742584ea54f9",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "588bdaa5-3881-4f16-9d4d-f96795457a79",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.246Z",
+      "modified_date": "2022-10-05T16:56:52.246Z",
+      "file": "4333c077-ea1f-4316-9e8c-ce90c6eafadf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "47749799-5bdd-40ed-84c2-84fabfd02407",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.958Z",
+      "modified_date": "2022-10-05T16:56:50.958Z",
+      "file_name": "C-NFKNJL-N001-d01.per-base.bed.gz",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01.per-base.bed.gz",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$baac7aaaeb5b931af1ede305b4d195d230b85dd7",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "61cd2f34-758d-41d6-9d8e-4e063e1bd2f1",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.966Z",
+      "modified_date": "2022-10-05T16:56:50.966Z",
+      "file": "47749799-5bdd-40ed-84c2-84fabfd02407",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "479fb380-a32b-4085-8bb1-052f868b6cff",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.146Z",
+      "modified_date": "2022-10-05T16:56:49.146Z",
+      "file_name": "multiqc.log",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc.log",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$cf1407670ddf9cb5f601d7a770098f9eaa414d46",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9c16319d-86f2-49bd-9d3e-74859c72eb2a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.150Z",
+      "modified_date": "2022-10-05T16:56:49.150Z",
+      "file": "479fb380-a32b-4085-8bb1-052f868b6cff",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "488b991c-bb8e-4d16-9008-32ca940ff154",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.414Z",
+      "modified_date": "2022-10-05T16:56:50.414Z",
+      "file_name": "multiqc_picard_HsMetrics_collapsed_targetcov.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_targetcov.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$119fa92b5637c7a4de819e5839ecdcee5cd9f966",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5e4e055b-033f-48fb-8308-9cd8adeecd3d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.419Z",
+      "modified_date": "2022-10-05T16:56:50.419Z",
+      "file": "488b991c-bb8e-4d16-9008-32ca940ff154",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "493d0586-2a40-4e25-81f1-b4a9f3b142d4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.213Z",
+      "modified_date": "2022-10-05T16:56:52.213Z",
+      "file_name": "collapsed_major_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$25bd32474ba5f49d5d008e197f832813cd6ba2de",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d8bd8ffc-324e-44e9-80d0-f30bdbeb9c0a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.217Z",
+      "modified_date": "2022-10-05T16:56:52.217Z",
+      "file": "493d0586-2a40-4e25-81f1-b4a9f3b142d4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "55bd4051-60bb-40bc-aadd-f8a43941485c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.347Z",
+      "modified_date": "2022-10-05T16:56:51.347Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM_insert_size_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_FM_insert_size_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$70fbdf870c645f4e6ff18db6bc947323924a31aa",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "be48d086-5740-4a6a-9f32-027ade6128df",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.352Z",
+      "modified_date": "2022-10-05T16:56:51.352Z",
+      "file": "55bd4051-60bb-40bc-aadd-f8a43941485c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "560380e5-3fc5-4ac8-b20b-b5bedb92276b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.423Z",
+      "modified_date": "2022-10-05T16:56:52.423Z",
+      "file_name": "C-NFKNJL-N001-d01_noise.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c4c7ae60f90b709ac3b0f6e4da532994c412bf2d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "02a1a5b2-8987-467a-8faf-e6b3e3752527",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.428Z",
+      "modified_date": "2022-10-05T16:56:52.428Z",
+      "file": "560380e5-3fc5-4ac8-b20b-b5bedb92276b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "56b807cc-c522-496a-bd78-9f6d61ef5ba6",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.305Z",
+      "modified_date": "2022-10-05T16:56:49.305Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c1dc9891109c6e592fc7d3f95be51c63937c12fc",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "38186a4b-29fe-41b9-b58d-3cfd138c32d1",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.310Z",
+      "modified_date": "2022-10-05T16:56:49.310Z",
+      "file": "56b807cc-c522-496a-bd78-9f6d61ef5ba6",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "56e1cde2-2046-4fa2-9f95-07087ac82024",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.182Z",
+      "modified_date": "2022-10-05T16:56:52.182Z",
+      "file_name": "collapsed_sex_mismatch.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$40ccd2667da96891c979a4409645c274b8add6ba",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "392b0b29-3417-453c-9343-3b393a661aa2",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.187Z",
+      "modified_date": "2022-10-05T16:56:52.187Z",
+      "file": "56e1cde2-2046-4fa2-9f95-07087ac82024",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "59ad0a72-3ab7-40b3-b2fe-516d3408eae1",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.869Z",
+      "modified_date": "2022-10-05T16:56:50.869Z",
+      "file_name": "histogram.pdf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/histogram.pdf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e6c5246046654f1de33e0856e8a0921905292419",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "47fa3c1a-bbec-433f-afa7-7f43c7478267",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.874Z",
+      "modified_date": "2022-10-05T16:56:50.874Z",
+      "file": "59ad0a72-3ab7-40b3-b2fe-516d3408eae1",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5bea48a9-017e-403f-b016-72fd9299ddb7",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.368Z",
+      "modified_date": "2022-10-05T16:56:49.368Z",
+      "file_name": "multiqc_minor_contamination_duplex.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination_duplex.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$3cd8ad8c698fe02e46053dab4df15d8f0486baa6",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "cb78a9e6-431c-4491-8c04-61d6216f2159",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.373Z",
+      "modified_date": "2022-10-05T16:56:49.373Z",
+      "file": "5bea48a9-017e-403f-b016-72fd9299ddb7",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5d85889d-4e55-4b6d-8a93-e1dd5e62b9bc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.345Z",
+      "modified_date": "2022-10-05T16:56:50.345Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ca2f9a03a0c67fe3b0665aaa7aa33724cce721ca",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0ac3770f-2f06-40b6-a2ea-6a8a2ab0160f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.350Z",
+      "modified_date": "2022-10-05T16:56:50.350Z",
+      "file": "5d85889d-4e55-4b6d-8a93-e1dd5e62b9bc",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5de94515-71b7-4278-9ac3-180333284272",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.808Z",
+      "modified_date": "2022-10-05T16:56:51.808Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex_per_base_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_simplex_per_base_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$6e7bd3994f6e9246204103eac28f09bda68e978d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "73eef3ee-8456-4231-9bf5-fc704a88a24e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.812Z",
+      "modified_date": "2022-10-05T16:56:51.812Z",
+      "file": "5de94515-71b7-4278-9ac3-180333284272",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "60f9b0f6-4c71-46f7-a48b-f1466717c03b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.007Z",
+      "modified_date": "2022-10-05T16:56:53.007Z",
+      "file_name": "sequence_qc_mqc.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$814eb7524a50dd48b187a11de220d969444d6d22",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f145e9e4-0e8b-4f7c-80a4-3d7747df20d0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.012Z",
+      "modified_date": "2022-10-05T16:56:53.012Z",
+      "file": "60f9b0f6-4c71-46f7-a48b-f1466717c03b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "616c01a5-6341-4b62-bbb7-4a665b0c4d89",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.894Z",
+      "modified_date": "2022-10-05T16:56:49.894Z",
+      "file_name": "multiqc_picard_HsMetrics_collapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$119fa92b5637c7a4de819e5839ecdcee5cd9f966",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a20f029c-701e-4fbd-83ba-5664e8f49aed",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.900Z",
+      "modified_date": "2022-10-05T16:56:49.900Z",
+      "file": "616c01a5-6341-4b62-bbb7-4a665b0c4d89",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "6c7c6096-8006-4251-acb0-978c0a1b4132",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.379Z",
+      "modified_date": "2022-10-05T16:56:50.379Z",
+      "file_name": "multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$fcab64c585ca91791bce76f7ec041ff9572575d6",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "31f44c13-f7cc-4fb5-86c0-e0c7df6e6d92",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.384Z",
+      "modified_date": "2022-10-05T16:56:50.384Z",
+      "file": "6c7c6096-8006-4251-acb0-978c0a1b4132",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "6d448799-2555-4e9b-91dd-5dcab155c338",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.404Z",
+      "modified_date": "2022-10-05T16:56:49.404Z",
+      "file_name": "multiqc_picard_HsMetrics_duplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_duplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$3b0a1d0c43b5cbef09e980cfc923948e578f8747",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "49bf9b28-f5fb-49e2-bb50-2c827563475e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.408Z",
+      "modified_date": "2022-10-05T16:56:49.408Z",
+      "file": "6d448799-2555-4e9b-91dd-5dcab155c338",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "702d2591-d7e8-42fe-b712-1c2139a09726",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.738Z",
+      "modified_date": "2022-10-05T16:56:51.738Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex_insert_size_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_simplex_insert_size_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$f96bd0f28f7186f6626d21d83e86aca6b1345340",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "90014ddd-05eb-4322-86e8-64f88b42a64e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.744Z",
+      "modified_date": "2022-10-05T16:56:51.744Z",
+      "file": "702d2591-d7e8-42fe-b712-1c2139a09726",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7058d8cd-7b50-4cd1-9532-5bc63a49baab",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.092Z",
+      "modified_date": "2022-10-05T16:56:49.092Z",
+      "file_name": "multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "09270d78-3677-4dff-a9db-89cf410c830a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.096Z",
+      "modified_date": "2022-10-05T16:56:49.096Z",
+      "file": "7058d8cd-7b50-4cd1-9532-5bc63a49baab",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "717769e6-a12c-429a-a734-188aabf76768",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.080Z",
+      "modified_date": "2022-10-05T16:56:53.080Z",
+      "file_name": "minor_contamination_sites_mqc.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/minor_contamination_sites_mqc.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$a967738002f55a6c77c398b942d583c01b1c9498",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8f2a64af-af49-455d-8ebf-fa0115889fa0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.085Z",
+      "modified_date": "2022-10-05T16:56:53.085Z",
+      "file": "717769e6-a12c-429a-a734-188aabf76768",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "73917433-4653-432d-a798-e338d4e4299c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.900Z",
+      "modified_date": "2022-10-05T16:56:52.900Z",
+      "file_name": "minor_contamination_sites.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination_sites.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$79a120e5a6c906aa8a926ba72082af607de9238a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "57395ad6-33b1-4d14-91eb-da6efcfa2e79",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.905Z",
+      "modified_date": "2022-10-05T16:56:52.905Z",
+      "file": "73917433-4653-432d-a798-e338d4e4299c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7455c7aa-c982-4380-8c2a-b9575a8a0434",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.106Z",
+      "modified_date": "2022-10-05T16:56:52.106Z",
+      "file_name": "collapsed_sex_mismatch.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$32db31bceb5a7e5bbce441c77e0dfa3762cb6d09",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "ef6f276e-e81b-4308-ac7a-522089aee87d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.111Z",
+      "modified_date": "2022-10-05T16:56:52.111Z",
+      "file": "7455c7aa-c982-4380-8c2a-b9575a8a0434",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "75f82ca1-4440-466d-881f-cd3433ca4a77",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.815Z",
+      "modified_date": "2022-10-05T16:56:49.815Z",
+      "file_name": "multiqc_summary_qc_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_summary_qc_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$31ef43fd5062a352b158f165157dd32cd8425fab",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "71e94454-e551-4b79-ad5c-92c5f2717073",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.819Z",
+      "modified_date": "2022-10-05T16:56:49.819Z",
+      "file": "75f82ca1-4440-466d-881f-cd3433ca4a77",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "76671d8d-f15e-49fe-962b-ee6f4383fc7a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.736Z",
+      "modified_date": "2022-10-05T16:56:49.736Z",
+      "file_name": "multiqc_picard_HsMetrics_uncollapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$61026e697bdc7ec9a12c83dd8b99d03efc462490",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "66e530dc-6d5a-4e58-960d-25ae366ba843",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.739Z",
+      "modified_date": "2022-10-05T16:56:49.739Z",
+      "file": "76671d8d-f15e-49fe-962b-ee6f4383fc7a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "777a379f-e4f2-44b2-9459-7aa22083dda3",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.613Z",
+      "modified_date": "2022-10-05T16:56:51.613Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_mean_quality_by_cycle.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_mean_quality_by_cycle.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$1efa47aa9a118c1de891c4336a98ea0c8011ce1f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "96c4d6ad-efab-4fd3-812b-eeeb9278927d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.618Z",
+      "modified_date": "2022-10-05T16:56:51.618Z",
+      "file": "777a379f-e4f2-44b2-9459-7aa22083dda3",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7e34c3b0-2275-4950-a182-ac6aea39071f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.961Z",
+      "modified_date": "2022-10-05T16:56:49.961Z",
+      "file_name": "multiqc_picard_HsMetrics_collapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$119fa92b5637c7a4de819e5839ecdcee5cd9f966",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8ebfaead-1ac2-42cb-b944-36f9b563a24a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.966Z",
+      "modified_date": "2022-10-05T16:56:49.966Z",
+      "file": "7e34c3b0-2275-4950-a182-ac6aea39071f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "81988cac-4534-495b-8655-232feccef683",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.525Z",
+      "modified_date": "2022-10-05T16:56:49.525Z",
+      "file_name": "multiqc_picard_target_coverage_collapsed_targetcov.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_targetcov.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "fbdad412-8b22-4ca4-9990-4a77dd3f9124",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.529Z",
+      "modified_date": "2022-10-05T16:56:49.529Z",
+      "file": "81988cac-4534-495b-8655-232feccef683",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "832939a3-7a9e-4071-b1c3-deba7434e3cc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.986Z",
+      "modified_date": "2022-10-05T16:56:51.986Z",
+      "file_name": "major_contamination.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/major_contamination.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$32718d3335e73ba2d83564a7c25c359ff7badb87",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8d3dbc66-a69a-4a09-ba73-e3c7e78c67a9",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.991Z",
+      "modified_date": "2022-10-05T16:56:51.991Z",
+      "file": "832939a3-7a9e-4071-b1c3-deba7434e3cc",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "832e9121-cf0c-4025-b43e-d068244a22bf",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.237Z",
+      "modified_date": "2022-10-05T16:56:51.237Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM_per_base_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_FM_per_base_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e57fff4ab1e8b2766adeecbea5650082d4456bcf",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6dd71e5f-f9df-4314-b6f7-0c29cc112dab",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.243Z",
+      "modified_date": "2022-10-05T16:56:51.243Z",
+      "file": "832e9121-cf0c-4025-b43e-d068244a22bf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "868ef373-3243-4097-84c4-820189cf1069",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.143Z",
+      "modified_date": "2022-10-05T16:56:51.144Z",
+      "file_name": "histogram.pdf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/histogram.pdf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$8add59e68bb981d3113e3a387a5150da8d816aa8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dc0ae8f5-debb-428a-87b5-56bafe26d96a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.150Z",
+      "modified_date": "2022-10-05T16:56:51.150Z",
+      "file": "868ef373-3243-4097-84c4-820189cf1069",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "88dd88d3-85da-4f28-91ed-d2a572b732e4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.020Z",
+      "modified_date": "2022-10-05T16:56:52.020Z",
+      "file_name": "minor_contamination_sites.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination_sites.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$327149ddf8b78c0c4a8e20269c4757e3805c17a8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f093ed9c-cd48-40f6-b44e-8330598226e7",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.025Z",
+      "modified_date": "2022-10-05T16:56:52.025Z",
+      "file": "88dd88d3-85da-4f28-91ed-d2a572b732e4",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8bb4a783-40ef-41f1-80db-c9489ee1b6cb",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.876Z",
+      "modified_date": "2022-10-05T16:56:51.876Z",
+      "file_name": "minor_contamination.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$f02bf6b1a9ef6b00fa8cc0c07089ca14c254804b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4e5746af-3bf2-4d4c-9653-394d2c77184f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.881Z",
+      "modified_date": "2022-10-05T16:56:51.881Z",
+      "file": "8bb4a783-40ef-41f1-80db-c9489ee1b6cb",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8d2678bc-c9f3-4383-a49a-ef7186afaea9",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.448Z",
+      "modified_date": "2022-10-05T16:56:50.448Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c1dc9891109c6e592fc7d3f95be51c63937c12fc",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "80ebed21-a568-4914-87a2-62450f46e208",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.453Z",
+      "modified_date": "2022-10-05T16:56:50.453Z",
+      "file": "8d2678bc-c9f3-4383-a49a-ef7186afaea9",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "90034169-30b5-4a4c-b736-bc09a150f670",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.492Z",
+      "modified_date": "2022-10-05T16:56:50.492Z",
+      "file_name": "multiqc_sources.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sources.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$a3de3a578785dbe3c6aac70b9715dadf75900767",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "df788b70-1c5e-49c8-8bc3-c7ff05b9e3f9",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.499Z",
+      "modified_date": "2022-10-05T16:56:50.499Z",
+      "file": "90034169-30b5-4a4c-b736-bc09a150f670",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "907d031a-e153-401e-9b6a-a87d7f1d2d10",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.586Z",
+      "modified_date": "2022-10-05T16:56:49.586Z",
+      "file_name": "multiqc_picard_insertSize_uncollapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c2473f390ee8734297819d969f5a4e67a948ab67",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3ab18968-3b77-4368-9aa2-d80ceccb96be",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.591Z",
+      "modified_date": "2022-10-05T16:56:49.591Z",
+      "file": "907d031a-e153-401e-9b6a-a87d7f1d2d10",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9195806b-9d11-44bd-8fc5-c4074b4ab15c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.927Z",
+      "modified_date": "2022-10-05T16:56:49.927Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c1dc9891109c6e592fc7d3f95be51c63937c12fc",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8c242717-1ff1-4f23-9496-31bebace3d4d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.932Z",
+      "modified_date": "2022-10-05T16:56:49.932Z",
+      "file": "9195806b-9d11-44bd-8fc5-c4074b4ab15c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "91d3abe3-27da-4ed2-95f1-a6b26b5c42bb",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.078Z",
+      "modified_date": "2022-10-05T16:56:50.078Z",
+      "file_name": "multiqc_minor_contamination.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c35731c461ad964109daa20ed65fa9b344c4a3c9",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6d926d49-57f6-40a5-b079-fdc866513793",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.083Z",
+      "modified_date": "2022-10-05T16:56:50.083Z",
+      "file": "91d3abe3-27da-4ed2-95f1-a6b26b5c42bb",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "94e3fc44-a721-45e8-b030-db2d90684028",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.909Z",
+      "modified_date": "2022-10-05T16:56:51.909Z",
+      "file_name": "collapsed_major_contamination.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$f41fec76690f41fb7e01f8582ef32508df70e45c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b15e6524-dee1-4d47-808c-eeffb85d5dcc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.914Z",
+      "modified_date": "2022-10-05T16:56:51.914Z",
+      "file": "94e3fc44-a721-45e8-b030-db2d90684028",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "96604ee9-5db4-4963-b283-d8f2dd3576be",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.470Z",
+      "modified_date": "2022-10-05T16:56:52.470Z",
+      "file_name": "C-NFKNJL-N001-d01_noise_del.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise_del.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$b5dcb2268aa404d2fdfa56da09287124000cabca",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1d9a1ac4-1d7e-48c9-92f3-7feffe171de0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.476Z",
+      "modified_date": "2022-10-05T16:56:52.476Z",
+      "file": "96604ee9-5db4-4963-b283-d8f2dd3576be",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "99ebb102-480e-4715-9dcc-fdfd33ad641d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.556Z",
+      "modified_date": "2022-10-05T16:56:49.556Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e7598e3ec0abf44cb9a5b88f109e7dae5d374cd1",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "020e89ce-5f70-46b2-817a-300aeb0ed081",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.560Z",
+      "modified_date": "2022-10-05T16:56:49.560Z",
+      "file": "99ebb102-480e-4715-9dcc-fdfd33ad641d",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "99fee058-392e-4425-b1b8-e08617951f04",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.799Z",
+      "modified_date": "2022-10-05T16:56:50.799Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex_insert_size_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_duplex_insert_size_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$04c0634a0a6c5481fabcf81bdbc478e817f440ab",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a190f585-8bb5-4583-9dfa-89826f9c5843",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.804Z",
+      "modified_date": "2022-10-05T16:56:50.804Z",
+      "file": "99fee058-392e-4425-b1b8-e08617951f04",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9b96cc1a-260b-4640-82ea-5003829846bc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.617Z",
+      "modified_date": "2022-10-05T16:56:49.617Z",
+      "file_name": "multiqc_data.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_data.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$978e3dcc50c2b6f7c93be00f7e6e76d0858177c4",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a9953842-f4ba-41aa-8e98-4c04a0bf3e1c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.622Z",
+      "modified_date": "2022-10-05T16:56:49.622Z",
+      "file": "9b96cc1a-260b-4640-82ea-5003829846bc",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9ba58bac-12ca-4776-8502-abbc8b4fdd9a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.577Z",
+      "modified_date": "2022-10-05T16:56:51.577Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$cf2a68c5eaf53e11f9669b669b5d83f20b45bf89",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0c603853-fa85-4394-8947-8dd778bd6b06",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.583Z",
+      "modified_date": "2022-10-05T16:56:51.583Z",
+      "file": "9ba58bac-12ca-4776-8502-abbc8b4fdd9a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a051f99e-4d82-4c7c-a0f5-0bf317683903",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.245Z",
+      "modified_date": "2022-10-05T16:56:49.245Z",
+      "file_name": "multiqc_picard_insertSize_uncollapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c2473f390ee8734297819d969f5a4e67a948ab67",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "25642a2b-e14b-4f34-a774-8518347f1518",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.250Z",
+      "modified_date": "2022-10-05T16:56:49.250Z",
+      "file": "a051f99e-4d82-4c7c-a0f5-0bf317683903",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a0e69f8c-faf5-4abe-84db-21006da4dbc9",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.841Z",
+      "modified_date": "2022-10-05T16:56:49.841Z",
+      "file_name": "multiqc_picard_target_coverage_collapsed_insertsize.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_insertsize.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "faa9b8a7-ff13-4051-86c4-2966ad355345",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.845Z",
+      "modified_date": "2022-10-05T16:56:49.845Z",
+      "file": "a0e69f8c-faf5-4abe-84db-21006da4dbc9",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a145f841-4c21-4b3f-b795-1fe599b68a95",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.434Z",
+      "modified_date": "2022-10-05T16:56:49.434Z",
+      "file_name": "multiqc_picard_insertSize_collapsed_targetcov.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_targetcov.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$759603753ff7accaea1d8a68ef2fb73991a6ae35",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1147aa81-bc65-4459-a2eb-3b67d0be995b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.439Z",
+      "modified_date": "2022-10-05T16:56:49.439Z",
+      "file": "a145f841-4c21-4b3f-b795-1fe599b68a95",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a2a6c2a2-2304-4d8d-8b75-cdac6b892773",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.542Z",
+      "modified_date": "2022-10-05T16:56:51.542Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_grouped.umi_counts.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_grouped.umi_counts.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$986791de9d074e8302ed8909a6efb7df53b6d28b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "822f017a-69bf-4d75-a921-bd9704835175",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.547Z",
+      "modified_date": "2022-10-05T16:56:51.547Z",
+      "file": "a2a6c2a2-2304-4d8d-8b75-cdac6b892773",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a88fd3fc-868e-4c95-932f-8b9ad35421ad",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.583Z",
+      "modified_date": "2022-10-05T16:56:52.583Z",
+      "file_name": "histogram.pdf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/histogram.pdf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$b2c3ded9cb4a0db7cb5215c6410d8c9cf131249a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6a5099cd-6008-4923-8d1c-905dd598606f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.589Z",
+      "modified_date": "2022-10-05T16:56:52.589Z",
+      "file": "a88fd3fc-868e-4c95-932f-8b9ad35421ad",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a9a00b80-63ce-48a4-a963-52473164a1f8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.064Z",
+      "modified_date": "2022-10-05T16:56:52.064Z",
+      "file_name": "collapsed_genotype_clusters_input.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_clusters_input.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$594348643114572e4309e93282f12c0db8d70ff0",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "070b52f3-d119-47ab-9af9-580584fae455",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.070Z",
+      "modified_date": "2022-10-05T16:56:52.070Z",
+      "file": "a9a00b80-63ce-48a4-a963-52473164a1f8",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "acfa068b-d486-4fc2-9471-e3c40ec5b886",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.272Z",
+      "modified_date": "2022-10-05T16:56:52.272Z",
+      "file_name": "C-NFKNJL-N001-d01_pileup.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_pileup.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$837b4c773d60b066f8bc4d4651dd6c43442e9249",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "76428dc4-4cce-4f70-b4c0-cbd773902e15",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.276Z",
+      "modified_date": "2022-10-05T16:56:52.276Z",
+      "file": "acfa068b-d486-4fc2-9471-e3c40ec5b886",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ae3dcb14-4731-4aad-af91-623d480b6d88",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.789Z",
+      "modified_date": "2022-10-05T16:56:49.789Z",
+      "file_name": "multiqc_picard_HsMetrics_uncollapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$61026e697bdc7ec9a12c83dd8b99d03efc462490",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1d9ce1c4-d9c6-482f-b49b-5eb3bf7aa7f8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.793Z",
+      "modified_date": "2022-10-05T16:56:49.793Z",
+      "file": "ae3dcb14-4731-4aad-af91-623d480b6d88",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ae6de642-8302-4378-a563-570080d4313a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.542Z",
+      "modified_date": "2022-10-05T16:56:50.542Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$37454212a2ae6ff8b6296ab7f6c71e9f84d2515b",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a3b7b98c-f05b-4f8d-9d8a-97dbe7b5b406",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.548Z",
+      "modified_date": "2022-10-05T16:56:50.548Z",
+      "file": "ae6de642-8302-4378-a563-570080d4313a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "af4ca2fc-72ba-44ab-bc50-24e2183cb094",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.211Z",
+      "modified_date": "2022-10-05T16:56:49.211Z",
+      "file_name": "multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a1aa4bbb-b397-4742-9e12-7fcdedd7e898",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.219Z",
+      "modified_date": "2022-10-05T16:56:49.219Z",
+      "file": "af4ca2fc-72ba-44ab-bc50-24e2183cb094",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b0cb2efc-da10-431c-928b-2402a9066a3c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.509Z",
+      "modified_date": "2022-10-05T16:56:52.509Z",
+      "file_name": "C-NFKNJL-N001-d01_noise_acgt.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise_acgt.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$a53929ad799d99be06c3e835734b9dfbc33f1796",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5aa440e3-81e0-4310-9fef-e2e00e9ee3b5",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.515Z",
+      "modified_date": "2022-10-05T16:56:52.515Z",
+      "file": "b0cb2efc-da10-431c-928b-2402a9066a3c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b162c7e3-967c-4215-abcf-59bbbb502a7e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.506Z",
+      "modified_date": "2022-10-05T16:56:51.506Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_grouped.duplex_family_sizes.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_grouped.duplex_family_sizes.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$304cd863e3321756fe92926acc576ffa6ade8f4f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "df7fd686-2ec5-4ce9-ade5-1ee20795c0f6",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.511Z",
+      "modified_date": "2022-10-05T16:56:51.511Z",
+      "file": "b162c7e3-967c-4215-abcf-59bbbb502a7e",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b3371181-6faf-439d-bd34-9d34a293541f",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.696Z",
+      "modified_date": "2022-10-05T16:56:51.696Z",
+      "file_name": "histogram.pdf",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/histogram.pdf",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$be5cde7e8cc6d5e3795b821c356bff48d9c88f51",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "70ea3358-aafd-4ca0-bed1-cba2fb4c8294",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.703Z",
+      "modified_date": "2022-10-05T16:56:51.703Z",
+      "file": "b3371181-6faf-439d-bd34-9d34a293541f",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b45cd8af-9789-4f73-8ac3-4f5a581135aa",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.119Z",
+      "modified_date": "2022-10-05T16:56:49.119Z",
+      "file_name": "multiqc_picard_target_coverage_uncollapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e567a97a-e196-4e07-8b5b-93feceec4993",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.123Z",
+      "modified_date": "2022-10-05T16:56:49.123Z",
+      "file": "b45cd8af-9789-4f73-8ac3-4f5a581135aa",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b67c7e03-a248-4256-900c-ee76c050417c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.494Z",
+      "modified_date": "2022-10-05T16:56:49.494Z",
+      "file_name": "multiqc_picard_HsMetrics_collapsed_insertsize.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_insertsize.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$119fa92b5637c7a4de819e5839ecdcee5cd9f966",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c39ff28e-1d23-46c1-bd20-5634691b42cd",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.499Z",
+      "modified_date": "2022-10-05T16:56:49.499Z",
+      "file": "b67c7e03-a248-4256-900c-ee76c050417c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b7ffac73-b4c7-49d7-9a62-13194908e33d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.101Z",
+      "modified_date": "2022-10-05T16:56:51.101Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex_alignment_summary_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_duplex_alignment_summary_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$9b65f5f79fdd92941d455439750daabf6d65096f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f471d39c-e0dc-46f5-9f39-a5badcab4f9a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.106Z",
+      "modified_date": "2022-10-05T16:56:51.106Z",
+      "file": "b7ffac73-b4c7-49d7-9a62-13194908e33d",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "bb756c56-baac-41ae-bc6e-e1407d1e1bdf",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.763Z",
+      "modified_date": "2022-10-05T16:56:50.763Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex_per_base_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_duplex_per_base_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$bbf67a9f3811dfc9a41949cdc1d34353fe0cf93d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6cade4bc-8521-493f-97f1-2110484b775e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.768Z",
+      "modified_date": "2022-10-05T16:56:50.768Z",
+      "file": "bb756c56-baac-41ae-bc6e-e1407d1e1bdf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "bc3b5030-8e2a-42e8-9dbb-6824f6164c70",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.762Z",
+      "modified_date": "2022-10-05T16:56:49.762Z",
+      "file_name": "multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$c1dc9891109c6e592fc7d3f95be51c63937c12fc",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6ad2429c-8f2a-4a6f-a518-2973accc9577",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.766Z",
+      "modified_date": "2022-10-05T16:56:49.766Z",
+      "file": "bc3b5030-8e2a-42e8-9dbb-6824f6164c70",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "bde31161-9e7b-4fe7-995c-c8ba24d98004",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.044Z",
+      "modified_date": "2022-10-05T16:56:53.044Z",
+      "file_name": "qc_criteria.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/qc_criteria.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$b18ceb3b1ec0dde7e04820db970d7ccbc7c725ae",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "68f4d326-3c1a-42fe-8374-769bac90bd85",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.049Z",
+      "modified_date": "2022-10-05T16:56:53.049Z",
+      "file": "bde31161-9e7b-4fe7-995c-c8ba24d98004",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c0938577-c120-40a6-8d8a-bafcf58d541b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.030Z",
+      "modified_date": "2022-10-05T16:56:51.030Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex_hs_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_duplex_hs_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$d6ef884865b1fe60b8377a9ff6823e4a3b1b6945",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a8f0fe7e-e998-43e7-8df0-3b6e42d9bb5b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.035Z",
+      "modified_date": "2022-10-05T16:56:51.035Z",
+      "file": "c0938577-c120-40a6-8d8a-bafcf58d541b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c1f3ded7-b83c-4b06-8bb3-83c9b28436d0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.276Z",
+      "modified_date": "2022-10-05T16:56:51.276Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM_alignment_summary_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_FM_alignment_summary_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$1e95614069f74675626df6a56e5d777df68ff70c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "60957b0e-8e79-46d0-b0ec-9bcbaafc2265",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.281Z",
+      "modified_date": "2022-10-05T16:56:51.281Z",
+      "file": "c1f3ded7-b83c-4b06-8bb3-83c9b28436d0",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c31ca1c9-5d41-40e4-a9b7-b5502f7c5e59",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.647Z",
+      "modified_date": "2022-10-05T16:56:49.647Z",
+      "file_name": "multiqc_picard_insertSize_simplex_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_simplex_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$abe565dc16734eb0af8b1742e026153353fc8828",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0735e0dd-d37a-4d0a-8c86-6f04c0dcf506",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.652Z",
+      "modified_date": "2022-10-05T16:56:49.652Z",
+      "file": "c31ca1c9-5d41-40e4-a9b7-b5502f7c5e59",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c6bbd052-3509-4fd8-961a-7d67fd6c7840",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.464Z",
+      "modified_date": "2022-10-05T16:56:49.464Z",
+      "file_name": "multiqc_picard_target_coverage_collapsed_bam.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_bam.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3a291d11-8cb8-4c14-b194-61b6647d8575",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.469Z",
+      "modified_date": "2022-10-05T16:56:49.469Z",
+      "file": "c6bbd052-3509-4fd8-961a-7d67fd6c7840",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "cc4d8910-498a-4fa4-a901-941eb435fd40",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.117Z",
+      "modified_date": "2022-10-05T16:56:53.117Z",
+      "file_name": "hotspot_table.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/hotspot_table.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$fa1f97d3a4466c1f28851c6f4765fa4a9796abfe",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d62303d5-ac4b-489f-9855-21fedae54fcc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:53.122Z",
+      "modified_date": "2022-10-05T16:56:53.122Z",
+      "file": "cc4d8910-498a-4fa4-a901-941eb435fd40",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "cd108cba-d0cd-45e1-9ed2-86a940289f7e",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.433Z",
+      "modified_date": "2022-10-05T16:56:51.433Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_grouped.family_sizes.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_grouped.family_sizes.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$122012ef7a7571ecd396d5242b4722e15926997d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "076fea68-af5c-4492-906d-d0ff2d722382",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.438Z",
+      "modified_date": "2022-10-05T16:56:51.438Z",
+      "file": "cd108cba-d0cd-45e1-9ed2-86a940289f7e",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d27eb925-f0b9-43ae-b2ee-d1e880f9b790",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.677Z",
+      "modified_date": "2022-10-05T16:56:49.677Z",
+      "file_name": "multiqc_picard_target_coverage_collapsed_gcbias.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_gcbias.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$07fd33dd5c87cbe78082f4f3e35e3dfe32cd5e7f",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "afab8894-47db-4326-8e54-002347b19cc6",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.682Z",
+      "modified_date": "2022-10-05T16:56:49.682Z",
+      "file": "d27eb925-f0b9-43ae-b2ee-d1e880f9b790",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d460066b-2c7e-4f65-943d-f622bf278fae",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.664Z",
+      "modified_date": "2022-10-05T16:56:52.664Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$53c8598e743ea2f64fd33ffe42c40d5a8694413a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "25522872-2cfb-4035-adf9-eb22dc358420",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.669Z",
+      "modified_date": "2022-10-05T16:56:52.669Z",
+      "file": "d460066b-2c7e-4f65-943d-f622bf278fae",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "da03aba7-5449-47ae-8b7d-7618f6fb6aa8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.729Z",
+      "modified_date": "2022-10-05T16:56:50.729Z",
+      "file_name": "C-NFKNJL-N001-d01.mosdepth.global.dist.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01.mosdepth.global.dist.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$94a5e33eecb1dafa684d7b5d753b6ba672436f6c",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d4f3197b-aeb7-4f7a-974f-66343266f692",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.733Z",
+      "modified_date": "2022-10-05T16:56:50.734Z",
+      "file": "da03aba7-5449-47ae-8b7d-7618f6fb6aa8",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "dd1ccfa8-be72-4712-90c0-59451d707292",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.336Z",
+      "modified_date": "2022-10-05T16:56:49.336Z",
+      "file_name": "multiqc_qc_criteria.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_qc_criteria.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$2cd376064f2a80671e3d8f3f411d965889a57bbf",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8e41c5cf-3b25-45bd-8bf4-634d9dd76e20",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.340Z",
+      "modified_date": "2022-10-05T16:56:49.340Z",
+      "file": "dd1ccfa8-be72-4712-90c0-59451d707292",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e30fe866-1f09-48bb-a727-e276a8353058",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.340Z",
+      "modified_date": "2022-10-05T16:56:52.340Z",
+      "file_name": "C-NFKNJL-N001-d01_noise_positions.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise_positions.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$a54648bda7d4b95247d078564efa5bf30b62936e",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8070c48d-88ef-41cf-952d-f29cbc94d389",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.345Z",
+      "modified_date": "2022-10-05T16:56:52.345Z",
+      "file": "e30fe866-1f09-48bb-a727-e276a8353058",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e3fcee56-4500-4fc8-a305-8919580df111",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.625Z",
+      "modified_date": "2022-10-05T16:56:52.625Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$7e0f6b3295c8a5d74f979a94633f582d87d827bc",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a2aef73f-f6c8-4fed-8c3b-cb56131ea2fc",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.631Z",
+      "modified_date": "2022-10-05T16:56:52.631Z",
+      "file": "e3fcee56-4500-4fc8-a305-8919580df111",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e6880e87-a852-46c8-971d-713214eb91b7",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.305Z",
+      "modified_date": "2022-10-05T16:56:52.305Z",
+      "file_name": "C-NFKNJL-N001-d01_noise_n.tsv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_noise_n.tsv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$ca4f6d5e4559ee910bcaa07ee6116d3bec9f6615",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "608d4fc2-95c2-464b-83fd-704eb1d6185a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.310Z",
+      "modified_date": "2022-10-05T16:56:52.310Z",
+      "file": "e6880e87-a852-46c8-971d-713214eb91b7",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e71b161f-1694-4036-bb26-507e0dd78871",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.935Z",
+      "modified_date": "2022-10-05T16:56:52.935Z",
+      "file_name": "duplex_genotype_comparison.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_comparison.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$cb48b3cd29e4e28f5717c2e700c24fa7acb371ae",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e2b9ac20-ab05-47f0-8817-f5ffffc3a27b",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.940Z",
+      "modified_date": "2022-10-05T16:56:52.940Z",
+      "file": "e71b161f-1694-4036-bb26-507e0dd78871",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e997eedf-b6ae-4cf1-9af5-aec8d117d695",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.839Z",
+      "modified_date": "2022-10-05T16:56:50.631Z",
+      "file_name": "multiqc_1.10.1.7.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$310559df896807e4baf31a300be37e5c19bce574",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b19e4cb4-ad26-460b-a333-f4f8a4431760",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.847Z",
+      "modified_date": "2022-10-05T16:56:48.847Z",
+      "file": "e997eedf-b6ae-4cf1-9af5-aec8d117d695",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "eba688c2-3b29-4eca-83be-9f9c50f78caf",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.648Z",
+      "modified_date": "2022-10-05T16:56:51.648Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex_alignment_summary_metrics.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed_simplex_alignment_summary_metrics.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$267accf6fc40a58433737be332d0ca71a5e2ef00",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "85f9b699-0b9a-452c-8031-694258dd9ab8",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.654Z",
+      "modified_date": "2022-10-05T16:56:51.654Z",
+      "file": "eba688c2-3b29-4eca-83be-9f9c50f78caf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f0d7a19a-f9c2-4e22-a5ef-eddbede47246",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.149Z",
+      "modified_date": "2022-10-05T16:56:52.149Z",
+      "file_name": "collapsed_minor_contamination.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$96d8963a3eef29461d1ae517bec73dde6f9bfdcb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "03035723-f461-431a-892a-ff4cc3c4179a",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.154Z",
+      "modified_date": "2022-10-05T16:56:52.154Z",
+      "file": "f0d7a19a-f9c2-4e22-a5ef-eddbede47246",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f2a97b20-ffe7-488c-b832-6ab4fe286af1",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.996Z",
+      "modified_date": "2022-10-05T16:56:50.996Z",
+      "file_name": "C-NFKNJL-N001-d01.regions.bed.gz",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01.regions.bed.gz",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$fa09cfd425bde87cf96849beb30c22194173b6eb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a5e81a2f-a578-4b9a-ad77-851a1e4fb66d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:51.001Z",
+      "modified_date": "2022-10-05T16:56:51.001Z",
+      "file": "f2a97b20-ffe7-488c-b832-6ab4fe286af1",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f8805349-7381-4770-aa25-239f8d96e6c2",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.275Z",
+      "modified_date": "2022-10-05T16:56:49.275Z",
+      "file_name": "multiqc_picard_insertSize_collapsed_insertsize.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_insertsize.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$759603753ff7accaea1d8a68ef2fb73991a6ae35",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "111d5ee9-3074-4fc1-bc50-9da130738a15",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.279Z",
+      "modified_date": "2022-10-05T16:56:49.279Z",
+      "file": "f8805349-7381-4770-aa25-239f8d96e6c2",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f9b2a591-66ef-4c7d-b682-c3c64fa58ada",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.662Z",
+      "modified_date": "2022-10-05T16:56:50.662Z",
+      "file_name": "fontlist-v330.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/.cache/matplotlib/fontlist-v330.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$42ddee9681b54c90cc4124cb7ef579fbaad2cf11",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "23db487e-e992-4efc-93f2-44bc2ee2903c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:50.667Z",
+      "modified_date": "2022-10-05T16:56:50.667Z",
+      "file": "f9b2a591-66ef-4c7d-b682-c3c64fa58ada",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "fcd1a0cf-ce96-424a-9037-5d7b475e255c",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.544Z",
+      "modified_date": "2022-10-05T16:56:52.544Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$d000d9dba205603418eaab95d2634b0f93710a93",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "28043c82-5e40-4bd7-94e3-a205329362f0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:52.549Z",
+      "modified_date": "2022-10-05T16:56:52.549Z",
+      "file": "fcd1a0cf-ce96-424a-9037-5d7b475e255c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e997eedf-b6ae-4cf1-9af5-aec8d117d695",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.839Z",
+      "modified_date": "2022-10-05T16:56:50.631Z",
+      "file_name": "multiqc_1.10.1.7.html",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/multiqc_1.10.1.7/multiqc_1.10.1.7.html",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$310559df896807e4baf31a300be37e5c19bce574",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b19e4cb4-ad26-460b-a333-f4f8a4431760",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.847Z",
+      "modified_date": "2022-10-05T16:56:48.847Z",
+      "file": "e997eedf-b6ae-4cf1-9af5-aec8d117d695",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "15d4ce28-b895-4613-bb5a-fb3953bdafd2",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.897Z",
+      "modified_date": "2022-10-05T16:56:48.897Z",
+      "file_name": "C-NFKNJL-N001-d01_duplex.pickle",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_duplex.pickle",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$a69d2e1509d291d630e4f4387dd2bdff41aae5c1",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c96db17a-cf78-49e3-8799-17ef5a757264",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.901Z",
+      "modified_date": "2022-10-05T16:56:48.901Z",
+      "file": "15d4ce28-b895-4613-bb5a-fb3953bdafd2",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f684f5d5-e8bd-41c8-843b-561382a292ec",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.870Z",
+      "modified_date": "2022-10-05T16:56:48.870Z",
+      "file_name": "minor_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/minor_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$30f32298334c318c25973cd0f365f90e96a825d2",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2cf5d6bd-9608-4550-9b51-c39e10bc3042",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.874Z",
+      "modified_date": "2022-10-05T16:56:48.874Z",
+      "file": "f684f5d5-e8bd-41c8-843b-561382a292ec",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "31ec3418-18d7-4003-8a1e-1143e3b4accb",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.980Z",
+      "modified_date": "2022-10-05T16:56:48.980Z",
+      "file_name": "collapsed_minor_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/collapsed_minor_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$db4e2ae6d033696cbcca87181983742584ea54f9",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "77365072-7ae4-4125-9c41-50efa4134be4",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.984Z",
+      "modified_date": "2022-10-05T16:56:48.984Z",
+      "file": "31ec3418-18d7-4003-8a1e-1143e3b4accb",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "349f78db-90a5-4756-98a9-6b6d60d4b031",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.007Z",
+      "modified_date": "2022-10-05T16:56:49.007Z",
+      "file_name": "major_contamination.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/major_contamination.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$25bd32474ba5f49d5d008e197f832813cd6ba2de",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "95f64e70-badb-4721-9c65-15d3288f6098",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.011Z",
+      "modified_date": "2022-10-05T16:56:49.011Z",
+      "file": "349f78db-90a5-4756-98a9-6b6d60d4b031",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7fa23399-90fe-4b25-b4b7-ef3fc8c07b06",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.952Z",
+      "modified_date": "2022-10-05T16:56:48.952Z",
+      "file_name": "collapsed_minor_contamination.json",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/collapsed_minor_contamination.json",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$96d8963a3eef29461d1ae517bec73dde6f9bfdcb",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "cd7d649e-900e-420f-b1ac-d1cffe9e009d",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.956Z",
+      "modified_date": "2022-10-05T16:56:48.956Z",
+      "file": "7fa23399-90fe-4b25-b4b7-ef3fc8c07b06",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b61ecddc-4ccf-4785-aee3-3054a452abad",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.924Z",
+      "modified_date": "2022-10-05T16:56:49.069Z",
+      "file_name": "collapsed_sex_mismatch.csv",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/collapsed_sex_mismatch.csv",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$32db31bceb5a7e5bbce441c77e0dfa3762cb6d09",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d1b6e281-3bb3-43e4-b21e-4e5a2b63ba91",
+    "fields": {
+      "created_date": "2022-10-05T16:56:48.928Z",
+      "modified_date": "2022-10-05T16:56:48.928Z",
+      "file": "b61ecddc-4ccf-4785-aee3-3054a452abad",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ed9be0ff-7ac1-4b12-8fdd-32b2b738cd16",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.034Z",
+      "modified_date": "2022-10-05T16:56:49.034Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed.pickle",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_qc/93e9da6b-b233-409f-a9b3-c645797fa958/C-NFKNJL-N001-d01/C-NFKNJL-N001-d01_collapsed.pickle",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$e055c45ae97a9f2004c7b674b9f627bc1188a6de",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "13e59da8-2bfd-4b81-ba17-c30e026d23b0",
+    "fields": {
+      "created_date": "2022-10-05T16:56:49.037Z",
+      "modified_date": "2022-10-05T16:56:49.037Z",
+      "file": "ed9be0ff-7ac1-4b12-8fdd-32b2b738cd16",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "89b69cf7-4a5a-4c5e-ad3c-9855dafc6f9b",
+    "fields": {
+      "created_date": "2022-08-08T23:03:08.668Z",
+      "modified_date": "2022-08-08T23:03:08.669Z",
+      "file": "691adf61-2131-4ed5-9347-433e87c4a9e3",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "691adf61-2131-4ed5-9347-433e87c4a9e3",
+    "fields": {
+      "created_date": "2022-08-08T23:03:08.657Z",
+      "modified_date": "2022-08-08T23:03:08.657Z",
+      "file_name": "picard_baits.bed",
+      "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed",
+      "file_type": 4,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7a9742aa-e77e-46f5-b84a-3784669c378b",
+    "fields": {
+      "created_date": "2022-08-08T23:03:09.289Z",
+      "modified_date": "2022-08-08T23:03:09.289Z",
+      "file": "33352237-222b-4435-9599-a480089b0878",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "33352237-222b-4435-9599-a480089b0878",
+    "fields": {
+      "created_date": "2022-08-08T23:03:09.278Z",
+      "modified_date": "2022-08-08T23:03:09.278Z",
+      "file_name": "fp_tiling_snps.vcf",
+      "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf",
+      "file_type": 11,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9fd79111-c2d9-4677-939b-80dd3091c9bb",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.459Z",
+      "modified_date": "2022-09-13T08:39:46.459Z",
+      "file": "67fcaf5b-efa8-4d6f-91a5-64364230c9ad",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "67fcaf5b-efa8-4d6f-91a5-64364230c9ad",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.447Z",
+      "modified_date": "2022-09-13T08:39:46.447Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM.bam",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_FM.bam",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$38926d0199ea2bd36740b69cd41cc5ee59902983",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e3071d83-fa4a-4322-b5e0-07a2048884f6",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.505Z",
+      "modified_date": "2022-09-13T08:39:46.506Z",
+      "file": "8c00d551-6147-4aec-ada5-cfe903076f5d",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8c00d551-6147-4aec-ada5-cfe903076f5d",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.490Z",
+      "modified_date": "2022-09-13T08:39:46.490Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_FM.bai",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_FM.bai",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$77b40bdb3a4717945ea9cf885a46c536ae489a30",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "634a42c4-07ca-4b5e-bfd3-e660aada0bde",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.043Z",
+      "modified_date": "2022-09-13T08:39:46.043Z",
+      "file": "0f7b23e5-c315-42df-99eb-91441923ed1e",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0f7b23e5-c315-42df-99eb-91441923ed1e",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.029Z",
+      "modified_date": "2022-09-13T08:39:46.029Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_grouped.bam",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_grouped.bam",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$aca494f9eabb6dcc264f7b353bb78a3347e8688d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b3abfe15-f747-4727-bfb2-351a8e616f65",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.151Z",
+      "modified_date": "2022-09-13T08:39:46.151Z",
+      "file": "8c6fce4a-d14b-4cc9-b2a1-69e2cd68dfab",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8c6fce4a-d14b-4cc9-b2a1-69e2cd68dfab",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.137Z",
+      "modified_date": "2022-09-13T08:39:46.137Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex.bai",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_duplex.bai",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$03eee95d9a0956f9323d47c29116ed85f46efa3d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9c54686a-00ae-422b-be66-a66fdaa2a2ec",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.100Z",
+      "modified_date": "2022-09-13T08:39:46.100Z",
+      "file": "f9630d93-4301-405d-8f42-8336c00701a9",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f9630d93-4301-405d-8f42-8336c00701a9",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.086Z",
+      "modified_date": "2022-09-13T08:39:46.086Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_duplex.bam",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_duplex.bam",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$67eb65cffd35582258e2a58a8e7f42d17da94e3d",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6b9fe6a5-bd96-4a01-abac-b32d061075c5",
+    "fields": {
+      "created_date": "2022-08-08T23:03:07.998Z",
+      "modified_date": "2022-08-08T23:03:07.998Z",
+      "file": "9ee8ebff-6b0e-4730-96fb-004dfecc119b",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9ee8ebff-6b0e-4730-96fb-004dfecc119b",
+    "fields": {
+      "created_date": "2022-08-08T23:03:07.985Z",
+      "modified_date": "2022-08-08T23:03:07.985Z",
+      "file_name": "panel_bed_file_athena_CH_nodup.bed",
+      "path": "/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/panel_bed_file_athena_CH_nodup.bed",
+      "file_type": 4,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "83a1b06d-ab70-4683-851e-b77dc6397e44",
+    "fields": {
+      "created_date": "2022-08-08T23:03:10.583Z",
+      "modified_date": "2022-08-08T23:03:10.583Z",
+      "file": "4506d6b0-0f02-442f-9dae-992850443892",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4506d6b0-0f02-442f-9dae-992850443892",
+    "fields": {
+      "created_date": "2022-08-08T23:03:10.570Z",
+      "modified_date": "2022-08-08T23:03:10.570Z",
+      "file_name": "picard_baits.interval_list",
+      "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+      "file_type": 7,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "83a1b06d-ab70-4683-851e-b77dc6397e44",
+    "fields": {
+      "created_date": "2022-08-08T23:03:10.583Z",
+      "modified_date": "2022-08-08T23:03:10.583Z",
+      "file": "4506d6b0-0f02-442f-9dae-992850443892",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4506d6b0-0f02-442f-9dae-992850443892",
+    "fields": {
+      "created_date": "2022-08-08T23:03:10.570Z",
+      "modified_date": "2022-08-08T23:03:10.570Z",
+      "file_name": "picard_baits.interval_list",
+      "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+      "file_type": 7,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4c73b6e9-e467-494b-b96b-c39739955742",
+    "fields": {
+      "created_date": "2022-09-13T08:39:45.954Z",
+      "modified_date": "2022-09-13T08:39:45.954Z",
+      "file": "62223a6a-ef6a-4a53-a0bd-e920077ddeab",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "62223a6a-ef6a-4a53-a0bd-e920077ddeab",
+    "fields": {
+      "created_date": "2022-09-13T08:39:45.943Z",
+      "modified_date": "2022-09-13T08:39:45.943Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex.bai",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_simplex.bai",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$1ffa2d3f8ee907ec1210b6918a22c77890845339",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0b33d224-57e9-4ca9-8786-08f11ad23e14",
+    "fields": {
+      "created_date": "2022-09-13T08:39:45.913Z",
+      "modified_date": "2022-09-13T08:39:45.913Z",
+      "file": "ba447eaf-6126-4fdb-836f-781c240de68c",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ba447eaf-6126-4fdb-836f-781c240de68c",
+    "fields": {
+      "created_date": "2022-09-13T08:39:45.902Z",
+      "modified_date": "2022-09-13T08:39:45.902Z",
+      "file_name": "C-NFKNJL-N001-d01_collapsed_simplex.bam",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_collapsed_simplex.bam",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$6d3d9845fd02ea7505c5829b7925fcc159abebb8",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "013ff080-b0eb-4773-870d-a4dc977fd361",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.610Z",
+      "modified_date": "2022-09-13T08:39:46.610Z",
+      "file": "312ebb30-da81-4842-8543-4625c45bd434",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "312ebb30-da81-4842-8543-4625c45bd434",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.597Z",
+      "modified_date": "2022-09-13T08:39:46.598Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR.bai",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_uncollapsed_BR.bai",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$5cf73e77706f780aede23efc926fa0558f6d41ef",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1e90a084-b6c2-4b58-b6b9-f39a845775a6",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.560Z",
+      "modified_date": "2022-09-13T08:39:46.560Z",
+      "file": "ee00612d-2580-4ba3-9074-68ee9cff6478",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "sex": "Unknown",
+        "ciTag": "s_C_NFKNJL_N001_d01",
+        "baitSet": "null",
+        "barcodeId": "IDTdual46",
+        "primaryId": "13167_C_3",
+        "dnaInputNg": 200.0,
+        "captureName": "",
+        "barcodeIndex": "AGCGTGTT-TTGCGAAG",
+        "cmoPatientId": "C-NFKNJL",
+        "igoRequestId": "13167_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-NFKNJL-N001-d01",
+        "libraryVolume": 25.0,
+        "tumorOrNormal": "Normal",
+        "captureInputNg": 250.00000000000003,
+        "investigatorSampleId": "TL-005-01",
+        "captureConcentrationNm": 51.0,
+        "libraryConcentrationNgul": 51.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ee00612d-2580-4ba3-9074-68ee9cff6478",
+    "fields": {
+      "created_date": "2022-09-13T08:39:46.546Z",
+      "modified_date": "2022-09-13T08:39:46.546Z",
+      "file_name": "C-NFKNJL-N001-d01_uncollapsed_BR.bam",
+      "path": "/juno/work/access/production/runs/voyager/staging/cmo_ch_nucelo/aca36504-7769-4031-ac02-31da93134e09/C-NFKNJL-N001-d01_uncollapsed_BR.bam",
+      "file_type": 21,
+      "size": 0,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": "sha1$726e63b7a8bd2270846b543de70c8d4e6cad4b9a",
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "64bc4601-f671-4a4c-ab82-b6f911811e54",
+    "fields": {
+      "created_date": "2022-09-29T19:05:31.640Z",
+      "modified_date": "2022-09-29T19:05:31.640Z",
+      "file_name": "samples_json.json",
+      "path": "/juno/work/ci/temp/f6560691-6067-4f61-be35-573c2d41b7c0/samples_json.json",
+      "file_type": 21,
+      "size": 759,
+      "file_group": "da9c6b54-859d-40ec-9b7d-96cb695ba669",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f764e384-dbfe-4073-9fdb-62804b571a57",
+    "fields": {
+      "created_date": "2022-08-08T23:03:07.306Z",
+      "modified_date": "2022-08-08T23:03:07.306Z",
+      "file": "ecec5b7e-fbf6-4ccf-ace8-d0e6dfa89a29",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ecec5b7e-fbf6-4ccf-ace8-d0e6dfa89a29",
+    "fields": {
+      "created_date": "2022-08-08T23:03:07.290Z",
+      "modified_date": "2022-08-08T23:03:07.290Z",
+      "file_name": "config_ch.yaml",
+      "path": "/work/cch/production/resources/cmo-ch/versions/v1.0/multiqc_config/versions/v1.0/config_ch.yaml",
+      "file_type": 30,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9e1ec334-b5e5-417b-96e6-f027627785ba",
+    "fields": {
+      "created_date": "2022-08-08T23:03:13.990Z",
+      "modified_date": "2022-08-08T23:03:13.990Z",
+      "file": "14ca1c8f-22de-4451-9e35-20dc9b3d958c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "14ca1c8f-22de-4451-9e35-20dc9b3d958c",
+    "fields": {
+      "created_date": "2022-08-08T23:03:13.978Z",
+      "modified_date": "2022-08-08T23:03:13.978Z",
+      "file_name": "hotspot-list-union-v1-v2_with_TERT.maf",
+      "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.maf",
+      "file_type": 24,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "226db6c5-f1ec-4191-9bd1-0d94fc38aeb9",
+    "fields": {
+      "created_date": "2022-08-08T23:03:12.599Z",
+      "modified_date": "2022-08-08T23:03:12.599Z",
+      "file": "88290498-fd74-4498-a7f9-e049651561fc",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "88290498-fd74-4498-a7f9-e049651561fc",
+    "fields": {
+      "created_date": "2022-08-08T23:03:12.586Z",
+      "modified_date": "2022-08-08T23:03:12.586Z",
+      "file_name": "Homo_sapiens_assembly19.fasta.fai",
+      "path": "/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta.fai",
+      "file_type": 17,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b63bec02-9e41-44e1-a778-a300e154427c",
+    "fields": {
+      "created_date": "2022-07-27T20:08:08.686Z",
+      "modified_date": "2022-07-27T20:08:08.686Z",
+      "file": "c1f01cb1-4228-4619-bd95-73f12e361851",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c1f01cb1-4228-4619-bd95-73f12e361851",
+    "fields": {
+      "created_date": "2022-07-27T20:08:08.675Z",
+      "modified_date": "2022-07-27T20:08:08.675Z",
+      "file_name": "Homo_sapiens_assembly19.fasta",
+      "path": "/juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+      "file_type": 2,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "16e60eba-818e-46d0-945b-031908681ada",
+    "fields": {
+      "created_date": "2022-08-08T23:03:13.224Z",
+      "modified_date": "2022-08-08T23:03:13.224Z",
+      "file": "c371ed60-7228-4360-84d9-72b827e7afbf",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c371ed60-7228-4360-84d9-72b827e7afbf",
+    "fields": {
+      "created_date": "2022-08-08T23:03:13.212Z",
+      "modified_date": "2022-08-08T23:03:13.213Z",
+      "file_name": "Homo_sapiens_assembly19.dict",
+      "path": "/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.dict",
+      "file_type": 16,
+      "size": 0,
+      "file_group": "37de8e54-b5f2-41d1-bd6d-1e1386ff53da",
+      "checksum": null,
+      "request": null,
+      "sample": null,
+      "patient": null
+    }
+  }
+]
