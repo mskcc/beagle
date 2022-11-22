@@ -143,7 +143,7 @@ def create_pipeline(faker):
     new_operator = create_new_operator()
     default = faker.boolean()
     walltime = randint(1, 1000)
-    memlimit = "{]gb".format(randint(1, 100))
+    memlimit = "{}gb".format(randint(1, 100))
     new_pipeline = Pipeline(name=name, github=github, version=version, entrypoint=entrypoint,
                             output_file_group=output_file_group, operator=new_operator, default=default, walltime=walltime, memlimit=memlimit)
     new_pipeline.save()
