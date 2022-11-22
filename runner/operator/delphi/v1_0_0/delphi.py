@@ -13,10 +13,7 @@ from file_system.models import File, FileGroup, FileType
 from runner.models import Pipeline, Run
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from .bin.helpers import (
-        get_data_from_file,
-        construct_delphi_input_jsons
-)
+from .bin.helpers import get_data_from_file, construct_delphi_input_jsons
 
 
 class DelphiOperator(Operator):
@@ -33,5 +30,4 @@ class DelphiOperator(Operator):
         data = get_data_from_file(CSV_FILE)
         input_jsons = construct_delphi_input_jsons(data)
 
-        
         return delphi_jobs
