@@ -17,11 +17,11 @@ from runner.run.objects.run_creator_object import RunCreator
 from .bin.helpers import get_data_from_file, construct_delphi_input_jsons
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-CSV_FILE = os.path.join(WORKDIR, "data/input.csv") 
+CSV_FILE = os.path.join(WORKDIR, "data/input.csv")
 LOGGER = logging.getLogger(__name__)
 
-class DelphiOperator(Operator):
 
+class DelphiOperator(Operator):
     def get_jobs(self):
         """
         Load paired sample data into a jsons that can be submitted to
@@ -29,7 +29,7 @@ class DelphiOperator(Operator):
         RunCreator
         """
         request_id = self.request_id
-        data = get_data_from_file(CSV_FILE)
+        header, data = get_data_from_file(CSV_FILE)
         delphi_inputs = construct_delphi_input_jsons(data)
 
         return [RunCreator(**job) for job in delphi_inputs]
