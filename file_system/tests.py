@@ -6,7 +6,8 @@ from rest_framework.test import APITestCase
 from django.conf import settings
 from django.contrib.auth.models import User
 from beagle_etl.metadata.validator import MetadataValidator
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample
+from file_system.repository import FileRepository
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample, Request
 
 
 class FileTest(APITestCase):
@@ -16,6 +17,8 @@ class FileTest(APITestCase):
         self.storage.save()
         self.file_group = FileGroup(name="Test Files", storage=self.storage)
         self.file_group.save()
+        self.file_group_2 = FileGroup(name="New File Group", storage=self.storage)
+        self.file_group_2.save()
         self.file_type_fasta = FileType(name="fasta")
         self.file_type_fasta.save()
         self.file_type_bam = FileType(name="bam")
@@ -48,14 +51,25 @@ class FileTest(APITestCase):
         for i in range(amount):
             request_id = "request_%s" % str(i)
             sample_id = "sample_%s" % str(i)
+            file_group_id = str(self.file_group.id)
             if file_type == "fasta":
                 file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
-                self._create_single_file(file_path_R1, file_type, str(self.file_group.id), request_id, sample_id)
+                self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
                 file_path_R2 = "/path/to/%s_R2.%s" % (sample_id, file_type)
-                self._create_single_file(file_path_R2, file_type, str(self.file_group.id), request_id, sample_id)
+                self._create_single_file(file_path_R2, file_type, file_group_id, request_id, sample_id)
             else:
                 file_path = "/path/to/%s.%s" % (sample_id, file_type)
-                self._create_single_file(file_path, file_type, str(self.file_group.id), request_id, sample_id)
+                self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
+
+    def _create_files_with_details_specified(self, file_type, file_group_id=None, request_id=None, sample_id=None):
+        if file_type == "fasta":
+            file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
+            self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
+            file_path_R2 = "/path/to/%s_R2.%s" % (sample_id, file_type)
+            self._create_single_file(file_path_R2, file_type, file_group_id, request_id, sample_id)
+        else:
+            file_path = "/path/to/%s.%s" % (sample_id, file_type)
+            self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
 
     def _generate_jwt(self, username="username", password="password"):
         response = self.client.post("/api-token-auth/", {"username": username, "password": password}, format="json")
@@ -116,6 +130,39 @@ class FileTest(APITestCase):
         except Sample.DoesNotExist:
             sample = None
         self.assertIsNotNone(sample)
+
+    def test_create_file_successful(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file.fasta",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file.fasta",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_file_unknown_file_type(self):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
@@ -562,3 +609,57 @@ class FileTest(APITestCase):
         response = self.client.post("/v0/fs/sample/", {"sample_id": "TEST_001", "redact": False}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json().get("redact"), False)
+
+    def test_copy_files_by_request_id_to_different_file_group(self):
+        sample_1 = Sample.objects.create(sample_id="TEST_B_1")
+        sample_2 = Sample.objects.create(sample_id="TEST_B_2")
+        sample_3 = Sample.objects.create(sample_id="TEST_B_3")
+        sample_4 = Sample.objects.create(sample_id="TEST_B_4")
+        request_id = Request.objects.create(request_id="TEST_B")
+        self._create_files_with_details_specified(
+            "fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1"
+        )
+        self._create_files_with_details_specified(
+            "fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_2"
+        )
+        self._create_files_with_details_specified(
+            "fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_3"
+        )
+        self._create_files_with_details_specified(
+            "fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_4"
+        )
+        test_json = dict(
+            request_id="TEST_B", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.post("/v0/fs/copy-files", test_json, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files_count_original = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"}, file_group=str(self.file_group.id)
+        ).count()
+        files_count_copy = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: "TEST_B"}, file_group=str(self.file_group_2.id)
+        ).count()
+        self.assertEqual(files_count_original, files_count_copy)
+
+    def test_copy_files_by_sample_id_to_different_file_group(self):
+        sample_1 = Sample.objects.create(sample_id="TEST_B_1")
+        request_id = Request.objects.create(request_id="TEST_B")
+        self._create_files_with_details_specified(
+            "fasta", file_group_id=str(self.file_group.id), request_id="TEST_B", sample_id="TEST_B_1"
+        )
+        test_json = dict(
+            primary_id="TEST_B_1", file_group_from=str(self.file_group.id), file_group_to=str(self.file_group_2.id)
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.post("/v0/fs/copy-files", test_json, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files_count_original = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}, file_group=str(self.file_group.id)
+        ).count()
+        files_count_copy = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}, file_group=str(self.file_group_2.id)
+        ).count()
+        self.assertEqual(files_count_original, files_count_copy)
+        files_count = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "TEST_B_1"}).count()
+        self.assertEqual(files_count, 2 * files_count_original)
