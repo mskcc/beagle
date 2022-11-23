@@ -1,7 +1,7 @@
 """
-CopyOutputsOperator
+DelphiOperator
 
-Constructs input JSON for the copy outputs pipeline and then
+Constructs input JSON for the prototype delphi (Tempo) pipeline and then
 submits them as runs
 """
 import os
@@ -28,6 +28,6 @@ class DelphiOperator(Operator):
         """
         request_id = self.request_id
         data = get_data_from_file(CSV_FILE)
-        input_jsons = construct_delphi_input_jsons(data)
+        delphi_inputs = construct_delphi_input_jsons(data)
 
-        return delphi_jobs
+        return [RunCreator(**job) for job in delphi_inputs]
