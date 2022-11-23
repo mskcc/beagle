@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import uuid
+import logging
 from pathlib import Path
 from django.conf import settings
 from notifier.models import JobGroup
