@@ -31,5 +31,6 @@ class DelphiOperator(Operator):
         request_id = self.request_id
         header, data = get_data_from_file(CSV_FILE)
         delphi_inputs = construct_delphi_input_jsons(header, data)
+        jobs = [delphi_inputs]
 
-        return [RunCreator(**job) for job in delphi_inputs]
+        return [RunCreator(**job) for job in jobs]
