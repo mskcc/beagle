@@ -18,14 +18,13 @@ from .bin.helpers import get_data_from_file, construct_delphi_input_jsons
 
 class DelphiOperator(Operator):
 
-    CSV_FILE = "data/input.csv"
-
     def get_jobs(self):
         """
         Load paired sample data into a jsons that can be submitted to
         the nextflow pipeline, and then submit them as jobs through the
         RunCreator
         """
+        CSV_FILE = "data/input.csv"
         request_id = self.request_id
         data = get_data_from_file(CSV_FILE)
         delphi_inputs = construct_delphi_input_jsons(data)
