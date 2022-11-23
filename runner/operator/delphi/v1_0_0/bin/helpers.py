@@ -12,13 +12,14 @@ def get_data_from_file(input_csv):
 
 
 def construct_delphi_input_jsons(header, data):
+    input_jsons = dict()
+    input_jsons["name"] = "Delphi A Tempo/Chronos Run"
+    input_jsons["app"] = ""
+    input_jsons["tags"] = dict()
+    input_jsons["output_metadata"] = dict()
+    input_jsons["output_directory"] = "/juno/work/ci/ops/delphiA"
     inputs = dict()
     inputs["somatic"] = True
-    inputs["name"] = "Delphi A Tempo/Chronos Run"
-    inputs["app"] = ""
-    inputs["tags"] = dict()
-    inputs["output_metadata"] = dict()
-    inputs["output_directory"] = "/juno/work/ci/ops/delphiA"
     inputs["mapping"] = list()
     for row in data:
         current_sample = dict()
@@ -28,6 +29,5 @@ def construct_delphi_input_jsons(header, data):
         current_sample["fastq_pe1"] = {"class": "File", "location": row["R1"]}
         current_sample["fastq_pe2"] = {"class": "File", "location": row["R2"]}
         inputs["mapping"].append(current_sample)
-    input_jsons = dict()
     input_jsons["inputs"] = inputs
     return input_jsons
