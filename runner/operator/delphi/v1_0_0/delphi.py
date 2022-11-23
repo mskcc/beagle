@@ -15,6 +15,9 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .bin.helpers import get_data_from_file, construct_delphi_input_jsons
 
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
+CSV_FILE = os.path.join(WORKDIR, "data/input.csv") 
+LOGGER = logging.getLogger(__name__)
 
 class DelphiOperator(Operator):
 
@@ -24,7 +27,6 @@ class DelphiOperator(Operator):
         the nextflow pipeline, and then submit them as jobs through the
         RunCreator
         """
-        CSV_FILE = "data/input.csv"
         request_id = self.request_id
         data = get_data_from_file(CSV_FILE)
         delphi_inputs = construct_delphi_input_jsons(data)
