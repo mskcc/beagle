@@ -50,6 +50,7 @@ class DelphiOperator(Operator):
             current_sample["sample"] = row["sample"]
             current_sample["fastq_pe1"] = {"class": "File", "location": "juno://" + row["R1"]}
             current_sample["fastq_pe2"] = {"class": "File", "location": "juno://" + row["R2"]}
+            current_sample["num_fq_pairs"] = 1
             inputs["mapping"].append(current_sample)
 
         header_p, data_pairs = get_data_from_file(PAIRING_FILE)
