@@ -43,7 +43,7 @@ class DelphiOperator(Operator):
         inputs["pairing"] = list()
 
         header_m, data_mapping = get_data_from_file(MAPPING_FILE)
-        for row in data:
+        for row in data_mapping:
             current_sample = dict()
             current_sample["assay"] = "exome"
             current_sample["target"] = "impact505"
