@@ -17,7 +17,8 @@ from runner.run.objects.run_creator_object import RunCreator
 from .bin.helpers import get_data_from_file
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-CSV_FILE = os.path.join(WORKDIR, "data/input.csv")
+MAPPING_FILE = os.path.join(WORKDIR, "data/input.csv")
+PAIRING_FILE = os.path.join(WORKDIR, "data/pairs.csv")
 LOGGER = logging.getLogger(__name__)
 
 
@@ -29,7 +30,7 @@ class DelphiOperator(Operator):
         RunCreator
         """
         request_id = self.request_id
-        header, data = get_data_from_file(CSV_FILE)
+
         delphi_inputs = dict()
         delphi_inputs["name"] = "Delphi A Tempo/Chronos Run"
         delphi_inputs["app"] = self.get_pipeline_id()
@@ -39,14 +40,25 @@ class DelphiOperator(Operator):
         inputs = dict()
         inputs["somatic"] = True
         inputs["mapping"] = list()
+        inputs["pairing"] = list()
+
+        header_m, data_mapping = get_data_from_file(MAPPING_FILE)
         for row in data:
             current_sample = dict()
             current_sample["assay"] = "exome"
             current_sample["target"] = "impact505"
             current_sample["sample"] = row["sample"]
-            current_sample["fastq_pe1"] = {"class": "File", "location": row["R1"]}
-            current_sample["fastq_pe2"] = {"class": "File", "location": row["R2"]}
+            current_sample["fastq_pe1"] = {"class": "File", "location": "juno://" + row["R1"]}
+            current_sample["fastq_pe2"] = {"class": "File", "location": "juno://" + row["R2"]}
             inputs["mapping"].append(current_sample)
+
+        header_p, data_pairs = get_data_from_file(PAIRING_FILE)
+        for row in data_pairs:
+            current_pair = dict()
+            current_pair["tumor"] = row["tumor"]
+            current_pair["normal"] = row["normal"]
+            inputs["pairing"].append(current_pair)
+
         delphi_inputs["inputs"] = inputs
 
         jobs = [delphi_inputs]
