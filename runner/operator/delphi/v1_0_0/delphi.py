@@ -46,7 +46,7 @@ class DelphiOperator(Operator):
         for row in data_mapping:
             current_sample = dict()
             current_sample["assay"] = "exome"
-            current_sample["target"] = "impact505"
+            current_sample["target"] = "agilent"
             current_sample["sample"] = row["sample"]
             current_sample["fastq_pe1"] = {"class": "File", "location": "juno://" + row["R1"]}
             current_sample["fastq_pe2"] = {"class": "File", "location": "juno://" + row["R2"]}
