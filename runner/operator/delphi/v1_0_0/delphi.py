@@ -36,7 +36,6 @@ class DelphiOperator(Operator):
         delphi_inputs["app"] = self.get_pipeline_id()
         delphi_inputs["tags"] = dict()
         delphi_inputs["output_metadata"] = dict()
-        delphi_inputs["output_directory"] = "/juno/work/ci/ops/delphiA"
         inputs = dict()
         inputs["somatic"] = True
         inputs["mapping"] = list()
