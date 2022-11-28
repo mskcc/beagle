@@ -37,7 +37,6 @@ class DelphiOperator(Operator):
         delphi_inputs["tags"] = dict()
         delphi_inputs["output_metadata"] = dict()
         inputs = dict()
-        inputs["somatic"] = True
         inputs["mapping"] = list()
         inputs["pairing"] = list()
 
