@@ -6,7 +6,7 @@ from django.utils.html import format_html
 from lib.admin import link_relation, progress_bar
 from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
-from runner.tasks import abort_job_task, add_pipeline_to_cache
+from runner.tasks import terminate_job_task, add_pipeline_to_cache
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
 
@@ -77,10 +77,10 @@ class StatusFilter(admin.SimpleListFilter):
         return queryset
 
 
-def abort_run(modeladmin, request, queryset):
+def terminate_run(modeladmin, request, queryset):
     jobs = list(queryset.values_list("id", flat=True))
     updated = len(jobs)
-    abort_job_task.delay(None, jobs)
+    terminate_job_task.delay(None, jobs)
     modeladmin.message_user(
         request,
         ngettext(
@@ -93,7 +93,7 @@ def abort_run(modeladmin, request, queryset):
     )
 
 
-abort_run.short_description = "Abort Run"
+terminate_run.short_description = "Terminate Run"
 
 
 class RunAdmin(admin.ModelAdmin):
@@ -128,7 +128,7 @@ class RunAdmin(admin.ModelAdmin):
         link_relation("app"),
     )
 
-    actions = [abort_run]
+    actions = [terminate_run]
 
     def link_to_ridgeback(self, obj):
         if not obj.execution_id:
