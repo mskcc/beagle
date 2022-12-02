@@ -33,11 +33,11 @@ class HelixFiltersOperator(Operator):
         argos_run_ids = self.run_ids
         dmp_samples = list()
         for run_id in argos_run_ids:
-          run = Run.objects.get(id=run_id)
-          tumor_sample_name = run.tags["sampleNameTumor"]
-          dmp_sample = get_dmp_sample(tumor_sample_name)
-          if dmp_sample:
-              dmp_samples.append(dmp_sample)
+            run = Run.objects.get(id=run_id)
+            tumor_sample_name = run.tags["sampleNameTumor"]
+            dmp_sample = get_dmp_sample(tumor_sample_name)
+            if dmp_sample:
+                dmp_samples.append(dmp_sample)
 
         input_json = construct_helix_filters_input(argos_run_ids, dmp_samples)
         number_of_runs = len(argos_run_ids)
