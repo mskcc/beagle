@@ -35,7 +35,12 @@ class HelixFiltersOperator(Operator):
         for run_id in argos_run_ids:
             run = Run.objects.get(id=run_id)
             tumor_sample_name = run.tags["sampleNameTumor"]
-            dmp_sample = [get_dmp_sample(tumor_sample_name)] # list of one because of how notifier/helper.py function expects dmp format to be
+            request_id = run.tags[settings.REQUEST_ID_METADATA_KEY]
+            pi = run.tags["labHeadName"]
+            pi_email = run.tags["labHeadEmail"]
+            dmp_sample = [
+                get_dmp_sample(tumor_sample_name, request_id=request_id, pi=pi, pi_email=pi_email)
+            ]  # list of one because of how notifier/helper.py function expects dmp format to be
             if dmp_sample:
                 dmp_samples.append(dmp_sample)
 
