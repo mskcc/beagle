@@ -390,10 +390,11 @@ def get_dmp_sample(sample_id):
         tumor_or_normal = get_tumor_or_normal_type(dmp_bam.metadata["type"])
         pi_email = "webbera@mskcc.org"
         pi = "Amy Webber"
-        dmp_sample = build_dmp_sample(
+        metadata = build_dmp_sample(
             dmp_bam, patient_id, bait_set, tumor_type=tumor_or_normal, pi=pi, pi_email=pi_email
         )
-        return dmp_sample
+        dmp_bam.metadata = metadata
+        return dmp_bam
     return None
 
 
