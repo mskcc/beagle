@@ -379,13 +379,14 @@ def get_project_prefix(run_id_list):
 
 
 def get_dmp_sample(sample_id):
+    sample_id = sample_id.replace("s_", "").replace("_", "-") # converting to CMO standard format
     DMP_BAMS_FG = FileGroup.objects.get(name="DMP BAMs").id
     files = FileRepository.filter(file_group=DMP_BAMS_FG).all()
     dmp_files = FileRepository.filter(queryset=files, metadata={"external_id": sample_id})
     if dmp_files:
         dmp_bam = dmp_files[0]  # there should be only one
         patient_id = dmp_bam.metadata["patient"]["cmo"]
-        bait_set = convert_bait_set(dmp_bam.metadata["bait_set"])
+        bait_set = convert_bait_set(dmp_bam.metadata["assay"])
         tumor_or_normal = get_tumor_or_normal_type(dmp_bam.metadata["type"])
         pi_email = "webbera@mskcc.org"
         pi = "Amy Webber"
