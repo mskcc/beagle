@@ -383,6 +383,7 @@ def get_dmp_sample(sample_id, request_id=None, pi=None, pi_email=None):
     DMP_BAMS_FG = FileGroup.objects.get(name="DMP BAMs").id
     files = FileRepository.filter(file_group=DMP_BAMS_FG).all()
     dmp_files = FileRepository.filter(queryset=files, metadata={"external_id": sample_id})
+
     if dmp_files:
         dmp_bam = dmp_files[0]  # there should be only one
         patient_id = dmp_bam.metadata["patient"]["cmo"]
@@ -396,7 +397,7 @@ def get_dmp_sample(sample_id, request_id=None, pi=None, pi_email=None):
             request_id = "Unspecified"
         metadata = build_dmp_sample(
             dmp_bam, patient_id, bait_set, tumor_type=tumor_or_normal, request_id=request_id, pi=pi, pi_email=pi_email
-        )
+        )["metadata"]
         dmp_bam.metadata = metadata
         return dmp_bam
     return None
