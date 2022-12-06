@@ -378,8 +378,8 @@ def get_project_prefix(run_id_list):
     return "_".join(sorted(project_prefix))
 
 
-def get_dmp_sample(sample_id):
-    sample_id = sample_id.replace("s_", "").replace("_", "-") # converting to CMO standard format
+def get_dmp_sample(sample_id, request_id=None, pi=None, pi_email=None):
+    sample_id = sample_id.replace("s_", "").replace("_", "-")  # converting to CMO standard format
     DMP_BAMS_FG = FileGroup.objects.get(name="DMP BAMs").id
     files = FileRepository.filter(file_group=DMP_BAMS_FG).all()
     dmp_files = FileRepository.filter(queryset=files, metadata={"external_id": sample_id})
@@ -388,10 +388,14 @@ def get_dmp_sample(sample_id):
         patient_id = dmp_bam.metadata["patient"]["cmo"]
         bait_set = convert_bait_set(dmp_bam.metadata["assay"])
         tumor_or_normal = get_tumor_or_normal_type(dmp_bam.metadata["type"])
-        pi_email = "webbera@mskcc.org"
-        pi = "Amy Webber"
+        if not pi_email:
+            pi_email = "webbera@mskcc.org"
+        if not pi:
+            pi = "Amy Webber"
+        if not request_id:
+            request_id = "Unspecified"
         metadata = build_dmp_sample(
-            dmp_bam, patient_id, bait_set, tumor_type=tumor_or_normal, pi=pi, pi_email=pi_email
+            dmp_bam, patient_id, bait_set, tumor_type=tumor_or_normal, request_id=request_id, pi=pi, pi_email=pi_email
         )
         dmp_bam.metadata = metadata
         return dmp_bam
