@@ -9,6 +9,7 @@ import json
 from runner.models import Port, Run
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
+from file_system.models import File, FileMetadata, FileGroup
 from notifier.helper import generate_sample_data_content
 from .bin.oncotree_data_handler.OncotreeDataHandler import OncotreeDataHandler
 from django.db.models import Q
