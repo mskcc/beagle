@@ -289,6 +289,8 @@ def get_lab_head_email(run_id_list):
 
 
 def get_request_pi(run_id_list):
+    # Can't retrieve request_pi if it doesn't exist in beagle sample database,
+    # specifically for DMP bam-only data
     request_pis = set()
     files = FileRepository.all()
     all_request_ids = set()
@@ -306,6 +308,8 @@ def get_request_pi(run_id_list):
     for request_pi in request_pis:
         if request_pi:
             request_pis_final.append(format_msk_id(request_pi))
+    if not request_pis_final:
+        request_pis_final = "webbera"
     return ",".join(request_pis_final)
 
 
