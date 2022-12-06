@@ -6,6 +6,7 @@ submits them as runs
 """
 import os
 import logging
+from django.conf import settings
 from notifier.models import JobGroup
 from runner.models import Pipeline, Run
 from runner.operator.operator import Operator
