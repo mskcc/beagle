@@ -309,7 +309,7 @@ def get_request_pi(run_id_list):
         if request_pi:
             request_pis_final.append(format_msk_id(request_pi))
     if not request_pis_final:
-        request_pis_final = ["webbera"] # hack
+        request_pis_final = ["webbera"]  # hack
     return ",".join(request_pis_final)
 
 
