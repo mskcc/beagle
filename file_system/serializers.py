@@ -8,7 +8,7 @@ from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
 from beagle_etl.metadata.validator import MetadataValidator
-from file_system.repository.file_repository import FileRepository
+# from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
 from runner.models import Run, RunStatus
@@ -347,6 +347,9 @@ class SampleSerializer(serializers.ModelSerializer):
             "sample_id",
             "sample_name",
             "cmo_sample_name",
+            "sample_type",
+            "tumor_or_normal",
+            "sample_class",
             "redact",
         )
 
@@ -354,7 +357,7 @@ class SampleSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
-        fields = ("id", "request_id", "delivery_date")
+        fields = ("id", "request_id", "lab_head_name", "investigator_email", "investigator_name", "delivery_date")
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -363,6 +366,7 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "patient_id",
+            "sex"
         )
 
 
