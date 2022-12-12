@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import JSONField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
+
 # from file_system.serializers import UpdateFileSerializer
 from file_system.tasks import populate_job_group_notifier_metadata
 
@@ -43,7 +44,6 @@ class FileType(models.Model):
         return "{}".format(self.name)
 
 
-
 def _update_files_metadata(files, metadata):
     # files.map(UpdateFileSerializer(f.path))
     # serializer = UpdateFileSerializer(files, data=metadata)
@@ -62,7 +62,7 @@ class Request(BaseModel):
     latest = models.BooleanField()
 
     def _update_files(self, request_id, updated_metadata):
-        query = {f'metadata__{settings.REQUEST_ID_METADATA_KEY}': request_id}
+        query = {f"metadata__{settings.REQUEST_ID_METADATA_KEY}": request_id}
         files = FileMetadata.objects.filter(**query)
         for f in files:
             for k, v in updated_metadata.items():
@@ -86,7 +86,7 @@ class Request(BaseModel):
                 settings.REQUEST_ID_METADATA_KEY: self.request_id,
                 settings.LAB_HEAD_NAME_METADATA_KEY: self.lab_head_name,
                 settings.INVESTIGATOR_EMAIL_METADATA_KEY: self.investigator_email,
-                settings.INVESTIGATOR_NAME_METADATA_KEY: self.investigator_name
+                settings.INVESTIGATOR_NAME_METADATA_KEY: self.investigator_name,
             }
             self._update_files(self.request_id, metadata)
             super(Request, self).save(*args, **kwargs)
@@ -231,9 +231,14 @@ class FileMetadata(BaseModel):
             populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
             if sample_id:
                 sample, _ = Sample.objects.get_or_create(
-                    sample_id=sample_id, defaults={"cmo_sample_name": cmo_sample_name, "sample_name": sample_name,
-                                                   "sample_type": sample_type, "tumor_or_normal": tumor_or_normal,
-                                                   "sample_class": sample_class}
+                    sample_id=sample_id,
+                    defaults={
+                        "cmo_sample_name": cmo_sample_name,
+                        "sample_name": sample_name,
+                        "sample_type": sample_type,
+                        "tumor_or_normal": tumor_or_normal,
+                        "sample_class": sample_class,
+                    },
                 )
                 self.file.sample = sample
                 if not _:
@@ -246,11 +251,14 @@ class FileMetadata(BaseModel):
                 self.file.save(update_fields=("sample",))
 
             if request_id:
-                request, _ = Request.objects.get_or_create(request_id=request_id,
-                                                           defaults={"lab_head_name": lab_head_name,
-                                                                     "investigator_email": investigator_email,
-                                                                     "investigator_name": investigator_name}
-                                                           )
+                request, _ = Request.objects.get_or_create(
+                    request_id=request_id,
+                    defaults={
+                        "lab_head_name": lab_head_name,
+                        "investigator_email": investigator_email,
+                        "investigator_name": investigator_name,
+                    },
+                )
                 if not (_ or skip_request_sample_patient_update):
                     request.lab_head_name = lab_head_name
                     request.investigator_email = investigator_email
