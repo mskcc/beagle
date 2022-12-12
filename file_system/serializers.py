@@ -8,6 +8,7 @@ from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
 from beagle_etl.metadata.validator import MetadataValidator
+
 # from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -363,11 +364,7 @@ class RequestSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = (
-            "id",
-            "patient_id",
-            "sex"
-        )
+        fields = ("id", "patient_id", "sex")
 
 
 class SampleQuerySerializer(serializers.Serializer):
