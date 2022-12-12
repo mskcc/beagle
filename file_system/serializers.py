@@ -308,6 +308,24 @@ class UpdateFileSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown file_type: %s" % file_type)
         return file_type
 
+    def _validate_which_metadata_fields_changed(self, metadata_diff, user):
+        unchangeable_by_user = (
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.TUMOR_OR_NORMAL_METADATA_KEY,
+            settings.BAITSET_METADATA_KEY,
+            settings.RECIPE_METADATA_KEY,
+            settings.PRESERVATION_METADATA_KEY,
+        )
+        if not user.username == settings.ETL_USER:
+            updated_keys = [
+                key.replace("root['", "").replace("']", "") for key in metadata_diff.get("values_changed", {}).keys()
+            ]
+            if any(key in updated_keys for key in unchangeable_by_user):
+                raise serializers.ValidationError(
+                    f"Fields {', '.join(unchangeable_by_user)} can only be updated by SMILE"
+                )
+
     def update(self, instance, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
@@ -333,6 +351,7 @@ class UpdateFileSerializer(serializers.Serializer):
                 instance.filemetadata_set.order_by("-created_date").first().metadata,
                 ignore_order=True,
             )
+            self._validate_which_metadata_fields_changed(ddiff, user)
             if ddiff:
                 metadata = FileMetadata(file=instance, metadata=validated_data.get("metadata"), user=user)
                 metadata.save()

@@ -27,7 +27,16 @@ class FileTest(APITestCase):
         self.file_type_fastq.save()
 
     def _create_single_file(
-        self, path, file_type, group_id, request_id, sample_id, sample_name=None, cmo_sample_name=None, patient_id=None
+        self,
+        path,
+        file_type,
+        group_id,
+        request_id,
+        sample_id,
+        sample_name=None,
+        cmo_sample_name=None,
+        patient_id=None,
+        cmo_sample_class=None,
     ):
         file_type_obj = FileType.objects.get(name=file_type)
         group_id_obj = FileGroup.objects.get(id=group_id)
@@ -42,6 +51,8 @@ class FileTest(APITestCase):
             file_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = cmo_sample_name
         if patient_id:
             file_metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
+        if cmo_sample_class:
+            file_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = cmo_sample_class
 
         file_metadata = FileMetadata(file=file, metadata=file_metadata)
         file_metadata.save()
@@ -131,7 +142,7 @@ class FileTest(APITestCase):
             sample = None
         self.assertIsNotNone(sample)
 
-    def test_create_file_successful(self):
+    def test_create_file_successful_2(self):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.post(
             "/v0/fs/files/",
@@ -241,7 +252,9 @@ class FileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 3)
 
-    def test_update_file_metadata(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_update_file_metadata(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
         _file = self._create_single_file(
             "/path/to/sample_file.bam", "bam", str(self.file_group.id), "request_id", "sample_id"
         )
@@ -266,6 +279,40 @@ class FileTest(APITestCase):
         self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 2)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_update_file_metadata_updatable_by_etl(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        _file = self._create_single_file(
+            "/path/to/sample_file.fastq",
+            "fastq",
+            str(self.file_group.id),
+            "request_id",
+            "sample_id",
+            "sample_name",
+            "not_updatable_by_user",
+            "patient_id",
+            "cmo_sample_class",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.put(
+            "/v0/fs/files/%s/" % str(_file.id),
+            {
+                "path": _file.file_name,
+                "size": _file.size,
+                "file_group": str(_file.file_group.id),
+                "file_type": _file.file_type.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.CMO_SAMPLE_CLASS_METADATA_KEY: "New CMO_SAMPLE_CLASS",
+                    settings.SAMPLE_ID_METADATA_KEY: _file.filemetadata_set.first().metadata[
+                        settings.SAMPLE_ID_METADATA_KEY
+                    ],
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     def test_update_file_metadata_updates_request_sample_and_patient_objects(
