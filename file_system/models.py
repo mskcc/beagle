@@ -71,6 +71,7 @@ class Request(BaseModel):
 
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop("do_not_version", False)
+        update_files = kwargs.pop("update_files", False)
         if do_not_version:
             super(Request, self).save(*args, **kwargs)
         else:
@@ -88,7 +89,8 @@ class Request(BaseModel):
                 settings.INVESTIGATOR_EMAIL_METADATA_KEY: self.investigator_email,
                 settings.INVESTIGATOR_NAME_METADATA_KEY: self.investigator_name,
             }
-            self._update_files(self.request_id, metadata)
+            if update_files:
+                self._update_files(self.request_id, metadata)
             super(Request, self).save(*args, **kwargs)
 
 
@@ -239,9 +241,10 @@ class FileMetadata(BaseModel):
                         "tumor_or_normal": tumor_or_normal,
                         "sample_class": sample_class,
                     },
+                    update_files=False
                 )
                 self.file.sample = sample
-                if not _:
+                if not (_ or skip_request_sample_patient_update):
                     sample.sample_name = sample_name
                     sample.cmo_sample_name = cmo_sample_name
                     sample.sample_type = sample_type
@@ -258,12 +261,13 @@ class FileMetadata(BaseModel):
                         "investigator_email": investigator_email,
                         "investigator_name": investigator_name,
                     },
+                    update_files=False
                 )
                 if not (_ or skip_request_sample_patient_update):
                     request.lab_head_name = lab_head_name
                     request.investigator_email = investigator_email
                     request.investigator_name = investigator_name
-                    request.save()
+                    request.save(update_files=True)
                 self.file.request = request
                 self.file.save(update_fields=("request",))
 
