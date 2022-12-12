@@ -8,6 +8,8 @@
             "sample_id": "A-000000",
             "sample_name": "A-000000",
             "cmo_sample_name": "A-000000",
+            "latest": true,
+            "version": 0,
             "redact": false
         }
     }
