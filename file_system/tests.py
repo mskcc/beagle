@@ -297,6 +297,8 @@ class FileTest(APITestCase):
                         settings.SAMPLE_ID_METADATA_KEY
                     ],
                     settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator Name"
                 },
             },
             format="json",
@@ -307,6 +309,8 @@ class FileTest(APITestCase):
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
         self.assertEqual(_file.patient.patient_id, "Patient_001")
+        self.assertEqual(_file.sample.tumor_or_normal, "Tumor")
+        self.assertEqual(_file.request.investigator_name, "Investigator Name")
 
     def test_patch_file_metadata(self):
         _file = self._create_single_file(
@@ -609,6 +613,48 @@ class FileTest(APITestCase):
         response = self.client.post("/v0/fs/sample/", {"sample_id": "TEST_001", "redact": False}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json().get("redact"), False)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_list(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified('fastq',
+                                                  file_group_id=str(self.file_group.id),
+                                                  request_id='08944_B',
+                                                  sample_id='08944_B_1')
+        self._create_files_with_details_specified('fastq',
+                                                  file_group_id=str(self.file_group.id),
+                                                  request_id='08944_B',
+                                                  sample_id='08944_B_2')
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.get("/v0/fs/request/", format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()["results"]), 1)
+        response = self.client.get("/v0/fs/sample/", format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()["results"]), 2)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_update(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified('fastq',
+                                                  file_group_id=str(self.file_group.id),
+                                                  request_id='08944_B',
+                                                  sample_id='08944_B_1')
+        self._create_files_with_details_specified('fastq',
+                                                  file_group_id=str(self.file_group.id),
+                                                  request_id='08944_B',
+                                                  sample_id='08944_B_2')
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        request = Request.objects.get(request_id='08944_B')
+        response = self.client.patch(f"/v0/fs/request/{str(request.id)}/",
+                                     {
+                                         'lab_head_name': 'New Lab Head Name'
+                                     },
+                                     format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: '08944_B'})
+        for f in files:
+            self.assertEqual(f.metadata[settings.LAB_HEAD_NAME_METADATA_KEY], 'New Lab Head Name')
 
     def test_copy_files_by_request_id_to_different_file_group(self):
         sample_1 = Sample.objects.create(sample_id="TEST_B_1")
