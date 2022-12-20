@@ -8,6 +8,7 @@ from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
+from runner.tasks import add_pipeline_to_cache, add_image_to_cache
 
 
 class ProtocolType(IntEnum):
@@ -74,6 +75,14 @@ class Pipeline(BaseModel):
 
     def __str__(self):
         return "{}".format(self.name)
+
+    def save(self, *args, **kwargs):
+        """
+        Create the pipeline and image cache if the pipeline is created or updated
+        """
+        add_pipeline_to_cache.delay(self.github, self.version)
+        add_image_to_cache.delay(self)
+        super(Run, self).save(*args, **kwargs)
 
 
 class OperatorTrigger(BaseModel):
