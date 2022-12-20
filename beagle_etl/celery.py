@@ -43,6 +43,7 @@ app.conf.task_routes = {
     "runner.tasks.create_jobs_from_request": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_chaining": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.add_pipeline_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.add_image_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.running_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.terminate_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.complete_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},

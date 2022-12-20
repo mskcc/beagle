@@ -31,6 +31,7 @@ from notifier.models import JobGroup, JobGroupNotifier
 from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
+from runner.cache.image_cache import ImageCache
 from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 
@@ -452,6 +453,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["walltime"] = run.app.walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
+    job["image_cache"] = ImageCache.get(run.app)
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
@@ -766,3 +768,10 @@ def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, j
 def add_pipeline_to_cache(github, version):
     if not GithubCache.get(github, version):
         GithubCache.add(github, version)
+
+
+@shared_task
+@memcache_lock("add_image_lock")
+def add_image_to_cache(pipeline):
+    if not ImageCache.get(pipeline):
+        ImageCache.add(pipeline)
