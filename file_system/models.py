@@ -44,14 +44,6 @@ class FileType(models.Model):
         return "{}".format(self.name)
 
 
-def _update_files_metadata(files, metadata):
-    # files.map(UpdateFileSerializer(f.path))
-    # serializer = UpdateFileSerializer(files, data=metadata)
-    # if serializer.is_valid():
-    #     serializer.save()
-    pass
-
-
 class Request(BaseModel):
     request_id = models.CharField(max_length=100, null=True, blank=True)
     delivery_date = models.DateTimeField(null=True, blank=True)
@@ -71,7 +63,9 @@ class Request(BaseModel):
 
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop("do_not_version", False)
-        update_files = kwargs.pop("update_files", False)
+        update_files = False
+        if hasattr(self, "update_files"):
+            update_files = self.update_files
         if do_not_version:
             super(Request, self).save(*args, **kwargs)
         else:
@@ -105,8 +99,19 @@ class Sample(BaseModel):
     version = models.IntegerField()
     latest = models.BooleanField()
 
+    def _update_files(self, sample_id, updated_metadata):
+        query = {f"metadata__{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
+        files = FileMetadata.objects.filter(**query)
+        for f in files:
+            for k, v in updated_metadata.items():
+                f.metadata[k] = v
+            f.save(skip_request_sample_patient_update=True)
+
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop("do_not_version", False)
+        update_files = False
+        if hasattr(self, "update_files"):
+            update_files = self.update_files
         if do_not_version:
             super(Sample, self).save(*args, **kwargs)
         else:
@@ -118,6 +123,15 @@ class Sample(BaseModel):
             if old:
                 old.latest = False
                 old.save(do_not_version=True)
+            if update_files:
+                metadata = {
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: self.cmo_sample_name,
+                    settings.SAMPLE_NAME_METADATA_KEY: self.sample_name,
+                    settings.CMO_SAMPLE_CLASS_METADATA_KEY: self.sample_type,
+                    settings.SAMPLE_CLASS_METADATA_KEY: self.sample_class,
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: self.tumor_or_normal,
+                }
+                self._update_files(self.sample_id, metadata)
             super(Sample, self).save(*args, **kwargs)
 
 
@@ -130,8 +144,19 @@ class Patient(BaseModel):
     class Meta:
         select_on_save = True
 
+    def _update_files(self, patient_id, updated_metadata):
+        query = {f"metadata__{settings.PATIENT_ID_METADATA_KEY}": patient_id}
+        files = FileMetadata.objects.filter(**query)
+        for f in files:
+            for k, v in updated_metadata.items():
+                f.metadata[k] = v
+            f.save(skip_request_sample_patient_update=True)
+
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop("do_not_version", False)
+        update_files = False
+        if hasattr(self, "update_files"):
+            update_files = self.update_files
         if do_not_version:
             super(Patient, self).save(*args, **kwargs)
         else:
@@ -143,6 +168,9 @@ class Patient(BaseModel):
             if old:
                 old.latest = False
                 old.save(do_not_version=True)
+            if update_files:
+                metadata = {settings.SEX_METADATA_KEY: self.sex}
+                self._update_files(self.patient_id, metadata)
             super(Patient, self).save(*args, **kwargs)
 
 
@@ -231,6 +259,24 @@ class FileMetadata(BaseModel):
 
             assay = self.metadata.get(settings.RECIPE_METADATA_KEY, "")
             populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
+
+            if request_id:
+                request, _ = Request.objects.get_or_create(
+                    request_id=request_id,
+                    defaults={
+                        "lab_head_name": lab_head_name,
+                        "investigator_email": investigator_email,
+                        "investigator_name": investigator_name,
+                    },
+                )
+                if not (_ or skip_request_sample_patient_update):
+                    request.lab_head_name = lab_head_name
+                    request.investigator_email = investigator_email
+                    request.investigator_name = investigator_name
+                    request.save()
+                self.file.request = request
+                self.file.save(update_fields=("request",))
+
             if sample_id:
                 sample, _ = Sample.objects.get_or_create(
                     sample_id=sample_id,
@@ -241,7 +287,6 @@ class FileMetadata(BaseModel):
                         "tumor_or_normal": tumor_or_normal,
                         "sample_class": sample_class,
                     },
-                    update_files=False
                 )
                 self.file.sample = sample
                 if not (_ or skip_request_sample_patient_update):
@@ -252,24 +297,6 @@ class FileMetadata(BaseModel):
                     sample.sample_class = sample_class
                     sample.save()
                 self.file.save(update_fields=("sample",))
-
-            if request_id:
-                request, _ = Request.objects.get_or_create(
-                    request_id=request_id,
-                    defaults={
-                        "lab_head_name": lab_head_name,
-                        "investigator_email": investigator_email,
-                        "investigator_name": investigator_name,
-                    },
-                    update_files=False
-                )
-                if not (_ or skip_request_sample_patient_update):
-                    request.lab_head_name = lab_head_name
-                    request.investigator_email = investigator_email
-                    request.investigator_name = investigator_name
-                    request.save(update_files=True)
-                self.file.request = request
-                self.file.save(update_fields=("request",))
 
             if patient_id:
                 patient, _ = Patient.objects.get_or_create(patient_id=patient_id, defaults={"sex": sex})
