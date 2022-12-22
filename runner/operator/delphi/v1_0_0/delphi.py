@@ -29,7 +29,7 @@ class DelphiOperator(Operator):
         the nextflow pipeline, and then submit them as jobs through the
         RunCreator
         """
-        request_id = self.request_id
+        request_id = "delphiC"
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
@@ -37,18 +37,18 @@ class DelphiOperator(Operator):
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         output_directory = os.path.join(
-                output_directory_base, "chaos", self.request_id, jg_created_date
+                output_directory_base, "chaos", request_id, jg_created_date
         )
 
         delphi_inputs = dict()
-        delphi_inputs["name"] = "Delphi A Tempo/Chronos Run"
+        delphi_inputs["name"] = "%s Tempo/Chronos Run" % request_id
         delphi_inputs["app"] = self.get_pipeline_id()
         delphi_inputs["tags"] = dict()
         delphi_inputs["output_metadata"] = dict()
+        delphi_inputs["output_directory"] = output_directory
         inputs = dict()
         inputs["mapping"] = list()
-        inputs["pairing"] = list()
-        inputs["output_directory"] = output_directory
+        inputs["pairing"] = list() 
 
         header_m, data_mapping = get_data_from_file(MAPPING_FILE)
         for row in data_mapping:
