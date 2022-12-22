@@ -9,7 +9,7 @@ from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
 from beagle_etl.metadata.validator import MetadataValidator
 
-# from file_system.repository.file_repository import FileRepository
+from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
 from runner.models import Run, RunStatus
@@ -66,7 +66,7 @@ class CreateStorageSerializer(serializers.ModelSerializer):
 class FileGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileGroup
-        fields = ("id", "name", "slug", "storage")
+        fields = ("id", "name", "slug", "storage", "owner")
 
 
 class CreateFileGroupSerializer(serializers.ModelSerializer):
@@ -373,17 +373,41 @@ class SampleSerializer(serializers.ModelSerializer):
             "redact",
         )
 
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
+
 
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = ("id", "request_id", "lab_head_name", "investigator_email", "investigator_name", "delivery_date")
 
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
+
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ("id", "patient_id", "sex")
+
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
 
 
 class SampleQuerySerializer(serializers.Serializer):
