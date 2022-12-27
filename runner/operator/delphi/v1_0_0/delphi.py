@@ -17,10 +17,7 @@ from runner.run.objects.run_creator_object import RunCreator
 from .bin.helpers import get_data_from_file
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-MAPPING_FILE = os.path.join(WORKDIR, "data/input.csv")
-PAIRING_FILE = os.path.join(WORKDIR, "data/pairs.csv")
 LOGGER = logging.getLogger(__name__)
-
 
 class DelphiOperator(Operator):
     def get_jobs(self):
@@ -29,7 +26,11 @@ class DelphiOperator(Operator):
         the nextflow pipeline, and then submit them as jobs through the
         RunCreator
         """
-        request_id = "delphiC"
+
+        request_id = self.request_id
+
+        MAPPING_FILE = os.path.join(WORKDIR, "data", request_id, "input.csv")
+        PAIRING_FILE = os.path.join(WORKDIR, "data", request_id, "pairs.csv")
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
@@ -48,7 +49,7 @@ class DelphiOperator(Operator):
         delphi_inputs["output_directory"] = output_directory
         inputs = dict()
         inputs["mapping"] = list()
-        inputs["pairing"] = list() 
+        inputs["pairing"] = list()
 
         header_m, data_mapping = get_data_from_file(MAPPING_FILE)
         for row in data_mapping:
