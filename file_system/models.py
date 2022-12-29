@@ -95,6 +95,8 @@ class Sample(BaseModel):
     sample_type = models.CharField(max_length=100, null=True, blank=True)
     tumor_or_normal = models.CharField(max_length=30, null=True, blank=True)
     sample_class = models.CharField(max_length=30, null=True, blank=True)
+    igo_qc_notes = models.TextField(default="")
+    cas_qc_notes = models.TextField(default="")
     redact = models.BooleanField(default=False, null=False)
     version = models.IntegerField()
     latest = models.BooleanField()

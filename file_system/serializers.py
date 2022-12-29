@@ -370,6 +370,8 @@ class SampleSerializer(serializers.ModelSerializer):
             "sample_type",
             "tumor_or_normal",
             "sample_class",
+            "igo_qc_notes",
+            "cas_qc_notes",
             "redact",
         )
 
