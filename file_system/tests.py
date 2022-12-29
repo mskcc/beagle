@@ -660,6 +660,19 @@ class FileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("redact"), True)
 
+    def test_sample_update_cas_qc_notes(self):
+        sample = Sample.objects.create(sample_id="08944_B")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.patch(
+            "/v0/fs/sample/%s/" % str(sample.id),
+            {
+                "igo_qc_notes": "QC Failed",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get("igo_qc_notes"), "QC Failed")
+
     def test_sample_create(self):
         # sample = Sample.objects.create(sample_id="08944_B")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
