@@ -28,7 +28,7 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
-from file_system.models import Request
+from file_system.models import Request, FileGroup
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
