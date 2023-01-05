@@ -452,6 +452,8 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["walltime"] = run.app.walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
+    if run.app.output_permission:
+        job["root_permission"] = run.app.output_permission
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
