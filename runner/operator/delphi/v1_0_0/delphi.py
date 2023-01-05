@@ -19,6 +19,7 @@ from .bin.helpers import get_data_from_file
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
+
 class DelphiOperator(Operator):
     def get_jobs(self):
         """
@@ -37,9 +38,7 @@ class DelphiOperator(Operator):
         output_directory_base = pipeline.output_directory
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-        output_directory = os.path.join(
-                output_directory_base, "chaos", request_id, jg_created_date
-        )
+        output_directory = os.path.join(output_directory_base, "chaos", request_id, jg_created_date)
 
         delphi_inputs = dict()
         delphi_inputs["name"] = "%s Tempo/Chronos Run" % request_id
