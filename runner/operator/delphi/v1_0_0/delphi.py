@@ -50,6 +50,7 @@ class DelphiOperator(Operator):
         inputs = dict()
         inputs["mapping"] = list()
         inputs["pairing"] = list()
+        inputs["aggregate"] = True
 
         header_m, data_mapping = get_data_from_file(MAPPING_FILE)
         for row in data_mapping:
