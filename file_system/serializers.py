@@ -8,6 +8,7 @@ from beagle_etl.models import Job, JobStatus
 from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
 from beagle_etl.metadata.validator import MetadataValidator
+
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -65,7 +66,7 @@ class CreateStorageSerializer(serializers.ModelSerializer):
 class FileGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileGroup
-        fields = ("id", "name", "slug", "storage")
+        fields = ("id", "name", "slug", "storage", "owner")
 
 
 class CreateFileGroupSerializer(serializers.ModelSerializer):
@@ -307,6 +308,24 @@ class UpdateFileSerializer(serializers.Serializer):
             raise serializers.ValidationError("Unknown file_type: %s" % file_type)
         return file_type
 
+    def _validate_which_metadata_fields_changed(self, metadata_diff, user):
+        unchangeable_by_user = (
+            settings.CMO_SAMPLE_CLASS_METADATA_KEY,
+            settings.SAMPLE_CLASS_METADATA_KEY,
+            settings.TUMOR_OR_NORMAL_METADATA_KEY,
+            settings.BAITSET_METADATA_KEY,
+            settings.RECIPE_METADATA_KEY,
+            settings.PRESERVATION_METADATA_KEY,
+        )
+        if not user.username == settings.ETL_USER:
+            updated_keys = [
+                key.replace("root['", "").replace("']", "") for key in metadata_diff.get("values_changed", {}).keys()
+            ]
+            if any(key in updated_keys for key in unchangeable_by_user):
+                raise serializers.ValidationError(
+                    f"Fields {', '.join(unchangeable_by_user)} can only be updated by SMILE"
+                )
+
     def update(self, instance, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
@@ -332,6 +351,7 @@ class UpdateFileSerializer(serializers.Serializer):
                 instance.filemetadata_set.order_by("-created_date").first().metadata,
                 ignore_order=True,
             )
+            self._validate_which_metadata_fields_changed(ddiff, user)
             if ddiff:
                 metadata = FileMetadata(file=instance, metadata=validated_data.get("metadata"), user=user)
                 metadata.save()
@@ -347,23 +367,49 @@ class SampleSerializer(serializers.ModelSerializer):
             "sample_id",
             "sample_name",
             "cmo_sample_name",
+            "sample_type",
+            "tumor_or_normal",
+            "sample_class",
+            "igo_qc_notes",
+            "cas_qc_notes",
             "redact",
         )
+
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
 
 
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
-        fields = ("id", "request_id", "delivery_date")
+        fields = ("id", "request_id", "lab_head_name", "investigator_email", "investigator_name", "delivery_date")
+
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
 
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = (
-            "id",
-            "patient_id",
-        )
+        fields = ("id", "patient_id", "sex")
+
+    def create(self, validated_data):
+        validated_data.pop("update_files")
+        instance = Sample.objects.create(**validated_data)
+        return instance
+
+    def save(self):
+        super().save(update_files=True)
 
 
 class SampleQuerySerializer(serializers.Serializer):
