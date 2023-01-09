@@ -131,7 +131,7 @@
         "qcAccessEmails": "-",
         "flowCellLanes": [3, 4],
         "tumorOrNormal": "Normal",
-        "igocomplete": true
+        "igoComplete": true
       },
       "user": null
     }
@@ -162,7 +162,7 @@
         "qcAccessEmails": "-",
         "flowCellLanes": [3, 4],
         "tumorOrNormal": "Normal",
-        "igocomplete": true
+        "igoComplete": true
       },
       "user": null
     }
@@ -195,7 +195,7 @@
         "qcAccessEmails": "-",
         "flowCellLanes": [3, 4],
         "tumorOrNormal": "Tumor",
-        "igocomplete": true
+        "igoComplete": true
       },
       "user": null
     }
@@ -288,7 +288,7 @@
         "qcAccessEmails": "-",
         "flowCellLanes": [3, 4],
         "tumorOrNormal": "Normal",
-        "igocomplete": true
+        "igoComplete": true
       },
       "user": null
     }
@@ -347,7 +347,7 @@
         "qcAccessEmails": "-",
         "flowCellLanes": [3, 4],
         "tumorOrNormal": "Tumor",
-        "igocomplete": true
+        "igoComplete": true
       },
       "user": null
     }

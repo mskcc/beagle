@@ -2,15 +2,13 @@
 Tests for METADB ETL jobs
 """
 
-from math import exp
 import os
 from mock import patch
 import json
-import copy
 from django.test import TestCase
 from django.conf import settings
-from file_system.repository import FileRepository
-from beagle_etl.models import SMILEMessage, SmileMessageStatus
+from django.contrib.auth.models import User
+from beagle_etl.models import SMILEMessage
 from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job
 from django.core.management import call_command
 from file_system.repository import FileRepository
@@ -56,6 +54,7 @@ class TestNewRequest(TestCase):
         with open(new_request_json_path) as new_request_json_file:
             self.new_request_data = json.load(new_request_json_file)
         self.request_data_str = json.dumps(self.new_request_data)
+        self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -67,16 +66,17 @@ class TestNewRequest(TestCase):
         """
         Test if request metadata update is properly updating fields
         """
-        request_callback.return_value = None
-        populate_job_group.return_value = None
-        jobGroupNotifierObjectGet.return_value = None
-        send_notification.return_value = None
-        msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
-        update_request_job(str(msg.id))
-        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
-        for file in files:
-            for single_request_key in self.request_keys:
-                self.assertEqual(file.metadata[single_request_key], self.new_request_data[single_request_key])
+        with self.settings(ETL_USER=str(self.etl_user.username)):
+            request_callback.return_value = None
+            populate_job_group.return_value = None
+            jobGroupNotifierObjectGet.return_value = None
+            send_notification.return_value = None
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            update_request_job(str(msg.id))
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            for file in files:
+                for single_request_key in self.request_keys:
+                    self.assertEqual(file.metadata[single_request_key], self.new_request_data[0][single_request_key])
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -89,25 +89,26 @@ class TestNewRequest(TestCase):
         """
         Test that generate ticket is called properly in update request
         """
-        request_callback.return_value = None
-        populate_job_group.return_value = None
-        jobGroupNotifierObjectGet.return_value = None
-        send_notification.return_value = None
-        msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
-        update_request_job(str(msg.id))
-        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
-        sample_names = []
-        for file in files:
-            sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
-            if sample_name not in sample_names:
-                sample_names.append(sample_name)
-        ticket_description.assert_called_once()
-        call_args = ticket_description.call_args[0]
-        self.assertEqual(call_args[0], "10075_D_2")
-        self.assertEqual(len(call_args[3]), len(sample_names))
-        request_metadata = call_args[5]
-        for single_request_key in self.request_keys:
-            self.assertEqual(request_metadata[single_request_key], self.new_request_data[single_request_key])
+        with self.settings(ETL_USER=str(self.etl_user.username)):
+            request_callback.return_value = None
+            populate_job_group.return_value = None
+            jobGroupNotifierObjectGet.return_value = None
+            send_notification.return_value = None
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            update_request_job(str(msg.id))
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            sample_names = []
+            for file in files:
+                sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
+                if sample_name not in sample_names:
+                    sample_names.append(sample_name)
+            ticket_description.assert_called_once()
+            call_args = ticket_description.call_args[0]
+            self.assertEqual(call_args[0], "10075_D_2")
+            self.assertEqual(len(call_args[3]), len(sample_names))
+            request_metadata = call_args[5]
+            for single_request_key in self.request_keys:
+                self.assertEqual(request_metadata[single_request_key], self.new_request_data[0][single_request_key])
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -119,31 +120,32 @@ class TestNewRequest(TestCase):
         """
         Test that the samples metadata are not updated when only update request is called
         """
-        request_callback.return_value = None
-        populate_job_group.return_value = None
-        jobGroupNotifierObjectGet.return_value = None
-        send_notification.return_value = None
-        sample_metadata = {}
-        sample_files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
-        for single_file in sample_files:
-            sample_name = single_file.metadata[settings.SAMPLE_ID_METADATA_KEY]
-            if sample_name not in sample_metadata:
-                sample_metadata[sample_name] = single_file.metadata
-        msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
-        update_request_job(str(msg.id))
-        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
-        for file in files:
-            metadata_keys = file.metadata.keys()
-            sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
-            for single_metadata_key in metadata_keys:
-                current_value = file.metadata[single_metadata_key]
-                if single_metadata_key in self.file_keys:
-                    continue
-                if single_metadata_key in self.request_keys:
-                    expected_value = self.new_request_data[single_metadata_key]
-                else:
-                    expected_value = sample_metadata[sample_name][single_metadata_key]
-                self.assertEqual(current_value, expected_value)
+        with self.settings(ETL_USER=str(self.etl_user.username)):
+            request_callback.return_value = None
+            populate_job_group.return_value = None
+            jobGroupNotifierObjectGet.return_value = None
+            send_notification.return_value = None
+            sample_metadata = {}
+            sample_files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            for single_file in sample_files:
+                sample_name = single_file.metadata[settings.SAMPLE_ID_METADATA_KEY]
+                if sample_name not in sample_metadata:
+                    sample_metadata[sample_name] = single_file.metadata
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            update_request_job(str(msg.id))
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            for file in files:
+                metadata_keys = file.metadata.keys()
+                sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
+                for single_metadata_key in metadata_keys:
+                    current_value = file.metadata[single_metadata_key]
+                    if single_metadata_key in self.file_keys:
+                        continue
+                    if single_metadata_key in self.request_keys:
+                        expected_value = self.new_request_data[0][single_metadata_key]
+                    else:
+                        expected_value = sample_metadata[sample_name][single_metadata_key]
+                    self.assertEqual(current_value, expected_value)
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -155,16 +157,17 @@ class TestNewRequest(TestCase):
         """
         Test that other samples are not modified
         """
-        request_callback.return_value = None
-        populate_job_group.return_value = None
-        jobGroupNotifierObjectGet.return_value = None
-        send_notification.return_value = None
-        sample_metadata = {}
-        msg = SMILEMessage.objects.create(topic="update_sample", message=self.new_sample_data_str)
-        update_sample_job(str(msg.id))
-        sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3"})
-        for f in sample_files:
-            self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
+        with self.settings(ETL_USER=str(self.etl_user.username)):
+            request_callback.return_value = None
+            populate_job_group.return_value = None
+            jobGroupNotifierObjectGet.return_value = None
+            send_notification.return_value = None
+            sample_metadata = {}
+            msg = SMILEMessage.objects.create(topic="update_sample", message=self.new_sample_data_str)
+            update_sample_job(str(msg.id))
+            sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3"})
+            for f in sample_files:
+                self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
 
     # @patch("notifier.models.JobGroupNotifier.objects.get")
     # @patch("notifier.tasks.send_notification.delay")

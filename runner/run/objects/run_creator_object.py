@@ -9,6 +9,7 @@ class RunCreator(object):
 
     def __init__(
         self,
+        # TODO: app should be pipeline github repo and version
         app,
         inputs,
         name,
@@ -34,6 +35,7 @@ class RunCreator(object):
         self.resume = resume
 
     def create(self):
+        # TODO: Creating of Run object should be in different class so RunCreator could be moved to voyager_operator
         try:
             pipeline = Pipeline.objects.get(id=self.app)
         except Pipeline.DoesNotExist:

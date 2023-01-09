@@ -345,7 +345,7 @@ class OperatorSampleQuerySerializer(serializers.Serializer):
     sample = serializers.CharField(required=True, allow_blank=False)
 
 
-class AbortRunSerializer(serializers.Serializer):
+class TerminateRunSerializer(serializers.Serializer):
     job_group_id = serializers.UUIDField(required=False, allow_null=True)
     runs = serializers.ListField(child=serializers.UUIDField())
 

@@ -31,5 +31,5 @@ class Migration(migrations.Migration):
             name="config",
             field=models.CharField(blank=True, default=None, max_length=1000, null=True),
         ),
-        migrations.RunPython(populate_pipeline_type, reverse_code=revert),
+        # migrations.RunPython(populate_pipeline_type, reverse_code=revert),
     ]

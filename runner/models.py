@@ -21,7 +21,7 @@ class RunStatus(IntEnum):
     RUNNING = 2
     FAILED = 3
     COMPLETED = 4
-    ABORTED = 5
+    TERMINATED = 5
 
 
 class PortType(IntEnum):
@@ -60,6 +60,7 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
+    output_permission = models.IntegerField(blank=True, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
@@ -269,9 +270,9 @@ class Run(BaseModel):
                 self.operator_run.increment_failed_run()
                 self.original["status"] = RunStatus.FAILED
                 self.finished_date = now()
-            elif self.status == RunStatus.ABORTED:
+            elif self.status == RunStatus.TERMINATED:
                 self.operator_run.increment_failed_run()
-                self.original["status"] = RunStatus.ABORTED
+                self.original["status"] = RunStatus.TERMINATED
                 self.finished_date = now()
         super(Run, self).save(*args, **kwargs)
 

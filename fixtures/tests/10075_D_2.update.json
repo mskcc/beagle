@@ -1,4 +1,4 @@
-{
+[{
   "metaDbRequestId": "6cc9f987-875a-11eb-ada3-acde48001122",
   "igoRequestId": "10075_D_2",
   "genePanel": "GENESET101_BAITS",
@@ -298,4 +298,4 @@
     "/FASTQ/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_GGCGTCAT/MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_GGCGTCAT_S61_R2_001.fastq.gz"
   ],
   "igoProjectId": "MOCKREQUEST1"
-}
+}]

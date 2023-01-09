@@ -184,9 +184,17 @@ class NextflowRunObject(RunObject):
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
         output_file_path = os.path.join(output_directory, "nextflow_output.txt")
+        trace_file_path = os.path.join(output_directory, "trace.txt")
         config = bytes(self.run_obj.app.config, "utf-8").decode("unicode_escape")
+        render_value = dict()
+        render = False
         if "{{output_directory}}" in config:
-            render_value = {"output_directory": output_file_path}
+            render_value["output_directory"] = output_file_path
+            render = True
+        if "{{trace_file}}" in config:
+            render_value["trace_file"] = trace_file_path
+            render = True
+        if render:
             inputs["config"] = pystache.render(config, render_value)
         else:
             inputs["config"] = config
