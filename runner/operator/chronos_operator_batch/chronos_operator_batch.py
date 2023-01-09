@@ -160,7 +160,12 @@ class ChronosOperatorBatch(Operator):
             pairing_for_request.append(pairing)
             mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
-        input_json = {"pairing": pairing_for_request, "mapping": mapping_for_request}
+        input_json = {
+            "pairing": pairing_for_request,
+            "mapping": mapping_for_request,
+            "somatic": True,
+            "aggregate": True,
+        }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
         jobs.append(job_json)
