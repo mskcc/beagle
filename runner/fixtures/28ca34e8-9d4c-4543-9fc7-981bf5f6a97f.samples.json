@@ -8,6 +8,8 @@
             "sample_id": "ALN-TEST-03",
             "sample_name": "C-ALLANT-T003-d",
             "cmo_sample_name": "s_C_ALLANT_T003_d",
+            "latest": true,
+            "version": 0,
             "redact": false
         }
     },
@@ -20,6 +22,8 @@
             "sample_id": "ALN-TEST-02",
             "sample_name": "C-ALLANT-N002-d",
             "cmo_sample_name": "s_C_ALLANT_N002_d",
+            "latest": true,
+            "version": 0,
             "redact": false
         }
     }
