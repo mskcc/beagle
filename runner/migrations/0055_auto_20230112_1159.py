@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0054_pipeline_output_permission'),
+        ("runner", "0054_pipeline_output_permission"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='run',
-            name='restart_attempts',
+            model_name="run",
+            name="restart_attempts",
             field=models.IntegerField(default=3),
         ),
         migrations.AlterField(
-            model_name='run',
-            name='resume_attempts',
+            model_name="run",
+            name="resume_attempts",
             field=models.IntegerField(default=2),
         ),
     ]
