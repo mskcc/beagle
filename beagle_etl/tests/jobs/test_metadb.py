@@ -76,7 +76,7 @@ class TestNewRequest(TestCase):
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             for file in files:
                 for single_request_key in self.request_keys:
-                    self.assertEqual(file.metadata[single_request_key], self.new_request_data[single_request_key])
+                    self.assertEqual(file.metadata[single_request_key], self.new_request_data[0][single_request_key])
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -108,7 +108,7 @@ class TestNewRequest(TestCase):
             self.assertEqual(len(call_args[3]), len(sample_names))
             request_metadata = call_args[5]
             for single_request_key in self.request_keys:
-                self.assertEqual(request_metadata[single_request_key], self.new_request_data[single_request_key])
+                self.assertEqual(request_metadata[single_request_key], self.new_request_data[0][single_request_key])
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -142,7 +142,7 @@ class TestNewRequest(TestCase):
                     if single_metadata_key in self.file_keys:
                         continue
                     if single_metadata_key in self.request_keys:
-                        expected_value = self.new_request_data[single_metadata_key]
+                        expected_value = self.new_request_data[0][single_metadata_key]
                     else:
                         expected_value = sample_metadata[sample_name][single_metadata_key]
                     self.assertEqual(current_value, expected_value)

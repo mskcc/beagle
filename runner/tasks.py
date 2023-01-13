@@ -28,7 +28,7 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
-from file_system.models import Request
+from file_system.models import Request, FileGroup
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
@@ -452,6 +452,8 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["walltime"] = run.app.walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
+    if run.app.output_permission:
+        job["root_permission"] = run.app.output_permission
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]

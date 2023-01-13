@@ -8,6 +8,8 @@
       "sample_id": "08944_B_4",
       "sample_name": "C-4LM16H-N001-d",
       "cmo_sample_name": "s_C_4LM16H_N001_d",
+      "latest": true,
+      "version": 0,
       "redact": false
     }
   },
@@ -20,6 +22,8 @@
       "sample_id": "08944_B_3",
       "sample_name": "C-4LM16H-X001-d",
       "cmo_sample_name": "s_C_4LM16H_X001_d",
+      "latest": true,
+      "version": 0,
       "redact": false
     }
   }

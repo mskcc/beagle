@@ -383,7 +383,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 @shared_task
 def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    data = json.loads(message.message)
+    data = json.loads(message.message)[0]
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
@@ -435,10 +435,10 @@ def update_request_job(message_id):
         if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
                 "type": "SAMPLE",
-                "igocomplete": f.metadata["igocomplete"],
+                "igocomplete": f.metadata[settings.IGO_COMPLETE_METADATA_KEY],
                 "sample": f.metadata[settings.SAMPLE_ID_METADATA_KEY],
                 "status": "COMPLETED",
-                "message": "File %s request metadata updated",
+                "message": f"File {f.file.path} request metadata updated",
                 "code": None,
             }
             samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
