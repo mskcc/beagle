@@ -264,7 +264,7 @@ class RunApiRestartViewSet(GenericAPIView):
             job_group_id = runs_in_progress[0].job_group_id
             terminate_job_task.delay(job_group_id, runs_in_progress)
 
-        runs_to_restart = o.runs.exclude(status__in=RunStatus.COMPLETED)
+        runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
         runs_to_restart = runs_to_restart + runs_in_progress
 
         if not runs_to_restart:
