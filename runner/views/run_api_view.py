@@ -265,7 +265,7 @@ class RunApiRestartViewSet(GenericAPIView):
             terminate_job_task.delay(job_group_id, runs_in_progress)
 
         runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
-        runs_to_restart = runs_to_restart + runs_in_progress
+        runs_to_restart.union(runs_in_progress)
 
         if not runs_to_restart:
             return Response("There are no runs to restart", status=status.HTTP_400_BAD_REQUEST)
