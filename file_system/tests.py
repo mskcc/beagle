@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from beagle_etl.metadata.validator import MetadataValidator
 from file_system.repository import FileRepository
-from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample, Request
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, FileMetadata, Sample, Request, Patient
 
 
 class FileTest(APITestCase):
@@ -72,12 +72,18 @@ class FileTest(APITestCase):
                 file_path = "/path/to/%s.%s" % (sample_id, file_type)
                 self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
 
-    def _create_files_with_details_specified(self, file_type, file_group_id=None, request_id=None, sample_id=None):
+    def _create_files_with_details_specified(
+        self, file_type, file_group_id=None, request_id=None, sample_id=None, patient_id=None
+    ):
         if file_type == "fasta":
             file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
-            self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
+            self._create_single_file(
+                file_path_R1, file_type, file_group_id, request_id, sample_id, patient_id=patient_id
+            )
             file_path_R2 = "/path/to/%s_R2.%s" % (sample_id, file_type)
-            self._create_single_file(file_path_R2, file_type, file_group_id, request_id, sample_id)
+            self._create_single_file(
+                file_path_R2, file_type, file_group_id, request_id, sample_id, patient_id=patient_id
+            )
         else:
             file_path = "/path/to/%s.%s" % (sample_id, file_type)
             self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
@@ -344,6 +350,8 @@ class FileTest(APITestCase):
                         settings.SAMPLE_ID_METADATA_KEY
                     ],
                     settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator Name",
                 },
             },
             format="json",
@@ -354,6 +362,8 @@ class FileTest(APITestCase):
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
         self.assertEqual(_file.patient.patient_id, "Patient_001")
+        self.assertEqual(_file.sample.tumor_or_normal, "Tumor")
+        self.assertEqual(_file.request.investigator_name, "Investigator Name")
 
     def test_patch_file_metadata(self):
         _file = self._create_single_file(
@@ -650,12 +660,135 @@ class FileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("redact"), True)
 
-    def test_sample_create(self):
+    def test_sample_update_cas_qc_notes(self):
         sample = Sample.objects.create(sample_id="08944_B")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.patch(
+            "/v0/fs/sample/%s/" % str(sample.id),
+            {
+                "igo_qc_notes": "QC Failed",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get("igo_qc_notes"), "QC Failed")
+
+    def test_sample_create(self):
+        # sample = Sample.objects.create(sample_id="08944_B")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.post("/v0/fs/sample/", {"sample_id": "TEST_001", "redact": False}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json().get("redact"), False)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_list(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified(
+            "fastq",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_1",
+            patient_id="PT-001",
+        )
+        self._create_files_with_details_specified(
+            "fastq",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_2",
+            patient_id="PT-001",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.get("/v0/fs/request/", format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()["results"]), 1)
+        response = self.client.get("/v0/fs/sample/", format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()["results"]), 2)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_update(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified(
+            "fasta",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_1",
+            patient_id="PT-001",
+        )
+        self._create_files_with_details_specified(
+            "fasta",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_2",
+            patient_id="PT-001",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        request = Request.objects.get(request_id="08944_B")
+        response = self.client.patch(
+            f"/v0/fs/request/{str(request.id)}/", {"lab_head_name": "New Lab Head Name"}, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
+        for f in files:
+            self.assertEqual(files.count(), 4)
+            self.assertEqual(f.metadata[settings.LAB_HEAD_NAME_METADATA_KEY], "New Lab Head Name")
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_sample_update(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified(
+            "fastq",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_1",
+            patient_id="PT-001",
+        )
+        self._create_files_with_details_specified(
+            "fastq",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_2",
+            patient_id="PT-001",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        sample = Sample.objects.get(sample_id="08944_B_1")
+        response = self.client.patch(
+            f"/v0/fs/sample/{str(sample.id)}/",
+            {"sample_type": "New Sample Type", "tumor_or_normal": "N"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B_1"})
+        for f in files:
+            self.assertEqual(files.count(), 2)
+            self.assertEqual(f.metadata[settings.settings.CMO_SAMPLE_CLASS_METADATA_KEY], "New Sample Type")
+            self.assertEqual(f.metadata[settings.settings.TUMOR_OR_NORMAL_METADATA_KEY], "N")
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_patient_update(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_files_with_details_specified(
+            "fasta",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_1",
+            patient_id="PT-001",
+        )
+        self._create_files_with_details_specified(
+            "fasta",
+            file_group_id=str(self.file_group.id),
+            request_id="08944_B",
+            sample_id="08944_B_2",
+            patient_id="PT-001",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        patient = Patient.objects.get(patient_id="PT-001")
+        response = self.client.patch(f"/v0/fs/patient/{str(patient.id)}/", {"sex": "M"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        files = FileRepository.filter(metadata={settings.PATIENT_ID_METADATA_KEY: "08944_B_1"})
+        for f in files:
+            self.assertEqual(files.count(), 4)
+            self.assertEqual(f.metadata[settings.SEX_METADATA_KEY], "M")
 
     def test_copy_files_by_request_id_to_different_file_group(self):
         sample_1 = Sample.objects.create(sample_id="TEST_B_1")

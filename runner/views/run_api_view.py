@@ -258,10 +258,10 @@ class RunApiRestartViewSet(GenericAPIView):
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
         runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.TERMINATED]))
-
         if runs_in_progress:
-            job_group_id = runs_in_progress[0].job_group_id
-            terminate_job_task.delay(job_group_id, runs_in_progress)
+            return Response(
+                "There are runs still in progress, please terminate them to restart", status=status.HTTP_400_BAD_REQUEST
+            )
 
         runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
 
