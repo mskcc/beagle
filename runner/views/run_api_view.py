@@ -397,6 +397,7 @@ class RequestOperatorViewSet(GenericAPIView):
         pipeline_name = request.data.get("pipeline")
         pipeline_version = request.data.get("pipeline_version", None)
         job_group_id = request.data.get("job_group_id", None)
+        file_group_id = request.data.get("file_group_id", None)
         for_each = request.data.get("for_each", True)
 
         if pipeline_version:
@@ -419,7 +420,9 @@ class RequestOperatorViewSet(GenericAPIView):
                     job_group.save()
                     job_group_id = str(job_group.id)
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id))
+                    create_jobs_from_request.delay(
+                        req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
+                    )
             else:
                 return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
         else:
