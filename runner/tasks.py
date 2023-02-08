@@ -153,7 +153,9 @@ def create_operator_run_from_jobs(
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
+def create_jobs_from_request(
+    request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None
+):
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
@@ -186,6 +188,7 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
         job_group_notifier_id=job_group_notifier_id,
         request_id=request_id,
         pipeline=pipeline,
+        file_group=file_group,
     )
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
