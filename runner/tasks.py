@@ -21,6 +21,7 @@ from notifier.events import (
     SetLabelEvent,
     SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
+    VoyagerActionRequiredForRunningEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
@@ -28,7 +29,8 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
-from file_system.models import Request, FileGroup
+from notifier.helper import get_emails_to_notify
+from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
@@ -39,9 +41,20 @@ logger = logging.getLogger(__name__)
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
-    jobs = operator.get_jobs()
+    try:
+        jobs = operator.get_jobs()
+    except Exception as e:
+        send_to = get_emails_to_notify(operator.request_id)
+        for email in send_to:
+            event = VoyagerActionRequiredForRunningEvent(
+                job_notifier=job_group_id,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject=f"Action Required for Project {operator.request_id}",
+                request_id=operator.request_id,
+            )
+            send_notification.delay(event)
     log_directory = operator.get_log_directory()
-    print(log_directory)
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
