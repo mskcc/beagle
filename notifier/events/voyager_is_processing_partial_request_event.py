@@ -22,7 +22,9 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
         """
         :return: email body
         """
-        body = "Project {igo_request_id} is partially running. Samples unpaired: {samples}.".format(
-            igo_request_id=self.request_id, samples=", ".join(self.unpaired)
-        )
+        body = f"""
+Project specific voyager details:
+
+Project 12405_F is partially running. Samples unpaired: {", ".join(self.unpaired)}
+"""
         return body
