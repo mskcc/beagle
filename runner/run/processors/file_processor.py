@@ -1,4 +1,5 @@
 import os
+import logging
 from django.db import IntegrityError
 from file_system.models import File, FileType, FileGroup, FileMetadata
 from file_system.serializers import UpdateFileSerializer
@@ -7,6 +8,9 @@ from django.contrib.auth.models import User
 
 
 class FileProcessor(object):
+
+    logger = logging.getLogger(__name__)
+
     @staticmethod
     def get_sample(file):
         return file.sample
@@ -85,8 +89,9 @@ class FileProcessor(object):
             group_id_obj = FileGroup.objects.get(id=group_id)
         except FileGroup.DoesNotExist as e:
             raise FileHelperException("Invalid FileGroup id: %s" % group_id)
-        if File.objects.filter(path=file_path).first():
-            raise FileConflictException("File with path %s already exist" % file_path)
+        if File.objects.filter(path=file_path, file_group=group_id_obj).first():
+            FileProcessor.logger.info("File with path %s already exist" % file_path)
+            return File.objects.filter(path=file_path, file_group=group_id_obj).first()
         file_object = File.objects.create(
             path=file_path,
             file_name=os.path.basename(file_path),
