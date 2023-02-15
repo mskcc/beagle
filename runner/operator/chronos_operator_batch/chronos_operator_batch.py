@@ -421,6 +421,7 @@ class ChronosOperatorBatch(Operator):
             jg_created_date,
             'json',
             pipeline.name,
-            pipeline.version
+            pipeline.version,
+            "%s"
         )
         return log_directory
