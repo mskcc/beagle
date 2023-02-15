@@ -21,7 +21,8 @@ class VoyagerActionRequiredForRunningEvent(Event):
         """
         :return: email body
         """
-        body = f"""
-We have received the request to run {self.request_id}. You need to contact us with the necessary information before your project will be processed.
+        body = f"""We have received the request to run {self.request_id} but are unable to proceed due to missing or incomplete data.
+
+Please review your data and contact us to resubmit.
 """
         return body

@@ -22,5 +22,7 @@ class VoyagerIsProcessingWholeRequestEvent(Event):
         TODO: Fill the content of the email
         :return: email body
         """
-        body = f"We have received the request to run {self.request_id}. Please review this information carefully if this is not what you expected contact us. Results can be expected in 10-14 days."
+        body = f"""We have received the request to run {self.request_id} and will begin processing them soon. Results typically take 10-14 days to generate.
+
+Please review this information carefully; if anything in this project is not what you expected, contact us and we'll be happy to help."""
         return body
