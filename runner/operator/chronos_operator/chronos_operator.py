@@ -427,6 +427,13 @@ class ChronosOperator(Operator):
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         log_directory = os.path.join(
-            pipeline.output_directory, self.CHRONOS_NAME, self.request_id, self.CHRONOS_VERSION, jg_created_date
+            pipeline.output_directory,
+            self.CHRONOS_NAME,
+            self.request_id,
+            self.CHRONOS_VERSION,
+            jg_created_date,
+            'json',
+            pipeline.name,
+            pipeline.version
         )
         return log_directory
