@@ -1,7 +1,7 @@
 from notifier.event_handler.event import Event
 
 
-class VoyagerIsProcessingWholeRequestEvent(Event):
+class VoyagerActionRequiredForRunningEvent(Event):
     def __init__(self, job_notifier, email_to, email_from, subject, request_id):
         self.job_notifier = job_notifier
         self.email_to = email_to
@@ -11,7 +11,7 @@ class VoyagerIsProcessingWholeRequestEvent(Event):
 
     @classmethod
     def get_type(cls):
-        return "VoyagerIsProcessingWholeRequestEvent"
+        return "VoyagerActionRequiredForRunningEvent"
 
     @classmethod
     def get_method(cls):
@@ -19,10 +19,10 @@ class VoyagerIsProcessingWholeRequestEvent(Event):
 
     def __str__(self):
         """
-        TODO: Fill the content of the email
         :return: email body
         """
-        body = f"""We have received the request to run {self.request_id} and will begin processing them soon. Results typically take 10-14 days to generate.
+        body = f"""We have received the request to run {self.request_id} but are unable to proceed due to missing or incomplete data.
 
-Please review this information carefully; if anything in this project is not what you expected, contact us and we'll be happy to help."""
+Please review your data and contact us to resubmit.
+"""
         return body

@@ -6,11 +6,8 @@ from notifier.events import (
 from runner.models import Run
 from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
-from notifier.events import (
-    VoyagerIsProcessingPartialRequestEvent,
-    VoyagerIsProcessingWholeRequestEvent,
-    VoyagerCantProcessRequestAllNormalsEvent,
-)
+from notifier.events import VoyagerIsProcessingPartialRequestEvent, VoyagerIsProcessingWholeRequestEvent
+from notifier.helper import get_emails_to_notify
 
 
 def _voyager_start_processing(request_id, run_ids):
@@ -18,19 +15,8 @@ def _voyager_start_processing(request_id, run_ids):
     sample_ids = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
     )
-    investigator_email = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
-    ).first()
-    lab_head_email = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
-    ).first()
-    sent_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
-    if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
-        if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-            sent_to.add(investigator_email)
-        if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-            sent_to.add(lab_head_email)
 
+    send_to = get_emails_to_notify(request_id)
     runs = Run.objects.filter(id__in=run_ids)
     pipeline = runs.first().app
     # TODO: When this is tested add inform flag to pipeline model
@@ -49,23 +35,23 @@ def _voyager_start_processing(request_id, run_ids):
                 unprocessed_samples.add(sample)
 
         if unprocessed_samples:
-            for email in sent_to:
+            for email in send_to:
                 event = VoyagerIsProcessingPartialRequestEvent(
                     job_notifier=job_group,
                     email_to=email,
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject="Voyager Status: {request_id} is partial running".format(request_id=request_id),
+                    subject=f"Confirmation of Project {request_id} running in Pipeline",
                     request_id=request_id,
                     unpaired=list(unprocessed_samples),
                 ).to_dict()
                 send_notification.delay(event)
         else:
-            for email in sent_to:
+            for email in send_to:
                 event = VoyagerIsProcessingWholeRequestEvent(
                     job_notifier=job_group,
                     email_to=email,
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject="Voyager Status: {request_id} is successfully running".format(request_id=request_id),
+                    subject=f"Confirmation of Project {request_id} running in Pipeline",
                     request_id=request_id,
                 ).to_dict()
                 send_notification.delay(event)
