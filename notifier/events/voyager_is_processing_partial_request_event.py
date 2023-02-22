@@ -2,12 +2,16 @@ from notifier.event_handler.event import Event
 
 
 class VoyagerIsProcessingPartialRequestEvent(Event):
-    def __init__(self, job_notifier, email_to, email_from, subject, request_id, unpaired):
+    def __init__(
+        self, job_notifier, email_to, email_from, subject, request_id, gene_panel, number_of_samples, unpaired
+    ):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
         self.subject = subject
         self.request_id = request_id
+        self.gene_panel = gene_panel
+        self.number_of_samples = number_of_samples
         self.unpaired = unpaired
 
     @classmethod
@@ -24,7 +28,9 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
         """
         body = f"""
 Project specific voyager details:
-
-Project 12405_F is partially running. Samples unpaired: {", ".join(self.unpaired)}
+\n
+Project {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples) is partially running.
+\n
+Samples unpaired: {", ".join(self.unpaired)}
 """
         return body

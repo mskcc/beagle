@@ -2,12 +2,14 @@ from notifier.event_handler.event import Event
 
 
 class VoyagerActionRequiredForRunningEvent(Event):
-    def __init__(self, job_notifier, email_to, email_from, subject, request_id):
+    def __init__(self, job_notifier, email_to, email_from, subject, request_id, gene_panel, number_of_samples):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
         self.subject = subject
         self.request_id = request_id
+        self.gene_panel = gene_panel
+        self.number_of_samples = number_of_samples
 
     @classmethod
     def get_type(cls):
@@ -21,7 +23,7 @@ class VoyagerActionRequiredForRunningEvent(Event):
         """
         :return: email body
         """
-        body = f"""We have received the request to run {self.request_id} but are unable to proceed due to missing or incomplete data.
+        body = f"""We have received the request to run {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples) but are unable to proceed due to missing or incomplete data.
 
 Please review your data and contact us to resubmit.
 """
