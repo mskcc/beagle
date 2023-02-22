@@ -432,9 +432,9 @@ class ChronosOperator(Operator):
             self.request_id,
             self.CHRONOS_VERSION,
             jg_created_date,
-            'json',
+            "json",
             pipeline.name,
             pipeline.version,
-            "%s"
+            "%s",
         )
         return log_directory

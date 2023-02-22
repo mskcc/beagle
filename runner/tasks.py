@@ -29,7 +29,7 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
-from notifier.helper import get_emails_to_notify
+from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
 from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
@@ -44,6 +44,8 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
     try:
         jobs = operator.get_jobs()
     except Exception as e:
+        gene_panel = get_gene_panel(operator.request_id)
+        number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id)
         for email in send_to:
             event = VoyagerActionRequiredForRunningEvent(
@@ -52,6 +54,8 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject=f"Action Required for Project {operator.request_id}",
                 request_id=operator.request_id,
+                gene_panel=gene_panel,
+                number_of_samples=number_of_samples,
             )
             send_notification.delay(event)
     log_directory = operator.get_log_directory()

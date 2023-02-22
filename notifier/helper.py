@@ -9,6 +9,18 @@ def get_project_id(request_id):
     return request_id.split("_")[0]
 
 
+def get_gene_panel(request_id):
+    return FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
+    ).first()
+
+
+def get_samples(request_id):
+    return FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+    ).all()
+
+
 def get_emails_to_notify(request_id):
     investigator_email = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
