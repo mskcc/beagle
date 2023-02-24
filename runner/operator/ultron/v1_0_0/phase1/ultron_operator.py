@@ -55,17 +55,16 @@ class UltronOperator(Operator):
 
         return ultron_output_job
 
-    def _get_output_directory(self, run_id):
+    def _get_output_directory(self, ultron_pipeline, run_id):
         project_prefix = get_project_prefix(run_id)
-        app = self.get_pipeline_id()
-        pipeline = self._get_prev_pipeline(run_id)
-        pipeline_version = pipeline.version
+        argos_pipeline = self._get_prev_pipeline(run_id)
+        argos_pipeline_version = argos_pipeline.version
         output_directory = None
         if self.job_group_id:
             jg = JobGroup.objects.get(id=self.job_group_id)
             jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
             output_directory = os.path.join(
-                pipeline.output_directory, "argos", project_prefix, pipeline_version, jg_created_date, "analysis"
+                ultron_pipeline.output_directory, "argos", project_prefix, argos_pipeline_version, jg_created_date, "analysis"
             )
         return output_directory
 
@@ -78,10 +77,10 @@ class UltronOperator(Operator):
 
     def _build_job(self, input_json, run_id):
         app = self.get_pipeline_id()
-        pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
+        ultron_pipeline = Pipeline.objects.get(id=app)
+        ultron_pipeline_version = ultron_pipeline.version
         project_prefix = get_project_prefix(run_id)
-        output_directory = self._get_output_directory(run_id)
+        output_directory = self._get_output_directory(ultron_pipeline, run_id)
         prev_pipeline_version = self._get_prev_pipeline(run_id).version
         input_json["is_impact"] = True  # assume True for now
         input_json["argos_version_string"] = prev_pipeline_version
