@@ -34,7 +34,7 @@ class Operator(object):
         if self.file_group:
             self.files = FileRepository.filter(file_group=self.file_group).all()
         else:
-            self.files = FileRepository.filter().all()
+            self.files = FileRepository.filter(file_group=settings.IMPORT_FILE_GROUP).all()
         self.pairing = pairing
         # {"pairs": [{"tumor": "tumorSampleName", "normal": "normalSampleName"}]}
         self.output_directory_prefix = output_directory_prefix

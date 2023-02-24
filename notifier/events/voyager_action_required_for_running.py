@@ -1,10 +1,8 @@
 from notifier.event_handler.event import Event
 
 
-class VoyagerIsProcessingPartialRequestEvent(Event):
-    def __init__(
-        self, job_notifier, email_to, email_from, subject, request_id, gene_panel, number_of_samples, unpaired
-    ):
+class VoyagerActionRequiredForRunningEvent(Event):
+    def __init__(self, job_notifier, email_to, email_from, subject, request_id, gene_panel, number_of_samples):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
@@ -12,11 +10,10 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
         self.request_id = request_id
         self.gene_panel = gene_panel
         self.number_of_samples = number_of_samples
-        self.unpaired = unpaired
 
     @classmethod
     def get_type(cls):
-        return "VoyagerIsProcessingPartialRequestEvent"
+        return "VoyagerActionRequiredForRunningEvent"
 
     @classmethod
     def get_method(cls):
@@ -26,11 +23,8 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
         """
         :return: email body
         """
-        body = f"""
-Project specific voyager details:
-\n
-Project {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples) is partially running.
-\n
-Samples unpaired: {", ".join(self.unpaired)}
+        body = f"""We have received the request to run {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples) but are unable to proceed due to missing or incomplete data.
+
+Please review your data and contact us to resubmit.
 """
         return body
