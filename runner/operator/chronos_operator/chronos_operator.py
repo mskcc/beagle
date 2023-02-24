@@ -162,7 +162,7 @@ class ChronosOperator(Operator):
             input_json = {"pairing": pairing, "mapping": mapping}
 
             output_directory = os.path.join(
-                output_directory_base, self.CHRONOS_NAME, tumor, self.CHRONOS_VERSION, jg_created_date
+                output_directory_base, self.CHRONOS_NAME, self.request_id, self.CHRONOS_VERSION, jg_created_date
             )
             job_json = {
                 "name": name,
@@ -421,3 +421,20 @@ class ChronosOperator(Operator):
                             running.append(s)
                         tracker += "\t".join(running) + "\n"
         return self.write_to_file("sample_tracker.txt", tracker)
+
+    def get_log_directory(self):
+        pipeline = Pipeline.objects.get(id=self.get_pipeline_id())
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        log_directory = os.path.join(
+            pipeline.output_directory,
+            self.CHRONOS_NAME,
+            self.request_id,
+            self.CHRONOS_VERSION,
+            jg_created_date,
+            "json",
+            pipeline.name,
+            pipeline.version,
+            "%s",
+        )
+        return log_directory
