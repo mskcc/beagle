@@ -9,6 +9,34 @@ def get_project_id(request_id):
     return request_id.split("_")[0]
 
 
+def get_gene_panel(request_id):
+    return FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
+    ).first()
+
+
+def get_samples(request_id):
+    return FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+    ).all()
+
+
+def get_emails_to_notify(request_id):
+    investigator_email = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
+    ).first()
+    lab_head_email = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
+    ).first()
+    send_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
+    if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
+        if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+            send_to.add(investigator_email)
+        if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
+            send_to.add(lab_head_email)
+    return send_to
+
+
 def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline_version, dmp_samples=None):
     result = "SAMPLE_ID\tREQUEST_ID\tPROJECT_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\tRUN_MODE\tPIPELINE\tPIPELINE_GITHUB_LINK\tPIPELINE_VERSION\n"
     ret_str = "metadata__{sample_id_key}".format(sample_id_key=settings.SAMPLE_ID_METADATA_KEY)

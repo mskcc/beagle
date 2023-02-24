@@ -29,6 +29,7 @@ from notifier.events import (
     VoyagerCantProcessRequestAllNormalsEvent,
 )
 from notifier.tasks import send_notification, notifier_start
+from notifier.helper import get_emails_to_notify
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.models import (
     JobStatus,
@@ -315,21 +316,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     ):
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
-        investigator_email = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
-        ).first()
-        lab_head_email = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
-        ).first()
-
-        sent_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
-        if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
-            if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-                sent_to.add(investigator_email)
-            if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-                sent_to.add(lab_head_email)
-
-        for email in sent_to:
+        send_to = get_emails_to_notify(request_id)
+        for email in send_to:
             event = VoyagerCantProcessRequestAllNormalsEvent(
                 job_notifier=str(job_group.id),
                 email_to=email,
@@ -383,7 +371,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 @shared_task
 def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    data = json.loads(message.message)
+    data = json.loads(message.message)[0]
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
@@ -435,10 +423,10 @@ def update_request_job(message_id):
         if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
                 "type": "SAMPLE",
-                "igocomplete": f.metadata["igocomplete"],
+                "igocomplete": f.metadata[settings.IGO_COMPLETE_METADATA_KEY],
                 "sample": f.metadata[settings.SAMPLE_ID_METADATA_KEY],
                 "status": "COMPLETED",
-                "message": "File %s request metadata updated",
+                "message": f"File {f.file.path} request metadata updated",
                 "code": None,
             }
             samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])

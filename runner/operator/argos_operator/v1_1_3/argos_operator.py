@@ -329,9 +329,11 @@ class ArgosOperator(Operator):
                 s += "| %s | %s | %s |\n" % (sample_name, matched_sample, normal_request)
 
         number_of_normals_in_req = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Normal"}
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Normal"},
+            values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
         ).count()
-        if number_of_normals_in_req != len(argos_inputs):
+
+        if number_of_normals_in_req > num_within_req:
             event = NotAllNormalsUsedEvent(self.job_group_notifier_id, request_id)
             send_notification.delay(event.to_dict())
 

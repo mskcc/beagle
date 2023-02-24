@@ -21,6 +21,7 @@ from notifier.events import (
     SetLabelEvent,
     SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
+    VoyagerActionRequiredForRunningEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
@@ -28,6 +29,7 @@ from beagle_etl.jobs import TYPES
 from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
+from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
 from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
@@ -39,9 +41,24 @@ logger = logging.getLogger(__name__)
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
-    jobs = operator.get_jobs()
+    try:
+        jobs = operator.get_jobs()
+    except Exception as e:
+        gene_panel = get_gene_panel(operator.request_id)
+        number_of_samples = get_samples(operator.request_id).count()
+        send_to = get_emails_to_notify(operator.request_id)
+        for email in send_to:
+            event = VoyagerActionRequiredForRunningEvent(
+                job_notifier=job_group_id,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject=f"Action Required for Project {operator.request_id}",
+                request_id=operator.request_id,
+                gene_panel=gene_panel,
+                number_of_samples=number_of_samples,
+            )
+            send_notification.delay(event)
     log_directory = operator.get_log_directory()
-    print(log_directory)
     create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
 
 
@@ -153,7 +170,9 @@ def create_operator_run_from_jobs(
 
 
 @shared_task
-def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None):
+def create_jobs_from_request(
+    request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None
+):
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
@@ -186,6 +205,7 @@ def create_jobs_from_request(request_id, operator_id, job_group_id, job_group_no
         job_group_notifier_id=job_group_notifier_id,
         request_id=request_id,
         pipeline=pipeline,
+        file_group=file_group,
     )
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
@@ -452,6 +472,8 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["walltime"] = run.app.walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
+    if run.app.output_permission:
+        job["root_permission"] = run.app.output_permission
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
@@ -462,7 +484,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
 
 
 @shared_task
-def abort_job_task(job_group_id=None, jobs=[]):
+def terminate_job_task(job_group_id=None, jobs=[]):
     successful = []
     unsuccessful = []
     runs = []
@@ -474,20 +496,20 @@ def abort_job_task(job_group_id=None, jobs=[]):
         if str(run_obj.execution_id) not in runs:
             runs.append(str(run_obj.execution_id))
     for run in runs:
-        if abort_job_on_ridgeback(run):
+        if terminate_job_on_ridgeback(run):
             successful.append(run)
         else:
             unsuccessful.append(run)
     if unsuccessful:
-        logger.error("Failed to abort %s" % ", ".join(unsuccessful))
+        logger.error("Failed to terminate %s" % ", ".join(unsuccessful))
 
 
-def abort_job_on_ridgeback(job_id):
-    response = requests.get(settings.RIDGEBACK_URL + "/v0/jobs/%s/abort/" % job_id)
+def terminate_job_on_ridgeback(job_id):
+    response = requests.get(settings.RIDGEBACK_URL + "/v0/jobs/%s/terminate/" % job_id)
     if response.status_code == 200:
-        logger.info(format_log("Job aborted", obj_id=job_id))
+        logger.info(format_log("Job terminated", obj_id=job_id))
         return True
-    logger.error(format_log("Failed to abort job", obj_id=job_id))
+    logger.error(format_log("Failed to terminate job", obj_id=job_id))
     return None
 
 
@@ -632,14 +654,14 @@ def running_job(self, run_id):
 
 
 @shared_task(bind=True)
-def abort_job(self, run_id, lsf_log_location, inputs_json_location):
+def terminate_job(self, run_id, lsf_log_location, inputs_json_location):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
             run = Run.objects.get(id=run_id)
-            logger.info(format_log("Transition to state ABORTED", obj=run))
-            if run.status != RunStatus.ABORTED:
-                run.status = RunStatus.ABORTED
+            logger.info(format_log("Transition to state TERMINATED", obj=run))
+            if run.status != RunStatus.TERMINATED:
+                run.status = RunStatus.TERMINATED
                 run.save()
                 run_obj = RunObjectFactory.from_db(run_id)
                 _job_finished_notify(run_obj, lsf_log_location, inputs_json_location)
@@ -730,13 +752,13 @@ def check_jobs_status():
                 logger.info(format_log("Job running", obj=run))
                 running_job.delay(str(run.id))
                 continue
-            if status["status"] == "ABORTED":
-                logger.info(format_log("Job aborted", obj=run))
+            if status["status"] == "TERMINATED":
+                logger.info(format_log("Job terminated", obj=run))
                 lsf_log_location = status.get("message", {}).get("log")
                 inputs_location = None
                 if lsf_log_location:
                     inputs_location = lsf_log_location.replace("lsf.log", "input.json")
-                abort_job.delay(str(run.id), lsf_log_location, inputs_location)
+                terminate_job.delay(str(run.id), lsf_log_location, inputs_location)
             else:
                 logger.info("Run lock not acquired for run: %s" % str(run.id))
 
