@@ -226,12 +226,15 @@ class Run(BaseModel):
             started_strftime = started.strftime("%m/%d/%Y, %H:%M:%S")
         if not message:
             message = {}
+        execution_id = self.execution_id
+        job_tuple = (started_strftime, exited_strftime, str(execution_id))
         if self.resume_attempts > 0:
             resume_attempts = self.resume_attempts - 1
-            execution_id = self.execution_id
             if "resume" not in message:
                 message["resume"] = []
-            message["resume"].append((started_strftime, exited_strftime, str(execution_id)))
+                message["initial"] = job_tuple
+            else:
+                message["resume"].append(job_tuple)
             self.clear().save()
             self.resume_attempts = resume_attempts
             self.message = message
@@ -239,10 +242,12 @@ class Run(BaseModel):
             self.save()
         elif self.restart_attempts > 0:
             restart_attempts = self.restart_attempts - 1
-            execution_id = None
             if "restart" not in message:
                 message["restart"] = []
-            message["restart"].append((started_strftime, exited_strftime))
+                message["resume"].append(job_tuple)
+            else:
+                message["restart"].append(job_tuple)
+            execution_id = None
             self.clear().save()
             self.restart_attempts = restart_attempts
             self.message = message
