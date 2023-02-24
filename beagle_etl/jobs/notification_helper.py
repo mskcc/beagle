@@ -7,7 +7,7 @@ from runner.models import Run
 from notifier.tasks import send_notification
 from file_system.repository.file_repository import FileRepository
 from notifier.events import VoyagerIsProcessingPartialRequestEvent, VoyagerIsProcessingWholeRequestEvent
-from notifier.helper import get_emails_to_notify
+from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
 
 
 def _voyager_start_processing(request_id, run_ids):
@@ -34,6 +34,8 @@ def _voyager_start_processing(request_id, run_ids):
             if sample not in used_samples:
                 unprocessed_samples.add(sample)
 
+        gene_panel = get_gene_panel(request_id)
+        number_of_samples = get_samples(request_id).count()
         if unprocessed_samples:
             for email in send_to:
                 event = VoyagerIsProcessingPartialRequestEvent(
@@ -42,6 +44,8 @@ def _voyager_start_processing(request_id, run_ids):
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                     subject=f"Confirmation of Project {request_id} running in Pipeline",
                     request_id=request_id,
+                    gene_panel=gene_panel,
+                    number_of_samples=number_of_samples,
                     unpaired=list(unprocessed_samples),
                 ).to_dict()
                 send_notification.delay(event)
@@ -53,6 +57,8 @@ def _voyager_start_processing(request_id, run_ids):
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                     subject=f"Confirmation of Project {request_id} running in Pipeline",
                     request_id=request_id,
+                    gene_panel=gene_panel,
+                    number_of_samples=number_of_samples,
                 ).to_dict()
                 send_notification.delay(event)
 
