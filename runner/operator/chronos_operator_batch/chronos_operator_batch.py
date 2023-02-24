@@ -160,7 +160,12 @@ class ChronosOperatorBatch(Operator):
             pairing_for_request.append(pairing)
             mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
-        input_json = {"pairing": pairing_for_request, "mapping": mapping_for_request}
+        input_json = {
+            "pairing": pairing_for_request,
+            "mapping": mapping_for_request,
+            "somatic": True,
+            "aggregate": True,
+        }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
         jobs.append(job_json)
@@ -403,3 +408,20 @@ class ChronosOperatorBatch(Operator):
                             running.append(s)
                         tracker += "\t".join(running) + "\n"
         return self.write_to_file("sample_tracker.txt", tracker)
+
+    def get_log_directory(self):
+        pipeline = Pipeline.objects.get(id=self.get_pipeline_id())
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        log_directory = os.path.join(
+            pipeline.output_directory,
+            self.CHRONOS_NAME,
+            self.request_id,
+            self.CHRONOS_VERSION,
+            jg_created_date,
+            "json",
+            pipeline.name,
+            pipeline.version,
+            "%s",
+        )
+        return log_directory
