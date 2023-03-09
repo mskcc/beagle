@@ -41,7 +41,12 @@ def fetch_request_nats():
 
 @shared_task
 def process_smile_events():
-    messages = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING)
+    messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST))
+    messages.extend(
+        list(SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)))
+    messages.extend(
+        list(SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)))
     for message in messages:
         process_smile_message(message)
 
