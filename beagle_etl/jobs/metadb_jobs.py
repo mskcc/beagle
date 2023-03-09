@@ -371,13 +371,13 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 @shared_task
 def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    data = json.loads(message.message)[0]
+    metadata = json.loads(message.message)[-1]
+    data = json.loads(metadata['requestMetadataJson'])
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
-    recipe = data.get(settings.RECIPE_METADATA_KEY)
-
+    recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     job_group = JobGroup()
     job_group.save()
     job_group_notifier_id = notifier_start(job_group, request_id)
@@ -440,8 +440,22 @@ def update_request_job(message_id):
         send_notification.delay(diff_details_event)
         update_file_object(f.file, f.file.path, new_metadata)
 
+    pooled_normal = data.get("pooledNormals", [])
+    pooled_normal_jobs = []
+    for pn in pooled_normal:
+        try:
+            create_pooled_normal(pn, str(settings.POOLED_NORMAL_FILE_GROUP))
+        except Exception as e:
+            pooled_normal_jobs.append(
+                {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
+            )
+        else:
+            pooled_normal_jobs.append(
+                {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
+            )
+
     _generate_ticket_description(
-        request_id, str(job_group.id), job_group_notifier_id, sample_status_list, [], request_metadata
+        request_id, str(job_group.id), job_group_notifier_id, sample_status_list, pooled_normal_jobs, request_metadata
     )
 
     message.status = SmileMessageStatus.COMPLETED
@@ -457,6 +471,7 @@ def update_sample_job(message_id):
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
+    new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
     request_id = latest.get("igoRequestId")
     igocomplete = latest.get("igoComplete")
@@ -533,6 +548,7 @@ def update_sample_job(message_id):
     request_metadata["baitSet"] = latest.get("baitSet")
     request_metadata["qcReports"] = latest.get("qcReports")
     request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
+    request_metadata[settings.RECIPE_METADATA_KEY] = latest.get(settings.RECIPE_METADATA_KEY)
     request_metadata["igoComplete"] = igocomplete
 
     logger.info("Parsing sample: %s" % primary_id)
@@ -563,6 +579,7 @@ def update_sample_job(message_id):
                         request_metadata,
                         R1_or_R2(fastq),
                     )
+                    new_files.append(fastq)
                     ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
                     msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
@@ -574,6 +591,12 @@ def update_sample_job(message_id):
                     send_notification.delay(diff_details_event)
                 except Exception as e:
                     logger.error(e)
+
+    # Remove unnecessary files
+    files_to_remove = set(file_paths) - set(new_files)
+    for fi in list(files_to_remove):
+        logger.info(f"Removing file {fi}.")
+        File.objects.get(path=fi).delete()
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
