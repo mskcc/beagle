@@ -441,6 +441,8 @@ def update_request_job(message_id):
         update_file_object(f.file, f.file.path, new_metadata)
 
     pooled_normal = data.get("pooledNormals", [])
+    if pooled_normal is None:
+        pooled_normal = []
     pooled_normal_jobs = []
     for pn in pooled_normal:
         try:
