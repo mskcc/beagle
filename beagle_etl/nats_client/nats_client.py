@@ -16,7 +16,12 @@ def persist_message(topic, message):
     try:
         msg = SMILEMessage.objects.create(topic=topic, message=message)
         request_message = json.loads(message)
-        msg.request_id = request_message.get(settings.REQUEST_ID_METADATA_KEY)
+        if topic == settings.METADB_NATS_NEW_REQUEST:
+            msg.request_id = request_message.get(settings.REQUEST_ID_METADATA_KEY)
+        elif topic == settings.METADB_NATS_REQUEST_UPDATE:
+            msg.request_id = request_message[0].get(settings.REQUEST_ID_METADATA_KEY)
+        elif topic == settings.METADB_NATS_SAMPLE_UPDATE:
+            msg.request_id = request_message[0].get(settings.SAMPLE_ID_METADATA_KEY)
         msg.save()
     except Exception as e:
         logger.error(e)
