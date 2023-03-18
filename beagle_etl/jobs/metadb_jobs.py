@@ -466,6 +466,22 @@ def update_request_job(message_id):
 
 
 @shared_task
+def update_job(request_id):
+    sample_update_messages = SMILEMessage.objects.filter(request_id__startswith=request_id,
+                                                         topic=settings.METADB_NATS_SAMPLE_UPDATE,
+                                                         status=SmileMessageStatus.PENDING).order_by(
+        "created_date").all()
+    request_update_messages = SMILEMessage.objects.filter(request_id__startswith=request_id,
+                                                          topic=settings.METADB_NATS_REQUEST_UPDATE,
+                                                          status=SmileMessageStatus.PENDING).order_by(
+        "created_date").all()
+    for msg in sample_update_messages:
+        update_sample_job(str(msg.id))
+    for msg in request_update_messages:
+        update_request_job(str(msg.id))
+
+
+@shared_task
 def update_sample_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     data = json.loads(message.message)
