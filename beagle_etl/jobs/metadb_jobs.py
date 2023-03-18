@@ -373,7 +373,7 @@ def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata['requestMetadataJson'])
-    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+    request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
@@ -626,7 +626,6 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier, delay=60)
 
 
 @shared_task
