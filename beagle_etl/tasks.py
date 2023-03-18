@@ -62,10 +62,10 @@ def process_smile_events():
         new_request.delay(str(message.id))
 
     for req in list(update_requests):
-        logger.info(f"Update request/samples: {message.request_id}")
+        logger.info(f"Update request/samples: {req}")
         update_job.delay(req)
 
-    unknown_topics = SMILEMessage.objects.filter(status=SMILEMessage.PENDING).exclude(topic__in=(
+    unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(topic__in=(
         settings.METADB_NATS_REQUEST_UPDATE,
         settings.METADB_NATS_SAMPLE_UPDATE,
         settings.METADB_NATS_NEW_REQUEST)
