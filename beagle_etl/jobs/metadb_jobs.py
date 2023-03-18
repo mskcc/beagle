@@ -614,7 +614,7 @@ def update_sample_job(message_id):
     files_to_remove = set(file_paths) - set(new_files)
     for fi in list(files_to_remove):
         logger.info(f"Removing file {fi}.")
-        File.objects.get(path=fi).delete()
+        File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
