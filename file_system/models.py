@@ -48,6 +48,7 @@ class Request(BaseModel):
     request_id = models.CharField(max_length=100, null=True, blank=True)
     delivery_date = models.DateTimeField(null=True, blank=True)
     lab_head_name = models.CharField(max_length=200, null=True, blank=True)
+    lab_head_email = models.CharField(max_length=200, null=True, blank=True)
     investigator_email = models.CharField(max_length=200, null=True, blank=True)
     investigator_name = models.CharField(max_length=200, null=True, blank=True)
     version = models.IntegerField()
