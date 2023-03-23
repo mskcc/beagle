@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "beagle_etl.apps.BeagleEtlConfig",
     "file_system.apps.FileSystemConfig",
     "notifier.apps.NotifierConfig",
+    "study.apps.StudyConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
