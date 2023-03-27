@@ -50,10 +50,15 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class PipelineName(models.Model):
+    name = models.CharField(max_length=30, null=False, blank=False)
+
+
 class Pipeline(BaseModel):
     pipeline_type = models.IntegerField(
         choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=ProtocolType.CWL
     )
+    pipeline_name = models.ForeignKey(PipelineName, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100, editable=True)
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
