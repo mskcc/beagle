@@ -185,9 +185,10 @@ class SampleGroup:
             "normal_id": self.normal_sample_name,
             "sample_type": "research",
             "prefilter": True,
-            "maf_file": self.maf,
             "bam_file": self.tumor_bam,
         }
+        if self.maf:
+            d["maf_file"] = self.maf
         return d
 
     def _init_clinical_samples_json(self):
@@ -200,9 +201,10 @@ class SampleGroup:
                     "normal_id": "DMP_NORMAL",
                     "sample_type": "clinical",
                     "prefilter": False,
-                    "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path},
-                    "maf_file": {"class": "File", "location": "juno://" + bam_data.mutations_extended},
+                    "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path}
                 }
+                if bam_data.mutations_extended:
+                    d["maf_file"] = {"class": "File", "location": "juno://" + bam_data.mutations_extended}
                 clin_jsons.append(d)
         return clin_jsons
 
