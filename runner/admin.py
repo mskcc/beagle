@@ -8,7 +8,7 @@ from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
 from runner.tasks import terminate_job_task, add_pipeline_to_cache
 from advanced_filters.admin import AdminAdvancedFiltersMixin
-from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus
+from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus, PipelineName
 
 
 def action_add_pipeline_to_cache(modeladmin, request, queryset):
@@ -20,7 +20,7 @@ action_add_pipeline_to_cache.short_description = "Add Pipeline to Cache"
 
 
 class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
-    list_display = ("id", "name", "version", "default", "output_directory", link_relation("operator"))
+    list_display = ("id", "pipeline_name_string", "name", "version", "default", "output_directory", link_relation("operator"))
     actions = [
         action_add_pipeline_to_cache,
     ]
@@ -33,6 +33,10 @@ class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
         else:
             return []
 
+    def pipeline_name_string(self, obj):
+        if not obj.pipeline_name:
+            return "-"
+        return obj.pipeline_name.name
 
 class AppFilter(admin.SimpleListFilter):
     title = "App"
@@ -185,6 +189,7 @@ class PortAdmin(admin.ModelAdmin):
 
 admin.site.register(Run, RunAdmin)
 admin.site.register(Port, PortAdmin)
+admin.site.register(PipelineName)
 admin.site.register(Pipeline, PipelineAdmin)
 admin.site.register(ExecutionEvents)
 admin.site.register(OperatorRun, OperatorRunAdmin)
