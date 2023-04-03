@@ -257,13 +257,15 @@ class RunApiRestartViewSet(GenericAPIView):
         if not o:
             return Response("Operator does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        runs_in_progress = len(o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.TERMINATED]))
+        runs_in_progress = o.runs.exclude(status__in=[RunStatus.COMPLETED, RunStatus.FAILED, RunStatus.TERMINATED])
+
         if runs_in_progress:
-            return Response(
-                "There are runs still in progress, please terminate them to restart", status=status.HTTP_400_BAD_REQUEST
-            )
+            job_group_id = runs_in_progress[0].job_group_id
+            runs_in_progress_ids = list(runs_in_progress.values_list("id", flat=True))
+            terminate_job_task.delay(job_group_id, runs_in_progress_ids)
 
         runs_to_restart = o.runs.exclude(status=RunStatus.COMPLETED)
+        runs_to_restart.union(runs_in_progress)
 
         if not runs_to_restart:
             return Response("There are no runs to restart", status=status.HTTP_400_BAD_REQUEST)
@@ -395,6 +397,7 @@ class RequestOperatorViewSet(GenericAPIView):
         pipeline_name = request.data.get("pipeline")
         pipeline_version = request.data.get("pipeline_version", None)
         job_group_id = request.data.get("job_group_id", None)
+        file_group_id = request.data.get("file_group_id", None)
         for_each = request.data.get("for_each", True)
 
         if pipeline_version:
@@ -417,7 +420,9 @@ class RequestOperatorViewSet(GenericAPIView):
                     job_group.save()
                     job_group_id = str(job_group.id)
                     logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    create_jobs_from_request.delay(req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id))
+                    create_jobs_from_request.delay(
+                        req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
+                    )
             else:
                 return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
         else:

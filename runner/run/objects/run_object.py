@@ -92,7 +92,9 @@ class RunObject(object):
 
     def fail(self, error_message):
         self.status = RunStatus.FAILED
-        self.message = error_message
+        run_message = self.message.copy()
+        run_message.update(error_message)
+        self.message = run_message
 
     def complete(self, outputs):
         pass
