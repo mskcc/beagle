@@ -60,6 +60,7 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
+    output_permission = models.IntegerField(blank=True, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
@@ -194,7 +195,8 @@ class Run(BaseModel):
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
-    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=5)
+    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=2)
+    restart_attempts = models.IntegerField(blank=False, null=False, editable=True, default=3)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
@@ -214,29 +216,45 @@ class Run(BaseModel):
         return self
 
     def set_for_restart(self):
-        if self.resume_attempts == 0:
-            return None
-        resume_attempts = self.resume_attempts - 1
         run_id = self.pk
-        execution_id = self.execution_id
-        started = self.started
         output_directory = self.output_directory
         message = self.message
-        if not message:
-            message = {}
-        if "resume" not in message:
-            message["resume"] = []
+        started = self.started
         started_strftime = ""
         exited_strftime = now().strftime("%m/%d/%Y, %H:%M:%S")
         if started:
             started_strftime = started.strftime("%m/%d/%Y, %H:%M:%S")
-        message["resume"].append((started_strftime, exited_strftime, str(execution_id)))
-        self.clear().save()
-        self.message = message
-        self.started = started
-        self.output_directory = output_directory
-        self.resume_attempts = resume_attempts
-        self.save()
+        if not message:
+            message = {}
+        execution_id = self.execution_id
+        job_tuple = (started_strftime, exited_strftime, str(execution_id))
+        if self.resume_attempts > 0:
+            resume_attempts = self.resume_attempts - 1
+            if "resume" not in message:
+                message["resume"] = []
+                message["initial"] = job_tuple
+            else:
+                message["resume"].append(job_tuple)
+            self.clear().save()
+            self.resume_attempts = resume_attempts
+            self.message = message
+            self.output_directory = output_directory
+            self.save()
+        elif self.restart_attempts > 0:
+            restart_attempts = self.restart_attempts - 1
+            if "restart" not in message:
+                message["restart"] = []
+                message["resume"].append(job_tuple)
+            else:
+                message["restart"].append(job_tuple)
+            execution_id = None
+            self.clear().save()
+            self.restart_attempts = restart_attempts
+            self.message = message
+            self.output_directory = output_directory
+            self.save()
+        else:
+            return None
         return run_id, output_directory, execution_id
 
     @property
