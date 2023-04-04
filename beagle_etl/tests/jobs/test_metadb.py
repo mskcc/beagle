@@ -48,12 +48,17 @@ class TestNewRequest(TestCase):
         new_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.update.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
         update_sample_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.update_sample.json")
+        call_command("loaddata", test_files_fixture, verbosity=0)
+        update_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_request_update.json")
         with open(update_sample_json_path) as new_sample_json_file:
             self.new_sample_data = json.load(new_sample_json_file)
         self.new_sample_data_str = json.dumps(self.new_sample_data)
         with open(new_request_json_path) as new_request_json_file:
             self.new_request_data = json.load(new_request_json_file)
         self.request_data_str = json.dumps(self.new_request_data)
+        with open(update_request_json_path) as update_request_json_file:
+            self.update_request_data = json.load(update_request_json_file)
+        self.update_request_str = json.dumps(self.update_request_data)
         self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
@@ -66,17 +71,45 @@ class TestNewRequest(TestCase):
         """
         Test if request metadata update is properly updating fields
         """
+        request_keys = [
+            "piEmail",
+            "projectManagerName",
+            "labHeadName",
+            "labHeadEmail",
+            "investigatorName",
+            "investigatorEmail",
+            "dataAnalystName",
+            "dataAnalystEmail",
+            "otherContactEmails",
+            "dataAccessEmails",
+            "qcAccessEmails",
+        ]
         with self.settings(ETL_USER=str(self.etl_user.username)):
             request_callback.return_value = None
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
-            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             update_request_job(str(msg.id))
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             for file in files:
-                for single_request_key in self.request_keys:
-                    self.assertEqual(file.metadata[single_request_key], self.new_request_data[0][single_request_key])
+                self.assertEqual(
+                    file.metadata[settings.REQUEST_ID_METADATA_KEY],
+                    json.loads(self.update_request_data[-1]["requestMetadataJson"])["requestId"],
+                )
+                self.assertEqual(
+                    file.metadata[settings.PROJECT_ID_METADATA_KEY],
+                    json.loads(self.update_request_data[-1]["requestMetadataJson"])["projectId"],
+                )
+                self.assertEqual(
+                    file.metadata[settings.RECIPE_METADATA_KEY],
+                    json.loads(self.update_request_data[-1]["requestMetadataJson"])[settings.LIMS_RECIPE_METADATA_KEY],
+                )
+                for single_request_key in request_keys:
+                    self.assertEqual(
+                        file.metadata[single_request_key],
+                        json.loads(self.update_request_data[-1]["requestMetadataJson"])[single_request_key],
+                    )
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -94,7 +127,7 @@ class TestNewRequest(TestCase):
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
-            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             update_request_job(str(msg.id))
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             sample_names = []
@@ -108,7 +141,7 @@ class TestNewRequest(TestCase):
             self.assertEqual(len(call_args[3]), len(sample_names))
             request_metadata = call_args[5]
             for single_request_key in self.request_keys:
-                self.assertEqual(request_metadata[single_request_key], self.new_request_data[0][single_request_key])
+                self.assertEqual(file.metadata[single_request_key], request_metadata[single_request_key])
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -131,7 +164,7 @@ class TestNewRequest(TestCase):
                 sample_name = single_file.metadata[settings.SAMPLE_ID_METADATA_KEY]
                 if sample_name not in sample_metadata:
                     sample_metadata[sample_name] = single_file.metadata
-            msg = SMILEMessage.objects.create(topic="update_request", message=self.request_data_str)
+            msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             update_request_job(str(msg.id))
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             for file in files:
@@ -142,7 +175,22 @@ class TestNewRequest(TestCase):
                     if single_metadata_key in self.file_keys:
                         continue
                     if single_metadata_key in self.request_keys:
-                        expected_value = self.new_request_data[0][single_metadata_key]
+                        if single_metadata_key == settings.REQUEST_ID_METADATA_KEY:
+                            expected_value = json.loads(self.update_request_data[-1]["requestMetadataJson"])[
+                                "requestId"
+                            ]
+                        elif single_metadata_key == settings.PROJECT_ID_METADATA_KEY:
+                            expected_value = json.loads(self.update_request_data[-1]["requestMetadataJson"])[
+                                "projectId"
+                            ]
+                        elif single_metadata_key == settings.RECIPE_METADATA_KEY:
+                            expected_value = json.loads(self.update_request_data[-1]["requestMetadataJson"])[
+                                settings.LIMS_RECIPE_METADATA_KEY
+                            ]
+                        else:
+                            expected_value = json.loads(self.update_request_data[-1]["requestMetadataJson"])[
+                                single_metadata_key
+                            ]
                     else:
                         expected_value = sample_metadata[sample_name][single_metadata_key]
                     self.assertEqual(current_value, expected_value)
