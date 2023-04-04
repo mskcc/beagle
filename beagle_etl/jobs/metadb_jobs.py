@@ -372,11 +372,11 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     metadata = json.loads(message.message)[-1]
-    data = json.loads(metadata['requestMetadataJson'])
+    data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
-    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     job_group = JobGroup()
     job_group.save()
@@ -418,7 +418,7 @@ def update_request_job(message_id):
     samples = list()
     sample_status_list = list()
     for f in files:
-        new_metadata = f.metadata
+        new_metadata = copy.deepcopy(f.metadata)
         new_metadata.update(request_metadata)
         if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
@@ -467,14 +467,24 @@ def update_request_job(message_id):
 
 @shared_task
 def update_job(request_id):
-    sample_update_messages = SMILEMessage.objects.filter(request_id__startswith=request_id,
-                                                         topic=settings.METADB_NATS_SAMPLE_UPDATE,
-                                                         status=SmileMessageStatus.PENDING).order_by(
-        "created_date").all()
-    request_update_messages = SMILEMessage.objects.filter(request_id__startswith=request_id,
-                                                          topic=settings.METADB_NATS_REQUEST_UPDATE,
-                                                          status=SmileMessageStatus.PENDING).order_by(
-        "created_date").all()
+    sample_update_messages = (
+        SMILEMessage.objects.filter(
+            request_id__startswith=request_id,
+            topic=settings.METADB_NATS_SAMPLE_UPDATE,
+            status=SmileMessageStatus.PENDING,
+        )
+        .order_by("created_date")
+        .all()
+    )
+    request_update_messages = (
+        SMILEMessage.objects.filter(
+            request_id__startswith=request_id,
+            topic=settings.METADB_NATS_REQUEST_UPDATE,
+            status=SmileMessageStatus.PENDING,
+        )
+        .order_by("created_date")
+        .all()
+    )
     for msg in sample_update_messages:
         update_sample_job(str(msg.id))
     for msg in request_update_messages:
@@ -583,7 +593,7 @@ def update_sample_job(message_id):
                     new_path = CopyService.remap(recipe, fastq)
                     f = FileRepository.filter(path=new_path).first()
                     if f:
-                        new_metadata = f.metadata
+                        new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
                         fastq,
@@ -683,7 +693,10 @@ def create_pooled_normal(filepath, file_group_id):
     try:
         File.objects.get(path=filepath)
     except File.DoesNotExist:
-        logger.info("Pooled normal already created filepath")
+        logger.info(f"Creating pooled normal with path {filepath}")
+    else:
+        logger.info(f"Pooled normal with path {filepath} already exists")
+        return
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name="fastq").first()
     assays = ETLConfiguration.objects.first()

@@ -106,11 +106,13 @@ class TestCreatePooledNormal(TestCase):
     def test_true(self):
         self.assertTrue(True)
 
-    def test_create_pooled_normal1(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_create_pooled_normal1(self, populate_job_group_notifier_metadata):
         """
         Test the creation of a pooled normal entry in the database
         """
         # sanity check that starting db is empty
+        populate_job_group_notifier_metadata.return_value = True
         files = File.objects.all()
         files_metadata = FileMetadata.objects.all()
         self.assertTrue(len(files) == 0)
@@ -133,10 +135,12 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(imported_file_metadata.metadata["runId"] == "JAX_0397")
         # TODO: add more metadata fields?
 
-    def test_create_pooled_normal2(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_create_pooled_normal2(self, populate_job_group_notifier_metadata):
         """
         Test the creation of a pooled normal entry in the database
         """
+        populate_job_group_notifier_metadata.return_value = True
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
@@ -145,10 +149,12 @@ class TestCreatePooledNormal(TestCase):
         self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
         self.assertTrue(imported_file_metadata.metadata["runId"] == "PITT_0439")
 
-    def test_create_pooled_normal_recipe(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_create_pooled_normal_recipe(self, populate_job_group_notifier_metadata):
         """
         Test the creation of a pooled normal entry in the database with the right recipe
         """
+        populate_job_group_notifier_metadata.return_value = True
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG_S7_R2_001.fastq.gz"
         create_pooled_normal(filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
@@ -588,8 +594,14 @@ class TestImportSample(APITestCase):
     #     self.assertEqual(count_files, 1)
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    def test_request_callback(self, mock_create_jobs_from_request):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("notifier.tasks.send_notification.delay")
+    def test_request_callback(
+        self, send_notification, populate_job_group_notifier_metadata, mock_create_jobs_from_request
+    ):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        populate_job_group_notifier_metadata.return_value = True
+        send_notification.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
@@ -613,8 +625,14 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id))
 
     @patch("runner.tasks.create_jobs_from_request.delay")
-    def test_request_callback_two_operators(self, mock_create_jobs_from_request):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("notifier.tasks.send_notification.delay")
+    def test_request_callback_two_operators(
+        self, send_notification, populate_job_group_notifier_metadata, mock_create_jobs_from_request
+    ):
         # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        populate_job_group_notifier_metadata.return_value = True
+        send_notification.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
@@ -643,8 +661,10 @@ class TestImportSample(APITestCase):
         mock_create_jobs_from_request.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    def test_request_callback_unknown_assay(self, mock_send_notification):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_callback_unknown_assay(self, populate_job_group_notifier_metadata, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
+        populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)
@@ -673,8 +693,10 @@ class TestImportSample(APITestCase):
         mock_send_notification.assert_has_calls(calls, any_order=True)
 
     @patch("notifier.tasks.send_notification.delay")
-    def test_request_callback_disabled_assay(self, mock_send_notification):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_request_callback_disabled_assay(self, populate_job_group_notifier_metadata, mock_send_notification):
         # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
+        populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
         job_group_notifier = JobGroupNotifier.objects.create(job_group=job_group, notifier_type=notifier)

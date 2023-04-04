@@ -147,6 +147,11 @@ class FileTest(APITestCase):
         except Sample.DoesNotExist:
             sample = None
         self.assertIsNotNone(sample)
+        try:
+            request = Request.objects.get(request_id="Request_001")
+        except Request.DoesNotExist:
+            request = None
+        self.assertIsNotNone(request)
 
     def test_create_file_successful_2(self):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
@@ -362,7 +367,7 @@ class FileTest(APITestCase):
         _file.refresh_from_db()
         self.assertEqual(_file.request.request_id, "Request_001")
         self.assertEqual(_file.patient.patient_id, "Patient_001")
-        self.assertEqual(_file.sample.tumor_or_normal, "Tumor")
+        self.assertEqual(_file.samples.first().tumor_or_normal, "Tumor")
         self.assertEqual(_file.request.investigator_name, "Investigator Name")
 
     def test_patch_file_metadata(self):

@@ -98,6 +98,7 @@ class Sample(BaseModel):
     igo_qc_notes = models.TextField(default="")
     cas_qc_notes = models.TextField(default="")
     redact = models.BooleanField(default=False, null=False)
+    # request = models.ForeignKey(Request, null=False, blank=False)
     version = models.IntegerField()
     latest = models.BooleanField()
 
@@ -214,6 +215,7 @@ class File(BaseModel):
     checksum = models.CharField(max_length=50, blank=True, null=True)
     request = models.ForeignKey(Request, null=True, on_delete=models.SET_NULL)
     sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
+    samples = models.ManyToManyField(Sample, related_name="samples")
     patient = models.ForeignKey(Patient, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
@@ -260,7 +262,7 @@ class FileMetadata(BaseModel):
             sex = self.metadata.get(settings.SEX_METADATA_KEY)
 
             assay = self.metadata.get(settings.RECIPE_METADATA_KEY, "")
-            populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
+            # populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
 
             if request_id:
                 request, _ = Request.objects.get_or_create(
@@ -290,7 +292,7 @@ class FileMetadata(BaseModel):
                         "sample_class": sample_class,
                     },
                 )
-                self.file.sample = sample
+                self.file.samples.add(sample)
                 if not (_ or skip_request_sample_patient_update):
                     sample.sample_name = sample_name
                     sample.cmo_sample_name = cmo_sample_name
@@ -298,7 +300,6 @@ class FileMetadata(BaseModel):
                     sample.tumor_or_normal = tumor_or_normal
                     sample.sample_class = sample_class
                     sample.save()
-                self.file.save(update_fields=("sample",))
 
             if patient_id:
                 patient, _ = Patient.objects.get_or_create(patient_id=patient_id, defaults={"sex": sex})
