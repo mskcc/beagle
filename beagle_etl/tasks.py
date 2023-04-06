@@ -19,6 +19,7 @@ from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
 from beagle_etl.jobs.metadb_jobs import (
     new_request,
+    update_job,
     update_request_job,
     update_sample_job,
     not_supported,
@@ -41,22 +42,36 @@ def fetch_request_nats():
 
 @shared_task
 def process_smile_events():
-    messages = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING)
+    update_requests = set()
+
+    messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE))
+    for msg in messages:
+        update_requests.add(msg.request_id)
+    messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE))
+    for msg in messages:
+        update_requests.add('_'.join(msg.request_id.split('_')[:-1]))
+
+    messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST))
     for message in messages:
-        process_smile_message(message)
+        if message.request_id in update_requests:
+            update_requests.remove(message.request_id)
+        logger.info(f"New request: {message.request_id}")
+        new_request.delay(str(message.id))
 
+    for req in list(update_requests):
+        logger.info(f"Update request/samples: {req}")
+        update_job.delay(req)
 
-def process_smile_message(msg):
-    if msg.topic == settings.METADB_NATS_NEW_REQUEST:
-        new_request.delay(str(msg.id))
-        logger.info("New request")
-    elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
-        update_request_job.delay(str(msg.id))
-        logger.info("Update request")
-    elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
-        update_sample_job.delay(str(msg.id))
-        logger.info("Update sample")
-    else:
+    unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(topic__in=(
+        settings.METADB_NATS_REQUEST_UPDATE,
+        settings.METADB_NATS_SAMPLE_UPDATE,
+        settings.METADB_NATS_NEW_REQUEST)
+    )
+
+    for msg in unknown_topics:
         not_supported.delay(str(msg.id))
         logger.error("Unknown subject: %s" % msg.topic)
 
