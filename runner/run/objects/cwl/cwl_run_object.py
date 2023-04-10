@@ -100,8 +100,8 @@ class CWLRunObject(RunObject):
         for p in self.inputs:
             for f in p.files:
                 file_obj = FileProcessor.get_file_obj(f)
-                if file_obj.samples.all():
-                    [samples.add(s) for s in file_obj.samples.all()]
+                for sample in file_obj.get_samples():
+                    samples.add(sample)
         self.samples = list(samples)
         [CWLPortObject.ready(p) for p in self.outputs]
         self.status = RunStatus.READY
