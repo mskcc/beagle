@@ -2,7 +2,19 @@ from notifier.event_handler.event import Event
 
 
 class VoyagerIsProcessingWholeRequestEvent(Event):
-    def __init__(self, job_notifier, email_to, email_from, subject, request_id, gene_panel, number_of_samples, number_of_samples_recived, match_normal_cnt, pooled_normal_cnt):
+    def __init__(
+        self,
+        job_notifier,
+        email_to,
+        email_from,
+        subject,
+        request_id,
+        gene_panel,
+        number_of_samples,
+        number_of_samples_recived,
+        match_normal_cnt,
+        pooled_normal_cnt,
+    ):
         self.job_notifier = job_notifier
         self.email_to = email_to
         self.email_from = email_from
