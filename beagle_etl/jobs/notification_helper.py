@@ -48,11 +48,13 @@ def _voyager_start_processing(request_id, run_ids):
                     job_notifier=job_group,
                     email_to=email,
                     email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject=f"Confirmation of Project {request_id} running in Pipeline",
+                    subject=f"Confirmation of Project {request_id} running in Pipeline: partial run",
                     request_id=request_id,
                     gene_panel=gene_panel,
-                    number_of_samples=number_of_samples,
-                    number_of_samples_recived=number_of_samples,
+                    number_of_samples=number_of_samples - len(list(unprocessed_samples)),
+                    number_of_samples_received=number_of_samples,
+                    match_normal_cnt=matched_normals,
+                    pooled_normal_cnt=pooled_normals,
                     unpaired=list(unprocessed_samples),
                 ).to_dict()
                 send_notification.delay(event)
@@ -67,9 +69,8 @@ def _voyager_start_processing(request_id, run_ids):
                     gene_panel=gene_panel,
                     number_of_samples=number_of_samples,
                     number_of_samples_recived=number_of_samples,
-                    polled_normal=pooled_normals,
-                    matched_normals=matched_normals
-
+                    match_normal_cnt=matched_normals,
+                    pooled_normal_cnt=pooled_normals,
                 ).to_dict()
                 send_notification.delay(event)
 
