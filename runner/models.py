@@ -3,7 +3,7 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.db.models import F
-from file_system.models import File, FileGroup, Sample
+from file_system.models import File, FileGroup, Sample, Request
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
@@ -191,6 +191,7 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True, null=True))
     samples = models.ManyToManyField(Sample)
+    requests = models.ManyToManyField(Request)
     started = models.DateTimeField(blank=True, null=True)
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
