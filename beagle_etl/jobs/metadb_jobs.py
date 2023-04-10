@@ -318,7 +318,6 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         send_notification.delay(only_normal_samples_event)
         send_to = get_emails_to_notify(request_id)
         for email in send_to:
-
             event = VoyagerCantProcessRequestAllNormalsEvent(
                 job_notifier=str(job_group.id),
                 email_to=email,
