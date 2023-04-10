@@ -26,10 +26,16 @@ def _voyager_start_processing(request_id, run_ids):
     if runs:
         used_samples = set()
         unprocessed_samples = set()
+        pooled_normals = 0
+        matched_normals = 0
 
         for run in runs:
             used_samples.add(run.tags.get("sampleNameTumor"))
             used_samples.add(run.tags.get("sampleNameNormal"))
+            if "POOLEDNORMAL" in run.tags.get("sampleNameNormal"):
+                pooled_normals += 1
+            else:
+                matched_normals += 1
         for sample in sample_ids:
             if sample not in used_samples:
                 unprocessed_samples.add(sample)
@@ -46,6 +52,7 @@ def _voyager_start_processing(request_id, run_ids):
                     request_id=request_id,
                     gene_panel=gene_panel,
                     number_of_samples=number_of_samples,
+                    number_of_samples_recived=number_of_samples,
                     unpaired=list(unprocessed_samples),
                 ).to_dict()
                 send_notification.delay(event)
@@ -59,6 +66,10 @@ def _voyager_start_processing(request_id, run_ids):
                     request_id=request_id,
                     gene_panel=gene_panel,
                     number_of_samples=number_of_samples,
+                    number_of_samples_recived=number_of_samples,
+                    polled_normal=pooled_normals,
+                    matched_normals=matched_normals
+
                 ).to_dict()
                 send_notification.delay(event)
 
