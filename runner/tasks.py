@@ -593,7 +593,10 @@ def _upload_qc_report(run):
     operator = OperatorFactory.get_by_model(
         run.operator_run.operator, job_group_id=run.job_group_id, job_group_notifier_id=run.job_group_notifier_id
     )
-    operator.on_job_fail(run)
+    try:
+        operator.on_job_fail(run)
+    except Exception as e:
+        logger.error("Operator on_job_fail failed", e)
 
 
 def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
