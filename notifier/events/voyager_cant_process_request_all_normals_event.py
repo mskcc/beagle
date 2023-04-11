@@ -21,7 +21,5 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
         """
         :return: email body
         """
-        body = "Project {igo_request_id} can't be run because it contains only normal samples.".format(
-            igo_request_id=self.request_id
-        )
+        body = f"Project {self.request_id} can't be run because it contains only normal samples."
         return body

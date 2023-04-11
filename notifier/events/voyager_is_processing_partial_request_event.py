@@ -41,18 +41,18 @@ class VoyagerIsProcessingPartialRequestEvent(Event):
         :return: email body
         """
         body = f"""
-        CMO Informatics has received the request to run project {self.request_id} in the ARGOS pipeline.\n 
-        Not all samples are being processed at this time. \n
-        Processing of valid samples will begin soon. Results typically take 10-14 days to generate. \n
-        Please review the project information below carefully and contact us to resolve issues with invalid samples.\n
-        ]n
-Gene Panel: {self.gene_panel}\n
-Number of samples received: {self.number_of_samples_received}\n
-Number of samples running: {self.number_of_samples}\n
-Samples Paired with Match normal: {self.match_normal_cnt}\n
-Samples Paired with Pooled normal: {self.pooled_normal_cnt}\n
-\n
-Samples with the following IDs are not being processed:\n
-{",".join(self.unpaired)}
+        CMO Informatics has received the request to run project {self.request_id} in the ARGOS pipeline.<br> 
+        Not all samples are being processed at this time.<br>
+        Processing of valid samples will begin soon. Results typically take 10-14 days to generate. <br>
+        Please review the project information below carefully and contact us to resolve issues with invalid samples.<br>
+        <br>
+Gene Panel: {self.gene_panel}<br>
+Number of samples received: {self.number_of_samples_received}<br>
+Number of samples running: {self.number_of_samples}<br>
+Samples Paired with Match normal: {self.match_normal_cnt}<br>
+Samples Paired with Pooled normal: {self.pooled_normal_cnt}<br>
+<br>
+Samples with the following IDs are not being processed:<br>
+{"<br>".join(self.unpaired)}
 """
         return body
