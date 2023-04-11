@@ -601,6 +601,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
     pipeline_name = run.run_obj.app.name
+    pipeline_version = run.run_obj.app.version
     pipeline_link = run.run_obj.app.pipeline_link
 
     if run.run_obj.operator_run:
@@ -623,6 +624,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
         str(run.run_id),
         pipeline_name,
+        pipeline_version,
         pipeline_link,
         run.run_obj.output_directory,
         RunStatus(run.status).name,
@@ -634,6 +636,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         operator_run_id,
         lsf_log_location,
         input_json_location,
+        str(run.run_obj.job_group.id)
     )
     e = event.to_dict()
     send_notification.delay(e)
