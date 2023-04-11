@@ -72,7 +72,7 @@ class RunFinishedEvent(Event):
         Failed: {failed}
         
         TOTAL: {total}
-        
+        \n
         {rerun_info}
         """
         link = "%s%s%s\n" % (settings.BEAGLE_URL, "/v0/run/api/", self.run_id)
@@ -97,7 +97,11 @@ class RunFinishedEvent(Event):
             rerun_json['request_ids'] = self.request_id
 
         if self.run_status == "FAILED":
-            rerun_str = json.dumps(rerun_json)
+            rerun_str = f"""
+            API Body for re-run:
+            
+            {json.dumps(rerun_json)}
+            """
         else:
             rerun_str = ""
 
