@@ -138,7 +138,7 @@ class FileRepository(object):
             queryset = queryset.filter(id__in=metadata_ids)
             if order_by:
                 queryset = queryset.order_by(order_by)
-            return queryset.values_list(*sorted_metadata_query_list)
+            return queryset.values(*sorted_metadata_query_list)
         if metadata_distribution:
             metadata_query = "metadata__%s" % metadata_distribution
             metadata_ids = queryset.values_list("id", flat=True)
