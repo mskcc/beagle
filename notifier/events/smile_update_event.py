@@ -1,7 +1,7 @@
 from notifier.event_handler.event import Event
 
 
-class VoyagerCantProcessRequestAllNormalsEvent(Event):
+class SMILEUpdateEvent(Event):
     def __init__(self, job_notifier, email_to, email_from, subject, request_id):
         self.job_notifier = job_notifier
         self.email_to = email_to
@@ -11,7 +11,7 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
 
     @classmethod
     def get_type(cls):
-        return "VoyagerCantProcessRequestAllNormalsEvent"
+        return "SMILEUpdateEvent"
 
     @classmethod
     def get_method(cls):
@@ -21,5 +21,5 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
         """
         :return: email body
         """
-        body = f"Project {self.request_id} can't be run because it contains only normal samples."
+        body = f"Voyager received the update for Project: {self.request_id} ."
         return body
