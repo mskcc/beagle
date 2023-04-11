@@ -27,6 +27,7 @@ from notifier.events import (
     OnlyNormalSamplesEvent,
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
+    SMILEUpdateEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
@@ -80,6 +81,24 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
             job_group_notifier=job_group_notifier,
             delay=delay,
         )
+
+
+def request_update_notification(request_id):
+    last = SMILEMessage.objects.filter(request_id__startswith=request_id).order_by("-created_date")
+    if last.topic in (settings.METADB_NATS_REQUEST_UPDATE, settings.METADB_NATS_SAMPLE_UPDATE):
+        logger.info(f"Sending notifications about {request_id} update")
+        send_to = get_emails_to_notify(request_id)
+        for email in send_to:
+            event = SMILEUpdateEvent(
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject=f"SMILE sent update for request {request_id}",
+                request_id=request_id,
+            ).to_dict()
+            send_notification.delay(event)
+    else:
+        logger.info(f"SMILE sent new project {request_id}")
 
 
 @shared_task
@@ -244,6 +263,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     except JobGroupNotifier.DoesNotExist:
         job_group_notifier = None
 
+    request_update_notification(request_id)
+
     if recipe in settings.WES_ASSAYS:
         for job in sample_jobs:
             if job["igocomplete"] and job["status"] != "COMPLETED":
@@ -319,7 +340,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         send_to = get_emails_to_notify(request_id)
         for email in send_to:
             event = VoyagerCantProcessRequestAllNormalsEvent(
-                job_notifier=str(job_group.id),
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
