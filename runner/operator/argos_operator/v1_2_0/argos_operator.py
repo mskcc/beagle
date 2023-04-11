@@ -412,7 +412,7 @@ class ArgosOperator(Operator):
         files = FileRepository.filter(queryset=self.files, metadata={"cmoSampleName": cmo_sample_name})
         if files:
             qc_report = files[0].metadata["qcReports"]
-            sample_id = files[0].metadata["sampleId"]
+            sample_id = files[0].metadata[settings.SAMPLE_ID_METADATA_KEY]
             """
             {
                 "comments": "Suboptimal quantity",
