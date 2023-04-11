@@ -1,6 +1,6 @@
 from study.models import Study
 from study.exceptions import StudyDoesNotExistExceptions
-from runner.models import Run, RunStatus
+from runner.models import Run, RunStatus, Port
 
 
 class StudyObject(object):
@@ -43,6 +43,13 @@ class StudyObject(object):
         runs = Run.objects.filter(samples__in=sample_object_ids, status=RunStatus.COMPLETED).distinct()
         return self._latest(runs)
 
+    @property
+    def project_prefixes(self):
+        result = set()
+        for run_id in self.run_ids:
+            result.add(self.get_project_prefix(run_id))
+        return list(result)
+
     def _latest(self, runs):
         result = dict()
         grouped_by_pipeline = self._group_by_pipeline(runs)
@@ -71,3 +78,12 @@ class StudyObject(object):
                 if run.created_date > grouped_by_sample[key].created_date:
                     grouped_by_sample[key] = run
         return grouped_by_sample
+
+    def get_project_prefix(self, run_id):
+        project_prefix = set()
+        port_list = Port.objects.filter(run=run_id)
+        for single_port in port_list:
+            if single_port.name == "project_prefix":
+                project_prefix.add(single_port.value)
+        project_prefix_str = "_".join(sorted(project_prefix))
+        return project_prefix_str

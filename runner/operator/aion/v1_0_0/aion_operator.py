@@ -7,6 +7,7 @@ submits them as runs
 import os
 import datetime
 import logging
+from study.objects import StudyObject
 from runner.models import Run, Pipeline
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
@@ -15,33 +16,35 @@ LOGGER = logging.getLogger(__name__)
 
 
 class AionOperator(Operator):
-    def get_jobs(self, study_obj):
+    def get_jobs(self):
         """
         From self, retrieve relevant run IDs, build the input JSON for
         the pipeline, and then submit them as jobs through the
         RunCreator
         """
-        run_ids = study_obj.run_ids
-        study_id = study_obj.study_id
-        project_prefixes = study_obj.proj_prefixes
-        samples = study_obj.samples
-        # How should we separate dmp samples from regular samples in the study obj?
+        study_objects = StudyObject.get_by_request(self.request_id)
+        aion_outputs_jobs = []
+        for study_obj in study_objects:
+            run_ids = study_obj.run_ids
+            study_id = study_obj.study_id
+            project_prefixes = study_obj.proj_prefixes
+            samples = study_obj.samples
+            # How should we separate dmp samples from regular samples in the study obj?
 
-        dmp_samples = []
+            dmp_samples = []
 
-        number_of_runs = len(run_ids)
-        name = "AION merging %i runs for lab head email %s" % (number_of_runs, study_obj.lab_head_email)
+            number_of_runs = len(run_ids)
+            name = "AION merging %i runs for lab head email %s" % (number_of_runs, study_obj.lab_head_email)
 
-        app = self.get_pipeline_id()
-        input_json = self.build_input_json(run_ids, project_prefixes, study_id, dmp_samples)
-        tags = {"study_id": study_id, "num_runs_merged": len(run_ids)}
-        print(input_json)
+            app = self.get_pipeline_id()
+            input_json = self.build_input_json(run_ids, project_prefixes, study_id, dmp_samples)
+            tags = {"study_id": study_id, "num_runs_merged": len(run_ids)}
+            print(input_json)
 
-        aion_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
+            aion_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
 
-        aion_outputs_job = [RunCreator(**aion_outputs_job_data)]
-
-        return aion_outputs_job
+            aion_outputs_jobs.append(RunCreator(**aion_outputs_job_data))
+        return aion_outputs_jobs
 
     def build_input_json(self, run_ids, project_prefixes, study_id, dmp_samples):
         #    run_ids = self.run_ids
