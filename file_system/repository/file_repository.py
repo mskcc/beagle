@@ -128,7 +128,7 @@ class FileRepository(object):
         # ------------
         if values_metadata:
             ret_str = "metadata__%s" % values_metadata
-            return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
+            return queryset.values(ret_str).distinct(ret_str)
         if values_metadata_list:
             values_metadata_query_list = ["metadata__%s" % single_metadata for single_metadata in values_metadata_list]
             values_metadata_query_set = set(values_metadata_query_list)
