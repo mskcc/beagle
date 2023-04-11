@@ -603,9 +603,7 @@ class FileTest(APITestCase):
         self.assertEqual(len(response.json()["results"]), 1)
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.get(
-            "/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata={request_id_key}".format(
-                request_id_key=settings.REQUEST_ID_METADATA_KEY
-            ),
+            f"/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata={settings.REQUEST_ID_METADATA_KEY},{settings.SAMPLE_ID_METADATA_KEY}",
             format="json",
         )
         self.assertEqual(response.json()["results"][0], "1")
