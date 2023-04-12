@@ -290,7 +290,7 @@ class manifest(GenericAPIView):
     # varibales we want from the request metadata
     request_keys = ['igoRequestId', 'primaryId', 'cmoSampleIdFields', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
 
-    def construct_csv(self, request_query, pDmps):
+    def construct_csv(self, request_query, pDmps, request_ids):
             """
             Construct a csv HTTP response from DMP BAM Metadata and Request Metadata
             Keyword arguments:
@@ -299,7 +299,8 @@ class manifest(GenericAPIView):
             """
             # set up HTTP response 
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="myfile.csv"'
+            breakpoint()
+            response['Content-Disposition'] = 'attachment; filename="{request}.csv"'.format(request=request_ids)
             writer = csv.DictWriter(response, fieldnames=self.manifestHeader)
             writer.writeheader()
             # we care about the metadata for the request
@@ -343,7 +344,7 @@ class manifest(GenericAPIView):
                 pDmps = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trim)
             try: 
                 # generate csv response
-                response = self.construct_csv(request_query, pDmps)
+                response = self.construct_csv(request_query, pDmps, request_ids)
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
             if response is not None:
