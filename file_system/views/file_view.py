@@ -281,7 +281,7 @@ class CopyFilesView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 class manifest(GenericAPIView):
-    """GenericAPIView Class that returns a special formated csv, that adds DMP BAM Metadata to Request Fastq Metdata"""
+    """GenericAPIView Class that returns a special formated csv, which adds DMP BAM Metadata to Request Fastq Metdata"""
     # Setting members 
     pagination_class=None  # We don't need pagination
     serializer_class = manifestSerializer
