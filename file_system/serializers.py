@@ -529,3 +529,7 @@ class CopyFilesSerializer(serializers.Serializer):
         if not request_id and not primary_id:
             raise serializers.ValidationError("Either request_id or primary_id input is required.")
         return data
+
+class manifestSerializer(serializers.Serializer):
+    request_id = serializers.ListField(child=serializers.CharField(), required=True)
+    file_group = serializers.CharField(required=True)
