@@ -606,7 +606,8 @@ class FileTest(APITestCase):
             f"/v0/fs/files/?path=/path/to/file1_R1.fastq&values_metadata={settings.REQUEST_ID_METADATA_KEY},{settings.SAMPLE_ID_METADATA_KEY}",
             format="json",
         )
-        self.assertEqual(response.json()["results"][0], "1")
+        self.assertEqual(response.json()["results"][0][f"metadata__{settings.REQUEST_ID_METADATA_KEY}"], "1")
+        self.assertEqual(response.json()["results"][0][f"metadata__{settings.SAMPLE_ID_METADATA_KEY}"], "1s")
 
     def test_metadata_clean_function(self):
         test1 = "abc\tdef2"

@@ -24,7 +24,7 @@ def get_samples(request_id):
 def get_number_of_tumor_samples(request_id):
     return FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor"},
-        values_metadata=settings.SAMPLE_ID_METADATA_KEY
+        values_metadata=settings.SAMPLE_ID_METADATA_KEY,
     ).count()
 
 
