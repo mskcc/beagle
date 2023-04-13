@@ -22,7 +22,7 @@ class RunFinishedEvent(Event):
         operator_run_id,
         lsf_log_location,
         input_json_location,
-        job_group_id
+        job_group_id,
     ):
         self.job_notifier = job_notifier
         self.request_id = request_id
@@ -84,17 +84,17 @@ class RunFinishedEvent(Event):
         run_ids = None
         for k, v in self.tags.items():
             tags += f"{k}: {json.dumps(v) if isinstance(v, list) or isinstance(v, dict) else str(v)}\n"
-            if k == 'argos_run_ids':
+            if k == "argos_run_ids":
                 run_ids = v
 
         rerun_json = {}
-        rerun_json['pipelines'] = [self.pipeline]
-        rerun_json['pipeline_versions'] = [self.pipeline_version]
-        rerun_json['job_group_id'] = self.job_group_id
+        rerun_json["pipelines"] = [self.pipeline]
+        rerun_json["pipeline_versions"] = [self.pipeline_version]
+        rerun_json["job_group_id"] = self.job_group_id
         if run_ids:
-            rerun_json['run_ids'] = run_ids
+            rerun_json["run_ids"] = run_ids
         else:
-            rerun_json['request_ids'] = self.request_id
+            rerun_json["request_ids"] = self.request_id
 
         if self.run_status == "FAILED":
             rerun_str = f"""
@@ -120,5 +120,5 @@ class RunFinishedEvent(Event):
             output_directory=self.output_directory,
             lsf_log_location=self.lsf_log_location,
             inputs_json_location=self.input_json_location,
-            rerun_info=rerun_str
+            rerun_info=rerun_str,
         )

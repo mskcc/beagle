@@ -43,6 +43,8 @@ class FileRepository(object):
         q=None,
         values_metadata=None,
         values_metadata_list=[],
+        key_value_metadata=None,
+        key_values_metadata_list=[],
         filter_redact=False,
         exclude=[],
         order_by=None,
@@ -66,6 +68,8 @@ class FileRepository(object):
         if metadata and metadata_regex:
             raise InvalidQueryException("Can't specify both metadata and metadata_regex in the query")
         if values_metadata and values_metadata_list:
+            raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
+        if key_value_metadata and key_values_metadata_list:
             raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
         create_query_dict = {
             "file__path": path,
@@ -128,7 +132,7 @@ class FileRepository(object):
         # ------------
         if values_metadata:
             ret_str = "metadata__%s" % values_metadata
-            return queryset.values(ret_str).distinct(ret_str)
+            return queryset.values_list(ret_str, flat=True).order_by(ret_str).distinct(ret_str)
         if values_metadata_list:
             values_metadata_query_list = ["metadata__%s" % single_metadata for single_metadata in values_metadata_list]
             values_metadata_query_set = set(values_metadata_query_list)
@@ -138,6 +142,19 @@ class FileRepository(object):
             queryset = queryset.filter(id__in=metadata_ids)
             if order_by:
                 queryset = queryset.order_by(order_by)
+            return queryset.values_list(*sorted_metadata_query_list)
+        if key_value_metadata:
+            ret_str = f"metadata__{key_value_metadata}"
+            return queryset.values(ret_str).distinct(ret_str)
+        if key_values_metadata_list:
+            values_metadata_query_list = [
+                f"metadata__{single_metadata}" for single_metadata in key_values_metadata_list
+            ]
+            values_metadata_query_set = set(values_metadata_query_list)
+            sorted_metadata_query_list = sorted(values_metadata_query_set)
+            metadata_ids = queryset.values_list("id", flat=True)
+            queryset = FileRepository.all()
+            queryset = queryset.filter(id__in=metadata_ids)
             return queryset.values(*sorted_metadata_query_list)
         if metadata_distribution:
             metadata_query = "metadata__%s" % metadata_distribution
