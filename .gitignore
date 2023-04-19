@@ -17,4 +17,4 @@ runner/tests/operator/demo_operator/tmp*
 .vscode/targets.log
 .DS_Store
 Miniconda3*
-celerybeat-schedule.db
+*.db
