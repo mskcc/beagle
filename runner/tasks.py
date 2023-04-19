@@ -474,6 +474,14 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["memlimit"] = run.app.memlimit
     if run.app.output_permission:
         job["root_permission"] = run.app.output_permission
+
+    job["metadata"] = dict()
+    job["metadata"]["run_id"] = run_id
+    job["metadata"]["pipeline_id"] = str(run.app.id)
+    job["metadata"][
+        "pipeline_link"
+    ] = f"{run1.run_obj.app.github}/blob/{run1.run_obj.app.version}/{run1.run_obj.app.entrypoint}"
+
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
@@ -639,7 +647,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         operator_run_id,
         lsf_log_location,
         input_json_location,
-        str(run.run_obj.job_group.id)
+        str(run.run_obj.job_group.id),
     )
     e = event.to_dict()
     send_notification.delay(e)
