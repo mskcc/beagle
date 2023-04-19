@@ -143,9 +143,9 @@ class FileView(
                 kwargs["distinct"] = distinct_metadata
             if values_metadata:
                 if len(values_metadata) == 1:
-                    kwargs["values_metadata"] = values_metadata[0]
+                    kwargs["key_values_metadata"] = values_metadata[0]
                 else:
-                    kwargs["values_metadata_list"] = values_metadata
+                    kwargs["key_values_metadata_list"] = values_metadata
             try:
                 queryset = FileRepository.filter(**kwargs)
             except Exception as e:

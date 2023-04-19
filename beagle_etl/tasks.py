@@ -45,16 +45,19 @@ def process_smile_events():
     update_requests = set()
 
     messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE))
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)
+    )
     for msg in messages:
         update_requests.add(msg.request_id)
     messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE))
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
+    )
     for msg in messages:
-        update_requests.add('_'.join(msg.request_id.split('_')[:-1]))
+        update_requests.add("_".join(msg.request_id.split("_")[:-1]))
 
     messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST))
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST)
+    )
     for message in messages:
         if message.request_id in update_requests:
             update_requests.remove(message.request_id)
@@ -65,10 +68,12 @@ def process_smile_events():
         logger.info(f"Update request/samples: {req}")
         update_job.delay(req)
 
-    unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(topic__in=(
-        settings.METADB_NATS_REQUEST_UPDATE,
-        settings.METADB_NATS_SAMPLE_UPDATE,
-        settings.METADB_NATS_NEW_REQUEST)
+    unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(
+        topic__in=(
+            settings.METADB_NATS_REQUEST_UPDATE,
+            settings.METADB_NATS_SAMPLE_UPDATE,
+            settings.METADB_NATS_NEW_REQUEST,
+        )
     )
 
     for msg in unknown_topics:
