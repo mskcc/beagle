@@ -532,4 +532,3 @@ class CopyFilesSerializer(serializers.Serializer):
 
 class manifestSerializer(serializers.Serializer):
     request_id = serializers.ListField(child=serializers.CharField(), required=True)
-    file_group = serializers.CharField(required=True)

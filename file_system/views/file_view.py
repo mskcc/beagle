@@ -286,7 +286,7 @@ class manifest(GenericAPIView):
     pagination_class=None  # We don't need pagination
     serializer_class = manifestSerializer
     # headers for returned csv 
-    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpsampleinfo', 'dampsampleid','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
+    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpSampleInfo', 'dmpPatientId','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
     # varibales we want from the request metadata
     request_keys = ['igoRequestId', 'primaryId', 'cmoSampleIdFields', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
 
@@ -299,7 +299,6 @@ class manifest(GenericAPIView):
             """
             # set up HTTP response 
             response = HttpResponse(content_type='text/csv')
-            breakpoint()
             response['Content-Disposition'] = 'attachment; filename="{request}.csv"'.format(request=request_ids)
             writer = csv.DictWriter(response, fieldnames=self.manifestHeader)
             writer.writeheader()
@@ -312,15 +311,18 @@ class manifest(GenericAPIView):
                 if  pId not in primaryIds: # we haven't seen the Primary Id 
                     primaryIds.add(pId)
                     fastq_meta = {k: fastq[k] for k in fastq.keys() & self.request_keys}
+                    fastq_meta['dmpSampleInfo'] = None
+                    fastq_meta['dmpPatientId'] = None 
                     # look up cmopatient in dmp query set 
                     patient_id = fastq_meta['cmoPatientId'].replace('C-','')
                     dmp_meta = pDmps.filter(metadata__patient__cmo=patient_id)
-                    dmpsampleinfo = [dmp.metadata['sample'] for dmp in dmp_meta]
-                    # add dmp data to request data, building up in csv
-                    dmpsampleinfo = ';'.join(dmpsampleinfo)
-                    dmpsampleid = dmp_meta[0].metadata['patient']['dmp']
-                    fastq_meta['dmpsampleinfo'] = dmpsampleinfo
-                    fastq_meta['dampsampleid'] = dmpsampleid
+                    if dmp_meta.exists():
+                        dmpsampleinfo = [dmp.metadata['sample'] for dmp in dmp_meta]
+                        # add dmp data to request data, building up in csv
+                        dmpsampleinfo = ';'.join(dmpsampleinfo)
+                        dmppatientid = dmp_meta[0].metadata['patient']['dmp']
+                        fastq_meta['dmpSampleInfo'] = dmpsampleinfo
+                        fastq_meta['dmpPatientId'] = dmppatientid
                     writer.writerow(fastq_meta)
             return response
 
@@ -330,15 +332,13 @@ class manifest(GenericAPIView):
         serializer = manifestSerializer(data=request.query_params)
         if serializer.is_valid():
             request_ids = serializer.validated_data.get("request_id")
-            file_group = serializer.validated_data.get("file_group")
             if request_ids:
                 # get fastq metadata for a given request
                 request_query = FileMetadata.objects.filter(metadata__igoRequestId__in=request_ids)
                 cmoPatientId = request_query.values_list("metadata__cmoPatientId",flat=True)
                 cmoPatientId = list(set(list(cmoPatientId)))
-            if file_group:
                 # get DMP BAM file group
-                dmp_bams = FileRepository.filter(file_group_in=file_group)
+                dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
                 cmoPatientId_trim = [c.replace('C-','') for c in cmoPatientId]
                 # subset DMP BAM file group to patients in the provided requests
                 pDmps = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trim)
