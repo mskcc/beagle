@@ -54,7 +54,7 @@ def dump_request(**kwargs):
     """
     Dump re-loadable fixtures for File and FileMetadata items from a given request
     """
-    requestID = kwargs.pop("requestID")
+    requestID = kwargs.pop("igoRequestId")
     output_file_file = "{}.file.json".format(requestID)
     output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
