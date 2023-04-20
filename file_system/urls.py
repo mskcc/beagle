@@ -4,7 +4,7 @@ from . import views
 
 from rest_framework import routers
 from file_system.views.file_group_view import FileGroupViewSet
-from file_system.views.file_view import FileView, BatchPatchFiles, CopyFilesView
+from file_system.views.file_view import FileView, BatchPatchFiles, CopyFilesView, manifest
 from file_system.views.storage_view import StorageViewSet
 from file_system.views.file_metadata_view import FileMetadataView
 from file_system.views.file_type_view import FileTypeView
@@ -31,4 +31,5 @@ urlpatterns = [
     path("", include(router.urls)),
     path("batch-patch-files", BatchPatchFiles.as_view()),
     path("copy-files", CopyFilesView.as_view()),
+    path("manifest/", manifest.as_view()),
 ]
