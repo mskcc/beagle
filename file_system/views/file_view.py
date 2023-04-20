@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
+from django.core.exceptions import ValidationError
 from file_system.serializers import (
     CreateFileSerializer,
     UpdateFileSerializer,
@@ -16,12 +17,14 @@ from file_system.serializers import (
     FileQuerySerializer,
     BatchPatchFileSerializer,
     CopyFilesSerializer,
+    manifestSerializer
 )
 from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
-
+import csv 
+from django.http import HttpResponse
 
 class FileView(
     mixins.CreateModelMixin,
@@ -276,3 +279,77 @@ class CopyFilesView(GenericAPIView):
                 )
             self._copy_files(files, file_group_to)
         return Response(status=status.HTTP_200_OK)
+
+class manifest(GenericAPIView):
+    """GenericAPIView Class that returns a special formated csv, which adds DMP BAM Metadata to Request Fastq Metdata"""
+    # Setting members 
+    pagination_class=None  # We don't need pagination
+    serializer_class = manifestSerializer
+    # headers for returned csv 
+    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpSampleInfo', 'dmpPatientId','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
+    # varibales we want from the request metadata
+    request_keys = ['igoRequestId', 'primaryId', 'cmoSampleIdFields', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
+
+    def construct_csv(self, request_query, pDmps, request_ids):
+            """
+            Construct a csv HTTP response from DMP BAM Metadata and Request Metadata
+            Keyword arguments:
+                request_query -- a queryset containg fastq metaddata for a given request
+                pDmps -- a query set from the DMP BAM file group, filtered to patients in request_query
+            """
+            # set up HTTP response 
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="{request}.csv"'.format(request=request_ids)
+            writer = csv.DictWriter(response, fieldnames=self.manifestHeader)
+            writer.writeheader()
+            # we care about the metadata for the request
+            request_metadata = request_query.values_list("metadata",flat=True) 
+            primaryIds = set() # we only want to look at fastq metdata for a PrimaryId once
+            # for each fastq in the request query 
+            for fastq in request_metadata:
+                pId = fastq['primaryId'] 
+                if  pId not in primaryIds: # we haven't seen the Primary Id 
+                    primaryIds.add(pId)
+                    fastq_meta = {k: fastq[k] for k in fastq.keys() & self.request_keys}
+                    fastq_meta['dmpSampleInfo'] = None
+                    fastq_meta['dmpPatientId'] = None 
+                    # look up cmopatient in dmp query set 
+                    patient_id = fastq_meta['cmoPatientId'].replace('C-','')
+                    dmp_meta = pDmps.filter(metadata__patient__cmo=patient_id)
+                    if dmp_meta.exists():
+                        dmpsampleinfo = [dmp.metadata['sample'] for dmp in dmp_meta]
+                        # add dmp data to request data, building up in csv
+                        dmpsampleinfo = ';'.join(dmpsampleinfo)
+                        dmppatientid = dmp_meta[0].metadata['patient']['dmp']
+                        fastq_meta['dmpSampleInfo'] = dmpsampleinfo
+                        fastq_meta['dmpPatientId'] = dmppatientid
+                    writer.writerow(fastq_meta)
+            return response
+
+    @swagger_auto_schema(query_serializer=manifestSerializer)
+    def get(self, request):
+        """get params, validate, return"""
+        serializer = manifestSerializer(data=request.query_params)
+        if serializer.is_valid():
+            request_ids = serializer.validated_data.get("request_id")
+            if request_ids:
+                # get fastq metadata for a given request
+                request_query = FileMetadata.objects.filter(metadata__igoRequestId__in=request_ids)
+                cmoPatientId = request_query.values_list("metadata__cmoPatientId",flat=True)
+                cmoPatientId = list(set(list(cmoPatientId)))
+                # get DMP BAM file group
+                dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
+                cmoPatientId_trim = [c.replace('C-','') for c in cmoPatientId]
+                # subset DMP BAM file group to patients in the provided requests
+                pDmps = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trim)
+            try: 
+                # generate csv response
+                response = self.construct_csv(request_query, pDmps, request_ids)
+            except ValidationError as e:
+                return Response(e, status=status.HTTP_400_BAD_REQUEST)
+            if response is not None:
+                return response 
+            else:
+                return Response([], status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
