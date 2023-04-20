@@ -54,12 +54,12 @@ def dump_request(**kwargs):
     """
     Dump re-loadable fixtures for File and FileMetadata items from a given request
     """
-    requestID = kwargs.pop("igoRequestId")
+    requestID = kwargs.pop("requestID")
     output_file_file = "{}.file.json".format(requestID)
     output_filemetadata_file = "{}.filemetadata.json".format(requestID)
 
     # get FileMetadata entries that match the request ID
-    file_instances = FileMetadata.objects.filter(metadata__requestId=requestID)
+    file_instances = FileMetadata.objects.filter(metadata__igoRequestId=requestID)
     print(
         json.dumps(json.loads(serializers.serialize("json", file_instances)), indent=4),
         file=open(output_filemetadata_file, "w"),
