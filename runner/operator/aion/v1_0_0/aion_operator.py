@@ -31,7 +31,7 @@ class AionOperator(Operator):
         for study_obj in study_objects:
             run_ids = study_obj.run_ids
             study_id = study_obj.study_id
-            project_prefixes = study_obj.project_prefixes()
+            project_prefixes = study_obj.project_prefixes
             dmp_samples = self._get_dmp_samples(study_obj)
 
             number_of_runs = len(run_ids)
@@ -52,8 +52,8 @@ class AionOperator(Operator):
         patient_ids = []
         sample_ids = []
         for single_file in sample_files:
-            if single_file.patient and single_file.patient.patient_id:
-                single_patient_id = single_file.patient.patient_id
+            if single_file.patient_id:
+                single_patient_id = single_file.patient_id
                 dmp_patient_id = single_patient_id.lstrip("C-")
                 if dmp_patient_id not in patient_ids:
                     patient_ids.append(dmp_patient_id)
