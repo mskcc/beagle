@@ -299,7 +299,11 @@ class manifest(GenericAPIView):
             """
             # set up HTTP response 
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="{request}.csv"'.format(request=request_ids)
+            if len(request_ids) > 1:
+                request_type = 'multiple_requests'
+            else:
+                request_type = request_ids[0]
+            response['Content-Disposition'] = 'attachment; filename="{request_type}.csv"'.format(request_type=request_type)
             writer = csv.DictWriter(response, fieldnames=self.manifestHeader)
             writer.writeheader()
             # we care about the metadata for the request
