@@ -69,6 +69,7 @@ class AionOperator(Operator):
         merge_date = datetime.datetime.now().strftime("%Y_%m_%d")
         directories = set()
         input_json = dict()
+        run_id_list = list()
 
         input_json["project_description"] = "[%s] Includes samples received at IGO for Project ID(s): %s" % (
             merge_date,
@@ -89,9 +90,11 @@ class AionOperator(Operator):
                     output_dir = single_ultron_run.output_directory
                     if os.path.isdir(output_dir):
                         directories.add(output_dir)
+            for single_run in run_list:
+                run_id_list.append(single_run.id)
 
         input_json["directories"] = list()
-        input_json["sample_data_clinical_files"] = [create_data_clinical_file(run_ids, dmp_samples)]
+        input_json["sample_data_clinical_files"] = [create_data_clinical_file(run_id_list, dmp_samples)]
         for portal_directory in directories:
             input_json["directories"].append({"class": "Directory", "path": portal_directory})
         return input_json
