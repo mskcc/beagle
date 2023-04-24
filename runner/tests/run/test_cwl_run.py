@@ -6,7 +6,7 @@ from runner.tasks import complete_job, fail_job
 from runner.models import Run, RunStatus, Pipeline, OperatorRun
 from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.run_object_factory import RunObjectFactory
-from file_system.models import Storage, StorageType, FileGroup, File, FileType
+from file_system.models import Storage, StorageType, FileGroup, File, FileType, Sample, Request
 
 
 class CWLRunObjectTest(APITestCase):
@@ -34,6 +34,9 @@ class CWLRunObjectTest(APITestCase):
         self.run.save()
         self.file_type_unknown = FileType(name="unknown")
         self.file_type_unknown.save()
+        self.request = Request.objects.create(request_id="REQUEST_1")
+        self.sample_1 = Sample.objects.create(sample_id='SAMPLE_1', sample_name="SAMPLE_NAME_1", request_id="REQUEST_1")
+        self.sample_2 = Sample.objects.create(sample_id='SAMPLE_2', sample_name="SAMPLE_NAME_2", request_id="REQUEST_1")
         self.file1 = File(
             **{
                 "file_name": "FASTQ_L002_R1_001.fastq.gz",
@@ -41,6 +44,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
+                "samples": ["SAMPLE_1"]
             }
         )
         self.file1.save()
@@ -51,6 +55,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
+                "samples": ["SAMPLE_1"]
             }
         )
         self.file2.save()
@@ -61,6 +66,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
+                "samples": ["SAMPLE_2"]
             }
         )
         self.file3.save()
@@ -71,6 +77,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
+                "samples": ["SAMPLE_2"]
             }
         )
         self.file4.save()
@@ -280,6 +287,8 @@ class CWLRunObjectTest(APITestCase):
                 self.assertEqual(inp.value[1]["R1"][0]["path"], self.file3.path)
                 self.assertEqual(inp.db_value[1]["R2"][0]["location"], "bid://%s" % str(self.file4.id))
                 self.assertEqual(inp.value[1]["R2"][0]["path"], self.file4.path)
+        self.assertTrue(self.sample_1 in run.samples)
+        self.assertTrue(self.sample_2 in run.samples)
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_run_to_db(self, mock_get_pipeline):
