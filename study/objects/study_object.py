@@ -46,8 +46,10 @@ class StudyObject(object):
     @property
     def project_prefixes(self):
         result = set()
-        for run_id in self.run_ids:
-            result.add(self.get_project_prefix(run_id))
+        for pipeline, runs in self.run_ids.items():
+            project_prefixes = runs.keys()
+            for pp in project_prefixes:
+                result.add(pp)
         return list(result)
 
     def _latest(self, runs):
