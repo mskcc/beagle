@@ -2,13 +2,13 @@ import os
 import uuid
 from enum import IntEnum
 from django.db import models
+from deepdiff import DeepDiff
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
-
-# from file_system.serializers import UpdateFileSerializer
+from django.db import transaction
 from file_system.tasks import populate_job_group_notifier_metadata
 
 
@@ -48,6 +48,7 @@ class Request(BaseModel):
     request_id = models.CharField(max_length=100, null=True, blank=True)
     delivery_date = models.DateTimeField(null=True, blank=True)
     lab_head_name = models.CharField(max_length=200, null=True, blank=True)
+    lab_head_email = models.CharField(max_length=200, null=True, blank=True)
     investigator_email = models.CharField(max_length=200, null=True, blank=True)
     investigator_name = models.CharField(max_length=200, null=True, blank=True)
     version = models.IntegerField()
@@ -97,6 +98,7 @@ class Sample(BaseModel):
     sample_class = models.CharField(max_length=30, null=True, blank=True)
     igo_qc_notes = models.TextField(default="")
     cas_qc_notes = models.TextField(default="")
+    request_id = models.CharField(max_length=100, null=True, blank=True)
     redact = models.BooleanField(default=False, null=False)
     version = models.IntegerField()
     latest = models.BooleanField()
@@ -140,6 +142,7 @@ class Sample(BaseModel):
 class Patient(BaseModel):
     patient_id = models.CharField(max_length=100, null=True, blank=True)
     sex = models.CharField(max_length=30, null=True, blank=True)
+    samples = ArrayField(models.CharField(max_length=100), default=list)
     version = models.IntegerField()
     latest = models.BooleanField()
 
@@ -212,9 +215,19 @@ class File(BaseModel):
     size = models.BigIntegerField()
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     checksum = models.CharField(max_length=50, blank=True, null=True)
-    request = models.ForeignKey(Request, null=True, on_delete=models.SET_NULL)
+    request_id = models.CharField(max_length=100, null=True, blank=True)
     sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
-    patient = models.ForeignKey(Patient, null=True, on_delete=models.SET_NULL)
+    samples = ArrayField(models.CharField(max_length=100), default=list)
+    patient_id = models.CharField(max_length=100, null=True, blank=True)
+
+    def get_request(self):
+        return Request.objects.filter(request_id=self.request_id, latest=True).first()
+
+    def get_patient(self):
+        return Patient.objects.filter(patient_id=self.patient_id, latest=True).first()
+
+    def get_samples(self):
+        return Sample.objects.filter(sample_id__in=self.samples, latest=True).all()
 
     def save(self, *args, **kwargs):
         if not self.size:
@@ -237,6 +250,121 @@ class FileMetadata(BaseModel):
     metadata = JSONField(default=dict)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
+    def create_or_update_request(self, request_id, lab_head_name, investigator_email, investigator_name):
+        with transaction.atomic():
+            latest = Request.objects.filter(request_id=request_id, latest=True).first()
+            current = {
+                "request_id": request_id,
+                "lab_head_name": lab_head_name,
+                "investigator_email": investigator_email,
+                "investigator_name": investigator_name,
+            }
+            if latest:
+                latest_dict = {
+                    "request_id": latest.request_id,
+                    "lab_head_name": latest.lab_head_name,
+                    "investigator_email": latest.investigator_email,
+                    "investigator_name": latest.investigator_name,
+                }
+                if DeepDiff(current, latest_dict, ignore_order=True):
+                    request = Request.objects.create(
+                        request_id=request_id,
+                        lab_head_name=lab_head_name,
+                        investigator_email=investigator_email,
+                        investigator_name=investigator_name,
+                    )
+                else:
+                    request = latest
+            else:
+                request = Request.objects.create(
+                    request_id=request_id,
+                    lab_head_name=lab_head_name,
+                    investigator_email=investigator_email,
+                    investigator_name=investigator_name,
+                )
+            return request
+
+    def create_or_update_sample(self,
+                                sample_id,
+                                cmo_sample_name,
+                                sample_name,
+                                sample_type,
+                                tumor_or_normal,
+                                sample_class,
+                                request):
+        with transaction.atomic():
+            latest = Sample.objects.filter(sample_id=sample_id, latest=True).first()
+            current = {
+                "sample_id": sample_id,
+                "cmo_sample_name": cmo_sample_name,
+                "sample_name": sample_name,
+                "sample_type": sample_type,
+                "tumor_or_normal": tumor_or_normal,
+                "sample_class": sample_class,
+                "request": request
+            }
+            if latest:
+                latest_dict = {
+                    "sample_id": latest.sample_id,
+                    "cmo_sample_name": latest.cmo_sample_name,
+                    "sample_name": latest.sample_name,
+                    "sample_type": latest.sample_type,
+                    "tumor_or_normal": latest.tumor_or_normal,
+                    "sample_class": latest.sample_class,
+                    "request": str(latest.request_id)
+                }
+                if DeepDiff(current, latest_dict, ignore_order=True):
+                    sample = Sample.objects.create(
+                        sample_id=sample_id,
+                        cmo_sample_name=cmo_sample_name,
+                        sample_name=sample_name,
+                        sample_type=sample_type,
+                        tumor_or_normal=tumor_or_normal,
+                        sample_class=sample_class,
+                        request_id=request
+                    )
+                else:
+                    sample = latest
+            else:
+                sample = Sample.objects.create(
+                    sample_id=sample_id,
+                    cmo_sample_name=cmo_sample_name,
+                    sample_name=sample_name,
+                    sample_type=sample_type,
+                    tumor_or_normal=tumor_or_normal,
+                    sample_class=sample_class,
+                    request_id=request
+                )
+            return sample
+
+    def create_or_update_patient(self, patient_id, sex, sample):
+        with transaction.atomic():
+            latest = Patient.objects.filter(patient_id=patient_id, latest=True).first()
+            current = {
+                "patient_id": patient_id,
+                "sex": sex,
+            }
+            if latest:
+                latest_dict = {
+                    "patient_id": latest.patient_id,
+                    "sex": latest.sex,
+                }
+                if DeepDiff(current, latest_dict, ignore_order=True):
+                    patient = Patient.objects.create(
+                        patient_id=patient_id,
+                        sex=sex
+                    )
+                else:
+                    patient = latest
+            else:
+                patient = Patient.objects.create(
+                    patient_id=patient_id,
+                    sex=sex
+                )
+            if sample not in patient.samples:
+                patient.samples.append(sample)
+            return patient
+
     def save(self, *args, **kwargs):
         do_not_version = kwargs.pop("do_not_version", False)
         # Skip updating Request, Sample or Patient objects
@@ -258,55 +386,32 @@ class FileMetadata(BaseModel):
 
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
             sex = self.metadata.get(settings.SEX_METADATA_KEY)
-
             assay = self.metadata.get(settings.RECIPE_METADATA_KEY, "")
-            populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
+            # populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
 
             if request_id:
-                request, _ = Request.objects.get_or_create(
-                    request_id=request_id,
-                    defaults={
-                        "lab_head_name": lab_head_name,
-                        "investigator_email": investigator_email,
-                        "investigator_name": investigator_name,
-                    },
-                )
-                if not (_ or skip_request_sample_patient_update):
-                    request.lab_head_name = lab_head_name
-                    request.investigator_email = investigator_email
-                    request.investigator_name = investigator_name
-                    request.save()
-                self.file.request = request
-                self.file.save(update_fields=("request",))
+                request = self.create_or_update_request(request_id,
+                                                        lab_head_name,
+                                                        investigator_email,
+                                                        investigator_name)
+                self.file.request_id = request_id
+                self.file.save(update_fields=("request_id",))
 
             if sample_id:
-                sample, _ = Sample.objects.get_or_create(
-                    sample_id=sample_id,
-                    defaults={
-                        "cmo_sample_name": cmo_sample_name,
-                        "sample_name": sample_name,
-                        "sample_type": sample_type,
-                        "tumor_or_normal": tumor_or_normal,
-                        "sample_class": sample_class,
-                    },
-                )
-                self.file.sample = sample
-                if not (_ or skip_request_sample_patient_update):
-                    sample.sample_name = sample_name
-                    sample.cmo_sample_name = cmo_sample_name
-                    sample.sample_type = sample_type
-                    sample.tumor_or_normal = tumor_or_normal
-                    sample.sample_class = sample_class
-                    sample.save()
-                self.file.save(update_fields=("sample",))
+                sample = self.create_or_update_sample(sample_id,
+                                                      cmo_sample_name,
+                                                      sample_name,
+                                                      sample_type,
+                                                      tumor_or_normal,
+                                                      sample_class,
+                                                      request_id)
+                if sample_id not in self.file.samples:
+                    self.file.samples.append(sample_id)
 
             if patient_id:
-                patient, _ = Patient.objects.get_or_create(patient_id=patient_id, defaults={"sex": sex})
-                if not (_ or skip_request_sample_patient_update):
-                    patient.sex = sex
-                    patient.save()
-                self.file.patient = patient
-                self.file.save(update_fields=("patient",))
+                patient = self.create_or_update_patient(patient_id, sex, sample_id)
+                self.file.patient_id = patient_id
+                self.file.save(update_fields=("patient_id",))
 
             versions = FileMetadata.objects.filter(file_id=self.file.id).values_list("version", flat=True)
             version = max(versions) + 1 if versions else 0

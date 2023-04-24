@@ -293,15 +293,16 @@ class AccessLegacySNVOperator(Operator):
         capture_id = None
         sample_ids = []
         sample_fastq = FileRepository.filter(
-            file_type="fastq", metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id},
-            filter_redact=True
+            file_type="fastq", metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: tumor_sample_id}, filter_redact=True
         )
         if len(sample_fastq) >= 1:
             capture_id = sample_fastq[0].metadata["captureName"]
 
             if capture_id:
                 # Get samples IDs from this capture from fastqs with this capture ID
-                sample_id_fastqs = FileRepository.filter(file_type="fastq", metadata={"captureName": capture_id},filter_redact=True)
+                sample_id_fastqs = FileRepository.filter(
+                    file_type="fastq", metadata={"captureName": capture_id}, filter_redact=True
+                )
                 sample_ids = list(set([f.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] for f in sample_id_fastqs]))
                 # Don't double-genotype the main sample
                 sample_ids.remove(tumor_sample_id)

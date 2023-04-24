@@ -15,7 +15,6 @@ from .models import (
 )
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
-from beagle_etl.tasks import process_smile_message
 
 
 def restart(modeladmin, request, queryset):
@@ -96,17 +95,17 @@ class AssayAdmin(ModelAdmin):
         return False
 
 
-def action_process_messages(modeladmin, request, queryset):
-    for job in queryset:
-        process_smile_message(job)
-
-
-action_process_messages.short_description = "Process SMILE messages"
+# def action_process_messages(modeladmin, request, queryset):
+#     for job in queryset:
+#         process_smile_message(job)
+#
+#
+# action_process_messages.short_description = "Process SMILE messages"
 
 
 class SMILEMessagesAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
     list_filter = ("request_id", "topic", "status")
-    actions = (action_process_messages,)
+    # actions = (action_process_messages,)
     advanced_filter_fields = ("request_id", "topic", "status")
     ordering = ("-created_date",)
     list_display = ("created_date", "request_id", "topic", "status")

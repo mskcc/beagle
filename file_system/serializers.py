@@ -144,7 +144,7 @@ class FileSerializer(serializers.ModelSerializer):
 
     def get_redacted(self, obj):
         if obj.file.sample:
-            return obj.file.sample.redact
+            return obj.file.sample.first().redact
         return "No sample associated with file"
 
     class Meta:
@@ -529,3 +529,6 @@ class CopyFilesSerializer(serializers.Serializer):
         if not request_id and not primary_id:
             raise serializers.ValidationError("Either request_id or primary_id input is required.")
         return data
+
+class manifestSerializer(serializers.Serializer):
+    request_id = serializers.ListField(child=serializers.CharField(), required=True)

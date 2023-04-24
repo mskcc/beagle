@@ -27,6 +27,7 @@ from notifier.events import (
     OnlyNormalSamplesEvent,
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
+    SMILEUpdateEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
@@ -80,6 +81,24 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
             job_group_notifier=job_group_notifier,
             delay=delay,
         )
+
+
+def request_update_notification(request_id):
+    last = SMILEMessage.objects.filter(request_id__startswith=request_id).order_by("-created_date")
+    if last.topic in (settings.METADB_NATS_REQUEST_UPDATE, settings.METADB_NATS_SAMPLE_UPDATE):
+        logger.info(f"Sending notifications about {request_id} update")
+        send_to = get_emails_to_notify(request_id)
+        for email in send_to:
+            event = SMILEUpdateEvent(
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject=f"SMILE sent update for request {request_id}",
+                request_id=request_id,
+            ).to_dict()
+            send_notification.delay(event)
+    else:
+        logger.info(f"SMILE sent new project {request_id}")
 
 
 @shared_task
@@ -244,6 +263,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     except JobGroupNotifier.DoesNotExist:
         job_group_notifier = None
 
+    request_update_notification(request_id)
+
     if recipe in settings.WES_ASSAYS:
         for job in sample_jobs:
             if job["igocomplete"] and job["status"] != "COMPLETED":
@@ -319,7 +340,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         send_to = get_emails_to_notify(request_id)
         for email in send_to:
             event = VoyagerCantProcessRequestAllNormalsEvent(
-                job_notifier=str(job_group.id),
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
@@ -371,13 +392,13 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 @shared_task
 def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    data = json.loads(message.message)[0]
-    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+    metadata = json.loads(message.message)[-1]
+    data = json.loads(metadata["requestMetadataJson"])
+    request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
-    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
-    recipe = data.get(settings.RECIPE_METADATA_KEY)
-
+    project_id = data.get("projectId")
+    recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     job_group = JobGroup()
     job_group.save()
     job_group_notifier_id = notifier_start(job_group, request_id)
@@ -418,7 +439,7 @@ def update_request_job(message_id):
     samples = list()
     sample_status_list = list()
     for f in files:
-        new_metadata = f.metadata
+        new_metadata = copy.deepcopy(f.metadata)
         new_metadata.update(request_metadata)
         if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
@@ -440,13 +461,55 @@ def update_request_job(message_id):
         send_notification.delay(diff_details_event)
         update_file_object(f.file, f.file.path, new_metadata)
 
+    pooled_normal = data.get("pooledNormals", [])
+    if pooled_normal is None:
+        pooled_normal = []
+    pooled_normal_jobs = []
+    for pn in pooled_normal:
+        try:
+            create_pooled_normal(pn, str(settings.POOLED_NORMAL_FILE_GROUP))
+        except Exception as e:
+            pooled_normal_jobs.append(
+                {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
+            )
+        else:
+            pooled_normal_jobs.append(
+                {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
+            )
+
     _generate_ticket_description(
-        request_id, str(job_group.id), job_group_notifier_id, sample_status_list, [], request_metadata
+        request_id, str(job_group.id), job_group_notifier_id, sample_status_list, pooled_normal_jobs, request_metadata
     )
 
     message.status = SmileMessageStatus.COMPLETED
     message.save()
     create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier)
+
+
+@shared_task
+def update_job(request_id):
+    sample_update_messages = (
+        SMILEMessage.objects.filter(
+            request_id__startswith=request_id,
+            topic=settings.METADB_NATS_SAMPLE_UPDATE,
+            status=SmileMessageStatus.PENDING,
+        )
+        .order_by("created_date")
+        .all()
+    )
+    request_update_messages = (
+        SMILEMessage.objects.filter(
+            request_id__startswith=request_id,
+            topic=settings.METADB_NATS_REQUEST_UPDATE,
+            status=SmileMessageStatus.PENDING,
+        )
+        .order_by("created_date")
+        .all()
+    )
+    for msg in sample_update_messages:
+        update_sample_job(str(msg.id))
+    for msg in request_update_messages:
+        update_request_job(str(msg.id))
 
 
 @shared_task
@@ -457,6 +520,7 @@ def update_sample_job(message_id):
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
     file_paths = [f.file.path for f in files]
+    new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
     request_id = latest.get("igoRequestId")
     igocomplete = latest.get("igoComplete")
@@ -533,6 +597,7 @@ def update_sample_job(message_id):
     request_metadata["baitSet"] = latest.get("baitSet")
     request_metadata["qcReports"] = latest.get("qcReports")
     request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
+    request_metadata[settings.RECIPE_METADATA_KEY] = latest.get(settings.RECIPE_METADATA_KEY)
     request_metadata["igoComplete"] = igocomplete
 
     logger.info("Parsing sample: %s" % primary_id)
@@ -549,7 +614,7 @@ def update_sample_job(message_id):
                     new_path = CopyService.remap(recipe, fastq)
                     f = FileRepository.filter(path=new_path).first()
                     if f:
-                        new_metadata = f.metadata
+                        new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
                         fastq,
@@ -563,6 +628,7 @@ def update_sample_job(message_id):
                         request_metadata,
                         R1_or_R2(fastq),
                     )
+                    new_files.append(fastq)
                     ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
                     msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
@@ -575,6 +641,12 @@ def update_sample_job(message_id):
                 except Exception as e:
                     logger.error(e)
 
+    # Remove unnecessary files
+    files_to_remove = set(file_paths) - set(new_files)
+    for fi in list(files_to_remove):
+        logger.info(f"Removing file {fi}.")
+        File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
+
     message.status = SmileMessageStatus.COMPLETED
     message.save()
     sample_status = {
@@ -585,7 +657,6 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier, delay=60)
 
 
 @shared_task
@@ -643,7 +714,10 @@ def create_pooled_normal(filepath, file_group_id):
     try:
         File.objects.get(path=filepath)
     except File.DoesNotExist:
-        logger.info("Pooled normal already created filepath")
+        logger.info(f"Creating pooled normal with path {filepath}")
+    else:
+        logger.info(f"Pooled normal with path {filepath} already exists")
+        return
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name="fastq").first()
     assays = ETLConfiguration.objects.first()

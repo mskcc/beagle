@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "beagle_etl.apps.BeagleEtlConfig",
     "file_system.apps.FileSystemConfig",
     "notifier.apps.NotifierConfig",
+    "study.apps.StudyConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -426,6 +427,7 @@ PATIENT_ID_METADATA_KEY = "cmoPatientId"
 LAB_HEAD_NAME_METADATA_KEY = "labHeadName"
 INVESTIGATOR_NAME_METADATA_KEY = "investigatorName"
 INVESTIGATOR_EMAIL_METADATA_KEY = "investigatorEmail"
+LIMS_RECIPE_METADATA_KEY = "recipe"
 RECIPE_METADATA_KEY = "genePanel"
 ONCOTREE_METADATA_KEY = "oncotreeCode"
 IGO_COMPLETE_METADATA_KEY = "igoComplete"
