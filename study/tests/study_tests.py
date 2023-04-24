@@ -100,3 +100,7 @@ class TestStudy(APITestCase):
         run_ids = study.run_ids
         self.assertEqual(list(run_ids.keys()), ['Argos'])
         self.assertEqual(len(run_ids['Argos']), 2)
+
+    def test_project_prefixes(self):
+        study = StudyObject.from_db(self.study.study_id)
+        study.project_prefixes
