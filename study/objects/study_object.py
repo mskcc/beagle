@@ -45,12 +45,10 @@ class StudyObject(object):
 
     @property
     def project_prefixes(self):
-        result = set()
+        result = dict()
         for pipeline, runs in self.run_ids.items():
-            project_prefixes = runs.keys()
-            for pp in project_prefixes:
-                result.add(pp)
-        return list(result)
+            result[pipeline] = list(runs.keys())
+        return result
 
     def _latest(self, runs):
         result = dict()
