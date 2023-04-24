@@ -187,9 +187,13 @@ class PortAdmin(admin.ModelAdmin):
         return False
 
 
+class PipelineNameAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
 admin.site.register(Run, RunAdmin)
 admin.site.register(Port, PortAdmin)
-admin.site.register(PipelineName)
+admin.site.register(PipelineName, PipelineNameAdmin)
 admin.site.register(Pipeline, PipelineAdmin)
 admin.site.register(ExecutionEvents)
 admin.site.register(OperatorRun, OperatorRunAdmin)
