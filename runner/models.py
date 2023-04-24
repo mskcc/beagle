@@ -3,7 +3,7 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.db.models import F
-from file_system.models import File, FileGroup, Sample
+from file_system.models import File, FileGroup, Sample, Request
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
@@ -42,7 +42,7 @@ class TriggerAggregateConditionType(IntEnum):
 
 
 class BaseModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
 
@@ -50,10 +50,15 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class PipelineName(models.Model):
+    name = models.CharField(max_length=30, null=False, blank=False)
+
+
 class Pipeline(BaseModel):
     pipeline_type = models.IntegerField(
         choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=ProtocolType.CWL
     )
+    pipeline_name = models.ForeignKey(PipelineName, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100, editable=True)
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
@@ -191,6 +196,7 @@ class Run(BaseModel):
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     notify_for_outputs = ArrayField(models.CharField(max_length=40, blank=True, null=True))
     samples = models.ManyToManyField(Sample)
+    requests = models.ManyToManyField(Request)
     started = models.DateTimeField(blank=True, null=True)
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)

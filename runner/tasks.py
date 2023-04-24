@@ -474,6 +474,14 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["memlimit"] = run.app.memlimit
     if run.app.output_permission:
         job["root_permission"] = run.app.output_permission
+
+    job["metadata"] = dict()
+    job["metadata"]["run_id"] = run_id
+    job["metadata"]["pipeline_id"] = str(run.app.id)
+    job["metadata"][
+        "pipeline_link"
+    ] = f"{run1.run_obj.app.github}/blob/{run1.run_obj.app.version}/{run1.run_obj.app.entrypoint}"
+
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
@@ -593,7 +601,10 @@ def _upload_qc_report(run):
     operator = OperatorFactory.get_by_model(
         run.operator_run.operator, job_group_id=run.job_group_id, job_group_notifier_id=run.job_group_notifier_id
     )
-    operator.on_job_fail(run)
+    try:
+        operator.on_job_fail(run)
+    except Exception as e:
+        logger.error("Operator on_job_fail failed", e)
 
 
 def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
@@ -601,6 +612,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
     pipeline_name = run.run_obj.app.name
+    pipeline_version = run.run_obj.app.version
     pipeline_link = run.run_obj.app.pipeline_link
 
     if run.run_obj.operator_run:
@@ -623,6 +635,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
         str(run.run_id),
         pipeline_name,
+        pipeline_version,
         pipeline_link,
         run.run_obj.output_directory,
         RunStatus(run.status).name,
@@ -634,6 +647,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         operator_run_id,
         lsf_log_location,
         input_json_location,
+        str(run.run_obj.job_group.id),
     )
     e = event.to_dict()
     send_notification.delay(e)

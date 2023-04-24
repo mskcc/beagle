@@ -73,9 +73,10 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         ]
 
     def get_qc_outputs(self):
-        # Test case for if user passed run id, or not
+        # was the pipeline triggered from a chaining operator (runs) or executed with the api via the request id
         if not self.request_id:
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
+            self.request_id = most_recent_runs_for_request[0].tags['igoRequestId']
         else:
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
