@@ -77,16 +77,19 @@ class AionOperator(Operator):
         input_json["study_id"] = study_id
         input_json["project_title"] = "CMO Merged Study for Principal Investigator (%s)" % study_id
 
-        for run_id in run_ids:
-            run = Run.objects.get(id=run_id)
-            if 'helix_filters' in run.app.name:
-                run_portal_dir = os.path.join(run.output_directory, "portal")
-                if os.path.isdir(run_portal_dir):
-                    directories.add(run_portal_dir)
-            if 'ultron' in run.app.name:
-                output_dir = run.output_directory
-                if os.path.isdir(output_dir):
-                    directories.add(output_dir)
+        for app_name in run_ids:
+            run_list = run_ids[app_name].values()
+            if app_name == "Helix Filters":
+                for single_helix_run in run_list:
+                    run_portal_dir = os.path.join(single_helix_run.output_directory, "portal")
+                    if os.path.isdir(run_portal_dir):
+                        directories.add(run_portal_dir)
+            if app_name == "Ultron":
+                for single_ultron_run in run_list:
+                    output_dir = single_ultron_run.output_directory
+                    if os.path.isdir(output_dir):
+                        directories.add(output_dir)
+
         input_json["directories"] = list()
         input_json["sample_data_clinical_files"] = [create_data_clinical_file(run_ids, dmp_samples)]
         for portal_directory in directories:
