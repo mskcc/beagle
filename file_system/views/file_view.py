@@ -25,6 +25,7 @@ from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
 import csv 
 from django.http import HttpResponse
+import re 
 
 class FileView(
     mixins.CreateModelMixin,
@@ -286,7 +287,7 @@ class manifest(GenericAPIView):
     pagination_class=None  # We don't need pagination
     serializer_class = manifestSerializer
     # headers for returned csv 
-    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpSampleInfo', 'dmpPatientId','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
+    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpPatientId','dmpImpactSamples', 'dmpAccessSamples','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
     # varibales we want from the request metadata
     request_keys = ['igoRequestId', 'primaryId', 'cmoSampleIdFields', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
 
@@ -315,17 +316,21 @@ class manifest(GenericAPIView):
                 if  pId not in primaryIds: # we haven't seen the Primary Id 
                     primaryIds.add(pId)
                     fastq_meta = {k: fastq[k] for k in fastq.keys() & self.request_keys}
-                    fastq_meta['dmpSampleInfo'] = None
+                    fastq_meta['dmpImpactSamples'] = None
+                    fastq_meta['dmpAccessSamples'] = None
                     fastq_meta['dmpPatientId'] = None 
                     # look up cmopatient in dmp query set 
                     patient_id = fastq_meta['cmoPatientId'].replace('C-','')
                     dmp_meta = pDmps.filter(metadata__patient__cmo=patient_id)
                     if dmp_meta.exists():
-                        dmpsampleinfo = [dmp.metadata['sample'] for dmp in dmp_meta]
+                        dmpImpactSamples = [dmp.metadata['sample'] for dmp in dmp_meta if re.match(r'^P-.*-.*-I.*', dmp.metadata['sample'])]
+                        dmpAccessSamples = [dmp.metadata['sample'] for dmp in dmp_meta if re.match(r'^P-.*-.*-X.*', dmp.metadata['sample'])]
                         # add dmp data to request data, building up in csv
-                        dmpsampleinfo = ';'.join(dmpsampleinfo)
+                        dmpImpactSamples = ';'.join(dmpImpactSamples)
+                        dmpAccessSamples = ';'.join(dmpAccessSamples)
                         dmppatientid = dmp_meta[0].metadata['patient']['dmp']
-                        fastq_meta['dmpSampleInfo'] = dmpsampleinfo
+                        fastq_meta['dmpImpactSamples'] = dmpImpactSamples
+                        fastq_meta['dmpAccessSamples'] = dmpAccessSamples
                         fastq_meta['dmpPatientId'] = dmppatientid
                     writer.writerow(fastq_meta)
             return response
