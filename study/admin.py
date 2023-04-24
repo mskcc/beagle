@@ -5,11 +5,8 @@ from study.models import Study
 class StudyAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "study_id",
-        "requests",
-        "samples"
+        "study_id"
     )
-    ordering = ("-created_date",)
 
 
 admin.site.register(Study, StudyAdmin)
