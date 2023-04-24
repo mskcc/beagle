@@ -92,7 +92,7 @@ class AionOperator(Operator):
                     if os.path.isdir(output_dir):
                         directories.add(output_dir)
             if app_name == "Argos":
-                argos_runs = run_ids[app_name].values()
+                argos_runs = run_list
 
         input_json["directories"] = list()
         input_json["sample_data_clinical_files"] = [self.create_data_clinical_file(argos_runs, dmp_samples)]
