@@ -95,6 +95,7 @@ class AionOperator(Operator):
                 argos_runs = run_list
 
         input_json["directories"] = list()
+        input_json["output_directory"] = study_id
         input_json["sample_data_clinical_files"] = [self.create_data_clinical_file(argos_runs, dmp_samples)]
         for portal_directory in directories:
             input_json["directories"].append({"class": "Directory", "path": portal_directory})
