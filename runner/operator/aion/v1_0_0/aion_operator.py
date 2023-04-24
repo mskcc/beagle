@@ -31,7 +31,7 @@ class AionOperator(Operator):
         for study_obj in study_objects:
             run_ids = study_obj.run_ids
             study_id = study_obj.study_id
-            project_prefixes = study_obj.project_prefixes
+            project_prefixes = study_obj.project_prefixes['Argos']
             dmp_samples = self._get_dmp_samples(study_obj)
 
             number_of_runs = len(run_ids)
