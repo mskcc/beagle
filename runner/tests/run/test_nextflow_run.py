@@ -3,7 +3,7 @@ from mock import patch
 from rest_framework.test import APITestCase
 from runner.run.objects.nextflow.nextflow_run_object import NextflowRunObject
 from runner.run.objects.nextflow.nextflow_port_object import NextflowPortObject
-from runner.models import Run, ProtocolType, RunStatus, Pipeline, PortType, Port
+from runner.models import Run, ProtocolType, RunStatus, Pipeline, PortType, Port, Sample
 from file_system.models import FileGroup, File, FileType, FileExtension
 
 
@@ -31,12 +31,36 @@ class NextflowRunObjectTest(APITestCase):
         )
         self.fastq_type = FileType.objects.create(name="fastq")
         self.fastq_ext = FileExtension.objects.create(extension="fastq", file_type=self.fastq_type)
+        self.sample_tumor = Sample.objects.create(
+            sample_id="SAMPLE-TUMOR-001",
+            sample_name="P-SAMPLE-TUMOR-001-WES",
+            cmo_sample_name="C_SAMPLE_TUMOR_001",
+            sample_type="Metastasis",
+            tumor_or_normal="Tumor",
+            sample_class="Blood",
+        )
+        self.sample_normal = Sample.objects.create(
+            sample_id="SAMPLE-NORMAL-001",
+            sample_name="P-SAMPLE-NORMAL-001-WES",
+            cmo_sample_name="C_SAMPLE_NORMAL_001",
+            sample_type="Normal",
+            tumor_or_normal="Normal",
+            sample_class="Blood",
+        )
         self.file_1 = File.objects.create(path="/path/to/file_1.fastq", file_group=self.nxf_file_group)
         self.file_2 = File.objects.create(path="/path/to/file_2.fastq", file_group=self.nxf_file_group)
         self.file_a_1 = File.objects.create(path="/path/to/file_a_1.fastq", file_group=self.nxf_file_group)
+        self.file_a_1.samples.append(self.sample_tumor.sample_id)
+        self.file_a_1.save()
         self.file_a_2 = File.objects.create(path="/path/to/file_a_2.fastq", file_group=self.nxf_file_group)
+        self.file_a_2.samples.append(self.sample_tumor.sample_id)
+        self.file_a_2.save()
         self.file_b_1 = File.objects.create(path="/path/to/file_b_1.fastq", file_group=self.nxf_file_group)
+        self.file_b_1.samples.append(self.sample_normal.sample_id)
+        self.file_b_1.save()
         self.file_b_2 = File.objects.create(path="/path/to/file_b_2.fastq", file_group=self.nxf_file_group)
+        self.file_b_2.samples.append(self.sample_normal.sample_id)
+        self.file_b_2.save()
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_port_from_definition(self, get_pipeline):
@@ -78,21 +102,21 @@ sample_id\tassay_value\ttarget_value\t/path/to/file_1.fastq\t/path/to/file_2.fas
         input_dict = {
             "mapping": [
                 {
-                    "sample": "sample_id_a",
+                    "sample": "SAMPLE-TUMOR-001",
                     "assay": "assay_value",
                     "target": "target_value",
                     "fastq_pe1": {"class": "File", "location": "juno:///path/to/file_a_1.fastq"},
                     "fastq_pe2": {"class": "File", "location": "juno:///path/to/file_a_2.fastq"},
                 },
                 {
-                    "sample": "sample_id_b",
+                    "sample": "SAMPLE-NORMAL-001",
                     "assay": "assay_value",
                     "target": "target_value",
                     "fastq_pe1": {"class": "File", "location": "juno:///path/to/file_b_1.fastq"},
                     "fastq_pe2": {"class": "File", "location": "juno:///path/to/file_b_2.fastq"},
                 },
             ],
-            "pairing": [{"tumor": "TUMOR_1", "normal": "NORMAL_1"}],
+            "pairing": [{"tumor": "SAMPLE-TUMOR-001", "normal": "SAMPLE-NORMAL-001"}],
         }
         run = Run.objects.create(
             app=self.pipeline,
@@ -107,12 +131,12 @@ sample_id\tassay_value\ttarget_value\t/path/to/file_1.fastq\t/path/to/file_2.fas
         run.refresh_from_db()
         mapping = Port.objects.get(name="mapping")
         template_value_mapping = """SAMPLE\tASSAY\tTARGET\tFASTQ_PE1\tFASTQ_PE2
-sample_id_a\tassay_value\ttarget_value\t/path/to/file_a_1.fastq\t/path/to/file_a_2.fastq
-sample_id_b\tassay_value\ttarget_value\t/path/to/file_b_1.fastq\t/path/to/file_b_2.fastq
+SAMPLE-TUMOR-001\tassay_value\ttarget_value\t/path/to/file_a_1.fastq\t/path/to/file_a_2.fastq
+SAMPLE-NORMAL-001\tassay_value\ttarget_value\t/path/to/file_b_1.fastq\t/path/to/file_b_2.fastq
 """
         pairing = Port.objects.get(name="pairing")
         template_value_pairing = """NORMAL_ID\tTUMOR_ID
-NORMAL_1\tTUMOR_1
+SAMPLE-NORMAL-001\tSAMPLE-TUMOR-001
 """
         self.assertEqual(mapping.value, template_value_mapping)
         self.assertEqual(pairing.value, template_value_pairing)
@@ -122,6 +146,7 @@ NORMAL_1\tTUMOR_1
         self.assertEqual(run_from_db.run_type, ProtocolType.NEXTFLOW)
         self.assertEqual(len(run_from_db.inputs), 3)
         self.assertEqual(len(run_from_db.outputs), 1)
+        self.assertEqual(len(run_from_db.samples), 2)
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_run_dump_job(self, get_pipeline):
