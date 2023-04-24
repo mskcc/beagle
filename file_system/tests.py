@@ -136,17 +136,23 @@ class FileTest(APITestCase):
                 "metadata": {
                     settings.REQUEST_ID_METADATA_KEY: "Request_001",
                     settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
                 },
             },
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["file_name"], "file.fasta")
-        try:
-            sample = Sample.objects.get(sample_id="igoSampleId_001")
-        except Sample.DoesNotExist:
-            sample = None
-        self.assertIsNotNone(sample)
+        self.assertEqual(Sample.objects.filter(sample_id="igoSampleId_001").count(), 1)
+        self.assertEqual(Request.objects.filter(request_id="Request_001").count(), 1)
+        self.assertEqual(Patient.objects.filter(patient_id="Patient_001").count(), 1)
 
     def test_create_file_successful_2(self):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
@@ -160,6 +166,14 @@ class FileTest(APITestCase):
                 "metadata": {
                     settings.REQUEST_ID_METADATA_KEY: "Request_001",
                     settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
                 },
             },
             format="json",
@@ -175,11 +189,133 @@ class FileTest(APITestCase):
                 "metadata": {
                     settings.REQUEST_ID_METADATA_KEY: "Request_001",
                     settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
                 },
             },
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Sample.objects.filter(sample_id="igoSampleId_001").count(), 1)
+        self.assertEqual(Request.objects.filter(request_id="Request_001").count(), 1)
+        self.assertEqual(Patient.objects.filter(patient_id="Patient_001").count(), 1)
+
+    def test_crete_files_count_sample_patient_request(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file_R1.fastq",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file_R2.fastq",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Sample.objects.filter(sample_id="igoSampleId_001").count(), 1)
+        self.assertEqual(Request.objects.filter(request_id="Request_001").count(), 1)
+        self.assertEqual(Patient.objects.filter(patient_id="Patient_001").count(), 1)
+
+    def test_create_file_with_update_request_metadata(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file_R1.fastq",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.PATIENT_ID_METADATA_KEY: "Patient_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        file_id_1 = response.json()['id']
+        response = self.client.post(
+            "/v0/fs/files/",
+            {
+                "path": "/path/to/file_R2.fastq",
+                "size": 1234,
+                "file_group": str(self.file_group.id),
+                "file_type": self.file_type_fasta.name,
+                "metadata": {
+                    settings.REQUEST_ID_METADATA_KEY: "Request_001",
+                    settings.SAMPLE_ID_METADATA_KEY: "igoSampleId_001",
+                    settings.SAMPLE_NAME_METADATA_KEY: "sampleName_001",
+                    settings.CMO_SAMPLE_NAME_METADATA_KEY: "cmoSampleName_001",
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                    settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
+                    settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName new",
+                    settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        file_id_2 = response.json()['id']
+        self.assertEqual(Sample.objects.filter(sample_id="igoSampleId_001").count(), 1)
+        self.assertEqual(Request.objects.filter(request_id="Request_001").count(), 2)
+        self.assertEqual(Patient.objects.filter(patient_id="Patient_001").count(), 1)
+        file_1 = File.objects.get(id=file_id_1)
+        file_2 = File.objects.get(id=file_id_2)
+        request = Request.objects.get(request_id="Request_001", latest=True)
+        self.assertEqual(str(file_1.get_request().pk), str(request.id))
+        self.assertEqual(str(file_2.get_request().pk), str(request.id))
+        self.assertEqual(file_1.get_request().lab_head_name, "labHeadName new")
+        self.assertEqual(file_2.get_request().lab_head_name, "labHeadName new")
 
     def test_create_file_unknown_file_type(self):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
@@ -360,10 +496,10 @@ class FileTest(APITestCase):
         self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
 
         _file.refresh_from_db()
-        self.assertEqual(_file.request.request_id, "Request_001")
-        self.assertEqual(_file.patient.patient_id, "Patient_001")
-        self.assertEqual(_file.sample.tumor_or_normal, "Tumor")
-        self.assertEqual(_file.request.investigator_name, "Investigator Name")
+        self.assertEqual(_file.get_request().request_id, "Request_001")
+        self.assertEqual(_file.get_patient().patient_id, "Patient_001")
+        self.assertEqual(_file.get_samples().first().tumor_or_normal, "Tumor")
+        self.assertEqual(_file.get_request().investigator_name, "Investigator Name")
 
     def test_patch_file_metadata(self):
         _file = self._create_single_file(
@@ -493,7 +629,7 @@ class FileTest(APITestCase):
         self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_001")
 
         _file.refresh_from_db()
-        self.assertEqual(_file.request.request_id, "Request_001")
+        self.assertEqual(_file.get_request().request_id, "Request_001")
 
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt(username=user2.username))
         response = self.client.put(
@@ -516,7 +652,7 @@ class FileTest(APITestCase):
         self.assertEqual(response.data["metadata"][settings.REQUEST_ID_METADATA_KEY], "Request_002")
 
         _file.refresh_from_db()
-        self.assertEqual(_file.request.request_id, "Request_002")
+        self.assertEqual(_file.get_request().request_id, "Request_002")
 
         # Check listing files as well
         response = self.client.get(
