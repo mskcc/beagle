@@ -287,9 +287,9 @@ class manifest(GenericAPIView):
     pagination_class=None  # We don't need pagination
     serializer_class = manifestSerializer
     # headers for returned csv 
-    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'cmoSampleIdFields', 'dmpPatientId','dmpImpactSamples', 'dmpAccessSamples','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
+    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'dmpPatientId','dmpImpactSamples', 'dmpAccessSamples','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
     # varibales we want from the request metadata
-    request_keys = ['igoRequestId', 'primaryId', 'cmoSampleIdFields', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
+    request_keys = ['igoRequestId', 'primaryId', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
 
     def construct_csv(self, request_query, pDmps, request_ids):
             """
@@ -316,9 +316,9 @@ class manifest(GenericAPIView):
                 if  pId not in primaryIds: # we haven't seen the Primary Id 
                     primaryIds.add(pId)
                     fastq_meta = {k: fastq[k] for k in fastq.keys() & self.request_keys}
-                    fastq_meta['dmpImpactSamples'] = None
-                    fastq_meta['dmpAccessSamples'] = None
-                    fastq_meta['dmpPatientId'] = None 
+                    for key in self.request_keys:
+                        if fastq_meta.get(key) is None:
+                            fastq_meta[key] = None
                     # look up cmopatient in dmp query set 
                     patient_id = fastq_meta['cmoPatientId'].replace('C-','')
                     dmp_meta = pDmps.filter(metadata__patient__cmo=patient_id)
