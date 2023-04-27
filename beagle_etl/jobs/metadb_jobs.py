@@ -65,6 +65,8 @@ from beagle_etl.copy_service import CopyService
 from beagle_etl.jobs.helper_jobs import check_file_permissions
 from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
+from study.models import Study
+from study.objects import StudyObject
 
 
 logger = logging.getLogger(__name__)
@@ -174,6 +176,8 @@ def new_request(message_id):
     data_access_email = data.get("dataAccessEmails")
     qc_access_email = data.get("qcAccessEmails")
 
+    study = Study.objects.get_or_create(StudyObject.generate_study_id(lab_head_email))
+
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
         settings.PROJECT_ID_METADATA_KEY: project_id,
@@ -219,6 +223,10 @@ def new_request(message_id):
                         )
                     except Exception as e:
                         logger.error(e)
+        sample = Sample.objects.get(sample_id=sample_id)
+        study.samples.add(sample)
+    request = Request.objects.create(request_id=request_id)
+    study.requests.add(request)
     pooled_normal = data.get("pooledNormals", [])
     pooled_normal_jobs = []
     for pn in pooled_normal:

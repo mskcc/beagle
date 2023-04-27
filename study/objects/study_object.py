@@ -25,13 +25,17 @@ class StudyObject(object):
         )
 
     @staticmethod
+    def generate_study_id(lab_head_email):
+        return f"set_{lab_head_email.split('@')[0]}"
+
+    @staticmethod
     def get_by_request(request_id):
         studies = Study.objects.filter(requests__request_id__contains=request_id).all()
         return [StudyObject.from_db(s.study_id) for s in studies]
 
     @staticmethod
     def get_by_lab_head(lab_head_email):
-        studies = Study.objects.filter(requests__lab_head_email__contains=lab_head_email).all()
+        studies = Study.objects.filter(study_id=StudyObject.generate_study_id(lab_head_email)).all()
         return [StudyObject.from_db(s.study_id) for s in studies]
 
     @property

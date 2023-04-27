@@ -177,9 +177,15 @@ class CWLRunObject(RunObject):
         return True
 
     def complete(self, outputs):
+        request_id = self.run_obj.samples.first().request_id if self.run_obj.samples.first() else None
         for out in self.outputs:
             out.complete(
-                outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata
+                outputs.get(out.name, None),
+                self.output_file_group,
+                self.job_group_notifier,
+                self.output_metadata,
+                request_id,
+                [s.sample_id for s in self.run_obj.samples]
             )
         self.status = RunStatus.COMPLETED
 
