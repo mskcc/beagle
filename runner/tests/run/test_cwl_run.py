@@ -6,6 +6,7 @@ from runner.tasks import complete_job, fail_job
 from runner.models import Run, RunStatus, Pipeline, OperatorRun
 from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.run_object_factory import RunObjectFactory
+from beagle_etl.models import JobGroup
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, Sample, Request
 
 
@@ -320,8 +321,11 @@ class CWLRunObjectTest(APITestCase):
         mock_get_pipeline.return_value = app
         memcache_task_lock.return_value = True
         send_notification.return_value = False
+        job_group = JobGroup.objects.create()
         run = RunObjectFactory.from_definition(str(self.run.id), inputs)
+        run.job_group = job_group
         run.to_db()
+        run.ready()
         operator_run = OperatorRun.objects.first()
         operator_run.runs.add(run.run_obj)
         num_completed_runs = operator_run.num_completed_runs
