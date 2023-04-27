@@ -74,7 +74,13 @@ class PortProcessor(object):
             return PortProcessor._covert_to_cwl_format(file_obj)
         if action == PortAction.REGISTER_OUTPUT_FILES:
             return PortProcessor._register_file(
-                file_obj, kwargs.get("size"), kwargs.get("group_id"), kwargs.get("metadata"), kwargs.get("file_list")
+                file_obj,
+                kwargs.get("size"),
+                kwargs.get("group_id"),
+                kwargs.get("metadata"),
+                kwargs.get("file_list"),
+                kwargs.get('request_id'),
+                kwargs.get('samples', [])
             )
         if action == PortAction.SEND_AS_NOTIFICATION:
             return PortProcessor._send_as_notification(file_obj, kwargs.get("job_group"))
@@ -187,7 +193,7 @@ class PortProcessor(object):
         return file_obj
 
     @staticmethod
-    def _register_file(val, size, group_id, metadata, file_list):
+    def _register_file(val, size, group_id, metadata, file_list, request_id=None, samples=[]):
         file_obj = copy.deepcopy(val)
         file_obj.pop("basename", None)
         file_obj.pop("nameroot", None)
@@ -195,7 +201,7 @@ class PortProcessor(object):
         uri = file_obj.pop("location", None)
         checksum = file_obj.pop("checksum", None)
         try:
-            file_obj_db = FileProcessor.create_file_obj(uri, size, checksum, group_id, metadata)
+            file_obj_db = FileProcessor.create_file_obj(uri, size, checksum, group_id, metadata, request_id, samples)
         except FileConflictException as e:
             logger.warning(str(e))
             # TODO: Check what to do in case file already exist in DB.

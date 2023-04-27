@@ -78,7 +78,7 @@ class TestStudy(APITestCase):
                                             )
         self.run_3.samples.add(self.sample_n_2)
         self.run_3.samples.add(self.sample_t_2)
-        self.study = Study.objects.create(study_id="set_testname")
+        self.study = Study.objects.create(study_id="set_labhead")
         self.study.requests.add(self.request)
         self.study.samples.add(self.sample_n_1)
         self.study.samples.add(self.sample_t_1)
@@ -102,5 +102,6 @@ class TestStudy(APITestCase):
         self.assertEqual(len(run_ids['Argos']), 2)
 
     def test_project_prefixes(self):
+        expected = {'Argos': ['08944_B_1_08944_B_2', '08944_B_3_08944_B_4']}
         study = StudyObject.from_db(self.study.study_id)
-        study.project_prefixes
+        self.assertDictEqual(study.project_prefixes, expected)
