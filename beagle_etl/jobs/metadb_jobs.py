@@ -223,8 +223,9 @@ def new_request(message_id):
                         )
                     except Exception as e:
                         logger.error(e)
-        sample = Sample.objects.get(sample_id=sample_id)
-        study.samples.add(sample)
+        sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
+        if sample:
+            study.samples.add(sample)
     request = Request.objects.create(request_id=request_id)
     study.requests.add(request)
     pooled_normal = data.get("pooledNormals", [])
