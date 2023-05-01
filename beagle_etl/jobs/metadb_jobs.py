@@ -82,6 +82,9 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
             job_group_notifier=job_group_notifier,
             delay=delay,
         )
+    else:
+        request.samples.extend(sample_jobs)
+        request.save()
 
 
 def request_update_notification(request_id):
@@ -696,7 +699,7 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 @shared_task
 def not_supported(message_id):
