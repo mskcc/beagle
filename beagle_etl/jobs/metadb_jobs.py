@@ -42,12 +42,11 @@ from beagle_etl.models import (
     RequestCallbackJob,
     RequestCallbackJobStatus,
     initialize_normalizer,
-    get_metadata_schema,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Sample, Request, Patient
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request
 from beagle_etl.exceptions import (
     FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
@@ -86,7 +85,7 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
 
 
 def request_update_notification(request_id):
-    last = SMILEMessage.objects.filter(request_id__startswith=request_id).order_by("-created_date")
+    last = SMILEMessage.objects.filter(request_id__startswith=request_id).order_by("-created_date").first()
     if last.topic in (settings.METADB_NATS_REQUEST_UPDATE, settings.METADB_NATS_SAMPLE_UPDATE):
         logger.info(f"Sending notifications about {request_id} update")
         send_to = get_emails_to_notify(request_id)
