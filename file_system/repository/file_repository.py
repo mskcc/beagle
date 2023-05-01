@@ -43,7 +43,7 @@ class FileRepository(object):
         q=None,
         values_metadata=None,
         values_metadata_list=[],
-        key_value_metadata=None,
+        key_values_metadata=None,
         key_values_metadata_list=[],
         filter_redact=False,
         exclude=[],
@@ -69,7 +69,7 @@ class FileRepository(object):
             raise InvalidQueryException("Can't specify both metadata and metadata_regex in the query")
         if values_metadata and values_metadata_list:
             raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
-        if key_value_metadata and key_values_metadata_list:
+        if key_values_metadata and key_values_metadata_list:
             raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
         create_query_dict = {
             "file__path": path,
@@ -143,8 +143,8 @@ class FileRepository(object):
             if order_by:
                 queryset = queryset.order_by(order_by)
             return queryset.values_list(*sorted_metadata_query_list)
-        if key_value_metadata:
-            ret_str = f"metadata__{key_value_metadata}"
+        if key_values_metadata:
+            ret_str = f"metadata__{key_values_metadata}"
             return queryset.values(ret_str).distinct(ret_str)
         if key_values_metadata_list:
             values_metadata_query_list = [
