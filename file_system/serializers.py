@@ -144,7 +144,7 @@ class FileSerializer(serializers.ModelSerializer):
 
     def get_redacted(self, obj):
         if obj.file.samples:
-            sample = Sample.objects.filter(obj.file.samples[0]).first()
+            sample = Sample.objects.filter(sample_id=obj.file.samples[0]).first()
             if sample:
                 return sample.redact
         return "No sample associated with file"
