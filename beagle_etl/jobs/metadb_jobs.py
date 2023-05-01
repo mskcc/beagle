@@ -46,7 +46,7 @@ from beagle_etl.models import (
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request, Sample
 from beagle_etl.exceptions import (
     FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
