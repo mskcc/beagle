@@ -335,7 +335,7 @@ class UpdateFileSerializer(serializers.Serializer):
             try:
                 user = User.objects.get(id=validated_data.get("user"))
             except User.DoesNotExist:
-                pass
+                user = User.objects.get(username=settings.ETL_USER)
         instance.path = validated_data.get("path", instance.path)
         instance.file_name = os.path.basename(instance.path)
         instance.size = validated_data.get("size", instance.size)
