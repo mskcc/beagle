@@ -46,7 +46,7 @@ from beagle_etl.models import (
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request, Sample
 from beagle_etl.exceptions import (
     FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
@@ -82,6 +82,9 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
             job_group_notifier=job_group_notifier,
             delay=delay,
         )
+    else:
+        request.samples.extend(sample_jobs)
+        request.save()
 
 
 def request_update_notification(request_id):
@@ -107,11 +110,6 @@ def new_request(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
-    if data.get("deliveryDate"):
-        delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
-    else:
-        delivery_date = datetime.now()
-    Request.objects.get_or_create(request_id=request_id, defaults={"delivery_date": delivery_date})
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
@@ -175,7 +173,7 @@ def new_request(message_id):
     data_access_email = data.get("dataAccessEmails")
     qc_access_email = data.get("qcAccessEmails")
 
-    study = Study.objects.get_or_create(StudyObject.generate_study_id(lab_head_email))
+    study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(lab_head_email))
 
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
@@ -193,6 +191,18 @@ def new_request(message_id):
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
     }
+
+    if data.get("deliveryDate"):
+        delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
+    else:
+        delivery_date = datetime.now()
+    Request.objects.get_or_create(request_id=request_id,
+                                  defaults={"delivery_date": delivery_date,
+                                            "lab_head_name": lab_head_name,
+                                            "lab_head_email": lab_head_email,
+                                            "investigator_email": investigator_email,
+                                            "investigator_name": investigator_name
+                                            })
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -222,9 +232,10 @@ def new_request(message_id):
                         )
                     except Exception as e:
                         logger.error(e)
-        sample = Sample.objects.get(sample_id=sample_id)
+        sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
         study.samples.add(sample)
-    request = Request.objects.create(request_id=request_id)
+
+    request = Request.objects.filter(request_id=request_id, latest=True).first()
     study.requests.add(request)
     pooled_normal = data.get("pooledNormals", [])
     pooled_normal_jobs = []
@@ -546,8 +557,17 @@ def update_sample_job(message_id):
         other_contact_emails = latest.get("otherContactEmails")
         data_access_email = latest.get("dataAccessEmails")
         qc_access_email = latest.get("qcAccessEmails")
+        oncotree_code = latest.get(settings.ONCOTREE_METADATA_KEY)
+        datasource = latest.get("datasource")
+        sample_aliases = latest.get("sampleAliases")
+        smile_sample_id = latest.get("smileSampleId")
+        cfdna_2dbarcode = latest.get("cfDNA2dBarcode")
+        cmo_info_igo_id = latest.get("cmoInfoIgoId")
+        patient_aliases = latest.get("patientAliases")
+        smile_patient_id = latest.get("smilePatientId")
     else:
         project_id = files[0].metadata.get(settings.PROJECT_ID_METADATA_KEY)
+        oncotree_code = files[0].metadata.get(settings.ONCOTREE_METADATA_KEY)
         project_manager_name = files[0].metadata.get("projectManagerName")
         pi_email = files[0].metadata.get("piEmail")
         lab_head_name = files[0].metadata.get("labHeadName")
@@ -559,11 +579,19 @@ def update_sample_job(message_id):
         other_contact_emails = files[0].metadata.get("otherContactEmails")
         data_access_email = files[0].metadata.get("dataAccessEmails")
         qc_access_email = files[0].metadata.get("qcAccessEmails")
+        datasource = files[0].metadata.get("datasource")
+        sample_aliases = files[0].metadata.get("sampleAliases")
+        smile_sample_id = files[0].metadata.get("smileSampleId")
+        cfdna_2dbarcode = files[0].metadata.get("cfDNA2dBarcode")
+        cmo_info_igo_id = files[0].metadata.get("cmoInfoIgoId")
+        patient_aliases = files[0].metadata.get("patientAliases")
+        smile_patient_id = files[0].metadata.get("smilePatientId")
 
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
         settings.PROJECT_ID_METADATA_KEY: project_id,
         settings.RECIPE_METADATA_KEY: recipe,
+        settings.ONCOTREE_METADATA_KEY: oncotree_code,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
         "labHeadName": lab_head_name,
@@ -575,6 +603,13 @@ def update_sample_job(message_id):
         "otherContactEmails": other_contact_emails,
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
+        "datasource": datasource,
+        "sampleAliases": sample_aliases,
+        "smileSampleId": smile_sample_id,
+        "cfDNA2dBarcode": cfdna_2dbarcode,
+        "cmoInfoIgoId": cmo_info_igo_id,
+        "patientAliases": patient_aliases,
+        "smilePatientId": smile_patient_id
     }
 
     job_group = JobGroup()
@@ -664,7 +699,7 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 @shared_task
 def not_supported(message_id):

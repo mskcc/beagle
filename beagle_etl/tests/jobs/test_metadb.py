@@ -5,13 +5,17 @@ Tests for METADB ETL jobs
 import os
 from mock import patch
 import json
+from deepdiff import DeepDiff
 from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import User
 from beagle_etl.models import SMILEMessage
-from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job
+from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
+from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job, new_request
 from django.core.management import call_command
+from file_system.models import Request, Sample, Patient, FileMetadata
 from file_system.repository import FileRepository
+from study.objects import StudyObject
 
 
 class TestNewRequest(TestCase):
@@ -40,6 +44,9 @@ class TestNewRequest(TestCase):
             settings.PROJECT_ID_METADATA_KEY,
             settings.RECIPE_METADATA_KEY,
         ]
+        self.notifier = Notifier.objects.create(notifier_type="JIRA", board="TEST")
+        self.job_group = JobGroup.objects.create()
+        self.job_group_notifier = JobGroupNotifier.objects.create(job_group=self.job_group, notifier_type=self.notifier)
         self.file_keys = ["R"]
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
@@ -55,11 +62,74 @@ class TestNewRequest(TestCase):
         self.new_sample_data_str = json.dumps(self.new_sample_data)
         with open(new_request_json_path) as new_request_json_file:
             self.new_request_data = json.load(new_request_json_file)
+
         self.request_data_str = json.dumps(self.new_request_data)
         with open(update_request_json_path) as update_request_json_file:
             self.update_request_data = json.load(update_request_json_file)
         self.update_request_str = json.dumps(self.update_request_data)
+
+        test_new_request_08944_B = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B_new_request.json")
+        with open(test_new_request_08944_B) as new_request_08944_B:
+            self.new_request = json.load(new_request_08944_B)
+        self.new_request_str = json.dumps(self.new_request)
+
+        test_new_request_14269_C = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_new_request.json")
+        with open(test_new_request_14269_C) as new_request_14269_C:
+            self.new_request_14269_C = json.load(new_request_14269_C)
+        self.new_request_14269_C_str = json.dumps(self.new_request_14269_C)
+
+        test_14269_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample.json")
+        with open(test_14269_C_1_update_sample) as update_sample_14269_C_1:
+            self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
+        self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
+
+        test_14269_C_1_update_sample_new_files = os.path.join(settings.TEST_FIXTURE_DIR,
+                                                              "14269_C_1_update_sample_new_files.json")
+        with open(test_14269_C_1_update_sample_new_files) as update_sample_14269_C_1_new_files:
+            self.update_sample_14269_C_1_new_files = json.load(update_sample_14269_C_1_new_files)
+        self.update_sample_14269_C_1_new_files_str = json.dumps(self.update_sample_14269_C_1_new_files)
+
         self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
+        settings.ETL_USER = self.etl_user.username
+
+    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
+    @patch("notifier.tasks.notifier_start")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("notifier.models.JobGroupNotifier.objects.get")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_new_request(self, populate_job_group_notifier_metadata, job_group_notifier_get, send_notification, notifier_start, check_files_permissions):
+        populate_job_group_notifier_metadata.return_value = None
+        job_group_notifier_get.return_value = self.job_group_notifier
+        notifier_start.return_value = True
+        send_notification.return_value = True
+        check_files_permissions.return_value = True
+        settings.NOTIFIER_ACTIVE = False
+        msg = SMILEMessage.objects.create(topic="new-request", message=self.new_request_str)
+        new_request(str(msg.id))
+        request = Request.objects.filter(request_id='08944_B')
+        sample_1 = Sample.objects.filter(sample_id='08944_B_1')
+        sample_2 = Sample.objects.filter(sample_id='08944_B_2')
+        sample_3 = Sample.objects.filter(sample_id='08944_B_3')
+        sample_4 = Sample.objects.filter(sample_id='08944_B_4')
+        patient_1 = Patient.objects.filter(patient_id='C-MP76JR')
+        patient_2 = Patient.objects.filter(patient_id='C-4LM16H')
+        self.assertEqual(request.count(), 1)
+        self.assertEqual(sample_1.count(), 1)
+        self.assertEqual(sample_2.count(), 1)
+        self.assertEqual(sample_3.count(), 1)
+        self.assertEqual(sample_4.count(), 1)
+        self.assertTrue(patient_1.count(), 1)
+        self.assertTrue(patient_2.count(), 1)
+        study = StudyObject.get_by_request('08944_B')
+        self.assertIsNotNone(study)
+        self.assertListEqual(list(study[0].requests), list(request.all()))
+        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
+        self.assertEqual(files.count(), 8)
+        request = request.first()
+        samples = Sample.objects.filter(sample_id__startswith="08944_B").order_by("created_date").all()
+        for sample in samples:
+            self.assertEqual(sample.request_id, request.request_id)
+        self.assertListEqual(study[0].samples, list(samples))
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")
@@ -217,34 +287,88 @@ class TestNewRequest(TestCase):
             for f in sample_files:
                 self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
 
-    # @patch("notifier.models.JobGroupNotifier.objects.get")
-    # @patch("notifier.tasks.send_notification.delay")
-    # @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    # def test_update_sample_new(self, populate_job_group, send_notification, jobGroupNotifierObjectGet):
-    #     """
-    #     Test that new samples are properly added
-    #     """
-    #     populate_job_group.return_value = None
-    #     jobGroupNotifierObjectGet.return_value = None
-    #     send_notification.return_value = None
-    #     sample_metadata = {}
-    #     for single_sample in self.new_request_data["samples"]:
-    #         sample_name = single_sample[settings.SAMPLE_ID_METADATA_KEY]
-    #         if sample_name not in sample_metadata:
-    #             sample_metadata[sample_name] = single_sample
-    #     update_sample_job(self.request_data_str)
-    #     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
-    #     self.assertEqual(len(files), 10)
-    #     for file in files:
-    #         metadata_keys = file.metadata.keys()
-    #         sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
-    #         for single_metadata_key in metadata_keys:
-    #             if single_metadata_key in sample_metadata:
-    #                 if single_metadata_key in self.file_keys:
-    #                     continue
-    #                 current_value = file.metadata[single_metadata_key]
-    #                 expected_value = sample_metadata[sample_name][single_metadata_key]
-    #                 self.assertEqual(current_value, expected_value)
+    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
+    @patch("notifier.tasks.notifier_start")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("notifier.models.JobGroupNotifier.objects.get")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_update_sample(self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions):
+        """
+        Test that sample metadata is updated properly
+        """
+        populate_job_group.return_value = None
+        send_notification.return_value = None
+        job_group_notifier_get.return_value = self.job_group_notifier
+        notifier_start.return_value = True
+        send_notification.return_value = True
+        check_files_permissions.return_value = True
+        settings.NOTIFIER_ACTIVE = False
+
+        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        update_sample_msg = SMILEMessage.objects.create(request_id="14269_C_1", message=self.update_sample_14269_C_1_str)
+
+        new_request(new_request_msg.id)
+        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        self.assertEqual(tumor_or_normal, "Normal")
+        update_sample_job(update_sample_msg.id)
+        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        self.assertEqual(tumor_or_normal, "Tumor")
+
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
+        self.assertEqual(len(files), 2)
+
+        for file in files:
+            old_file = FileMetadata.objects.get(file__path=file.file.path, latest=False)
+            ddiff = DeepDiff(old_file.metadata, file.metadata, ignore_order=True)
+            print(ddiff)
+            self.assertIsNotNone(ddiff)
+            self.assertEqual(ddiff['values_changed']["root['tumorOrNormal']"]['new_value'], 'Tumor')
+            self.assertEqual(ddiff['values_changed']["root['tumorOrNormal']"]['old_value'], 'Normal')
+            self.assertEqual(list(ddiff.keys()), ["values_changed"])
+
+    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
+    @patch("notifier.tasks.notifier_start")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("notifier.models.JobGroupNotifier.objects.get")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_update_sample_new_fastqs(self,
+                            populate_job_group,
+                            job_group_notifier_get,
+                            send_notification,
+                            notifier_start,
+                            check_files_permissions):
+        """
+        Test sample updates for new fastqs
+        """
+        populate_job_group.return_value = None
+        send_notification.return_value = None
+        job_group_notifier_get.return_value = self.job_group_notifier
+        notifier_start.return_value = True
+        send_notification.return_value = True
+        check_files_permissions.return_value = True
+        settings.NOTIFIER_ACTIVE = False
+
+        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        update_sample_msg = SMILEMessage.objects.create(request_id="14269_C_1",
+                                                        message=self.update_sample_14269_C_1_new_files_str)
+
+        new_request(new_request_msg.id)
+        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        self.assertEqual(tumor_or_normal, "Normal")
+        update_sample_job(update_sample_msg.id)
+        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        self.assertEqual(tumor_or_normal, "Tumor")
+
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
+        self.assertEqual(len(files), 2)
+
+        for file in files:
+            self.assertTrue(file.file.path.endswith('new.fastq.gz'))
+
 
     # @patch("notifier.models.JobGroupNotifier.objects.get")
     # @patch("notifier.tasks.send_notification.delay")

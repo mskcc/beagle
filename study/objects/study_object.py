@@ -19,8 +19,8 @@ class StudyObject(object):
             raise StudyDoesNotExistExceptions
         return cls(
             study_id=study_id,
-            requests=list(study.requests.all()),
-            samples=list(study.samples.all()),
+            requests=list(study.requests.order_by("created_date").all()),
+            samples=list(study.samples.order_by("created_date").all()),
             db_object=study
         )
 
