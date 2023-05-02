@@ -49,5 +49,10 @@ Number of samples received: {self.number_of_samples_recived}<br>
 Number of samples running: {self.number_of_samples}<br>
 Samples Paired with Match normal: {self.match_normal_cnt}<br>
 Samples Paired with Pooled normal: {self.pooled_normal_cnt}<br>
+<br>
+Thank you,<br>
+Nicholas D. Socci<br>
+Director, Bioinformatics Core<br>
+zzPDL_CMO_Pipeline_Support@mskcc.org<br>
 """
         return body
