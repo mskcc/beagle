@@ -525,6 +525,7 @@ class PairsOperatorViewSet(GenericAPIView):
         investigatorName = request.data.get("investigatorName")
         assay = request.data.get("assay")
         job_group_id = request.data.get("job_group_id", None)
+        file_group_id = request.data.get("file_group_id", None)
         request_id = request.data.get("request_id", "missing_request_id")
         output_directory_prefix = request.data.get("output_directory_prefix", None)
 
@@ -553,6 +554,7 @@ class PairsOperatorViewSet(GenericAPIView):
                 job_group_id=job_group_id,
                 job_group_notifier_id=job_group_notifier_id,
                 request_id=request_id,
+                file_group_id=file_group_id,
                 output_directory_prefix=output_directory_prefix,
             )
             create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
