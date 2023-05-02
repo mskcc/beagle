@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -53,6 +54,6 @@ Samples Paired with Pooled normal: {self.pooled_normal_cnt}<br>
 Thank you,<br>
 Nicholas D. Socci<br>
 Director, Bioinformatics Core<br>
-zzPDL_CMO_Pipeline_Support@mskcc.org<br>
+{settings.CONTACT_EMAIL}<br>
 """
         return body
