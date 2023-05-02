@@ -387,7 +387,7 @@ class FileMetadata(BaseModel):
             patient_id = self.metadata.get(settings.PATIENT_ID_METADATA_KEY)
             sex = self.metadata.get(settings.SEX_METADATA_KEY)
             assay = self.metadata.get(settings.RECIPE_METADATA_KEY, "")
-            # populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
+            populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
 
             if request_id:
                 request = self.create_or_update_request(request_id,
