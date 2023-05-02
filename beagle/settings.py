@@ -466,3 +466,5 @@ COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
 DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp/%s")
 
 APP_CACHE = os.environ.get("BEAGLE_APP_CACHE", "/tmp")
+
+CONTACT_EMAIL = os.environ("EVENTS_CONTACT_EMAIL", "")

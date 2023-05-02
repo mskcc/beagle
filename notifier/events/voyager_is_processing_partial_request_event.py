@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -58,6 +59,6 @@ Samples with the following IDs are not being processed:<br>
 Thank you,<br>
 Nicholas D. Socci<br>
 Director, Bioinformatics Core<br>
-zzPDL_CMO_Pipeline_Support@mskcc.org<br>
+{settings.CONTACT_EMAIL}<br>
 """
         return body
