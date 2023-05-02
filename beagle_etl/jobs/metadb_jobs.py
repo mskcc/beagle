@@ -353,6 +353,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
+        samples = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"},
+                                             values_metadata=settings.SAMPLE_ID_METADATA_KEY))
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         send_to = get_emails_to_notify(request_id)
@@ -363,6 +365,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
                 request_id=request_id,
+                samples=samples
             ).to_dict()
             send_notification.delay(event)
 
