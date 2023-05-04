@@ -1,7 +1,6 @@
 import logging
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
-from file_system.helper.file_group_helper import default_file_group
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
