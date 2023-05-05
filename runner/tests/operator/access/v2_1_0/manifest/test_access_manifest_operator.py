@@ -54,10 +54,9 @@ class TestAcessManifestOperator(TestCase):
         # Check if the file exists, use glob since we are unsure of what the date will be 
         file = glob.glob(self.file_path_pattern)
         self.assertEqual(len(file) == 1, True)
-        file = file[0]
-        file_name = file.name
+        file_name = file[0]
         # Check contents
-        with open(file, 'r') as file:
+        with open(file_name, 'r') as file:
             csv_string = file.read()
         self.assertEqual(csv_string, self.expected_csv_content)
         # Check if file can be queried
