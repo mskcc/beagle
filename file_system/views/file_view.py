@@ -26,6 +26,7 @@ from rest_framework.generics import GenericAPIView
 import csv 
 from django.http import HttpResponse
 import re 
+from runner.tasks import cmo_dmp_manifest
 
 class FileView(
     mixins.CreateModelMixin,
@@ -286,54 +287,6 @@ class manifest(GenericAPIView):
     # Setting members 
     pagination_class=None  # We don't need pagination
     serializer_class = manifestSerializer
-    # headers for returned csv 
-    manifestHeader = ['igoRequestId','primaryId','cmoPatientId', 'dmpPatientId','dmpImpactSamples', 'dmpAccessSamples','baitSet', 'libraryVolume', 'investigatorSampleId', 'preservation', 'species', 'libraryConcentrationNgul', 'tissueLocation', 'sampleClass', 'sex', 'cfDNA2dBarcode', 'sampleOrigin', 'tubeId', 'tumorOrNormal', 'captureConcentrationNm', 'oncotreeCode', 'dnaInputNg', 'collectionYear', 'captureInputNg']
-    # varibales we want from the request metadata
-    request_keys = ['igoRequestId', 'primaryId', 'cmoPatientId', 'investigatorSampleId', 'sampleClass', 'oncotreeCode', 'tumorOrNormal', 'tissueLocation', 'sampleOrigin', 'preservation', 'collectionYear', 'sex', 'species', 'tubeId', 'cfDNA2dBarcode', 'baitSet', 'libraryVolume', 'libraryConcentrationNgul', 'dnaInputNg', 'captureConcentrationNm', 'captureInputNg']
-
-    def construct_csv(self, request_query, pDmps, request_ids):
-            """
-            Construct a csv HTTP response from DMP BAM Metadata and Request Metadata
-            Keyword arguments:
-                request_query -- a queryset containg fastq metaddata for a given request
-                pDmps -- a query set from the DMP BAM file group, filtered to patients in request_query
-            """
-            # set up HTTP response 
-            response = HttpResponse(content_type='text/csv')
-            if len(request_ids) > 1:
-                request_type = 'multiple_requests'
-            else:
-                request_type = request_ids[0]
-            response['Content-Disposition'] = 'attachment; filename="{request_type}.csv"'.format(request_type=request_type)
-            writer = csv.DictWriter(response, fieldnames=self.manifestHeader)
-            writer.writeheader()
-            # we care about the metadata for the request
-            request_metadata = request_query.values_list("metadata",flat=True) 
-            primaryIds = set() # we only want to look at fastq metdata for a PrimaryId once
-            # for each fastq in the request query 
-            for fastq in request_metadata:
-                pId = fastq['primaryId'] 
-                if  pId not in primaryIds: # we haven't seen the Primary Id 
-                    primaryIds.add(pId)
-                    fastq_meta = {k: fastq[k] for k in fastq.keys() & self.request_keys}
-                    for key in self.request_keys:
-                        if fastq_meta.get(key) is None:
-                            fastq_meta[key] = None
-                    # look up cmopatient in dmp query set 
-                    patient_id = fastq_meta['cmoPatientId'].replace('C-','')
-                    dmp_meta = pDmps.filter(metadata__patient__cmo=patient_id)
-                    if dmp_meta.exists():
-                        dmpImpactSamples = [dmp.metadata['sample'] for dmp in dmp_meta if re.match(r'^P-.*-.*-I.*', dmp.metadata['sample'])]
-                        dmpAccessSamples = [dmp.metadata['sample'] for dmp in dmp_meta if re.match(r'^P-.*-.*-X.*', dmp.metadata['sample'])]
-                        # add dmp data to request data, building up in csv
-                        dmpImpactSamples = ';'.join(dmpImpactSamples)
-                        dmpAccessSamples = ';'.join(dmpAccessSamples)
-                        dmppatientid = dmp_meta[0].metadata['patient']['dmp']
-                        fastq_meta['dmpImpactSamples'] = dmpImpactSamples
-                        fastq_meta['dmpAccessSamples'] = dmpAccessSamples
-                        fastq_meta['dmpPatientId'] = dmppatientid
-                    writer.writerow(fastq_meta)
-            return response
 
     @swagger_auto_schema(query_serializer=manifestSerializer)
     def get(self, request):
@@ -341,19 +294,9 @@ class manifest(GenericAPIView):
         serializer = manifestSerializer(data=request.query_params)
         if serializer.is_valid():
             request_ids = serializer.validated_data.get("request_id")
-            if request_ids:
-                # get fastq metadata for a given request
-                request_query = FileMetadata.objects.filter(metadata__igoRequestId__in=request_ids)
-                cmoPatientId = request_query.values_list("metadata__cmoPatientId",flat=True)
-                cmoPatientId = list(set(list(cmoPatientId)))
-                # get DMP BAM file group
-                dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
-                cmoPatientId_trim = [c.replace('C-','') for c in cmoPatientId]
-                # subset DMP BAM file group to patients in the provided requests
-                pDmps = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trim)
             try: 
                 # generate csv response
-                response = self.construct_csv(request_query, pDmps, request_ids)
+                response = cmo_dmp_manifest(request_ids).csv
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
             if response is not None:

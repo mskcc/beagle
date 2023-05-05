@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
 
-class TestUltron(TestCase):
+class TestManifest(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
         "file_system.filegroup.json",
