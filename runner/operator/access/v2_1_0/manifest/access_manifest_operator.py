@@ -53,12 +53,12 @@ meta_fields = [
 
 class AccessManifestOperator(Operator):
     """
-    Operator for the ACCESS Legacy Structural Variants workflow:
-
-    http://www.github.com/mskcc/access-pipeline/workflows/subworkflows/manta.cwl
-
-    This Operator will search for Standard Bam files based on an IGO Request ID
+    Operator to create a manifest report (merged dmp and fastq metadata) for a given access request.
+    
+    It doesn't use a cwl, but rather the internal cmo_dmp_manifest class, 
+    which generates the manifest using internal queries. 
     """
+    # parent directory for manifest output
     OUTPUT_DIR = "/work/access/production/runs/voyager/staging/manifests/"
     def get_jobs(self):
         """
@@ -68,7 +68,9 @@ class AccessManifestOperator(Operator):
         """
         self.request_id = get_request_id(self.run_ids, self.request_id)
         request_output_directory = self.get_request_output_directory()
-        job = None
+        # The run really isn't "submitted", there are no job inputs since there is no cwl. 
+        # The run more or less documents that the operator ran from inside Voyager.
+        job = None 
         return [
             RunCreator(
                 **{
@@ -86,9 +88,9 @@ class AccessManifestOperator(Operator):
     
     def get_request_output_directory(self):
         """
-        Create all sample inputs for all runs triggered in this instance of the operator
+        Create manifest report and write contents to file and return output directory of written file
 
-        :return: list of json_objects
+        :return: a juno output directory specifying the manifests location
         """
         # Construct manifest via requestid 
         manifest_csv = cmo_dmp_manifest([self.request_id]).csv.content.decode()
@@ -98,7 +100,7 @@ class AccessManifestOperator(Operator):
     
     def write_to_file(self, fname, s):
         """
-        Writes file to temporary location, then registers it to the temp file group
+        Writes file to temporary location, then registers it to the manifest file group
         Also uploads it to notifier if there is a job group id
         """
         current_datetime = datetime.datetime.now()
