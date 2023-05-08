@@ -11,6 +11,7 @@ import datetime
 import glob
 import shutil
 
+# test specific fixtures
 FIXTURES = [
     "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.files.json",
     "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.input.json",
@@ -19,6 +20,7 @@ FIXTURES = [
     "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.samples.json",
 ]
 
+# general fixtures 
 COMMON_FIXTURES = [
     "runner/fixtures/runner.pipeline.json",
     "runner/fixtures/runner.operator_run.json",
@@ -31,12 +33,14 @@ COMMON_FIXTURES = [
 
 
 class TestAcessManifestOperator(TestCase):
+    # test db 
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
+    # variables to help check operator output
     expected_csv_content = 'igoRequestId,primaryId,cmoPatientId,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg\n12345_A,12345_A_25,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,null,0,A-000000,,,0,,,F,,Whole Blood,,Tumor,0,,0,,0\n""\n'
     file_path_pattern = "/tmp/12345_A/*/manifest.csv"
     def test_access_manifest_operator(self):
         """
-        Test Access manifest operator
+        Test access manifest operator
         """
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         # Check Operator basics
