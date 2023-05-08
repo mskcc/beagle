@@ -187,5 +187,12 @@
     "fields": {
       "name": "yaml"
     }
+  },
+  {
+    "model": "file_system.filetype",
+    "pk": 31,
+    "fields": {
+      "name": "csv"
+    }
   }
 ]
