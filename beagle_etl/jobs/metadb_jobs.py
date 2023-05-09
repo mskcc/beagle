@@ -72,7 +72,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
-    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING)
+    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
@@ -197,6 +197,7 @@ def new_request(message_id):
     else:
         delivery_date = datetime.now()
     Request.objects.get_or_create(request_id=request_id,
+                                  latest=True,
                                   defaults={"delivery_date": delivery_date,
                                             "lab_head_name": lab_head_name,
                                             "lab_head_email": lab_head_email,
@@ -353,7 +354,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
-        samples = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"},
+        samples = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
                                              values_metadata=settings.SAMPLE_ID_METADATA_KEY))
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
@@ -673,7 +674,7 @@ def update_sample_job(message_id):
                         request_metadata,
                         R1_or_R2(fastq),
                     )
-                    new_files.append(fastq)
+                    new_files.append(new_path)
                     ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
                     msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
@@ -687,6 +688,8 @@ def update_sample_job(message_id):
                     logger.error(e)
 
     # Remove unnecessary files
+    print(file_paths)
+    print(new_files)
     files_to_remove = set(file_paths) - set(new_files)
     for fi in list(files_to_remove):
         logger.info(f"Removing file {fi}.")

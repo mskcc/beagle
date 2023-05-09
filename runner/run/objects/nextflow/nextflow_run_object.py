@@ -166,7 +166,7 @@ class NextflowRunObject(RunObject):
                 self.job_group_notifier,
                 self.output_metadata,
                 request_id,
-                [s.sample_id for s in self.run_obj.samples]
+                [s.sample_id for s in self.run_obj.samples.all()]
             )
         self.status = RunStatus.COMPLETED
 
