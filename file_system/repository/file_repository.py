@@ -1,5 +1,5 @@
 from django.db.models import Q, Count
-from file_system.models import FileMetadata, File
+from file_system.models import FileMetadata, File, Sample
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
 
 
@@ -107,11 +107,16 @@ class FileRepository(object):
                     regex_query_q |= Q(**regex_query_dict)
                 queryset = queryset.filter(regex_query_q)
         create_query_dict.update(metadata_query_dict)
-        queryset = (
-            queryset.filter(Q(**create_query_dict) & Q(file__sample__redact=False))
-            if filter_redact
-            else queryset.filter(**create_query_dict)
-        )
+
+        if filter_redact:
+            samples = queryset.filter(**create_query_dict).values_list("file__samples", flat=True).distinct().all()
+            flatten_sample_ids = [item for sublist in samples for item in sublist]
+            reducted_sample_ids = list(Sample.objects.filter(sample_id__in=flatten_sample_ids, redact=True).values_list(
+                "sample_id", flat=True).all())
+            queryset = queryset.exclude(file__samples=reducted_sample_ids)
+
+        queryset = queryset.filter(**create_query_dict).order_by('-created_date')
+
         if exclude:
             exc_dict = {}
             for single_exclude_field in exclude:
