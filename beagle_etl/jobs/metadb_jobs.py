@@ -234,7 +234,8 @@ def new_request(message_id):
                     except Exception as e:
                         logger.error(e)
         sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
-        study.samples.add(sample)
+        if sample:
+            study.samples.add(sample)
 
     request = Request.objects.filter(request_id=request_id, latest=True).first()
     study.requests.add(request)

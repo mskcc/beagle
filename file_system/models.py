@@ -407,6 +407,7 @@ class FileMetadata(BaseModel):
                                                       request_id)
                 if sample_id not in self.file.samples:
                     self.file.samples.append(sample_id)
+                    self.file.save(update_fields=('samples',))
 
             if patient_id:
                 patient = self.create_or_update_patient(patient_id, sex, sample_id)
