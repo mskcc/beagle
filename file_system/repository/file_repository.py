@@ -113,7 +113,8 @@ class FileRepository(object):
             flatten_sample_ids = [item for sublist in samples for item in sublist]
             reducted_sample_ids = list(Sample.objects.filter(sample_id__in=flatten_sample_ids, redact=True).values_list(
                 "sample_id", flat=True).all())
-            queryset = queryset.exclude(file__samples=reducted_sample_ids)
+            for item in reducted_sample_ids:
+                queryset = queryset.exclude(file__samples=[item.strip()])
 
         queryset = queryset.filter(**create_query_dict)
 
