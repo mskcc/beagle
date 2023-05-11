@@ -115,7 +115,7 @@ class FileRepository(object):
                 "sample_id", flat=True).all())
             queryset = queryset.exclude(file__samples=reducted_sample_ids)
 
-        queryset = queryset.filter(**create_query_dict).order_by('-created_date')
+        queryset = queryset.filter(**create_query_dict)
 
         if exclude:
             exc_dict = {}
