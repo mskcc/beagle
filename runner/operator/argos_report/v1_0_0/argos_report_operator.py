@@ -1,27 +1,17 @@
-import uuid
-import re
 import os
-import json
-import csv
-import pickle
 import logging
 import unicodedata
-from django.db.models import Q
+from datetime import datetime
 from django.conf import settings
-from pathlib import Path
 from beagle import __version__
 from datetime import datetime
 from file_system.models import File, FileGroup, FileType, FileMetadata
-from file_system.repository.file_repository import FileRepository
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
 from runner.run.objects.run_creator_object import RunCreator
 from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
-from notifier.events import UploadAttachmentEvent
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,6 +41,7 @@ class ArgosReportOperator(Operator):
             )
 
         self.send_message(
+            run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
             """
             Writing HTML report files to {file_path}.
 
