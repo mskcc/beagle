@@ -11,7 +11,7 @@ from django.conf import settings
 from pathlib import Path
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType
+from file_system.models import File, FileGroup, FileType, FileMetadata
 from file_system.repository.file_repository import FileRepository
 from rest_framework import serializers
 from runner.operator.operator import Operator
