@@ -34,16 +34,14 @@ class ArgosReportOperator(Operator):
         output_directory = self.gen_output_dir(pipeline, project_prefix)
 
         for i, input in enumerate(inputs):
-            name = "ARGOS Report"
-            tags = {"name": name, "app": app}
-            jobs.append(
-                RunCreator(app=pipeline, inputs=input, name=name, tags=tags, output_directory=output_directory)
-            )
+            name = "ARGOS Report: %s" % project_prefix
+            tags = {"name": name, "project_prefix": project_prefix, "app": app}
+            jobs.append(RunCreator(app=pipeline, inputs=input, name=name, tags=tags, output_directory=output_directory))
 
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         beagle_version = __version__
 
-        self.send_message( 
+        self.send_message(
             """
             Writing HTML report files to {file_path}.
 
