@@ -9,3 +9,4 @@ from .helix_filters.v20_08_1 import HelixFiltersOperator as HelixFiltersOperator
 from .aion.v1_0_0 import AionOperator as AionOperator_v1_0_0
 from .operator_factory import OperatorFactory
 from .demo_operator.demo_operator import DemoOperator
+from .argos_report.v1_0_0.argos_report import ArgosReportOperator as ArgosReportOperator
