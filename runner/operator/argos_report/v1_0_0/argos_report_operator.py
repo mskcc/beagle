@@ -16,6 +16,7 @@ from file_system.repository.file_repository import FileRepository
 from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
+from runner.run.objects.run_creator_object import RunCreator
 from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
