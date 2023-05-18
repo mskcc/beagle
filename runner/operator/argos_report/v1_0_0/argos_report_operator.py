@@ -103,3 +103,8 @@ class ArgosReportOperator(Operator):
             for f in files:
                 ci_tags.add(f.metadata["ciTag"])
         return ci_tags
+
+    def send_message(self, msg):
+        event = OperatorRequestEvent(self.job_group_notifier_id, msg)
+        e = event.to_dict()
+        send_notification.delay(e)
