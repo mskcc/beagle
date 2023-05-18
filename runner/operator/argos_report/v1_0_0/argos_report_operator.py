@@ -41,6 +41,8 @@ class ArgosReportOperator(Operator):
             )
 
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
+        beagle_version = __version__
+
         self.send_message( 
             """
             Writing HTML report files to {file_path}.
