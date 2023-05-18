@@ -40,8 +40,8 @@ class ArgosReportOperator(Operator):
                 RunCreator(app=pipeline, inputs=input, name=name, tags=tags, output_directory=output_directory)
             )
 
-        self.send_message(
-            run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
+        run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
+        self.send_message( 
             """
             Writing HTML report files to {file_path}.
 
