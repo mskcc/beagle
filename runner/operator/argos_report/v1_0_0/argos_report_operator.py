@@ -38,13 +38,14 @@ class ArgosReportOperator(Operator):
 
         inputs = self.gen_inputs(hf_run)
         app = self.get_pipeline_id()
+        jobs = list()
         pipeline = Pipeline.objects.get(id=app)
         output_directory = self.gen_output_dir(pipeline, project_prefix)
 
         for i, input in enumerate(inputs):
             name = "ARGOS Report"
             tags = {"name": name, "app": app}
-            argos_jobs.append(
+            jobs.append(
                 RunCreator(app=pipeline, inputs=input, name=name, tags=tags, output_directory=output_directory)
             )
 
@@ -59,7 +60,7 @@ class ArgosReportOperator(Operator):
             )
         )
 
-        return argos_jobs
+        return jobs
 
     def gen_output_dir(self, pipeline, project_prefix):
         jg = JobGroup.objects.get(id=self.job_group_id)
