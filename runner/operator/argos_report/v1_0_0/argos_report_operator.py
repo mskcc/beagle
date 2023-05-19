@@ -66,15 +66,21 @@ class ArgosReportOperator(Operator):
     def gen_inputs(self, hf_run):
         samples = hf_run.samples.all()
         ports = hf_run.port_set.all()
-        analysis_dir_path = ""
-        portal_dir_path = ""
+        analysis_dir_path = dict()
+        portal_dir_path = dict()
         ci_tags = self.get_ci_tags(samples)
 
         for port in ports:
             if port.name == "analysis_dir":
-                analysis_dir_path = FileProcessor.parse_path_from_uri(port.value["location"])
+                analysis_dir_path = {
+                    "class": "Directory",
+                    "location": FileProcessor.parse_path_from_uri(port.value["location"]),
+                }
             if port.name == "portal_dir":
-                portal_dir_path = FileProcessor.parse_path_from_uri(port.value["location"])
+                portal_dir_path = {
+                    "class": "Directory",
+                    "location": FileProcessor.parse_path_from_uri(port.value["location"]),
+                }
 
         inputs = list()
         for ci_tag in ci_tags:
