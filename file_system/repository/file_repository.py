@@ -1,5 +1,5 @@
 from django.db.models import Q, Count
-from file_system.models import FileMetadata, File
+from file_system.models import FileMetadata, File, Sample
 from file_system.exceptions import FileNotFoundException, InvalidQueryException
 
 
@@ -43,7 +43,7 @@ class FileRepository(object):
         q=None,
         values_metadata=None,
         values_metadata_list=[],
-        key_value_metadata=None,
+        key_values_metadata=None,
         key_values_metadata_list=[],
         filter_redact=False,
         exclude=[],
@@ -69,7 +69,7 @@ class FileRepository(object):
             raise InvalidQueryException("Can't specify both metadata and metadata_regex in the query")
         if values_metadata and values_metadata_list:
             raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
-        if key_value_metadata and key_values_metadata_list:
+        if key_values_metadata and key_values_metadata_list:
             raise InvalidQueryException("Can't specify both values_metadata and values_metadata_list in the query")
         create_query_dict = {
             "file__path": path,
@@ -107,11 +107,17 @@ class FileRepository(object):
                     regex_query_q |= Q(**regex_query_dict)
                 queryset = queryset.filter(regex_query_q)
         create_query_dict.update(metadata_query_dict)
-        queryset = (
-            queryset.filter(Q(**create_query_dict) & Q(file__sample__redact=False))
-            if filter_redact
-            else queryset.filter(**create_query_dict)
-        )
+
+        if filter_redact:
+            samples = queryset.filter(**create_query_dict).values_list("file__samples", flat=True).distinct().all()
+            flatten_sample_ids = [item for sublist in samples for item in sublist]
+            reducted_sample_ids = list(Sample.objects.filter(sample_id__in=flatten_sample_ids, redact=True).values_list(
+                "sample_id", flat=True).all())
+            for item in reducted_sample_ids:
+                queryset = queryset.exclude(file__samples=[item.strip()])
+
+        queryset = queryset.filter(**create_query_dict)
+
         if exclude:
             exc_dict = {}
             for single_exclude_field in exclude:
@@ -143,8 +149,8 @@ class FileRepository(object):
             if order_by:
                 queryset = queryset.order_by(order_by)
             return queryset.values_list(*sorted_metadata_query_list)
-        if key_value_metadata:
-            ret_str = f"metadata__{key_value_metadata}"
+        if key_values_metadata:
+            ret_str = f"metadata__{key_values_metadata}"
             return queryset.values(ret_str).distinct(ret_str)
         if key_values_metadata_list:
             values_metadata_query_list = [

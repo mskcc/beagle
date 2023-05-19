@@ -1,0 +1,3 @@
+
+class StudyDoesNotExistExceptions(Exception):
+    pass

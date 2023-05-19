@@ -46,7 +46,7 @@ from beagle_etl.models import (
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request
+from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request, Sample
 from beagle_etl.exceptions import (
     FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
@@ -64,13 +64,15 @@ from beagle_etl.copy_service import CopyService
 from beagle_etl.jobs.helper_jobs import check_file_permissions
 from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
+from study.models import Study
+from study.objects import StudyObject
 
 
 logger = logging.getLogger(__name__)
 
 
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
-    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING)
+    request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
@@ -80,6 +82,9 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
             job_group_notifier=job_group_notifier,
             delay=delay,
         )
+    else:
+        request.samples.extend(sample_jobs)
+        request.save()
 
 
 def request_update_notification(request_id):
@@ -105,11 +110,6 @@ def new_request(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     data = json.loads(message.message)
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
-    if data.get("deliveryDate"):
-        delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
-    else:
-        delivery_date = datetime.now()
-    Request.objects.get_or_create(request_id=request_id, defaults={"delivery_date": delivery_date})
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
@@ -173,6 +173,8 @@ def new_request(message_id):
     data_access_email = data.get("dataAccessEmails")
     qc_access_email = data.get("qcAccessEmails")
 
+    study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(lab_head_email))
+
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
         settings.PROJECT_ID_METADATA_KEY: project_id,
@@ -189,6 +191,19 @@ def new_request(message_id):
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
     }
+
+    if data.get("deliveryDate"):
+        delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
+    else:
+        delivery_date = datetime.now()
+    Request.objects.get_or_create(request_id=request_id,
+                                  latest=True,
+                                  defaults={"delivery_date": delivery_date,
+                                            "lab_head_name": lab_head_name,
+                                            "lab_head_email": lab_head_email,
+                                            "investigator_email": investigator_email,
+                                            "investigator_name": investigator_name
+                                            })
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -218,6 +233,12 @@ def new_request(message_id):
                         )
                     except Exception as e:
                         logger.error(e)
+        sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
+        if sample:
+            study.samples.add(sample)
+
+    request = Request.objects.filter(request_id=request_id, latest=True).first()
+    study.requests.add(request)
     pooled_normal = data.get("pooledNormals", [])
     pooled_normal_jobs = []
     for pn in pooled_normal:
@@ -334,6 +355,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
+        samples = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+                                             values_metadata=settings.SAMPLE_ID_METADATA_KEY))
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         send_to = get_emails_to_notify(request_id)
@@ -344,6 +367,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
                 request_id=request_id,
+                samples=samples
             ).to_dict()
             send_notification.delay(event)
 
@@ -396,7 +420,7 @@ def update_request_job(message_id):
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
-    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     job_group = JobGroup()
     job_group.save()
@@ -438,7 +462,7 @@ def update_request_job(message_id):
     samples = list()
     sample_status_list = list()
     for f in files:
-        new_metadata = f.metadata
+        new_metadata = copy.deepcopy(f.metadata)
         new_metadata.update(request_metadata)
         if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
             sample_status = {
@@ -538,8 +562,17 @@ def update_sample_job(message_id):
         other_contact_emails = latest.get("otherContactEmails")
         data_access_email = latest.get("dataAccessEmails")
         qc_access_email = latest.get("qcAccessEmails")
+        oncotree_code = latest.get(settings.ONCOTREE_METADATA_KEY)
+        datasource = latest.get("datasource")
+        sample_aliases = latest.get("sampleAliases")
+        smile_sample_id = latest.get("smileSampleId")
+        cfdna_2dbarcode = latest.get("cfDNA2dBarcode")
+        cmo_info_igo_id = latest.get("cmoInfoIgoId")
+        patient_aliases = latest.get("patientAliases")
+        smile_patient_id = latest.get("smilePatientId")
     else:
         project_id = files[0].metadata.get(settings.PROJECT_ID_METADATA_KEY)
+        oncotree_code = files[0].metadata.get(settings.ONCOTREE_METADATA_KEY)
         project_manager_name = files[0].metadata.get("projectManagerName")
         pi_email = files[0].metadata.get("piEmail")
         lab_head_name = files[0].metadata.get("labHeadName")
@@ -551,11 +584,19 @@ def update_sample_job(message_id):
         other_contact_emails = files[0].metadata.get("otherContactEmails")
         data_access_email = files[0].metadata.get("dataAccessEmails")
         qc_access_email = files[0].metadata.get("qcAccessEmails")
+        datasource = files[0].metadata.get("datasource")
+        sample_aliases = files[0].metadata.get("sampleAliases")
+        smile_sample_id = files[0].metadata.get("smileSampleId")
+        cfdna_2dbarcode = files[0].metadata.get("cfDNA2dBarcode")
+        cmo_info_igo_id = files[0].metadata.get("cmoInfoIgoId")
+        patient_aliases = files[0].metadata.get("patientAliases")
+        smile_patient_id = files[0].metadata.get("smilePatientId")
 
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: request_id,
         settings.PROJECT_ID_METADATA_KEY: project_id,
         settings.RECIPE_METADATA_KEY: recipe,
+        settings.ONCOTREE_METADATA_KEY: oncotree_code,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
         "labHeadName": lab_head_name,
@@ -567,6 +608,13 @@ def update_sample_job(message_id):
         "otherContactEmails": other_contact_emails,
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
+        "datasource": datasource,
+        "sampleAliases": sample_aliases,
+        "smileSampleId": smile_sample_id,
+        "cfDNA2dBarcode": cfdna_2dbarcode,
+        "cmoInfoIgoId": cmo_info_igo_id,
+        "patientAliases": patient_aliases,
+        "smilePatientId": smile_patient_id
     }
 
     job_group = JobGroup()
@@ -613,7 +661,7 @@ def update_sample_job(message_id):
                     new_path = CopyService.remap(recipe, fastq)
                     f = FileRepository.filter(path=new_path).first()
                     if f:
-                        new_metadata = f.metadata
+                        new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
                         fastq,
@@ -627,7 +675,7 @@ def update_sample_job(message_id):
                         request_metadata,
                         R1_or_R2(fastq),
                     )
-                    new_files.append(fastq)
+                    new_files.append(new_path)
                     ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
                     diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
                     msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
@@ -641,6 +689,8 @@ def update_sample_job(message_id):
                     logger.error(e)
 
     # Remove unnecessary files
+    print(file_paths)
+    print(new_files)
     files_to_remove = set(file_paths) - set(new_files)
     for fi in list(files_to_remove):
         logger.info(f"Removing file {fi}.")
@@ -656,7 +706,7 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 @shared_task
 def not_supported(message_id):
@@ -713,7 +763,10 @@ def create_pooled_normal(filepath, file_group_id):
     try:
         File.objects.get(path=filepath)
     except File.DoesNotExist:
-        logger.info("Pooled normal already created filepath")
+        logger.info(f"Creating pooled normal with path {filepath}")
+    else:
+        logger.info(f"Pooled normal with path {filepath} already exists")
+        return
     file_group_obj = FileGroup.objects.get(id=file_group_id)
     file_type_obj = FileType.objects.filter(name="fastq").first()
     assays = ETLConfiguration.objects.first()

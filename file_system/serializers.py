@@ -143,8 +143,10 @@ class FileSerializer(serializers.ModelSerializer):
         return obj.file.checksum
 
     def get_redacted(self, obj):
-        if obj.file.sample:
-            return obj.file.sample.redact
+        if obj.file.samples:
+            sample = Sample.objects.filter(sample_id=obj.file.samples[0]).first()
+            if sample:
+                return sample.redact
         return "No sample associated with file"
 
     class Meta:
@@ -333,7 +335,7 @@ class UpdateFileSerializer(serializers.Serializer):
             try:
                 user = User.objects.get(id=validated_data.get("user"))
             except User.DoesNotExist:
-                pass
+                user = User.objects.get(username=settings.ETL_USER)
         instance.path = validated_data.get("path", instance.path)
         instance.file_name = os.path.basename(instance.path)
         instance.size = validated_data.get("size", instance.size)
