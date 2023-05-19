@@ -196,5 +196,16 @@
       "version": "v2.1.0",
       "slug": "CMOCHNucleoOperatorQcAgg_2_1_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 20,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.access.v2_1_0.manifest.AccessManifestOperator",
+      "version": "v2.1.0",
+      "slug": "AccessManifestOperator_2_1_0"
+    }
   }
 ]
