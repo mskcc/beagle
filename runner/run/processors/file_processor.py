@@ -81,7 +81,7 @@ class FileProcessor(object):
             raise FileHelperException("Unknown uri schema %s" % uri)
 
     @staticmethod
-    def create_file_obj(uri, size, checksum, group_id, metadata):
+    def create_file_obj(uri, size, checksum, group_id, metadata, request_id=None, samples=[]):
         file_path = FileProcessor.parse_path_from_uri(uri)
         basename = os.path.basename(file_path)
         file_type = FileProcessor.get_file_ext(basename)
@@ -99,6 +99,8 @@ class FileProcessor(object):
             file_type=file_type,
             file_group=group_id_obj,
             size=size,
+            request_id=request_id,
+            samples=samples
         )
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()

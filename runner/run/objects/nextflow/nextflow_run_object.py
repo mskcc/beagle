@@ -103,8 +103,8 @@ class NextflowRunObject(RunObject):
         for p in self.inputs:
             for f in p.files:
                 file_obj = FileProcessor.get_file_obj(f)
-                if file_obj.sample:
-                    samples.add(file_obj.sample)
+                for sample in file_obj.get_samples():
+                    samples.add(sample)
         self.samples = list(samples)
         [NextflowPortObject.ready(p) for p in self.outputs]
         self.status = RunStatus.READY
@@ -158,9 +158,15 @@ class NextflowRunObject(RunObject):
         self.run_obj.save()
 
     def complete(self, outputs):
+        request_id = self.run_obj.samples.first().request_id if self.run_obj.samples.first() else None
         for out in self.outputs:
             out.complete(
-                outputs.get(out.name, None), self.output_file_group, self.job_group_notifier, self.output_metadata
+                outputs.get(out.name, None),
+                self.output_file_group,
+                self.job_group_notifier,
+                self.output_metadata,
+                request_id,
+                [s.sample_id for s in self.run_obj.samples.all()]
             )
         self.status = RunStatus.COMPLETED
 
