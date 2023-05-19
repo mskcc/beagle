@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -54,5 +55,10 @@ Samples Paired with Pooled normal: {self.pooled_normal_cnt}<br>
 <br>
 Samples with the following IDs are not being processed:<br>
 {"<br>".join(self.unpaired)}
+<br><br>
+Thank you,<br>
+Nicholas D. Socci<br>
+Director, Bioinformatics Core<br>
+{settings.CONTACT_EMAIL}<br>
 """
         return body

@@ -35,6 +35,8 @@ from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
+from study.objects import StudyObject
+from study.models import JobGroupWatcher, JobGroupWatcherConfig
 
 
 logger = logging.getLogger(__name__)
@@ -97,6 +99,7 @@ def create_operator_run_from_jobs(
         job_group_notifier=jgn,
         parent=operator_run_parent,
     )
+
     run_ids = []
     pipeline_id = None
 
@@ -195,9 +198,15 @@ def create_jobs_from_request(
         except Exception as e:
             logger.info(
                 format_log(
-                    "Failed to instantiate notifier" % operator_id, job_group_id=job_group_id, request_id=request_id
+                    f"Failed to instantiate notifier {operator_id}", job_group_id=job_group_id, request_id=request_id
                 )
             )
+
+    studies = StudyObject.get_by_request(request_id)
+    postprocessors = JobGroupWatcherConfig.objects.filter(operators=operator_id)
+    for study in studies:
+        for config in postprocessors:
+            JobGroupWatcher.objects.create(study=study.db_object, job_group=job_group, config=config)
 
     operator = OperatorFactory.get_by_model(
         operator_model,
@@ -474,6 +483,14 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["memlimit"] = run.app.memlimit
     if run.app.output_permission:
         job["root_permission"] = run.app.output_permission
+
+    job["metadata"] = dict()
+    job["metadata"]["run_id"] = run_id
+    job["metadata"]["pipeline_id"] = str(run.app.id)
+    job["metadata"][
+        "pipeline_link"
+    ] = f"{run1.run_obj.app.github}/blob/{run1.run_obj.app.version}/{run1.run_obj.app.entrypoint}"
+
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
@@ -639,7 +656,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         operator_run_id,
         lsf_log_location,
         input_json_location,
-        str(run.run_obj.job_group.id)
+        str(run.run_obj.job_group.id),
     )
     e = event.to_dict()
     send_notification.delay(e)
