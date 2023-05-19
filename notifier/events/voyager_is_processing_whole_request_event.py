@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -49,5 +50,10 @@ Number of samples received: {self.number_of_samples_recived}<br>
 Number of samples running: {self.number_of_samples}<br>
 Samples Paired with Match normal: {self.match_normal_cnt}<br>
 Samples Paired with Pooled normal: {self.pooled_normal_cnt}<br>
+<br>
+Thank you,<br>
+Nicholas D. Socci<br>
+Director, Bioinformatics Core<br>
+{settings.CONTACT_EMAIL}<br>
 """
         return body

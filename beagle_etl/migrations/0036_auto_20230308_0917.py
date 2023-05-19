@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 def update_smile_messages(apps, schema_editor):
-    SMILEMessage = apps.get_model('beagle_etl', 'SMILEMessage')
+    SMILEMessage = apps.get_model("beagle_etl", "SMILEMessage")
     for msg in SMILEMessage.objects.all():
         if msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
             msg.request_id = json.loads(msg.message)[0].get(settings.REQUEST_ID_METADATA_KEY)
@@ -17,7 +17,7 @@ def update_smile_messages(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0035_validatormodel'),
+        ("beagle_etl", "0035_validatormodel"),
     ]
 
     operations = [

@@ -35,8 +35,7 @@ class CWLPortObject(PortObject):
         self.value = PortProcessor.process_files(copy.deepcopy(self.value), PortAction.CONVERT_TO_PATH)
         self.files = files
 
-    def complete(self, value, group, job_group_notifier, output_metadata={}):
-
+    def complete(self, value, group, job_group_notifier, output_metadata={}, request_id=None, samples=[]):
         self.value = value
         files = []
         self.db_value = PortProcessor.process_files(
@@ -45,6 +44,8 @@ class CWLPortObject(PortObject):
             file_list=files,
             group_id=str(group.id),
             metadata=output_metadata,
+            request_id=request_id,
+            samples=samples
         )
         if self.notify:
             PortProcessor.process_files(
