@@ -79,8 +79,8 @@ class PortProcessor(object):
                 kwargs.get("group_id"),
                 kwargs.get("metadata"),
                 kwargs.get("file_list"),
-                kwargs.get('request_id'),
-                kwargs.get('samples', [])
+                kwargs.get("request_id"),
+                kwargs.get("samples", []),
             )
         if action == PortAction.SEND_AS_NOTIFICATION:
             return PortProcessor._send_as_notification(file_obj, kwargs.get("job_group"))

@@ -196,14 +196,17 @@ def new_request(message_id):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    Request.objects.get_or_create(request_id=request_id,
-                                  latest=True,
-                                  defaults={"delivery_date": delivery_date,
-                                            "lab_head_name": lab_head_name,
-                                            "lab_head_email": lab_head_email,
-                                            "investigator_email": investigator_email,
-                                            "investigator_name": investigator_name
-                                            })
+    Request.objects.get_or_create(
+        request_id=request_id,
+        latest=True,
+        defaults={
+            "delivery_date": delivery_date,
+            "lab_head_name": lab_head_name,
+            "lab_head_email": lab_head_email,
+            "investigator_email": investigator_email,
+            "investigator_name": investigator_name,
+        },
+    )
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -355,8 +358,11 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
         == 0
     ):
-        samples = list(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                             values_metadata=settings.SAMPLE_ID_METADATA_KEY))
+        samples = list(
+            FileRepository.filter(
+                metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+            )
+        )
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
         send_to = get_emails_to_notify(request_id)
@@ -367,7 +373,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject="Voyager Status: All Normals",
                 request_id=request_id,
-                samples=samples
+                samples=samples,
             ).to_dict()
             send_notification.delay(event)
 
@@ -614,7 +620,7 @@ def update_sample_job(message_id):
         "cfDNA2dBarcode": cfdna_2dbarcode,
         "cmoInfoIgoId": cmo_info_igo_id,
         "patientAliases": patient_aliases,
-        "smilePatientId": smile_patient_id
+        "smilePatientId": smile_patient_id,
     }
 
     job_group = JobGroup()
@@ -707,6 +713,7 @@ def update_sample_job(message_id):
         "code": None,
     }
     create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
+
 
 @shared_task
 def not_supported(message_id):

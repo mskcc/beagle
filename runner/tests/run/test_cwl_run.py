@@ -36,8 +36,8 @@ class CWLRunObjectTest(APITestCase):
         self.file_type_unknown = FileType(name="unknown")
         self.file_type_unknown.save()
         self.request = Request.objects.create(request_id="REQUEST_1")
-        self.sample_1 = Sample.objects.create(sample_id='SAMPLE_1', sample_name="SAMPLE_NAME_1", request_id="REQUEST_1")
-        self.sample_2 = Sample.objects.create(sample_id='SAMPLE_2', sample_name="SAMPLE_NAME_2", request_id="REQUEST_1")
+        self.sample_1 = Sample.objects.create(sample_id="SAMPLE_1", sample_name="SAMPLE_NAME_1", request_id="REQUEST_1")
+        self.sample_2 = Sample.objects.create(sample_id="SAMPLE_2", sample_name="SAMPLE_NAME_2", request_id="REQUEST_1")
         self.file1 = File(
             **{
                 "file_name": "FASTQ_L002_R1_001.fastq.gz",
@@ -45,7 +45,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
-                "samples": ["SAMPLE_1"]
+                "samples": ["SAMPLE_1"],
             }
         )
         self.file1.save()
@@ -56,7 +56,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
-                "samples": ["SAMPLE_1"]
+                "samples": ["SAMPLE_1"],
             }
         )
         self.file2.save()
@@ -67,7 +67,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
-                "samples": ["SAMPLE_2"]
+                "samples": ["SAMPLE_2"],
             }
         )
         self.file3.save()
@@ -78,7 +78,7 @@ class CWLRunObjectTest(APITestCase):
                 "size": 1234,
                 "file_group": self.file_group,
                 "file_type": self.file_type_unknown,
-                "samples": ["SAMPLE_2"]
+                "samples": ["SAMPLE_2"],
             }
         )
         self.file4.save()
