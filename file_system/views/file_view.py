@@ -29,7 +29,6 @@ import re
 from runner.tasks import cmo_dmp_manifest
 
 
-
 class FileView(
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
@@ -287,6 +286,7 @@ class CopyFilesView(GenericAPIView):
 
 class manifest(GenericAPIView):
     """GenericAPIView Class that returns a special formated csv, which adds DMP BAM Metadata to Request Fastq Metdata"""
+
     # Setting members
     pagination_class = None  # We don't need pagination
     serializer_class = manifestSerializer
