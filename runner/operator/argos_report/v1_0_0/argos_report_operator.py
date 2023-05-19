@@ -9,6 +9,7 @@ from file_system.models import File, FileGroup, FileType, FileMetadata
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
 from runner.run.objects.run_creator_object import RunCreator
+from runner.run.processors.file_processor import FileProcessor
 from notifier.events import OperatorRequestEvent
 from notifier.models import JobGroup
 from notifier.tasks import send_notification
@@ -71,9 +72,9 @@ class ArgosReportOperator(Operator):
 
         for port in ports:
             if port.name == "analysis_dir":
-                analysis_dir_path = port.value["location"]
+                analysis_dir_path = FileProcessor.parse_path_from_uri(port.value["location"])
             if port.name == "portal_dir":
-                portal_dir_path = port.value["location"]
+                portal_dir_path = FileProcessor.parse_path_from_uri(port.value["location"])
 
         inputs = list()
         for ci_tag in ci_tags:
