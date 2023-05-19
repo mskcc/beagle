@@ -59,7 +59,7 @@ class ArgosReportOperator(Operator):
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         output_directory = os.path.join(
-            pipeline.output_directory, ARGOS_NAME, project_prefix, ARGOS_VERSION, jg_created_date
+            pipeline.output_directory, ARGOS_NAME, project_prefix, ARGOS_VERSION, jg_created_date, "report"
         )
         return output_directory
 
