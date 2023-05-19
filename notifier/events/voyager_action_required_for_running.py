@@ -1,3 +1,4 @@
+from django.conf import settings
 from notifier.event_handler.event import Event
 
 
@@ -23,8 +24,14 @@ class VoyagerActionRequiredForRunningEvent(Event):
         """
         :return: email body
         """
-        body = f"""We have received the request to run {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples) but are unable to proceed due to missing or incomplete data.
+        body = f"""We have received the request to run {self.request_id} (Gene Panel: {self.gene_panel}; {self.number_of_samples} samples)<br>
+        but are unable to proceed due to missing or incomplete data.
 
-Please review your data and contact us to resubmit.
+Please review your data and contact us to resubmit.<br>
+<br>
+Thank you,<br>
+Nicholas D. Socci<br>
+Director, Bioinformatics Core<br>
+{settings.CONTACT_EMAIL}<br>
 """
         return body

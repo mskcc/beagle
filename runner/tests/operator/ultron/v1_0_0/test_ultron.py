@@ -9,7 +9,7 @@ from django.test import TestCase
 from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, SampleData, BamData
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
-from runner.models import Run
+from runner.models import Run, Port
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from django.conf import settings
@@ -99,6 +99,7 @@ class TestUltron(TestCase):
                 "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
+        self.maf_runner_ports = ["7f743915-a0d6-466c-b1eb-3f8501089a36", "b946625d-2753-4e5a-89b8-cc08beb1bc40"]
         self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.1.2/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
@@ -246,6 +247,45 @@ class TestUltron(TestCase):
         single_run_id = self.run_ids[0]
         sample_groups = ultron_operator._build_sample_groups([single_run_id])
         self.assertEqual(len(sample_groups[0]), 1)
+
+    def test_construct_inputs_no_clinical_maf(self):
+        """
+        Test the created of the inputs obj with no mafs
+        """
+        file_group_id = FileGroup.objects.get(name="DMP Data Mutations Extended").pk
+        files = FileRepository.filter(file_group=file_group_id)
+        operator_model = Operator.objects.get(id=12)
+        job_group = JobGroup()
+        job_group.save()
+        ultron_operator = UltronOperator(
+            operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
+        )
+        for single_file in files:
+            single_file.delete()
+        single_run_id = self.run_ids[0]
+        sample_groups = ultron_operator._build_sample_groups([single_run_id])
+        for single_sample_group in sample_groups:
+            if single_sample_group["sample_type"] == "clinical":
+                self.assertNotContains(single_sample_group, "maf_file")
+
+    def test_construct_inputs_no_research_maf(self):
+        """
+        Test the created of the inputs obj with no mafs
+        """
+        runner_ports = Port.objects.filter(id__in=self.maf_runner_ports)
+        for single_port in runner_ports:
+            single_port.delete()
+        operator_model = Operator.objects.get(id=12)
+        job_group = JobGroup()
+        job_group.save()
+        ultron_operator = UltronOperator(
+            operator_model, pipeline="cb5d793b-e650-4b7d-bfcd-882858e29cc5", job_group_id=job_group.id
+        )
+        single_run_id = self.run_ids[0]
+        sample_groups = ultron_operator._build_sample_groups([single_run_id])
+        for single_sample_group in sample_groups:
+            if single_sample_group["sample_type"] == "research":
+                self.assertNotContains(single_sample_group, "maf_file")
 
     def test_construct_sample_data_null_patient_id(self):
         """
