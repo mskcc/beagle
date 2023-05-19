@@ -1,0 +1,368 @@
+{
+  "smileRequestId": "7203e4e8-ab74-4928-b31f-5089908ab051",
+  "igoProjectId": "08944",
+  "igoRequestId": "08944_B",
+  "genePanel": "IMPACT468",
+  "projectManagerName": "Ling, Lilan",
+  "piEmail": "rudinc@mskcc.org",
+  "labHeadName": "Charles Rudin",
+  "labHeadEmail": "rudinc@mskcc.org",
+  "investigatorName": "Viola Allaj",
+  "investigatorEmail": "allajv@mskcc.org",
+  "dataAnalystName": "John Poirier",
+  "dataAnalystEmail": "poirierj@mskcc.org",
+  "otherContactEmails": "poirierj@mskcc.org",
+  "dataAccessEmails": "",
+  "qcAccessEmails": ",zzPDL_SKI_PDXTeam@mskcc.org",
+  "strand": null,
+  "libraryType": null,
+  "isCmoRequest": true,
+  "bicAnalysis": true,
+  "requestJson": "{\"requestId\":\"08944_B\",\"projectId\":\"08944\",\"dataAccessEmails\":\"\",\"dataAnalystEmail\":\"poirierj@mskcc.org\",\"dataAnalystName\":\"John Poirier\",\"investigatorEmail\":\"allajv@mskcc.org\",\"investigatorName\":\"Viola Allaj\",\"labHeadEmail\":\"rudinc@mskcc.org\",\"labHeadName\":\"Charles Rudin\",\"libraryType\":null,\"otherContactEmails\":\"poirierj@mskcc.org\",\"piEmail\":\"rudinc@mskcc.org\",\"projectManagerName\":\"Ling, Lilan\",\"qcAccessEmails\":\",zzPDL_SKI_PDXTeam@mskcc.org\",\"recipe\":\"IMPACT468\",\"strand\":null,\"deliveryDate\":null,\"bicAnalysis\":true,\"isCmoRequest\":true,\"samples\":[{\"igoId\":\"08944_B_3\",\"cmoPatientId\":\"C-4LM16H\",\"cmoSampleName\":\"C-4LM16H-X001-d\",\"sampleName\":\"LTG017_P1_17095a_R_43\",\"baitSet\":\"IMPACT468_BAITS\",\"cfDNA2dBarcode\":null,\"cmoInfoIgoId\":null,\"cmoSampleClass\":\"Primary\",\"collectionYear\":\"\",\"investigatorSampleId\":\"LTG017_P1_17095a_R_43\",\"oncoTreeCode\":\"SCLC\",\"preservation\":\"Frozen\",\"sampleOrigin\":\"Tissue\",\"sex\":\"M\",\"species\":\"Human\",\"specimenType\":\"PDX\",\"tissueLocation\":\"\",\"tubeId\":\"\",\"tumorOrNormal\":\"Tumor\",\"igoComplete\":true,\"qcReports\":[],\"libraries\":[{\"barcodeId\":null,\"barcodeIndex\":null,\"libraryIgoId\":\"08944_B_3_1_1_1\",\"libraryVolume\":35.0,\"libraryConcentrationNgul\":35.2,\"dnaInputNg\":null,\"captureConcentrationNm\":\"11.363636363636363\",\"captureInputNg\":\"400.0\",\"captureName\":\"Pool-08944_B-Tube7_1\",\"runs\":[{\"runMode\":\"HiSeq High Output\",\"runId\":\"PITT_0319\",\"flowCellId\":\"H3MV7BBXY\",\"readLength\":\"\",\"runDate\":\"2019-02-11\",\"flowCellLanes\":[5],\"fastqs\":[\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R2_001.fastq.gz\"]}]}],\"cmoSampleIdFields\":{\"naToExtract\":\"\",\"normalizedPatientId\":\"ALLAJV_HCISCLC017\",\"sampleType\":\"DNA\",\"recipe\":\"IMPACT468\"}},{\"igoId\":\"08944_B_4\",\"cmoPatientId\":\"C-4LM16H\",\"cmoSampleName\":\"C-4LM16H-N001-d\",\"sampleName\":\"17-0010557a\",\"baitSet\":\"IMPACT468_BAITS\",\"cfDNA2dBarcode\":null,\"cmoInfoIgoId\":null,\"cmoSampleClass\":\"Normal\",\"collectionYear\":\"\",\"investigatorSampleId\":\"17-0010557a\",\"oncoTreeCode\":null,\"preservation\":\"Frozen\",\"sampleOrigin\":\"Whole Blood\",\"sex\":\"M\",\"species\":\"Human\",\"specimenType\":\"Blood\",\"tissueLocation\":\"\",\"tubeId\":\"\",\"tumorOrNormal\":\"Normal\",\"igoComplete\":true,\"qcReports\":[],\"libraries\":[{\"barcodeId\":null,\"barcodeIndex\":null,\"libraryIgoId\":\"08944_B_4_1_1_1\",\"libraryVolume\":35.0,\"libraryConcentrationNgul\":34.1,\"dnaInputNg\":null,\"captureConcentrationNm\":\"4.9853372434017595\",\"captureInputNg\":\"170.0\",\"captureName\":\"Pool-08944_B-Tube7_1\",\"runs\":[{\"runMode\":\"HiSeq High Output\",\"runId\":\"PITT_0319\",\"flowCellId\":\"H3MV7BBXY\",\"readLength\":\"\",\"runDate\":\"2019-02-11\",\"flowCellLanes\":[5],\"fastqs\":[\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz\"]}]}],\"cmoSampleIdFields\":{\"naToExtract\":\"\",\"normalizedPatientId\":\"ALLAJV_HCISCLC017\",\"sampleType\":\"DNA\",\"recipe\":\"IMPACT468\"}},{\"igoId\":\"08944_B_1\",\"cmoPatientId\":\"C-MP76JR\",\"cmoSampleName\":\"C-MP76JR-X001-d\",\"sampleName\":\"LTG002_P3_17096_L1\",\"baitSet\":\"IMPACT468_BAITS\",\"cfDNA2dBarcode\":null,\"cmoInfoIgoId\":null,\"cmoSampleClass\":\"Primary\",\"collectionYear\":\"\",\"investigatorSampleId\":\"LTG002_P3_17096_L1\",\"oncoTreeCode\":\"SCLC\",\"preservation\":\"Frozen\",\"sampleOrigin\":\"Tissue\",\"sex\":\"F\",\"species\":\"Human\",\"specimenType\":\"PDX\",\"tissueLocation\":\"\",\"tubeId\":\"\",\"tumorOrNormal\":\"Tumor\",\"igoComplete\":true,\"qcReports\":[],\"libraries\":[{\"barcodeId\":null,\"barcodeIndex\":null,\"libraryIgoId\":\"08944_B_1_1_1_1\",\"libraryVolume\":35.0,\"libraryConcentrationNgul\":34.8,\"dnaInputNg\":null,\"captureConcentrationNm\":\"11.49425287356322\",\"captureInputNg\":\"400.0\",\"captureName\":\"Pool-08944_B-Tube7_1\",\"runs\":[{\"runMode\":\"HiSeq High Output\",\"runId\":\"PITT_0319\",\"flowCellId\":\"H3MV7BBXY\",\"readLength\":\"\",\"runDate\":\"2019-02-11\",\"flowCellLanes\":[5],\"fastqs\":[\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R2_001.fastq.gz\"]}]}],\"cmoSampleIdFields\":{\"naToExtract\":\"\",\"normalizedPatientId\":\"ALLAJV_HCISCLC002\",\"sampleType\":\"DNA\",\"recipe\":\"IMPACT468\"}},{\"igoId\":\"08944_B_2\",\"cmoPatientId\":\"C-MP76JR\",\"cmoSampleName\":\"C-MP76JR-N001-d\",\"sampleName\":\"17-0001535a\",\"baitSet\":\"IMPACT468_BAITS\",\"cfDNA2dBarcode\":null,\"cmoInfoIgoId\":null,\"cmoSampleClass\":\"Normal\",\"collectionYear\":\"\",\"investigatorSampleId\":\"17-0001535a\",\"oncoTreeCode\":null,\"preservation\":\"Frozen\",\"sampleOrigin\":\"Whole Blood\",\"sex\":\"F\",\"species\":\"Human\",\"specimenType\":\"Blood\",\"tissueLocation\":\"\",\"tubeId\":\"\",\"tumorOrNormal\":\"Normal\",\"igoComplete\":true,\"qcReports\":[],\"libraries\":[{\"barcodeId\":null,\"barcodeIndex\":null,\"libraryIgoId\":\"08944_B_2_1_1_1\",\"libraryVolume\":35.0,\"libraryConcentrationNgul\":33.5,\"dnaInputNg\":null,\"captureConcentrationNm\":\"5.074626865671642\",\"captureInputNg\":\"170.0\",\"captureName\":\"Pool-08944_B-Tube7_1\",\"runs\":[{\"runMode\":\"HiSeq High Output\",\"runId\":\"PITT_0319\",\"flowCellId\":\"H3MV7BBXY\",\"readLength\":\"\",\"runDate\":\"2019-02-11\",\"flowCellLanes\":[5],\"fastqs\":[\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz\"]}]}],\"cmoSampleIdFields\":{\"naToExtract\":\"\",\"normalizedPatientId\":\"ALLAJV_HCISCLC002\",\"sampleType\":\"DNA\",\"recipe\":\"IMPACT468\"}}],\"pooledNormals\":[\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC/FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC_S23_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC/FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC_S23_R2_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC_S86_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC_S86_R2_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC_S147_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC_S147_R2_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC_S196_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC_S196_R2_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC/MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC_S61_R1_001.fastq.gz\",\"/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC/MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC_S61_R2_001.fastq.gz\"]}",
+  "pooledNormals": [
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC/FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC_S23_R1_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC/FFPEPOOLEDNORMAL_IGO_IMPACT468_GATGAATC_S23_R2_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC_S86_R1_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_AMBIGUOUS_GCCAAGAC_S86_R2_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC_S147_R1_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_GCCAAGAC_S147_R2_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC_S196_R1_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC/FROZENPOOLEDNORMAL_IGO_IMPACT468_GCCAAGAC_S196_R2_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC/MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC_S61_R1_001.fastq.gz",
+    "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_POOLEDNORMALS/Sample_MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC/MOUSEPOOLEDNORMAL_IGO_AMBIGUOUS_AATCCGTC_S61_R2_001.fastq.gz"
+  ],
+  "samples": [
+    {
+      "smileSampleId": "9020df2c-76b0-4e79-8fe8-a1da0dfec629",
+      "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+      "primaryId": "08944_B_1",
+      "cmoPatientId": "C-MP76JR",
+      "cmoSampleName": "C-MP76JR-X001-d",
+      "sampleName": "LTG002_P3_17096_L1",
+      "cmoInfoIgoId": null,
+      "investigatorSampleId": "LTG002_P3_17096_L1",
+      "importDate": "2022-11-28",
+      "sampleType": "Primary",
+      "oncotreeCode": "SCLC",
+      "collectionYear": "",
+      "tubeId": "",
+      "cfDNA2dBarcode": null,
+      "species": "Human",
+      "sex": "F",
+      "tumorOrNormal": "Tumor",
+      "preservation": "Frozen",
+      "sampleClass": "PDX",
+      "sampleOrigin": "Tissue",
+      "tissueLocation": "",
+      "genePanel": "IMPACT468",
+      "baitSet": "IMPACT468_BAITS",
+      "datasource": "igo",
+      "igoComplete": true,
+      "cmoSampleIdFields": {
+        "naToExtract": "",
+        "normalizedPatientId": "ALLAJV_HCISCLC002",
+        "sampleType": "DNA",
+        "recipe": "IMPACT468"
+      },
+      "qcReports": [],
+      "libraries": [
+        {
+          "barcodeId": null,
+          "barcodeIndex": null,
+          "libraryIgoId": "08944_B_1_1_1_1",
+          "libraryVolume": 35.0,
+          "libraryConcentrationNgul": 34.8,
+          "dnaInputNg": null,
+          "captureConcentrationNm": "11.49425287356322",
+          "captureInputNg": "400.0",
+          "captureName": "Pool-08944_B-Tube7_1",
+          "runs": [
+            {
+              "runMode": "HiSeq High Output",
+              "runId": "PITT_0319",
+              "flowCellId": "H3MV7BBXY",
+              "readLength": "",
+              "runDate": "2019-02-11",
+              "flowCellLanes": [
+                5
+              ],
+              "fastqs": [
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R1_001.fastq.gz",
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R2_001.fastq.gz"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleAliases": [
+        {
+          "value": "LTG002_P3_17096_L1",
+          "namespace": "investigatorId"
+        },
+        {
+          "value": "08944_B_1",
+          "namespace": "igoId"
+        }
+      ],
+      "patientAliases": [
+        {
+          "value": "C-MP76JR",
+          "namespace": "cmoId"
+        }
+      ],
+      "additionalProperties": {
+        "igoRequestId": "08944_B",
+        "isCmoSample": "true"
+      }
+    },
+    {
+      "smileSampleId": "91584827-03bc-49ac-bf20-e28db41ea64e",
+      "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+      "primaryId": "08944_B_4",
+      "cmoPatientId": "C-4LM16H",
+      "cmoSampleName": "C-4LM16H-N001-d",
+      "sampleName": "17-0010557a",
+      "cmoInfoIgoId": null,
+      "investigatorSampleId": "17-0010557a",
+      "importDate": "2022-11-28",
+      "sampleType": "Normal",
+      "oncotreeCode": null,
+      "collectionYear": "",
+      "tubeId": "",
+      "cfDNA2dBarcode": null,
+      "species": "Human",
+      "sex": "M",
+      "tumorOrNormal": "Normal",
+      "preservation": "Frozen",
+      "sampleClass": "Blood",
+      "sampleOrigin": "Whole Blood",
+      "tissueLocation": "",
+      "genePanel": "IMPACT468",
+      "baitSet": "IMPACT468_BAITS",
+      "datasource": "igo",
+      "igoComplete": true,
+      "cmoSampleIdFields": {
+        "naToExtract": "",
+        "normalizedPatientId": "ALLAJV_HCISCLC017",
+        "sampleType": "DNA",
+        "recipe": "IMPACT468"
+      },
+      "qcReports": [],
+      "libraries": [
+        {
+          "barcodeId": null,
+          "barcodeIndex": null,
+          "libraryIgoId": "08944_B_4_1_1_1",
+          "libraryVolume": 35.0,
+          "libraryConcentrationNgul": 34.1,
+          "dnaInputNg": null,
+          "captureConcentrationNm": "4.9853372434017595",
+          "captureInputNg": "170.0",
+          "captureName": "Pool-08944_B-Tube7_1",
+          "runs": [
+            {
+              "runMode": "HiSeq High Output",
+              "runId": "PITT_0319",
+              "flowCellId": "H3MV7BBXY",
+              "readLength": "",
+              "runDate": "2019-02-11",
+              "flowCellLanes": [
+                5
+              ],
+              "fastqs": [
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz",
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleAliases": [
+        {
+          "value": "17-0010557a",
+          "namespace": "investigatorId"
+        },
+        {
+          "value": "08944_B_4",
+          "namespace": "igoId"
+        }
+      ],
+      "patientAliases": [
+        {
+          "value": "C-4LM16H",
+          "namespace": "cmoId"
+        }
+      ],
+      "additionalProperties": {
+        "igoRequestId": "08944_B",
+        "isCmoSample": "true"
+      }
+    },
+    {
+      "smileSampleId": "34e815cf-468f-49f3-953a-bccd11c4461b",
+      "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+      "primaryId": "08944_B_2",
+      "cmoPatientId": "C-MP76JR",
+      "cmoSampleName": "C-MP76JR-N001-d",
+      "sampleName": "17-0001535a",
+      "cmoInfoIgoId": null,
+      "investigatorSampleId": "17-0001535a",
+      "importDate": "2022-11-28",
+      "sampleType": "Normal",
+      "oncotreeCode": null,
+      "collectionYear": "",
+      "tubeId": "",
+      "cfDNA2dBarcode": null,
+      "species": "Human",
+      "sex": "F",
+      "tumorOrNormal": "Normal",
+      "preservation": "Frozen",
+      "sampleClass": "Blood",
+      "sampleOrigin": "Whole Blood",
+      "tissueLocation": "",
+      "genePanel": "IMPACT468",
+      "baitSet": "IMPACT468_BAITS",
+      "datasource": "igo",
+      "igoComplete": true,
+      "cmoSampleIdFields": {
+        "naToExtract": "",
+        "normalizedPatientId": "ALLAJV_HCISCLC002",
+        "sampleType": "DNA",
+        "recipe": "IMPACT468"
+      },
+      "qcReports": [],
+      "libraries": [
+        {
+          "barcodeId": null,
+          "barcodeIndex": null,
+          "libraryIgoId": "08944_B_2_1_1_1",
+          "libraryVolume": 35.0,
+          "libraryConcentrationNgul": 33.5,
+          "dnaInputNg": null,
+          "captureConcentrationNm": "5.074626865671642",
+          "captureInputNg": "170.0",
+          "captureName": "Pool-08944_B-Tube7_1",
+          "runs": [
+            {
+              "runMode": "HiSeq High Output",
+              "runId": "PITT_0319",
+              "flowCellId": "H3MV7BBXY",
+              "readLength": "",
+              "runDate": "2019-02-11",
+              "flowCellLanes": [
+                5
+              ],
+              "fastqs": [
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz",
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleAliases": [
+        {
+          "value": "17-0001535a",
+          "namespace": "investigatorId"
+        },
+        {
+          "value": "08944_B_2",
+          "namespace": "igoId"
+        }
+      ],
+      "patientAliases": [
+        {
+          "value": "C-MP76JR",
+          "namespace": "cmoId"
+        }
+      ],
+      "additionalProperties": {
+        "igoRequestId": "08944_B",
+        "isCmoSample": "true"
+      }
+    },
+    {
+      "smileSampleId": "2068fb42-777b-416f-b703-2017ec875ae8",
+      "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+      "primaryId": "08944_B_3",
+      "cmoPatientId": "C-4LM16H",
+      "cmoSampleName": "C-4LM16H-X001-d",
+      "sampleName": "LTG017_P1_17095a_R_43",
+      "cmoInfoIgoId": null,
+      "investigatorSampleId": "LTG017_P1_17095a_R_43",
+      "importDate": "2022-11-28",
+      "sampleType": "Primary",
+      "oncotreeCode": "SCLC",
+      "collectionYear": "",
+      "tubeId": "",
+      "cfDNA2dBarcode": null,
+      "species": "Human",
+      "sex": "M",
+      "tumorOrNormal": "Tumor",
+      "preservation": "Frozen",
+      "sampleClass": "PDX",
+      "sampleOrigin": "Tissue",
+      "tissueLocation": "",
+      "genePanel": "IMPACT468",
+      "baitSet": "IMPACT468_BAITS",
+      "datasource": "igo",
+      "igoComplete": true,
+      "cmoSampleIdFields": {
+        "naToExtract": "",
+        "normalizedPatientId": "ALLAJV_HCISCLC017",
+        "sampleType": "DNA",
+        "recipe": "IMPACT468"
+      },
+      "qcReports": [],
+      "libraries": [
+        {
+          "barcodeId": null,
+          "barcodeIndex": null,
+          "libraryIgoId": "08944_B_3_1_1_1",
+          "libraryVolume": 35.0,
+          "libraryConcentrationNgul": 35.2,
+          "dnaInputNg": null,
+          "captureConcentrationNm": "11.363636363636363",
+          "captureInputNg": "400.0",
+          "captureName": "Pool-08944_B-Tube7_1",
+          "runs": [
+            {
+              "runMode": "HiSeq High Output",
+              "runId": "PITT_0319",
+              "flowCellId": "H3MV7BBXY",
+              "readLength": "",
+              "runDate": "2019-02-11",
+              "flowCellLanes": [
+                5
+              ],
+              "fastqs": [
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R1_001.fastq.gz",
+                "/igo/delivery/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R2_001.fastq.gz"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleAliases": [
+        {
+          "value": "LTG017_P1_17095a_R_43",
+          "namespace": "investigatorId"
+        },
+        {
+          "value": "08944_B_3",
+          "namespace": "igoId"
+        }
+      ],
+      "patientAliases": [
+        {
+          "value": "C-4LM16H",
+          "namespace": "cmoId"
+        }
+      ],
+      "additionalProperties": {
+        "igoRequestId": "08944_B",
+        "isCmoSample": "true"
+      }
+    }
+  ]
+}

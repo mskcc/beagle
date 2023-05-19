@@ -135,6 +135,7 @@ class RunSerializerPartial(serializers.ModelSerializer):
     request_id = serializers.SerializerMethodField()
     status_url = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    samples = serializers.SerializerMethodField()
 
     def get_status(self, obj):
         return RunStatus(obj.status).name
@@ -145,9 +146,23 @@ class RunSerializerPartial(serializers.ModelSerializer):
     def get_status_url(self, obj):
         return settings.BEAGLE_URL + "/v0/run/api/%s" % obj.id
 
+    def get_samples(self, obj):
+        return obj.samples.all().values_list("sample_id", flat=True)
+
     class Meta:
         model = Run
-        fields = ("id", "name", "message", "status", "request_id", "app", "status_url", "created_date", "job_group")
+        fields = (
+            "id",
+            "name",
+            "message",
+            "status",
+            "samples",
+            "request_id",
+            "app",
+            "status_url",
+            "created_date",
+            "job_group",
+        )
 
 
 class RunSerializerFull(serializers.ModelSerializer):

@@ -1,7 +1,6 @@
 import logging
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
-from file_system.helper.file_group_helper import default_file_group
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
@@ -21,6 +20,7 @@ class Operator(object):
         pairing=None,
         output_directory_prefix=None,
         file_group=None,
+        **kwargs
     ):
         if not isinstance(model, OperatorModel):
             raise Exception("Must pass an instance of beagle_etl.models.Operator")
