@@ -100,7 +100,7 @@ class FileProcessor(object):
             file_group=group_id_obj,
             size=size,
             request_id=request_id,
-            samples=samples
+            samples=samples,
         )
         file_metadata = FileMetadata(file=file_object, metadata=metadata)
         file_metadata.save()
