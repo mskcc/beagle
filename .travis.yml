@@ -1,3 +1,4 @@
+dist: jammy
 language: python
 sudo: required
 os:
