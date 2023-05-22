@@ -4,7 +4,6 @@ from runner.models import Run, RunStatus, Port
 
 
 class StudyObject(object):
-
     def __init__(self, study_id, requests, samples, db_object):
         self.study_id = study_id
         self.requests = requests
@@ -21,7 +20,7 @@ class StudyObject(object):
             study_id=study_id,
             requests=list(study.requests.order_by("created_date").all()),
             samples=list(study.samples.order_by("created_date").all()),
-            db_object=study
+            db_object=study,
         )
 
     @staticmethod
@@ -67,7 +66,9 @@ class StudyObject(object):
             if result.get(run.app.pipeline_name.name):
                 result[run.app.pipeline_name.name].append(run)
             else:
-                result[run.app.pipeline_name.name] = [run,]
+                result[run.app.pipeline_name.name] = [
+                    run,
+                ]
         return result
 
     def _filter_latest_runs(self, runs):
@@ -75,7 +76,7 @@ class StudyObject(object):
         for run in runs:
             samples = [s.sample_id for s in run.samples.all()]
             samples.sort()
-            key = '_'.join(samples)
+            key = "_".join(samples)
             if not grouped_by_sample.get(key):
                 grouped_by_sample[key] = run
             else:

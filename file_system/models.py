@@ -284,14 +284,9 @@ class FileMetadata(BaseModel):
                 )
             return request
 
-    def create_or_update_sample(self,
-                                sample_id,
-                                cmo_sample_name,
-                                sample_name,
-                                sample_type,
-                                tumor_or_normal,
-                                sample_class,
-                                request):
+    def create_or_update_sample(
+        self, sample_id, cmo_sample_name, sample_name, sample_type, tumor_or_normal, sample_class, request
+    ):
         with transaction.atomic():
             latest = Sample.objects.filter(sample_id=sample_id, latest=True).first()
             current = {
@@ -301,7 +296,7 @@ class FileMetadata(BaseModel):
                 "sample_type": sample_type,
                 "tumor_or_normal": tumor_or_normal,
                 "sample_class": sample_class,
-                "request": request
+                "request": request,
             }
             if latest:
                 latest_dict = {
@@ -311,7 +306,7 @@ class FileMetadata(BaseModel):
                     "sample_type": latest.sample_type,
                     "tumor_or_normal": latest.tumor_or_normal,
                     "sample_class": latest.sample_class,
-                    "request": str(latest.request_id)
+                    "request": str(latest.request_id),
                 }
                 if DeepDiff(current, latest_dict, ignore_order=True):
                     sample = Sample.objects.create(
@@ -321,7 +316,7 @@ class FileMetadata(BaseModel):
                         sample_type=sample_type,
                         tumor_or_normal=tumor_or_normal,
                         sample_class=sample_class,
-                        request_id=request
+                        request_id=request,
                     )
                 else:
                     sample = latest
@@ -333,7 +328,7 @@ class FileMetadata(BaseModel):
                     sample_type=sample_type,
                     tumor_or_normal=tumor_or_normal,
                     sample_class=sample_class,
-                    request_id=request
+                    request_id=request,
                 )
             return sample
 
@@ -350,17 +345,11 @@ class FileMetadata(BaseModel):
                     "sex": latest.sex,
                 }
                 if DeepDiff(current, latest_dict, ignore_order=True):
-                    patient = Patient.objects.create(
-                        patient_id=patient_id,
-                        sex=sex
-                    )
+                    patient = Patient.objects.create(patient_id=patient_id, sex=sex)
                 else:
                     patient = latest
             else:
-                patient = Patient.objects.create(
-                    patient_id=patient_id,
-                    sex=sex
-                )
+                patient = Patient.objects.create(patient_id=patient_id, sex=sex)
             if sample not in patient.samples:
                 patient.samples.append(sample)
             return patient
@@ -390,24 +379,19 @@ class FileMetadata(BaseModel):
             populate_job_group_notifier_metadata.delay(request_id, lab_head_name, investigator_name, assay)
 
             if request_id:
-                request = self.create_or_update_request(request_id,
-                                                        lab_head_name,
-                                                        investigator_email,
-                                                        investigator_name)
+                request = self.create_or_update_request(
+                    request_id, lab_head_name, investigator_email, investigator_name
+                )
                 self.file.request_id = request_id
                 self.file.save(update_fields=("request_id",))
 
             if sample_id:
-                sample = self.create_or_update_sample(sample_id,
-                                                      cmo_sample_name,
-                                                      sample_name,
-                                                      sample_type,
-                                                      tumor_or_normal,
-                                                      sample_class,
-                                                      request_id)
+                sample = self.create_or_update_sample(
+                    sample_id, cmo_sample_name, sample_name, sample_type, tumor_or_normal, sample_class, request_id
+                )
                 if sample_id not in self.file.samples:
                     self.file.samples.append(sample_id)
-                    self.file.save(update_fields=('samples',))
+                    self.file.save(update_fields=("samples",))
 
             if patient_id:
                 patient = self.create_or_update_patient(patient_id, sex, sample_id)
