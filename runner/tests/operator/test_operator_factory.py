@@ -27,4 +27,6 @@ class TestOperatorFactory(TestCase):
         """
         Test that invalid pipelines raise an exception
         """
-        self.assertRaises(Exception, OperatorFactory.get_by_model, Operator.objects.first(), pipeline_version="Does_not_exist")
+        self.assertRaises(
+            Exception, OperatorFactory.get_by_model, Operator.objects.first(), pipeline_version="Does_not_exist"
+        )
