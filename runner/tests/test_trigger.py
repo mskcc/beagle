@@ -31,7 +31,14 @@ class TestOperatorTriggers(TestCase):
     @patch("runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id")
     @patch("runner.tasks._job_finished_notify")
     def test_create_jobs_from_operator_pipeline_deleted(
-        self, job_finished_notify, get_pipeline_id, get_jobs, send_notification, create_run_task, memcache_task_lock, set_for_restart
+        self,
+        job_finished_notify,
+        get_pipeline_id,
+        get_jobs,
+        send_notification,
+        create_run_task,
+        memcache_task_lock,
+        set_for_restart,
     ):
         argos_jobs = list()
         argos_jobs.append(RunCreator(app="cb5d793b-e650-4b7d-bfcd-882858e29cc5", inputs=None, name=None, tags={}))
