@@ -11,15 +11,6 @@ import datetime
 import glob
 import shutil
 
-# test specific fixtures
-FIXTURES = [
-    "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.files.json",
-    "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.input.json",
-    "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.port.output.json",
-    "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.run.json",
-    "runner/tests/operator/access/v2_1_0/manifest/0a3c70a9-cf89-466b-bd39-4f409c21fb41.samples.json",
-]
-
 # general fixtures
 COMMON_FIXTURES = [
     "runner/fixtures/runner.pipeline.json",
@@ -29,14 +20,20 @@ COMMON_FIXTURES = [
     "file_system/fixtures/file_system.storage.json",
     "beagle_etl/fixtures/beagle_etl.operator.json",
     "file_system/fixtures/DMP_data.json",
+    "file_system/fixtures/request_files.json",
+    "file_system/fixtures/request_metadata.json",
+    "runner/fixtures/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.samples.json",
+    "runner/fixtures/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.files.json",
+    "runner/fixtures/4d9c8213-df56-4a0f-8d86-ce2bd8349c59.samples.json",
+    "runner/fixtures/4d9c8213-df56-4a0f-8d86-ce2bd8349c59.files.json",
 ]
 
 
 class TestAcessManifestOperator(TestCase):
     # test db
-    fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
+    fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
     # variables to help check operator output
-    expected_csv_content = 'igoRequestId,primaryId,cmoPatientId,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg\n12345_A,12345_A_25,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,null,0,A-000000,,,0,,,F,,Whole Blood,,Tumor,0,,0,,0\n""\n'
+    expected_csv_content = 'igoRequestId,primaryId,cmoPatientId,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg\n12345_A,12345_A_3,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,102.5,,Blood,M,8042889270,Whole Blood,,Normal,9.756097561,,200.0,,1000.0000000025001\n12345_A,12345_A_1,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,69.0,,Blood,M,8042889270,Whole Blood,,Normal,14.49275362,,200.0,,999.99999978\n12345_A,12345_A_2,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,74.5,,Blood,M,8042889270,Whole Blood,,Normal,13.42281879,,200.0,,999.999999855\n""\n'
     file_path_pattern = "/tmp/12345_A/*/manifest.csv"
 
     def test_access_manifest_operator(self):
