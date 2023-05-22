@@ -64,6 +64,7 @@ class ArgosReportOperator(Operator):
         return output_directory
 
     def gen_inputs(self, hf_run):
+        request_id = hf_run.tags["project_prefix"]
         samples = hf_run.samples.all()
         ports = hf_run.port_set.all()
         analysis_dir_path = dict()
