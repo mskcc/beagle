@@ -202,7 +202,7 @@ class SampleGroup:
                         "normal_id": "DMP_NORMAL",
                         "sample_type": "clinical",
                         "prefilter": False,
-                        "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path}
+                        "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path},
                     }
                     if bam_data.mutations_extended:
                         d["maf_file"] = {"class": "File", "location": "juno://" + bam_data.mutations_extended}

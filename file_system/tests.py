@@ -12,8 +12,10 @@ from file_system.models import Storage, StorageType, FileGroup, File, FileType, 
 
 class FileTest(APITestCase):
     def setUp(self):
-        settings.ETL_USER="etl_user"
-        self.etl_user = User.objects.create_user(username=settings.ETL_USER, password="password", email="etl_user@gmail.com")
+        settings.ETL_USER = "etl_user"
+        self.etl_user = User.objects.create_user(
+            username=settings.ETL_USER, password="password", email="etl_user@gmail.com"
+        )
         self.user = User.objects.create_user(username="username", password="password", email="admin@gmail.com")
         self.storage = Storage(name="test", type=StorageType.LOCAL)
         self.storage.save()
@@ -145,7 +147,7 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
@@ -175,7 +177,7 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
@@ -197,7 +199,7 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
@@ -226,7 +228,7 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
@@ -249,7 +251,7 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
@@ -278,13 +280,13 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        file_id_1 = response.json()['id']
+        file_id_1 = response.json()["id"]
         response = self.client.post(
             "/v0/fs/files/",
             {
@@ -301,13 +303,13 @@ class FileTest(APITestCase):
                     settings.SAMPLE_CLASS_METADATA_KEY: "sampleClass_001",
                     settings.LAB_HEAD_NAME_METADATA_KEY: "labHeadName new",
                     settings.INVESTIGATOR_EMAIL_METADATA_KEY: "investigator@mskcc.org",
-                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator"
+                    settings.INVESTIGATOR_NAME_METADATA_KEY: "Investigator",
                 },
             },
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        file_id_2 = response.json()['id']
+        file_id_2 = response.json()["id"]
         self.assertEqual(Sample.objects.filter(sample_id="igoSampleId_001").count(), 1)
         self.assertEqual(Request.objects.filter(request_id="Request_001").count(), 2)
         self.assertEqual(Patient.objects.filter(patient_id="Patient_001").count(), 1)

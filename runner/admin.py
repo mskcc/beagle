@@ -20,7 +20,15 @@ action_add_pipeline_to_cache.short_description = "Add Pipeline to Cache"
 
 
 class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
-    list_display = ("id", "pipeline_name_string", "name", "version", "default", "output_directory", link_relation("operator"))
+    list_display = (
+        "id",
+        "pipeline_name_string",
+        "name",
+        "version",
+        "default",
+        "output_directory",
+        link_relation("operator"),
+    )
     actions = [
         action_add_pipeline_to_cache,
     ]
@@ -37,6 +45,7 @@ class PipelineAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
         if not obj.pipeline_name:
             return "-"
         return obj.pipeline_name.name
+
 
 class AppFilter(admin.SimpleListFilter):
     title = "App"
@@ -188,7 +197,7 @@ class PortAdmin(admin.ModelAdmin):
 
 
 class PipelineNameAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ("id", "name")
 
 
 admin.site.register(Run, RunAdmin)
