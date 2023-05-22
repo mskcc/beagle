@@ -98,7 +98,6 @@ class RunObject(object):
         run_message.update(error_message)
         self.message = run_message
 
-
     def complete(self, outputs):
         pass
 
