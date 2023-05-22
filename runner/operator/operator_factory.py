@@ -23,10 +23,6 @@ class OperatorFactory(object):
         mod_name, func_name = model.class_name.rsplit(".", 1)
         mod = importlib.import_module(mod_name)
         operator_class = getattr(mod, func_name)
-
-        from pprint import pprint
-        for operator_pipeline in model.pipeline_set.all():
-            pprint("pipeline_version is " + operator_pipeline.version)
         if "pipeline_version" in kwargs:
             pipeline_version = kwargs.get("pipeline_version")
             pipeline_exists = any([
