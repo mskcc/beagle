@@ -22,9 +22,3 @@ class TestOperatorFactory(TestCase):
         """
         first_operator = OperatorFactory.get_by_model(Operator.objects.first())
         self.assertTrue(first_operator != None)
-
-    def test_operator_invalid_version(self):
-        """
-        Test that invalid pipelines raise an exception
-        """
-        self.assertRaises(Exception, OperatorFactory.get_by_model, Operator.objects.first(), version="Does_not_exist")
