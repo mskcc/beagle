@@ -86,6 +86,7 @@ class ArgosReportOperator(Operator):
         inputs = list()
         for ci_tag in ci_tags:
             input = dict()
+            input["request_id"] = request_id
             input["sample_id"] = ci_tag
             input["portal_dir"] = portal_dir_path
             input["analysis_dir"] = analysis_dir_path
