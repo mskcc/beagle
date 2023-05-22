@@ -3,7 +3,7 @@ from enum import IntEnum
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from beagle_etl.metadata.normalizer import Normalizer
 
@@ -24,14 +24,14 @@ class BaseModel(models.Model):
 
 class Job(BaseModel):
     run = models.CharField(max_length=100, db_index=True)
-    args = JSONField(null=True, blank=True)
+    args = models.JSONField(null=True, blank=True)
     status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus], db_index=True)
-    children = JSONField(null=True, blank=True)
+    children = models.JSONField(null=True, blank=True)
     retry_count = models.IntegerField(default=0)
-    message = JSONField(null=True, blank=True)
+    message = models.JSONField(null=True, blank=True)
     max_retry = models.IntegerField(default=3)
     callback = models.CharField(max_length=100, default=None, blank=True, null=True)
-    callback_args = JSONField(null=True, blank=True)
+    callback_args = models.JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
@@ -101,7 +101,7 @@ class RequestCallbackJobStatus(IntEnum):
 class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
     recipe = models.CharField(max_length=100)
-    samples = JSONField(null=True, blank=True)
+    samples = models.JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.IntegerField(
@@ -113,8 +113,8 @@ class RequestCallbackJob(BaseModel):
 
 
 class NormalizerModel(BaseModel):
-    condition = JSONField(null=False, blank=False)
-    normalizer = JSONField(null=False, blank=False)
+    condition = models.JSONField(null=False, blank=False)
+    normalizer = models.JSONField(null=False, blank=False)
 
 
 def initialize_normalizer():
@@ -126,7 +126,7 @@ def initialize_normalizer():
 
 class ValidatorModel(BaseModel):
     name = models.CharField(null=False, blank=False, max_length=30, default="Metadata Schema")
-    schema = JSONField(null=False, blank=False)
+    schema = models.JSONField(null=False, blank=False)
 
     def save(self, *args, **kwargs):
         if not self.pk and ValidatorModel.objects.exists():

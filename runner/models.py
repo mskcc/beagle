@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models import F
 from file_system.models import File, FileGroup, Sample, Request
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
-from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 
@@ -186,11 +185,11 @@ class Run(BaseModel):
     app = models.ForeignKey(Pipeline, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(choices=[(status.value, status.name) for status in RunStatus], db_index=True)
     execution_id = models.UUIDField(null=True, blank=True)
-    job_statuses = JSONField(default=dict, blank=True)
-    message = JSONField(default=dict, blank=True, null=True)
-    output_metadata = JSONField(default=dict, blank=True, null=True)
+    job_statuses = models.JSONField(default=dict, blank=True)
+    message = models.JSONField(default=dict, blank=True, null=True)
+    output_metadata = models.JSONField(default=dict, blank=True, null=True)
     output_directory = models.CharField(max_length=1000, editable=True, blank=True, null=True)
-    tags = JSONField(default=dict, blank=True, null=True)
+    tags = models.JSONField(default=dict, blank=True, null=True)
     operator_run = models.ForeignKey(OperatorRun, on_delete=models.CASCADE, null=True, related_name="runs")
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
@@ -304,11 +303,11 @@ class Port(BaseModel):
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, editable=True)
     port_type = models.IntegerField(choices=[(port_type.value, port_type.name) for port_type in PortType])
-    schema = JSONField(null=True, blank=True)
-    template = JSONField(null=True, blank=True)
-    secondary_files = JSONField(null=True, blank=True)
-    db_value = JSONField(null=True)
-    value = JSONField(null=True)
+    schema = models.JSONField(null=True, blank=True)
+    template = models.JSONField(null=True, blank=True)
+    secondary_files = models.JSONField(null=True, blank=True)
+    db_value = models.JSONField(null=True)
+    value = models.JSONField(null=True)
     files = models.ManyToManyField(File)
     notify = models.BooleanField(default=False)
 
@@ -319,7 +318,7 @@ class ExecutionEvents(BaseModel):
     job_status = models.CharField(max_length=30)
     message = models.CharField(max_length=1000)
     err_file_path = models.CharField(max_length=200)
-    outputs = JSONField(null=True)
+    outputs = models.JSONField(null=True)
     processed = models.BooleanField(default=False)
 
 
@@ -335,4 +334,4 @@ class FileJobTracker(models.Model):
 class OperatorErrors(BaseModel):
     operator_name = models.CharField(max_length=100)
     request_id = models.CharField(max_length=100)
-    error = JSONField(null=True, blank=True)
+    error = models.JSONField(null=True, blank=True)
