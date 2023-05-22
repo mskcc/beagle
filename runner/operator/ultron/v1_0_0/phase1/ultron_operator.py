@@ -133,7 +133,7 @@ class SampleGroup:
         self.tumor_bam = self._get_port("tumor_bam")[0]
         self.normal_bam = self._get_port("normal_bam")[0]
         self.maf_file = self._get_port("maf_file")[0]
-        self.maf = self._get_port("maf")[0]
+        self.maf = self._get_port("maf")[0] if self._get_port("maf") else None
         self.json = self._build_sample_group_dict()
 
     def _get_samples_data(self):
