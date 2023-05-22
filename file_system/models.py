@@ -4,7 +4,7 @@ from enum import IntEnum
 from django.db import models
 from deepdiff import DeepDiff
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
@@ -205,7 +205,7 @@ class FileGroup(BaseModel):
 class FileGroupMetadata(BaseModel):
     file_group = models.ForeignKey(FileGroup, blank=False, null=False, on_delete=models.CASCADE)
     version = models.IntegerField()
-    metadata = JSONField(default=dict, blank=True, null=True)
+    metadata = models.JSONField(default=dict, blank=True, null=True)
 
 
 class File(BaseModel):
@@ -240,14 +240,14 @@ class File(BaseModel):
 
 class ImportMetadata(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
-    metadata = JSONField(default=dict)
+    metadata = models.JSONField(default=dict)
 
 
 class FileMetadata(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     version = models.IntegerField()
     latest = models.BooleanField()
-    metadata = JSONField(default=dict)
+    metadata = models.JSONField(default=dict)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
     def create_or_update_request(self, request_id, lab_head_name, investigator_email, investigator_name):
@@ -423,4 +423,4 @@ class FileMetadata(BaseModel):
 
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
-    run = JSONField(default=list)
+    run = models.JSONField(default=list)
