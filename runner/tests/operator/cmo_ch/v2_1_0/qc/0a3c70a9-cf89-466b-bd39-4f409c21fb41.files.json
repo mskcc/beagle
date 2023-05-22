@@ -1115,6 +1115,7 @@
 			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
 			"checksum": null,
 			"request_id": null,
+			"patient_id": null,
 			"samples": ["2d8a8e1d-f2ac-48ba-85be-135123315b67"]
 		}
 	},
@@ -1143,6 +1144,7 @@
 			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
 			"checksum": null,
 			"request_id": null,
+			"patient_id": null,
 			"samples": ["2d8a8e1d-f2ac-48ba-85be-135123315b67"]
 		}
 	},
@@ -1171,6 +1173,7 @@
 			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
 			"checksum": null,
 			"request_id": null,
+			"patient_id": null,
 			"samples": ["2d8a8e1d-f2ac-48ba-85be-135123315b67"]
 		}
 	},
