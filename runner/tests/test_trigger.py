@@ -29,11 +29,20 @@ class TestOperatorTriggers(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("runner.operator.argos_operator.v1_0_0.ArgosOperator.get_jobs")
     @patch("runner.operator.argos_operator.v1_0_0.ArgosOperator.get_pipeline_id")
+    @patch("runner.tasks._job_finished_notify")
     def test_create_jobs_from_operator_pipeline_deleted(
-        self, get_pipeline_id, get_jobs, send_notification, create_run_task, memcache_task_lock, set_for_restart
+        self,
+        job_finished_notify,
+        get_pipeline_id,
+        get_jobs,
+        send_notification,
+        create_run_task,
+        memcache_task_lock,
+        set_for_restart,
     ):
         argos_jobs = list()
         argos_jobs.append(RunCreator(app="cb5d793b-e650-4b7d-bfcd-882858e29cc5", inputs=None, name=None, tags={}))
+        job_finished_notify.return_value = None
         set_for_restart.return_value = None
         get_jobs.return_value = argos_jobs
         get_pipeline_id.return_value = None
@@ -50,9 +59,11 @@ class TestOperatorTriggers(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")
     @patch("runner.tasks.create_jobs_from_chaining")
+    @patch("runner.tasks._job_finished_notify")
     def test_operator_trigger_creates_next_operator_run_when_90percent_runs_completed(
-        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+        self, job_finished_notify, create_jobs_from_chaining, memcache_task_lock, send_notification
     ):
+        job_finished_notify.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
@@ -77,9 +88,11 @@ class TestOperatorTriggers(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")
     @patch("runner.tasks.create_jobs_from_chaining")
+    @patch("runner.tasks._job_finished_notify")
     def test_operator_trigger_does_not_create_next_operator_run_when_too_few_runs_completed(
-        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+        self, job_finished_notify, create_jobs_from_chaining, memcache_task_lock, send_notification
     ):
+        job_finished_notify.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         operator_run = OperatorRun.objects.prefetch_related("runs").first()
@@ -93,10 +106,11 @@ class TestOperatorTriggers(TestCase):
     @patch("runner.models.Run.set_for_restart")
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")
-    @patch("runner.tasks.create_jobs_from_chaining")
+    @patch("runner.tasks._job_finished_notify")
     def test_operator_trigger_fails_operator_run_when_all_runs_are_complete_and_no_threshold_is_met(
-        self, create_jobs_from_chaining, memcache_task_lock, send_notification, set_for_restart
+        self, job_finished_notify, memcache_task_lock, send_notification, set_for_restart
     ):
+        job_finished_notify.return_value = None
         set_for_restart.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
@@ -113,9 +127,11 @@ class TestOperatorTriggers(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("lib.memcache_lock.memcache_task_lock")
     @patch("runner.tasks.create_jobs_from_chaining")
+    @patch("runner.tasks._job_finished_notify")
     def test_operator_trigger_executes_runs_individually(
-        self, create_jobs_from_chaining, memcache_task_lock, send_notification
+        self, job_finished_notify, create_jobs_from_chaining, memcache_task_lock, send_notification
     ):
+        job_finished_notify.return_value = None
         memcache_task_lock.return_value = True
         send_notification.return_value = False
         for op_run in OperatorRun.objects.prefetch_related("runs").all():
