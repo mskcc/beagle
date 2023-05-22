@@ -29,7 +29,7 @@
         "assay": "IM6",
         "sample": "P-0000001-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT",
           "dmp": "P-0000001"
         },
@@ -82,7 +82,7 @@
         "assay": "IM6",
         "sample": "P-0000002-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT",
           "dmp": "P-0000001"
         },
@@ -136,7 +136,7 @@
         "assay": "IM6",
         "sample": "P-0000004-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT2",
           "dmp": "P-0000002"
         },
@@ -189,7 +189,7 @@
         "assay": "IM6",
         "sample": "P-0000005-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT2",
           "dmp": "P-0000002"
         },
@@ -242,7 +242,7 @@
         "assay": "IM6",
         "sample": "P-0000001-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT",
           "dmp": "P-0000001"
         },
@@ -295,7 +295,7 @@
         "assay": "IM6",
         "sample": "P-0000002-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT",
           "dmp": "P-0000001"
         },
@@ -348,7 +348,7 @@
         "assay": "IM6",
         "sample": "P-0000004-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT2",
           "dmp": "P-0000002"
         },
@@ -401,7 +401,7 @@
         "assay": "IM6",
         "sample": "P-0000005-T01-IM6",
         "anon_id": "REDACTED",
-        "patient_id": {
+        "patient": {
           "cmo": "ALLANT2",
           "dmp": "P-0000002"
         },
