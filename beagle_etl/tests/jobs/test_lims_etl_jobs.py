@@ -587,7 +587,11 @@ class TestImportSample(APITestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
     def test_request_callback(
-        self, request_update_notification, send_notification, populate_job_group_notifier_metadata, mock_create_jobs_from_request
+        self,
+        request_update_notification,
+        send_notification,
+        populate_job_group_notifier_metadata,
+        mock_create_jobs_from_request,
     ):
         request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
@@ -619,8 +623,11 @@ class TestImportSample(APITestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
     def test_request_callback_two_operators(
-            self, request_update_notification, send_notification, populate_job_group_notifier_metadata,
-            mock_create_jobs_from_request
+        self,
+        request_update_notification,
+        send_notification,
+        populate_job_group_notifier_metadata,
+        mock_create_jobs_from_request,
     ):
         request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
@@ -655,7 +662,9 @@ class TestImportSample(APITestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
-    def test_request_callback_unknown_assay(self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification):
+    def test_request_callback_unknown_assay(
+        self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification
+    ):
         request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
@@ -688,7 +697,9 @@ class TestImportSample(APITestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
-    def test_request_callback_disabled_assay(self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification):
+    def test_request_callback_disabled_assay(
+        self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification
+    ):
         request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
