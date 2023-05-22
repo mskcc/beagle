@@ -12,7 +12,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$f997af3fe3c580ef0700cabc8d9bef4368fc24e3",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -29,7 +29,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$fd2278acbe70b94e93553b81a2fb4baad6998a28",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -46,7 +46,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$f997af3fe3c580ef0700cabc8d9bef4368fc24e3",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -63,7 +63,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$d235041c1a415bd9bb42025ba1607828fcbbca0a",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -80,7 +80,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$fd2278acbe70b94e93553b81a2fb4baad6998a28",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -97,7 +97,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$d235041c1a415bd9bb42025ba1607828fcbbca0a",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -114,7 +114,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$9fa6aa23857c705c0f2c3f01fe785ab950066039",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -131,7 +131,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$619cf02b52fbcd4bbff6f9ba9f0f217b98f03491",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -148,7 +148,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$619cf02b52fbcd4bbff6f9ba9f0f217b98f03491",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -165,7 +165,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$1e8e606318c3c6769bfd2da7663c3d145935475d",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -182,7 +182,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$9fa6aa23857c705c0f2c3f01fe785ab950066039",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -199,7 +199,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": "sha1$1e8e606318c3c6769bfd2da7663c3d145935475d",
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -216,7 +216,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -233,7 +233,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -250,7 +250,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -267,7 +267,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -284,7 +284,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -301,7 +301,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -318,7 +318,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -335,7 +335,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -352,7 +352,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -369,7 +369,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -386,7 +386,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     },
@@ -403,7 +403,7 @@
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
             "checksum": null,
             "request_id": null,
-            "sample": null,
+            "samples": [],
             "patient_id": null
         }
     }
