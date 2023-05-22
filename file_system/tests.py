@@ -12,6 +12,8 @@ from file_system.models import Storage, StorageType, FileGroup, File, FileType, 
 
 class FileTest(APITestCase):
     def setUp(self):
+        settings.ETL_USER="etl_user"
+        self.etl_user = User.objects.create_user(username=settings.ETL_USER, password="password", email="etl_user@gmail.com")
         self.user = User.objects.create_user(username="username", password="password", email="admin@gmail.com")
         self.storage = Storage(name="test", type=StorageType.LOCAL)
         self.storage.save()
@@ -535,7 +537,9 @@ class FileTest(APITestCase):
         file_metadata_count = FileMetadata.objects.filter(file=str(_file.id)).count()
         self.assertEqual(file_metadata_count, 3)
 
-    def test_batch_patch_file_metadata(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_batch_patch_file_metadata(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = None
         first_file = self._create_single_file(
             "/path/to/first_file.bam", "bam", str(self.file_group.id), "first_request_id", "first_sample_id"
         )
@@ -577,7 +581,9 @@ class FileTest(APITestCase):
         response = self.client.post("/v0/fs/batch-patch-files", patch_json, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_partial_fail_batch_patch_file_metadata(self):
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_partial_fail_batch_patch_file_metadata(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = None
         first_file = self._create_single_file(
             "/path/to/first_file.bam", "bam", str(self.file_group.id), "first_request_id", "first_sample_id"
         )
@@ -591,7 +597,7 @@ class FileTest(APITestCase):
                 {"id": None, "patch": {"metadata": {settings.REQUEST_ID_METADATA_KEY: "Request_002"}}},
             ]
         }
-        response = self.client.post("/v0/fs/batch-patch-files", patch_json, format="json")
+        response = self.client.post("/v0/fs/batch-patch-files/", patch_json, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         first_file_metadata = (
             FileMetadata.objects.order_by("file", "-version").distinct("file").filter(file=str(first_file.id)).first()
