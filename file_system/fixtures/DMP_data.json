@@ -10,9 +10,9 @@
       "file_type": 17,
       "size": 3046,
       "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "patient_id": null
     }
   },
   {
@@ -63,9 +63,9 @@
       "file_type": 17,
       "size": 4372,
       "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -117,9 +117,9 @@
       "file_type": 17,
       "size": 3046,
       "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -170,9 +170,9 @@
       "file_type": 17,
       "size": 4372,
       "file_group": "6b3bf1ec-4cc0-441c-8fd7-0c104091cd58",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -223,9 +223,9 @@
       "file_type": 17,
       "size": 3046,
       "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -276,9 +276,9 @@
       "file_type": 17,
       "size": 4372,
       "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -329,9 +329,9 @@
       "file_type": 17,
       "size": 3046,
       "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
@@ -382,9 +382,9 @@
       "file_type": 17,
       "size": 4372,
       "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
-      "request": null,
+      "request_id": null,
       "samples": [],
-      "patient": null
+      "request_id": null
     }
   },
   {
