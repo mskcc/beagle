@@ -25,11 +25,13 @@ class OperatorFactory(object):
         operator_class = getattr(mod, func_name)
         if "pipeline_version" in kwargs:
             pipeline_version = kwargs.get("pipeline_version")
-            pipeline_exists = any([
-                p_version_bool in operator_pipeline.version for operator_pipeline in model.pipeline_set.all()
-            ])
+            pipeline_exists = any(
+                [p_version_bool in operator_pipeline.version for operator_pipeline in model.pipeline_set.all()]
+            )
             if not pipeline_exists:
                 raise PipelineNotFoundError(
-                    "Version {pipeline_version} is not found for Pipelines associated with Operator {model_name}"
-                .format(pipeline_version=pipeline_version, model_name=mod_name))
+                    "Version {pipeline_version} is not found for Pipelines associated with Operator {model_name}".format(
+                        pipeline_version=pipeline_version, model_name=mod_name
+                    )
+                )
         return operator_class(model, **kwargs)
