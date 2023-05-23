@@ -8,24 +8,13 @@ from unittest import skipIf
 from uuid import UUID
 from django.test import TestCase
 from django.conf import settings
-from beagle_etl.tasks import scheduler
-from beagle_etl.models import JobStatus, Job, ETLConfiguration
-from beagle_etl.exceptions import (
-    FailedToFetchSampleException,
-    MissingDataException,
-    ErrorInconsistentDataException,
-    FailedToFetchPoolNormalException,
-)
+from beagle_etl.models import JobStatus, Job, ETLConfiguration, SMILEMessage, SmileMessageStatus
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback
-
-# use local execution for Celery tasks
-# if beagle_etl.celery.app.conf['task_always_eager'] == False:
-#     beagle_etl.celery.app.conf['task_always_eager'] = True
 
 
 class TestFetchSamples(TestCase):
@@ -596,10 +585,15 @@ class TestImportSample(APITestCase):
     @patch("runner.tasks.create_jobs_from_request.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("notifier.tasks.send_notification.delay")
+    @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
     def test_request_callback(
-        self, send_notification, populate_job_group_notifier_metadata, mock_create_jobs_from_request
+        self,
+        request_update_notification,
+        send_notification,
+        populate_job_group_notifier_metadata,
+        mock_create_jobs_from_request,
     ):
-        # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         send_notification.return_value = True
         job_group = JobGroup.objects.create()
@@ -627,10 +621,15 @@ class TestImportSample(APITestCase):
     @patch("runner.tasks.create_jobs_from_request.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("notifier.tasks.send_notification.delay")
+    @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
     def test_request_callback_two_operators(
-        self, send_notification, populate_job_group_notifier_metadata, mock_create_jobs_from_request
+        self,
+        request_update_notification,
+        send_notification,
+        populate_job_group_notifier_metadata,
+        mock_create_jobs_from_request,
     ):
-        # mock_get_request_samples.return_value = {'recipe': 'TestAssay'}
+        request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         send_notification.return_value = True
         job_group = JobGroup.objects.create()
@@ -662,8 +661,11 @@ class TestImportSample(APITestCase):
 
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_request_callback_unknown_assay(self, populate_job_group_notifier_metadata, mock_send_notification):
-        # mock_get_request_samples.return_value = {'recipe': 'UnknownAssay'}
+    @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
+    def test_request_callback_unknown_assay(
+        self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification
+    ):
+        request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")
@@ -694,8 +696,11 @@ class TestImportSample(APITestCase):
 
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_request_callback_disabled_assay(self, populate_job_group_notifier_metadata, mock_send_notification):
-        # mock_get_request_samples.return_value = {'recipe': "DisabledAssay1"}
+    @patch("beagle_etl.jobs.metadb_jobs.request_update_notification")
+    def test_request_callback_disabled_assay(
+        self, request_update_notification, populate_job_group_notifier_metadata, mock_send_notification
+    ):
+        request_update_notification.return_value = None
         populate_job_group_notifier_metadata.return_value = True
         job_group = JobGroup.objects.create()
         notifier = Notifier.objects.create(default=False, notifier_type="JIRA", board="IMPORT")

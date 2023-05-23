@@ -8,30 +8,60 @@ import study.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0014_auto_20211005_1636'),
-        ('beagle_etl', '0036_auto_20230308_0917'),
-        ('study', '0001_initial'),
+        ("notifier", "0014_auto_20211005_1636"),
+        ("beagle_etl", "0036_auto_20230308_0917"),
+        ("study", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='JobGroupWatcherConfig',
+            name="JobGroupWatcherConfig",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20)),
-                ('operators', models.ManyToManyField(related_name='operators', to='beagle_etl.Operator')),
-                ('post_processors', models.ManyToManyField(related_name='post_processors', to='beagle_etl.Operator')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=20)),
+                ("operators", models.ManyToManyField(related_name="operators", to="beagle_etl.Operator")),
+                ("post_processors", models.ManyToManyField(related_name="post_processors", to="beagle_etl.Operator")),
             ],
         ),
         migrations.CreateModel(
-            name='JobGroupWatcher',
+            name="JobGroupWatcher",
             fields=[
-                ('basemodel_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='study.BaseModel')),
-                ('status', models.IntegerField(choices=[(0, 'WAITING'), (1, 'RUNNING'), (2, 'COMPLETED')], db_index=True, default=study.models.JobGroupWatcherStatus(0))),
-                ('config', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='study.JobGroupWatcherConfig')),
-                ('job_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='notifier.JobGroup')),
-                ('study', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='study.Study')),
+                (
+                    "basemodel_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="study.BaseModel",
+                    ),
+                ),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[(0, "WAITING"), (1, "RUNNING"), (2, "COMPLETED")],
+                        db_index=True,
+                        default=study.models.JobGroupWatcherStatus(0),
+                    ),
+                ),
+                (
+                    "config",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="study.JobGroupWatcherConfig"),
+                ),
+                (
+                    "job_group",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="notifier.JobGroup"
+                    ),
+                ),
+                (
+                    "study",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="study.Study"
+                    ),
+                ),
             ],
-            bases=('study.basemodel',),
+            bases=("study.basemodel",),
         ),
     ]
