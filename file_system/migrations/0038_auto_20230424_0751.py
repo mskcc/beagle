@@ -26,10 +26,11 @@ def populate_patient_request_sample(apps, schema_editor):
 def revert(apps, schema_editor):
     pass
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0037_auto_20230424_0743'),
+        ("file_system", "0037_auto_20230424_0743"),
     ]
 
     operations = [

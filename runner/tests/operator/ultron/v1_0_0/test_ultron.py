@@ -264,9 +264,10 @@ class TestUltron(TestCase):
             single_file.delete()
         single_run_id = self.run_ids[0]
         sample_groups = ultron_operator._build_sample_groups([single_run_id])
-        for single_sample_group in sample_groups:
-            if single_sample_group["sample_type"] == "clinical":
-                self.assertNotContains(single_sample_group, "maf_file")
+        for sample_group in sample_groups:
+            for item in sample_group:
+                if item["sample_type"] == "clinical":
+                    self.assertNotIn("maf_file", item)
 
     def test_construct_inputs_no_research_maf(self):
         """
@@ -284,8 +285,9 @@ class TestUltron(TestCase):
         single_run_id = self.run_ids[0]
         sample_groups = ultron_operator._build_sample_groups([single_run_id])
         for single_sample_group in sample_groups:
-            if single_sample_group["sample_type"] == "research":
-                self.assertNotContains(single_sample_group, "maf_file")
+            for item in single_sample_group:
+                if item["sample_type"] == "research":
+                    self.assertNotIn("maf_file", item)
 
     def test_construct_sample_data_null_patient_id(self):
         """

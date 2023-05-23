@@ -83,8 +83,9 @@ class TestNewRequest(TestCase):
             self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
         self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
 
-        test_14269_C_1_update_sample_new_files = os.path.join(settings.TEST_FIXTURE_DIR,
-                                                              "14269_C_1_update_sample_new_files.json")
+        test_14269_C_1_update_sample_new_files = os.path.join(
+            settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample_new_files.json"
+        )
         with open(test_14269_C_1_update_sample_new_files) as update_sample_14269_C_1_new_files:
             self.update_sample_14269_C_1_new_files = json.load(update_sample_14269_C_1_new_files)
         self.update_sample_14269_C_1_new_files_str = json.dumps(self.update_sample_14269_C_1_new_files)
@@ -97,7 +98,14 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_new_request(self, populate_job_group_notifier_metadata, job_group_notifier_get, send_notification, notifier_start, check_files_permissions):
+    def test_new_request(
+        self,
+        populate_job_group_notifier_metadata,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        check_files_permissions,
+    ):
         populate_job_group_notifier_metadata.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
@@ -106,13 +114,13 @@ class TestNewRequest(TestCase):
         settings.NOTIFIER_ACTIVE = False
         msg = SMILEMessage.objects.create(topic="new-request", message=self.new_request_str)
         new_request(str(msg.id))
-        request = Request.objects.filter(request_id='08944_B')
-        sample_1 = Sample.objects.filter(sample_id='08944_B_1')
-        sample_2 = Sample.objects.filter(sample_id='08944_B_2')
-        sample_3 = Sample.objects.filter(sample_id='08944_B_3')
-        sample_4 = Sample.objects.filter(sample_id='08944_B_4')
-        patient_1 = Patient.objects.filter(patient_id='C-MP76JR')
-        patient_2 = Patient.objects.filter(patient_id='C-4LM16H')
+        request = Request.objects.filter(request_id="08944_B")
+        sample_1 = Sample.objects.filter(sample_id="08944_B_1")
+        sample_2 = Sample.objects.filter(sample_id="08944_B_2")
+        sample_3 = Sample.objects.filter(sample_id="08944_B_3")
+        sample_4 = Sample.objects.filter(sample_id="08944_B_4")
+        patient_1 = Patient.objects.filter(patient_id="C-MP76JR")
+        patient_2 = Patient.objects.filter(patient_id="C-4LM16H")
         self.assertEqual(request.count(), 1)
         self.assertEqual(sample_1.count(), 1)
         self.assertEqual(sample_2.count(), 1)
@@ -120,7 +128,7 @@ class TestNewRequest(TestCase):
         self.assertEqual(sample_4.count(), 1)
         self.assertTrue(patient_1.count(), 1)
         self.assertTrue(patient_2.count(), 1)
-        study = StudyObject.get_by_request('08944_B')
+        study = StudyObject.get_by_request("08944_B")
         self.assertIsNotNone(study)
         self.assertListEqual(list(study[0].requests), list(request.all()))
         files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
@@ -292,7 +300,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_update_sample(self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions):
+    def test_update_sample(
+        self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions
+    ):
         """
         Test that sample metadata is updated properly
         """
@@ -305,15 +315,21 @@ class TestNewRequest(TestCase):
         settings.NOTIFIER_ACTIVE = False
 
         new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
-        update_sample_msg = SMILEMessage.objects.create(request_id="14269_C_1", message=self.update_sample_14269_C_1_str)
+        update_sample_msg = SMILEMessage.objects.create(
+            request_id="14269_C_1", message=self.update_sample_14269_C_1_str
+        )
 
         new_request(new_request_msg.id)
-        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
-                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
         self.assertEqual(tumor_or_normal, "Normal")
         update_sample_job(update_sample_msg.id)
-        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
-                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
         self.assertEqual(tumor_or_normal, "Tumor")
 
         files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
@@ -324,8 +340,8 @@ class TestNewRequest(TestCase):
             ddiff = DeepDiff(old_file.metadata, file.metadata, ignore_order=True)
             print(ddiff)
             self.assertIsNotNone(ddiff)
-            self.assertEqual(ddiff['values_changed']["root['tumorOrNormal']"]['new_value'], 'Tumor')
-            self.assertEqual(ddiff['values_changed']["root['tumorOrNormal']"]['old_value'], 'Normal')
+            self.assertEqual(ddiff["values_changed"]["root['tumorOrNormal']"]["new_value"], "Tumor")
+            self.assertEqual(ddiff["values_changed"]["root['tumorOrNormal']"]["old_value"], "Normal")
             self.assertEqual(list(ddiff.keys()), ["values_changed"])
 
     @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
@@ -333,12 +349,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_update_sample_new_fastqs(self,
-                            populate_job_group,
-                            job_group_notifier_get,
-                            send_notification,
-                            notifier_start,
-                            check_files_permissions):
+    def test_update_sample_new_fastqs(
+        self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions
+    ):
         """
         Test sample updates for new fastqs
         """
@@ -351,24 +364,28 @@ class TestNewRequest(TestCase):
         settings.NOTIFIER_ACTIVE = False
 
         new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
-        update_sample_msg = SMILEMessage.objects.create(request_id="14269_C_1",
-                                                        message=self.update_sample_14269_C_1_new_files_str)
+        update_sample_msg = SMILEMessage.objects.create(
+            request_id="14269_C_1", message=self.update_sample_14269_C_1_new_files_str
+        )
 
         new_request(new_request_msg.id)
-        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
-                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
         self.assertEqual(tumor_or_normal, "Normal")
         update_sample_job(update_sample_msg.id)
-        tumor_or_normal = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
-                                                values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY).first()
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
         self.assertEqual(tumor_or_normal, "Tumor")
 
         files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
         self.assertEqual(len(files), 2)
 
         for file in files:
-            self.assertTrue(file.file.path.endswith('new.fastq.gz'))
-
+            self.assertTrue(file.file.path.endswith("new.fastq.gz"))
 
     # @patch("notifier.models.JobGroupNotifier.objects.get")
     # @patch("notifier.tasks.send_notification.delay")
