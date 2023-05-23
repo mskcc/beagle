@@ -12,4 +12,3 @@ class Command(BaseCommand):
         smile_message_id = options["smile_msg_id"]
         print(f"Running update for {smile_message_id}")
         update_sample_job(smile_message_id)
-
