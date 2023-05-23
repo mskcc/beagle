@@ -216,7 +216,7 @@ class JobGroupAPITest(APITestCase):
         ):
             emails = get_emails_to_notify("REQUEST_001", "VoyagerIsProcessingWholeRequestEvent")
             self.assertEqual(len(emails), 2)
-            self.assertListEqual(emails, ["me@mskcc.org", "test_email@mskcc.org"])
+            self.assertListEqual(sorted(emails), sorted(["me@mskcc.org", "test_email@mskcc.org"]))
         # Test blacklisted user
         with self.settings(
             BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO=["me@mskcc.org"],
