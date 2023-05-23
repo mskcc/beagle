@@ -7,43 +7,43 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0055_auto_20230112_1159'),
+        ("runner", "0055_auto_20230112_1159"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='executionevents',
-            name='id',
+            model_name="executionevents",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='operatorerrors',
-            name='id',
+            model_name="operatorerrors",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='operatorrun',
-            name='id',
+            model_name="operatorrun",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='operatortrigger',
-            name='id',
+            model_name="operatortrigger",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='pipeline',
-            name='id',
+            model_name="pipeline",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='port',
-            name='id',
+            model_name="port",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='run',
-            name='id',
+            model_name="run",
+            name="id",
             field=models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False),
         ),
     ]
