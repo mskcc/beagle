@@ -16,7 +16,6 @@ def _voyager_start_processing(request_id, run_ids):
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
     )
 
-    send_to = get_emails_to_notify(request_id)
     runs = Run.objects.filter(id__in=run_ids)
     pipeline = runs.first().app
     # TODO: When this is tested add inform flag to pipeline model
@@ -43,6 +42,7 @@ def _voyager_start_processing(request_id, run_ids):
         gene_panel = get_gene_panel(request_id)
         number_of_samples = get_number_of_tumor_samples(request_id)
         if unprocessed_samples:
+            send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingPartialRequestEvent")
             for email in send_to:
                 event = VoyagerIsProcessingPartialRequestEvent(
                     job_notifier=job_group,
@@ -59,6 +59,7 @@ def _voyager_start_processing(request_id, run_ids):
                 ).to_dict()
                 send_notification.delay(event)
         else:
+            send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingWholeRequestEvent")
             for email in send_to:
                 event = VoyagerIsProcessingWholeRequestEvent(
                     job_notifier=job_group,

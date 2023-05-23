@@ -9,25 +9,25 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('file_system', '0037_auto_20230424_0743'),
+        ("file_system", "0037_auto_20230424_0743"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BaseModel',
+            name="BaseModel",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Study',
+            name="Study",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('study_id', models.CharField(max_length=40)),
-                ('requests', models.ManyToManyField(to='file_system.Request')),
-                ('samples', models.ManyToManyField(to='file_system.Sample')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("study_id", models.CharField(max_length=40)),
+                ("requests", models.ManyToManyField(to="file_system.Request")),
+                ("samples", models.ManyToManyField(to="file_system.Sample")),
             ],
         ),
     ]
