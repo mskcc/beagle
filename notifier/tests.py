@@ -1,9 +1,13 @@
+import os
 import uuid
 from mock import patch
+from django.conf import settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
+from notifier.helper import get_emails_to_notify
 from notifier.models import JobGroup, JobGroupNotifier, Notifier, JiraStatus
+from file_system.models import File, FileMetadata, FileGroup, FileType, Storage, StorageType
 
 
 class JobGroupAPITest(APITestCase):
@@ -15,6 +19,60 @@ class JobGroupAPITest(APITestCase):
         self.job_group_notifier = JobGroupNotifier.objects.create(
             jira_id="JIRA-12", job_group=self.job_group1, notifier_type=self.notifier, status=JiraStatus.UNKNOWN
         )
+        self.storage = Storage(name="test", type=StorageType.LOCAL)
+        self.storage.save()
+        self.file_group = FileGroup(name="Test Files", storage=self.storage)
+        self.file_group.save()
+        self.file_type_fastq = FileType(name="fastq")
+        self.file_type_fastq.save()
+
+    def _create_single_file(
+        self,
+        path,
+        file_type,
+        group_id,
+        request_id,
+        sample_id,
+        lab_head_email=None,
+        sample_name=None,
+        cmo_sample_name=None,
+        patient_id=None,
+        cmo_sample_class=None,
+    ):
+        file_type_obj = FileType.objects.get(name=file_type)
+        group_id_obj = FileGroup.objects.get(id=group_id)
+        file = File(
+            path=path, file_name=os.path.basename(path), file_type=file_type_obj, file_group=group_id_obj, size=1234
+        )
+        file.save()
+        file_metadata = {settings.REQUEST_ID_METADATA_KEY: request_id, settings.SAMPLE_ID_METADATA_KEY: sample_id}
+        if lab_head_email:
+            file_metadata[settings.LAB_HEAD_EMAIL_METADATA_KEY] = lab_head_email
+        if sample_name:
+            file_metadata[settings.SAMPLE_NAME_METADATA_KEY] = sample_name
+        if cmo_sample_name:
+            file_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = cmo_sample_name
+        if patient_id:
+            file_metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
+        if cmo_sample_class:
+            file_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = cmo_sample_class
+        file_metadata = FileMetadata(file=file, metadata=file_metadata)
+        file_metadata.save()
+        return file
+
+    def _create_files(self, file_type, amount):
+        for i in range(amount):
+            request_id = "request_%s" % str(i)
+            sample_id = "sample_%s" % str(i)
+            file_group_id = str(self.file_group.id)
+            if file_type == "fasta":
+                file_path_R1 = "/path/to/%s_R1.%s" % (sample_id, file_type)
+                self._create_single_file(file_path_R1, file_type, file_group_id, request_id, sample_id)
+                file_path_R2 = "/path/to/%s_R2.%s" % (sample_id, file_type)
+                self._create_single_file(file_path_R2, file_type, file_group_id, request_id, sample_id)
+            else:
+                file_path = "/path/to/%s.%s" % (sample_id, file_type)
+                self._create_single_file(file_path, file_type, file_group_id, request_id, sample_id)
 
     def _generate_jwt(self, username="username", password="password"):
         response = self.client.post("/api-token-auth/", {"username": username, "password": password}, format="json")
@@ -134,3 +192,45 @@ class JobGroupAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.job_group_notifier.refresh_from_db()
         self.assertEqual(self.job_group_notifier.status, JiraStatus.CI_REVIEW_NEEDED)
+
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    def test_get_emails_to_notify(self, populate_job_group_notifier_metadata):
+        populate_job_group_notifier_metadata.return_value = True
+        self._create_single_file(
+            "/path/to/file.fastq",
+            "fastq",
+            str(self.file_group.id),
+            "REQUEST_001",
+            "SAMPLE_001",
+            lab_head_email="test_email@mskcc.org",
+        )
+        # Test send external notification internally without notification type
+        with self.settings(BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO=["me@mskcc.org"]):
+            emails = get_emails_to_notify("REQUEST_001")
+            self.assertEqual(len(emails), 1)
+            self.assertEqual(emails[0], "me@mskcc.org")
+        # Test send external notification to lab_head
+        with self.settings(
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO=["me@mskcc.org"],
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL=["VoyagerIsProcessingWholeRequestEvent"],
+        ):
+            emails = get_emails_to_notify("REQUEST_001", "VoyagerIsProcessingWholeRequestEvent")
+            self.assertEqual(len(emails), 2)
+            self.assertListEqual(emails, ["me@mskcc.org", "test_email@mskcc.org"])
+        # Test blacklisted user
+        with self.settings(
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO=["me@mskcc.org"],
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL=["VoyagerIsProcessingWholeRequestEvent"],
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST=["test_email@mskcc.org"],
+        ):
+            emails = get_emails_to_notify("REQUEST_001", "VoyagerIsProcessingWholeRequestEvent")
+            self.assertEqual(len(emails), 1)
+            self.assertListEqual(emails, ["me@mskcc.org"])
+        # Test notification type not in list for external notifications
+        with self.settings(
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO=["me@mskcc.org"],
+            BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL=["VoyagerIsProcessingWholeRequestEvent"],
+        ):
+            emails = get_emails_to_notify("REQUEST_001", "VoyagerIsProcessingPartialRequestEvent")
+            self.assertEqual(len(emails), 1)
+            self.assertListEqual(emails, ["me@mskcc.org"])

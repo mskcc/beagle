@@ -28,20 +28,21 @@ def get_number_of_tumor_samples(request_id):
     ).count()
 
 
-def get_emails_to_notify(request_id):
+def get_emails_to_notify(request_id, notification_type=None):
     investigator_email = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="investigatorEmail"
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+        values_metadata=settings.INVESTIGATOR_EMAIL_METADATA_KEY,
     ).first()
     lab_head_email = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.LAB_HEAD_EMAIL_METADATA_KEY
     ).first()
     send_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
-    if settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
-        if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-            send_to.add(investigator_email)
-        if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST:
-            send_to.add(lab_head_email)
-    return send_to
+    if notification_type in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL:
+        if investigator_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST and investigator_email:
+            send_to.append(investigator_email)
+        if lab_head_email not in settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST and lab_head_email:
+            send_to.append(lab_head_email)
+    return list(set(send_to))
 
 
 def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline_version, dmp_samples=None):
