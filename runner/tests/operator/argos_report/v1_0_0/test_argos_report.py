@@ -31,18 +31,13 @@ class TestArgosReportOperator(TestCase):
         "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16.files.json",
         "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16.port.output.json",
         "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16.port.input.json",
+        "BALTO_REQID.file.json",
+        "BALTO_REQID.filemetadata.json",
     ]
 
     def setUp(self):
         os.environ["TMPDIR"] = ""
-        self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"]
-        self.sample_ids = [
-            ["0420c2fc-92fd-46a2-a50c-5ab19723f553",
-             "8896334f-e000-40b3-88de-8c5b0f4ea32c",
-             "4c008ebe-0556-4d91-958e-907ea15f480d",
-             "2024258c-7588-479c-aa23-8b349e8552c7"],
-        ]
-        
+        self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"] 
         self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.1.2/"
         self.expected_project_prefix = "BALTO_REQID"
 
@@ -70,3 +65,21 @@ class TestArgosReportOperator(TestCase):
                 self.expected_output_directory, job_group.created_date.strftime("%Y%m%d_%H_%M_%f"), "report"
             )
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
+
+    def test_gen_inputs(self):
+        expected_inputs = json.load(open("runner/tests/operator/argos_report/v1_0_0/test_argos_report_expected_inputs.json", "rb"))
+        job_group = JobGroup()
+        job_group.save()
+        operator_model = Operator.objects.get(id=12)
+        argos_report_operator = ArgosReportOperator(
+            operator_model,
+            pipeline="cf3a6950-30fc-4894-8cdc-3417c1c7bbfc",
+            job_group_id=job_group.id,
+            run_ids=self.run_ids,
+        )
+        run = Run.objects.get(id=self.run_ids[0])
+        my_generated_inputs = argos_report_operator.gen_inputs(run)        
+        expected = json.dumps(sorted(expected_inputs, key=lambda d: d["sample_id"]))
+        actual = json.dumps(sorted(my_generated_inputs, key=lambda d: d["sample_id"]))
+        self.maxDiff = None
+        self.assertEqual(expected, actual)
