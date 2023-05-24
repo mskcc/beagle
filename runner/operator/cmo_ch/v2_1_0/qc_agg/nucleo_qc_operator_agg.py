@@ -143,21 +143,16 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             "gatk_mean_quality_by_cycle_recal_dir",
             "simplex_bam_stats_dir",
             "uncollapsed_bam_stats_dir",
+            "biometrics_extract_files_dir"
         ]
-
-        file_regex_dict = {
-            "collapsed_extraction_files": ("collapsed_bam_biometrics_dir", ".*collapsed.pickle"),
-            "duplex_extraction_files": ("duplex_bam_biometrics_dir", ".*duplex.pickle"),
-        }
 
         job = {}
         for single_directory in qc_output_port_directory_names:
             job[single_directory] = self.get_directory_ports(runs, "multiqc_output_dir", single_directory)
 
-        for single_file in file_regex_dict:
-            port_name, regex = file_regex_dict[single_file]
-            job[single_file] = self.get_file_ports(runs, port_name, regex)
-
+        job["duplex_extraction_files"] = self.find_biometric_files(job, "duplex.pickle")
+        job["collapsed_extraction_files"] = self.find_biometric_files(job, "collapsed.pickle")
+        
         samples_json_content = self.create_sample_json(runs)
         job["samples_json"] = samples_json_content
 
@@ -169,6 +164,21 @@ class CMOCHNucleoOperatorQcAgg(Operator):
     @staticmethod
     def create_cwl_file_object(file_path):
         return {"class": "File", "location": "juno://" + file_path}
+    
+    @staticmethod
+    def create_cwl_file_object_no_juno(file_path):
+        return {"class": "File", "path": file_path.replace('file://', '', 1)}
+    
+    def find_biometric_files(self, job_dirs, ending):
+        matching_files = []
+        biometric_dir = job_dirs["biometrics_extract_files_dir"]
+        for sample_dir in biometric_dir:
+            sample_listing = sample_dir['listing']
+            for file in sample_listing:
+                file_path = file['location']
+                if file_path.endswith(ending):
+                    matching_files.append(self.create_cwl_file_object_no_juno(file_path))
+        return matching_files
 
     def create_sample_json(self, runs):
         samples_json = []
