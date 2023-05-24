@@ -133,7 +133,7 @@ class SampleGroup:
         self.tumor_bam = self._get_port("tumor_bam")[0]
         self.normal_bam = self._get_port("normal_bam")[0]
         self.maf_file = self._get_port("maf_file")[0]
-        self.maf = self._get_port("maf")[0]
+        self.maf = self._get_port("maf")[0] if self._get_port("maf") else None
         self.json = self._build_sample_group_dict()
 
     def _get_samples_data(self):
@@ -202,7 +202,7 @@ class SampleGroup:
                         "normal_id": "DMP_NORMAL",
                         "sample_type": "clinical",
                         "prefilter": False,
-                        "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path}
+                        "bam_file": {"class": "File", "location": "juno://" + bam_data.bam_path},
                     }
                     if bam_data.mutations_extended:
                         d["maf_file"] = {"class": "File", "location": "juno://" + bam_data.mutations_extended}
