@@ -37,7 +37,7 @@ class TestArgosReportOperator(TestCase):
 
     def setUp(self):
         os.environ["TMPDIR"] = ""
-        self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"] 
+        self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"]
         self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.1.2/"
         self.expected_project_prefix = "BALTO_REQID"
 
@@ -67,7 +67,9 @@ class TestArgosReportOperator(TestCase):
             self.assertEqual(output_directory, expected_output_directory_with_timestamp)
 
     def test_gen_inputs(self):
-        expected_inputs = json.load(open("runner/tests/operator/argos_report/v1_0_0/test_argos_report_expected_inputs.json", "rb"))
+        expected_inputs = json.load(
+            open("runner/tests/operator/argos_report/v1_0_0/test_argos_report_expected_inputs.json", "rb")
+        )
         job_group = JobGroup()
         job_group.save()
         operator_model = Operator.objects.get(id=12)
@@ -78,7 +80,7 @@ class TestArgosReportOperator(TestCase):
             run_ids=self.run_ids,
         )
         run = Run.objects.get(id=self.run_ids[0])
-        my_generated_inputs = argos_report_operator.gen_inputs(run)        
+        my_generated_inputs = argos_report_operator.gen_inputs(run)
         expected = json.dumps(sorted(expected_inputs, key=lambda d: d["sample_id"]))
         actual = json.dumps(sorted(my_generated_inputs, key=lambda d: d["sample_id"]))
         self.maxDiff = None
