@@ -413,8 +413,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             else:
                 complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
                 send_notification.delay(complete_event)
-
-            create_jobs_from_request.delay(request_id, operator.id, str(job_group.id))
+            notify = SMILEMessage.objects.filter(request_id__startswith=request_id).count() == 1
+            create_jobs_from_request.delay(request_id, operator.id, str(job_group.id), notify=notify)
     return []
 
 
