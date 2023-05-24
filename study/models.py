@@ -15,12 +15,12 @@ class Study(models.Model):
     study_id = models.CharField(max_length=40, null=False)
     requests = models.ManyToManyField(Request)
     samples = models.ManyToManyField(Sample)
-    
+
 
 class JobGroupWatcherConfig(models.Model):
     name = models.CharField(max_length=20, null=False, blank=False)
-    operators = models.ManyToManyField(Operator, related_name='operators')
-    post_processors = models.ManyToManyField(Operator, related_name='post_processors')
+    operators = models.ManyToManyField(Operator, related_name="operators")
+    post_processors = models.ManyToManyField(Operator, related_name="post_processors")
 
 
 class JobGroupWatcherStatus(IntEnum):
