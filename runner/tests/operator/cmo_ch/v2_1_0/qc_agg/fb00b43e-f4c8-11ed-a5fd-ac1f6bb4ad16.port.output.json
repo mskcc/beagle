@@ -52,7 +52,7 @@
                 "nameext": ".html",
                 "basename": "multiqc_1.10.1.7.html",
                 "checksum": "sha1$9d45a4d8e22af2755e7cf85b65db1f84fd89c6b4",
-                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7.html",
+                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7.html",
                 "nameroot": "multiqc_1.10.1.7"
             },
             "notify": false,
@@ -88,8 +88,8 @@
                             "location": "bid://0a8bcace-b75b-4ace-9d66-704a5177f316"
                         }
                     ],
-                    "basename": "C-P016VH-F001-d01",
-                    "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01"
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
                 }
             ],
             "value": [
@@ -102,7 +102,7 @@
                             "nameext": ".csv",
                             "basename": "duplex_minor_contamination.csv",
                             "checksum": "sha1$e67b3a44f436dd9fda19c56c56b73d8e6212689e",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/duplex_minor_contamination.csv",
+                            "location": "file:///path/to/C-100000-F001-d01/duplex_minor_contamination.csv",
                             "nameroot": "duplex_minor_contamination"
                         },
                         {
@@ -111,12 +111,12 @@
                             "nameext": ".json",
                             "basename": "duplex_minor_contamination.json",
                             "checksum": "sha1$77d6ac275dbf5a62c56308eddeba3ab9d92570b1",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/duplex_minor_contamination.json",
+                            "location": "file:///path/to/C-100000-F001-d01/duplex_minor_contamination.json",
                             "nameroot": "duplex_minor_contamination"
                         }
                     ],
-                    "basename": "C-P016VH-F001-d01",
-                    "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01"
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
                 }
             ],
             "notify": false,
@@ -183,8 +183,8 @@
                             "location": "bid://a1769d94-271d-4206-9551-f16276b4f090"
                         }
                     ],
-                    "basename": "C-P016VH-F001-d01",
-                    "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01"
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
                 }
             ],
             "value": [
@@ -197,7 +197,7 @@
                             "nameext": ".json",
                             "basename": "collapsed_sex_mismatch.json",
                             "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_sex_mismatch.json",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.json",
                             "nameroot": "collapsed_sex_mismatch"
                         },
                         {
@@ -206,7 +206,7 @@
                             "nameext": ".csv",
                             "basename": "collapsed_sex_mismatch.csv",
                             "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_sex_mismatch.csv",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.csv",
                             "nameroot": "collapsed_sex_mismatch"
                         },
                         {
@@ -215,7 +215,7 @@
                             "nameext": ".json",
                             "basename": "collapsed_minor_contamination.json",
                             "checksum": "sha1$740e8f8732f4046325e71a0e2f903c53482e8429",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_minor_contamination.json",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_minor_contamination.json",
                             "nameroot": "collapsed_minor_contamination"
                         },
                         {
@@ -224,7 +224,7 @@
                             "nameext": ".csv",
                             "basename": "collapsed_minor_contamination.csv",
                             "checksum": "sha1$927e09e66b03a32b4b6647b4668d45469200220d",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_minor_contamination.csv",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_minor_contamination.csv",
                             "nameroot": "collapsed_minor_contamination"
                         },
                         {
@@ -233,7 +233,7 @@
                             "nameext": ".json",
                             "basename": "collapsed_major_contamination.json",
                             "checksum": "sha1$8c6c2b0815be2ac965a02382ef94601d3e2b85e1",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_major_contamination.json",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_major_contamination.json",
                             "nameroot": "collapsed_major_contamination"
                         },
                         {
@@ -242,7 +242,7 @@
                             "nameext": ".csv",
                             "basename": "collapsed_major_contamination.csv",
                             "checksum": "sha1$0492937b683609294a15db436315f91c793d4e94",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_major_contamination.csv",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_major_contamination.csv",
                             "nameroot": "collapsed_major_contamination"
                         },
                         {
@@ -251,7 +251,7 @@
                             "nameext": ".csv",
                             "basename": "collapsed_sex_mismatch.csv",
                             "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_sex_mismatch.csv",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.csv",
                             "nameroot": "collapsed_sex_mismatch"
                         },
                         {
@@ -260,12 +260,12 @@
                             "nameext": ".json",
                             "basename": "collapsed_sex_mismatch.json",
                             "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
-                            "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01/collapsed_sex_mismatch.json",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.json",
                             "nameroot": "collapsed_sex_mismatch"
                         }
                     ],
-                    "basename": "C-P016VH-F001-d01",
-                    "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/C-P016VH-F001-d01"
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
                 }
             ],
             "notify": false,
@@ -307,11 +307,11 @@
                                 "class": "Directory",
                                 "listing": [],
                                 "basename": "matplotlib",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.config/matplotlib"
+                                "location": "file:///path/to/multiqc_1.10.1.7/.config/matplotlib"
                             }
                         ],
                         "basename": ".config",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.config"
+                        "location": "file:///path/to/multiqc_1.10.1.7/.config"
                     },
                     {
                         "class": "Directory",
@@ -548,7 +548,7 @@
                             }
                         ],
                         "basename": "multiqc_1.10.1.7_data",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
                     },
                     {
                         "size": 5093137,
@@ -568,11 +568,11 @@
                                     }
                                 ],
                                 "basename": "matplotlib",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.cache/matplotlib"
+                                "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib"
                             }
                         ],
                         "basename": ".cache",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.cache"
+                        "location": "file:///path/to/multiqc_1.10.1.7/.cache"
                     },
                     {
                         "class": "Directory",
@@ -647,12 +647,12 @@
                                                         "location": "bid://35f0a75e-54e7-4d33-912f-6d6c3aecde8f"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "duplex_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -696,12 +696,12 @@
                                                         "location": "bid://7f9d27be-9e6b-42d8-ab31-bc78889d5d4b"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "collapsed_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -730,12 +730,12 @@
                                                         "location": "bid://88c11136-5bc1-47d1-b96d-e60ed0f7a61f"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "collapsed_bam_duplex_metrics_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -754,12 +754,12 @@
                                                         "location": "bid://e9f81e38-90a0-4edf-9301-6337760138f9"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "gatk_mean_quality_by_cycle_recal_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -778,12 +778,12 @@
                                                         "location": "bid://d58ef08c-0708-439b-9bc8-91798e9284b3"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "biometrics_extract_files_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -822,12 +822,12 @@
                                                         "location": "bid://bf790770-6486-4818-917a-ddc3049bd45d"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "simplex_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -889,7 +889,7 @@
                                             }
                                         ],
                                         "basename": "collapsed_biometrics_output",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
                                     },
                                     {
                                         "class": "Directory",
@@ -933,12 +933,12 @@
                                                         "location": "bid://21c00595-0b9e-49da-8813-63706ea984e0"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "duplex_bam_sequence_qc_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -977,12 +977,12 @@
                                                         "location": "bid://77b35489-f2be-4b67-8cb5-0d2fffcbcc89"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "uncollapsed_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -990,12 +990,12 @@
                                             {
                                                 "class": "Directory",
                                                 "listing": [],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "athena_coverage_report_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1032,11 +1032,11 @@
                                             }
                                         ],
                                         "basename": "duplex_biometrics_output",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
                                     }
                                 ],
                                 "basename": "all_qc_files",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
                             },
                             {
                                 "size": 17137699,
@@ -1065,12 +1065,12 @@
                             }
                         ],
                         "basename": "aggregate_parsed_stats",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats"
+                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats"
                     }
                 ],
                 "nameext": "",
                 "basename": "multiqc_1.10.1.7",
-                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7",
+                "location": "file:///path/to/multiqc_1.10.1.7",
                 "nameroot": "tmp-outrbgldaa7"
             },
             "value": {
@@ -1083,11 +1083,11 @@
                                 "class": "Directory",
                                 "listing": [],
                                 "basename": "matplotlib",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.config/matplotlib"
+                                "location": "file:///path/to/multiqc_1.10.1.7/.config/matplotlib"
                             }
                         ],
                         "basename": ".config",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.config"
+                        "location": "file:///path/to/multiqc_1.10.1.7/.config"
                     },
                     {
                         "class": "Directory",
@@ -1097,333 +1097,333 @@
                                 "class": "File",
                                 "basename": "multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_uncollapsed_gcbias.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_gcbias.txt"
                             },
                             {
                                 "size": 182580,
                                 "class": "File",
                                 "basename": "multiqc.log",
                                 "checksum": "sha1$4bb0d237a71bea119a8832b715436f3c1861d7b7",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc.log"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc.log"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_collapsed_bam.txt",
                                 "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_bam.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_uncollapsed_gcbias.txt",
                                 "checksum": "sha1$287eb90e87b0594bf29c0d6a0b4253a4f55272a0",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_gcbias.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_collapsed_insertsize.txt",
                                 "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_insertsize.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_insertsize.txt"
                             },
                             {
                                 "size": 683,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt",
                                 "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt"
                             },
                             {
                                 "size": 2628,
                                 "class": "File",
                                 "basename": "multiqc_qc_criteria.txt",
                                 "checksum": "sha1$2cd376064f2a80671e3d8f3f411d965889a57bbf",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_qc_criteria.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_qc_criteria.txt"
                             },
                             {
                                 "size": 167,
                                 "class": "File",
                                 "basename": "multiqc_minor_contamination_duplex.txt",
                                 "checksum": "sha1$f1d4e2583ba3c63f4e46c399c3b462fc4e7f5603",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination_duplex.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination_duplex.txt"
                             },
                             {
                                 "size": 1504,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_duplex_bam.txt",
                                 "checksum": "sha1$c072f16859e4c1f094ceab597ae15353f24192c1",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_duplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_duplex_bam.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_collapsed_targetcov.txt",
                                 "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_targetcov.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_targetcov.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_collapsed_bam.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_bam.txt"
                             },
                             {
                                 "size": 1514,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_collapsed_insertsize.txt",
                                 "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_insertsize.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_insertsize.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_collapsed_targetcov.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_targetcov.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_targetcov.txt"
                             },
                             {
                                 "size": 674,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt",
                                 "checksum": "sha1$f44012a05068f6e65d5aa1176df7144e0b49f7fb",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_uncollapsed_bam.txt",
                                 "checksum": "sha1$287eb90e87b0594bf29c0d6a0b4253a4f55272a0",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_bam.txt"
                             },
                             {
                                 "size": 2143723,
                                 "class": "File",
                                 "basename": "multiqc_data.json",
                                 "checksum": "sha1$e64ee57c3ed520bd65def0af7b297dc422da3e5e",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_data.json"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_data.json"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_simplex_bam.txt",
                                 "checksum": "sha1$360bab3ad5b17a2e275c0b5017b80f5e346385eb",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_simplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_simplex_bam.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_collapsed_gcbias.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_gcbias.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_simplex_bam.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_simplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_simplex_bam.txt"
                             },
                             {
                                 "size": 1520,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_uncollapsed_bam.txt",
                                 "checksum": "sha1$925cebf4ade5af7bf3aa7d516da2124976214c41",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_bam.txt"
                             },
                             {
                                 "size": 683,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt",
                                 "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt"
                             },
                             {
                                 "size": 1520,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_uncollapsed_gcbias.txt",
                                 "checksum": "sha1$925cebf4ade5af7bf3aa7d516da2124976214c41",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_gcbias.txt"
                             },
                             {
                                 "size": 1094,
                                 "class": "File",
                                 "basename": "multiqc_summary_qc_metrics.txt",
                                 "checksum": "sha1$b6d37296a7249df76cd2eac508634309d570bc9e",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_summary_qc_metrics.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_summary_qc_metrics.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_collapsed_insertsize.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_insertsize.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_insertsize.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_uncollapsed_bam.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_bam.txt"
                             },
                             {
                                 "size": 1514,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_collapsed_gcbias.txt",
                                 "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_gcbias.txt"
                             },
                             {
                                 "size": 683,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt",
                                 "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt"
                             },
                             {
                                 "size": 1514,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_collapsed_bam.txt",
                                 "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_bam.txt"
                             },
                             {
                                 "size": 25,
                                 "class": "File",
                                 "basename": "multiqc_picard_target_coverage_duplex_bam.txt",
                                 "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_duplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_duplex_bam.txt"
                             },
                             {
                                 "size": 260,
                                 "class": "File",
                                 "basename": "multiqc_sample_clusters.txt",
                                 "checksum": "sha1$97b2866774d221d99a2beab2f86e40e0a381ccce",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sample_clusters.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sample_clusters.txt"
                             },
                             {
                                 "size": 167,
                                 "class": "File",
                                 "basename": "multiqc_minor_contamination.txt",
                                 "checksum": "sha1$a2bd5503ed6fdf09cc108bc3c73d143e2f239a0f",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination.txt"
                             },
                             {
                                 "size": 680,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt",
                                 "checksum": "sha1$3f1f96e10399655c551771397fed82beecf2b70e",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt"
                             },
                             {
                                 "size": 1022,
                                 "class": "File",
                                 "basename": "multiqc_hotspots_in_normals.txt",
                                 "checksum": "sha1$1c4ad6f173f91f33f6031c65af6c7d599f5e3ccf",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_hotspots_in_normals.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_hotspots_in_normals.txt"
                             },
                             {
                                 "size": 1501,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_simplex_bam.txt",
                                 "checksum": "sha1$e6f10c8dbbd566226ccd38ae3d33a6d24b375b14",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_simplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_simplex_bam.txt"
                             },
                             {
                                 "size": 356,
                                 "class": "File",
                                 "basename": "multiqc_noise_metrics.txt",
                                 "checksum": "sha1$19c88470129b5577df718e8d70a0674bacda35f2",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_noise_metrics.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_noise_metrics.txt"
                             },
                             {
                                 "size": 158,
                                 "class": "File",
                                 "basename": "multiqc_major_contamination.txt",
                                 "checksum": "sha1$41c7fb23df3bb44601526b9a6cbea85d99aabb57",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_major_contamination.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_major_contamination.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_duplex_bam.txt",
                                 "checksum": "sha1$f804a20a3b5118583299dcf26a434f5be78a0524",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_duplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_duplex_bam.txt"
                             },
                             {
                                 "size": 680,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt",
                                 "checksum": "sha1$3f1f96e10399655c551771397fed82beecf2b70e",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt"
                             },
                             {
                                 "size": 877,
                                 "class": "File",
                                 "basename": "multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt",
                                 "checksum": "sha1$14b0faa407f4f40df141746919c698fa1a15c222",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt"
                             },
                             {
                                 "size": 1514,
                                 "class": "File",
                                 "basename": "multiqc_picard_HsMetrics_collapsed_targetcov.txt",
                                 "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_targetcov.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_targetcov.txt"
                             },
                             {
                                 "size": 683,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt",
                                 "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt"
                             },
                             {
                                 "size": 5250,
                                 "class": "File",
                                 "basename": "multiqc_sources.txt",
                                 "checksum": "sha1$9d98b870545470039b3b93fdd2685d8019f517aa",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sources.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sources.txt"
                             },
                             {
                                 "size": 672,
                                 "class": "File",
                                 "basename": "multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt",
                                 "checksum": "sha1$af7aeada6a96a93075104fca80e08e748a0e42f2",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt"
                             },
                             {
                                 "size": 595,
                                 "class": "File",
                                 "basename": "multiqc_picard_insertSize_collapsed_gcbias.txt",
                                 "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_gcbias.txt"
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_gcbias.txt"
                             }
                         ],
                         "basename": "multiqc_1.10.1.7_data",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
                     },
                     {
                         "size": 5093137,
                         "class": "File",
                         "basename": "multiqc_1.10.1.7.html",
                         "checksum": "sha1$9d45a4d8e22af2755e7cf85b65db1f84fd89c6b4",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/multiqc_1.10.1.7.html"
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7.html"
                     },
                     {
                         "class": "Directory",
@@ -1436,15 +1436,15 @@
                                         "class": "File",
                                         "basename": "fontlist-v330.json",
                                         "checksum": "sha1$5a8aa6705713aa150bcc26c839a4b37f0de10035",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.cache/matplotlib/fontlist-v330.json"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib/fontlist-v330.json"
                                     }
                                 ],
                                 "basename": "matplotlib",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.cache/matplotlib"
+                                "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib"
                             }
                         ],
                         "basename": ".cache",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/.cache"
+                        "location": "file:///path/to/multiqc_1.10.1.7/.cache"
                     },
                     {
                         "class": "Directory",
@@ -1454,7 +1454,7 @@
                                 "class": "File",
                                 "basename": "genstats_qc_status.csv",
                                 "checksum": "sha1$6229b224a490a7a6353f696f87a4a91a180d96c3",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/genstats_qc_status.csv"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/genstats_qc_status.csv"
                             },
                             {
                                 "class": "Directory",
@@ -1468,87 +1468,87 @@
                                                     {
                                                         "size": 7229,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01.regions.bed.gz",
+                                                        "basename": "C-100000-F001-d01.regions.bed.gz",
                                                         "checksum": "sha1$4a7fe43c84d733acebb2e2b57400633185b334e4",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01.regions.bed.gz"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.regions.bed.gz"
                                                     },
                                                     {
                                                         "size": 12860,
                                                         "class": "File",
                                                         "basename": "histogram.pdf",
                                                         "checksum": "sha1$97e1812141ae76bc8ca83536354fed62b44a6c43",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/histogram.pdf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
                                                     },
                                                     {
                                                         "size": 37458,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01.mosdepth.global.dist.txt",
+                                                        "basename": "C-100000-F001-d01.mosdepth.global.dist.txt",
                                                         "checksum": "sha1$39853b1b8b634381676c37a7713651827a5af449",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01.mosdepth.global.dist.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.mosdepth.global.dist.txt"
                                                     },
                                                     {
                                                         "size": 3809917,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01.per-base.bed.gz",
+                                                        "basename": "C-100000-F001-d01.per-base.bed.gz",
                                                         "checksum": "sha1$2ade956bef7bcebd6a7c25484fc81ee41e1c489c",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01.per-base.bed.gz"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.per-base.bed.gz"
                                                     },
                                                     {
                                                         "size": 9039,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_duplex_hotspots_fillout.maf",
+                                                        "basename": "C-100000-F001-d01_duplex_hotspots_fillout.maf",
                                                         "checksum": "sha1$70215bbf73966aa2d62480be18aa46df4b55a54c",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_duplex_hotspots_fillout.maf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_duplex_hotspots_fillout.maf"
                                                     },
                                                     {
                                                         "size": 349016,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01.mosdepth.region.dist.txt",
+                                                        "basename": "C-100000-F001-d01.mosdepth.region.dist.txt",
                                                         "checksum": "sha1$59cd4697ab0ecd582052d9ae54d64147657918f7",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01.mosdepth.region.dist.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.mosdepth.region.dist.txt"
                                                     },
                                                     {
                                                         "size": 27615070,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_duplex_per_base_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_per_base_coverage.txt",
                                                         "checksum": "sha1$46f6f1ca86f0d51cd999d89d6d39c5a46227cd7b",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_duplex_per_base_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_per_base_coverage.txt"
                                                     },
                                                     {
                                                         "size": 6454,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_duplex_insert_size_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_insert_size_metrics.txt",
                                                         "checksum": "sha1$7bec9ba8bc9f8ffa38ffc0c11ef1b144ac62ba8c",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_duplex_insert_size_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_insert_size_metrics.txt"
                                                     },
                                                     {
                                                         "size": 2447,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_duplex_alignment_summary_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_alignment_summary_metrics.txt",
                                                         "checksum": "sha1$defc835bcf82e9c43268f2a14df9240f5e48b0a0",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_duplex_alignment_summary_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_alignment_summary_metrics.txt"
                                                     },
                                                     {
                                                         "size": 5063,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_duplex_hs_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_hs_metrics.txt",
                                                         "checksum": "sha1$e7d020ad6b7133b03869416a8b13557da69e39a2",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_duplex_hs_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_hs_metrics.txt"
                                                     },
                                                     {
                                                         "size": 92010,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_duplex_per_target_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_per_target_coverage.txt",
                                                         "checksum": "sha1$543aab505b345ef4477eb97269202d65dec528cf",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_duplex_per_target_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_per_target_coverage.txt"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "duplex_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1559,59 +1559,59 @@
                                                     {
                                                         "size": 4948,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_FM_hs_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_hs_metrics.txt",
                                                         "checksum": "sha1$19df9fc513183e3860fcfd85e9cc39d36067dcb9",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_FM_hs_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_hs_metrics.txt"
                                                     },
                                                     {
                                                         "size": 27709248,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_FM_per_base_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_per_base_coverage.txt",
                                                         "checksum": "sha1$4d9b7a9b40e5f9d3f28ca1d09420ca2736661e8d",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_FM_per_base_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_per_base_coverage.txt"
                                                     },
                                                     {
                                                         "size": 14652,
                                                         "class": "File",
                                                         "basename": "histogram.pdf",
                                                         "checksum": "sha1$4c3bf2d5e6be314dec8883204394ec926a7558f2",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/histogram.pdf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
                                                     },
                                                     {
                                                         "size": 2467,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_FM_alignment_summary_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_alignment_summary_metrics.txt",
                                                         "checksum": "sha1$329d215759787b1f65a35815826d9390c35c0667",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_FM_alignment_summary_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_alignment_summary_metrics.txt"
                                                     },
                                                     {
                                                         "size": 9457,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_hotspots_fillout.maf",
+                                                        "basename": "C-100000-F001-d01_collapsed_hotspots_fillout.maf",
                                                         "checksum": "sha1$af35183d89d3c5bb7c82fd34a7096fa205f6f6cf",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_hotspots_fillout.maf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_hotspots_fillout.maf"
                                                     },
                                                     {
                                                         "size": 7390,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_FM_insert_size_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_insert_size_metrics.txt",
                                                         "checksum": "sha1$6d63c418e119a16360bd91e894faf4d8b1fc4a1c",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_FM_insert_size_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_insert_size_metrics.txt"
                                                     },
                                                     {
                                                         "size": 93778,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_FM_per_target_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_per_target_coverage.txt",
                                                         "checksum": "sha1$30da78bf8f78e1ed9923b232c30893bfd7b63c13",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_FM_per_target_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_per_target_coverage.txt"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "collapsed_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1622,38 +1622,38 @@
                                                     {
                                                         "size": 4336,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_grouped.umi_counts.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.umi_counts.txt",
                                                         "checksum": "sha1$334faa7e4d11484a531638c271a761156d110481",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_grouped.umi_counts.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.umi_counts.txt"
                                                     },
                                                     {
                                                         "size": 3108,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_grouped.duplex_family_sizes.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.duplex_family_sizes.txt",
                                                         "checksum": "sha1$2a9460530fba836fb112010c03a28d70c8e1d7ee",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_grouped.duplex_family_sizes.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.duplex_family_sizes.txt"
                                                     },
                                                     {
                                                         "size": 2952,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_grouped.family_sizes.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.family_sizes.txt",
                                                         "checksum": "sha1$fa46697dbc85dfd2ece7a585ee37c10fb17f7707",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_grouped.family_sizes.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.family_sizes.txt"
                                                     },
                                                     {
                                                         "size": 1323,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_grouped.duplex_yield_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.duplex_yield_metrics.txt",
                                                         "checksum": "sha1$599df187e3b0958e0e43dc6a3ddc6b928e4f2a1f",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_grouped.duplex_yield_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.duplex_yield_metrics.txt"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "collapsed_bam_duplex_metrics_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1664,24 +1664,24 @@
                                                     {
                                                         "size": 5414,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt",
                                                         "checksum": "sha1$da302e20ddf07d62f1f33600a86ad2b7d3fe980a",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt"
                                                     },
                                                     {
                                                         "size": 7976,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf",
                                                         "checksum": "sha1$6d9d439d774abf7d117d6f23e7c79befce27fd3d",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "gatk_mean_quality_by_cycle_recal_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1692,24 +1692,24 @@
                                                     {
                                                         "size": 7495,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_duplex.pickle",
+                                                        "basename": "C-100000-F001-d01_duplex.pickle",
                                                         "checksum": "sha1$7f1ba6b7923bac89edacbd0fb49c530028615a38",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_duplex.pickle"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01/C-100000-F001-d01_duplex.pickle"
                                                     },
                                                     {
                                                         "size": 6998,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed.pickle",
+                                                        "basename": "C-100000-F001-d01_collapsed.pickle",
                                                         "checksum": "sha1$a7bc57832274e266048ece9126f24084ddca72c6",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed.pickle"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed.pickle"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "biometrics_extract_files_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1720,52 +1720,52 @@
                                                     {
                                                         "size": 6449,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_simplex_insert_size_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_insert_size_metrics.txt",
                                                         "checksum": "sha1$a02f4c20414e042f032e2a927a3859cb543f7489",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_simplex_insert_size_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_insert_size_metrics.txt"
                                                     },
                                                     {
                                                         "size": 4963,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_simplex_hs_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_hs_metrics.txt",
                                                         "checksum": "sha1$0f802a2b2b33490c2b3f25ebdfe1a3222ec38c4e",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_simplex_hs_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_hs_metrics.txt"
                                                     },
                                                     {
                                                         "size": 2448,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_simplex_alignment_summary_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_alignment_summary_metrics.txt",
                                                         "checksum": "sha1$7383cc6ad86cd6b386998d991f8edf176efe71bc",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_simplex_alignment_summary_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_alignment_summary_metrics.txt"
                                                     },
                                                     {
                                                         "size": 13243,
                                                         "class": "File",
                                                         "basename": "histogram.pdf",
                                                         "checksum": "sha1$1781c1621c38cbdd8f81253a04288dd1084c6f0f",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/histogram.pdf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
                                                     },
                                                     {
                                                         "size": 92096,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_simplex_per_target_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_per_target_coverage.txt",
                                                         "checksum": "sha1$ee15142ec3ab7b6e9843691e985830e49c8263c4",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_simplex_per_target_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_per_target_coverage.txt"
                                                     },
                                                     {
                                                         "size": 27615595,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_collapsed_simplex_per_base_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_per_base_coverage.txt",
                                                         "checksum": "sha1$6e39a2f07ef2d2bad9d0b967c074cc2360054d1c",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_collapsed_simplex_per_base_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_per_base_coverage.txt"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "simplex_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1775,81 +1775,81 @@
                                                 "class": "File",
                                                 "basename": "minor_contamination.html",
                                                 "checksum": "sha1$f54bfbdf5af9ef4c9bdb7eb4ca5da0939b11191c",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination.html"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination.html"
                                             },
                                             {
                                                 "size": 222,
                                                 "class": "File",
                                                 "basename": "collapsed_major_contamination.json",
                                                 "checksum": "sha1$8c6c2b0815be2ac965a02382ef94601d3e2b85e1",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.json"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.json"
                                             },
                                             {
                                                 "size": 367,
                                                 "class": "File",
                                                 "basename": "collapsed_genotype_comparison.csv",
                                                 "checksum": "sha1$82cf49f79baa8494576640438835789e613f4928",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_comparison.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_comparison.csv"
                                             },
                                             {
                                                 "size": 3719859,
                                                 "class": "File",
                                                 "basename": "major_contamination.html",
                                                 "checksum": "sha1$5eb2042e094d77603cbb21082f173317f4897133",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/major_contamination.html"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/major_contamination.html"
                                             },
                                             {
                                                 "size": 3721920,
                                                 "class": "File",
                                                 "basename": "minor_contamination_sites.html",
                                                 "checksum": "sha1$e79a5ce02b3e06423c7e642f6b35be99c718d7d6",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination_sites.html"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination_sites.html"
                                             },
                                             {
                                                 "size": 253,
                                                 "class": "File",
                                                 "basename": "collapsed_genotype_clusters_input.csv",
                                                 "checksum": "sha1$0784c7e3088454eb0251c220aa0332defe319f02",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_clusters_input.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_clusters_input.csv"
                                             },
                                             {
                                                 "size": 68,
                                                 "class": "File",
                                                 "basename": "collapsed_sex_mismatch.csv",
                                                 "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.csv"
                                             },
                                             {
                                                 "size": 229,
                                                 "class": "File",
                                                 "basename": "collapsed_minor_contamination.json",
                                                 "checksum": "sha1$740e8f8732f4046325e71a0e2f903c53482e8429",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.json"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.json"
                                             },
                                             {
                                                 "size": 115,
                                                 "class": "File",
                                                 "basename": "collapsed_sex_mismatch.json",
                                                 "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.json"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.json"
                                             },
                                             {
                                                 "size": 159,
                                                 "class": "File",
                                                 "basename": "collapsed_major_contamination.csv",
                                                 "checksum": "sha1$0492937b683609294a15db436315f91c793d4e94",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.csv"
                                             },
                                             {
                                                 "size": 168,
                                                 "class": "File",
                                                 "basename": "collapsed_minor_contamination.csv",
                                                 "checksum": "sha1$927e09e66b03a32b4b6647b4668d45469200220d",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.csv"
                                             }
                                         ],
                                         "basename": "collapsed_biometrics_output",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
                                     },
                                     {
                                         "class": "Directory",
@@ -1860,59 +1860,59 @@
                                                     {
                                                         "size": 913961,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise_positions.tsv",
+                                                        "basename": "C-100000-F001-d01_noise_positions.tsv",
                                                         "checksum": "sha1$b1c4a281f7fe36af81c8ca3f97291c624f4da04e",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise_positions.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_positions.tsv"
                                                     },
                                                     {
                                                         "size": 130,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise_del.tsv",
+                                                        "basename": "C-100000-F001-d01_noise_del.tsv",
                                                         "checksum": "sha1$2b1aefe0a8ea03d3024f9e9f0d57ef5ca58b8f02",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise_del.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_del.tsv"
                                                     },
                                                     {
                                                         "size": 17137513,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise.html",
+                                                        "basename": "C-100000-F001-d01_noise.html",
                                                         "checksum": "sha1$a73329f4d84f3dd2240a61576bee6ce757746c13",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise.html"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise.html"
                                                     },
                                                     {
                                                         "size": 834,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise_by_substitution.tsv",
+                                                        "basename": "C-100000-F001-d01_noise_by_substitution.tsv",
                                                         "checksum": "sha1$dc162ffa7f8139e25f2bdf1f5bc7bac6eb1d832a",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise_by_substitution.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_by_substitution.tsv"
                                                     },
                                                     {
                                                         "size": 143,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise_acgt.tsv",
+                                                        "basename": "C-100000-F001-d01_noise_acgt.tsv",
                                                         "checksum": "sha1$a1a21d2c41ba89f2cbbc339897be235c8272f1a2",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise_acgt.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_acgt.tsv"
                                                     },
                                                     {
                                                         "size": 4041554,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_pileup.tsv",
+                                                        "basename": "C-100000-F001-d01_pileup.tsv",
                                                         "checksum": "sha1$dcd201fda77efd778432057b84642475bde9f185",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_pileup.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_pileup.tsv"
                                                     },
                                                     {
                                                         "size": 130,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_noise_n.tsv",
+                                                        "basename": "C-100000-F001-d01_noise_n.tsv",
                                                         "checksum": "sha1$2a8f6334e03ccccea130c853562bd40a8ac0c698",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_noise_n.tsv"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_n.tsv"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "duplex_bam_sequence_qc_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1923,52 +1923,52 @@
                                                     {
                                                         "size": 4768,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt",
                                                         "checksum": "sha1$d6b43ff7ae6aeb398f17114ec0658fc0a379ce64",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt"
                                                     },
                                                     {
                                                         "size": 7841,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt",
                                                         "checksum": "sha1$9fabedb8ac01be145dcc516c7aed76bcc8fd66c4",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt"
                                                     },
                                                     {
                                                         "size": 14390,
                                                         "class": "File",
                                                         "basename": "histogram.pdf",
                                                         "checksum": "sha1$349549dc1e9d83d060f7b4e091661f3e9c28da42",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/histogram.pdf"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
                                                     },
                                                     {
                                                         "size": 2494,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt",
                                                         "checksum": "sha1$2cae9c4e55cda48c83aefe03db72bfe0eb2430e6",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt"
                                                     },
                                                     {
                                                         "size": 95160,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt",
                                                         "checksum": "sha1$2376f1bd73dc4600039bdaf12e7ae0eaf21a93dc",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt"
                                                     },
                                                     {
                                                         "size": 27794015,
                                                         "class": "File",
-                                                        "basename": "C-P016VH-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt",
                                                         "checksum": "sha1$567c1918cec4efdfba0b7062188ae8044d40d47e",
-                                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01/C-P016VH-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt"
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt"
                                                     }
                                                 ],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "uncollapsed_bam_stats_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1976,12 +1976,12 @@
                                             {
                                                 "class": "Directory",
                                                 "listing": [],
-                                                "basename": "C-P016VH-F001-d01",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-P016VH-F001-d01"
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-100000-F001-d01"
                                             }
                                         ],
                                         "basename": "athena_coverage_report_dir",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
                                     },
                                     {
                                         "class": "Directory",
@@ -1991,94 +1991,94 @@
                                                 "class": "File",
                                                 "basename": "duplex_genotype_clusters_input.csv",
                                                 "checksum": "sha1$0784c7e3088454eb0251c220aa0332defe319f02",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_clusters_input.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_clusters_input.csv"
                                             },
                                             {
                                                 "size": 3719872,
                                                 "class": "File",
                                                 "basename": "minor_contamination.html",
                                                 "checksum": "sha1$b4fe2e14cb05f9a5977f68dbec8ea6fc995da88c",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination.html"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination.html"
                                             },
                                             {
                                                 "size": 227,
                                                 "class": "File",
                                                 "basename": "duplex_minor_contamination.json",
                                                 "checksum": "sha1$77d6ac275dbf5a62c56308eddeba3ab9d92570b1",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.json"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.json"
                                             },
                                             {
                                                 "size": 3720553,
                                                 "class": "File",
                                                 "basename": "minor_contamination_sites.html",
                                                 "checksum": "sha1$2a27641dd1ebb75bf782c86058e84ebe26da727a",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination_sites.html"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination_sites.html"
                                             },
                                             {
                                                 "size": 364,
                                                 "class": "File",
                                                 "basename": "duplex_genotype_comparison.csv",
                                                 "checksum": "sha1$8b5916cb0108046ddce35c42d85ffd05bfab32f2",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_comparison.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_comparison.csv"
                                             },
                                             {
                                                 "size": 168,
                                                 "class": "File",
                                                 "basename": "duplex_minor_contamination.csv",
                                                 "checksum": "sha1$e67b3a44f436dd9fda19c56c56b73d8e6212689e",
-                                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.csv"
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.csv"
                                             }
                                         ],
                                         "basename": "duplex_biometrics_output",
-                                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
                                     }
                                 ],
                                 "basename": "all_qc_files",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
                             },
                             {
                                 "size": 17137699,
                                 "class": "File",
                                 "basename": "sequence_qc_mqc.html",
                                 "checksum": "sha1$03aadbd7bbff0d88123dc3a5251bc24daaa736f4",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.html"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.html"
                             },
                             {
                                 "size": 2631,
                                 "class": "File",
                                 "basename": "qc_criteria.csv",
                                 "checksum": "sha1$b18ceb3b1ec0dde7e04820db970d7ccbc7c725ae",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/qc_criteria.csv"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/qc_criteria.csv"
                             },
                             {
                                 "size": 3722092,
                                 "class": "File",
                                 "basename": "minor_contamination_sites_mqc.html",
                                 "checksum": "sha1$9d9d7410b6d7b0aaf7da459e2dae875300d5cec9",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/minor_contamination_sites_mqc.html"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/minor_contamination_sites_mqc.html"
                             },
                             {
                                 "size": 1011,
                                 "class": "File",
                                 "basename": "hotspot_table.tsv",
                                 "checksum": "sha1$8058debda928498363dd8f8e00d8fb5addc352eb",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/hotspot_table.tsv"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/hotspot_table.tsv"
                             },
                             {
                                 "size": 1159,
                                 "class": "File",
                                 "basename": "sequence_qc_mqc.yaml",
                                 "checksum": "sha1$bc7b85aa3c000697839d8bf2b147886508b2149b",
-                                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.yaml"
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.yaml"
                             }
                         ],
                         "basename": "aggregate_parsed_stats",
-                        "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7/aggregate_parsed_stats"
+                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats"
                     }
                 ],
                 "nameext": "",
                 "basename": "multiqc_1.10.1.7",
-                "location": "file:///work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16/multiqc_1.10.1.7",
+                "location": "file:///path/to/multiqc_1.10.1.7",
                 "nameroot": "tmp-outrbgldaa7"
             },
             "notify": false,
