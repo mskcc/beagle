@@ -1,0 +1,1486 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "a11eaffa-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.975Z",
+            "modified_date": "2023-05-11T05:34:26.771Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_segment_cna_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID.seg.cna.txt",
+            "value": "BALTO_REQID.seg.cna.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11f90dc-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.981Z",
+            "modified_date": "2023-05-11T05:34:26.774Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_sv_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID.svs.maf",
+            "value": "BALTO_REQID.svs.maf",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1221582-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.997Z",
+            "modified_date": "2023-05-11T05:34:26.785Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_mutations_share_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID.muts.share.maf",
+            "value": "BALTO_REQID.muts.share.maf",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13838bc-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.142Z",
+            "modified_date": "2023-05-11T05:34:26.865Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "mutation_svs_maf_files",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://e5ed5737-930a-45a6-bb9f-038f41db68b5"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://ed9555bc-bc1c-4b96-bf0b-87766c208820"
+                }
+            ],
+            "value": [
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
+                    "class": "File"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "e5ed5737-930a-45a6-bb9f-038f41db68b5",
+                "ed9555bc-bc1c-4b96-bf0b-87766c208820"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1397d62-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.151Z",
+            "modified_date": "2023-05-11T05:34:26.870Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "targets_list",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://0d6d4e53-f7cd-412c-bf14-5c147ab2abae"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "0d6d4e53-f7cd-412c-bf14-5c147ab2abae"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13abb50-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.159Z",
+            "modified_date": "2023-05-11T05:34:26.874Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "known_fusions_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://6c90454d-fc4c-4cce-84a9-dce5d7da4345"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/known_fusions/known_fusions_at_mskcc.txt",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "6c90454d-fc4c-4cce-84a9-dce5d7da4345"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a114f9ce-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.912Z",
+            "modified_date": "2023-05-11T05:34:26.887Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "project_pi",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "rudinc",
+            "value": "rudinc",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1160b34-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.919Z",
+            "modified_date": "2023-05-11T05:34:26.892Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "request_pi",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "allajv",
+            "value": "allajv",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a116f760-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.924Z",
+            "modified_date": "2023-05-11T05:34:26.895Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "project_short_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID",
+            "value": "BALTO_REQID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a117ce7e-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.930Z",
+            "modified_date": "2023-05-11T05:34:26.899Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "project_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID",
+            "value": "BALTO_REQID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a118c6c6-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.936Z",
+            "modified_date": "2023-05-11T05:34:26.903Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "project_description",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID",
+            "value": "BALTO_REQID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a119a3d4-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.942Z",
+            "modified_date": "2023-05-11T05:34:26.907Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cancer_type",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "sclc",
+            "value": "sclc",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11a7e30-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.948Z",
+            "modified_date": "2023-05-11T05:34:26.911Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cancer_study_identifier",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID",
+            "value": "BALTO_REQID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11b4f0e-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.953Z",
+            "modified_date": "2023-05-11T05:34:26.914Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "argos_version_string",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "21.10.0",
+            "value": "21.10.0",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11c237a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.958Z",
+            "modified_date": "2023-05-11T05:34:26.917Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "helix_filter_version",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "21.10.0",
+            "value": "21.10.0",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11cf2dc-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.964Z",
+            "modified_date": "2023-05-11T05:34:26.920Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "is_impact",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": true,
+            "value": true,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a11ddd82-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.970Z",
+            "modified_date": "2023-05-11T05:34:26.767Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "extra_pi_groups",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a120763c-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.987Z",
+            "modified_date": "2023-05-11T05:34:26.778Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_gene_cna_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID.gene.cna.txt",
+            "value": "BALTO_REQID.gene.cna.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1213ebe-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.992Z",
+            "modified_date": "2023-05-11T05:34:26.782Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_mutations_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID.muts.maf",
+            "value": "BALTO_REQID.muts.maf",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a122e4bc-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.003Z",
+            "modified_date": "2023-05-11T05:34:26.788Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_segment_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID_data_cna_hg19.seg",
+            "value": "BALTO_REQID_data_cna_hg19.seg",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a123ca3a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.008Z",
+            "modified_date": "2023-05-11T05:34:26.791Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_cna_segments_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID_meta_cna_hg19_seg.txt",
+            "value": "BALTO_REQID_meta_cna_hg19_seg.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a124bec2-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.015Z",
+            "modified_date": "2023-05-11T05:34:26.795Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cases_sequenced_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a125dca8-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.023Z",
+            "modified_date": "2023-05-11T05:34:26.799Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cases_cna_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12729aa-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.031Z",
+            "modified_date": "2023-05-11T05:34:26.802Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cases_cnaseq_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12828b4-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.037Z",
+            "modified_date": "2023-05-11T05:34:26.805Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cases_all_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1292926-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.044Z",
+            "modified_date": "2023-05-11T05:34:26.808Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_mutations_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12a1552-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.050Z",
+            "modified_date": "2023-05-11T05:34:26.811Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_fusions_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12b050c-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.056Z",
+            "modified_date": "2023-05-11T05:34:26.814Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_cna_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12c08b2-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.063Z",
+            "modified_date": "2023-05-11T05:34:26.817Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_study_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12d6b8a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.072Z",
+            "modified_date": "2023-05-11T05:34:26.820Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_clinical_patient_meta_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12e69a4-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.078Z",
+            "modified_date": "2023-05-11T05:34:26.823Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_clinical_sample_meta_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a12f43ec-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.084Z",
+            "modified_date": "2023-05-11T05:34:26.827Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_clinical_sample_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1300eb2-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.089Z",
+            "modified_date": "2023-05-11T05:34:26.831Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_clinical_patient_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a130cd48-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.094Z",
+            "modified_date": "2023-05-11T05:34:26.834Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_fusion_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1318a8a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.099Z",
+            "modified_date": "2023-05-11T05:34:26.838Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_mutation_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13263b0-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.104Z",
+            "modified_date": "2023-05-11T05:34:26.842Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cna_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1333b46-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.110Z",
+            "modified_date": "2023-05-11T05:34:26.845Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cna_ascna_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1341ebc-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.116Z",
+            "modified_date": "2023-05-11T05:34:26.848Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_cna_scna_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1350a02-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.122Z",
+            "modified_date": "2023-05-11T05:34:26.852Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_sv_data_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a135f00c-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.127Z",
+            "modified_date": "2023-05-11T05:34:26.855Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "cbio_meta_sv_filename",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a136ad1c-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.132Z",
+            "modified_date": "2023-05-11T05:34:26.860Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "mutation_svs_txt_files",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://3dac67cf-e820-4b83-b5a9-4ee4f88155b0"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://53737c3b-acf2-4311-863d-c6ad27b60037"
+                }
+            ],
+            "value": [
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
+                    "class": "File"
+                },
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
+                    "class": "File"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "3dac67cf-e820-4b83-b5a9-4ee4f88155b0",
+                "53737c3b-acf2-4311-863d-c6ad27b60037"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1109866-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.884Z",
+            "modified_date": "2023-05-11T05:34:26.880Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "pairs",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "record"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "pair_id": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d",
+                    "pair_maf": {
+                        "class": "File",
+                        "location": "bid://1a7dea31-fe52-45ed-b2f4-34b612750d4d"
+                    },
+                    "tumor_id": "s_C_ABCDEF_X001_d",
+                    "normal_id": "s_C_ABCDEF_N001_d",
+                    "snp_pileup": {
+                        "class": "File",
+                        "location": "bid://16be67c5-1e51-4f54-8874-fded5aa3e2ed"
+                    }
+                },
+                {
+                    "pair_id": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d",
+                    "pair_maf": {
+                        "class": "File",
+                        "location": "bid://101ebd6a-e5e6-43ff-8038-c269831b3083"
+                    },
+                    "tumor_id": "s_C_GHIJKL_X001_d",
+                    "normal_id": "s_C_GHIJKL_N001_d",
+                    "snp_pileup": {
+                        "class": "File",
+                        "location": "bid://14e3a9d7-7af9-4801-9b4e-107b89fd963b"
+                    }
+                }
+            ],
+            "value": [
+                {
+                    "pair_id": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d",
+                    "pair_maf": {
+                        "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
+                        "class": "File"
+                    },
+                    "tumor_id": "s_C_ABCDEF_X001_d",
+                    "normal_id": "s_C_ABCDEF_N001_d",
+                    "snp_pileup": {
+                        "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
+                        "class": "File"
+                    }
+                },
+                {
+                    "pair_id": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d",
+                    "pair_maf": {
+                        "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
+                        "class": "File"
+                    },
+                    "tumor_id": "s_C_GHIJKL_X001_d",
+                    "normal_id": "s_C_GHIJKL_N001_d",
+                    "snp_pileup": {
+                        "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
+                        "class": "File"
+                    }
+                }
+            ],
+            "notify": false,
+            "files": [
+                "101ebd6a-e5e6-43ff-8038-c269831b3083",
+                "14e3a9d7-7af9-4801-9b4e-107b89fd963b",
+                "16be67c5-1e51-4f54-8874-fded5aa3e2ed",
+                "1a7dea31-fe52-45ed-b2f4-34b612750d4d"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1138062-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:30.903Z",
+            "modified_date": "2023-05-11T05:34:26.883Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "project_id",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "BALTO_REQID",
+            "value": "BALTO_REQID",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13ce9b6-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.173Z",
+            "modified_date": "2023-05-11T05:34:26.925Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "sample_summary_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1462742-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.235Z",
+            "modified_date": "2023-05-11T05:34:26.958Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "tumor_bam_files",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://f21009f3-7d35-424b-9171-2e862bdbe7f2"
+                        }
+                    ]
+                },
+                {
+                    "class": "File",
+                    "location": "bid://da87ab23-4127-4e02-882e-67736e525e13",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://3a907e66-9180-466f-a410-174b8fa8531e"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
+                            "class": "File"
+                        }
+                    ]
+                },
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
+                "3a907e66-9180-466f-a410-174b8fa8531e",
+                "da87ab23-4127-4e02-882e-67736e525e13",
+                "f21009f3-7d35-424b-9171-2e862bdbe7f2"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a148e798-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.253Z",
+            "modified_date": "2023-05-11T05:34:26.964Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "extra_cna_files",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a14a4dc2-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.261Z",
+            "modified_date": "2023-05-11T05:34:26.970Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "extra_sample_ids",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13bf344-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.167Z",
+            "modified_date": "2023-05-11T05:34:26.922Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "data_clinical_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "basename": "sample_data_clinical.txt",
+                "contents": "SAMPLE_ID\tREQUEST_ID\tPROJECT_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\tRUN_MODE\tPIPELINE\tPIPELINE_GITHUB_LINK\tPIPELINE_VERSION\ns_C_ABCDEF_X001_d\tBALTO_REQID\tNone\tC-ABCDEF\tLTG002_P3_17096_L1\tPDX\tIMPACT468\tSCLC\tPDX\tFrozen\tF\tNone\tBALTO_REQID_1\tHiSeq High Output\targos\thttps://github.com/mskcc/argos-cwl\ns_C_GHIJKL_X001_d\tBALTO_REQID\tNone\tC-GHIJKL\tLTG017_P1_17095a_R_43\tPDX\tIMPACT468\tSCLC\tPDX\tFrozen\tM\tNone\tBALTO_REQID_3\tHiSeq High Output\targos\thttps://github.com/mskcc/argos-cwl"
+            },
+            "value": {
+                "class": "File",
+                "basename": "sample_data_clinical.txt",
+                "contents": "SAMPLE_ID\tREQUEST_ID\tPROJECT_ID\tPATIENT_ID\tCOLLAB_ID\tSAMPLE_TYPE\tGENE_PANEL\tONCOTREE_CODE\tSAMPLE_CLASS\tSPECIMEN_PRESERVATION_TYPE\tSEX\tTISSUE_SITE\tIGO_ID\tRUN_MODE\tPIPELINE\tPIPELINE_GITHUB_LINK\tPIPELINE_VERSION\ns_C_ABCDEF_X001_d\tBALTO_REQID\tNone\tC-ABCDEF\tLTG002_P3_17096_L1\tPDX\tIMPACT468\tSCLC\tPDX\tFrozen\tF\tNone\tBALTO_REQID_1\tHiSeq High Output\targos\thttps://github.com/mskcc/argos-cwl\ns_C_GHIJKL_X001_d\tBALTO_REQID\tNone\tC-GHIJKL\tLTG017_P1_17095a_R_43\tPDX\tIMPACT468\tSCLC\tPDX\tFrozen\tM\tNone\tBALTO_REQID_3\tHiSeq High Output\targos\thttps://github.com/mskcc/argos-cwl"
+            },
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a13e3870-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.183Z",
+            "modified_date": "2023-05-11T05:34:26.929Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "IMPACT_gene_list",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://0db3314e-1a17-4d24-8910-a88f73cb8a7c"
+            },
+            "value": {
+                "path": "/juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "0db3314e-1a17-4d24-8910-a88f73cb8a7c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a140601e-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.197Z",
+            "modified_date": "2023-05-11T05:34:26.933Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "assay_coverage",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "1139294",
+            "value": "1139294",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a141ba04-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.205Z",
+            "modified_date": "2023-05-11T05:34:26.939Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "microsatellites_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://ffb33d50-5bda-4b89-b6cc-b0aeda4c547a"
+            },
+            "value": {
+                "path": "/juno/work/ci/resources/request_files/msisensor/microsatellites.list",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "ffb33d50-5bda-4b89-b6cc-b0aeda4c547a"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a1434b30-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.215Z",
+            "modified_date": "2023-05-11T05:34:26.947Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "normal_bam_files",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [
+                "^.bai"
+            ],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://6483333a-4a0e-4b4f-bc91-18cbcb34f098",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://eb20a340-3200-4135-8e2d-8c7a29ce1cf6"
+                        }
+                    ]
+                },
+                {
+                    "class": "File",
+                    "location": "bid://67457754-ffa9-49ae-96fb-c29c23dc36f5",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://795dfb7d-63be-4e45-bd9e-51d0689e2d18"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
+                            "class": "File"
+                        }
+                    ]
+                },
+                {
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "6483333a-4a0e-4b4f-bc91-18cbcb34f098",
+                "67457754-ffa9-49ae-96fb-c29c23dc36f5",
+                "795dfb7d-63be-4e45-bd9e-51d0689e2d18",
+                "eb20a340-3200-4135-8e2d-8c7a29ce1cf6"
+            ]
+        }
+    }
+]

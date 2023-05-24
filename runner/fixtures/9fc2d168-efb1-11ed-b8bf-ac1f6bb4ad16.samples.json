@@ -1,0 +1,82 @@
+[
+    {
+        "model": "file_system.sample",
+        "pk": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+        "fields": {
+            "created_date": "2020-10-08T01:32:45.920Z",
+            "modified_date": "2022-04-06T22:28:59.856Z",
+            "sample_id": "BALTO_REQID_2",
+            "sample_name": "17-0001535a",
+            "cmo_sample_name": "C-ABCDEF-N001-d",
+            "sample_type": null,
+            "tumor_or_normal": null,
+            "sample_class": null,
+            "igo_qc_notes": "",
+            "cas_qc_notes": "",
+            "request_id": null,
+            "redact": false,
+            "version": 0,
+            "latest": true
+        }
+    },
+    {
+        "model": "file_system.sample",
+        "pk": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+        "fields": {
+            "created_date": "2020-10-08T01:34:02.304Z",
+            "modified_date": "2022-04-06T22:28:59.906Z",
+            "sample_id": "BALTO_REQID_1",
+            "sample_name": "LTG002_P3_17096_L1",
+            "cmo_sample_name": "C-ABCDEF-X001-d",
+            "sample_type": null,
+            "tumor_or_normal": null,
+            "sample_class": null,
+            "igo_qc_notes": "",
+            "cas_qc_notes": "",
+            "request_id": null,
+            "redact": false,
+            "version": 0,
+            "latest": true
+        }
+    },
+    {
+        "model": "file_system.sample",
+        "pk": "4c008ebe-0556-4d91-958e-907ea15f480d",
+        "fields": {
+            "created_date": "2020-10-08T01:33:34.422Z",
+            "modified_date": "2022-04-06T22:28:59.841Z",
+            "sample_id": "BALTO_REQID_4",
+            "sample_name": "17-0010557a",
+            "cmo_sample_name": "C-GHIJKL-N001-d",
+            "sample_type": null,
+            "tumor_or_normal": null,
+            "sample_class": null,
+            "igo_qc_notes": "",
+            "cas_qc_notes": "",
+            "request_id": null,
+            "redact": false,
+            "version": 0,
+            "latest": true
+        }
+    },
+    {
+        "model": "file_system.sample",
+        "pk": "2024258c-7588-479c-aa23-8b349e8552c7",
+        "fields": {
+            "created_date": "2020-10-08T01:33:34.352Z",
+            "modified_date": "2022-04-06T22:28:59.870Z",
+            "sample_id": "BALTO_REQID_3",
+            "sample_name": "LTG017_P1_17095a_R_43",
+            "cmo_sample_name": "C-GHIJKL-X001-d",
+            "sample_type": null,
+            "tumor_or_normal": null,
+            "sample_class": null,
+            "igo_qc_notes": "",
+            "cas_qc_notes": "",
+            "request_id": null,
+            "redact": false,
+            "version": 0,
+            "latest": true
+        }
+    }
+]
