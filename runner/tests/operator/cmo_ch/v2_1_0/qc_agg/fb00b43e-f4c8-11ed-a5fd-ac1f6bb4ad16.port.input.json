@@ -1,0 +1,976 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "023df220-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.158Z",
+            "modified_date": "2023-05-17T20:48:58.676Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "group_reads_by_umi_bam",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://f8f3d50c-48fe-4003-8f6b-0a071cdd2c1b"
+                }
+            ],
+            "value": [
+                {
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_grouped.bam",
+                    "class": "File"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "f8f3d50c-48fe-4003-8f6b-0a071cdd2c1b"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "023655e2-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.108Z",
+            "modified_date": "2023-05-17T20:48:58.686Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "target_intervals",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://546a6067-2d44-4a6f-bc7c-fce57030ad74"
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "546a6067-2d44-4a6f-bc7c-fce57030ad74"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02378c32-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.116Z",
+            "modified_date": "2023-05-17T20:48:58.691Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "bait_intervals",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://546a6067-2d44-4a6f-bc7c-fce57030ad74"
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "546a6067-2d44-4a6f-bc7c-fce57030ad74"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0238cd18-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.124Z",
+            "modified_date": "2023-05-17T20:48:58.695Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "noise_sites_bed",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://80184010-f3e8-4604-bcd8-f00f8a28bb88"
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "80184010-f3e8-4604-bcd8-f00f8a28bb88"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0239e78e-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.131Z",
+            "modified_date": "2023-05-17T20:48:58.699Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "biometrics_vcf_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://f978a356-4c68-4325-a846-9eb9addea04b"
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "f978a356-4c68-4325-a846-9eb9addea04b"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0234d38e-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.098Z",
+            "modified_date": "2023-05-17T20:48:58.681Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "reference",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://7734f8b9-9677-4b45-a16c-7bd239be8076",
+                "secondaryFiles": [
+                    {
+                        "class": "File",
+                        "location": "bid://f84b0830-b7e4-4d1d-8fd7-c5d842741aa3"
+                    },
+                    {
+                        "class": "File",
+                        "location": "bid://486fe673-39c8-40d6-b941-c2d27978a282"
+                    }
+                ]
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+                "class": "File",
+                "secondaryFiles": [
+                    {
+                        "path": "/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta.fai",
+                        "class": "File"
+                    },
+                    {
+                        "path": "/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.dict",
+                        "class": "File"
+                    }
+                ]
+            },
+            "notify": false,
+            "files": [
+                "486fe673-39c8-40d6-b941-c2d27978a282",
+                "7734f8b9-9677-4b45-a16c-7bd239be8076",
+                "f84b0830-b7e4-4d1d-8fd7-c5d842741aa3"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024d6d5e-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.259Z",
+            "modified_date": "2023-05-17T20:48:58.747Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_limit",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024e654c-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.266Z",
+            "modified_date": "2023-05-17T20:48:58.750Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_summary",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": true,
+            "value": true,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024f624e-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.272Z",
+            "modified_date": "2023-05-17T20:48:58.752Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_vcf",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02503a7a-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.278Z",
+            "modified_date": "2023-05-17T20:48:58.754Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_cores",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": 4,
+            "value": 4,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02510b26-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.283Z",
+            "modified_date": "2023-05-17T20:48:58.756Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "output",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0251cff2-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.288Z",
+            "modified_date": "2023-05-17T20:48:58.758Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "omaf",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": true,
+            "value": true,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02528aa0-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.292Z",
+            "modified_date": "2023-05-17T20:48:58.761Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "generic_counting",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": true,
+            "value": true,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02534ab2-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.297Z",
+            "modified_date": "2023-05-17T20:48:58.763Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "fragment_count",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": 1,
+            "value": 1,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02540146-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.302Z",
+            "modified_date": "2023-05-17T20:48:58.766Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "filter_duplicate",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": 0,
+            "value": 0,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0246d32c-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.216Z",
+            "modified_date": "2023-05-17T20:48:58.731Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "hotspots_maf",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://5d40547d-5404-44d1-a8d4-60ce95841689"
+            },
+            "value": {
+                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-ch-pd-v1.maf",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "5d40547d-5404-44d1-a8d4-60ce95841689"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0247ff4a-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.224Z",
+            "modified_date": "2023-05-17T20:48:58.734Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "mosdepth_bed",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://68c86d4d-cbfa-4a57-b7b1-8327f3da4954"
+            },
+            "value": {
+                "path": "/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/panel_bed_file_athena_CH_nodup.bed",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "68c86d4d-cbfa-4a57-b7b1-8327f3da4954"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0249500c-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.232Z",
+            "modified_date": "2023-05-17T20:48:58.736Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_transcript_file",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024a1eba-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.238Z",
+            "modified_date": "2023-05-17T20:48:58.738Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_build",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024aed86-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.243Z",
+            "modified_date": "2023-05-17T20:48:58.740Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_flagstat",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024bbef0-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.248Z",
+            "modified_date": "2023-05-17T20:48:58.743Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_thresholds",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                250,
+                500,
+                1000,
+                1500,
+                2000
+            ],
+            "value": [
+                250,
+                500,
+                1000,
+                1500,
+                2000
+            ],
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024c9064-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.254Z",
+            "modified_date": "2023-05-17T20:48:58.745Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "athena_threshold",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": 500,
+            "value": 500,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "023b2572-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.139Z",
+            "modified_date": "2023-05-17T20:48:58.704Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "collapsed_bam",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://c99e258a-e728-4f86-9322-c2ae77afbffc",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://492e866d-5ff3-4299-9dca-e0ce365de736"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_FM.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_FM.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "492e866d-5ff3-4299-9dca-e0ce365de736",
+                "c99e258a-e728-4f86-9322-c2ae77afbffc"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "023ca7f8-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.149Z",
+            "modified_date": "2023-05-17T20:48:58.707Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "duplex_bam",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://d6adcc0d-5a07-49b4-8cb7-25674641fdd8",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://80aeccea-22df-456d-93b9-b1b0e758137f"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_duplex.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_duplex.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "80aeccea-22df-456d-93b9-b1b0e758137f",
+                "d6adcc0d-5a07-49b4-8cb7-25674641fdd8"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "023f2618-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.166Z",
+            "modified_date": "2023-05-17T20:48:58.711Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "simplex_bam",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://0b5db216-f00e-4eed-b4a4-54569e5da79d",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://5a6ee1c0-ff3b-4fc2-9cd6-03da0f96c415"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_simplex.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_collapsed_simplex.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "0b5db216-f00e-4eed-b4a4-54569e5da79d",
+                "5a6ee1c0-ff3b-4fc2-9cd6-03da0f96c415"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02408b3e-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.175Z",
+            "modified_date": "2023-05-17T20:48:58.714Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "sample_sex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                "unknown"
+            ],
+            "value": [
+                "unknown"
+            ],
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02415ea6-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.180Z",
+            "modified_date": "2023-05-17T20:48:58.716Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "sample_group",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                "C-100000"
+            ],
+            "value": [
+                "C-100000"
+            ],
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024227fa-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.185Z",
+            "modified_date": "2023-05-17T20:48:58.719Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "uncollapsed_bam_base_recal",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://1fa45e9e-16ca-450c-a446-367b4af6ab27",
+                    "secondaryFiles": [
+                        {
+                            "class": "File",
+                            "location": "bid://ead19e6c-6fb1-4cbd-9b40-6c71d4809280"
+                        }
+                    ]
+                }
+            ],
+            "value": [
+                {
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_uncollapsed_BR.bam",
+                    "class": "File",
+                    "secondaryFiles": [
+                        {
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ebb289e-f0d4-11ed-b3fe-ac1f6bb4ad16/C-100000-F001-d01_uncollapsed_BR.bai",
+                            "class": "File"
+                        }
+                    ]
+                }
+            ],
+            "notify": false,
+            "files": [
+                "1fa45e9e-16ca-450c-a446-367b4af6ab27",
+                "ead19e6c-6fb1-4cbd-9b40-6c71d4809280"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0243e95a-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.197Z",
+            "modified_date": "2023-05-17T20:48:58.722Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "sample_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                "C-100000-F001-d01"
+            ],
+            "value": [
+                "C-100000-F001-d01"
+            ],
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "024498b4-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.201Z",
+            "modified_date": "2023-05-17T20:48:58.725Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "samples-json",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://8c79064a-69f5-4a7f-8759-85c4f06a85b5"
+            },
+            "value": {
+                "path": "/juno/work/ci/temp/8dd44c29-73c3-4d9c-a6fb-999d41e76017/samples_json.json",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "8c79064a-69f5-4a7f-8759-85c4f06a85b5"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0245a6f0-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.208Z",
+            "modified_date": "2023-05-17T20:48:58.728Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "multiqc_config",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "File",
+                "location": "bid://489259ca-2e67-4437-a4ef-572a70af0b38"
+            },
+            "value": {
+                "path": "/work/cch/production/resources/cmo-ch/versions/v1.0/multiqc_config/versions/v1.0/config_ch.yaml",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "489259ca-2e67-4437-a4ef-572a70af0b38"
+            ]
+        }
+    }
+]
