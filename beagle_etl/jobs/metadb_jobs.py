@@ -360,7 +360,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     ):
         samples = list(
             FileRepository.filter(
-                metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.SAMPLE_ID_METADATA_KEY
+                metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+                values_metadata=settings.INVESTIGATOR_SAMPLE_ID_METADATA_KEY,
             )
         )
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
