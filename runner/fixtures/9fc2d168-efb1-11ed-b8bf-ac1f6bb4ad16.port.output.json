@@ -1,0 +1,1039 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "a14b168a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.266Z",
+            "modified_date": "2023-05-11T05:34:27.009Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "portal_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 135,
+                        "class": "File",
+                        "location": "bid://ae02ab91-42d9-447f-9d2a-0b9dea1e46dc"
+                    },
+                    {
+                        "size": 89,
+                        "class": "File",
+                        "location": "bid://12d71485-86f2-4e52-a447-df4101b661b3"
+                    },
+                    {
+                        "size": 1470,
+                        "class": "File",
+                        "location": "bid://67c37acb-0826-48e5-b347-84c8b7c45a07"
+                    },
+                    {
+                        "size": 138,
+                        "class": "File",
+                        "location": "bid://bfbe4101-d538-4166-ba17-5954f9f4d2c9"
+                    },
+                    {
+                        "size": 137,
+                        "class": "File",
+                        "location": "bid://14e1cadb-d6f2-4754-9dba-0ff0a5997e75"
+                    },
+                    {
+                        "size": 265,
+                        "class": "File",
+                        "location": "bid://ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a"
+                    },
+                    {
+                        "size": 222,
+                        "class": "File",
+                        "location": "bid://aefd50f3-ef56-4c72-8a51-45f175306525"
+                    },
+                    {
+                        "size": 265,
+                        "class": "File",
+                        "location": "bid://2a995cbf-bac9-4fbe-ba7b-67b41b09a011"
+                    },
+                    {
+                        "size": 190,
+                        "class": "File",
+                        "location": "bid://5bfe4ae1-5347-44d8-8957-6ea88b6a682a"
+                    },
+                    {
+                        "size": 252,
+                        "class": "File",
+                        "location": "bid://0b667b14-b587-4ffa-9306-7f5435abdf9e"
+                    },
+                    {
+                        "size": 170,
+                        "class": "File",
+                        "location": "bid://455cfce0-2ed8-493d-bb72-40e39f56f0d3"
+                    },
+                    {
+                        "size": 5089,
+                        "class": "File",
+                        "location": "bid://24283396-7739-42c2-844c-0808e6e50389"
+                    },
+                    {
+                        "size": 6819,
+                        "class": "File",
+                        "location": "bid://0324978b-8cdd-4d23-b86d-82a73c47d5bb"
+                    },
+                    {
+                        "size": 16879,
+                        "class": "File",
+                        "location": "bid://ea3990b1-aba2-4d1a-9348-e9c4cf05eef0"
+                    },
+                    {
+                        "size": 10276,
+                        "class": "File",
+                        "location": "bid://7fd42482-9034-4a59-b2e3-a6291ed3658a"
+                    },
+                    {
+                        "size": 99,
+                        "class": "File",
+                        "location": "bid://47f4cb97-1941-496d-bcb2-6cdf019abd1e"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 214,
+                                "class": "File",
+                                "location": "bid://eacaec13-cc86-409f-b2c0-fb8b9eb22422"
+                            },
+                            {
+                                "size": 294,
+                                "class": "File",
+                                "location": "bid://35515ac2-9ab8-4aa4-bac9-838a152b827c"
+                            },
+                            {
+                                "size": 226,
+                                "class": "File",
+                                "location": "bid://d676fd04-31c4-4381-a9df-079cdf2ed3db"
+                            },
+                            {
+                                "size": 239,
+                                "class": "File",
+                                "location": "bid://553ca8c0-f6da-4074-aaa8-8e3c850830e3"
+                            }
+                        ],
+                        "basename": "case_lists",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists"
+                    },
+                    {
+                        "size": 1015628,
+                        "class": "File",
+                        "location": "bid://5b7d9b45-39ff-4f24-b7a5-498d32882bf2"
+                    }
+                ],
+                "basename": "portal",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 135,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_clinical_sample.txt",
+                        "checksum": "sha1$0610ad0752b25ba70b351968b96e371ed17d133e",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_sample.txt",
+                        "nameroot": "meta_clinical_sample"
+                    },
+                    {
+                        "size": 89,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_clinical_patient.txt",
+                        "checksum": "sha1$dbd3c9ddd87b092d5c8d5f4b8fb5d58806d21a70",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_patient.txt",
+                        "nameroot": "data_clinical_patient"
+                    },
+                    {
+                        "size": 1470,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_clinical_sample.txt",
+                        "checksum": "sha1$5a046eb5dace378e4ead32857c33f1d7ee4f3517",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_sample.txt",
+                        "nameroot": "data_clinical_sample"
+                    },
+                    {
+                        "size": 138,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_study.txt",
+                        "checksum": "sha1$0a4c0963d794e6b3a2bb15bec693769afd89d096",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_study.txt",
+                        "nameroot": "meta_study"
+                    },
+                    {
+                        "size": 137,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_clinical_patient.txt",
+                        "checksum": "sha1$050f7c6f1902425977ae32e42949ecfed69966c3",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_patient.txt",
+                        "nameroot": "meta_clinical_patient"
+                    },
+                    {
+                        "size": 265,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_CNA.txt",
+                        "checksum": "sha1$7d9822e81cbcf6c423b2fac7037825354a21aef0",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_CNA.txt",
+                        "nameroot": "meta_CNA"
+                    },
+                    {
+                        "size": 222,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_fusions.txt",
+                        "checksum": "sha1$519e821d543f05758ce67999cbebe07715a15e1e",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_fusions.txt",
+                        "nameroot": "meta_fusions"
+                    },
+                    {
+                        "size": 265,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_mutations_extended.txt",
+                        "checksum": "sha1$c8b3a1c2dbce72c75a0ed51094ba4eeb7231d230",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_mutations_extended.txt",
+                        "nameroot": "meta_mutations_extended"
+                    },
+                    {
+                        "size": 190,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "BALTO_REQID_meta_cna_hg19_seg.txt",
+                        "checksum": "sha1$365b7973ccbe6fd1a4981498bb4ed579cd3b2216",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_meta_cna_hg19_seg.txt",
+                        "nameroot": "BALTO_REQID_meta_cna_hg19_seg"
+                    },
+                    {
+                        "size": 252,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "meta_sv.txt",
+                        "checksum": "sha1$5f7ca81c8d442fe959b588e99d93b046249caee9",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_sv.txt",
+                        "nameroot": "meta_sv"
+                    },
+                    {
+                        "size": 170,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_sv.txt",
+                        "checksum": "sha1$276634dab72db8e7f6a49537345311183986c5fa",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_sv.txt",
+                        "nameroot": "data_sv"
+                    },
+                    {
+                        "size": 5089,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_CNA.txt",
+                        "checksum": "sha1$1e734227d76502e26177fb7d7a12b4f561d47ac3",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.txt",
+                        "nameroot": "data_CNA"
+                    },
+                    {
+                        "size": 6819,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_CNA.ascna.txt",
+                        "checksum": "sha1$c0b6058c7181c2216c039e0f1042f5890c9c25b3",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.ascna.txt",
+                        "nameroot": "data_CNA.ascna"
+                    },
+                    {
+                        "size": 16879,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_mutations_extended.txt",
+                        "checksum": "sha1$cf7b3f57ae3aa91afddb7ca6be1227550dc449cf",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_mutations_extended.txt",
+                        "nameroot": "data_mutations_extended"
+                    },
+                    {
+                        "size": 10276,
+                        "class": "File",
+                        "nameext": ".seg",
+                        "basename": "BALTO_REQID_data_cna_hg19.seg",
+                        "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_data_cna_hg19.seg",
+                        "nameroot": "BALTO_REQID_data_cna_hg19"
+                    },
+                    {
+                        "size": 99,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "data_fusions.txt",
+                        "checksum": "sha1$c16f763b248813fcdde76f7486f1ddc4e9856038",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_fusions.txt",
+                        "nameroot": "data_fusions"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 214,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "cases_all.txt",
+                                "checksum": "sha1$e6b7f1a7a42f8a1c36638123aecfacff8825f2e4",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_all.txt",
+                                "nameroot": "cases_all"
+                            },
+                            {
+                                "size": 294,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "cases_cnaseq.txt",
+                                "checksum": "sha1$76e041dd92d36e24519ef413cc8f6afbbd255c97",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cnaseq.txt",
+                                "nameroot": "cases_cnaseq"
+                            },
+                            {
+                                "size": 226,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "cases_cna.txt",
+                                "checksum": "sha1$af1ad4e33db24a4dea94e3d2639de8d28834834b",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cna.txt",
+                                "nameroot": "cases_cna"
+                            },
+                            {
+                                "size": 239,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "cases_sequenced.txt",
+                                "checksum": "sha1$016b7624974761f469dd1096b605011a31c7def9",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_sequenced.txt",
+                                "nameroot": "cases_sequenced"
+                            }
+                        ],
+                        "basename": "case_lists",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists"
+                    },
+                    {
+                        "size": 1015628,
+                        "class": "File",
+                        "nameext": ".html",
+                        "basename": "report.html",
+                        "checksum": "sha1$0a6ebb863f5ac29a71fc51e467ff55a76545eac3",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/report.html",
+                        "nameroot": "report"
+                    }
+                ],
+                "basename": "portal",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+            },
+            "notify": false,
+            "files": [
+                "0324978b-8cdd-4d23-b86d-82a73c47d5bb",
+                "0b667b14-b587-4ffa-9306-7f5435abdf9e",
+                "12d71485-86f2-4e52-a447-df4101b661b3",
+                "14e1cadb-d6f2-4754-9dba-0ff0a5997e75",
+                "24283396-7739-42c2-844c-0808e6e50389",
+                "2a995cbf-bac9-4fbe-ba7b-67b41b09a011",
+                "35515ac2-9ab8-4aa4-bac9-838a152b827c",
+                "455cfce0-2ed8-493d-bb72-40e39f56f0d3",
+                "47f4cb97-1941-496d-bcb2-6cdf019abd1e",
+                "553ca8c0-f6da-4074-aaa8-8e3c850830e3",
+                "5b7d9b45-39ff-4f24-b7a5-498d32882bf2",
+                "5bfe4ae1-5347-44d8-8957-6ea88b6a682a",
+                "67c37acb-0826-48e5-b347-84c8b7c45a07",
+                "7fd42482-9034-4a59-b2e3-a6291ed3658a",
+                "ae02ab91-42d9-447f-9d2a-0b9dea1e46dc",
+                "aefd50f3-ef56-4c72-8a51-45f175306525",
+                "bfbe4101-d538-4166-ba17-5954f9f4d2c9",
+                "ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a",
+                "d676fd04-31c4-4381-a9df-079cdf2ed3db",
+                "ea3990b1-aba2-4d1a-9348-e9c4cf05eef0",
+                "eacaec13-cc86-409f-b2c0-fb8b9eb22422"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a14be1b4-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.271Z",
+            "modified_date": "2023-05-11T05:34:27.023Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "analysis_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 137879,
+                        "class": "File",
+                        "location": "bid://41a9c199-3312-49e5-9bf8-7b9e5c347094"
+                    },
+                    {
+                        "size": 190606,
+                        "class": "File",
+                        "location": "bid://564c1663-947c-484d-8440-425ded469261"
+                    },
+                    {
+                        "size": 26386,
+                        "class": "File",
+                        "location": "bid://d40b2db6-199d-4642-ad67-04e9fe31ce1e"
+                    },
+                    {
+                        "size": 10276,
+                        "class": "File",
+                        "location": "bid://db401f55-37c2-4b30-9a2a-62b27004ecfa"
+                    },
+                    {
+                        "size": 4899,
+                        "class": "File",
+                        "location": "bid://499b0cbd-42cc-4397-8efa-84c0055f1e27"
+                    }
+                ],
+                "basename": "analysis",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 137879,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "BALTO_REQID.gene.cna.txt",
+                        "checksum": "sha1$6f48bf7c43539a3cacef98def04d0b33d7058dea",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.gene.cna.txt",
+                        "nameroot": "BALTO_REQID.gene.cna"
+                    },
+                    {
+                        "size": 190606,
+                        "class": "File",
+                        "nameext": ".maf",
+                        "basename": "BALTO_REQID.muts.maf",
+                        "checksum": "sha1$4abc24d4ac169d56eb8ada505862b37ea1a4352f",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.maf",
+                        "nameroot": "BALTO_REQID.muts"
+                    },
+                    {
+                        "size": 26386,
+                        "class": "File",
+                        "nameext": ".maf",
+                        "basename": "BALTO_REQID.muts.share.maf",
+                        "checksum": "sha1$5b04bb973843b148377abb17a3e06d7822cb18fd",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.share.maf",
+                        "nameroot": "BALTO_REQID.muts.share"
+                    },
+                    {
+                        "size": 10276,
+                        "class": "File",
+                        "nameext": ".txt",
+                        "basename": "BALTO_REQID.seg.cna.txt",
+                        "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.seg.cna.txt",
+                        "nameroot": "BALTO_REQID.seg.cna"
+                    },
+                    {
+                        "size": 4899,
+                        "class": "File",
+                        "nameext": ".maf",
+                        "basename": "BALTO_REQID.svs.maf",
+                        "checksum": "sha1$01b2c8bd77640677b4f8c14778afd45d1cb2ba76",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.svs.maf",
+                        "nameroot": "BALTO_REQID.svs"
+                    }
+                ],
+                "basename": "analysis",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+            },
+            "notify": false,
+            "files": [
+                "41a9c199-3312-49e5-9bf8-7b9e5c347094",
+                "499b0cbd-42cc-4397-8efa-84c0055f1e27",
+                "564c1663-947c-484d-8440-425ded469261",
+                "d40b2db6-199d-4642-ad67-04e9fe31ce1e",
+                "db401f55-37c2-4b30-9a2a-62b27004ecfa"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a14d8640-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.282Z",
+            "modified_date": "2023-05-11T05:34:27.069Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "msi_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 64,
+                        "class": "File",
+                        "location": "bid://c203b782-3864-4892-87e3-70f725955524"
+                    },
+                    {
+                        "size": 61,
+                        "class": "File",
+                        "location": "bid://8bdfb3b8-574b-41ad-b433-d2740907ebbc"
+                    }
+                ],
+                "basename": "msi",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 64,
+                        "class": "File",
+                        "nameext": ".tsv",
+                        "basename": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
+                        "checksum": "sha1$99a6d0e0cc61eb26ff8475c52b9424f3770c0a47",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
+                        "nameroot": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi"
+                    },
+                    {
+                        "size": 61,
+                        "class": "File",
+                        "nameext": ".tsv",
+                        "basename": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
+                        "checksum": "sha1$a3d54b007d2e545047752feb1ff7608a51e578b0",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
+                        "nameroot": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi"
+                    }
+                ],
+                "basename": "msi",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi"
+            },
+            "notify": false,
+            "files": [
+                "8bdfb3b8-574b-41ad-b433-d2740907ebbc",
+                "c203b782-3864-4892-87e3-70f725955524"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a14cb76a-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.277Z",
+            "modified_date": "2023-05-11T05:34:27.059Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "facets_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 7377047,
+                                "class": "File",
+                                "location": "bid://91d93ce9-cc1d-4dea-8219-44d276c34863"
+                            },
+                            {
+                                "size": 1588,
+                                "class": "File",
+                                "location": "bid://0b8d8a95-ea96-41b8-85ae-cf76f70cb50b"
+                            },
+                            {
+                                "size": 703,
+                                "class": "File",
+                                "location": "bid://7f8729a3-06f4-46cb-a652-19f2d93e2cfe"
+                            },
+                            {
+                                "size": 222194,
+                                "class": "File",
+                                "location": "bid://9ee079f1-5992-46b9-9bb5-39ca7f407d89"
+                            },
+                            {
+                                "size": 20336,
+                                "class": "File",
+                                "location": "bid://18ed0523-19e2-4c60-a89d-c5c0b5e22142"
+                            },
+                            {
+                                "size": 524440,
+                                "class": "File",
+                                "location": "bid://4dfb7210-d6c0-40dd-a07d-6bd3816b4864"
+                            },
+                            {
+                                "size": 7873,
+                                "class": "File",
+                                "location": "bid://b695164a-4820-4037-9869-d50a5b1efbec"
+                            },
+                            {
+                                "size": 153633,
+                                "class": "File",
+                                "location": "bid://e293b7ca-3666-4339-8c42-39797f57798a"
+                            },
+                            {
+                                "size": 521427,
+                                "class": "File",
+                                "location": "bid://cbdc4651-b0e4-48a7-b885-e0893051543f"
+                            },
+                            {
+                                "size": 4299,
+                                "class": "File",
+                                "location": "bid://d7c00ce5-a8b5-4d5c-aa03-913972eb6555"
+                            },
+                            {
+                                "size": 145912,
+                                "class": "File",
+                                "location": "bid://0cf422a7-9e8d-4468-ba88-29803da337be"
+                            },
+                            {
+                                "size": 1387,
+                                "class": "File",
+                                "location": "bid://1e12a002-01ba-4731-9ee2-66e04a971d59"
+                            }
+                        ],
+                        "basename": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 4259054,
+                                "class": "File",
+                                "location": "bid://0a21a41d-6eab-4d2f-915a-1c47f62667bf"
+                            },
+                            {
+                                "size": 2144,
+                                "class": "File",
+                                "location": "bid://a26c0843-7e72-42fc-96ad-25f8ddc7c2d1"
+                            },
+                            {
+                                "size": 644,
+                                "class": "File",
+                                "location": "bid://77aba2ab-d1f8-4426-8eac-df58615eabf6"
+                            },
+                            {
+                                "size": 212146,
+                                "class": "File",
+                                "location": "bid://ec4799a6-0d20-4c4a-b87c-12f30027f221"
+                            },
+                            {
+                                "size": 11497,
+                                "class": "File",
+                                "location": "bid://3198d6bf-2500-4947-bf31-86c270133c8a"
+                            },
+                            {
+                                "size": 560555,
+                                "class": "File",
+                                "location": "bid://c328b180-8534-442a-99df-d5fecfb62b04"
+                            },
+                            {
+                                "size": 4492,
+                                "class": "File",
+                                "location": "bid://952a1be0-ae12-4862-9aa1-4dcc1b94ddf3"
+                            },
+                            {
+                                "size": 145351,
+                                "class": "File",
+                                "location": "bid://a425a949-225a-4ed0-8340-82998233e315"
+                            },
+                            {
+                                "size": 559113,
+                                "class": "File",
+                                "location": "bid://1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1"
+                            },
+                            {
+                                "size": 2844,
+                                "class": "File",
+                                "location": "bid://424f7aeb-35fe-456c-a77d-a3dea47d57e5"
+                            },
+                            {
+                                "size": 139606,
+                                "class": "File",
+                                "location": "bid://df192110-8c31-4e0d-b746-2dfed278f999"
+                            },
+                            {
+                                "size": 1364,
+                                "class": "File",
+                                "location": "bid://f8940dd4-2420-452f-b257-972f3fad2f1f"
+                            }
+                        ],
+                        "basename": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d"
+                    }
+                ],
+                "basename": "facets",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 7377047,
+                                "class": "File",
+                                "nameext": ".maf",
+                                "basename": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
+                                "checksum": "sha1$6100529afe874bb7655d2b2ba02a83520bbdfd68",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
+                                "nameroot": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal"
+                            },
+                            {
+                                "size": 1588,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_ABCDEF_X001_d.arm_level.txt",
+                                "checksum": "sha1$88f874dfff9f2631c70682ecdfabaa71163fee41",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.arm_level.txt",
+                                "nameroot": "s_C_ABCDEF_X001_d.arm_level"
+                            },
+                            {
+                                "size": 703,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_ABCDEF_X001_d.txt",
+                                "checksum": "sha1$237ae3bd806672de5f67c8c26c725cae5c836fce",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.txt",
+                                "nameroot": "s_C_ABCDEF_X001_d"
+                            },
+                            {
+                                "size": 222194,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_ABCDEF_X001_d.gene_level.txt",
+                                "checksum": "sha1$84e740874c9269755af6b0461ba180063f5766d9",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.gene_level.txt",
+                                "nameroot": "s_C_ABCDEF_X001_d.gene_level"
+                            },
+                            {
+                                "size": 20336,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_ABCDEF_X001_d_hisens.cncf.txt",
+                                "checksum": "sha1$8c9b55c3bfd5a8c492a2ad71e12a53d9341c1430",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.cncf.txt",
+                                "nameroot": "s_C_ABCDEF_X001_d_hisens.cncf"
+                            },
+                            {
+                                "size": 524440,
+                                "class": "File",
+                                "nameext": ".rds",
+                                "basename": "s_C_ABCDEF_X001_d_hisens.rds",
+                                "checksum": "sha1$e23e8dbcd105f041170d24e82cdac6b01eeaf99b",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.rds",
+                                "nameroot": "s_C_ABCDEF_X001_d_hisens"
+                            },
+                            {
+                                "size": 7873,
+                                "class": "File",
+                                "nameext": ".seg",
+                                "basename": "s_C_ABCDEF_X001_d_hisens.seg",
+                                "checksum": "sha1$7416ac4eba38ca02c848b61fb749cefe4968389d",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.seg",
+                                "nameroot": "s_C_ABCDEF_X001_d_hisens"
+                            },
+                            {
+                                "size": 153633,
+                                "class": "File",
+                                "nameext": ".png",
+                                "basename": "s_C_ABCDEF_X001_d_hisens.png",
+                                "checksum": "sha1$29848b34f4d08dd2bdf2cff486177f1b6664dc5e",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.png",
+                                "nameroot": "s_C_ABCDEF_X001_d_hisens"
+                            },
+                            {
+                                "size": 521427,
+                                "class": "File",
+                                "nameext": ".rds",
+                                "basename": "s_C_ABCDEF_X001_d_purity.rds",
+                                "checksum": "sha1$f239921bd7f00823791096ffc93c6f6e8d98108c",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.rds",
+                                "nameroot": "s_C_ABCDEF_X001_d_purity"
+                            },
+                            {
+                                "size": 4299,
+                                "class": "File",
+                                "nameext": ".seg",
+                                "basename": "s_C_ABCDEF_X001_d_purity.seg",
+                                "checksum": "sha1$8a1b4e73b5ab079c28129e6a6048216feb455fef",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.seg",
+                                "nameroot": "s_C_ABCDEF_X001_d_purity"
+                            },
+                            {
+                                "size": 145912,
+                                "class": "File",
+                                "nameext": ".png",
+                                "basename": "s_C_ABCDEF_X001_d_purity.png",
+                                "checksum": "sha1$725b9130df5b5ab5cefbe85df2705942388fa673",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.png",
+                                "nameroot": "s_C_ABCDEF_X001_d_purity"
+                            },
+                            {
+                                "size": 1387,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_ABCDEF_X001_d.qc.txt",
+                                "checksum": "sha1$3855b1214004099af1143a009893b1416ec8c5e3",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.qc.txt",
+                                "nameroot": "s_C_ABCDEF_X001_d.qc"
+                            }
+                        ],
+                        "basename": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 4259054,
+                                "class": "File",
+                                "nameext": ".maf",
+                                "basename": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
+                                "checksum": "sha1$02a689b80614dbcbdc354e67610dee62daf2a108",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
+                                "nameroot": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal"
+                            },
+                            {
+                                "size": 2144,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_GHIJKL_X001_d.arm_level.txt",
+                                "checksum": "sha1$d8a215749e477d0de13c0840e2c0fe97688024a6",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.arm_level.txt",
+                                "nameroot": "s_C_GHIJKL_X001_d.arm_level"
+                            },
+                            {
+                                "size": 644,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_GHIJKL_X001_d.txt",
+                                "checksum": "sha1$96f2096d3b6edfbe8baa1e721fdd6380e674c6c5",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.txt",
+                                "nameroot": "s_C_GHIJKL_X001_d"
+                            },
+                            {
+                                "size": 212146,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_GHIJKL_X001_d.gene_level.txt",
+                                "checksum": "sha1$aa2643f5b5e8d01df039af68148e9e09673528c2",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.gene_level.txt",
+                                "nameroot": "s_C_GHIJKL_X001_d.gene_level"
+                            },
+                            {
+                                "size": 11497,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_GHIJKL_X001_d_hisens.cncf.txt",
+                                "checksum": "sha1$866675c69b5e0076395caed00cd73318cd67f360",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.cncf.txt",
+                                "nameroot": "s_C_GHIJKL_X001_d_hisens.cncf"
+                            },
+                            {
+                                "size": 560555,
+                                "class": "File",
+                                "nameext": ".rds",
+                                "basename": "s_C_GHIJKL_X001_d_hisens.rds",
+                                "checksum": "sha1$491b734b727a0c4e7faa578a45765d68af8a3273",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.rds",
+                                "nameroot": "s_C_GHIJKL_X001_d_hisens"
+                            },
+                            {
+                                "size": 4492,
+                                "class": "File",
+                                "nameext": ".seg",
+                                "basename": "s_C_GHIJKL_X001_d_hisens.seg",
+                                "checksum": "sha1$2baab8bb720f328b426d55e950128d1ad17ea817",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.seg",
+                                "nameroot": "s_C_GHIJKL_X001_d_hisens"
+                            },
+                            {
+                                "size": 145351,
+                                "class": "File",
+                                "nameext": ".png",
+                                "basename": "s_C_GHIJKL_X001_d_hisens.png",
+                                "checksum": "sha1$c3e2a4cbdfd5cb278b3402be88f791f16b354178",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.png",
+                                "nameroot": "s_C_GHIJKL_X001_d_hisens"
+                            },
+                            {
+                                "size": 559113,
+                                "class": "File",
+                                "nameext": ".rds",
+                                "basename": "s_C_GHIJKL_X001_d_purity.rds",
+                                "checksum": "sha1$155d23906746a8bf5f5186d6deeca059b34f3131",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.rds",
+                                "nameroot": "s_C_GHIJKL_X001_d_purity"
+                            },
+                            {
+                                "size": 2844,
+                                "class": "File",
+                                "nameext": ".seg",
+                                "basename": "s_C_GHIJKL_X001_d_purity.seg",
+                                "checksum": "sha1$4f4a72ff965bb4a25514380b1f486c255e3894ad",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.seg",
+                                "nameroot": "s_C_GHIJKL_X001_d_purity"
+                            },
+                            {
+                                "size": 139606,
+                                "class": "File",
+                                "nameext": ".png",
+                                "basename": "s_C_GHIJKL_X001_d_purity.png",
+                                "checksum": "sha1$8bbd74f13e381a10a6801f55fe3f010a70041dac",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.png",
+                                "nameroot": "s_C_GHIJKL_X001_d_purity"
+                            },
+                            {
+                                "size": 1364,
+                                "class": "File",
+                                "nameext": ".txt",
+                                "basename": "s_C_GHIJKL_X001_d.qc.txt",
+                                "checksum": "sha1$33e06152fcace43af5ef8c9ef1ed173b4d2616ab",
+                                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.qc.txt",
+                                "nameroot": "s_C_GHIJKL_X001_d.qc"
+                            }
+                        ],
+                        "basename": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d"
+                    }
+                ],
+                "basename": "facets",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets"
+            },
+            "notify": false,
+            "files": [
+                "0a21a41d-6eab-4d2f-915a-1c47f62667bf",
+                "0b8d8a95-ea96-41b8-85ae-cf76f70cb50b",
+                "0cf422a7-9e8d-4468-ba88-29803da337be",
+                "18ed0523-19e2-4c60-a89d-c5c0b5e22142",
+                "1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1",
+                "1e12a002-01ba-4731-9ee2-66e04a971d59",
+                "3198d6bf-2500-4947-bf31-86c270133c8a",
+                "424f7aeb-35fe-456c-a77d-a3dea47d57e5",
+                "4dfb7210-d6c0-40dd-a07d-6bd3816b4864",
+                "77aba2ab-d1f8-4426-8eac-df58615eabf6",
+                "7f8729a3-06f4-46cb-a652-19f2d93e2cfe",
+                "91d93ce9-cc1d-4dea-8219-44d276c34863",
+                "952a1be0-ae12-4862-9aa1-4dcc1b94ddf3",
+                "9ee079f1-5992-46b9-9bb5-39ca7f407d89",
+                "a26c0843-7e72-42fc-96ad-25f8ddc7c2d1",
+                "a425a949-225a-4ed0-8340-82998233e315",
+                "b695164a-4820-4037-9869-d50a5b1efbec",
+                "c328b180-8534-442a-99df-d5fecfb62b04",
+                "cbdc4651-b0e4-48a7-b885-e0893051543f",
+                "d7c00ce5-a8b5-4d5c-aa03-913972eb6555",
+                "df192110-8c31-4e0d-b746-2dfed278f999",
+                "e293b7ca-3666-4339-8c42-39797f57798a",
+                "ec4799a6-0d20-4c4a-b87c-12f30027f221",
+                "f8940dd4-2420-452f-b257-972f3fad2f1f"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a14e5476-efb1-11ed-8b14-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:31.287Z",
+            "modified_date": "2023-05-11T05:34:27.077Z",
+            "run": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+            "name": "tmb_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 49,
+                        "class": "File",
+                        "location": "bid://d8c21dcd-af7f-4aa5-9c39-c226d911779a"
+                    },
+                    {
+                        "size": 48,
+                        "class": "File",
+                        "location": "bid://844a2323-1a91-43d2-a12b-38683c7de348"
+                    }
+                ],
+                "basename": "tmb",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "size": 49,
+                        "class": "File",
+                        "nameext": ".tsv",
+                        "basename": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
+                        "checksum": "sha1$8480cd17c88f330b277f55be3a2779aad895c672",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
+                        "nameroot": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb"
+                    },
+                    {
+                        "size": 48,
+                        "class": "File",
+                        "nameext": ".tsv",
+                        "basename": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
+                        "checksum": "sha1$08760b1ba7a136e1b82cc1006306f5852f9f92ad",
+                        "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
+                        "nameroot": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb"
+                    }
+                ],
+                "basename": "tmb",
+                "location": "file:///juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb"
+            },
+            "notify": false,
+            "files": [
+                "844a2323-1a91-43d2-a12b-38683c7de348",
+                "d8c21dcd-af7f-4aa5-9c39-c226d911779a"
+            ]
+        }
+    }
+]
