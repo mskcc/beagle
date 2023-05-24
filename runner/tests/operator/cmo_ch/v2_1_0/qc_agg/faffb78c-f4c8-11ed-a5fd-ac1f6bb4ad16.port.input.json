@@ -25,7 +25,7 @@
             ],
             "value": [
                 {
-                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_grouped.bam",
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_grouped.bam",
                     "class": "File"
                 }
             ],
@@ -195,11 +195,11 @@
             ],
             "value": [
                 {
-                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_FM.bam",
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_FM.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_FM.bai",
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_FM.bai",
                             "class": "File"
                         }
                     ]
@@ -244,11 +244,11 @@
             ],
             "value": [
                 {
-                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_duplex.bam",
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_duplex.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_duplex.bai",
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_duplex.bai",
                             "class": "File"
                         }
                     ]
@@ -623,11 +623,11 @@
             ],
             "value": [
                 {
-                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_simplex.bam",
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_simplex.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_collapsed_simplex.bai",
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_collapsed_simplex.bai",
                             "class": "File"
                         }
                     ]
@@ -687,10 +687,10 @@
             "template": null,
             "secondary_files": [],
             "db_value": [
-                "C-26N8NE"
+                "C-200000"
             ],
             "value": [
-                "C-26N8NE"
+                "C-200000"
             ],
             "notify": false,
             "files": []
@@ -728,11 +728,11 @@
             ],
             "value": [
                 {
-                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_uncollapsed_BR.bam",
+                    "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_uncollapsed_BR.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-26N8NE-F001-d01_uncollapsed_BR.bai",
+                            "path": "/work/cch/production/runs/voyager/production/bam/1ee2c9d0-f0d4-11ed-b3fe-ac1f6bb4ad16/C-200000-F001-d01_uncollapsed_BR.bai",
                             "class": "File"
                         }
                     ]
@@ -764,10 +764,10 @@
             "template": null,
             "secondary_files": [],
             "db_value": [
-                "C-26N8NE-F001-d01"
+                "C-200000-F001-d01"
             ],
             "value": [
-                "C-26N8NE-F001-d01"
+                "C-200000-F001-d01"
             ],
             "notify": false,
             "files": []

@@ -14,7 +14,7 @@
             "message": {},
             "output_metadata": {
                 "sex": "F",
-                "ciTag": "C-P016VH-F001-d01",
+                "ciTag": "C-100000-F001-d01",
                 "igoId": null,
                 "tubeId": null,
                 "baitSet": "null",
@@ -27,13 +27,13 @@
                 "captureName": "",
                 "sampleClass": null,
                 "barcodeIndex": "ACGTCGTA-GTTCATGG",
-                "cmoPatientId": "C-P016VH",
+                "cmoPatientId": "C-100000",
                 "igoRequestId": "13843_C",
                 "libraryIgoId": null,
                 "oncotreeCode": null,
                 "preservation": null,
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "C-P016VH-F001-d01",
+                "cmoSampleName": "C-100000-F001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Tumor",
                 "captureInputNg": 350.0,
@@ -47,7 +47,7 @@
             "output_directory": "/work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
             "tags": {
                 "cmoSampleId": [
-                    "C-P016VH-F001-d01"
+                    "C-100000-F001-d01"
                 ],
                 "igoRequestId": "13843_C"
             },
