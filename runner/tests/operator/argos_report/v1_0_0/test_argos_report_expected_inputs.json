@@ -1,0 +1,66 @@
+[
+    {
+      "request_id": "BALTO_REQID",
+      "sample_id": "s_C_ABCDEF_N001_d",
+      "portal_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+      },
+      "analysis_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+      },
+      "oncokb_dir": {
+        "class": "Directory",
+        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      }
+    },
+    {
+      "request_id": "BALTO_REQID",
+      "sample_id": "s_C_GHIJKL_X001_d",
+      "portal_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+      },
+      "analysis_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+      },
+      "oncokb_dir": {
+        "class": "Directory",
+        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      }
+    },
+    {
+      "request_id": "BALTO_REQID",
+      "sample_id": "s_C_GHIJKL_N001_d",
+      "portal_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+      },
+      "analysis_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+      },
+      "oncokb_dir": {
+        "class": "Directory",
+        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      }
+    },
+    {
+      "request_id": "BALTO_REQID",
+      "sample_id": "s_C_ABCDEF_X001_d",
+      "portal_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal"
+      },
+      "analysis_dir": {
+        "class": "Directory",
+        "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
+      },
+      "oncokb_dir": {
+        "class": "Directory",
+        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      }
+    }
+  ]
