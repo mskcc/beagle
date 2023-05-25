@@ -18,12 +18,12 @@ LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
 ARGOS_VERSION = "1.1.2"
-ANNOTATIONS_PATH = "juno:///juno/work/ci/resources/genomic_resources/annotations/"
-
+ONCOKB_FG_SLUG = "oncokb_filegroup"
 
 class ArgosReportOperator(Operator):
     def get_jobs(self):
         LOGGER.info("[%s] Running ArgosReportOperator", self.job_group_notifier_id)
+        self.annotations_path = "juno:///juno/work/ci/resources/genomic_resources/annotations/"
 
         hf_run_id = self.run_ids[0]  # only one run in list
         hf_run = Run.objects.get(id=hf_run_id)
@@ -91,10 +91,7 @@ class ArgosReportOperator(Operator):
             input["sample_id"] = ci_tag
             input["portal_dir"] = portal_dir_path
             input["analysis_dir"] = analysis_dir_path
-            input["oncokb_dir"] = {
-                "class": "Directory",
-                "location": FileProcessor.parse_path_from_uri(ANNOTATIONS_PATH),
-            }
+            input["oncokb_file"] = self.get_oncokb_file(self.annotations_path)
             inputs.append(input)
         return inputs
 
@@ -108,6 +105,17 @@ class ArgosReportOperator(Operator):
             for f in files:
                 ci_tags.add(f.metadata["ciTag"])
         return ci_tags
+
+    def get_oncokb_file(self, annotations_path):
+            oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
+            oncokb_files = os.listdir(oncokb_dir)
+            oncokb_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
+            oncokb_file_path = os.path.join(oncokb_dir, oncokb_file)
+
+            return {
+                "class": "File",
+                "location": oncokb_file_path,
+            }
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)

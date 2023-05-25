@@ -10,9 +10,9 @@
         "class": "Directory",
         "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
       },
-      "oncokb_dir": {
-        "class": "Directory",
-        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      "oncokb_file": {
+        "class": "File",
+        "location": "/my/oncokb/dir/oncokb.db.v230427.rds"
       }
     },
     {
@@ -26,9 +26,9 @@
         "class": "Directory",
         "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
       },
-      "oncokb_dir": {
-        "class": "Directory",
-        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      "oncokb_file": {
+        "class": "File",
+        "location": "/my/oncokb/dir/oncokb.db.v230427.rds"
       }
     },
     {
@@ -42,9 +42,9 @@
         "class": "Directory",
         "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
       },
-      "oncokb_dir": {
-        "class": "Directory",
-        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      "oncokb_file": {
+        "class": "File",
+        "location": "/my/oncokb/dir/oncokb.db.v230427.rds"
       }
     },
     {
@@ -58,9 +58,9 @@
         "class": "Directory",
         "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis"
       },
-      "oncokb_dir": {
-        "class": "Directory",
-        "location": "/juno/work/ci/resources/genomic_resources/annotations/"
+      "oncokb_file": {
+        "class": "File",
+        "location": "/my/oncokb/dir/oncokb.db.v230427.rds"
       }
     }
   ]
