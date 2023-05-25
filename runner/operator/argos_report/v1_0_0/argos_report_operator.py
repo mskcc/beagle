@@ -18,6 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
 ARGOS_VERSION = "1.1.2"
+ANNOTATIONS_PATH = "juno:///juno/work/ci/resources/genomic_resources/annotations/"
 
 
 class ArgosReportOperator(Operator):
@@ -90,6 +91,10 @@ class ArgosReportOperator(Operator):
             input["sample_id"] = ci_tag
             input["portal_dir"] = portal_dir_path
             input["analysis_dir"] = analysis_dir_path
+            input["oncokb_dir"] = {
+                "class": "Directory",
+                "location": FileProcessor.parse_path_from_uri(ANNOTATIONS_PATH),
+            }
             inputs.append(input)
         return inputs
 

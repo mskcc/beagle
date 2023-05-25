@@ -1,0 +1,16 @@
+[
+    {
+      "model": "file_system.sample",
+      "pk": "d8e5403c-29ed-4742-851e-196a55b5d245",
+      "fields": {
+        "created_date": "2022-09-06T21:08:26.276Z",
+        "modified_date": "2022-09-06T21:08:26.276Z",
+        "sample_id": "13843_C_45",
+        "sample_name": "A-000001",
+        "cmo_sample_name": "A-000001",
+        "latest": true,
+        "version": 0,
+        "redact": false
+      }
+    }
+  ]
