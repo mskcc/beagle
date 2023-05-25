@@ -478,7 +478,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
     logger.info(format_log("Job ready for submitting", obj=run1))
     if resume:
         url = urljoin(settings.RIDGEBACK_URL, "/v0/jobs/{id}/resume/".format(id=resume))
-        job = {"root_dir": output_directory}
+        job = {"root_dir": output_directory, "base_dir": run.app.output_directory}
     else:
         url = settings.RIDGEBACK_URL + "/v0/jobs/"
     if run.app.walltime:

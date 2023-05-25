@@ -10,16 +10,16 @@ from runner.operator.operator_factory import OperatorFactory
 
 
 FIXTURES = [
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6987d652-55b7-4055-98c2-0a08155758e2.port.input.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6987d652-55b7-4055-98c2-0a08155758e2.port.output.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6987d652-55b7-4055-98c2-0a08155758e2.run.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6987d652-55b7-4055-98c2-0a08155758e2.files.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/6987d652-55b7-4055-98c2-0a08155758e2.samples.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8eccdd2-1511-4e9a-a472-491338157f3a.port.input.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8eccdd2-1511-4e9a-a472-491338157f3a.port.output.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8eccdd2-1511-4e9a-a472-491338157f3a.run.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8eccdd2-1511-4e9a-a472-491338157f3a.files.json",
-    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/b8eccdd2-1511-4e9a-a472-491338157f3a.samples.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/faffb78c-f4c8-11ed-a5fd-ac1f6bb4ad16.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/faffb78c-f4c8-11ed-a5fd-ac1f6bb4ad16.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/faffb78c-f4c8-11ed-a5fd-ac1f6bb4ad16.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/faffb78c-f4c8-11ed-a5fd-ac1f6bb4ad16.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/faffb78c-f4c8-11ed-a5fd-ac1f6bb4ad16.samples.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16.port.input.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16.port.output.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16.run.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16.files.json",
+    "runner/tests/operator/cmo_ch/v2_1_0/qc_agg/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16.samples.json",
 ]
 
 COMMON_FIXTURES = [
@@ -45,14 +45,13 @@ class TestNucleoQCOperator(TestCase):
 
         # This operator needs to write a temp file, so need to override this env var
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
-        request_id = "13167_C"
+        request_id = "13843_C"
         operator_model = Operator.objects.get(id=19)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
         self.assertEqual(operator.get_pipeline_id(), "8c256be3-21b7-4640-9d54-bb5bba42db50")
         self.assertEqual(str(operator.model), "CMOCHNucleoOperatorQcAgg_2_1_0")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
-
         jobs = operator.get_jobs()
 
         self.assertEqual(len(jobs) > 0, True)
@@ -69,5 +68,6 @@ class TestNucleoQCOperator(TestCase):
             self.assertEqual(len(input_json["gatk_mean_quality_by_cycle_recal_dir"]), 2)
             self.assertEqual(len(input_json["simplex_bam_stats_dir"]), 2)
             self.assertEqual(len(input_json["uncollapsed_bam_stats_dir"]), 2)
+            self.assertEqual(len(input_json["biometrics_extract_files_dir"]), 2)
             self.assertIsNotNone(input_json["samples-json"])
             self.assertIsNotNone(input_json["config"])
