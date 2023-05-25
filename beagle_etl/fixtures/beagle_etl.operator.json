@@ -207,5 +207,17 @@
       "version": "v2.1.0",
       "slug": "AccessManifestOperator_2_1_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 21,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.argos_report.v1_0_0.argos_report_operator.ArgosReportOperator",
+      "version": "v1.0.0",
+      "slug": "ArgosReportOperator_v1_0_0"
+    }
   }
+
 ]
