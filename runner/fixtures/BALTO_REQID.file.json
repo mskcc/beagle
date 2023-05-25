@@ -1,0 +1,434 @@
+[
+    {
+        "model": "file_system.file",
+        "pk": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.092Z",
+            "modified_date": "2023-05-04T15:02:31.589Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 390343219,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.092Z",
+            "modified_date": "2023-05-04T15:02:31.589Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 390343219,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.092Z",
+            "modified_date": "2023-05-04T15:02:31.589Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 390343219,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.224Z",
+            "modified_date": "2023-05-04T15:02:31.593Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 434118132,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.224Z",
+            "modified_date": "2023-05-04T15:02:31.593Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 434118132,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.224Z",
+            "modified_date": "2023-05-04T15:02:31.593Z",
+            "file_name": "Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_2/Prefix_Data_BALTO_REQID_2_S83_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 434118132,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
+            "request_id": "BALTO_REQID",
+            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+            "samples": "[\"BALTO_REQID_2\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.209Z",
+            "modified_date": "2023-05-04T15:14:22.263Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 447094784,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.209Z",
+            "modified_date": "2023-05-04T15:14:22.263Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 447094784,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+        "fields": {
+            "created_date": "2021-03-15T16:42:53.209Z",
+            "modified_date": "2023-05-04T15:14:22.263Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 447094784,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.252Z",
+            "modified_date": "2023-05-04T15:14:12.328Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 508780796,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.252Z",
+            "modified_date": "2023-05-04T15:14:12.328Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 508780796,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.252Z",
+            "modified_date": "2023-05-04T15:14:12.328Z",
+            "file_name": "Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_4/Prefix_Data_BALTO_REQID_4_S85_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 508780796,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
+            "request_id": "BALTO_REQID",
+            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
+            "samples": "[\"BALTO_REQID_4\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.048Z",
+            "modified_date": "2023-05-04T15:14:12.325Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 933098209,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.048Z",
+            "modified_date": "2023-05-04T15:14:12.325Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 933098209,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.048Z",
+            "modified_date": "2023-05-04T15:14:12.325Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 933098209,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.529Z",
+            "modified_date": "2023-05-04T15:14:12.326Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1063798887,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.529Z",
+            "modified_date": "2023-05-04T15:14:12.326Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1063798887,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.529Z",
+            "modified_date": "2023-05-04T15:14:12.326Z",
+            "file_name": "Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_Data_BALTO_REQID_1/Prefix_Data_BALTO_REQID_1_S82_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1063798887,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
+            "request_id": "BALTO_REQID",
+            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+            "samples": "[\"BALTO_REQID_1\"]",
+            "patient_id": "C-ABCDEF"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "76658104-3f7e-41e3-9408-0d9075d9036f",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.065Z",
+            "modified_date": "2023-05-04T15:14:22.266Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 952360556,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "76658104-3f7e-41e3-9408-0d9075d9036f",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.065Z",
+            "modified_date": "2023-05-04T15:14:22.266Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 952360556,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "76658104-3f7e-41e3-9408-0d9075d9036f",
+        "fields": {
+            "created_date": "2021-03-15T16:42:54.065Z",
+            "modified_date": "2023-05-04T15:14:22.266Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R1_001.fastq.gz",
+            "file_type": 26,
+            "size": 952360556,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.535Z",
+            "modified_date": "2023-05-04T15:14:22.261Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1082701694,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.535Z",
+            "modified_date": "2023-05-04T15:14:22.261Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1082701694,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.535Z",
+            "modified_date": "2023-05-04T15:14:22.261Z",
+            "file_name": "Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "path": "/juno/archive/msk/cmo/FASTQ/MACHINE_CODE/Project_BALTO_REQID/Sample_Prefix_BALTO_REQID_3/Sample_Text_BALTO_REQID_3_S84_R2_001.fastq.gz",
+            "file_type": 26,
+            "size": 1082701694,
+            "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
+            "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
+            "request_id": "BALTO_REQID",
+            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
+            "samples": "[\"BALTO_REQID_3\"]",
+            "patient_id": "C-GHIJKL"
+        }
+    }
+]
