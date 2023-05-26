@@ -100,11 +100,13 @@ class ArgosReportOperator(Operator):
         ci_tags = set()
         # get ci_tag from file metadata
         for sample in samples:
-            sample_id = sample.sample_id
-            query = {f"metadata__{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
-            files = FileMetadata.objects.filter(**query)
-            for f in files:
-                ci_tags.add(f.metadata["ciTag"])
+            if sample.sample_type:
+                if "normal" not in sample.sample_type.lower():
+                    sample_id = sample.sample_id
+                    query = {f"metadata__{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
+                    files = FileMetadata.objects.filter(**query)
+                    for f in files:
+                        ci_tags.add(f.metadata["ciTag"])
         return ci_tags
 
     def get_oncokb_file(self, annotations_path):
