@@ -1,6 +1,6 @@
 import os
 import logging
-import unicodedata
+from file_system.repository.file_repository import FileRepository
 from datetime import datetime
 from django.conf import settings
 from beagle import __version__
@@ -19,6 +19,7 @@ LOGGER = logging.getLogger(__name__)
 ARGOS_NAME = "argos"
 ARGOS_VERSION = "1.1.2"
 ONCOKB_FG_SLUG = "oncokb_filegroup"
+
 
 class ArgosReportOperator(Operator):
     def get_jobs(self):
@@ -107,17 +108,45 @@ class ArgosReportOperator(Operator):
         return ci_tags
 
     def get_oncokb_file(self, annotations_path):
-            oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
-            oncokb_files = os.listdir(oncokb_dir)
-            oncokb_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
-            oncokb_file_path = os.path.join(oncokb_dir, oncokb_file)
+        oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
+        oncokb_files = os.listdir(oncokb_dir)
+        latest_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
+        oncokb_file_path = os.path.join(oncokb_dir, latest_file)
+        oncokb_file_registered = self._register_oncokb_file(oncokb_file_path)
 
-            return {
-                "class": "File",
-                "location": oncokb_file_path,
-            }
+        oncokb_entry = {
+            "class": "File",
+            "location": oncokb_file_path,
+        }
+
+        return oncokb_entry
+
+    def _register_oncokb_file(self, oncokb_fp):
+        file_group = FileGroup.objects.get(slug=ONCOKB_FG_SLUG)
+        file_type = FileType.objects.filter(name="rds").first()
+        return self._create_file_obj(path=oncokb_fp, file_group=file_group, file_type=file_type)
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
+
+    def _create_file_obj(self, path, file_group, file_type):
+        """
+        Tries to create a File from path provided
+        Returns True if file is created; False if file at path exists
+        """
+        file_exists = File.objects.filter(path=path).exists()
+        if not file_exists:
+            try:
+                f = File.objects.create(
+                    file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type
+                )
+                f.save()
+                LOGGER.info("Adding OncoKB RDS file to database: %s" % path)
+                return True
+            except Exception as e:
+                LOGGER.error("Failed to create file %s. Error %s" % (path, str(e)))
+                raise Exception("Failed to create file %s. Error %s" % (path, str(e)))
+        else:
+            return False

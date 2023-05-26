@@ -78,9 +78,6 @@ class TestArgosReportOperator(TestCase):
         self.maxDiff = None
         self.assertEqual(expected, actual)
 
-    def test_get_oncokb_file(self):
-        op = self.load_operator()
-
     def load_operator(self):
         job_group = JobGroup()
         job_group.save()
@@ -92,6 +89,17 @@ class TestArgosReportOperator(TestCase):
             run_ids=self.run_ids,
         )
         return argos_report_operator
+
+    def test_create_file_obj(self):
+        op = self.load_operator()
+        file_exists = File.objects.get(id="7e9c55b1-d8b5-4767-80a6-dfa382918ffb")
+        file_group = file_exists.file_group
+        file_type = file_exists.file_type
+        file_create_false = op._create_file_obj(path=file_exists.path, file_group=file_group, file_type=file_type)
+        file_not_exists = "/my/nonexistent/fake_file.txt"
+        file_create_true = op._create_file_obj(path=file_not_exists, file_group=file_group, file_type=file_type)
+        self.assertFalse(file_create_false)
+        self.assertTrue(file_create_true)
 
     def _create_tmp_annotations_dir(self):
         tmpdir = tempfile.TemporaryDirectory()
