@@ -76,12 +76,12 @@ class ArgosReportOperator(Operator):
             if port.name == "analysis_dir":
                 analysis_dir_path = {
                     "class": "Directory",
-                    "location": FileProcessor.parse_path_from_uri(port.value["location"]),
+                    "path": FileProcessor.parse_path_from_uri(port.value["location"]),
                 }
             if port.name == "portal_dir":
                 portal_dir_path = {
                     "class": "Directory",
-                    "location": FileProcessor.parse_path_from_uri(port.value["location"]),
+                    "path": FileProcessor.parse_path_from_uri(port.value["location"]),
                 }
 
         inputs = list()
@@ -117,7 +117,7 @@ class ArgosReportOperator(Operator):
 
         oncokb_entry = {
             "class": "File",
-            "location": oncokb_file_path,
+            "path": oncokb_file_path,
         }
 
         return oncokb_entry
