@@ -17,7 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
 ARGOS_VERSION = "1.1.2"
-ONCOKB_FG_SLUG = "oncokb_filegroup"
+ONCOKB_FG_SLUG = "oncokb-file-group"
 
 
 class ArgosReportOperator(Operator):
