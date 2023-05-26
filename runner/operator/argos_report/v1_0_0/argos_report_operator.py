@@ -1,6 +1,5 @@
 import os
 import logging
-from file_system.repository.file_repository import FileRepository
 from datetime import datetime
 from django.conf import settings
 from beagle import __version__
