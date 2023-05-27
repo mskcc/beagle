@@ -76,12 +76,12 @@ class ArgosReportOperator(Operator):
             if port.name == "analysis_dir":
                 analysis_dir_path = {
                     "class": "Directory",
-                    "path": FileProcessor.parse_path_from_uri(port.value["location"]),
+                    "location": port.value["location"],
                 }
             if port.name == "portal_dir":
                 portal_dir_path = {
                     "class": "Directory",
-                    "path": FileProcessor.parse_path_from_uri(port.value["location"]),
+                    "location": port.value["location"],
                 }
 
         inputs = list()
@@ -112,12 +112,12 @@ class ArgosReportOperator(Operator):
         oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
         oncokb_files = os.listdir(oncokb_dir)
         latest_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
-        oncokb_file_path = os.path.join(oncokb_dir, latest_file)
+        oncokb_file_path = "juno://" + os.path.join(oncokb_dir, latest_file)
         oncokb_file_registered = self._register_oncokb_file(oncokb_file_path)
 
         oncokb_entry = {
             "class": "File",
-            "path": oncokb_file_path,
+            "location": oncokb_file_path,
         }
 
         return oncokb_entry
