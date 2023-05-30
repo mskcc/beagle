@@ -4,7 +4,8 @@ from datetime import datetime
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType, FileMetadata
+from file_system.models import File, FileGroup, FileType
+from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
 from runner.run.objects.run_creator_object import RunCreator
@@ -102,8 +103,8 @@ class ArgosReportOperator(Operator):
             if sample.sample_type:
                 if "normal" not in sample.sample_type.lower():
                     sample_id = sample.sample_id
-                    query = {f"metadata__{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
-                    files = FileMetadata.objects.filter(**query)
+                    query = {f"{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
+                    files = FileRepository.filter(metadata=query)
                     for f in files:
                         ci_tags.add(f.metadata["ciTag"])
         return ci_tags
