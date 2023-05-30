@@ -1,9 +1,14 @@
+import json
 import os
 import git
 import uuid
 import shutil
 import logging
+from django.conf import settings
+from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
+
+# from runner.run.processors.file_processor import FileProcessor
 
 
 class PipelineResolver(object):
@@ -40,6 +45,31 @@ class PipelineResolver(object):
             os.unlink(location)
         else:
             shutil.rmtree(location)
+
+    def import_reference_files(self):
+        dir_name = self._dir_name()
+        pipeline_path = self._git_clone(dir_name)
+        absolute_path = os.path.join(pipeline_path, settings.APP_REFERENCE_FILES_PATH)
+        logging.info(f"Locating reference file in {absolute_path}")
+        if os.path.exists(absolute_path):
+            with open(absolute_path, "r") as f:
+                files = json.load(f)
+                for f in files:
+                    # file_path = FileProcessor.parse_path_from_uri(f["location"])
+                    if not FileRepository.filter(
+                        path=f["location"], file_group=settings.REFERENCE_FILE_GROUP_ID
+                    ).first():
+                        logging.info(f"Registering {f}")
+                        FileProcessor.create_file_obj(
+                            f["location"],
+                            f["size"],
+                            f["checksum"],
+                            settings.REFERENCE_FILE_GROUP_ID,
+                        )
+        else:
+            logging.info(f"Pipeline doesn't have reference file in {absolute_path}")
+        logging.info(f"Cleanup pipeline directory {dir_name}")
+        self._cleanup(dir_name)
 
     def load(self):
         pass

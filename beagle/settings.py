@@ -468,4 +468,8 @@ DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp/%s")
 
 APP_CACHE = os.environ.get("BEAGLE_APP_CACHE", "/tmp")
 
+REFERENCE_STORAGE_ID = os.environ.get("BEAGLE_REFERENCE_STORAGE_ID")
+REFERENCE_FILE_GROUP_ID = os.environ.get("BEAGLE_REFERENCE_FILE_GROUP_ID")
+APP_REFERENCE_FILES_PATH = os.environ.get("BEAGLE_APP_REFERENCE_FILES_PATH", "./reference/reference.json")
+
 CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")

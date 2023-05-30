@@ -9,8 +9,9 @@ from urllib.parse import urljoin
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
+from runner.pipeline.pipeline_resolver import PipelineResolver
 from runner.run.objects.run_object_factory import RunObjectFactory
-from .models import Run, RunStatus, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from .models import Run, RunStatus, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline, PipelineStatus
 from notifier.events import (
     RunFinishedEvent,
     OperatorRequestEvent,
@@ -40,6 +41,8 @@ from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 logger = logging.getLogger(__name__)
@@ -815,6 +818,25 @@ def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, j
 def add_pipeline_to_cache(github, version):
     if not GithubCache.get(github, version):
         GithubCache.add(github, version)
+
+
+@shared_task
+def register_reference_files(pipeline_id):
+    try:
+        pipeline = Pipeline.objects.get(id=pipeline_id)
+    except Pipeline.DoesNotExist:
+        logging.error(f"Pipeline with id:{pipeline_id} doesn't exist")
+        return
+    resolver = PipelineResolver(pipeline.github, pipeline.entrypoint, pipeline.version)
+    resolver.import_reference_files()
+    pipeline.status = PipelineStatus.READY
+    pipeline.save()
+
+
+@receiver(post_save, sender=Pipeline)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        register_reference_files.delay(str(instance.id))
 
 
 class cmo_dmp_manifest:
