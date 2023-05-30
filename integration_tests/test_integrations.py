@@ -12,19 +12,20 @@ SUBMIT_ROUTE = "/v0/run/operator/request/"
 JOB_GROUP_ROUTE = "/v0/notifier/job-groups/"
 NOTIFIER_CREATE_ROUTE = "/v0/notifier/create/"
 RUN_ROUTE = "/v0/run/api/"
-BEAGLE_URL = os.environ["BEAGLE_URL"]
-BEAGLE_USERNAME = os.environ["BEAGLE_USERNAME"]
-BEAGLE_PASSWORD = os.environ["BEAGLE_PASSWORD"]
-TEST_CONFIG_PATH = os.environ["TEST_CONFIG_PATH"]
 TEST_ENV = "RUN_INTEGRATION_TEST"
-basic_auth = HTTPBasicAuth(BEAGLE_USERNAME, BEAGLE_PASSWORD)
 
 
 class RunTestCase(TestCase):
     def setUp(self):
         self.test_data = []
-        with open(TEST_CONFIG_PATH, "r") as test_file:
-            self.test_data = json.load(test_file)
+        if "TEST_CONFIG_PATH" in os.environ:
+            TEST_CONFIG_PATH = os.environ["TEST_CONFIG_PATH"]
+            with open(TEST_CONFIG_PATH, "r") as test_file:
+                self.test_data = json.load(test_file)
+            self.beagle_url = os.environ["BEAGLE_URL"]
+            self.beagle_username = os.environ["BEAGLE_USERNAME"]
+            self.beagle_password = os.environ["BEAGLE_PASSWORD"]
+            self.beagle_basic_auth = HTTPBasicAuth(self.beagle_username, self.beagle_password)
 
     @unittest.skipIf(TEST_ENV in os.environ and os.environ[TEST_ENV] == "TRUE", "is a large integration test")
     def test_submit_runs(self):
@@ -35,18 +36,20 @@ class RunTestCase(TestCase):
                 "request", "pipeline", "version", "expected_complete"
             )(single_test)
             expected_complete = int(expected_complete)
-            job_group_request = requests.post(BEAGLE_URL + JOB_GROUP_ROUTE, auth=basic_auth)
+            job_group_request = requests.post(
+                self.beagle_url + JOB_GROUP_ROUTE, auth=self.beagle_self.beagle_basic_auth
+            )
             self.assertTrue(job_group_request.ok)
             new_jobgroup = job_group_request.json()["id"]
             job_groups.append(new_jobgroup)
             time.sleep(1)
             notifier_request = requests.post(
-                BEAGLE_URL + NOTIFIER_CREATE_ROUTE,
+                self.beagle_url + NOTIFIER_CREATE_ROUTE,
                 data={"job_group": new_jobgroup, "pipeline": pipeline, "request_id": request_id},
-                auth=basic_auth,
+                auth=self.beagle_basic_auth,
             )
             self.assertTrue(notifier_request.ok)
-            submit_url = BEAGLE_URL + SUBMIT_ROUTE
+            submit_url = self.beagle_url + SUBMIT_ROUTE
             submit_payload = {
                 "request_ids": [request_id],
                 "pipeline": pipeline,
@@ -54,7 +57,7 @@ class RunTestCase(TestCase):
                 "job_group_id": str(new_jobgroup),
             }
             run_id = str(pipeline) + "_" + str(version) + "_" + str(request_id)
-            submit_response = requests.post(submit_url, json=submit_payload, auth=basic_auth)
+            submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
             run_status[run_id] = {
                 "job_group": new_jobgroup,
                 "status": "Submitted",
@@ -69,7 +72,7 @@ class RunTestCase(TestCase):
         done = False
         while not done:
             run_status_request = requests.get(
-                BEAGLE_URL + RUN_ROUTE, params={"job_groups": job_groups}, auth=basic_auth
+                self.beagle_url + RUN_ROUTE, params={"job_groups": job_groups}, auth=self.beagle_basic_auth
             )
             status_dict = {}
             if run_status_request.ok:
