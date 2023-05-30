@@ -54,9 +54,17 @@ class PipelineName(models.Model):
     name = models.CharField(max_length=30, null=False, blank=False)
 
 
+class PipelineStatus(IntEnum):
+    PREPARING = 0
+    READY = 1
+
+
 class Pipeline(BaseModel):
     pipeline_type = models.IntegerField(
         choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=ProtocolType.CWL
+    )
+    status = models.IntegerField(
+        choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=PipelineStatus.PREPARING
     )
     pipeline_name = models.ForeignKey(PipelineName, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100, editable=True)

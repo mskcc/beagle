@@ -47,6 +47,7 @@ app.conf.task_routes = {
     "runner.tasks.terminate_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.complete_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.register_reference_files": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
