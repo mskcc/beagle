@@ -1,0 +1,27 @@
+pipeline {
+  agent any
+  stages {
+      stage('Deploy to Stage') {
+        steps {
+        build job: 'beagle-deploy', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: "STAGE"]]
+        sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
+          sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/staging_voyager/beagle && source /juno/work/ci/voyager_continous_deployment/staging/test_env.sh && singularity run instance://staging_beagle python3 manage.py test integration_tests"'     
+          
+        }
+        }
+     }
+  }
+  post {
+        failure {
+        slackSend channel: '#robot-house',
+                  color: 'bad',
+                  message: "The pipeline ${currentBuild.fullDisplayName} failed."
+    }
+        success {
+        slackSend channel: '#robot-house',
+                  color: 'good',
+                  message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
+    }
+
+  }
+}
