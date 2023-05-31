@@ -27,7 +27,7 @@ class RunTestCase(TestCase):
             self.beagle_password = os.environ["BEAGLE_PASSWORD"]
             self.beagle_basic_auth = HTTPBasicAuth(self.beagle_username, self.beagle_password)
 
-    @unittest.skipIf(TEST_ENV in os.environ and os.environ[TEST_ENV] == "TRUE", "is a large integration test")
+    @unittest.skipIf(TEST_ENV not in os.environ, "is a large integration test")
     def test_submit_runs(self):
         run_status = {}
         job_groups = []
