@@ -60,7 +60,6 @@ class CMOCHNucleoOperatorQcAgg(Operator):
     def get_jobs(self):
 
         job, sample_list = self.get_qc_outputs()
-        breakpoint()
         return [
             RunCreator(
                 **{
