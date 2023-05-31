@@ -60,7 +60,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
     def get_jobs(self):
 
         job, sample_list = self.get_qc_outputs()
-
+        breakpoint()
         return [
             RunCreator(
                 **{
@@ -114,9 +114,9 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
             directory_folder = self.process_listing(port.value["listing"], directory_name)["listing"][0]
-            directory_folder['location'] = directory_folder['location'].replace("file:///", "/juno/", 1)
-            for file in directory_folder['listing']:
-                file['location'] = file['location'].replace("file:///", "juno:///", 1)
+            directory_folder["location"] = directory_folder["location"].replace("file:///", "/juno/", 1)
+            for file in directory_folder["listing"]:
+                file["location"] = file["location"].replace("file:///", "juno:///", 1)
             if not directory_folder:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             directory_list.append(directory_folder)
