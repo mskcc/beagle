@@ -524,6 +524,7 @@ class TestPairRequest(TestCase):
                 "request_id": "10075_D_3",
                 "run_id": ["JAX_0397"],
                 "preservation_type": ["EDTA-Streck"],
+                "run_mode": "hiseq"
             }
         ]
 
@@ -539,6 +540,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["JAX_0397"],
                     "preservation_type": ["EDTA-Streck"],
+                    "run_mode": "hiseq"
                 }
             ],
             "normal": [
@@ -562,8 +564,8 @@ class TestPairRequest(TestCase):
                     "R2": [
                         "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz"
                     ],
-                    "R1_bid": [UUID("08072445-84ff-4b43-855d-d8d2dc87e2d5")],
-                    "R2_bid": [UUID("f0d9a1e1-9414-42df-a749-08776732ee04")],
+                    "R1_bid": [UUID("404ad544428c405f967aa6920d091148")],
+                    "R2_bid": [UUID("19703ff82e144f608d57891df80b2858")],
                     "bam": [],
                     "bam_bid": [],
                     "request_id": "10075_D_4",
@@ -571,13 +573,11 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "pi": "John Smith",
                     "pi_email": "email@internet.com",
+                    "run_mode": "hiseq"
                 }
             ],
         }
 
-        print("Running get_most_recent_normal1 ---")
-        print(json.dumps(pairs, cls=UUIDEncoder))
-        print(json.dumps(expected_pairs, cls=UUIDEncoder))
         self.assertTrue(pairs == expected_pairs)
 
     def test_compile_pairs_pooled_normal_and_dmp_bam(self):
