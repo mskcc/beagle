@@ -1,14 +1,17 @@
 import json
 from mock import patch
+from django.db.models import signals
 from rest_framework.test import APITestCase
 from runner.run.objects.nextflow.nextflow_run_object import NextflowRunObject
 from runner.run.objects.nextflow.nextflow_port_object import NextflowPortObject
 from runner.models import Run, ProtocolType, RunStatus, Pipeline, PortType, Port, Sample
 from file_system.models import FileGroup, File, FileType, FileExtension
+from runner.tasks import register_pipeline_reference_files
 
 
 class NextflowRunObjectTest(APITestCase):
     def setUp(self):
+        signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
         self.nxf_file_group = FileGroup.objects.create(name="Nextflow Output Group")
         self.pipeline = Pipeline.objects.create(
             name="nextflow_pipeline",

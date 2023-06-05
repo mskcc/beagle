@@ -3,9 +3,8 @@ Test for constructing Argos pair and jobs
 """
 import os
 import json
-from pprint import pprint
-from uuid import UUID
 from django.test import TestCase
+from django.db.models import signals
 from runner.operator.alignment_pair_operator.v1_0_0.construct_alignment_argos_inputs import (
     construct_alignment_pair_jobs,
 )
@@ -13,10 +12,12 @@ from runner.operator.alignment_pair_operator.v1_0_0.bin.make_sample import build
 from file_system.models import File
 from django.conf import settings
 from django.core.management import call_command
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 
 class TestConstructPair(TestCase):
-    # load fixtures for the test case temp db
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
     def setUp(self):

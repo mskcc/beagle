@@ -834,7 +834,7 @@ def register_reference_files(pipeline_id):
 
 
 @receiver(post_save, sender=Pipeline)
-def create_user_profile(sender, instance, created, **kwargs):
+def register_pipeline_reference_files(sender, instance, created, **kwargs):
     if created:
         register_reference_files.delay(str(instance.id))
 

@@ -1,5 +1,6 @@
 import json
 from mock import patch
+from django.db.models import signals
 from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
@@ -8,6 +9,7 @@ from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.run_object_factory import RunObjectFactory
 from beagle_etl.models import JobGroup
 from file_system.models import Storage, StorageType, FileGroup, File, FileType, Sample, Request
+from runner.tasks import register_pipeline_reference_files
 
 
 class CWLRunObjectTest(APITestCase):
@@ -18,6 +20,7 @@ class CWLRunObjectTest(APITestCase):
     ]
 
     def setUp(self):
+        signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
         self.storage = Storage(name="test", type=StorageType.LOCAL)
         self.storage.save()
         self.file_group = FileGroup(name="Test Files", storage=self.storage)
