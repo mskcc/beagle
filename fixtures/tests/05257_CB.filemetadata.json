@@ -7,6 +7,7 @@
             "modified_date": "2019-11-30T16:40:10.321Z",
             "file": "d8576140-e358-41e8-adaa-85af3a69ca1b",
             "version": 0,
+            "latest": false,
             "metadata": {
                 "sex": "F",
                 "igoId": "05257_CB_2",
@@ -78,6 +79,7 @@
             "modified_date": "2019-11-30T16:40:10.344Z",
             "file": "eba0a8fc-9702-4bb2-bd70-f42d3f94b7f2",
             "version": 0,
+            "latest": false,
             "metadata": {
                 "sex": "F",
                 "igoId": "05257_CB_2",
@@ -147,6 +149,7 @@
             "modified_date": "2019-11-30T16:40:14.002Z",
             "file": "aa0d762a-6833-4aac-a5fc-18ce71f713ca",
             "version": 0,
+            "latest": false,
             "metadata": {
                 "sex": "F",
                 "igoId": "05257_CB_1",
@@ -216,6 +219,7 @@
             "modified_date": "2019-11-30T16:40:14.027Z",
             "file": "1bd6eb62-f331-49f3-8ded-83d989c2c2d3",
             "version": 0,
+            "latest": false,
             "metadata": {
                 "sex": "F",
                 "igoId": "05257_CB_1",
@@ -285,6 +289,7 @@
             "modified_date": "2020-01-09T16:49:14.298Z",
             "file": "aa0d762a-6833-4aac-a5fc-18ce71f713ca",
             "version": 1,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "F",
@@ -350,6 +355,7 @@
             "modified_date": "2020-01-09T16:49:14.301Z",
             "file": "d8576140-e358-41e8-adaa-85af3a69ca1b",
             "version": 1,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "F",
@@ -415,6 +421,7 @@
             "modified_date": "2020-01-09T16:49:14.325Z",
             "file": "1bd6eb62-f331-49f3-8ded-83d989c2c2d3",
             "version": 1,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "F",
@@ -480,6 +487,7 @@
             "modified_date": "2020-01-09T16:49:14.329Z",
             "file": "eba0a8fc-9702-4bb2-bd70-f42d3f94b7f2",
             "version": 1,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "F",
