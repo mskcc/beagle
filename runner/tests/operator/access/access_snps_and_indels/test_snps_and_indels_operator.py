@@ -3,10 +3,13 @@ import os
 from django.test import TestCase
 
 from file_system.models import File
+from django.db.models import signals
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 REQUEST_ID = "access_legacy_test_request"
 TEST_RUN_ID = "bc23076e-f477-4578-943c-1fbf6f1fca44"
@@ -33,6 +36,7 @@ COMMON_FIXTURES = [
 
 
 class TestAccessSNVOperator(TestCase):
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_legacy_snv_operator(self):

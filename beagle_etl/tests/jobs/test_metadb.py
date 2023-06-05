@@ -8,6 +8,7 @@ import json
 from deepdiff import DeepDiff
 from django.test import TestCase
 from django.conf import settings
+from django.db.models import signals
 from django.contrib.auth.models import User
 from beagle_etl.models import SMILEMessage
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
@@ -16,9 +17,12 @@ from django.core.management import call_command
 from file_system.models import Request, Sample, Patient, FileMetadata
 from file_system.repository import FileRepository
 from study.objects import StudyObject
+from runner.tasks import register_pipeline_reference_files
+from runner.models import Pipeline
 
 
 class TestNewRequest(TestCase):
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [
         "file_system.filegroup.json",
         "file_system.filetype.json",

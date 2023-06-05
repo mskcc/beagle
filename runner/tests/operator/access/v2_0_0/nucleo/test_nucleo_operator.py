@@ -1,13 +1,13 @@
 import os
 
 from django.test import TestCase
-
+from django.db.models import signals
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
-from runner.operator.access.v1_0_0.merge_fastqs import AccessLegacyFastqMergeOperator, construct_inputs
-
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 FIXTURES = [
     "fixtures/tests/merge_fastqs/10151_F_13.file.json",
@@ -27,7 +27,7 @@ COMMON_FIXTURES = [
 
 
 class TestAccessNucleoOperator(TestCase):
-
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_nucleo_operator(self):

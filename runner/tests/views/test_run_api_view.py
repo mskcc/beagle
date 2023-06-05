@@ -4,6 +4,7 @@ Tests for Run API View
 import os
 from mock import patch, call
 from rest_framework import status
+from django.db.models import signals
 from rest_framework.test import APITestCase
 from runner.views.run_api_view import OperatorViewSet
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
@@ -14,6 +15,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.management import call_command
 from django.urls import reverse
+from runner.tasks import register_pipeline_reference_files
 import beagle_etl.celery
 
 if not beagle_etl.celery.app.conf["task_always_eager"]:
@@ -29,6 +31,7 @@ class MockRequest(object):
 
 
 class TestRunAPIList(APITestCase):
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [
         "file_system.filegroup.json",
         "file_system.filetype.json",

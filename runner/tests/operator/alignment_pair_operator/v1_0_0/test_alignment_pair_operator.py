@@ -3,15 +3,18 @@ Tests for Argos Operator class
 """
 import os
 from django.test import TestCase
+from django.db.models import signals
 from runner.operator.operator_factory import OperatorFactory
 from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
-from file_system.models import File, FileMetadata, FileGroup, FileType
-from pprint import pprint
+from file_system.models import File, FileMetadata, FileGroup
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 
 class TestAlignmentPairOperator(TestCase):
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [
         "file_system.filegroup.json",
         "file_system.filetype.json",

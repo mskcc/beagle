@@ -7,8 +7,7 @@ import logging
 from django.conf import settings
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
-
-# from runner.run.processors.file_processor import FileProcessor
+from runner.run.processors.file_processor import FileProcessor
 
 
 class PipelineResolver(object):
@@ -55,7 +54,6 @@ class PipelineResolver(object):
             with open(absolute_path, "r") as f:
                 files = json.load(f)
                 for f in files:
-                    # file_path = FileProcessor.parse_path_from_uri(f["location"])
                     if not FileRepository.filter(
                         path=f["location"], file_group=settings.REFERENCE_FILE_GROUP_ID
                     ).first():

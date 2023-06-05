@@ -3,10 +3,13 @@ import os
 from django.test import TestCase
 
 from beagle import settings
+from django.db.models import signals
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 
 FIXTURES = [
@@ -28,7 +31,7 @@ COMMON_FIXTURES = [
 
 
 class TestAccessQCOperator(TestCase):
-
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [os.path.join(ROOT_DIR, f) for f in FIXTURES + COMMON_FIXTURES]
 
     def test_access_qc_operator(self):
