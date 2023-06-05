@@ -31,7 +31,7 @@ class TestConstructPair(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         files = File.objects.filter(
-            {
+            **{
                 "filemetadata__metadata__{}".format(settings.REQUEST_ID_METADATA_KEY): "10075_D",
                 "filemetadata__metadata__{}".format(settings.IGO_COMPLETE_METADATA_KEY): True,
             }
