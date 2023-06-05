@@ -10,7 +10,7 @@ from notifier.events import VoyagerIsProcessingPartialRequestEvent, VoyagerIsPro
 from notifier.helper import get_emails_to_notify, get_gene_panel, get_number_of_tumor_samples
 
 
-def _voyager_start_processing(request_id, run_ids):
+def _voyager_start_processing(request_id, run_ids, notify=False):
     job_group = settings.BEAGLE_NOTIFIER_EMAIL_GROUP
     sample_ids = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
@@ -41,39 +41,40 @@ def _voyager_start_processing(request_id, run_ids):
 
         gene_panel = get_gene_panel(request_id)
         number_of_samples = get_number_of_tumor_samples(request_id)
-        if unprocessed_samples:
-            send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingPartialRequestEvent")
-            for email in send_to:
-                event = VoyagerIsProcessingPartialRequestEvent(
-                    job_notifier=job_group,
-                    email_to=email,
-                    email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject=f"Confirmation of Project {request_id} running in Pipeline: partial run",
-                    request_id=request_id,
-                    gene_panel=gene_panel,
-                    number_of_samples=len(runs),
-                    number_of_samples_received=number_of_samples,
-                    match_normal_cnt=matched_normals,
-                    pooled_normal_cnt=pooled_normals,
-                    unpaired=list(unprocessed_samples),
-                ).to_dict()
-                send_notification.delay(event)
-        else:
-            send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingWholeRequestEvent")
-            for email in send_to:
-                event = VoyagerIsProcessingWholeRequestEvent(
-                    job_notifier=job_group,
-                    email_to=email,
-                    email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                    subject=f"Confirmation of Project {request_id} running in Pipeline",
-                    request_id=request_id,
-                    gene_panel=gene_panel,
-                    number_of_samples=len(runs),
-                    number_of_samples_recived=number_of_samples,
-                    match_normal_cnt=matched_normals,
-                    pooled_normal_cnt=pooled_normals,
-                ).to_dict()
-                send_notification.delay(event)
+        if notify:
+            if unprocessed_samples:
+                send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingPartialRequestEvent")
+                for email in send_to:
+                    event = VoyagerIsProcessingPartialRequestEvent(
+                        job_notifier=job_group,
+                        email_to=email,
+                        email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                        subject=f"Confirmation of Project {request_id} running in Pipeline: partial run",
+                        request_id=request_id,
+                        gene_panel=gene_panel,
+                        number_of_samples=len(runs),
+                        number_of_samples_received=number_of_samples,
+                        match_normal_cnt=matched_normals,
+                        pooled_normal_cnt=pooled_normals,
+                        unpaired=list(unprocessed_samples),
+                    ).to_dict()
+                    send_notification.delay(event)
+            else:
+                send_to = get_emails_to_notify(request_id, "VoyagerIsProcessingWholeRequestEvent")
+                for email in send_to:
+                    event = VoyagerIsProcessingWholeRequestEvent(
+                        job_notifier=job_group,
+                        email_to=email,
+                        email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                        subject=f"Confirmation of Project {request_id} running in Pipeline",
+                        request_id=request_id,
+                        gene_panel=gene_panel,
+                        number_of_samples=len(runs),
+                        number_of_samples_recived=number_of_samples,
+                        match_normal_cnt=matched_normals,
+                        pooled_normal_cnt=pooled_normals,
+                    ).to_dict()
+                    send_notification.delay(event)
 
 
 def _generate_ticket_description(
