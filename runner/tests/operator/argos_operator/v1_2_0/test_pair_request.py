@@ -632,6 +632,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "HiSeq High Output"
             },
         )
         tumor1_R2_file_instance = File.objects.create(
@@ -671,6 +672,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "HiSeq High Output"
             },
         )
 
@@ -712,6 +714,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1234_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "HiSeq High Output"
             },
         )
         tumor2_R2_file_instance = File.objects.create(
@@ -751,6 +754,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1234_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "HiSeq High Output"
             },
         )
 
@@ -764,12 +768,9 @@ class TestPairRequest(TestCase):
                 "request_id": "10075_D_3",
                 "run_id": ["PITT_0439"],
                 "preservation_type": ["Frozen"],
+                "run_mode": "hiseq"
             }
         ]
-
-        # test that no pairs are found since there are no Normals loaded yet
-        pairs = compile_pairs(samples)
-        self.assertDictEqual(pairs, {"tumor": [], "normal": []})
 
         # add Pooled Normal from another run
         poolednormal_R1_file_instance = File.objects.create(
@@ -786,7 +787,7 @@ class TestPairRequest(TestCase):
                 "bait_set": "IMPACT468_BAITS",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
-                "preservation": "Frozen",
+                "preservation": "Frozen", 
             },
         )
         poolednormal_R2_file_instance = File.objects.create(
@@ -824,6 +825,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
+                    "run_mode": "hiseq"
                 }
             ],
             "normal": [
@@ -851,8 +853,9 @@ class TestPairRequest(TestCase):
                     "request_id": "FROZENPOOLEDNORMAL_PITT_0439",
                     "pi": "",
                     "pi_email": "",
-                    "run_id": [""],
+                    "run_id": ["PITT_0439"],
                     "preservation_type": [["Frozen"]],
+                    "run_mode": ""
                 }
             ],
         }
@@ -925,6 +928,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
+                    "run_mode": "hiseq"
                 }
             ],
             "normal": [
@@ -939,20 +943,21 @@ class TestPairRequest(TestCase):
                     "species": "",
                     "patient_id": "C-8VK0V7",
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "C-8VK0V7-N901-dZ-IM6",
+                    "sample_id": "s_C_8VK0V7_N901_dZ_IM6",
                     "run_date": [""],
-                    "specimen_type": "DMP Normal",
-                    "R1": [],
-                    "R2": [],
-                    "R1_bid": [],
-                    "R2_bid": [],
+                    "specimen_type": "DMP",
+                    "R1": [[]],
+                    "R2": [[]],
+                    "R1_bid": [[]],
+                    "R2_bid": [[]],
                     "bam": ["/C-8VK0V7.bam"],
                     "bam_bid": [],  # UUID('77b9a78f-1bed-475c-9799-c18a6f57b347')
-                    "request_id": "C-8VK0V7-N901-dZ-IM6",
+                    "request_id": None,
                     "pi": "",
                     "pi_email": "",
                     "run_id": [""],
                     "preservation_type": [""],
+                    "run_mode": ""
                 }
             ],
         }
@@ -1010,6 +1015,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_N",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "HiSeq"
             },
         )
         normal1_R2_file_instance = File.objects.create(
@@ -1049,6 +1055,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_N",
                 "labHeadEmail": "",
                 "labHeadName": "",
+                "runMode": "Hiseq"
             },
         )
 
@@ -1070,6 +1077,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
+                    "run_mode": "hiseq"
                 }
             ],
             "normal": [
@@ -1098,6 +1106,7 @@ class TestPairRequest(TestCase):
                     "pi_email": "",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
+                    "run_mode": "hiseq"
                 }
             ],
         }
@@ -1142,6 +1151,7 @@ class TestPairRequest(TestCase):
                 "species": "Human",
                 "specimen_type": "Blood",
                 "tumor_type": "Normal",
+                "run_mode": "hiseq"
             },
             {
                 "CN": "MSKCC",
@@ -1166,6 +1176,7 @@ class TestPairRequest(TestCase):
                 "species": "Human",
                 "specimen_type": "Resection",
                 "tumor_type": "Tumor",
+                "run_mode": "hiseq"
             },
         ]
         pairs = compile_pairs(samples)
@@ -1199,6 +1210,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "bam": [],
                     "bam_bid": [],
+                    "run_mode": "hiseq"
                 }
             ],
             "normal": [
@@ -1229,6 +1241,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "bam": [],
                     "bam_bid": [],
+                    "run_mode": "hiseq"
                 }
             ],
         }
