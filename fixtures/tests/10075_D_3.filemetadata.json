@@ -27,7 +27,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-R001-d",
+                "cmoSampleName": "C-8VK0V7-R001-d",
                 "captureName": "Pool-09483_R-10075_D_3-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -36,7 +36,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
@@ -102,7 +102,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-R001-d",
+                "cmoSampleName": "C-8VK0V7-R001-d",
                 "captureName": "Pool-09483_R-10075_D_3-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -111,7 +111,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
