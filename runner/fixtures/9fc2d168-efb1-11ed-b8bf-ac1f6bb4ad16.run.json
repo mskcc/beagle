@@ -1,0 +1,39 @@
+[
+    {
+        "model": "runner.run",
+        "pk": "9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-11T04:09:28.701Z",
+            "modified_date": "2023-05-11T05:34:27.084Z",
+            "run_type": 0,
+            "name": "HELIX FILTERS OUTPUTS 2 runs [0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16,..]  (05/11/2023, 00:09:28)",
+            "app": "cf3a6950-30fc-4894-8cdc-3417c1c7bbfc",
+            "status": 4,
+            "execution_id": "7b8bc320-ecfd-48b0-809c-92364a814b33",
+            "job_statuses": {},
+            "message": {},
+            "output_metadata": {},
+            "output_directory": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883",
+            "tags": {
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "argos_run_ids": ["0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16", "0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16"],
+                "project_prefix": "BALTO_REQID"
+            },
+            "operator_run": 3,
+            "notify_for_outputs": "[]",
+            "started": "2023-05-11T04:10:56.329Z",
+            "submitted": "2023-05-11T04:09:57.906Z",
+            "finished_date": "2023-05-11T05:34:27.084Z",
+            "resume": null,
+            "resume_attempts": 2,
+            "restart_attempts": 3,
+            "samples": [
+                "0420c2fc-92fd-46a2-a50c-5ab19723f553",
+                "8896334f-e000-40b3-88de-8c5b0f4ea32c",
+                "4c008ebe-0556-4d91-958e-907ea15f480d",
+                "2024258c-7588-479c-aa23-8b349e8552c7"
+            ],
+            "requests": []
+        }
+    }
+]

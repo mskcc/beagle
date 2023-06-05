@@ -1,0 +1,2416 @@
+[
+    {
+        "model": "file_system.filemetadata",
+        "pk": "06528f94-27c6-4551-a0e1-4313d00a99d8",
+        "fields": {
+            "created_date": "2022-04-06T12:18:25.048Z",
+            "modified_date": "2022-12-07T15:05:43.572Z",
+            "file": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "e753bf39-72e2-4738-a3a0-459d4df42f05",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "f8ad0d7e-65ce-4d5c-8e79-94be84041651",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.600Z",
+            "modified_date": "2022-12-07T15:05:43.600Z",
+            "file": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "34e815cf-468f-49f3-953a-bccd11c4461b",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "751503c3-2a7d-4359-987e-306dda477a99",
+        "fields": {
+            "created_date": "2022-04-06T12:18:24.991Z",
+            "modified_date": "2022-12-07T15:05:43.623Z",
+            "file": "76658104-3f7e-41e3-9408-0d9075d9036f",
+            "version": 5,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    },
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    }
+                ],
+                "smileSampleId": "4cb5fb80-47fd-4285-a623-33a68f417189",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "a66a656d-ff43-4cf9-9ac4-177e26020502",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.625Z",
+            "modified_date": "2022-12-07T15:05:43.626Z",
+            "file": "76658104-3f7e-41e3-9408-0d9075d9036f",
+            "version": 6,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "2068fb42-777b-416f-b703-2017ec875ae8",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "e2492398-0cb0-4b29-8d5a-b7082289f264",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.650Z",
+            "modified_date": "2022-12-07T15:05:43.650Z",
+            "file": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "2068fb42-777b-416f-b703-2017ec875ae8",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "7335531b-72b9-4890-a65f-fee4d0959e12",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.474Z",
+            "modified_date": "2022-12-07T15:05:43.474Z",
+            "file": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "9020df2c-76b0-4e79-8fe8-a1da0dfec629",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2396036c-7ea8-4643-b112-fff7ac698a9b",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.500Z",
+            "modified_date": "2022-12-07T15:05:43.500Z",
+            "file": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "9020df2c-76b0-4e79-8fe8-a1da0dfec629",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "28b85f7f-7a90-40b5-9638-54a513cbc609",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.525Z",
+            "modified_date": "2022-12-07T15:05:43.525Z",
+            "file": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "91584827-03bc-49ac-bf20-e28db41ea64e",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "5862b0f0-bf72-47e1-889a-a1cae904cdd1",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.550Z",
+            "modified_date": "2022-12-07T15:05:43.550Z",
+            "file": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "91584827-03bc-49ac-bf20-e28db41ea64e",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c6b2d3bf-7bfe-46da-be3b-10f5fee48d8f",
+        "fields": {
+            "created_date": "2022-12-07T15:05:43.574Z",
+            "modified_date": "2022-12-07T15:05:43.574Z",
+            "file": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+            "version": 7,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-11-28",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "34e815cf-468f-49f3-953a-bccd11c4461b",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "1d98a7d4-686e-4b88-9fb1-05afc5d8bcb9",
+        "fields": {
+            "created_date": "2022-04-06T12:18:24.882Z",
+            "modified_date": "2022-12-07T15:05:43.597Z",
+            "file": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "e753bf39-72e2-4738-a3a0-459d4df42f05",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2a7d4b76-64c5-4093-85ac-03fab12e1567",
+        "fields": {
+            "created_date": "2022-04-06T12:18:24.962Z",
+            "modified_date": "2022-12-07T15:05:43.548Z",
+            "file": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "27427c3b-c38c-41bc-ba17-faac5ccab6c3",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "154af24f-b071-4112-b2d1-e3ac5d7c5c84",
+        "fields": {
+            "created_date": "2022-04-06T12:18:25.020Z",
+            "modified_date": "2022-12-07T15:05:43.648Z",
+            "file": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    },
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    }
+                ],
+                "smileSampleId": "4cb5fb80-47fd-4285-a623-33a68f417189",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "ca70464b-d446-4141-b24b-46322b656fa7",
+        "fields": {
+            "created_date": "2022-04-06T12:18:24.928Z",
+            "modified_date": "2022-12-07T15:05:43.523Z",
+            "file": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "27427c3b-c38c-41bc-ba17-faac5ccab6c3",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "009a3d5c-8aab-4767-8991-67bba971b4c5",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.377Z",
+            "modified_date": "2022-04-06T12:18:24.988Z",
+            "file": "76658104-3f7e-41e3-9408-0d9075d9036f",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    },
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    }
+                ],
+                "smileSampleId": "4cb5fb80-47fd-4285-a623-33a68f417189",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "09a05309-1438-4ded-a001-bc3ca5650b9e",
+        "fields": {
+            "created_date": "2022-04-06T12:18:25.080Z",
+            "modified_date": "2022-12-07T15:05:43.497Z",
+            "file": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8e615e05-31f1-4a86-8c73-ae1b6a5240b9",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "6cdcc575-6b92-4c2a-8613-86d3d18c679d",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.323Z",
+            "modified_date": "2022-04-06T12:18:25.075Z",
+            "file": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8e615e05-31f1-4a86-8c73-ae1b6a5240b9",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "97550319-6e51-4e02-8f7f-27c6207c703e",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.267Z",
+            "modified_date": "2022-04-06T12:18:24.851Z",
+            "file": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8e615e05-31f1-4a86-8c73-ae1b6a5240b9",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "7d977f3c-2507-4e93-9a75-9a15b7ffc19d",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.478Z",
+            "modified_date": "2022-04-06T12:18:25.045Z",
+            "file": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "e753bf39-72e2-4738-a3a0-459d4df42f05",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "ae916ed5-ed34-4669-9dde-852d8565194f",
+        "fields": {
+            "created_date": "2022-04-06T12:18:24.855Z",
+            "modified_date": "2022-12-07T15:05:43.471Z",
+            "file": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+            "version": 6,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_1",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Data_3",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igoComplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_1_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-ABCDEF-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Data_3",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_1",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8e615e05-31f1-4a86-8c73-ae1b6a5240b9",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "clarks mcgee",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Data_3",
+                "captureConcentrationNm": "11.49425287356322",
+                "libraryConcentrationNgul": 34.8
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "2a312555-4e02-4e5a-89f0-db7dc1de8e8a",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.525Z",
+            "modified_date": "2022-04-06T12:18:24.878Z",
+            "file": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "F",
+                "ciTag": "s_C_ABCDEF_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_2",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-ABCDEF",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_2_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ABCDEF-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_2",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "e753bf39-72e2-4738-a3a0-459d4df42f05",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-ABCDEF",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "fc37b5c9-7f6c-41b5-918f-6c0d10d15774",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID002"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data",
+                "captureConcentrationNm": "5.074626865671642",
+                "libraryConcentrationNgul": 33.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "a6cf690d-f348-445b-8df9-b8ff64cebea5",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.572Z",
+            "modified_date": "2022-04-06T12:18:24.924Z",
+            "file": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "27427c3b-c38c-41bc-ba17-faac5ccab6c3",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "c5fbd70b-c1e1-4eb2-b1df-821954f2a142",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.618Z",
+            "modified_date": "2022-04-06T12:18:24.959Z",
+            "file": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_N001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_4",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_Data_4",
+                "sampleType": "Normal",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "Blood",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_4_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "Frozen",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-GHIJKL-N001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "Sample_Name_Data_4",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "BALTO_REQID_4",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "27427c3b-c38c-41bc-ba17-faac5ccab6c3",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "170.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_Data_4",
+                "captureConcentrationNm": "4.9853372434017595",
+                "libraryConcentrationNgul": 34.1
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "ffc9ccfa-0380-443b-8cae-cc5d7d5b1da8",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.429Z",
+            "modified_date": "2022-04-06T12:18:25.016Z",
+            "file": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_GHIJKL_X001_d",
+                "runId": "MACHINE_CODE",
+                "tubeId": "",
+                "baitSet": "IMPACT468_BAITS",
+                "piEmail": "superlabheadperson@myresearchorg.org",
+                "runDate": "2019-02-11",
+                "runMode": "HiSeq High Output",
+                "species": "Human",
+                "platform": "Illumina",
+                "barcodeId": null,
+                "genePanel": "IMPACT468",
+                "primaryId": "BALTO_REQID_3",
+                "qcReports": [],
+                "datasource": "igo",
+                "dnaInputNg": null,
+                "flowCellId": "FLOWCELLID",
+                "importDate": "2022-03-23",
+                "readLength": "",
+                "sampleName": "Sample_Name_2_R_43",
+                "sampleType": "Primary",
+                "captureName": "Pool-BALTO_REQID-Tube7_1",
+                "igocomplete": true,
+                "labHeadName": "Super LabHead Person",
+                "sampleClass": "PDX",
+                "barcodeIndex": null,
+                "cmoInfoIgoId": null,
+                "cmoPatientId": "C-GHIJKL",
+                "igoProjectId": "08944",
+                "igoRequestId": "BALTO_REQID",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
+                "libraryIgoId": "BALTO_REQID_3_1_1_1",
+                "oncotreeCode": "SCLC",
+                "preservation": "Frozen",
+                "sampleOrigin": "Tissue",
+                "cmoSampleName": "C-GHIJKL-X001-d",
+                "flowCellLanes": [
+                    5
+                ],
+                "libraryVolume": 35.0,
+                "sampleAliases": [
+                    {
+                        "value": "BALTO_REQID_3",
+                        "namespace": "igoId"
+                    },
+                    {
+                        "value": "Sample_Name_2_R_43",
+                        "namespace": "investigatorId"
+                    }
+                ],
+                "smileSampleId": "4cb5fb80-47fd-4285-a623-33a68f417189",
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": "400.0",
+                "cfDNA2dBarcode": null,
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-GHIJKL",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": ",zzPDL_RESEARCH_TEAMTeam@myresearchorg.org",
+                "smilePatientId": "6979b2e8-e2a0-4123-b3b9-2222e9661f30",
+                "tissueLocation": "",
+                "dataAnalystName": "Jane Potter",
+                "dataAccessEmails": "",
+                "dataAnalystEmail": "potterj@myresearchorg.org",
+                "investigatorName": "Davis Viola",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "IMPACT468",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "MY_PATIENTID017"
+                },
+                "investigatorEmail": "violad@myresearchorg.org",
+                "otherContactEmails": "potterj@myresearchorg.org",
+                "projectManagerName": "Parker, Peter",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "BALTO_REQID"
+                },
+                "investigatorSampleId": "Sample_Name_2_R_43",
+                "captureConcentrationNm": "11.363636363636363",
+                "libraryConcentrationNgul": 35.2
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "634fb9e3-ac48-4328-98de-95cd303f1f48",
+        "fields": {
+            "created_date": "2022-04-05T22:23:35.429Z",
+            "modified_date": "2022-04-06T12:18:25.016Z",
+            "file": "7e9c55b1-d8b5-4767-80a6-dfa382918ffb",
+            "version": 1,
+            "latest": false,
+            "metadata": {
+            },
+            "user": null
+        }
+    }
+]

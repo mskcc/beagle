@@ -91,7 +91,7 @@ def request_update_notification(request_id):
     last = SMILEMessage.objects.filter(request_id__startswith=request_id).order_by("-created_date").first()
     if last.topic in (settings.METADB_NATS_REQUEST_UPDATE, settings.METADB_NATS_SAMPLE_UPDATE):
         logger.info(f"Sending notifications about {request_id} update")
-        send_to = get_emails_to_notify(request_id)
+        send_to = get_emails_to_notify(request_id, "SMILEUpdateEvent")
         for email in send_to:
             event = SMILEUpdateEvent(
                 job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
@@ -365,7 +365,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         )
         only_normal_samples_event = OnlyNormalSamplesEvent(job_group_notifier_id, request_id).to_dict()
         send_notification.delay(only_normal_samples_event)
-        send_to = get_emails_to_notify(request_id)
+        send_to = get_emails_to_notify(request_id, "VoyagerCantProcessRequestAllNormalsEvent")
         for email in send_to:
             event = VoyagerCantProcessRequestAllNormalsEvent(
                 job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
