@@ -97,7 +97,6 @@ class ArgosOperator(Operator):
                 "sampleNameNormal": normal_sample_name,
                 "labHeadName": pi,
                 "labHeadEmail": pi_email,
-                "pairing": self.pairing,
             }
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:
@@ -229,6 +228,7 @@ class ArgosOperator(Operator):
         for pair in pairing.get("pairs"):
             tumor_sample = pair["tumor"]
             normal_sample = pair["normal"]
+            tumors = self.get_regular_sample(tumor_sample, "Tumor")
             tumor, is_dmp_tumor_sample = self.get_regular_sample(tumor_sample, "Tumor")
             cnt_tumors += 1
             normal, is_dmp_normal_sample = self.get_regular_sample(normal_sample, "Normal")
