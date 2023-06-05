@@ -207,6 +207,7 @@ class CWLRunObject(RunObject):
             "app": app,
             "inputs": inputs,
             "root_dir": output_directory,
+            "base_dir": self.run_obj.app.output_directory,
         }
         if log_directory:
             job["log_dir"] = log_directory % str(self.run_id)
