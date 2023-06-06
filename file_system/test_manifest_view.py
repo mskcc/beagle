@@ -46,6 +46,5 @@ class TestManifest(TestCase):
         # check that the response contains the correct data
         response_data = response.content.decode()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(1, 2)
         self.maxDiff = None
         self.assertEqual(response_data, self.response_csv)
