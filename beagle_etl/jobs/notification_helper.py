@@ -37,11 +37,11 @@ def _voyager_start_processing(request_id, run_ids, notify=False):
                 matched_normals += 1
         for sample in sample_ids:
             if sample not in used_samples:
-                FileRepository.filter(
-                    metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
+                investigator_sample_id = FileRepository.filter(
+                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                     values_metadata=settings.INVESTIGATOR_SAMPLE_ID_METADATA_KEY,
                 ).first()
-                unprocessed_samples.add(sample)
+                unprocessed_samples.add(investigator_sample_id)
 
         gene_panel = get_gene_panel(request_id)
         number_of_samples = get_number_of_tumor_samples(request_id)
