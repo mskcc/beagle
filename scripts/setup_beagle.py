@@ -24,6 +24,7 @@ OPERATOR_TRIGGER_AGGREGATE_CONDITION = {
 DMP_BAMS_FILE_GROUP = {"slug": "dmp-bams", "name": "DMP BAMs", "id": settings.DMP_BAM_FILE_GROUP}
 POOLED_NORMAL_FILE_GROUP = {"slug": "pooled-normals", "name": "Pooled Normals", "id": settings.POOLED_NORMAL_FILE_GROUP}
 IMPORT_FILE_GROUP = {"slug": "lims", "name": "LIMS", "id": settings.IMPORT_FILE_GROUP}
+ORIGIN_UNKNOWN_FILE_GROUP = {"slug": "origin-unknown", "name": "Origin Unknown", "id": None}
 FILE_TYPES = [
     "rsa",
     "rpac",
@@ -221,11 +222,19 @@ def set_dmp2cmo_files(patient_ids):
 
 
 def create_file_groups():
-    file_groups_to_create = [DMP_BAMS_FILE_GROUP, POOLED_NORMAL_FILE_GROUP, IMPORT_FILE_GROUP]
+    file_groups_to_create = [
+        DMP_BAMS_FILE_GROUP,
+        POOLED_NORMAL_FILE_GROUP,
+        IMPORT_FILE_GROUP,
+        ORIGIN_UNKNOWN_FILE_GROUP,
+    ]
     for single_file_group in file_groups_to_create:
-        FileGroup.objects.get_or_create(
-            name=single_file_group["name"], slug=single_file_group["slug"], id=single_file_group["id"]
-        )
+        if single_file_group["id"]:
+            FileGroup.objects.get_or_create(
+                name=single_file_group["name"], slug=single_file_group["slug"], id=single_file_group["id"]
+            )
+        else:
+            FileGroup.objects.get_or_create(name=single_file_group["name"], slug=single_file_group["slug"])
 
 
 def create_file_types():
