@@ -127,7 +127,7 @@ class RunTestCase(TestCase):
         ridgeback_hash = subprocess.run(["git", "-C", self.beagle_path, "rev-parse", "HEAD"]).stdout
         ridgeback_openapi = requests.get(self.ridgeback_url + OPEN_API_ROUTE)
         if beagle_openapi.ok:
-            beagle_version = beagle_openapi.json()["info"]["title"]["version"]
+            beagle_version = beagle_openapi.json()["info"]["version"]
         else:
             beagle_version = "NA"
         if beagle_hash:
@@ -135,7 +135,7 @@ class RunTestCase(TestCase):
         else:
             beagle_url = self.beagle_git
         if ridgeback_openapi.ok:
-            ridgeback_version = ridgeback_openapi.json()["info"]["title"]["version"]
+            ridgeback_version = ridgeback_openapi.json()["info"]["version"]
         else:
             ridgeback_version = "NA"
         if ridgeback_hash:
