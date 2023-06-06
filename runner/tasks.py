@@ -32,7 +32,7 @@ from beagle_etl.models import Operator, Job
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
-from file_system.models import Request, FileMetadata
+from file_system.models import Request, FileMetadata, File
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
@@ -40,7 +40,6 @@ from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
-
 
 logger = logging.getLogger(__name__)
 
@@ -888,10 +887,11 @@ class cmo_dmp_manifest:
         """
         Construct a csv HTTP response from DMP BAM Metadata and Request Metadata
         """
+
         # get fastq metadata for a given request
-        request_query = FileMetadata.objects.filter(metadata__igoRequestId__in=self.request_ids)
-        cmoPatientId = request_query.values_list("metadata__cmoPatientId", flat=True)
-        cmoPatientId = list(set(list(cmoPatientId)))
+        fastqs =  File.objects.filter(file_group__slug="lims", request_id__in=self.request_ids)
+        fastq_metadata = [fastq.filemetadata_set.values()[0]['metadata'] for fastq in fastqs]
+        cmoPatientId = set([fastq["cmoPatientId"] for fastq in fastq_metadata])
         # get DMP BAM file group
         dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
         cmoPatientId_trim = [c.replace("C-", "") for c in cmoPatientId]
@@ -906,11 +906,9 @@ class cmo_dmp_manifest:
         response["Content-Disposition"] = 'attachment; filename="{request_type}.csv"'.format(request_type=request_type)
         writer = csv.DictWriter(response, fieldnames=self.manifest_header)
         writer.writeheader()
-        # we care about the metadata for the request
-        request_metadata = request_query.values_list("metadata", flat=True)
         primaryIds = set()  # we only want to look at fastq metdata for a PrimaryId once
         # for each fastq in the request query
-        for fastq in request_metadata:
+        for fastq in fastq_metadata:
             pId = fastq["primaryId"]
             if pId not in primaryIds:  # we haven't seen the Primary Id
                 primaryIds.add(pId)
