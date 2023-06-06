@@ -49,7 +49,7 @@ class RunTestCase(TestCase):
             self.slack_token = os.environ["SLACK_TOKEN"]
             self.build_number = os.environ["BUILD_NUMBER"]
             self.build_url = os.environ["BUILD_URL"]
-            self.num_hours = os.environ["NUM_HOURS"]
+            self.num_hours = int(os.environ["NUM_HOURS"])
             self.beagle_basic_auth = HTTPBasicAuth(self.beagle_username, self.beagle_password)
 
     def send_slack_message(self, run_status, ts, channel):
