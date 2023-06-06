@@ -29,7 +29,7 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
 
         {"<br>".join(self.samples)}
         <br>
-        Please let us know if this is a mistake in the metadata, 
+        Please let us know if this is a mistake in the metadata,<br> 
         or if these normals should be paired with tumors from a previous project,<br> 
         or to be paired with tumors from a future project.<br>
         <br>
