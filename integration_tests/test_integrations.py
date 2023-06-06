@@ -204,7 +204,7 @@ class RunTestCase(TestCase):
                 jobgroup = single_run["job_group"]
                 prev_running = single_run["num_running"]
                 status = single_run["status"]
-                if job_group not in status_dict:
+                if jobgroup not in status_dict:
                     continue
                 jobgroup_run_statuses = status_dict[jobgroup]
                 total_jobs = len(jobgroup_run_statuses)
