@@ -222,6 +222,7 @@ def set_dmp2cmo_files(patient_ids):
 
 
 def create_file_groups():
+    storage, _ = Storage.objects.get_or_create(name=STORAGE_NAME, type=STORAGE_TYPE)
     file_groups_to_create = [
         DMP_BAMS_FILE_GROUP,
         POOLED_NORMAL_FILE_GROUP,
@@ -231,10 +232,15 @@ def create_file_groups():
     for single_file_group in file_groups_to_create:
         if single_file_group["id"]:
             FileGroup.objects.get_or_create(
-                name=single_file_group["name"], slug=single_file_group["slug"], id=single_file_group["id"]
+                name=single_file_group["name"],
+                slug=single_file_group["slug"],
+                id=single_file_group["id"],
+                storage=storage,
             )
         else:
-            FileGroup.objects.get_or_create(name=single_file_group["name"], slug=single_file_group["slug"])
+            FileGroup.objects.get_or_create(
+                name=single_file_group["name"], slug=single_file_group["slug"], storage=storage
+            )
 
 
 def create_file_types():
