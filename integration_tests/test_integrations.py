@@ -49,6 +49,7 @@ class RunTestCase(TestCase):
             self.slack_token = os.environ["SLACK_TOKEN"]
             self.build_number = os.environ["BUILD_NUMBER"]
             self.build_url = os.environ["BUILD_URL"]
+            self.num_hours = os.environ["NUM_HOURS"]
             self.beagle_basic_auth = HTTPBasicAuth(self.beagle_username, self.beagle_password)
 
     def send_slack_message(self, run_status, ts, channel):
@@ -230,8 +231,8 @@ class RunTestCase(TestCase):
             if "Submitted" not in status_list:
                 done = True
             else:
-                self.assertTrue(count < 36)
-                time.sleep(300)
+                self.assertTrue(count < self.num_hours)
+                time.sleep(3600)
                 count += 1
         for single_run_id in run_status:
             single_run = run_status[single_run_id]
