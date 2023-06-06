@@ -65,7 +65,6 @@ class TestAcessManifestOperator(TestCase):
         file_query = File.objects.filter(file_group__slug="access_manifests", path=file_name)
         # Check Query data
         self.assertEqual(len(file_query) == 1, True)
-        self.assertEqual(1, 2)
         file_query_object = file_query[0]
         self.assertEqual(file_query_object.path, file_name)
 
