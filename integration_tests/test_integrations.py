@@ -152,9 +152,7 @@ class RunTestCase(TestCase):
                 "request", "pipeline", "version", "expected_complete"
             )(single_test)
             expected_complete = int(expected_complete)
-            job_group_request = requests.post(
-                self.beagle_url + JOB_GROUP_ROUTE, auth=self.beagle_self.beagle_basic_auth
-            )
+            job_group_request = requests.post(self.beagle_url + JOB_GROUP_ROUTE, auth=self.beagle_basic_auth)
             self.assertTrue(job_group_request.ok)
             new_jobgroup = job_group_request.json()["id"]
             job_groups.append(new_jobgroup)
