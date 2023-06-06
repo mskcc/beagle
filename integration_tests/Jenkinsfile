@@ -3,7 +3,7 @@ pipeline {
   stages {
       stage('Deploy to Stage') {
         steps {
-        build job: 'beagle-deploy/feature/beagle_continuous_deployment', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: "STAGE"]],  propagate: true, wait: true
+        build job: 'beagle-deploy/${URLEncoder.encode(env.BRANCH_NAME, "utf-8")}', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: "STAGE"]],  propagate: true, wait: true
         sshagent(credentials: ['a4d999a5-6318-4659-83be-3f148a5490ca']) {
           sh 'ssh  -o StrictHostKeyChecking=no  voyager@silo.mskcc.org "cd /srv/services/staging_voyager/beagle && source /juno/work/ci/voyager_continous_deployment/staging/test_env.sh && singularity run instance://staging_beagle python3 manage.py test integration_tests"'     
           
