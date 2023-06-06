@@ -1,120 +1,6 @@
 [
     {
         "model": "file_system.filemetadata",
-        "pk": "8f02d44f-9e24-41e0-ada0-9ea2c3f97925",
-        "fields": {
-            "created_date": "2023-01-30T22:38:39.590Z",
-            "modified_date": "2023-01-30T22:38:39.590Z",
-            "file": "3edcb3c8-13fe-478e-9726-363e0e2acece",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "R": "R1",
-                "sex": "M",
-                "ciTag": "s_C_REDACT",
-                "runId": "DIANA_0568",
-                "tubeId": "",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "piEmail": "",
-                "runDate": "REDACT",
-                "runMode": "NovaSeq S4",
-                "species": "",
-                "platform": "Illumina",
-                "barcodeId": "IDTdual308",
-                "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_3",
-                "qcReports": [
-                    {
-                        "comments": "",
-                        "qcReportType": "DNA",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": "Already moved forward by IGO"
-                    },
-                    {
-                        "comments": "",
-                        "qcReportType": "LIBRARY",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": ""
-                    }
-                ],
-                "datasource": "igo",
-                "dnaInputNg": 200.0,
-                "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
-                "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
-                "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
-                "igoComplete": true,
-                "labHeadName": "REDACT",
-                "sampleClass": "Blood",
-                "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoInfoIgoId": "12345_A_3",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_3_1_1_1",
-                "oncotreeCode": null,
-                "preservation": "EDTA-Streck",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "flowCellLanes": [
-                    1,
-                    2
-                ],
-                "libraryVolume": 25.0,
-                "sampleAliases": [
-                    {
-                        "value": "P-REDACT",
-                        "namespace": "investigatorId"
-                    },
-                    {
-                        "value": "12345_A_3",
-                        "namespace": "igoId"
-                    }
-                ],
-                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
-                "tumorOrNormal": "Normal",
-                "captureInputNg": "1000.0000000025001",
-                "cfDNA2dBarcode": "8042889270",
-                "collectionYear": "",
-                "patientAliases": [
-                    {
-                        "value": "C-REDACT",
-                        "namespace": "cmoId"
-                    }
-                ],
-                "qcAccessEmails": "REDACT",
-                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
-                "tissueLocation": "",
-                "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
-                "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
-                "sequencingCenter": "MSKCC",
-                "cmoSampleIdFields": {
-                    "recipe": "MSK-ACCESS_v1",
-                    "sampleType": "DNA",
-                    "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
-                },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
-                "projectManagerName": "",
-                "additionalProperties": {
-                    "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
-                },
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": "9.756097561",
-                "libraryConcentrationNgul": 102.5
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
         "pk": "c8345dd8-838c-407a-b2c2-2febac7f6fc4",
         "fields": {
             "created_date": "2023-01-30T22:37:57.440Z",
@@ -130,13 +16,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual306",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "qcReports": [
                     {
                         "comments": "",
@@ -154,25 +40,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoInfoIgoId": "12345_A_1",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_1_1_1_1",
+                "cmoInfoIgoId": "13893_B_1",
+                "cmoPatientId": "ALLANT2",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_1_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "flowCellLanes": [
                     1,
                     2
@@ -180,11 +66,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "12345_A_1",
+                        "value": "13893_B_1",
                         "namespace": "igoId"
                     },
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     }
                 ],
@@ -195,32 +81,32 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "C-REDACT",
+                        "value": "C-F6H84U",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "ef4ff892-f7b2-4e80-9d0e-cab12a1c6d9b",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0025928"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "14.49275362",
                 "libraryConcentrationNgul": 69.0
             },
@@ -244,13 +130,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual306",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "qcReports": [
                     {
                         "comments": "",
@@ -268,25 +154,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoInfoIgoId": "12345_A_1",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_1_1_1_1",
+                "cmoInfoIgoId": "13893_B_1",
+                "cmoPatientId": "ALLANT2",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_1_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "flowCellLanes": [
                     1,
                     2
@@ -294,11 +180,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "12345_A_1",
+                        "value": "13893_B_1",
                         "namespace": "igoId"
                     },
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     }
                 ],
@@ -309,32 +195,32 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "C-REDACT",
+                        "value": "C-F6H84U",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "ef4ff892-f7b2-4e80-9d0e-cab12a1c6d9b",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0025928"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "14.49275362",
                 "libraryConcentrationNgul": 69.0
             },
@@ -358,13 +244,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual306",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "qcReports": [
                     {
                         "comments": "",
@@ -382,25 +268,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoInfoIgoId": "12345_A_1",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_1_1_1_1",
+                "cmoInfoIgoId": "13893_B_1",
+                "cmoPatientId": "ALLANT2",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_1_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "flowCellLanes": [
                     1,
                     2
@@ -408,11 +294,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "12345_A_1",
+                        "value": "13893_B_1",
                         "namespace": "igoId"
                     },
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     }
                 ],
@@ -423,490 +309,34 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "C-REDACT",
+                        "value": "C-F6H84U",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "ef4ff892-f7b2-4e80-9d0e-cab12a1c6d9b",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0025928"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "14.49275362",
                 "libraryConcentrationNgul": 69.0
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "59314767-429f-460c-90ac-c47d3b525117",
-        "fields": {
-            "created_date": "2023-01-30T22:38:16.318Z",
-            "modified_date": "2023-01-30T22:38:16.318Z",
-            "file": "7b2a0aec-9abd-4cc1-8e53-b202c3fd3711",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "R": "R1",
-                "sex": "M",
-                "ciTag": "s_C_F6H84U_N001_d01",
-                "runId": "DIANA_0568",
-                "tubeId": "",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "piEmail": "",
-                "runDate": "REDACT",
-                "runMode": "NovaSeq S4",
-                "species": "",
-                "platform": "Illumina",
-                "barcodeId": "IDTdual306",
-                "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_1",
-                "qcReports": [
-                    {
-                        "comments": "",
-                        "qcReportType": "DNA",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": "Already moved forward by IGO"
-                    },
-                    {
-                        "comments": "",
-                        "qcReportType": "LIBRARY",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": ""
-                    }
-                ],
-                "datasource": "igo",
-                "dnaInputNg": 200.0,
-                "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
-                "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
-                "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
-                "igoComplete": true,
-                "labHeadName": "REDACT",
-                "sampleClass": "Blood",
-                "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoInfoIgoId": "12345_A_1",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_1_1_1_1",
-                "oncotreeCode": null,
-                "preservation": "EDTA-Streck",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "flowCellLanes": [
-                    1,
-                    2
-                ],
-                "libraryVolume": 25.0,
-                "sampleAliases": [
-                    {
-                        "value": "12345_A_1",
-                        "namespace": "igoId"
-                    },
-                    {
-                        "value": "P-REDACT",
-                        "namespace": "investigatorId"
-                    }
-                ],
-                "smileSampleId": "7c1de952-d1b6-419f-b147-65481f222020",
-                "tumorOrNormal": "Normal",
-                "captureInputNg": "999.99999978",
-                "cfDNA2dBarcode": "8042889270",
-                "collectionYear": "",
-                "patientAliases": [
-                    {
-                        "value": "C-REDACT",
-                        "namespace": "cmoId"
-                    }
-                ],
-                "qcAccessEmails": "REDACT",
-                "smilePatientId": "ef4ff892-f7b2-4e80-9d0e-cab12a1c6d9b",
-                "tissueLocation": "",
-                "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
-                "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
-                "sequencingCenter": "MSKCC",
-                "cmoSampleIdFields": {
-                    "recipe": "MSK-ACCESS_v1",
-                    "sampleType": "DNA",
-                    "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
-                },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
-                "projectManagerName": "",
-                "additionalProperties": {
-                    "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
-                },
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": "14.49275362",
-                "libraryConcentrationNgul": 69.0
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "95ab5dc2-7109-4159-9ada-531eae65a6da",
-        "fields": {
-            "created_date": "2023-01-30T22:38:22.321Z",
-            "modified_date": "2023-01-30T22:38:22.321Z",
-            "file": "50d1ea47-bc16-4821-866b-fc13acbcfd27",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "R": "R2",
-                "sex": "M",
-                "ciTag": "s_C_REDACT",
-                "runId": "DIANA_0568",
-                "tubeId": "",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "piEmail": "",
-                "runDate": "REDACT",
-                "runMode": "NovaSeq S4",
-                "species": "",
-                "platform": "Illumina",
-                "barcodeId": "IDTdual308",
-                "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_3",
-                "qcReports": [
-                    {
-                        "comments": "",
-                        "qcReportType": "DNA",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": "Already moved forward by IGO"
-                    },
-                    {
-                        "comments": "",
-                        "qcReportType": "LIBRARY",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": ""
-                    }
-                ],
-                "datasource": "igo",
-                "dnaInputNg": 200.0,
-                "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
-                "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
-                "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
-                "igoComplete": true,
-                "labHeadName": "REDACT",
-                "sampleClass": "Blood",
-                "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoInfoIgoId": "12345_A_3",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_3_1_1_1",
-                "oncotreeCode": null,
-                "preservation": "EDTA-Streck",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "flowCellLanes": [
-                    1,
-                    2
-                ],
-                "libraryVolume": 25.0,
-                "sampleAliases": [
-                    {
-                        "value": "P-REDACT",
-                        "namespace": "investigatorId"
-                    },
-                    {
-                        "value": "12345_A_3",
-                        "namespace": "igoId"
-                    }
-                ],
-                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
-                "tumorOrNormal": "Normal",
-                "captureInputNg": "1000.0000000025001",
-                "cfDNA2dBarcode": "8042889270",
-                "collectionYear": "",
-                "patientAliases": [
-                    {
-                        "value": "C-REDACT",
-                        "namespace": "cmoId"
-                    }
-                ],
-                "qcAccessEmails": "REDACT",
-                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
-                "tissueLocation": "",
-                "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
-                "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
-                "sequencingCenter": "MSKCC",
-                "cmoSampleIdFields": {
-                    "recipe": "MSK-ACCESS_v1",
-                    "sampleType": "DNA",
-                    "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
-                },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
-                "projectManagerName": "",
-                "additionalProperties": {
-                    "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
-                },
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": "9.756097561",
-                "libraryConcentrationNgul": 102.5
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "247d899d-5b5b-41b2-9f07-3a65bcb2d12d",
-        "fields": {
-            "created_date": "2023-01-30T22:38:28.727Z",
-            "modified_date": "2023-01-30T22:38:28.727Z",
-            "file": "6d19ea38-f5f4-483f-9685-c145cbc94449",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "R": "R1",
-                "sex": "M",
-                "ciTag": "s_C_REDACT",
-                "runId": "DIANA_0568",
-                "tubeId": "",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "piEmail": "",
-                "runDate": "REDACT",
-                "runMode": "NovaSeq S4",
-                "species": "",
-                "platform": "Illumina",
-                "barcodeId": "IDTdual308",
-                "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_3",
-                "qcReports": [
-                    {
-                        "comments": "",
-                        "qcReportType": "DNA",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": "Already moved forward by IGO"
-                    },
-                    {
-                        "comments": "",
-                        "qcReportType": "LIBRARY",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": ""
-                    }
-                ],
-                "datasource": "igo",
-                "dnaInputNg": 200.0,
-                "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
-                "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
-                "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
-                "igoComplete": true,
-                "labHeadName": "REDACT",
-                "sampleClass": "Blood",
-                "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoInfoIgoId": "12345_A_3",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_3_1_1_1",
-                "oncotreeCode": null,
-                "preservation": "EDTA-Streck",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "flowCellLanes": [
-                    1,
-                    2
-                ],
-                "libraryVolume": 25.0,
-                "sampleAliases": [
-                    {
-                        "value": "P-REDACT",
-                        "namespace": "investigatorId"
-                    },
-                    {
-                        "value": "12345_A_3",
-                        "namespace": "igoId"
-                    }
-                ],
-                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
-                "tumorOrNormal": "Normal",
-                "captureInputNg": "1000.0000000025001",
-                "cfDNA2dBarcode": "8042889270",
-                "collectionYear": "",
-                "patientAliases": [
-                    {
-                        "value": "C-REDACT",
-                        "namespace": "cmoId"
-                    }
-                ],
-                "qcAccessEmails": "REDACT",
-                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
-                "tissueLocation": "",
-                "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
-                "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
-                "sequencingCenter": "MSKCC",
-                "cmoSampleIdFields": {
-                    "recipe": "MSK-ACCESS_v1",
-                    "sampleType": "DNA",
-                    "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
-                },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
-                "projectManagerName": "",
-                "additionalProperties": {
-                    "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
-                },
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": "9.756097561",
-                "libraryConcentrationNgul": 102.5
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "e73d5235-839f-4dbc-8dff-fb1138cad04b",
-        "fields": {
-            "created_date": "2023-01-30T22:38:34.446Z",
-            "modified_date": "2023-01-30T22:38:34.446Z",
-            "file": "831febcb-5c05-4555-8718-5a54d873eabf",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "R": "R2",
-                "sex": "M",
-                "ciTag": "s_C_REDACT",
-                "runId": "DIANA_0568",
-                "tubeId": "",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "piEmail": "",
-                "runDate": "REDACT",
-                "runMode": "NovaSeq S4",
-                "species": "",
-                "platform": "Illumina",
-                "barcodeId": "IDTdual308",
-                "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_3",
-                "qcReports": [
-                    {
-                        "comments": "",
-                        "qcReportType": "DNA",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": "Already moved forward by IGO"
-                    },
-                    {
-                        "comments": "",
-                        "qcReportType": "LIBRARY",
-                        "IGORecommendation": "Passed",
-                        "investigatorDecision": ""
-                    }
-                ],
-                "datasource": "igo",
-                "dnaInputNg": 200.0,
-                "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
-                "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
-                "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
-                "igoComplete": true,
-                "labHeadName": "REDACT",
-                "sampleClass": "Blood",
-                "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoInfoIgoId": "12345_A_3",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_3_1_1_1",
-                "oncotreeCode": null,
-                "preservation": "EDTA-Streck",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "flowCellLanes": [
-                    1,
-                    2
-                ],
-                "libraryVolume": 25.0,
-                "sampleAliases": [
-                    {
-                        "value": "P-REDACT",
-                        "namespace": "investigatorId"
-                    },
-                    {
-                        "value": "12345_A_3",
-                        "namespace": "igoId"
-                    }
-                ],
-                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
-                "tumorOrNormal": "Normal",
-                "captureInputNg": "1000.0000000025001",
-                "cfDNA2dBarcode": "8042889270",
-                "collectionYear": "",
-                "patientAliases": [
-                    {
-                        "value": "C-REDACT",
-                        "namespace": "cmoId"
-                    }
-                ],
-                "qcAccessEmails": "REDACT",
-                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
-                "tissueLocation": "",
-                "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
-                "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
-                "sequencingCenter": "MSKCC",
-                "cmoSampleIdFields": {
-                    "recipe": "MSK-ACCESS_v1",
-                    "sampleType": "DNA",
-                    "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
-                },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
-                "projectManagerName": "",
-                "additionalProperties": {
-                    "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
-                },
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": "9.756097561",
-                "libraryConcentrationNgul": 102.5
             },
             "user": null
         }
@@ -928,13 +358,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual307",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "qcReports": [
                     {
                         "comments": "",
@@ -952,25 +382,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoInfoIgoId": "12345_A_2",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_2_1_1_1",
+                "cmoInfoIgoId": "13893_B_2",
+                "cmoPatientId": "ALLANT3",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_2_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "flowCellLanes": [
                     1,
                     2
@@ -978,11 +408,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     },
                     {
-                        "value": "12345_A_2",
+                        "value": "13893_B_2",
                         "namespace": "igoId"
                     }
                 ],
@@ -993,38 +423,152 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-0010017",
                         "namespace": "dmpId"
                     },
                     {
-                        "value": "C-REDACT",
+                        "value": "C-13TFTU",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "946b154e-e899-4485-ad07-456de38afcbc",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0010017"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "13.42281879",
                 "libraryConcentrationNgul": 74.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "8f02d44f-9e24-41e0-ada0-9ea2c3f97925",
+        "fields": {
+            "created_date": "2023-01-30T22:38:39.590Z",
+            "modified_date": "2023-01-30T22:38:39.590Z",
+            "file": "3edcb3c8-13fe-478e-9726-363e0e2acece",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_35MA0W_N001_d01",
+                "runId": "DIANA_0568",
+                "tubeId": "",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "piEmail": "",
+                "runDate": "2023-01-26",
+                "runMode": "NovaSeq S4",
+                "species": "",
+                "platform": "Illumina",
+                "barcodeId": "IDTdual308",
+                "genePanel": "MSK-ACCESS_v1",
+                "primaryId": "13893_B_3",
+                "qcReports": [
+                    {
+                        "comments": "",
+                        "qcReportType": "DNA",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": "Already moved forward by IGO"
+                    },
+                    {
+                        "comments": "",
+                        "qcReportType": "LIBRARY",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": ""
+                    }
+                ],
+                "datasource": "igo",
+                "dnaInputNg": 200.0,
+                "flowCellId": "HG5YCDSX5",
+                "importDate": "2023-01-30",
+                "readLength": "101/8/8/101",
+                "sampleName": "P-1234567-N00-XS1",
+                "sampleType": "Normal",
+                "captureName": "Pool-13893_B-A2_1",
+                "igoComplete": true,
+                "labHeadName": "name",
+                "sampleClass": "Blood",
+                "barcodeIndex": "CACAAGTC-GTTGCGAT",
+                "cmoInfoIgoId": "13893_B_3",
+                "cmoPatientId": "ALLANT",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_3_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "ALLANT-N001-d01",
+                "flowCellLanes": [
+                    1,
+                    2
+                ],
+                "libraryVolume": 25.0,
+                "sampleAliases": [
+                    {
+                        "value": "P-1234567-N00-XS1",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "13893_B_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "1000.0000000025001",
+                "cfDNA2dBarcode": "8042889270",
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "ALLANT",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": "skicmopm@mskcc.org",
+                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
+                "dataAnalystEmail": "",
+                "investigatorName": "name",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "MSK-ACCESS_v1",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "P-0017716"
+                },
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
+                "projectManagerName": "",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "13893_B"
+                },
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": "9.756097561",
+                "libraryConcentrationNgul": 102.5
             },
             "user": null
         }
@@ -1046,13 +590,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual307",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "qcReports": [
                     {
                         "comments": "",
@@ -1070,25 +614,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoInfoIgoId": "12345_A_2",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_2_1_1_1",
+                "cmoInfoIgoId": "13893_B_2",
+                "cmoPatientId": "ALLANT3",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_2_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "flowCellLanes": [
                     1,
                     2
@@ -1096,11 +640,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     },
                     {
-                        "value": "12345_A_2",
+                        "value": "13893_B_2",
                         "namespace": "igoId"
                     }
                 ],
@@ -1111,36 +655,36 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-0010017",
                         "namespace": "dmpId"
                     },
                     {
-                        "value": "C-REDACT",
+                        "value": "C-13TFTU",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "946b154e-e899-4485-ad07-456de38afcbc",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0010017"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "13.42281879",
                 "libraryConcentrationNgul": 74.5
             },
@@ -1164,13 +708,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual307",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "qcReports": [
                     {
                         "comments": "",
@@ -1188,25 +732,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoInfoIgoId": "12345_A_2",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_2_1_1_1",
+                "cmoInfoIgoId": "13893_B_2",
+                "cmoPatientId": "ALLANT3",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_2_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "flowCellLanes": [
                     1,
                     2
@@ -1214,11 +758,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     },
                     {
-                        "value": "12345_A_2",
+                        "value": "13893_B_2",
                         "namespace": "igoId"
                     }
                 ],
@@ -1229,36 +773,36 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-0010017",
                         "namespace": "dmpId"
                     },
                     {
-                        "value": "C-REDACT",
+                        "value": "C-13TFTU",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "946b154e-e899-4485-ad07-456de38afcbc",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0010017"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "13.42281879",
                 "libraryConcentrationNgul": 74.5
             },
@@ -1282,13 +826,13 @@
                 "tubeId": "",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "piEmail": "",
-                "runDate": "REDACT",
+                "runDate": "2023-01-26",
                 "runMode": "NovaSeq S4",
                 "species": "",
                 "platform": "Illumina",
                 "barcodeId": "IDTdual307",
                 "genePanel": "MSK-ACCESS_v1",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "qcReports": [
                     {
                         "comments": "",
@@ -1306,25 +850,25 @@
                 "datasource": "igo",
                 "dnaInputNg": 200.0,
                 "flowCellId": "HG5YCDSX5",
-                "importDate": "REDACT",
+                "importDate": "2023-01-30",
                 "readLength": "101/8/8/101",
-                "sampleName": "P-REDACT",
+                "sampleName": "P-1234567-N00-XS1",
                 "sampleType": "Normal",
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "igoComplete": true,
-                "labHeadName": "REDACT",
+                "labHeadName": "name",
                 "sampleClass": "Blood",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoInfoIgoId": "12345_A_2",
-                "cmoPatientId": "C-ALLANT",
-                "igoProjectId": "12345",
-                "igoRequestId": "12345_A",
-                "labHeadEmail": "REDACT",
-                "libraryIgoId": "12345_A_2_1_1_1",
+                "cmoInfoIgoId": "13893_B_2",
+                "cmoPatientId": "ALLANT3",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_2_1_1_1",
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "flowCellLanes": [
                     1,
                     2
@@ -1332,11 +876,11 @@
                 "libraryVolume": 25.0,
                 "sampleAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-1234567-N00-XS1",
                         "namespace": "investigatorId"
                     },
                     {
-                        "value": "12345_A_2",
+                        "value": "13893_B_2",
                         "namespace": "igoId"
                     }
                 ],
@@ -1347,38 +891,525 @@
                 "collectionYear": "",
                 "patientAliases": [
                     {
-                        "value": "P-REDACT",
+                        "value": "P-0010017",
                         "namespace": "dmpId"
                     },
                     {
-                        "value": "C-REDACT",
+                        "value": "C-13TFTU",
                         "namespace": "cmoId"
                     }
                 ],
-                "qcAccessEmails": "REDACT",
+                "qcAccessEmails": "skicmopm@mskcc.org",
                 "smilePatientId": "946b154e-e899-4485-ad07-456de38afcbc",
                 "tissueLocation": "",
                 "dataAnalystName": "",
-                "dataAccessEmails": "REDACT",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
                 "dataAnalystEmail": "",
-                "investigatorName": "REDACT",
+                "investigatorName": "name",
                 "sequencingCenter": "MSKCC",
                 "cmoSampleIdFields": {
                     "recipe": "MSK-ACCESS_v1",
                     "sampleType": "DNA",
                     "naToExtract": "",
-                    "normalizedPatientId": "P-REDACT"
+                    "normalizedPatientId": "P-0010017"
                 },
-                "investigatorEmail": "REDACT",
-                "otherContactEmails": "REDACT",
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
                 "projectManagerName": "",
                 "additionalProperties": {
                     "isCmoSample": "true",
-                    "igoRequestId": "12345_A"
+                    "igoRequestId": "13893_B"
                 },
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": "13.42281879",
                 "libraryConcentrationNgul": 74.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "59314767-429f-460c-90ac-c47d3b525117",
+        "fields": {
+            "created_date": "2023-01-30T22:38:16.318Z",
+            "modified_date": "2023-01-30T22:38:16.318Z",
+            "file": "7b2a0aec-9abd-4cc1-8e53-b202c3fd3711",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_F6H84U_N001_d01",
+                "runId": "DIANA_0568",
+                "tubeId": "",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "piEmail": "",
+                "runDate": "2023-01-26",
+                "runMode": "NovaSeq S4",
+                "species": "",
+                "platform": "Illumina",
+                "barcodeId": "IDTdual306",
+                "genePanel": "MSK-ACCESS_v1",
+                "primaryId": "13893_B_1",
+                "qcReports": [
+                    {
+                        "comments": "",
+                        "qcReportType": "DNA",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": "Already moved forward by IGO"
+                    },
+                    {
+                        "comments": "",
+                        "qcReportType": "LIBRARY",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": ""
+                    }
+                ],
+                "datasource": "igo",
+                "dnaInputNg": 200.0,
+                "flowCellId": "HG5YCDSX5",
+                "importDate": "2023-01-30",
+                "readLength": "101/8/8/101",
+                "sampleName": "P-1234567-N00-XS1",
+                "sampleType": "Normal",
+                "captureName": "Pool-13893_B-A2_1",
+                "igoComplete": true,
+                "labHeadName": "name",
+                "sampleClass": "Blood",
+                "barcodeIndex": "AGTCGACA-CGTATTCG",
+                "cmoInfoIgoId": "13893_B_1",
+                "cmoPatientId": "ALLANT2",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_1_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
+                "flowCellLanes": [
+                    1,
+                    2
+                ],
+                "libraryVolume": 25.0,
+                "sampleAliases": [
+                    {
+                        "value": "13893_B_1",
+                        "namespace": "igoId"
+                    },
+                    {
+                        "value": "P-1234567-N00-XS1",
+                        "namespace": "investigatorId"
+                    }
+                ],
+                "smileSampleId": "7c1de952-d1b6-419f-b147-65481f222020",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "999.99999978",
+                "cfDNA2dBarcode": "8042889270",
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "C-F6H84U",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": "skicmopm@mskcc.org",
+                "smilePatientId": "ef4ff892-f7b2-4e80-9d0e-cab12a1c6d9b",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
+                "dataAnalystEmail": "",
+                "investigatorName": "name",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "MSK-ACCESS_v1",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "P-0025928"
+                },
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
+                "projectManagerName": "",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "13893_B"
+                },
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": "14.49275362",
+                "libraryConcentrationNgul": 69.0
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "95ab5dc2-7109-4159-9ada-531eae65a6da",
+        "fields": {
+            "created_date": "2023-01-30T22:38:22.321Z",
+            "modified_date": "2023-01-30T22:38:22.321Z",
+            "file": "50d1ea47-bc16-4821-866b-fc13acbcfd27",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_35MA0W_N001_d01",
+                "runId": "DIANA_0568",
+                "tubeId": "",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "piEmail": "",
+                "runDate": "2023-01-26",
+                "runMode": "NovaSeq S4",
+                "species": "",
+                "platform": "Illumina",
+                "barcodeId": "IDTdual308",
+                "genePanel": "MSK-ACCESS_v1",
+                "primaryId": "13893_B_3",
+                "qcReports": [
+                    {
+                        "comments": "",
+                        "qcReportType": "DNA",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": "Already moved forward by IGO"
+                    },
+                    {
+                        "comments": "",
+                        "qcReportType": "LIBRARY",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": ""
+                    }
+                ],
+                "datasource": "igo",
+                "dnaInputNg": 200.0,
+                "flowCellId": "HG5YCDSX5",
+                "importDate": "2023-01-30",
+                "readLength": "101/8/8/101",
+                "sampleName": "P-1234567-N00-XS1",
+                "sampleType": "Normal",
+                "captureName": "Pool-13893_B-A2_1",
+                "igoComplete": true,
+                "labHeadName": "name",
+                "sampleClass": "Blood",
+                "barcodeIndex": "CACAAGTC-GTTGCGAT",
+                "cmoInfoIgoId": "13893_B_3",
+                "cmoPatientId": "ALLANT",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_3_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "ALLANT-N001-d01",
+                "flowCellLanes": [
+                    1,
+                    2
+                ],
+                "libraryVolume": 25.0,
+                "sampleAliases": [
+                    {
+                        "value": "P-1234567-N00-XS1",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "13893_B_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "1000.0000000025001",
+                "cfDNA2dBarcode": "8042889270",
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "ALLANT",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": "skicmopm@mskcc.org",
+                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
+                "dataAnalystEmail": "",
+                "investigatorName": "name",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "MSK-ACCESS_v1",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "P-0017716"
+                },
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
+                "projectManagerName": "",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "13893_B"
+                },
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": "9.756097561",
+                "libraryConcentrationNgul": 102.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "247d899d-5b5b-41b2-9f07-3a65bcb2d12d",
+        "fields": {
+            "created_date": "2023-01-30T22:38:28.727Z",
+            "modified_date": "2023-01-30T22:38:28.727Z",
+            "file": "6d19ea38-f5f4-483f-9685-c145cbc94449",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "R": "R1",
+                "sex": "M",
+                "ciTag": "s_C_35MA0W_N001_d01",
+                "runId": "DIANA_0568",
+                "tubeId": "",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "piEmail": "",
+                "runDate": "2023-01-26",
+                "runMode": "NovaSeq S4",
+                "species": "",
+                "platform": "Illumina",
+                "barcodeId": "IDTdual308",
+                "genePanel": "MSK-ACCESS_v1",
+                "primaryId": "13893_B_3",
+                "qcReports": [
+                    {
+                        "comments": "",
+                        "qcReportType": "DNA",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": "Already moved forward by IGO"
+                    },
+                    {
+                        "comments": "",
+                        "qcReportType": "LIBRARY",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": ""
+                    }
+                ],
+                "datasource": "igo",
+                "dnaInputNg": 200.0,
+                "flowCellId": "HG5YCDSX5",
+                "importDate": "2023-01-30",
+                "readLength": "101/8/8/101",
+                "sampleName": "P-1234567-N00-XS1",
+                "sampleType": "Normal",
+                "captureName": "Pool-13893_B-A2_1",
+                "igoComplete": true,
+                "labHeadName": "name",
+                "sampleClass": "Blood",
+                "barcodeIndex": "CACAAGTC-GTTGCGAT",
+                "cmoInfoIgoId": "13893_B_3",
+                "cmoPatientId": "ALLANT",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_3_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "ALLANT-N001-d01",
+                "flowCellLanes": [
+                    1,
+                    2
+                ],
+                "libraryVolume": 25.0,
+                "sampleAliases": [
+                    {
+                        "value": "P-1234567-N00-XS1",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "13893_B_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "1000.0000000025001",
+                "cfDNA2dBarcode": "8042889270",
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "ALLANT",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": "skicmopm@mskcc.org",
+                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
+                "dataAnalystEmail": "",
+                "investigatorName": "name",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "MSK-ACCESS_v1",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "P-0017716"
+                },
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
+                "projectManagerName": "",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "13893_B"
+                },
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": "9.756097561",
+                "libraryConcentrationNgul": 102.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "e73d5235-839f-4dbc-8dff-fb1138cad04b",
+        "fields": {
+            "created_date": "2023-01-30T22:38:34.446Z",
+            "modified_date": "2023-01-30T22:38:34.446Z",
+            "file": "831febcb-5c05-4555-8718-5a54d873eabf",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "R": "R2",
+                "sex": "M",
+                "ciTag": "s_C_35MA0W_N001_d01",
+                "runId": "DIANA_0568",
+                "tubeId": "",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "piEmail": "",
+                "runDate": "2023-01-26",
+                "runMode": "NovaSeq S4",
+                "species": "",
+                "platform": "Illumina",
+                "barcodeId": "IDTdual308",
+                "genePanel": "MSK-ACCESS_v1",
+                "primaryId": "13893_B_3",
+                "qcReports": [
+                    {
+                        "comments": "",
+                        "qcReportType": "DNA",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": "Already moved forward by IGO"
+                    },
+                    {
+                        "comments": "",
+                        "qcReportType": "LIBRARY",
+                        "IGORecommendation": "Passed",
+                        "investigatorDecision": ""
+                    }
+                ],
+                "datasource": "igo",
+                "dnaInputNg": 200.0,
+                "flowCellId": "HG5YCDSX5",
+                "importDate": "2023-01-30",
+                "readLength": "101/8/8/101",
+                "sampleName": "P-1234567-N00-XS1",
+                "sampleType": "Normal",
+                "captureName": "Pool-13893_B-A2_1",
+                "igoComplete": true,
+                "labHeadName": "name",
+                "sampleClass": "Blood",
+                "barcodeIndex": "CACAAGTC-GTTGCGAT",
+                "cmoInfoIgoId": "13893_B_3",
+                "cmoPatientId": "ALLANT",
+                "igoProjectId": "13893",
+                "igoRequestId": "13893_B",
+                "labHeadEmail": "name@mskcc.org",
+                "libraryIgoId": "13893_B_3_1_1_1",
+                "oncotreeCode": null,
+                "preservation": "EDTA-Streck",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "ALLANT-N001-d01",
+                "flowCellLanes": [
+                    1,
+                    2
+                ],
+                "libraryVolume": 25.0,
+                "sampleAliases": [
+                    {
+                        "value": "P-1234567-N00-XS1",
+                        "namespace": "investigatorId"
+                    },
+                    {
+                        "value": "13893_B_3",
+                        "namespace": "igoId"
+                    }
+                ],
+                "smileSampleId": "8b08fb0e-734f-4cc1-b8a3-0a741ff253bc",
+                "tumorOrNormal": "Normal",
+                "captureInputNg": "1000.0000000025001",
+                "cfDNA2dBarcode": "8042889270",
+                "collectionYear": "",
+                "patientAliases": [
+                    {
+                        "value": "ALLANT",
+                        "namespace": "cmoId"
+                    }
+                ],
+                "qcAccessEmails": "skicmopm@mskcc.org",
+                "smilePatientId": "193a0d5e-ca18-4e36-939a-45e837b17158",
+                "tissueLocation": "",
+                "dataAnalystName": "",
+                "dataAccessEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org",
+                "dataAnalystEmail": "",
+                "investigatorName": "name",
+                "sequencingCenter": "MSKCC",
+                "cmoSampleIdFields": {
+                    "recipe": "MSK-ACCESS_v1",
+                    "sampleType": "DNA",
+                    "naToExtract": "",
+                    "normalizedPatientId": "P-0017716"
+                },
+                "investigatorEmail": "name@mskcc.org",
+                "otherContactEmails": "skicmopm@mskcc.org,zzPDL_SKI_CMO_ACCESS@mskcc.org,skicmopm@mskcc.org",
+                "projectManagerName": "",
+                "additionalProperties": {
+                    "isCmoSample": "true",
+                    "igoRequestId": "13893_B"
+                },
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": "9.756097561",
+                "libraryConcentrationNgul": 102.5
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "a3d0cf9c-aff7-45b6-9e00-b2ff373ba381",
+        "fields": {
+            "created_date": "2023-01-30T22:59:39.331Z",
+            "modified_date": "2023-01-30T22:59:39.331Z",
+            "file": "da8daa5e-5949-4040-b5d8-4486bf2618cf",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "sex": "M",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "barcodeId": "IDTdual308",
+                "primaryId": "13893_B_3",
+                "dnaInputNg": 200.0,
+                "captureName": "Pool-13893_B-A2_1",
+                "barcodeIndex": "CACAAGTC-GTTGCGAT",
+                "cmoPatientId": "ALLANT",
+                "igoRequestId": "13893_B",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "ALLANT-N001-d01",
+                "libraryVolume": 25.0,
+                "tumorOrNormal": "Normal",
+                "captureInputNg": 1000.0000000025001,
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": 9.756097561,
+                "libraryConcentrationNgul": 102.5
             },
             "user": null
         }
@@ -1396,18 +1427,49 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual306",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT2",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.99999978,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
+                "captureConcentrationNm": 14.49275362,
+                "libraryConcentrationNgul": 69.0
+            },
+            "user": null
+        }
+    },
+    {
+        "model": "file_system.filemetadata",
+        "pk": "6c3fd90d-4cc9-4406-9204-06e519cfcb38",
+        "fields": {
+            "created_date": "2023-01-30T22:58:39.697Z",
+            "modified_date": "2023-01-30T22:58:39.697Z",
+            "file": "353da7ea-9ac3-4db4-a338-456065f96987",
+            "version": 0,
+            "latest": true,
+            "metadata": {
+                "sex": "M",
+                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
+                "barcodeId": "IDTdual306",
+                "primaryId": "13893_B_1",
+                "dnaInputNg": 200.0,
+                "captureName": "Pool-13893_B-A2_1",
+                "barcodeIndex": "AGTCGACA-CGTATTCG",
+                "cmoPatientId": "ALLANT2",
+                "igoRequestId": "13893_B",
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
+                "libraryVolume": 25.0,
+                "tumorOrNormal": "Normal",
+                "captureInputNg": 999.99999978,
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 14.49275362,
                 "libraryConcentrationNgul": 69.0
             },
@@ -1427,18 +1489,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual307",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT3",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.999999855,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 13.42281879,
                 "libraryConcentrationNgul": 74.5
             },
@@ -1458,51 +1520,20 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual307",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT3",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.999999855,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 13.42281879,
                 "libraryConcentrationNgul": 74.5
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "a3d0cf9c-aff7-45b6-9e00-b2ff373ba381",
-        "fields": {
-            "created_date": "2023-01-30T22:59:39.331Z",
-            "modified_date": "2023-01-30T22:59:39.331Z",
-            "file": "da8daa5e-5949-4040-b5d8-4486bf2618cf",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "sex": "M",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "barcodeId": "IDTdual308",
-                "primaryId": "12345_A_3",
-                "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
-                "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "libraryVolume": 25.0,
-                "tumorOrNormal": "Normal",
-                "captureInputNg": 1000.0000000025001,
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": 9.756097561,
-                "libraryConcentrationNgul": 102.5
             },
             "user": null
         }
@@ -1520,51 +1551,20 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual308",
-                "primaryId": "12345_A_3",
+                "primaryId": "13893_B_3",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "ALLANT-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 1000.0000000025001,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 9.756097561,
                 "libraryConcentrationNgul": 102.5
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "6c3fd90d-4cc9-4406-9204-06e519cfcb38",
-        "fields": {
-            "created_date": "2023-01-30T22:58:39.697Z",
-            "modified_date": "2023-01-30T22:58:39.697Z",
-            "file": "353da7ea-9ac3-4db4-a338-456065f96987",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "sex": "M",
-                "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
-                "barcodeId": "IDTdual306",
-                "primaryId": "12345_A_1",
-                "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
-                "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
-                "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
-                "libraryVolume": 25.0,
-                "tumorOrNormal": "Normal",
-                "captureInputNg": 999.99999978,
-                "investigatorSampleId": "P-REDACT",
-                "captureConcentrationNm": 14.49275362,
-                "libraryConcentrationNgul": 69.0
             },
             "user": null
         }
@@ -1582,18 +1582,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual307",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT3",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.999999855,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 13.42281879,
                 "libraryConcentrationNgul": 74.5
             },
@@ -1613,18 +1613,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual307",
-                "primaryId": "12345_A_2",
+                "primaryId": "13893_B_2",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CGGATTGA-AACGACGT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT3",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT3-N003-d02",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.999999855,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 13.42281879,
                 "libraryConcentrationNgul": 74.5
             },
@@ -1644,18 +1644,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual306",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT2",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.99999978,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 14.49275362,
                 "libraryConcentrationNgul": 69.0
             },
@@ -1675,18 +1675,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual306",
-                "primaryId": "12345_A_1",
+                "primaryId": "13893_B_1",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "AGTCGACA-CGTATTCG",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT2",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "C-ALLANT2-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 999.99999978,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 14.49275362,
                 "libraryConcentrationNgul": 69.0
             },
@@ -1706,18 +1706,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual308",
-                "primaryId": "12345_A_3",
+                "primaryId": "13893_B_3",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "ALLANT-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 1000.0000000025001,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 9.756097561,
                 "libraryConcentrationNgul": 102.5
             },
@@ -1737,18 +1737,18 @@
                 "sex": "M",
                 "baitSet": "MSK-ACCESS-v1_0-probesAllwFP",
                 "barcodeId": "IDTdual308",
-                "primaryId": "12345_A_3",
+                "primaryId": "13893_B_3",
                 "dnaInputNg": 200.0,
-                "captureName": "Pool-12345_A-A2_1",
+                "captureName": "Pool-13893_B-A2_1",
                 "barcodeIndex": "CACAAGTC-GTTGCGAT",
-                "cmoPatientId": "C-ALLANT2",
-                "igoRequestId": "12345_A",
+                "cmoPatientId": "ALLANT",
+                "igoRequestId": "13893_B",
                 "sampleOrigin": "Whole Blood",
-                "cmoSampleName": "REDACT",
+                "cmoSampleName": "ALLANT-N001-d01",
                 "libraryVolume": 25.0,
                 "tumorOrNormal": "Normal",
                 "captureInputNg": 1000.0000000025001,
-                "investigatorSampleId": "P-REDACT",
+                "investigatorSampleId": "P-1234567-N00-XS1",
                 "captureConcentrationNm": 9.756097561,
                 "libraryConcentrationNgul": 102.5
             },
