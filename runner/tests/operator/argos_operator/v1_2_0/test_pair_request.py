@@ -443,7 +443,7 @@ class TestPairRequest(TestCase):
                 "sample_id": "10075_D_3_5",
                 "SM": "10075_D_3_5",
                 "request_id": "10075_D_3",
-                "run_mode": "hiseq"
+                "run_mode": "hiseq",
             }
         ]
 
@@ -459,7 +459,7 @@ class TestPairRequest(TestCase):
                     "sample_id": "10075_D_3_5",
                     "SM": "10075_D_3_5",
                     "request_id": "10075_D_3",
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -524,7 +524,7 @@ class TestPairRequest(TestCase):
                 "request_id": "10075_D_3",
                 "run_id": ["JAX_0397"],
                 "preservation_type": ["EDTA-Streck"],
-                "run_mode": "hiseq"
+                "run_mode": "hiseq",
             }
         ]
 
@@ -540,7 +540,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["JAX_0397"],
                     "preservation_type": ["EDTA-Streck"],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -573,7 +573,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "pi": "John Smith",
                     "pi_email": "email@internet.com",
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
         }
@@ -632,7 +632,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "HiSeq High Output"
+                "runMode": "HiSeq High Output",
             },
         )
         tumor1_R2_file_instance = File.objects.create(
@@ -672,7 +672,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "HiSeq High Output"
+                "runMode": "HiSeq High Output",
             },
         )
 
@@ -714,7 +714,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1234_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "HiSeq High Output"
+                "runMode": "HiSeq High Output",
             },
         )
         tumor2_R2_file_instance = File.objects.create(
@@ -754,7 +754,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1234_T",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "HiSeq High Output"
+                "runMode": "HiSeq High Output",
             },
         )
 
@@ -768,7 +768,7 @@ class TestPairRequest(TestCase):
                 "request_id": "10075_D_3",
                 "run_id": ["PITT_0439"],
                 "preservation_type": ["Frozen"],
-                "run_mode": "hiseq"
+                "run_mode": "hiseq",
             }
         ]
 
@@ -787,7 +787,7 @@ class TestPairRequest(TestCase):
                 "bait_set": "IMPACT468_BAITS",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
-                "preservation": "Frozen", 
+                "preservation": "Frozen",
             },
         )
         poolednormal_R2_file_instance = File.objects.create(
@@ -825,7 +825,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -855,7 +855,7 @@ class TestPairRequest(TestCase):
                     "pi_email": "",
                     "run_id": ["PITT_0439"],
                     "preservation_type": [["Frozen"]],
-                    "run_mode": ""
+                    "run_mode": "",
                 }
             ],
         }
@@ -928,7 +928,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -957,7 +957,7 @@ class TestPairRequest(TestCase):
                     "pi_email": "",
                     "run_id": [""],
                     "preservation_type": [""],
-                    "run_mode": ""
+                    "run_mode": "",
                 }
             ],
         }
@@ -1015,7 +1015,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_N",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "HiSeq"
+                "runMode": "HiSeq",
             },
         )
         normal1_R2_file_instance = File.objects.create(
@@ -1055,7 +1055,7 @@ class TestPairRequest(TestCase):
                 "investigatorSampleId": "SK_MEL_1091A_N",
                 "labHeadEmail": "",
                 "labHeadName": "",
-                "runMode": "Hiseq"
+                "runMode": "Hiseq",
             },
         )
 
@@ -1077,7 +1077,7 @@ class TestPairRequest(TestCase):
                     "request_id": "10075_D_3",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -1106,7 +1106,7 @@ class TestPairRequest(TestCase):
                     "pi_email": "",
                     "run_id": ["PITT_0439"],
                     "preservation_type": ["Frozen"],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
         }
@@ -1151,7 +1151,7 @@ class TestPairRequest(TestCase):
                 "species": "Human",
                 "specimen_type": "Blood",
                 "tumor_type": "Normal",
-                "run_mode": "hiseq"
+                "run_mode": "hiseq",
             },
             {
                 "CN": "MSKCC",
@@ -1176,7 +1176,7 @@ class TestPairRequest(TestCase):
                 "species": "Human",
                 "specimen_type": "Resection",
                 "tumor_type": "Tumor",
-                "run_mode": "hiseq"
+                "run_mode": "hiseq",
             },
         ]
         pairs = compile_pairs(samples)
@@ -1210,7 +1210,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "bam": [],
                     "bam_bid": [],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
             "normal": [
@@ -1241,7 +1241,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["EDTA-Streck"],
                     "bam": [],
                     "bam_bid": [],
-                    "run_mode": "hiseq"
+                    "run_mode": "hiseq",
                 }
             ],
         }
