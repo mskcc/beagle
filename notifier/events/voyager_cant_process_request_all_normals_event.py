@@ -28,7 +28,11 @@ class VoyagerCantProcessRequestAllNormalsEvent(Event):
                 There were a total of {len(self.samples)} samples received with the following ids:<br>
 
         {"<br>".join(self.samples)}
-        <br><br>
+        <br>
+        Please let us know if this is a mistake in the metadata,<br> 
+        or if these normals should be paired with tumors from a previous project,<br> 
+        or to be paired with tumors from a future project.<br>
+        <br>
         Thank you,<br>
         Nicholas D. Socci<br>
         Director, Bioinformatics Core<br>
