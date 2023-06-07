@@ -194,12 +194,5 @@
     "fields": {
       "name": "csv"
     }
-  },
-  {
-    "model": "file_system.filetype",
-    "pk": 32,
-    "fields": {
-      "name": "rds"
-    }
   }
 ]
