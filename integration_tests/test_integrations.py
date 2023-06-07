@@ -104,19 +104,19 @@ class RunTestCase(TestCase):
         if not ts:
             slack_response = requests.post(
                 SLACK_POST_ROUTE,
-                params={"channel": self.slack_channel, "attachments": attachment_list},
+                params={"channel": self.slack_channel, "attachments": json.dumps(attachment_list)},
                 headers={"Authorization": f"Bearer {self.slack_token}"},
             )
         else:
             slack_response = requests.post(
                 SLACK_UPDATE_ROUTE,
-                params={"channel": channel, "attachments": attachment_list, "ts": ts},
+                params={"channel": channel, "attachments": json.dumps(attachment_list), "ts": ts},
                 headers={"Authorization": f"Bearer {self.slack_token}"},
             )
             if not slack_response.ok:
                 slack_response = requests.post(
                     SLACK_POST_ROUTE,
-                    params={"channel": self.slack_channel, "attachments": attachment_list},
+                    params={"channel": self.slack_channel, "attachments": json.dumps(attachment_list)},
                     headers={"Authorization": f"Bearer {self.slack_token}"},
                 )
         if slack_response and slack_response.ok:
