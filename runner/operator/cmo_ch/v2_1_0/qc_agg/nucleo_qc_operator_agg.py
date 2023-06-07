@@ -113,9 +113,6 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
             directory_folder = self.process_listing(port.value["listing"], directory_name)["listing"][0]
-            directory_folder["location"] = directory_folder["location"].replace("file:///", "/juno/", 1)
-            for file in directory_folder["listing"]:
-                file["location"] = file["location"].replace("file:///", "juno:///", 1)
             if not directory_folder:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             directory_list.append(directory_folder)
@@ -175,7 +172,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         This creates a cwl file objects. Opting to use this method in find_biometric_files
         as it seems more consistent with what was in prior input.json(s) for this operator.
         """
-        return {"class": "File", "path": file_path.replace("file:///", "juno:///", 1)}
+        return {"class": "File", "location": file_path.replace("file://", "juno://", 1)}
 
     def find_biometric_files(self, job_dirs, ending):
         """
