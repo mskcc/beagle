@@ -85,7 +85,8 @@ class RunTestCase(TestCase):
             "color": "#FFFFFF",
         }
         attachment_list = [header_block]
-        run_id_list = run_status.keys().sort()
+        run_id_list = list(run_status.keys())
+        run_id_list.sort()
         for single_run_id in run_id_list:
             status = run_status[single_run_id]["status"]
             color = run_status_color[status]
