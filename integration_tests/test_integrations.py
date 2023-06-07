@@ -42,6 +42,7 @@ class RunTestCase(TestCase):
             self.ridgeback_url = os.environ["BEAGLE_RIDGEBACK_URL"]
             self.beagle_path = os.environ["BEAGLE_PATH"]
             self.ridgeback_path = os.environ["RIDGEBACK_PATH"]
+            self.service_env = os.environ["SERVICE_ENV"]
             self.beagle_username = os.environ["BEAGLE_USERNAME"]
             self.beagle_password = os.environ["BEAGLE_PASSWORD"]
             self.beagle_git = os.environ["BEAGLE_GIT"]
@@ -77,7 +78,7 @@ class RunTestCase(TestCase):
                     "type": "section",
                     "text": {
                         "type": "plain_text",
-                        "text": "Good news everyone! Tests are now running on staging beagle",
+                        "text": f"Good news everyone! Tests are now running on {self.service_env}!",
                         "emoji": True,
                     },
                 },
