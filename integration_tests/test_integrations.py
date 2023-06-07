@@ -128,9 +128,19 @@ class RunTestCase(TestCase):
             return slack_response.json()["ts"], slack_response.json()["channel"]
 
     def get_service_versions(self):
-        beagle_hash = subprocess.run(["git", "-C", self.beagle_path, "rev-parse", "HEAD"]).stdout
+        beagle_hash = None
+        ridgeback_hash = None
+        beagle_hash_process = subprocess.run(
+            ["git", "-C", self.beagle_path, "rev-parse", "HEAD"], capture_output=True, text=True
+        )
+        if beagle_hash_process.returncode == 0:
+            beagle_hash = beagle_hash_process.stdout.strip()
         beagle_openapi = requests.get(self.beagle_url + OPEN_API_ROUTE)
-        ridgeback_hash = subprocess.run(["git", "-C", self.beagle_path, "rev-parse", "HEAD"]).stdout
+        ridgeback_hash_process = subprocess.run(
+            ["git", "-C", self.beagle_path, "rev-parse", "HEAD"], capture_output=True, text=True
+        )
+        if ridgeback_hash_process.returncode == 0:
+            ridgeback_hash = ridgeback_hash_process.stdout.strip()
         ridgeback_openapi = requests.get(self.ridgeback_url + OPEN_API_ROUTE)
         if beagle_openapi.ok:
             beagle_version = beagle_openapi.json()["info"]["version"]
