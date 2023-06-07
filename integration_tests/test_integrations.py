@@ -21,7 +21,8 @@ SLACK_UPDATE_ROUTE = "https://slack.com/api/chat.update"
 
 
 run_status_color = {
-    "Submitted": "#2F8AB7",
+    "Submitted": "#d57eff",
+    "Running": "#2F8AB7",
     "Terminated": "#F6BBC1",
     "Failed": "#F2606A",
     "Completed": "#779846",
@@ -64,8 +65,8 @@ class RunTestCase(TestCase):
                     "elements": [
                         {"type": "mrkdwn", "text": f"Beagle version: <{beagle_url}| {beagle_version}>"},
                         {"type": "mrkdwn", "text": f"Ridgeback version: <{ridgeback_url}| {ridgeback_version}>"},
-                        {"type": "mrkdwn", "text": f"Last updated: {current_time}>"},
-                        {"type": "mrkdwn", "text": f"Build: <{self.build_url}| {self.build_number}>"},
+                        {"type": "mrkdwn", "text": f"Last updated: {current_time}"},
+                        {"type": "mrkdwn", "text": f"Build: <{self.build_url}| #{self.build_number}>"},
                     ],
                 },
             ]
@@ -92,6 +93,8 @@ class RunTestCase(TestCase):
             color = run_status_color[status]
             job_group = run_status[single_run_id]["job_group"]
             count = run_status[single_run_id]["num_total"]
+            if status == "Submitted" and count > 0:
+                status = "Running"
             job_group_link = self.beagle_url + RUN_ROUTE + "?job_groups=" + job_group
             job_text = f"{status} - <{job_group_link}|{single_run_id}> - {count} jobs"
             single_block = {
