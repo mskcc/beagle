@@ -119,7 +119,12 @@ class RunTestCase(TestCase):
                     params={"channel": self.slack_channel, "attachments": json.dumps(attachment_list)},
                     headers={"Authorization": f"Bearer {self.slack_token}"},
                 )
-        if slack_response and slack_response.ok:
+        if (
+            slack_response
+            and slack_response.ok
+            and "ts" in slack_response.json()
+            and "channel" in slack_response.json()
+        ):
             return slack_response.json()["ts"], slack_response.json()["channel"]
 
     def get_service_versions(self):
