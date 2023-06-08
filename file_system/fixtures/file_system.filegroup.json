@@ -185,5 +185,16 @@
       "slug": "access_manifests",
       "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
     }
+  },
+  {
+    "model": "file_system.filegroup",
+    "pk": "f6a547a3-cefd-4040-a16f-87289f7afdc6",
+    "fields": {
+      "created_date": "2019-11-05T20:13:29.923Z",
+      "modified_date": "2019-11-05T20:13:29.923Z",
+      "name": "Access FASTQs",
+      "slug": "access-fastqs",
+      "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+    }
   }
 ]
