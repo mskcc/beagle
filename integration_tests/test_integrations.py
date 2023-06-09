@@ -18,10 +18,11 @@ TEST_ENV = "RUN_INTEGRATION_TEST"
 OPEN_API_ROUTE = "/?format=openapi"
 SLACK_POST_ROUTE = "https://slack.com/api/chat.postMessage"
 SLACK_UPDATE_ROUTE = "https://slack.com/api/chat.update"
-
+PIPELINES_TO_WAIT = ["aion"]
 
 run_status_color = {
     "Submitted": "#d57eff",
+    "Waiting": "#FF00FF",
     "Running": "#2F8AB7",
     "Terminated": "#F6BBC1",
     "Failed": "#F2606A",
@@ -164,45 +165,50 @@ class RunTestCase(TestCase):
             ridgeback_url = self.ridgeback_git
         return beagle_version, beagle_url, ridgeback_version, ridgeback_url
 
+    def prepare_job(self, test_obj, job_groups, run_status):
+        request_id, pipeline, version, expected_complete = itemgetter(
+            "request", "pipeline", "version", "expected_complete"
+        )(test_obj)
+        expected_complete = int(expected_complete)
+        job_group_request = requests.post(self.beagle_url + JOB_GROUP_ROUTE, auth=self.beagle_basic_auth)
+        self.assertTrue(job_group_request.ok)
+        new_jobgroup = job_group_request.json()["id"]
+        job_groups.append(new_jobgroup)
+        submit_payload = {
+            "request_ids": [request_id],
+            "pipeline": pipeline,
+            "pipeline_version": version,
+            "job_group_id": str(new_jobgroup),
+        }
+        run_id = str(pipeline) + " ( " + str(version) + " )  - " + str(request_id)
+
+        run_status[run_id] = {
+            "job_group": new_jobgroup,
+            "status": "Not Submitted",
+            "num_running": None,
+            "num_expected": expected_complete,
+            "num_total": 0,
+            "submit_payload": submit_payload,
+        }
+        return run_id
+
+    def submit_job(self, run_status, run_id):
+        submit_payload = run_status[run_id]["submit_payload"]
+        submit_url = self.beagle_url + SUBMIT_ROUTE
+        submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
+        if submit_response.ok:
+            run_status[run_id]["status"] = "Submitted"
+
     @unittest.skipIf(TEST_ENV not in os.environ, "is a large integration test")
     def test_submit_runs(self):
         run_status = {}
         job_groups = []
         for single_test in self.test_data:
-            request_id, pipeline, version, expected_complete = itemgetter(
-                "request", "pipeline", "version", "expected_complete"
-            )(single_test)
-            expected_complete = int(expected_complete)
-            job_group_request = requests.post(self.beagle_url + JOB_GROUP_ROUTE, auth=self.beagle_basic_auth)
-            self.assertTrue(job_group_request.ok)
-            new_jobgroup = job_group_request.json()["id"]
-            job_groups.append(new_jobgroup)
-            time.sleep(1)
-            notifier_request = requests.post(
-                self.beagle_url + NOTIFIER_CREATE_ROUTE,
-                data={"job_group": new_jobgroup, "pipeline": pipeline, "request_id": request_id},
-                auth=self.beagle_basic_auth,
-            )
-            self.assertTrue(notifier_request.ok)
-            submit_url = self.beagle_url + SUBMIT_ROUTE
-            submit_payload = {
-                "request_ids": [request_id],
-                "pipeline": pipeline,
-                "pipeline_version": version,
-                "job_group_id": str(new_jobgroup),
-            }
-            run_id = str(pipeline) + "_" + str(version) + "_" + str(request_id)
-            submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
-            run_status[run_id] = {
-                "job_group": new_jobgroup,
-                "status": "Submitted",
-                "num_running": None,
-                "num_expected": expected_complete,
-                "num_total": 0,
-            }
-            if not submit_response.ok:
-                run_status[run_id]["status"] = "Not Submitted"
-
+            run_id = self.prepare_job(single_test, job_groups, run_status)
+            if single_test["pipeline"] not in PIPELINES_TO_WAIT:
+                self.submit_job(run_status, run_id)
+            else:
+                run_status[run_id]["status"] = "Waiting"
         count = 0
         prev_running = None
         done = False
@@ -224,6 +230,7 @@ class RunTestCase(TestCase):
                 jobgroup = single_run["job_group"]
                 prev_running = single_run["num_running"]
                 status = single_run["status"]
+                expected_complete = single_run["num_expected"]
                 if jobgroup not in status_dict:
                     continue
                 jobgroup_run_statuses = status_dict[jobgroup]
@@ -251,7 +258,12 @@ class RunTestCase(TestCase):
             status_list = [run_status[run_id]["status"] for run_id in run_status]
             ts, channel = self.send_slack_message(run_status, ts, channel)
             if "Submitted" not in status_list:
-                done = True
+                if "Waiting" in status_list:
+                    for single_run_id in run_status:
+                        if run_status[single_run_id] == "Waiting":
+                            self.submit_job(run_status, single_run_id)
+                else:
+                    done = True
             else:
                 self.assertTrue(count < self.num_hours)
                 time.sleep(3600)
