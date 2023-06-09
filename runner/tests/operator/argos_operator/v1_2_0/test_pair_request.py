@@ -87,6 +87,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Normal",
                 "sample_id": "my_sample_id2",
                 "SM": "my_sample_id2",
+                "run_mode": "HiSeq High Output"
             },
             {
                 "patient_id": "C-W86LMR",
@@ -96,6 +97,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Tumor",
                 "SM": "my_sample_id1",
                 "sample_id": "my_sample_id1",
+                "run_mode": "HiSeq High Output"
             },
         ]
         pairs = compile_pairs(samples)
@@ -109,6 +111,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id1",
                     "SM": "my_sample_id1",
+                    "run_mode": "HiSeq High Output"
                 }
             ],
             "normal": [
@@ -120,6 +123,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id2",
                     "SM": "my_sample_id2",
+                    "run_mode": "HiSeq High Output"
                 }
             ],
         }
@@ -138,6 +142,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Normal",
                 "SM": "my_sample_id1",
                 "sample_id": "my_sample_id1",
+                "run_mode": "HiSeq High Output"
             },
             {
                 "bait_set": "IMPACT468_BAITS",
@@ -147,6 +152,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Normal",
                 "SM": "my_sample_id2",
                 "sample_id": "my_sample_id2",
+                "run_mode": "HiSeq High Output"
             },
             {
                 "bait_set": "IMPACT468_BAITS",
@@ -156,6 +162,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Tumor",
                 "SM": "my_sample_id3",
                 "sample_id": "my_sample_id3",
+                "run_mode": "HiSeq High Output"
             },
             {
                 "bait_set": "IMPACT468_BAITS",
@@ -165,6 +172,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Tumor",
                 "SM": "my_sample_id4",
                 "sample_id": "my_sample_id4",
+                "run_mode": "HiSeq High Output"
             },
             {
                 "bait_set": "IMPACT468_BAITS",
@@ -174,6 +182,7 @@ class TestPairRequest(TestCase):
                 "tumor_type": "Tumor",
                 "SM": "my_sample_id5",
                 "sample_id": "my_sample_id5",
+                "run_mode": "HiSeq High Output"
             },
         ]
         pairs = compile_pairs(samples)
@@ -187,6 +196,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id3",
                     "SM": "my_sample_id3",
+                "run_mode": "HiSeq High Output"
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
@@ -196,6 +206,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id4",
                     "SM": "my_sample_id4",
+                "run_mode": "HiSeq High Output"
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
@@ -205,6 +216,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id5",
                     "SM": "my_sample_id5",
+                "run_mode": "HiSeq High Output"
                 },
             ],
             "normal": [
@@ -216,6 +228,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id1",
                     "SM": "my_sample_id1",
+                "run_mode": "HiSeq High Output"
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
@@ -225,6 +238,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id2",
                     "SM": "my_sample_id2",
+                "run_mode": "HiSeq High Output"
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
@@ -234,6 +248,7 @@ class TestPairRequest(TestCase):
                     "preservation_type": ["Frozen"],
                     "sample_id": "my_sample_id1",
                     "SM": "my_sample_id1",
+                "run_mode": "HiSeq High Output"
                 },
             ],
         }
@@ -255,6 +270,7 @@ class TestPairRequest(TestCase):
                 "run_id": ["JAX_0397"],
                 "preservation_type": ["Frozen"],
                 "tumor_type": "Normal",
+                "run_mode": "HiSeq High Output"
             }
         ]
         pairs = compile_pairs(samples)
