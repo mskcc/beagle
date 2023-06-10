@@ -27,9 +27,11 @@ IMPORT_FILE_GROUP = {"slug": "lims", "name": "LIMS", "id": settings.IMPORT_FILE_
 
 FILE_TYPES = [
     "rsa",
+    "rds",
     "rpac",
     "rbwt",
     "maf",
+    "csv",
     "idx",
     "sh",
     "unknown",
