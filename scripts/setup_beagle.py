@@ -120,6 +120,18 @@ def set_pipelines(notifier, operators, pipelines):
             operator=operator,
             default=True,
         )
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+        output_permission = operator_dict.get("output_permission", None)
+        memlimit = operator_dict.get("memlimit", None)
+        walltime = operator_dict.get("walltime", None)
+        if output_permission:
+            pipeline.output_permission = int(output_permission)
+        if memlimit:
+            pipeline.memlimit = memlimit
+        if walltime:
+            pipeline.walltime = int(walltime)
+
         current_index += 1
 
 
