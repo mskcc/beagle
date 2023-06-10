@@ -142,7 +142,7 @@ class RunTestCase(TestCase):
             beagle_hash = beagle_hash_process.stdout.strip()
         beagle_openapi = requests.get(self.beagle_url + OPEN_API_ROUTE)
         ridgeback_hash_process = subprocess.run(
-            ["git", "-C", self.beagle_path, "rev-parse", "HEAD"], capture_output=True, text=True
+            ["git", "-C", self.ridgeback_path, "rev-parse", "HEAD"], capture_output=True, text=True
         )
         if ridgeback_hash_process.returncode == 0:
             ridgeback_hash = ridgeback_hash_process.stdout.strip()
