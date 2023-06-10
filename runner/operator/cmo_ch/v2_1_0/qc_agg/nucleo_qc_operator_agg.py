@@ -173,7 +173,7 @@ class CMOCHNucleoOperatorQcAgg(Operator):
         This creates a cwl file objects. Opting to use this method in find_biometric_files
         as it seems more consistent with what was in prior input.json(s) for this operator.
         """
-        return {"class": "File", "path": file_path.replace("file://", "", 1)}
+        return {"class": "File", "location": file_path.replace("file://", "juno://", 1)}
 
     def find_biometric_files(self, job_dirs, ending):
         """
