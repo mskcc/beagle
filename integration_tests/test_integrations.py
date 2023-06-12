@@ -181,7 +181,6 @@ class RunTestCase(TestCase):
             "pipeline": pipeline,
             "pipeline_version": version,
             "job_group_id": str(new_jobgroup),
-            "run_id": run_id,
         }
 
         run_status[new_jobgroup] = {
@@ -191,6 +190,7 @@ class RunTestCase(TestCase):
             "num_expected": expected_complete,
             "num_total": 0,
             "submit_payload": submit_payload,
+            "run_id": run_id,
         }
         return new_jobgroup
 
