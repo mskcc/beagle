@@ -131,7 +131,7 @@ def set_pipelines(notifier, operators, pipelines):
             pipeline.memlimit = memlimit
         if walltime:
             pipeline.walltime = int(walltime)
-
+        pipeline.save()
         current_index += 1
 
 
