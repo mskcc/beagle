@@ -90,15 +90,16 @@ class RunTestCase(TestCase):
         attachment_list = [header_block]
         run_id_list = list(run_status.keys())
         run_id_list.sort()
-        for single_run_id in run_id_list:
-            status = run_status[single_run_id]["status"]
+        for single_jobgroup_id in run_id_list:
+            single_run = run_status[single_jobgroup_id]
+            run_id = single_run["run_id"]
+            status = single_run["status"]
             color = run_status_color[status]
-            job_group = run_status[single_run_id]["job_group"]
-            count = run_status[single_run_id]["num_total"]
+            count = single_run["num_total"]
             if status == "Submitted" and count > 0:
                 status = "Running"
-            job_group_link = self.beagle_url + RUN_ROUTE + "?job_groups=" + job_group
-            job_text = f"{status} - <{job_group_link}|{single_run_id}> - {count} jobs"
+            job_group_link = self.beagle_url + RUN_ROUTE + "?job_groups=" + single_jobgroup_id
+            job_text = f"{status} - <{job_group_link}|{run_id}> - {count} jobs"
             single_block = {
                 "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": job_text}}],
                 "color": color,
@@ -174,15 +175,16 @@ class RunTestCase(TestCase):
         self.assertTrue(job_group_request.ok)
         new_jobgroup = job_group_request.json()["id"]
         job_groups.append(new_jobgroup)
+        run_id = str(pipeline) + " ( " + str(version) + " )  - " + str(request_id)
         submit_payload = {
             "request_ids": [request_id],
             "pipeline": pipeline,
             "pipeline_version": version,
             "job_group_id": str(new_jobgroup),
+            "run_id": run_id,
         }
-        run_id = str(pipeline) + " ( " + str(version) + " )  - " + str(request_id)
 
-        run_status[run_id] = {
+        run_status[new_jobgroup] = {
             "job_group": new_jobgroup,
             "status": "Not Submitted",
             "num_running": None,
@@ -190,25 +192,25 @@ class RunTestCase(TestCase):
             "num_total": 0,
             "submit_payload": submit_payload,
         }
-        return run_id
+        return new_jobgroup
 
-    def submit_job(self, run_status, run_id):
-        submit_payload = run_status[run_id]["submit_payload"]
+    def submit_job(self, run_status, job_group):
+        submit_payload = run_status[job_group]["submit_payload"]
         submit_url = self.beagle_url + SUBMIT_ROUTE
         submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
         if submit_response.ok:
-            run_status[run_id]["status"] = "Submitted"
+            run_status[job_group]["status"] = "Submitted"
 
     @unittest.skipIf(TEST_ENV not in os.environ, "is a large integration test")
     def test_submit_runs(self):
         run_status = {}
         job_groups = []
         for single_test in self.test_data:
-            run_id = self.prepare_job(single_test, job_groups, run_status)
+            job_group = self.prepare_job(single_test, job_groups, run_status)
             if single_test["pipeline"] not in PIPELINES_TO_WAIT:
-                self.submit_job(run_status, run_id)
+                self.submit_job(run_status, job_group)
             else:
-                run_status[run_id]["status"] = "Waiting"
+                run_status[job_group]["status"] = "Waiting"
         count = 0
         prev_running = None
         done = False
@@ -225,49 +227,47 @@ class RunTestCase(TestCase):
                     if job_group not in status_dict:
                         status_dict[job_group] = []
                     status_dict[job_group].append(single_run["status"])
-            for single_run_id in run_status:
-                single_run = run_status[single_run_id]
-                jobgroup = single_run["job_group"]
+            for single_job_group in run_status:
+                single_run = run_status[single_job_group]
                 prev_running = single_run["num_running"]
                 status = single_run["status"]
                 expected_complete = single_run["num_expected"]
-                if jobgroup not in status_dict:
+                if single_job_group not in status_dict:
                     continue
-                jobgroup_run_statuses = status_dict[jobgroup]
-                total_jobs = len(jobgroup_run_statuses)
+                run_status_list = status_dict[single_job_group]
+                total_jobs = len(run_status_list)
                 single_run["num_total"] = total_jobs
                 if status != "Submitted":
                     continue
 
-                if RunStatus.FAILED.name in jobgroup_run_statuses:
+                if RunStatus.FAILED.name in run_status_list:
                     single_run["status"] = "Failed"
                     continue
-                if RunStatus.TERMINATED.name in jobgroup_run_statuses:
+                if RunStatus.TERMINATED.name in run_status_list:
                     single_run["status"] = "Terminated"
                     continue
-                count = jobgroup_run_statuses.count(RunStatus.COMPLETED.name)
+                count = run_status_list.count(RunStatus.COMPLETED.name)
                 if count == expected_complete:
                     single_run["status"] = "Completed"
                 else:
                     curr_running = total_jobs - count
-                    if curr_running != prev_running:
-                        prev_running = curr_running
-                    else:
-                        if curr_running == prev_running == 0:
-                            single_run["status"] = "Stalled"
-            status_list = [run_status[run_id]["status"] for run_id in run_status]
+                    single_run["num_running"] = curr_running
+                    if curr_running == prev_running == 0:
+                        single_run["status"] = "Stalled"
+                run_status[single_job_group] = single_run
             ts, channel = self.send_slack_message(run_status, ts, channel)
+            status_list = [run_status[job_group]["status"] for job_group in run_status]
             if "Submitted" not in status_list:
                 if "Waiting" in status_list:
-                    for single_run_id in run_status:
-                        if run_status[single_run_id] == "Waiting":
-                            self.submit_job(run_status, single_run_id)
+                    for single_job_group in run_status:
+                        if run_status[single_job_group]["status"] == "Waiting":
+                            self.submit_job(run_status, single_job_group)
                 else:
                     done = True
             else:
                 self.assertTrue(count < self.num_hours)
                 time.sleep(3600)
                 count += 1
-        for single_run_id in run_status:
-            single_run = run_status[single_run_id]
+        for single_job_group in run_status:
+            single_run = run_status[single_job_group]
             self.assertEqual(single_run["status"], "Completed")
