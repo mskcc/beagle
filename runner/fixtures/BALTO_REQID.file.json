@@ -430,5 +430,23 @@
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
+    },
+    {
+        "model": "file_system.file",
+        "pk": "7e9c55b1-d8b5-4767-80a6-dfa382918ffb",
+        "fields": {
+            "created_date": "2021-03-15T16:42:55.535Z",
+            "modified_date": "2023-05-04T15:14:22.261Z",
+            "file_name": "dummy.txt",
+            "path": "/my/fakedir/dummy.txt",
+            "file_type": 32,
+            "size": 1082701694,
+            "file_group": "2ded7cdb-5f04-4989-b3db-000d262fe22d",
+            "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
+            "request_id": null,
+            "sample": null,
+            "samples": [],
+            "patient_id": null
+        }
     }
 ]

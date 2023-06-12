@@ -151,6 +151,12 @@
             "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_FP_tiling_intervals.intervals",
             "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_baits.ilist",
             "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/HemePACT_v4/b37/HemePACT_v4_b37_targets.ilist"
+        },
+        "IMPACT-Heme_v2_BAITS": {
+            "FP_genotypes": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_FP_tiling_genotypes.txt",
+            "FP_intervals": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_FP_tiling_intervals.intervals",
+            "baits_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_baits.ilist",
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_targets.ilist"
         }
     },
     "request_files": {

@@ -185,5 +185,17 @@
       "slug": "access_manifests",
       "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
     }
+  },
+  {
+    "model": "file_system.filegroup",
+    "pk": "2ded7cdb-5f04-4989-b3db-000d262fe22d",
+    "fields": {
+      "created_date": "2019-11-05T20:13:29.923Z",
+      "modified_date": "2019-11-05T20:13:29.923Z",
+      "name": "oncokb_filegroup",
+      "slug": "oncokb-file-group",
+      "storage": "0cd14133-0f6a-413d-a498-495bf48546c0"
+    }
   }
+  
 ]
