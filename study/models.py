@@ -12,7 +12,7 @@ class BaseModel(models.Model):
 
 
 class Study(models.Model):
-    study_id = models.CharField(max_length=40, null=False)
+    study_id = models.CharField(max_length=40, null=False, unique=True)
     requests = models.ManyToManyField(Request)
     samples = models.ManyToManyField(Sample)
 
