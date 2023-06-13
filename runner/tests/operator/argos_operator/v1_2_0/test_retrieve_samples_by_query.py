@@ -448,7 +448,6 @@ class TestRetrieveSamplesByQuery(TestCase):
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
 
-
     def test_get_pooled_normals_impact_heme(self):
         """
         Test that IMPACT-Heme_v2 Pooled Normals can be retrieved correctly
