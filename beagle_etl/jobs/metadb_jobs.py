@@ -538,10 +538,14 @@ def update_job(request_id):
     job_group_notifier_id = notifier_start(job_group, request_id)
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
 
+    sample_status = []
     for msg in sample_update_messages:
-        update_sample_job(str(msg.id), job_group, job_group_notifier)
+        sample_status.append(update_sample_job(str(msg.id), job_group, job_group_notifier))
     for msg in request_update_messages:
         update_request_job(str(msg.id), job_group, job_group_notifier)
+
+    recipe = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY)
+    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
 
 
 @shared_task
@@ -709,7 +713,7 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         "message": "File %s request metadata updated",
         "code": None,
     }
-    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    return [sample_status]
 
 
 @shared_task
