@@ -451,7 +451,7 @@ class TestRetrieveSamplesByQuery(TestCase):
 
     def test_get_pooled_normals_impact_heme(self):
         """
-        Test that IMPACT-Heme_v1 Pooled Normals can be retrieved correctly
+        Test that IMPACT-Heme_v2 Pooled Normals can be retrieved correctly
         """
         # test that an empty database and irrelevant args returns None
         pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
@@ -471,10 +471,10 @@ class TestRetrieveSamplesByQuery(TestCase):
             file=poolednormal_R1_file_instance,
             metadata={
                 "runId": "DIANA_0568",
-                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v1",
+                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v2",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
-                "baitSet": "IMPACT-Heme_v1",
+                "baitSet": "IMPACT-Heme_v2",
                 "preservation": "Frozen",
             },
         )
@@ -488,16 +488,16 @@ class TestRetrieveSamplesByQuery(TestCase):
             file=poolednormal_R2_file_instance,
             metadata={
                 "runId": "DIANA_0568",
-                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v1",
+                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v2",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
-                "baitSet": "IMPACT-Heme_v1",
+                "baitSet": "IMPACT-Heme_v2",
                 "preservation": "Frozen",
             },
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["DIANA_0568"], preservation_types=["Frozen"], bait_set="IMPACT-Heme_v1"
+            run_ids=["DIANA_0568"], preservation_types=["Frozen"], bait_set="IMPACT-Heme_v2"
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -514,7 +514,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "SM": "FROZENPOOLEDNORMAL_DIANA_0568",
             "species": "",
             "patient_id": "PN_PATIENT_ID",
-            "bait_set": "IMPACT-Heme_v1",
+            "bait_set": "IMPACT-Heme_v2",
             "sample_id": "FROZENPOOLEDNORMAL_DIANA_0568",
             "run_date": [""],
             "specimen_type": "Pooled Normal",
