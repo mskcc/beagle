@@ -213,7 +213,7 @@ class Run(BaseModel):
         return str(self.pk)
 
     def clear(self):
-        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "message", "execution_id"]
+        fields_to_clear = ["resume", "finished_date", "started", "output_directory", "execution_id"]
         for f in fields_to_clear:
             setattr(self, f, None)
 
