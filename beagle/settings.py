@@ -414,6 +414,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
+IS_CMO_REQUEST = "isCmoRequest"
 REQUEST_ID_METADATA_KEY = "igoRequestId"
 PROJECT_ID_METADATA_KEY = "igoProjectId"
 LIBRARY_ID_METADATA_KEY = "libraryIgoId"
