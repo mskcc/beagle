@@ -366,7 +366,7 @@ class TestRetrieveSamplesByQuery(TestCase):
 
     def test_get_pooled_normals1(self):
         """
-        Test that Pooled Normals can be retrived correctly
+        Test that Pooled Normals can be retrieved correctly
         """
         # test that an empty database and irrelevant args returns None
         pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
@@ -440,6 +440,91 @@ class TestRetrieveSamplesByQuery(TestCase):
             "bam": [],
             "bam_bid": [],
             "request_id": "FROZENPOOLEDNORMAL_PITT_0439",
+            "pi": "",
+            "pi_email": "",
+            "run_id": [""],
+            "preservation_type": [["Frozen"]],
+        }
+
+        self.assertEqual(pooled_normals, expected_pooled_normals)
+
+
+    def test_get_pooled_normals_impact_heme(self):
+        """
+        Test that IMPACT-Heme_v1 Pooled Normals can be retrieved correctly
+        """
+        # test that an empty database and irrelevant args returns None
+        pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
+        self.assertEqual(pooled_normals, None)
+
+        # start adding Pooled Normals to the database
+        poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name="fastq")
+        # add Pooled Normal from another run
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R1.fastq",
+            path="/FROZENPOOLEDNORMAL.R1.fastq",
+        )
+        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+            file=poolednormal_R1_file_instance,
+            metadata={
+                "runId": "DIANA_0568",
+                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v1",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
+                "baitSet": "IMPACT-Heme_v1",
+                "preservation": "Frozen",
+            },
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R2.fastq",
+            path="/FROZENPOOLEDNORMAL.R2.fastq",
+        )
+        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+            file=poolednormal_R2_file_instance,
+            metadata={
+                "runId": "DIANA_0568",
+                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v1",
+                "sequencingCenter": "MSKCC",
+                "platform": "Illumina",
+                "baitSet": "IMPACT-Heme_v1",
+                "preservation": "Frozen",
+            },
+        )
+
+        pooled_normals = get_pooled_normals(
+            run_ids=["DIANA_0568"], preservation_types=["Frozen"], bait_set="IMPACT-Heme_v1"
+        )
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pooled_normals["R1_bid"].pop()
+        pooled_normals["R2_bid"].pop()
+
+        expected_pooled_normals = {
+            "CN": "MSKCC",
+            "PL": "Illumina",
+            "PU": ["PN_FCID_FROZENPOOLEDNORMAL"],
+            "LB": "FROZENPOOLEDNORMAL_DIANA_0568_1",
+            "tumor_type": "Normal",
+            "ID": ["FROZENPOOLEDNORMAL_DIANA_0568_PN_FCID_FROZENPOOLEDNORMAL"],
+            "SM": "FROZENPOOLEDNORMAL_DIANA_0568",
+            "species": "",
+            "patient_id": "PN_PATIENT_ID",
+            "bait_set": "IMPACT-Heme_v1",
+            "sample_id": "FROZENPOOLEDNORMAL_DIANA_0568",
+            "run_date": [""],
+            "specimen_type": "Pooled Normal",
+            "R1": ["/FROZENPOOLEDNORMAL.R1.fastq"],
+            "R2": ["/FROZENPOOLEDNORMAL.R2.fastq"],
+            "R1_bid": [],  # UUID('7268ac6e-e9a6-48e0-94f1-1c894280479b')
+            "R2_bid": [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
+            "bam": [],
+            "bam_bid": [],
+            "request_id": "FROZENPOOLEDNORMAL_DIANA_0568",
             "pi": "",
             "pi_email": "",
             "run_id": [""],
