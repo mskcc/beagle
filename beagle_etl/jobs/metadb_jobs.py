@@ -420,7 +420,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 
 
 @shared_task
-def update_request_job(message_id):
+def update_request_job(message_id, job_group, job_group_notifier):
+    job_group_notifier_id = str(job_group_notifier.id)
     message = SMILEMessage.objects.get(id=message_id)
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata["requestMetadataJson"])
@@ -429,11 +430,6 @@ def update_request_job(message_id):
 
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
-    job_group = JobGroup()
-    job_group.save()
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
@@ -536,15 +532,22 @@ def update_job(request_id):
         .order_by("created_date")
         .all()
     )
+
+    job_group = JobGroup()
+    job_group.save()
+    job_group_notifier_id = notifier_start(job_group, request_id)
+    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+
     for msg in sample_update_messages:
-        update_sample_job(str(msg.id))
+        update_sample_job(str(msg.id), job_group, job_group_notifier)
     for msg in request_update_messages:
-        update_request_job(str(msg.id))
+        update_request_job(str(msg.id), job_group, job_group_notifier)
 
 
 @shared_task
-def update_sample_job(message_id):
+def update_sample_job(message_id, job_group, job_group_notifier):
     message = SMILEMessage.objects.get(id=message_id)
+    job_group_notifier_id = str(job_group_notifier.id)
     data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
@@ -624,11 +627,6 @@ def update_sample_job(message_id):
         "smilePatientId": smile_patient_id,
     }
 
-    job_group = JobGroup()
-    job_group.save()
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
@@ -696,8 +694,6 @@ def update_sample_job(message_id):
                     logger.error(e)
 
     # Remove unnecessary files
-    print(file_paths)
-    print(new_files)
     files_to_remove = set(file_paths) - set(new_files)
     for fi in list(files_to_remove):
         logger.info(f"Removing file {fi}.")
