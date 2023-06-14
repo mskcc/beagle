@@ -60,9 +60,6 @@ class AccessManifestOperator(Operator):
     which generates the manifest using internal queries.
     """
 
-    # parent directory for manifest output
-    OUTPUT_DIR = "/work/access/production/runs/voyager/staging/manifests/"
-
     def get_jobs(self):
         """
         Convert job inputs into serialized jobs
@@ -73,7 +70,7 @@ class AccessManifestOperator(Operator):
         request_output_directory = self.get_request_output_directory()
         # The run really isn't "submitted", there are no job inputs since there is no cwl.
         # The run more or less documents that the operator ran from inside Voyager.
-        job = None
+        job = self.construct_sample_input(request_output_directory)
         return [
             RunCreator(
                 **{
@@ -82,11 +79,22 @@ class AccessManifestOperator(Operator):
                     "inputs": job,
                     "tags": {
                         settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                    },
-                    "output_directory": request_output_directory,
+                    }
+                    # ,"output_directory": request_output_directory,
                 }
             )
         ]
+    
+    def construct_sample_input(self, manifest_dir):
+        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+            template = Template(file.read())
+        job = {}
+        job["manifest_data"] = manifest_dir
+
+        input_file = template.render(**job)
+        input_file = input_file.replace("'", '"')
+        sample_input = json.loads(input_file)
+        return sample_input
 
     def get_request_output_directory(self):
         """
@@ -98,27 +106,36 @@ class AccessManifestOperator(Operator):
         manifest_csv = cmo_dmp_manifest([self.request_id]).csv.content.decode()
         output_directory = self.write_to_file("manifest.csv", manifest_csv)
         return output_directory
-
+    
     def write_to_file(self, fname, s):
         """
         Writes file to temporary location, then registers it to the manifest file group
         Also uploads it to notifier if there is a job group id
         """
-        current_datetime = datetime.datetime.now()
-        current_datetime_string = current_datetime.strftime("%Y-%m-%d_%H-%M")
-        output = os.path.join(self.OUTPUT_DIR, self.request_id, current_datetime_string, fname)
+        # current_datetime = datetime.datetime.now()
+        # current_datetime_string = current_datetime.strftime("%Y-%m-%d_%H-%M")
+        # output = os.path.join(self.OUTPUT_DIR, self.request_id, current_datetime_string, fname)
         # Split the string into rows using "\r\n" as the delimiter
         rows = s.split("\r\n")
         # Split each row into columns using "," as the delimiter
         data = [row.split(",") for row in rows]
-        # make dir if doesn't exist
-        os.makedirs(os.path.dirname(output), exist_ok=True)
+        # # make dir if doesn't exist
+        # os.makedirs(os.path.dirname(output), exist_ok=True)
+        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
+        Path(tmpdir).mkdir(parents=True, exist_ok=True)
+        output = os.path.join(tmpdir, fname)
         # Create a new CSV file and write the data to it
         with open(output, "w+", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(data)
         os.chmod(output, 0o777)
-        self.register_manifest_file(output)
+        fname = os.path.basename(output)
+        temp_file_group = FileGroup.objects.get(slug="temp")
+        file_type = FileType.objects.get(name="unknown")
+
+        f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
+        f.save()
+        # self.register_manifest_file(output)
         return {"class": "File", "location": "juno://" + output}
 
     def register_manifest_file(self, path):
