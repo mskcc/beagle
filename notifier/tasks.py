@@ -2,7 +2,7 @@ import logging
 from celery import shared_task
 from django.conf import settings
 from file_system.repository import FileRepository
-from notifier.models import JobGroupNotifier, Notifier
+from notifier.models import JobGroupNotifier, Notifier, JobGroup
 from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
 from notifier.event_handler.noop_event_handler.noop_event_handler import NoOpEventHandler
 from notifier.event_handler.email_event_handler.email_event_handler import EmailEventHandler
@@ -31,7 +31,9 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
         notifier = Notifier.objects.get(default=True)
         try:
             if operator:
-                notifier = Notifier.objects.filter(operator__id=operator.id).first()
+                operator_notifier = Notifier.objects.filter(operator__id=operator.id).first()
+                if operator_notifier:
+                    notifier = operator_notifier
         except Notifier.DoesNotExist:
             pass
         job_group_notifier = JobGroupNotifier.objects.create(

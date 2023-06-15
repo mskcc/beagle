@@ -77,16 +77,16 @@ class NotifierStartView(GenericAPIView):
     def post(self, request):
         job_group = request.data["job_group"]
         try:
-            JobGroup.objects.get(id=job_group)
+            job_group_obj = JobGroup.objects.get(id=job_group)
         except JobGroup.DoesNotExist:
             return Response({"details": "JobGroup %s Not Found" % job_group}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            pipeline = Pipeline.get(name=request.data.get("pipeline"))
+            pipeline = Pipeline.objects.get(name=request.data.get("pipeline"))
         except Pipeline.DoesNotExist:
             pipeline = None
 
         request_id = request.data["job_group"]
-        notifier_id = notifier_start(job_group, request_id, pipeline.operator)
+        notifier_id = notifier_start(job_group_obj, request_id, pipeline.operator)
         return Response({"notifier_id": notifier_id}, status=status.HTTP_201_CREATED)
 
 
