@@ -14,6 +14,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
+
 class TestManifest(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
