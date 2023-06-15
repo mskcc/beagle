@@ -62,11 +62,11 @@ class AccessManifestOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
-        # get request id 
+        # get request id
         self.request_id = get_request_id(self.run_ids, self.request_id)
-        # make manifest and get path 
+        # make manifest and get path
         manifest_path = self.generate_manifest()
-        # create job input json with manifest path 
+        # create job input json with manifest path
         job = self.construct_sample_input(manifest_path)
         # submit file to RunCreator
         # uses a cwl that returns the created manifest csv: https://github.com/msk-access/cwl_pass_through
@@ -78,7 +78,7 @@ class AccessManifestOperator(Operator):
                     "inputs": job,
                     "tags": {
                         settings.REQUEST_ID_METADATA_KEY: self.request_id,
-                    }
+                    },
                 }
             )
         ]
@@ -92,7 +92,7 @@ class AccessManifestOperator(Operator):
         manifest_csv = cmo_dmp_manifest([self.request_id]).csv.content.decode()
         output_directory = self.write_to_file("manifest.csv", manifest_csv)
         return output_directory
-    
+
     def write_to_file(self, fname, s):
         """
         Writes manifest csv to temporary location, registers it as tmp file
@@ -110,26 +110,27 @@ class AccessManifestOperator(Operator):
         with open(output, "w+", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(data)
-        # register output as tmp file 
-        register_temp_file(output)
+        # register output as tmp file
+        self.register_temp_file(output)
         # return with juno formatting
         return {"class": "File", "location": "juno://" + output}
 
-def construct_sample_input(self, manifest_dir):
-    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
-        template = Template(file.read())
-    job = {}
-    job["manifest_data"] = manifest_dir
+    def construct_sample_input(self, manifest_dir):
+        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+            template = Template(file.read())
+        job = {}
+        job["manifest_data"] = manifest_dir
 
-    input_file = template.render(**job)
-    input_file = input_file.replace("'", '"')
-    sample_input = json.loads(input_file)
-    return sample_input
+        input_file = template.render(**job)
+        input_file = input_file.replace("'", '"')
+        sample_input = json.loads(input_file)
+        return sample_input
 
-def register_temp_file(output):
-    os.chmod(output, 0o777)
-    fname = os.path.basename(output)
-    temp_file_group = FileGroup.objects.get(slug="temp")
-    file_type = FileType.objects.get(name="unknown")
-    f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
-    f.save()
+    @staticmethod
+    def register_temp_file(output):
+        os.chmod(output, 0o777)
+        fname = os.path.basename(output)
+        temp_file_group = FileGroup.objects.get(slug="temp")
+        file_type = FileType.objects.get(name="unknown")
+        f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
+        f.save()
