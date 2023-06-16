@@ -109,6 +109,15 @@ def request_update_notification(request_id):
 def new_request(message_id):
     message = SMILEMessage.objects.get(id=message_id)
     data = json.loads(message.message)
+
+    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+
+    if not data.get(settings.IS_CMO_REQUEST):
+        logger.info(f"Request {request_id} is not CMO Request")
+        message.status = SmileMessageStatus.COMPLETED
+        message.save()
+        return
+
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     logger.info("Importing new request: %s" % request_id)
 

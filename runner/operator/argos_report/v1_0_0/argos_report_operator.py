@@ -1,11 +1,11 @@
 import os
 import logging
-import unicodedata
 from datetime import datetime
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType, FileMetadata
+from file_system.models import File, FileGroup, FileType
+from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
 from runner.run.objects.run_creator_object import RunCreator
@@ -18,12 +18,13 @@ LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
 ARGOS_VERSION = "1.1.2"
-ANNOTATIONS_PATH = "juno:///juno/work/ci/resources/genomic_resources/annotations/"
+ONCOKB_FG_SLUG = "oncokb-file-group"
 
 
 class ArgosReportOperator(Operator):
     def get_jobs(self):
         LOGGER.info("[%s] Running ArgosReportOperator", self.job_group_notifier_id)
+        self.annotations_path = "juno:///juno/work/ci/resources/genomic_resources/annotations/oncokb"
 
         hf_run_id = self.run_ids[0]  # only one run in list
         hf_run = Run.objects.get(id=hf_run_id)
@@ -91,10 +92,7 @@ class ArgosReportOperator(Operator):
             input["sample_id"] = ci_tag
             input["portal_dir"] = portal_dir_path
             input["analysis_dir"] = analysis_dir_path
-            input["oncokb_dir"] = {
-                "class": "Directory",
-                "location": FileProcessor.parse_path_from_uri(ANNOTATIONS_PATH),
-            }
+            input["oncokb_file"] = self.get_oncokb_file(self.annotations_path)
             inputs.append(input)
         return inputs
 
@@ -102,14 +100,55 @@ class ArgosReportOperator(Operator):
         ci_tags = set()
         # get ci_tag from file metadata
         for sample in samples:
-            sample_id = sample.sample_id
-            query = {f"metadata__{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
-            files = FileMetadata.objects.filter(**query)
-            for f in files:
-                ci_tags.add(f.metadata["ciTag"])
+            if sample.sample_type:
+                if "normal" not in sample.sample_type.lower():
+                    sample_id = sample.sample_id
+                    query = {f"{settings.SAMPLE_ID_METADATA_KEY}": sample_id}
+                    files = FileRepository.filter(metadata=query)
+                    for f in files:
+                        ci_tags.add(f.metadata["ciTag"])
         return ci_tags
+
+    def get_oncokb_file(self, annotations_path):
+        oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
+        oncokb_files = os.listdir(oncokb_dir)
+        latest_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
+        oncokb_file_path = "juno://" + os.path.join(oncokb_dir, latest_file)
+        oncokb_file_registered = self._register_oncokb_file(oncokb_file_path)
+
+        oncokb_entry = {
+            "class": "File",
+            "location": oncokb_file_path,
+        }
+
+        return oncokb_entry
+
+    def _register_oncokb_file(self, oncokb_fp):
+        file_group = FileGroup.objects.get(slug=ONCOKB_FG_SLUG)
+        file_type = FileType.objects.filter(name="rds").first()
+        return self._create_file_obj(path=oncokb_fp, file_group=file_group, file_type=file_type)
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)
         e = event.to_dict()
         send_notification.delay(e)
+
+    def _create_file_obj(self, path, file_group, file_type):
+        """
+        Tries to create a File from path provided
+        Returns True if file is created; False if file at path exists
+        """
+        file_exists = File.objects.filter(path=path).exists()
+        if not file_exists:
+            try:
+                f = File.objects.create(
+                    file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type
+                )
+                f.save()
+                LOGGER.info("Adding OncoKB RDS file to database: %s" % path)
+                return True
+            except Exception as e:
+                LOGGER.error("Failed to create file %s. Error %s" % (path, str(e)))
+                raise Exception("Failed to create file %s. Error %s" % (path, str(e)))
+        else:
+            return False
