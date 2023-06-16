@@ -15,7 +15,7 @@
             "output_metadata": {},
             "output_directory": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883",
             "tags": {
-                "labHeadEmail": "rudinc@mskcc.org",
+                "labHeadEmail": "superlabheadperson@myresearchorg.org",
                 "argos_run_ids": ["0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16", "0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16"],
                 "project_prefix": "BALTO_REQID"
             },
