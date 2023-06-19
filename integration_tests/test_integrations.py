@@ -57,7 +57,7 @@ class RunTestCase(TestCase):
 
     def send_slack_message(self, run_status, ts, channel):
         beagle_version, beagle_url, ridgeback_version, ridgeback_url = self.get_service_versions()
-        current_time = datetime.strftime(datetime.now(), "%a %H-%M")
+        current_time = datetime.strftime(datetime.now(), "%a %H:%M")
 
         footer_block = {
             "blocks": [
