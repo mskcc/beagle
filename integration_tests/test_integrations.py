@@ -218,7 +218,9 @@ class RunTestCase(TestCase):
         channel = None
         while not done:
             run_status_request = requests.get(
-                self.beagle_url + RUN_ROUTE, params={"job_groups": job_groups}, auth=self.beagle_basic_auth
+                self.beagle_url + RUN_ROUTE,
+                params={"job_groups": job_groups, "page_size": 100},
+                auth=self.beagle_basic_auth,
             )
             status_dict = {}
             if run_status_request.ok:
