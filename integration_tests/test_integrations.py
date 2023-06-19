@@ -234,9 +234,9 @@ class RunTestCase(TestCase):
                 prev_running = single_run["num_running"]
                 status = single_run["status"]
                 expected_complete = single_run["num_expected"]
-                if single_job_group not in status_dict:
-                    continue
-                run_status_list = status_dict[single_job_group]
+                run_status_list = []
+                if single_job_group in status_dict:
+                    run_status_list = status_dict[single_job_group]
                 total_jobs = len(run_status_list)
                 single_run["num_total"] = total_jobs
                 if status != "Submitted":
