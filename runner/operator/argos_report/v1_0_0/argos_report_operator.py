@@ -4,7 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType
+from file_system.models import File, FileGroup, FileType, FileMetadata
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Run, Pipeline
@@ -145,6 +145,8 @@ class ArgosReportOperator(Operator):
                     file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type
                 )
                 f.save()
+                metadata = FileMetadata(file=f, metadata=metadata)
+                metadata.save()
                 LOGGER.info("Adding OncoKB RDS file to database: %s" % path)
                 return True
             except Exception as e:
