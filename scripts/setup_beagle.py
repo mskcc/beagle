@@ -1,6 +1,6 @@
 from beagle_etl.models import SMILEMessage, SmileMessageStatus, Operator
 from file_system.models import FileGroup, Storage, StorageType, File, FileType, FileMetadata
-from runner.models import Pipeline, TriggerRunType, TriggerAggregateConditionType, OperatorTrigger
+from runner.models import Pipeline, TriggerRunType, TriggerAggregateConditionType, OperatorTrigger, PipelineName
 from notifier.models import Notifier
 import os
 import requests
@@ -125,6 +125,10 @@ def set_pipelines(notifier, operators, pipelines):
         output_permission = pipeline_dict.get("output_permission", None)
         memlimit = pipeline_dict.get("memlimit", None)
         walltime = pipeline_dict.get("walltime", None)
+        pipeline_name_str = pipeline_dict.get("pipeline_name", None)
+        if pipeline_name_str:
+            pipeline_name, _ = PipelineName.objects.get_or_create(name=pipeline_name_str)
+            pipeline.pipeline_name = pipeline_name
         if output_permission:
             pipeline.output_permission = int(output_permission)
         if memlimit:
