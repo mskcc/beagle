@@ -45,7 +45,7 @@ from django.http import HttpResponse
 logger = logging.getLogger(__name__)
 
 
-def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None):
+def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
     try:
         jobs = operator.get_jobs()
     except Exception as e:
@@ -62,14 +62,16 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
                 request_id=operator.request_id,
                 gene_panel=gene_panel,
                 number_of_samples=number_of_samples,
-            )
+            ).to_dict()
             send_notification.delay(event)
     log_directory = operator.get_log_directory()
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory)
+    create_operator_run_from_jobs(
+        operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory, notify=notify
+    )
 
 
 def create_operator_run_from_jobs(
-    operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None, log_directory=None
+    operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None, log_directory=None, notify=False
 ):
     jg = None
     jgn = None
@@ -170,7 +172,7 @@ def create_operator_run_from_jobs(
         )
 
     if not operator_run_parent:
-        _voyager_start_processing(request_id=operator.request_id, run_ids=[r["run_id"] for r in run_ids])
+        _voyager_start_processing(request_id=operator.request_id, run_ids=[r["run_id"] for r in run_ids], notify=notify)
 
     operator_run.status = RunStatus.RUNNING
     operator_run.save()
@@ -178,7 +180,7 @@ def create_operator_run_from_jobs(
 
 @shared_task
 def create_jobs_from_request(
-    request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None
+    request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None, notify=False
 ):
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
@@ -225,7 +227,7 @@ def create_jobs_from_request(
 
     generate_description(job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
 
 
 def _set_link_to_run_ticket(request_id, job_group_notifier_id):
