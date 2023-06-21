@@ -78,9 +78,9 @@ class Operator(object):
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append(RunCreator(app=pipeline, inputs=job))
-            span = tracer.current_span()
-            request_id = self.request_id
-            span.set_tag("request.id", request_id)
+        span = tracer.current_span()
+        request_id = self.request_id
+        span.set_tag("request.id", request_id)
     def on_job_fail(self, run):
         pass
 
