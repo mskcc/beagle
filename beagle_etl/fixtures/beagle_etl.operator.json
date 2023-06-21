@@ -38,8 +38,8 @@
     "fields": {
       "active": true,
       "recipes": "[\"None\"]",
-      "class_name": "runner.operator.copy_outputs_operator.v1_0_0.copy_outputs_operator.CopyOutputsOperator",
-      "version": "v1.0.0",
+      "class_name": "runner.operator.copy_outputs_operator.v1_2_0.copy_outputs_operator.CopyOutputsOperator",
+      "version": "v1.2.0",
       "slug": "CopyOutputsOperator"
     }
   },
