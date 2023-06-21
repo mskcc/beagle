@@ -138,7 +138,7 @@ class TestDemoOperator(TestCase):
         # Pipeline entry for the Operator
         self.pipeline = Pipeline.objects.create(
             name=DemoOperator._pipeline_name,
-            github="git@github.com:stevekm/copy-cwl",
+            github="https://github.com/stevekm/copy-cwl",
             version="master",
             entrypoint="copy.cwl",
             output_file_group=self.filegroup,
