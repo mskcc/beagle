@@ -414,10 +414,12 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
+IS_CMO_REQUEST = "isCmoRequest"
 REQUEST_ID_METADATA_KEY = "igoRequestId"
 PROJECT_ID_METADATA_KEY = "igoProjectId"
 LIBRARY_ID_METADATA_KEY = "libraryIgoId"
 SAMPLE_ID_METADATA_KEY = "primaryId"
+INVESTIGATOR_SAMPLE_ID_METADATA_KEY = "investigatorSampleId"
 SAMPLE_NAME_METADATA_KEY = "sampleName"
 SAMPLE_CLASS_METADATA_KEY = "sampleClass"
 CMO_SAMPLE_CLASS_METADATA_KEY = "sampleType"
