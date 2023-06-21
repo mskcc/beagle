@@ -1,4 +1,5 @@
 import json
+import uuid
 from mock import patch
 from rest_framework.test import APITestCase
 from runner.models import Port
@@ -414,3 +415,62 @@ class CWLRunObjectTest(APITestCase):
         fail_job(run.run_id, {"details": "Error has happened"})
         operator_run.refresh_from_db()
         self.assertEqual(operator_run.num_failed_runs, num_failed_runs + 1)
+
+    @patch("runner.tasks._upload_qc_report")
+    @patch("runner.tasks.submit_job")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("lib.memcache_lock.memcache_task_lock")
+    @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
+    @patch("runner.tasks._job_finished_notify")
+    def test_resume_and_restart(
+        self,
+        job_finished_notify,
+        mock_get_pipeline,
+        memcache_task_lock,
+        send_notification,
+        submit_job,
+        _upload_qc_report,
+    ):
+        with open("runner/tests/run/pair-workflow.cwl", "r") as f:
+            app = json.load(f)
+        with open("runner/tests/run/inputs.json", "r") as f:
+            inputs = json.load(f)
+
+        job_finished_notify.return_value = None
+        memcache_task_lock.return_value = True
+        send_notification.return_value = False
+        mock_get_pipeline.return_value = app
+        submit_job.return_value = None
+        _upload_qc_report.return_value = None
+        cwl_run = RunObjectFactory.from_definition(str(self.run.id), inputs)
+        cwl_run.to_db()
+        run = cwl_run.run_obj
+        run_uuid = uuid.uuid4()
+        run.execution_id = run_uuid
+        run.save()
+        fail_job(run.pk, {"details": "Error has happened"})
+        _, _, execution_id = run.set_for_restart()
+        self.assertEqual(execution_id, run_uuid)
+        self.assertTrue(run.message["initial"] != None)
+        fail_job(run.pk, {"details": "Error has happened"})
+        run.execution_id = run_uuid
+        run.save()
+        _, _, execution_id = run.set_for_restart()
+        self.assertEqual(execution_id, run_uuid)
+        self.assertTrue(len(run.message["resume"]) == 1)
+        fail_job(run.pk, {"details": "Error has happened"})
+        _, _, execution_id = run.set_for_restart()
+        self.assertEqual(execution_id, None)
+        self.assertTrue(len(run.message["resume"]) == 2)
+        fail_job(run.pk, {"details": "Error has happened"})
+        _, _, execution_id = run.set_for_restart()
+        self.assertEqual(execution_id, None)
+        self.assertTrue(len(run.message["restart"]) == 1)
+        fail_job(run.pk, {"details": "Error has happened"})
+        _, _, execution_id = run.set_for_restart()
+        self.assertEqual(execution_id, None)
+        self.assertTrue(len(run.message["restart"]) == 2)
+        fail_job(run.pk, {"details": "Error has happened"})
+        restart_output = run.set_for_restart()
+        self.assertEqual(restart_output, None)
+        self.assertTrue(len(run.message["restart"]) == 2)
