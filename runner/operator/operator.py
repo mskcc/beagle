@@ -4,6 +4,9 @@ from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
+from ddtrace import tracer
+
+
 
 
 class Operator(object):
