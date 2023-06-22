@@ -32,7 +32,6 @@ from ddtrace import tracer
 
 
 tracer.configure(
-    hostname="silo",
     service="beagle"   
 )
 
