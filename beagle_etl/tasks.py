@@ -28,7 +28,13 @@ from beagle_etl.jobs.metadb_jobs import (
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
+from ddtrace import tracer
 
+
+tracer.configure(
+    hostname="silo",
+    service="beagle"   
+)
 
 logger = logging.getLogger(__name__)
 
