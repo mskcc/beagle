@@ -6,6 +6,9 @@ from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
 
+tracer.configure(
+    hostname="silo"
+)
 
 
 
