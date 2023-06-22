@@ -5,6 +5,13 @@ from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
+from ddtrace import config
+
+# Enable distributed tracing
+config.django['distributed_tracing_enabled'] = True
+
+# Override service name
+config.django['service_name'] = 'beagle'
 
 
 class Operator(object):
