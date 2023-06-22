@@ -30,11 +30,6 @@ from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
 from ddtrace import tracer
 
-
-tracer.configure(
-    service="beagle"   
-)
-
 logger = logging.getLogger(__name__)
 
 
