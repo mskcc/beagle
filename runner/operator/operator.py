@@ -7,7 +7,6 @@ from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
 
 tracer.configure(
-    hostname="silo",
     service="beagle"
 )
 
