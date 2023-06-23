@@ -35,7 +35,7 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
         except Notifier.DoesNotExist:
             pass
         job_group_notifier = JobGroupNotifier.objects.create(
-            job_group=job_group, request_id=request_id, notifier_type=notifier
+            job_group_id=job_group, request_id=request_id, notifier_type=notifier
         )
         eh = event_handler(job_group_notifier.id)
         notifier_id = eh.start(request_id)

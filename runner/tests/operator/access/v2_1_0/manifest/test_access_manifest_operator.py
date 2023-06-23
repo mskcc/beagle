@@ -1,15 +1,15 @@
 import os
-
-from django.test import TestCase
-
-from beagle import settings
-from beagle.settings import ROOT_DIR
-from beagle_etl.models import Operator
-from file_system.models import File, FileMetadata
-from runner.operator.operator_factory import OperatorFactory
-import datetime
 import glob
 import shutil
+from django.test import TestCase
+from beagle import settings
+from django.db.models import signals
+from beagle.settings import ROOT_DIR
+from beagle_etl.models import Operator
+from file_system.models import File
+from runner.operator.operator_factory import OperatorFactory
+from runner.models import Pipeline
+from runner.tasks import register_pipeline_reference_files
 
 # general fixtures
 COMMON_FIXTURES = [
@@ -30,7 +30,7 @@ COMMON_FIXTURES = [
 
 
 class TestAcessManifestOperator(TestCase):
-    # test db
+    signals.post_save.disconnect(register_pipeline_reference_files, sender=Pipeline)
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
     # variables to help check operator output
     expected_csv_content = 'igoRequestId,primaryId,cmoPatientId,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg\n12345_A,12345_A_3,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,102.5,,Blood,M,8042889270,Whole Blood,,Normal,9.756097561,,200.0,,1000.0000000025001\n12345_A,12345_A_1,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,69.0,,Blood,M,8042889270,Whole Blood,,Normal,14.49275362,,200.0,,999.99999978\n12345_A,12345_A_2,C-ALLANT,P-0000001,P-0000002-T01-IM6;P-0000001-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-REDACT,EDTA-Streck,,74.5,,Blood,M,8042889270,Whole Blood,,Normal,13.42281879,,200.0,,999.999999855\n""\n'
