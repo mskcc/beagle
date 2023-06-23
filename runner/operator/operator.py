@@ -5,12 +5,8 @@ from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
-from ddtrace import config, patch_all
-
-config.env = "dev"      # the environment the application is in
-config.service = "beagle"  # name of your application
+from ddtrace import patch_all
 patch_all()
-
 class Operator(object):
     logger = logging.getLogger(__name__)
 
