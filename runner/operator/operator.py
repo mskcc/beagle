@@ -5,6 +5,7 @@ from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
+import ddtrace.auto
 class Operator(object):
     logger = logging.getLogger(__name__)
 
