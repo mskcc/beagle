@@ -540,7 +540,7 @@ def update_job(request_id):
 
     sample_status = []
     for msg in sample_update_messages:
-        sample_status.append(update_sample_job(str(msg.id), job_group, job_group_notifier))
+        sample_status.extend(update_sample_job(str(msg.id), job_group, job_group_notifier))
     for msg in request_update_messages:
         update_request_job(str(msg.id), job_group, job_group_notifier)
 
