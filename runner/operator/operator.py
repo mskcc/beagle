@@ -5,10 +5,6 @@ from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.run.objects.run_creator_object import RunCreator
 from ddtrace import tracer
-from ddtrace import patch_all
-patch_all(
-    hostname="silo"
-)
 
 
 class Operator(object):
@@ -64,7 +60,7 @@ class Operator(object):
         :return: dict
         """
         return {}
-
+    @tracer.wrap()
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
             data={"operator_name": self.model.slug, "request_id": self.request_id, "error": error}
