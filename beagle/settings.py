@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "drf_multiple_model",
     "drf_yasg",
     "advanced_filters",
+    "ddtrace.contrib.django"
 ]
 
 
