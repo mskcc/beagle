@@ -544,8 +544,13 @@ def update_job(request_id):
     for msg in request_update_messages:
         update_request_job(str(msg.id), job_group, job_group_notifier)
 
-    recipe = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY)
-    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    recipe = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
+    ).first()
+    # _generate_ticket_description_redelivery(
+    #     request_id, str(job_group.id), job_group_notifier_id, sample_status, [], {}
+    # )
+    create_request_callback_instance(request_id, recipe, sample_status, job_group, job_group_notifier)
 
 
 @shared_task
