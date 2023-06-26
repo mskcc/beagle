@@ -7,6 +7,7 @@
             "modified_date": "2020-01-06T19:59:50.583Z",
             "file": "d2d8ed36-d8f4-4e93-b038-d38328fad021",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "F",
@@ -26,7 +27,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-R001-d",
+                "cmoSampleName": "C-8VK0V7-R001-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -35,7 +36,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
@@ -82,6 +83,7 @@
             "modified_date": "2020-01-06T19:59:50.584Z",
             "file": "36921f8a-d6d9-41eb-a082-7f8219dfbd1e",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "M",
@@ -101,7 +103,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-M002-d",
+                "cmoSampleName": "C-DRKHP7-M002-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -110,7 +112,7 @@
                 "oncotreeCode": "MUP",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
@@ -157,6 +159,7 @@
             "modified_date": "2020-01-06T19:59:50.589Z",
             "file": "40a07e9a-2198-40b7-9f7f-7696c9d6429e",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "M",
@@ -176,7 +179,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-N001-d",
+                "cmoSampleName": "C-DRKHP7-N001-d",
                 "captureName": "Pool-05257_CD-06287_AY-10075_D-Tube2_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -185,7 +188,7 @@
                 "oncotreeCode": null,
                 "preservation": "Frozen",
                 "sampleOrigin": "Whole Blood",
-                "specimenType": "Blood",
+                "sampleClass": "Blood",
                 "flowCellLanes": [
                     1,
                     2,
@@ -233,6 +236,7 @@
             "modified_date": "2020-01-06T19:59:50.590Z",
             "file": "a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "F",
@@ -252,7 +256,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-N001-d",
+                "cmoSampleName": "C-8VK0V7-N001-d",
                 "captureName": "Pool-05257_CD-06287_AY-10075_D-Tube2_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -261,7 +265,7 @@
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Plasma",
-                "specimenType": "Blood",
+                "sampleClass": "Blood",
                 "flowCellLanes": [
                     1,
                     2,
@@ -309,6 +313,7 @@
             "modified_date": "2020-01-06T19:59:50.596Z",
             "file": "6dbb89eb-2876-42b4-8746-957f286e01ac",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "M",
@@ -328,7 +333,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-M002-d",
+                "cmoSampleName": "C-DRKHP7-M002-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -337,7 +342,7 @@
                 "oncotreeCode": "MUP",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
@@ -384,6 +389,7 @@
             "modified_date": "2020-01-06T19:59:50.601Z",
             "file": "bb7ff922-b741-4df7-ba2a-4f3b8549e8b5",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "M",
@@ -403,7 +409,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-N001-d",
+                "cmoSampleName": "C-DRKHP7-N001-d",
                 "captureName": "Pool-05257_CD-06287_AY-10075_D-Tube2_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -412,7 +418,7 @@
                 "oncotreeCode": null,
                 "preservation": "Frozen",
                 "sampleOrigin": "Whole Blood",
-                "specimenType": "Blood",
+                "sampleClass": "Blood",
                 "flowCellLanes": [
                     1,
                     2,
@@ -460,6 +466,7 @@
             "modified_date": "2020-01-06T19:59:50.603Z",
             "file": "c71c259a-ebc0-4490-9af1-bc99387a70d7",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "F",
@@ -479,7 +486,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HCYYWBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-N001-d",
+                "cmoSampleName": "C-8VK0V7-N001-d",
                 "captureName": "Pool-05257_CD-06287_AY-10075_D-Tube2_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -488,7 +495,7 @@
                 "oncotreeCode": null,
                 "preservation": "EDTA-Streck",
                 "sampleOrigin": "Plasma",
-                "specimenType": "Blood",
+                "sampleClass": "Blood",
                 "flowCellLanes": [
                     1,
                     2,
@@ -536,6 +543,7 @@
             "modified_date": "2020-01-06T19:59:50.596Z",
             "file": "2f77f3ac-ab25-4a02-90bd-86542401ac89",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "F",
@@ -555,7 +563,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-8VK0V7-R001-d",
+                "cmoSampleName": "C-8VK0V7-R001-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -564,7 +572,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "Frozen",
                 "sampleOrigin": "Tissue",
-                "specimenType": "Resection",
+                "sampleClass": "Resection",
                 "flowCellLanes": [
                     3,
                     4
@@ -611,6 +619,7 @@
             "modified_date": "2020-01-06T19:59:50.598Z",
             "file": "bba1e6ac-bc65-412d-86bd-43b076d669d5",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R1",
                 "sex": "M",
@@ -630,7 +639,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-M001-d",
+                "cmoSampleName": "C-DRKHP7-M001-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -639,7 +648,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "FFPE",
                 "sampleOrigin": "Block",
-                "specimenType": "Biopsy",
+                "sampleClass": "Biopsy",
                 "flowCellLanes": [
                     3,
                     4
@@ -686,6 +695,7 @@
             "modified_date": "2020-01-06T19:59:50.610Z",
             "file": "ef9c3fd6-cd90-4c66-811b-3dc8de1afede",
             "version": 0,
+            "latest": true,
             "metadata": {
                 "R": "R2",
                 "sex": "M",
@@ -705,7 +715,7 @@
                 "platform": "Illumina",
                 "flowCellId": "HFTCNBBXY",
                 "readLength": "101/8/8/101",
-                "sampleName": "C-DRKHP7-M001-d",
+                "cmoSampleName": "C-DRKHP7-M001-d",
                 "captureName": "Pool-09483_R-10075_D-Tube7_1",
                 "igoComplete": true,
                 "labHeadName": "John Smith",
@@ -714,7 +724,7 @@
                 "oncotreeCode": "MEL",
                 "preservation": "FFPE",
                 "sampleOrigin": "Block",
-                "specimenType": "Biopsy",
+                "sampleClass": "Biopsy",
                 "flowCellLanes": [
                     3,
                     4
