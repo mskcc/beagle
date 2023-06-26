@@ -168,7 +168,9 @@ class TestNewRequest(TestCase):
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
-            update_request_job(str(msg.id))
+            job_group = JobGroup()
+            job_group_notifier = JobGroupNotifier(job_group=job_group)
+            update_request_job(str(msg.id), job_group, job_group_notifier)
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             for file in files:
                 self.assertEqual(
@@ -206,7 +208,9 @@ class TestNewRequest(TestCase):
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
-            update_request_job(str(msg.id))
+            job_group = JobGroup()
+            job_group_notifier = JobGroupNotifier(job_group=job_group)
+            update_request_job(str(msg.id), job_group, job_group_notifier)
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             sample_names = []
             for file in files:
@@ -243,7 +247,9 @@ class TestNewRequest(TestCase):
                 if sample_name not in sample_metadata:
                     sample_metadata[sample_name] = single_file.metadata
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
-            update_request_job(str(msg.id))
+            job_group = JobGroup()
+            job_group_notifier = JobGroupNotifier(job_group=job_group)
+            update_request_job(str(msg.id), job_group, job_group_notifier)
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             for file in files:
                 metadata_keys = file.metadata.keys()
@@ -288,9 +294,10 @@ class TestNewRequest(TestCase):
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
-            sample_metadata = {}
+            job_group = JobGroup()
+            job_group_notifier = JobGroupNotifier(job_group=job_group)
             msg = SMILEMessage.objects.create(topic="update_sample", message=self.new_sample_data_str)
-            update_sample_job(str(msg.id))
+            update_sample_job(str(msg.id), job_group, job_group_notifier)
             sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3"})
             for f in sample_files:
                 self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
@@ -325,7 +332,9 @@ class TestNewRequest(TestCase):
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Normal")
-        update_sample_job(update_sample_msg.id)
+        job_group = JobGroup()
+        job_group_notifier = JobGroupNotifier(job_group=job_group)
+        update_sample_job(update_sample_msg.id, job_group, job_group_notifier)
         tumor_or_normal = FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
@@ -374,7 +383,9 @@ class TestNewRequest(TestCase):
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Normal")
-        update_sample_job(update_sample_msg.id)
+        job_group = JobGroup()
+        job_group_notifier = JobGroupNotifier(job_group=job_group)
+        update_sample_job(update_sample_msg.id, job_group, job_group_notifier)
         tumor_or_normal = FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
