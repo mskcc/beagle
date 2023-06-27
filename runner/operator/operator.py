@@ -60,15 +60,14 @@ class Operator(object):
         :return: dict
         """
         return {}
-    @tracer.wrap()
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
             data={"operator_name": self.model.slug, "request_id": self.request_id, "error": error}
         )
+        current_span = tracer.current_span()
         if operator_error.is_valid():
-            span = tracer.current_span()
-            request_id = self.request_id
-            span.set_tag("request.id", request_id)
+            cmo_request_id = self.request_id
+            current_span.set_tag("request.id", cmo_request_id)
             operator_error.save()
             self.logger.info(
                 "Operator: %s failed to create a job for request_id: %s with error: %s"
@@ -79,9 +78,9 @@ class Operator(object):
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append(RunCreator(app=pipeline, inputs=job))
-        span = tracer.current_span()
-        request_id = self.request_id
-        span.set_tag("request.id", request_id)
+        current_span = tracer.current_span()
+        cmo_request_id = self.request_id
+        span.set_tag("request.id", cmo_request_id)
     def on_job_fail(self, run):
         pass
 
