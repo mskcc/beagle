@@ -113,12 +113,12 @@ class ArgosReportOperator(Operator):
         oncokb_dir = FileProcessor.parse_path_from_uri(annotations_path)
         oncokb_files = os.listdir(oncokb_dir)
         latest_file = sorted([f for f in oncokb_files if os.path.isfile(oncokb_dir + os.sep + f)])[-1]
-        oncokb_file_path = "juno://" + os.path.join(oncokb_dir, latest_file)
+        oncokb_file_path = os.path.join(oncokb_dir, latest_file)
         oncokb_file_registered = self._register_oncokb_file(oncokb_file_path)
 
         oncokb_entry = {
             "class": "File",
-            "location": oncokb_file_path,
+            "location": "juno://" + oncokb_file_path,
         }
 
         return oncokb_entry
