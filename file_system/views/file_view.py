@@ -17,16 +17,12 @@ from file_system.serializers import (
     FileQuerySerializer,
     BatchPatchFileSerializer,
     CopyFilesSerializer,
-    manifestSerializer,
 )
 from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
-import csv
 from django.http import HttpResponse
-import re
-from runner.tasks import cmo_dmp_manifest
 
 
 class FileView(
@@ -282,29 +278,3 @@ class CopyFilesView(GenericAPIView):
                 )
             self._copy_files(files, file_group_to)
         return Response(status=status.HTTP_200_OK)
-
-
-class manifest(GenericAPIView):
-    """GenericAPIView Class that returns a special formated csv, which adds DMP BAM Metadata to Request Fastq Metdata"""
-
-    # Setting members
-    pagination_class = None  # We don't need pagination
-    serializer_class = manifestSerializer
-
-    @swagger_auto_schema(query_serializer=manifestSerializer)
-    def get(self, request):
-        """get params, validate, return"""
-        serializer = manifestSerializer(data=request.query_params)
-        if serializer.is_valid():
-            request_ids = serializer.validated_data.get("request_id")
-            try:
-                # generate csv response
-                response = cmo_dmp_manifest(request_ids).csv
-            except ValidationError as e:
-                return Response(e, status=status.HTTP_400_BAD_REQUEST)
-            if response is not None:
-                return response
-            else:
-                return Response([], status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
