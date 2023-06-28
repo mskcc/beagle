@@ -210,15 +210,19 @@ def set_resource_files(resource_files):
                     )
                 if file_name in file_names:
                     updated_file_list.append(new_file_obj)
-                    updated_metadata_list.append(new_metadata_obj)
+                    if new_metadata_obj:
+                        updated_metadata_list.append(new_metadata_obj)
                 else:
                     new_file_list.append(new_file_obj)
-                    new_metadata_list.append(new_metadata_obj)
+                    if new_metadata_obj:
+                        new_metadata_list.append(new_metadata_obj)
                     file_names.append(file_name)
             File.objects.bulk_create(new_file_list, ignore_conflicts=True)
             FileMetadata.objects.bulk_create(new_metadata_list, ignore_conflicts=True)
-            File.objects.bulk_update(updated_file_list, ["file_name", "file_type", "path", "size", "file_group"])
-            FileMetadata.objects.bulk_update(updated_metadata_list, ["file", "metadata"])
+            if updated_file_list:
+                File.objects.bulk_update(updated_file_list, ["file_name", "file_type", "path", "size", "file_group"])
+            if updated_metadata_list:
+                FileMetadata.objects.bulk_update(updated_metadata_list, ["file", "metadata"])
 
 
 def set_dmp2cmo_files(patient_ids):
