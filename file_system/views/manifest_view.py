@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
-from file_system.helper.access_helper import Cmo_dmp_manifest
+from file_system.helper.access_helper import CmoDMPManifest
 
 
 class Manifest(GenericAPIView):
@@ -32,7 +32,7 @@ class Manifest(GenericAPIView):
             request_ids = serializer.validated_data.get("request_id")
             try:
                 # generate csv response
-                response = Cmo_dmp_manifest(request_ids).csv
+                response = CmoDMPManifest(request_ids).csv
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
             if response is not None:
