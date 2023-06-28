@@ -6,7 +6,7 @@ from django.http import HttpResponse
 import re
 
 
-class Cmo_dmp_manifest:
+class CmoDMPManifest:
     """
     Description:
         Class used to create a manifest report (merged dmp and fastq metadata) for a given access request.
