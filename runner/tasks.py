@@ -496,6 +496,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
     job["metadata"][
         "pipeline_link"
     ] = f"{run1.run_obj.app.github}/blob/{run1.run_obj.app.version}/{run1.run_obj.app.entrypoint}"
+    job["metadata"]["job_group"] = str(run.job_group.id)
 
     response = requests.post(url, json=job)
     if response.status_code == 201:
