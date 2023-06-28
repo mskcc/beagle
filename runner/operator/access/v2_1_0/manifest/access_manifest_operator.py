@@ -10,7 +10,7 @@ from runner.models import RunStatus, Port, Run
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
 from file_system.repository import FileRepository
-from runner.tasks import cmo_dmp_manifest
+from file_system.helper.access_helper import Cmo_dmp_manifest
 from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 import csv
 
@@ -89,7 +89,7 @@ class AccessManifestOperator(Operator):
         :return: manifest csv path
         """
         # Construct manifest via requestid
-        manifest_csv = cmo_dmp_manifest([self.request_id]).csv.content.decode()
+        manifest_csv = Cmo_dmp_manifest([self.request_id]).csv.content.decode()
         output_directory = self.write_to_file("manifest.csv", manifest_csv)
         return output_directory
 
