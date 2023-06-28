@@ -29,10 +29,6 @@ from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
 from ddtrace import tracer
-from ddtrace import config
-
-config.django['distributed_tracing_enabled'] = True
-config.django['service_name'] = 'custom-service-name'
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +41,7 @@ def fetch_request_nats():
 
 
 @shared_task
+@tracer.wrap()
 def process_smile_events():
     update_requests = set()
 
