@@ -501,7 +501,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["metadata"]["pipeline_name"] = run.app.pipeline_name.name
     else:
         job["metadata"]["pipeline_name"] = "NA"
-        
+
     response = requests.post(url, json=job)
     if response.status_code == 201:
         run.execution_id = response.json()["id"]
