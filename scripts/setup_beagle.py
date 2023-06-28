@@ -182,7 +182,7 @@ def set_operator_triggers(operator_triggers):
 
 def set_resource_files(resource_files):
     storage, _ = Storage.objects.get_or_create(name=STORAGE_NAME, type=STORAGE_TYPE)
-    file_names = File.objects.values_list("file_name", flat=True)
+    file_names = list(File.objects.values_list("file_name", flat=True))
     for single_file_path in resource_files:
         new_file_list = []
         new_metadata_list = []
