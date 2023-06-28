@@ -182,33 +182,43 @@ def set_operator_triggers(operator_triggers):
 
 def set_resource_files(resource_files):
     storage, _ = Storage.objects.get_or_create(name=STORAGE_NAME, type=STORAGE_TYPE)
+    file_names = File.objects.values_list("file_name", flat=True)
     for single_file_path in resource_files:
-        update_file_list = []
-        metadata_file_list = []
+        new_file_list = []
+        new_metadata_list = []
+        updated_file_list = []
+        updated_metadata_list = []
         with open(single_file_path, "r") as response_file:
             response_data = json.load(response_file)
             for single_file in response_data["results"]:
+                file_name = single_file["file_name"]
                 file_group, _ = FileGroup.objects.get_or_create(
                     name=single_file["file_group"]["name"], slug=single_file["file_group"]["slug"], storage=storage
                 )
                 file_type, _ = FileType.objects.get_or_create(name=single_file["file_type"])
-                update_file_list.append(
-                    File(
-                        file_name=single_file["file_name"],
-                        file_type=file_type,
-                        path=single_file["path"],
-                        size=single_file["size"],
-                        file_group=file_group,
-                    )
+                new_metadata_obj = None
+                new_file_obj = File(
+                    file_name=file_name,
+                    file_type=file_type,
+                    path=single_file["path"],
+                    size=single_file["size"],
+                    file_group=file_group,
                 )
                 if single_file["metadata"]:
-                    metadata_file_list.append(
-                        FileMetadata(
-                            file=update_file_list[-1], metadata=single_file["metadata"], version=0, latest=True
-                        )
+                    new_metadata_obj = FileMetadata(
+                        file=new_file_obj, metadata=single_file["metadata"], version=0, latest=True
                     )
-            File.objects.bulk_create(update_file_list, ignore_conflicts=True)
-            FileMetadata.objects.bulk_create(metadata_file_list, ignore_conflicts=True)
+                if file_name in file_names:
+                    updated_file_list.append(new_file_obj)
+                    updated_metadata_list.append(new_metadata_obj)
+                else:
+                    new_file_list.append(new_file_obj)
+                    new_metadata_list.append(new_metadata_obj)
+                    file_names.append(file_name)
+            File.objects.bulk_create(new_file_list, ignore_conflicts=True)
+            FileMetadata.objects.bulk_create(new_metadata_list, ignore_conflicts=True)
+            File.objects.bulk_update(updated_file_list, ["file_name", "file_type", "path", "size", "file_group"])
+            FileMetadata.objects.bulk_update(updated_metadata_list, ["file", "metadata"])
 
 
 def set_dmp2cmo_files(patient_ids):
