@@ -182,7 +182,7 @@ def set_operator_triggers(operator_triggers):
 
 def set_resource_files(resource_files):
     storage, _ = Storage.objects.get_or_create(name=STORAGE_NAME, type=STORAGE_TYPE)
-    file_names = list(File.objects.values_list("file_name", flat=True))
+    file_paths = list(File.objects.values_list("path", flat=True))
     for single_file_path in resource_files:
         new_file_list = []
         new_metadata_list = []
@@ -192,6 +192,7 @@ def set_resource_files(resource_files):
             response_data = json.load(response_file)
             for single_file in response_data["results"]:
                 file_name = single_file["file_name"]
+                path = single_file["path"]
                 file_group, _ = FileGroup.objects.get_or_create(
                     name=single_file["file_group"]["name"], slug=single_file["file_group"]["slug"], storage=storage
                 )
@@ -200,7 +201,7 @@ def set_resource_files(resource_files):
                 new_file_obj = File(
                     file_name=file_name,
                     file_type=file_type,
-                    path=single_file["path"],
+                    path=path,
                     size=single_file["size"],
                     file_group=file_group,
                 )
@@ -208,7 +209,7 @@ def set_resource_files(resource_files):
                     new_metadata_obj = FileMetadata(
                         file=new_file_obj, metadata=single_file["metadata"], version=0, latest=True
                     )
-                if file_name in file_names:
+                if path in file_paths:
                     updated_file_list.append(new_file_obj)
                     if new_metadata_obj:
                         updated_metadata_list.append(new_metadata_obj)
@@ -216,7 +217,7 @@ def set_resource_files(resource_files):
                     new_file_list.append(new_file_obj)
                     if new_metadata_obj:
                         new_metadata_list.append(new_metadata_obj)
-                    file_names.append(file_name)
+                    file_paths.append(path)
             File.objects.bulk_create(new_file_list, ignore_conflicts=True)
             FileMetadata.objects.bulk_create(new_metadata_list, ignore_conflicts=True)
             if updated_file_list:
