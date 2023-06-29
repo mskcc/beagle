@@ -182,19 +182,14 @@ class OperatorRunAdmin(admin.ModelAdmin):
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
-    list_display = ("id",
-                    link_relation("from_operator"),
-                    link_relation("to_operator"),
-                    "aggregate_condition", "graph")
+    list_display = ("id", link_relation("from_operator"), link_relation("to_operator"), "aggregate_condition", "graph")
 
     def _get_adjacent_nodes(self, operator, nodes=[], connections=[]):
         adjacent = OperatorTrigger.objects.filter(from_operator=operator)
         new_nodes = [
             {"key": str(node.to_operator.id), "text": node.to_operator.slug, "category": "Default"} for node in adjacent
         ]
-        new_connections = [
-            {"from": str(operator.id), "to": str(node.to_operator.id)} for node in adjacent
-        ]
+        new_connections = [{"from": str(operator.id), "to": str(node.to_operator.id)} for node in adjacent]
         nodes.extend(new_nodes)
         connections.extend(new_connections)
         adjacent_nodes = [node.to_operator for node in adjacent]
@@ -221,18 +216,19 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
         first_operator = obj.from_operator
         nodes = [{"key": str(first_operator.id), "text": first_operator.slug, "category": "Selected"}]
         adjacent, nodes, connections = self._get_adjacent_nodes(first_operator, nodes)
-        while(adjacent):
+        while adjacent:
             next_adjacent = []
             for item in adjacent:
                 new_adjacent, nodes, connections = self._get_adjacent_nodes(item, nodes, connections)
                 next_adjacent.extend(new_adjacent)
             adjacent = next_adjacent
-        result = {"class": "go.GraphLinksModel",
-                  "copiesArrays": True,
-                  "copiesArrayObjects": True,
-                  "nodeDataArray": nodes,
-                  "linkDataArray": connections
-                  }
+        result = {
+            "class": "go.GraphLinksModel",
+            "copiesArrays": True,
+            "copiesArrayObjects": True,
+            "nodeDataArray": nodes,
+            "linkDataArray": connections,
+        }
         return json.dumps(result)
 
 
