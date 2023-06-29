@@ -13,6 +13,7 @@ from datetime import datetime
 SUBMIT_ROUTE = "/v0/run/operator/request/"
 JOB_GROUP_ROUTE = "/v0/notifier/job-groups/"
 NOTIFIER_CREATE_ROUTE = "/v0/notifier/create/"
+PIPELINE_ROUTE = "/v0/run/pipelines/"
 RUN_ROUTE = "/v0/run/api/"
 TEST_ENV = "RUN_INTEGRATION_TEST"
 OPEN_API_ROUTE = "/?format=openapi"
@@ -52,8 +53,10 @@ class RunTestCase(TestCase):
             self.slack_token = os.environ["SLACK_TOKEN"]
             self.build_number = os.environ["BUILD_NUMBER"]
             self.build_url = os.environ["BUILD_URL"]
+            self.resume = os.environ["RESUME"]
             self.num_hours = int(os.environ["NUM_HOURS"])
             self.beagle_basic_auth = HTTPBasicAuth(self.beagle_username, self.beagle_password)
+            self.pipeline_info_list = None
 
     def send_slack_message(self, run_status, ts, channel):
         beagle_version, beagle_url, ridgeback_version, ridgeback_url = self.get_service_versions()
@@ -166,6 +169,48 @@ class RunTestCase(TestCase):
             ridgeback_url = self.ridgeback_git
         return beagle_version, beagle_url, ridgeback_version, ridgeback_url
 
+    def resume_job(self, test_obj, job_groups, run_status):
+        request_id, pipeline, version, expected_complete = itemgetter(
+            "request", "pipeline", "version", "expected_complete"
+        )(test_obj)
+        job_group_id = None
+        if not self.pipeline_info_list:
+            pipeline_request = requests.get(
+                self.beagle_url + PIPELINE_ROUTE, params={"page_size": 100}, auth=self.beagle_basic_auth
+            )
+            if pipeline_request.ok:
+                self.pipeline_info_list = pipeline_request.json()["results"]
+            else:
+                return None
+        app_id = None
+        for single_app in self.pipeline_info_list:
+            if single_app["name"] == pipeline and single_app["version"] == version:
+                app_id = single_app["id"]
+        if app_id:
+            job_group_request = requests.get(
+                self.beagle_url + RUN_ROUTE,
+                params={"apps": app_id, "request_ids": request_id, "page_size": 1, "values_run": "job_group"},
+                auth=self.beagle_basic_auth,
+            )
+            if job_group_request.ok:
+                job_group_list = job_group_request.json()["results"]
+                if job_group_list:
+                    job_group_id = job_group_list[0]
+        if job_group_id:
+            job_groups.append(job_group_id)
+            run_id = str(pipeline) + " ( " + str(version) + " )  - " + str(request_id)
+            run_status[job_group_id] = {
+                "job_group": job_group_id,
+                "status": "Submitted",
+                "num_running": None,
+                "num_expected": expected_complete,
+                "num_total": 0,
+                "submit_payload": None,
+                "run_id": run_id,
+            }
+            return job_group_id
+        return None
+
     def prepare_job(self, test_obj, job_groups, run_status):
         request_id, pipeline, version, expected_complete = itemgetter(
             "request", "pipeline", "version", "expected_complete"
@@ -196,17 +241,22 @@ class RunTestCase(TestCase):
 
     def submit_job(self, run_status, job_group):
         submit_payload = run_status[job_group]["submit_payload"]
-        submit_url = self.beagle_url + SUBMIT_ROUTE
-        submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
-        if submit_response.ok:
-            run_status[job_group]["status"] = "Submitted"
+        if submit_payload:
+            submit_url = self.beagle_url + SUBMIT_ROUTE
+            submit_response = requests.post(submit_url, json=submit_payload, auth=self.beagle_basic_auth)
+            if submit_response.ok:
+                run_status[job_group]["status"] = "Submitted"
 
     @unittest.skipIf(TEST_ENV not in os.environ, "is a large integration test")
     def test_submit_runs(self):
         run_status = {}
         job_groups = []
         for single_test in self.test_data:
-            job_group = self.prepare_job(single_test, job_groups, run_status)
+            job_group = None
+            if self.resume == "true":
+                job_group = self.resume_job(single_test, job_groups, run_status)
+            if not job_group:
+                job_group = self.prepare_job(single_test, job_groups, run_status)
             if single_test["pipeline"] not in PIPELINES_TO_WAIT:
                 self.submit_job(run_status, job_group)
             else:
