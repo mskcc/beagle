@@ -1,8 +1,10 @@
+import json
 from django.contrib import admin, messages
 from django.urls import reverse
 from django.conf import settings
 from django.utils.translation import ngettext
 from django.utils.html import format_html
+from beagle_etl.models import Operator
 from lib.admin import link_relation, progress_bar
 from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
@@ -180,7 +182,58 @@ class OperatorRunAdmin(admin.ModelAdmin):
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
-    list_display = ("id", link_relation("from_operator"), link_relation("to_operator"), "aggregate_condition")
+    list_display = ("id",
+                    link_relation("from_operator"),
+                    link_relation("to_operator"),
+                    "aggregate_condition", "graph")
+
+    def _get_adjacent_nodes(self, operator, nodes=[], connections=[]):
+        adjacent = OperatorTrigger.objects.filter(from_operator=operator)
+        new_nodes = [
+            {"key": str(node.to_operator.id), "text": node.to_operator.slug, "category": "Default"} for node in adjacent
+        ]
+        new_connections = [
+            {"from": str(operator.id), "to": str(node.to_operator.id)} for node in adjacent
+        ]
+        nodes.extend(new_nodes)
+        connections.extend(new_connections)
+        adjacent_nodes = [node.to_operator for node in adjacent]
+        return adjacent_nodes, nodes, connections
+
+    def graph(self, obj):
+        """
+        {"class": "go.GraphLinksModel",
+                "copiesArrays": True,
+                "copiesArrayObjects": True,
+                "nodeDataArray": [
+                    {"key": 0, "text": "ArgosOperator_v1.1.0"},
+                    {"key": 1, "text": "ArgosQcOperator_v1.1.0"},
+                    {"key": 2, "text": "CopyOutputsOperator_v1.1.0"},
+                    {"key": 3, "text": "HelixFiltersOperator_v20.11.2"}
+                ],
+                "linkDataArray": [
+                    {"from": 0, "to": 1},
+                    {"from": 0, "to": 2},
+                    {"from": 0, "to": 3}
+                ]
+            }
+        """
+        first_operator = obj.from_operator
+        nodes = [{"key": str(first_operator.id), "text": first_operator.slug, "category": "Selected"}]
+        adjacent, nodes, connections = self._get_adjacent_nodes(first_operator, nodes)
+        while(adjacent):
+            next_adjacent = []
+            for item in adjacent:
+                new_adjacent, nodes, connections = self._get_adjacent_nodes(item, nodes, connections)
+                next_adjacent.extend(new_adjacent)
+            adjacent = next_adjacent
+        result = {"class": "go.GraphLinksModel",
+                  "copiesArrays": True,
+                  "copiesArrayObjects": True,
+                  "nodeDataArray": nodes,
+                  "linkDataArray": connections
+                  }
+        return json.dumps(result)
 
 
 class PortAdmin(admin.ModelAdmin):
