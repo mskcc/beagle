@@ -62,6 +62,7 @@ class RunFinishedEvent(Event):
         Link: {link}
         LSF Log Location: {lsf_log_location}
         inputs.json Location: {inputs_json_location}
+        Datadog link: {datadog_link}
         
         _____________________________________________
         
@@ -88,6 +89,8 @@ class RunFinishedEvent(Event):
                 run_ids = v
 
         rerun_json = {}
+        datadog_url = settings.DATADOG_RUN_ERROR_URL + self.run_id
+        datadog_link = "[Voyager Run Error View ({})|{}]".format(self.run_id, datadog_url)
         rerun_json["pipelines"] = [self.pipeline]
         rerun_json["pipeline_versions"] = [self.pipeline_version]
         rerun_json["job_group_id"] = self.job_group_id
@@ -111,6 +114,7 @@ class RunFinishedEvent(Event):
             pipeline_link=self.pipeline_link,
             status=self.run_status,
             link=link,
+            datadog_link=datadog_link,
             running=str(self.running),
             completed=str(self.completed),
             failed=str(self.failed),
