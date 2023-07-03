@@ -51,6 +51,9 @@
         },
         "IMPACT505_b37": {
             "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_targets.ilist"
+        },
+        "IMPACT-Heme_v2_BAITS": {
+            "targets_list": "juno:///juno/work/ci/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_targets.ilist"
         }
     },
    "IMPACT_gene_list": "juno:///juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
