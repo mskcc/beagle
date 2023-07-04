@@ -53,7 +53,6 @@ def process_smile_events():
         current_span = tracer.current_span()
         request_id=msg.request_id
         current_span.set_tag("request.id", request_id)
-
     messages = list(
         SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
     )
