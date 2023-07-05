@@ -41,7 +41,7 @@ def fetch_request_nats():
 
 
 @shared_task
-@tracer.wrap()
+@tracer.wrap(service="beagle")
 def process_smile_events():
     update_requests = set()
 
@@ -50,9 +50,6 @@ def process_smile_events():
     )
     for msg in messages:
         update_requests.add(msg.request_id)
-        current_span = tracer.current_span()
-        request_id=msg.request_id
-        current_span.set_tag("request.id", request_id)
     messages = list(
         SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
     )
@@ -65,9 +62,6 @@ def process_smile_events():
     for message in messages:
         if message.request_id in update_requests:
             update_requests.remove(message.request_id)
-            current_span = tracer.current_span()
-            request_id=message.request_id
-            current_span.set_tag("request.id", request_id) 
         logger.info(f"New request: {message.request_id}")
         new_request.delay(str(message.id))
 
