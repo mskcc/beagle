@@ -40,6 +40,8 @@ from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
+from ddtrace import tracer
+
 
 
 logger = logging.getLogger(__name__)
@@ -179,9 +181,13 @@ def create_operator_run_from_jobs(
 
 
 @shared_task
+@tracer.wrap(service=beagle)
 def create_jobs_from_request(
     request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None, notify=False
 ):
+    current_span = tracer.current_span()
+    current_span.set_tag("request.id", request_id)
+
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
