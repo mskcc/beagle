@@ -181,7 +181,7 @@ def create_operator_run_from_jobs(
 
 
 @shared_task
-@tracer.wrap(service=beagle)
+@tracer.wrap(service="beagle")
 def create_jobs_from_request(
     request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None, notify=False
 ):
