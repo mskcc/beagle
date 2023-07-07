@@ -1,10 +1,10 @@
+import re
 import json
 from django.contrib import admin, messages
 from django.urls import reverse
 from django.conf import settings
 from django.utils.translation import ngettext
-from django.utils.html import format_html
-from beagle_etl.models import Operator
+from django.utils.html import format_html, format_html_join
 from lib.admin import link_relation, progress_bar
 from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
@@ -182,12 +182,16 @@ class OperatorRunAdmin(admin.ModelAdmin):
 
 
 class OperatorTriggerAdmin(admin.ModelAdmin):
-    list_display = ("id", link_relation("from_operator"), link_relation("to_operator"), "aggregate_condition", "graph")
+    list_display = ("id", link_relation("from_operator"), link_relation("to_operator"), "aggregate_condition",
+                    "graph")
 
     def _get_adjacent_nodes(self, operator, nodes=[], connections=[]):
         adjacent = OperatorTrigger.objects.filter(from_operator=operator)
         new_nodes = [
-            {"key": str(node.to_operator.id), "text": node.to_operator.slug, "category": "Default"} for node in adjacent
+            {"key": str(node.to_operator.id),
+             "pipeline": str(operator.pipeline_set.filter(default=True).first().id) if operator.pipeline_set.filter(default=True).first() else '',
+             "text": node.to_operator.slug, "category": "Default"} for
+            node in adjacent
         ]
         new_connections = [{"from": str(operator.id), "to": str(node.to_operator.id)} for node in adjacent]
         nodes.extend(new_nodes)
@@ -214,8 +218,12 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
             }
         """
         first_operator = obj.from_operator
-        nodes = [{"key": str(first_operator.id), "text": first_operator.slug, "category": "Selected"}]
-        adjacent, nodes, connections = self._get_adjacent_nodes(first_operator, nodes)
+        nodes = [{"key": str(first_operator.id),
+                  "pipeline": str(first_operator.pipeline_set.filter(
+                      default=True).first().id) if first_operator.pipeline_set.filter(default=True).first() else '',
+                  "text": first_operator.slug, "category": "Selected"}]
+        connections = []
+        adjacent, nodes, connections = self._get_adjacent_nodes(first_operator, nodes, connections)
         while adjacent:
             next_adjacent = []
             for item in adjacent:
@@ -229,7 +237,11 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
             "nodeDataArray": nodes,
             "linkDataArray": connections,
         }
+        # print(y:none;">REPLACE</p>'))
+        # return format_html(f'<p style="display:none;">REPLACE</p>').replace("REPLACE", re.escape(json.dumps(result)))
+        # print(format_html(f'<p style="display'))
         return json.dumps(result)
+        # return format_html(f'<p style="display:none;"> {re.escape(json.dumps(result))} </p>')
 
 
 class PortAdmin(admin.ModelAdmin):

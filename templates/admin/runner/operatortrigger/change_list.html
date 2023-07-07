@@ -61,14 +61,35 @@
         $(go.Adornment, "Spot",
           $(go.Panel, "Auto",
             $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 4 }),
-            $(go.Placeholder))
+            $(go.Placeholder)),
+            $("Button",
+            $(go.TextBlock, "Operator"),
+            {
+              alignment: go.Spot.TopRight,
+              margin: 2,
+              click: function(e, obj) {
+                window.location.href = '/admin/beagle_etl/operator/' + obj.panel.data.key + '/change/'
+                },
+            },
+            new go.Binding("visible", "", "").ofObject(),
+            $(go.Shape, "RoundedRectangle", { desiredSize: new go.Size(6, 6), })),
+            $("Button",
+            $(go.TextBlock, "Pipeline"),
+            {
+              alignment: go.Spot.BottomRight,
+              click: function(e, obj) {
+                window.location.href = '/admin/runner/pipeline/' + obj.panel.data.pipeline + '/change/'
+                }
+            },
+            new go.Binding("visible", "", "").ofObject(),
+            $(go.Shape, "RoundedRectangle", { desiredSize: new go.Size(6, 6), })
+          )
         );
 
       myDiagram.nodeTemplate =
         $(go.Node, "Auto",
           { selectionAdornmentTemplate: defaultAdornment },
           new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-          // define the node's outer shape, which will surround the TextBlock
           $(go.Shape, "RoundedRectangle",
             {
               fill: yellowgrad, stroke: "black",
@@ -79,7 +100,7 @@
             new go.Binding("text", "text").makeTwoWay()));
 
       myDiagram.nodeTemplateMap.add("Selected",
-        $(go.Node, "Auto",
+        $(go.Node, "Auto", { selectionAdornmentTemplate: defaultAdornment },
           new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
           $(go.Shape, "RoundedRectangle",
             {
@@ -91,11 +112,11 @@
             new go.Binding("text", "text").makeTwoWay())
         ));
       myDiagram.linkTemplate =
-        $(go.Link,  // the whole link panel
+        $(go.Link,
           { curve: go.Link.Bezier, toShortLength: 5 },
-          $(go.Shape,  // the link shape
+          $(go.Shape,
             { stroke: "#2F4F4F", strokeWidth: 2.5 }),
-          $(go.Shape,  // the arrowhead
+          $(go.Shape,
             { toArrow: "Kite", fill: "#2F4F4F", stroke: null, scale: 1.5 })
         );
       load(json);
@@ -105,7 +126,6 @@
     function layout() {
       myDiagram.layoutDiagram(true);
     }
-
     function load(json) {
     myDiagram.model = go.Model.fromJson(json);
     }
