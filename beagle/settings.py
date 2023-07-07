@@ -175,7 +175,7 @@ AUTHENTICATION_BACKENDS = [
 
 ROOT_URLCONF = "beagle.urls"
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, "templates")]
 
 TEMPLATES = [
     {
