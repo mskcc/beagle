@@ -247,11 +247,7 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
             "nodeDataArray": nodes,
             "linkDataArray": connections,
         }
-        # print(y:none;">REPLACE</p>'))
-        # return format_html(f'<p style="display:none;">REPLACE</p>').replace("REPLACE", re.escape(json.dumps(result)))
-        # print(format_html(f'<p style="display'))
         return json.dumps(result)
-        # return format_html(f'<p style="display:none;"> {re.escape(json.dumps(result))} </p>')
 
 
 class PortAdmin(admin.ModelAdmin):
