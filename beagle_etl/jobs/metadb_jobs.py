@@ -124,7 +124,13 @@ def new_request(message_id):
     sample_jobs = []
 
     samples = data.get("samples")
-    check_files_permissions(samples)
+    try:
+        check_files_permissions(samples)
+    except FailedToCopyFilePermissionDeniedException as e:
+        message.status = SmileMessageStatus.FAILED
+        message.save()
+        return
+
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
