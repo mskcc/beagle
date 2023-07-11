@@ -251,7 +251,7 @@ def new_request(message_id):
 
     request = Request.objects.filter(request_id=request_id, latest=True).first()
     study.requests.add(request)
-    pooled_normal = data.get("pooledNormals", [])
+    pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
     pooled_normal_jobs = []
     for pn in pooled_normal:
         try:
