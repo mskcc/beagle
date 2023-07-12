@@ -80,6 +80,7 @@ class SmileMessageStatus(IntEnum):
     PENDING = 0
     COMPLETED = 1
     NOT_SUPPORTED = 2
+    FAILED = 3
 
 
 class SMILEMessage(BaseModel):
