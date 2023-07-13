@@ -60,6 +60,7 @@ class Operator(object):
         :return: dict
         """
         return {}
+
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
             data={"operator_name": self.model.slug, "request_id": self.request_id, "error": error}
@@ -81,6 +82,7 @@ class Operator(object):
         current_span = tracer.current_span()
         cmo_request_id = self.request_id
         span.set_tag("request.id", cmo_request_id)
+
     def on_job_fail(self, run):
         pass
 
