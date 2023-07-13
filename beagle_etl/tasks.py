@@ -63,8 +63,8 @@ def process_smile_events():
         if message.request_id in update_requests:
             update_requests.remove(message.request_id)
             current_span = tracer.current_span()
-            request_id=message.request_id
-            current_span.set_tag("request.id", request_id) 
+            request_id = message.request_id
+            current_span.set_tag("request.id", request_id)
         logger.info(f"New request: {message.request_id}")
         new_request.delay(str(message.id))
 

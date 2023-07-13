@@ -43,7 +43,6 @@ from django.http import HttpResponse
 from ddtrace import tracer
 
 
-
 logger = logging.getLogger(__name__)
 
 
