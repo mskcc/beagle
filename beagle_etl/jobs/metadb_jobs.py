@@ -1016,12 +1016,7 @@ def normalize_metadata(original_metadata):
 
 
 def create_file_object(path, file_group, metadata, file_type):
-    data={
-        "path": path,
-        "file_type": file_type,
-        "metadata": metadata,
-        "file_group": file_group
-    }
+    data = {"path": path, "file_type": file_type, "metadata": metadata, "file_group": file_group}
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
