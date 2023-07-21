@@ -29,9 +29,12 @@ class RunStartedEvent(Event):
         Output Directory: {output_directory}
         {tags}
         Link: {link}
+        Datadog link: {datadog_link}
 
         """
         link = "%s%s%s\n" % (settings.BEAGLE_URL, "/v0/run/api/", self.run_id)
+        datadog_url = settings.DATADOG_RUN_ERROR_URL + self.run_id
+        datadog_link = "[Voyager Run Error View ({})|{}]".format(self.run_id, datadog_url)
         tags = ""
         for k, v in self.tags.items():
             tags += f"{k}: {json.dumps(v) if isinstance(v, list) or isinstance(v, dict) else str(v)}\n"
@@ -40,6 +43,7 @@ class RunStartedEvent(Event):
             pipeline_name=self.pipeline,
             pipeline_link=self.pipeline_link,
             link=link,
+            datadog_link=datadog_link,
             tags=tags,
             output_directory=self.output_directory,
         )
