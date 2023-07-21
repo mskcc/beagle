@@ -3,12 +3,12 @@ pipeline {
   stages {
       stage('Deploy Ridgeback') {
         steps {
-        build job: 'ridgeback-deploy/develop', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'STAGE']],  propagate: true, wait: true
+        build job: 'ridgeback-deploy/master', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'PROD']],  propagate: true, wait: true
         }
       }
       stage('Deploy Beagle') {
         steps {
-        build job: 'beagle-deploy/develop', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'STAGE']],  propagate: true, wait: true
+        build job: 'beagle-deploy/master', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'PROD']],  propagate: true, wait: true
         }
       }
   }
