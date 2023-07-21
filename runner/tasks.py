@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
+    jobs = []
     try:
         jobs = operator.get_jobs()
     except Exception as e:
