@@ -58,6 +58,7 @@ from beagle_etl.exceptions import (
     FailedToCopyFileException,
 )
 from runner.tasks import create_jobs_from_request
+from file_system.serializers import CreateFileSerializer
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name, format_patient_id
 from beagle_etl.copy_service import CopyService
@@ -955,8 +956,6 @@ def create_or_update_file(
     path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
 ):
     try:
-        file_group_obj = FileGroup.objects.get(id=file_group_id)
-        file_type_obj = FileType.objects.filter(name=file_type).first()
         lims_metadata = copy.deepcopy(data)
         library_copy = copy.deepcopy(library)
         lims_metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
@@ -992,7 +991,7 @@ def create_or_update_file(
                     raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
                 else:
                     raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
-            create_file_object(new_path, file_group_obj, metadata, file_type_obj)
+            create_file_object(new_path, file_group_id, metadata, file_type)
         else:
             update_file_object(f.file, f.file.path, metadata)
 
@@ -1017,23 +1016,19 @@ def normalize_metadata(original_metadata):
 
 
 def create_file_object(path, file_group, metadata, file_type):
-    try:
-        f = File.objects.create(file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type)
-        f.save()
-
-        fm = FileMetadata(file=f, metadata=metadata)
-        fm.save()
+    data = {"path": path, "file_type": file_type, "metadata": metadata, "file_group": file_group}
+    serializer = CreateFileSerializer(data=data)
+    if serializer.is_valid():
+        file = serializer.save()
         Job.objects.create(
             run=TYPES["CALCULATE_CHECKSUM"],
-            args={"file_id": str(f.id), "path": path},
+            args={"file_id": str(file.id), "path": path},
             status=JobStatus.CREATED,
             max_retry=3,
             children=[],
         )
-        import_metadata = ImportMetadata.objects.create(file=f, metadata=metadata)
-    except Exception as e:
-        logger.error("Failed to create file %s. Error %s" % (path, str(e)))
-        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
+    else:
+        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
 
 
 def update_file_object(file_object, path, metadata):
