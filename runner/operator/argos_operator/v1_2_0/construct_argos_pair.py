@@ -90,8 +90,11 @@ def construct_argos_jobs(samples, pairs=None):
 def get_curated_bams(assay, request_files):
     # Default to AgilentExon_51MB_b37_v3 BAMs for all assays except those specified below
     json_curated_bams = request_files["curated_bams"]["AgilentExon_51MB_b37_v3"]
+
+    if assay.find("IMPACT-Heme") > -1:
+        json_curated_bams = request_files["curated_bams"]["IMPACT-Heme_v2_BAITS"]
     # Default to IMPACT468_b37 BAMs for all IMPACT/HemePACT assays
-    if assay.find("IMPACT") > -1 or assay.find("HemePACT") > -1:
+    elif assay.find("IMPACT") > -1 or assay.find("HemePACT") > -1:
         json_curated_bams = request_files["curated_bams"]["IMPACT468_b37"]
     elif assay.find("IDT_Exome_v1_FP") > -1:
         json_curated_bams = request_files["curated_bams"]["IDT_Exome_v1_FP_b37"]

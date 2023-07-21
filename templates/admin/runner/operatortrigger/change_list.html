@@ -1,0 +1,145 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://unpkg.com/gojs@2.3.8/release/go.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="allSampleContent" class="p-4 w-full">
+    <script id="code">
+    function init() {
+      let json = {}
+      let result_list = document.getElementById("result_list");
+      console.log(result_list.rows)
+      var arr = Array.from(result_list.rows);
+
+      arr.forEach(element => element.onclick = function() {
+        console.log(element.getElementsByClassName("field-graph")[0].textContent);
+        let json = element.getElementsByClassName("field-graph")[0].textContent
+        load(JSON.parse(json));
+        layout();
+      });
+
+      const $ = go.GraphObject.make;  // for conciseness in defining templates
+      var yellowgrad = $(go.Brush, "Linear", { 0: "rgb(254, 201, 0)", 1: "rgb(254, 162, 0)" });
+      var bluegrad = $(go.Brush, "Linear", { 0: "#B0E0E6", 1: "#87CEEB" });
+
+      var bigfont = "bold 13pt Helvetica, Arial, sans-serif";
+
+      function textStyle() {
+        return {
+          margin: 6,
+          wrap: go.TextBlock.WrapFit,
+          textAlign: "center",
+          editable: false,
+          font: bigfont
+        }
+      }
+
+      myDiagram =
+        new go.Diagram("myDiagramDiv",
+          {
+            // have mouse wheel events zoom in and out instead of scroll up and down
+            "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
+            initialAutoScale: go.Diagram.Uniform,
+            "linkingTool.direction": go.LinkingTool.ForwardsOnly,
+            layout: $(go.LayeredDigraphLayout,
+              {
+                isInitial: false, isOngoing: false,
+                layerSpacing: 50,
+                alignOption: go.LayeredDigraphLayout.AlignAll
+              }),
+            "undoManager.isEnabled": true,
+            "InitialLayoutCompleted": function(e) {
+              e.diagram.nodes.each(function(n) { n.deletable = false; });
+              e.diagram.links.each(function(l) { l.deletable = false; });
+            },
+          });
+
+      var defaultAdornment =
+        $(go.Adornment, "Spot",
+          $(go.Panel, "Auto",
+            $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 4 }),
+            $(go.Placeholder)),
+            $("Button",
+            $(go.TextBlock, "Operator"),
+            {
+              alignment: go.Spot.TopRight,
+              margin: 2,
+              click: function(e, obj) {
+                window.location.href = '/admin/beagle_etl/operator/' + obj.panel.data.key + '/change/'
+                },
+            },
+            new go.Binding("visible", "", "").ofObject(),
+            $(go.Shape, "RoundedRectangle", { desiredSize: new go.Size(6, 6), })),
+            $("Button",
+            $(go.TextBlock, "Pipeline"),
+            {
+              alignment: go.Spot.BottomRight,
+              click: function(e, obj) {
+                window.location.href = '/admin/runner/pipeline/' + obj.panel.data.pipeline + '/change/'
+                }
+            },
+            new go.Binding("visible", "", "").ofObject(),
+            $(go.Shape, "RoundedRectangle", { desiredSize: new go.Size(6, 6), })
+          )
+        );
+
+      myDiagram.nodeTemplate =
+        $(go.Node, "Auto",
+          { selectionAdornmentTemplate: defaultAdornment },
+          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+          $(go.Shape, "RoundedRectangle",
+            {
+              fill: yellowgrad, stroke: "black",
+              portId: "", fromLinkable: false, toLinkable: false,
+              toEndSegmentLength: 50, fromEndSegmentLength: 40
+            }),
+          $(go.TextBlock, "Default", textStyle(),
+            new go.Binding("text", "text").makeTwoWay()));
+
+      myDiagram.nodeTemplateMap.add("Selected",
+        $(go.Node, "Auto", { selectionAdornmentTemplate: defaultAdornment },
+          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+          $(go.Shape, "RoundedRectangle",
+            {
+              fill: bluegrad,
+              portId: "", fromLinkable: false, toLinkable: false,
+              toEndSegmentLength: 50, fromEndSegmentLength: 40
+            }),
+          $(go.TextBlock, "Selected", textStyle(),
+            new go.Binding("text", "text").makeTwoWay())
+        ));
+      myDiagram.linkTemplate =
+        $(go.Link,
+          { curve: go.Link.Bezier, toShortLength: 5 },
+          $(go.Shape,
+            { stroke: "#2F4F4F", strokeWidth: 2.5 }),
+          $(go.Shape,
+            { toArrow: "Kite", fill: "#2F4F4F", stroke: null, scale: 1.5 })
+        );
+      load(json);
+      layout();
+    }
+
+    function layout() {
+      myDiagram.layoutDiagram(true);
+    }
+    function load(json) {
+    myDiagram.model = go.Model.fromJson(json);
+    }
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</div>
+
+<div id="sample">
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 480px; border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="1904" height="956" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 952px; height: 478px;">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 952px; height: 478px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+    {{ block.super }}
+{% endblock %}
