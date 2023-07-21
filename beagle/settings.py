@@ -473,3 +473,6 @@ DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp/%s")
 APP_CACHE = os.environ.get("BEAGLE_APP_CACHE", "/tmp")
 
 CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")
+
+DATADOG_RUN_ERROR_URL = os.environ.get("DATADOG_RUN_ERROR_URL", "")
+DATADOG_JOB_ERROR_URL = os.environ.get("DATADOG_JOB_ERROR_URL", "")

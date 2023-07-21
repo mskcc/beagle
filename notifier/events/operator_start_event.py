@@ -1,4 +1,5 @@
 from notifier.event_handler.event import Event
+from django.conf import settings
 
 
 class OperatorStartEvent(Event):
@@ -70,10 +71,15 @@ class OperatorStartEvent(Event):
         Number of tumor samples: {number_of_tumors}
         Number of normal samples: {number_of_normals}
         Job Group ID: {job_group}
+        Datadog link: {datadog_link}
         
         Pipelines:
         | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
+
+        datadog_url = settings.DATADOG_JOB_ERROR_URL + self.job_group
+        datadog_link = "[Voyager Job Error View ({})|{}]".format(self.job_group, datadog_url)
+
         return OPERATOR_START_TEMPLATE.format(
             request_id=self.request_id,
             cnt_samples=self.sample_list_completed,
@@ -90,6 +96,7 @@ class OperatorStartEvent(Event):
             number_of_tumors=self.number_of_tumors,
             number_of_normals=self.number_of_normals,
             job_group=self.job_group,
+            datadog_link=datadog_link,
             data_access_emails=self.data_access_emails,
             other_contact_emails=self.other_contact_emails,
         )
