@@ -63,7 +63,9 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
                 number_of_samples=number_of_samples,
             ).to_dict()
             send_notification.delay(event)
-        logger.info(format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id))
+        logger.info(
+            format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id)
+        )
     else:
         log_directory = operator.get_log_directory()
         create_operator_run_from_jobs(
