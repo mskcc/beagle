@@ -435,7 +435,8 @@ class RequestOperatorViewSet(GenericAPIView):
                         )
                         job_group_notifier_id = str(job_group_notifier.id)
                     except JobGroupNotifier.DoesNotExist:
-                        job_group_notifier_id = notifier_start(job_group_id, req, pipeline.operator)
+                        job_group = JobGroup.objects.get(id=job_group_id)
+                        job_group_notifier_id = notifier_start(job_group, req, pipeline.operator)
                     create_jobs_from_request.delay(
                         req,
                         pipeline.operator_id,
