@@ -296,6 +296,25 @@
                 "juno:///juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_P5FLLT_N001_d.Group4.rg.md.abra.printreads.bam",
                 "juno:///juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_VC7LNE_N001_d.Group5.rg.md.abra.printreads.bam",
                 "juno:///juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_WV53F0_N001_d.Group0.rg.md.abra.printreads.bam"
+            ],
+            "IMPACT-Heme_v2_BAITS": [
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_2AL2HX_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_40ADHA_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_46TPL2_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_5F4KFT_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_675JR5_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_FUH2NN_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_HA6MRW_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_HNL3MK_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_K5TJ3T_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_MWEAE4_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_PY8UJ4_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_T4XAKT_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_TLV4D4_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_ULPUE1_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_V16J6D_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_WPM78R_T001_d02.rg.md.abra.printreads.bam",
+                "juno:///juno/work/ci/resources/curated_bams/IMPACT-Heme_v2_BAITS/s_C_XN0L0N_T001_d02.rg.md.abra.printreads.bam"
             ]
         },
         "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
