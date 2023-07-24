@@ -11,7 +11,10 @@ class OncotreeDataHandler:
     def fetch_oncotree_data(self):
         oncotree_dir = os.path.dirname(__file__)
         oncotree_json = os.path.join(oncotree_dir, "data/oncotree.json")
-        request = requests.get("http://oncotree.mskcc.org/api/tumorTypes").json()
+        try:
+            request = requests.get("http://oncotree.mskcc.org/api/tumorTypes").json()
+        except:
+            request = "error"
         if "error" in request:  # load from file if error
             request = json.load(open(oncotree_json, "r"))
         converted_data = self.convert_data_key(request)
