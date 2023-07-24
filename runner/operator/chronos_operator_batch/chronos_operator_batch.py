@@ -163,8 +163,9 @@ class ChronosOperatorBatch(Operator):
         input_json = {
             "pairing": pairing_for_request,
             "mapping": mapping_for_request,
-            "somatic": True,
-            "aggregate": True,
+            "workflows": "",
+            "assayType": "exome",
+            "-process.clusterOptions=-sla CMOPI": True
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
