@@ -134,7 +134,7 @@ class ChronosOperatorBatch(Operator):
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
         mapping_all = self.create_mapping_input()
-        pairing_all = self.create_pairing_input()
+        # pairing_all = self.create_pairing_input()
 
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
@@ -155,14 +155,14 @@ class ChronosOperatorBatch(Operator):
             values_metadata="ciTag",
         )
         used_normals = set()
-        for tumor in tumors:
-            pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            pairing_for_request.append(pairing)
-            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
+        # for tumor in tumors:
+        #     pairing = self.get_pairing_for_sample(tumor, pairing_all)
+        #     pairing_for_request.append(pairing)
+        #     mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
         input_json = {
-            "pairing": pairing_for_request,
-            "mapping": mapping_for_request,
+            # "pairing": pairing_for_request,
+            "mapping": mapping_all,
             "workflows": "",
             "assayType": "exome",
             "-process.clusterOptions=-sla CMOPI": True
