@@ -221,6 +221,11 @@ class Run(BaseModel):
         self.status = RunStatus.READY
         return self
 
+    def reset_counters(self):
+        self.resume_attempts = 2
+        self.restart_attempts = 3
+        return self
+
     def set_for_restart(self):
         run_id = self.pk
         output_directory = self.output_directory
