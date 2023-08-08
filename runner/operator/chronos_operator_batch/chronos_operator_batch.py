@@ -115,6 +115,8 @@ class ChronosOperatorBatch(Operator):
         patient_ids = set()
         patient_files = dict()
         no_patient_samples = list()
+        tempo_files = FileRepository.filter(queryset=tempo_files,
+                                            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id})
         for entry in tempo_files:
             patient_id = entry.metadata[settings.PATIENT_ID_METADATA_KEY]
             if patient_id:
@@ -161,7 +163,6 @@ class ChronosOperatorBatch(Operator):
         #     mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
         input_json = {
-            # "pairing": pairing_for_request,
             "mapping": mapping_all,
             "workflows": "",
             "assayType": "exome",
