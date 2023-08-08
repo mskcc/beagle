@@ -136,6 +136,7 @@ class ChronosOperatorBatch(Operator):
                 self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
         mapping_all = self.create_mapping_input()
+        print(mapping_all)
         # pairing_all = self.create_pairing_input()
 
         beagle_version = __version__
@@ -151,11 +152,11 @@ class ChronosOperatorBatch(Operator):
         name = f"Tempo Run requestId:{self.request_id} {run_date}"
 
         pairing_for_request = []
+        # tumors = FileRepository.filter(
+        #     metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
+        #     values_metadata="ciTag",
+        # )
         mapping_for_request = []
-        tumors = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
-            values_metadata="ciTag",
-        )
         used_normals = set()
         # for tumor in tumors:
         #     pairing = self.get_pairing_for_sample(tumor, pairing_all)
@@ -294,7 +295,6 @@ class ChronosOperatorBatch(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             mapping.extend(patient.create_mapping_json())
-        self.write_to_file("sample_mapping_json.json", json.dumps(mapping))
         return mapping
 
     def create_conflict_samples_txt_file(self):
