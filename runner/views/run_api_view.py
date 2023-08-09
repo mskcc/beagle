@@ -300,6 +300,7 @@ class RunApiRestartViewSet(GenericAPIView):
             samples = r.samples.all()
             r.pk = None
             r.operator_run_id = o.pk
+            r.reset_counters()
             r.clear().save()
             if clean == False:
                 r.resume = original_run_id
