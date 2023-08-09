@@ -195,6 +195,8 @@ class TestRunAPIView(APITestCase):
             status=RunStatus.FAILED,
             notify_for_outputs=[],
             app=pipeline,
+            restart_attempts=0,
+            resume_attempts=0,
         )
         input_port = Port.objects.create(run=failed_run, port_type=PortType.INPUT)
         output_port = Port.objects.create(run=failed_run, port_type=PortType.OUTPUT)
@@ -209,6 +211,8 @@ class TestRunAPIView(APITestCase):
         # Restarted run should have resume directory set to original run
         restarted_run = Run.objects.get(id=restart_run_id)
         self.assertEqual(str(failed_run.id), str(restarted_run.resume))
+        self.assertEqual(restarted_run.restart_attempts, 3)
+        self.assertEqual(restarted_run.resume_attempts, 2)
         # Both runs should have same input ports
         restart_run_object = RunObjectFactory.from_db(restart_run_id)
         original_run_object = RunObjectFactory.from_db(failed_run.id)
