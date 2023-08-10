@@ -524,7 +524,7 @@ def fetch_request_metadata(request_id):
         "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
         "otherContactEmails": file_example.metadata["otherContactEmails"],
         "dataAccessEmails": file_example.metadata["dataAccessEmails"],
-        "qcAccessEmails": file_example.metadata["qcAccessEmails"]
+        "qcAccessEmails": file_example.metadata["qcAccessEmails"],
     }
     return request_metadata
 
