@@ -508,6 +508,27 @@ def update_request_job(message_id, job_group, job_group_notifier):
     return request_metadata, pooled_normal
 
 
+def fetch_request_metadata(request_id):
+    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
+    request_metadata = {
+        settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
+        settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
+        settings.RECIPE_METADATA_KEY: file_example.metadata[settings.RECIPE_METADATA_KEY],
+        "projectManagerName": file_example.metadata["projectManagerName"],
+        "piEmail": file_example.metadata["piEmail"],
+        "labHeadName": file_example.metadata["labHeadName"],
+        "labHeadEmail": file_example.metadata["labHeadEmail"],
+        "investigatorName": file_example.metadata["investigatorName"],
+        "investigatorEmail": file_example.metadata["investigatorEmail"],
+        "dataAnalystName": file_example.metadata["dataAnalystName"],
+        "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
+        "otherContactEmails": file_example.metadata["otherContactEmails"],
+        "dataAccessEmails": file_example.metadata["dataAccessEmails"],
+        "qcAccessEmails": file_example.metadata["qcAccessEmails"]
+    }
+    return request_metadata
+
+
 @shared_task
 def update_job(request_id):
     sample_update_messages = (
@@ -541,6 +562,9 @@ def update_job(request_id):
     pooled_normal = list()
     for msg in request_update_messages:
         request_metadata, pooled_normal = update_request_job(str(msg.id), job_group, job_group_notifier)
+
+    if not request_metadata:
+        request_metadata = fetch_request_metadata(request_id)
 
     recipe = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
