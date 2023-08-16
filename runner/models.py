@@ -70,7 +70,7 @@ class Pipeline(BaseModel):
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
-    config = models.CharField(blank=True, null=True, max_length=1000, default=None)
+    config = models.CharField(blank=True, null=True, max_length=10000, default=None)
 
     @property
     def pipeline_link(self):
