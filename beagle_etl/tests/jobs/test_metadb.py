@@ -195,9 +195,8 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
-    @patch("beagle_etl.jobs.metadb_jobs._generate_ticket_description")
     def test_update_request_ticket(
-        self, ticket_description, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):
         """
         Test that generate ticket is called properly in update request
@@ -210,18 +209,14 @@ class TestNewRequest(TestCase):
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             job_group = JobGroup()
             job_group_notifier = JobGroupNotifier(job_group=job_group)
-            update_request_job(str(msg.id), job_group, job_group_notifier)
+            request_metadata, pooled_normals = update_request_job(str(msg.id), job_group, job_group_notifier)
             files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
             sample_names = []
             for file in files:
                 sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
                 if sample_name not in sample_names:
                     sample_names.append(sample_name)
-            ticket_description.assert_called_once()
-            call_args = ticket_description.call_args[0]
-            self.assertEqual(call_args[0], "10075_D_2")
-            self.assertEqual(len(call_args[3]), len(sample_names))
-            request_metadata = call_args[5]
+            self.assertEqual(len(pooled_normals), 0)
             for single_request_key in self.request_keys:
                 self.assertEqual(file.metadata[single_request_key], request_metadata[single_request_key])
 
