@@ -650,7 +650,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         running_runs = 0
 
     request_id = "UNKNOWN REQUEST"
-    for sample in run.samples.all():
+    for sample in run.samples:
         tumor_or_normal = FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: sample.sample_id},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
