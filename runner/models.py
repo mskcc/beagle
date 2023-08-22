@@ -255,6 +255,8 @@ class Run(BaseModel):
             restart_attempts = self.restart_attempts - 1
             if "restart" not in message:
                 message["restart"] = []
+                if "resume" not in message:
+                    message["resume"] = []
                 message["resume"].append(job_tuple)
             else:
                 message["restart"].append(job_tuple)
