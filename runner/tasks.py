@@ -658,7 +658,8 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
 
         if tumor_or_normal == "Tumor":
             request_id = FileRepository.filter(
-                metadata={settings.SAMPLE_ID_METADATA_KEY}, values_metadata=settings.REQUEST_ID_METADATA_KEY
+                metadata={settings.SAMPLE_ID_METADATA_KEY: sample.sample_id},
+                values_metadata=settings.REQUEST_ID_METADATA_KEY,
             ).first()
             break
 
