@@ -649,9 +649,22 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
             completed_runs, failed_runs = 0, 1
         running_runs = 0
 
+    request_id = "UNKNOWN REQUEST"
+    for sample in run.samples.all():
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: sample.sample_id},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
+
+        if tumor_or_normal == "Tumor":
+            request_id = FileRepository.filter(
+                metadata={settings.SAMPLE_ID_METADATA_KEY}, values_metadata=settings.REQUEST_ID_METADATA_KEY
+            ).first()
+            break
+
     event = RunFinishedEvent(
         job_group_notifier_id,
-        run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
+        request_id,
         str(run.run_id),
         pipeline_name,
         pipeline_version,
