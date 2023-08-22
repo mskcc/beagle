@@ -149,7 +149,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     return pooled_normals, descriptor, sample_name
 
 
-def get_sequencer_type(run_ids_list):
+def get_sequencer_type(run_ids_list, run_mode):
     hiseq_machines = ["jax", "pitt"]
     novaseq_machines = ["diana", "michelle", "aa00227", "ruth"]
     run_ids_lower = [i.lower() for i in run_ids_list if i]
@@ -161,7 +161,8 @@ def get_sequencer_type(run_ids_list):
         is_novaseq = find_substr(machine, run_ids_lower)
         if is_novaseq:
             return "novaseq"
-    return None
+    else:
+        return run_mode
 
 
 def find_substr(s, l):
@@ -201,11 +202,11 @@ def build_preservation_query(data):
     return query
 
 
-def get_pooled_normals(run_ids, preservation_types, bait_set):
+def get_pooled_normals(run_ids, preservation_types, bait_set, run_mode):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
         sample_file = build_pooled_normal_sample_by_file(
@@ -217,7 +218,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     return pooled_normal
 
 
-def get_pooled_normal_files(run_ids, preservation_types, bait_set):
+def get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode):
 
     pooled_normals = FileRepository.all()
 

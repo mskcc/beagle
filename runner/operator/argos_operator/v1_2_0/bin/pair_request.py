@@ -177,7 +177,7 @@ def compile_pairs(samples, pairing_info=None):
                             pairs["tumor"].append(tumor)
                             pairs["normal"].append(dmp_normal)
                         else:
-                            pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
+                            pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set, run_mode)
                             LOGGER.info("No DMP Normal found for patient %s; checking for Pooled Normal", patient_id)
                             if pooled_normal:
                                 LOGGER.info(
