@@ -48,7 +48,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
     try:
         jobs = operator.get_jobs()
     except Exception as e:
-        logger.error(f"Exception in Operator get_jobs for: {operator}")
+        logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
         gene_panel = get_gene_panel(operator.request_id)
         number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
