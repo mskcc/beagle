@@ -43,26 +43,34 @@ def fetch_request_nats():
 @shared_task
 def process_smile_events():
     update_requests = set()
-
-    messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)
-    )
-    for msg in messages:
-        update_requests.add(msg.request_id)
-    messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
-    )
-    for msg in messages:
-        update_requests.add("_".join(msg.request_id.split("_")[:-1]))
-
-    messages = list(
+    new_request_messages = list(
         SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST)
     )
-    for message in messages:
-        if message.request_id in update_requests:
-            update_requests.remove(message.request_id)
-        logger.info(f"New request: {message.request_id}")
-        new_request.delay(str(message.id))
+    new_request_set = set([msg.request_id for msg in new_request_messages])
+
+    request_update_messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)
+    )
+
+    sample_update_messages = list(
+        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
+    )
+
+    for msg in request_update_messages:
+        if msg.request_id not in new_request_set:
+            msg.in_progress()
+            update_requests.add(msg.request_id)
+
+    for msg in sample_update_messages:
+        request_id = "_".join(msg.request_id.split("_")[:-1])
+        if request_id not in new_request_set:
+            msg.in_progress()
+            update_requests.add(request_id)
+
+    for msg in new_request_messages:
+        logger.info(f"New request: {msg.request_id}")
+        msg.in_progress()
+        new_request.delay(str(msg.id))
 
     for req in list(update_requests):
         logger.info(f"Update request/samples: {req}")
