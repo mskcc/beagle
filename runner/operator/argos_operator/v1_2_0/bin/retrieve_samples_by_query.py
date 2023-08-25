@@ -65,7 +65,7 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
+def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, run_mode):
     """
     Need descriptor to match pooled normal "genePanel", which might need to be re-labeled as bait_set
 
@@ -97,7 +97,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
         descriptor = "IMPACT505"
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        machine = get_sequencer_type(run_ids)
+        machine = get_sequencer_type(run_ids, run_mode)
         if not machine:
             LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
         if machine is "hiseq":
@@ -116,7 +116,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # We didn't find a pooled normal for HemePACT_v4; return "static" FROZEN or FFPE pool normal
         descriptor = "HemePACT_v4"
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        machine = get_sequencer_type(run_ids)
+        machine = get_sequencer_type(run_ids, run_mode)
         if not machine:
             LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
         if machine is "hiseq":
@@ -135,7 +135,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         # We didn't find a pooled normal for IMPACT-Heme_v2; return "static" FROZEN or FFPE pool normal
         descriptor = "IMPACT-Heme_v2"
         preservations_lower_case = set([x.lower() for x in preservation_types])
-        machine = get_sequencer_type(run_ids)
+        machine = get_sequencer_type(run_ids, run_mode)
         if not machine:
             LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal for $s; new machine name?", sample_name)
         if machine is "novaseq":
@@ -150,7 +150,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     return pooled_normals, descriptor, sample_name
 
 
-def get_sequencer_type(run_ids_list):
+def get_sequencer_type(run_ids_list, run_mode):
     hiseq_machines = ["jax", "pitt"]
     novaseq_machines = ["diana", "michelle", "aa00227", "ruth"]
     run_ids_lower = [i.lower() for i in run_ids_list if i]
@@ -162,7 +162,8 @@ def get_sequencer_type(run_ids_list):
         is_novaseq = find_substr(machine, run_ids_lower)
         if is_novaseq:
             return "novaseq"
-    return None
+    else:
+        return run_mode
 
 
 def find_substr(s, l):
@@ -202,11 +203,11 @@ def build_preservation_query(data):
     return query
 
 
-def get_pooled_normals(run_ids, preservation_types, bait_set):
+def get_pooled_normals(run_ids, preservation_types, bait_set, run_mode):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
         sample_file = build_pooled_normal_sample_by_file(
@@ -218,7 +219,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     return pooled_normal
 
 
-def get_pooled_normal_files(run_ids, preservation_types, bait_set):
+def get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode):
 
     pooled_normals = FileRepository.all()
 
@@ -230,7 +231,9 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids)
+    pooled_normals, descriptor, sample_name = get_descriptor(
+        bait_set, pooled_normals, preservation_types, run_ids, run_mode
+    )
 
     return pooled_normals, descriptor, sample_name
 
