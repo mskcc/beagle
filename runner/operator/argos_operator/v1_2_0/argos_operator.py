@@ -1,8 +1,7 @@
 import os
 from django.conf import settings
 from django.db.models import Q
-from file_system.models import File, FileMetadata, FileGroup
-from rest_framework import serializers
+from file_system.models import FileGroup
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs, get_project_prefix
@@ -15,7 +14,7 @@ from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
-from .bin.make_sample import format_sample_name
+from .bin.make_sample import format_sample_name, get_run_mode
 
 
 class ArgosOperator(Operator):
@@ -26,8 +25,13 @@ class ArgosOperator(Operator):
 
         argos_jobs = list()
         dmp_samples = list()
+        run_mode = get_run_mode(
+            FileRepository.filter(
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id}, values_metadata="runMode"
+            ).first()
+        )
         if self.pairing:
-            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing, run_mode)
         elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
@@ -221,7 +225,7 @@ class ArgosOperator(Operator):
                 samples.append(build_sample(igo_id_group[igo_id]))
         return samples
 
-    def get_files_for_pairs(self, pairing):
+    def get_files_for_pairs(self, pairing, run_mode):
         all_files = []
         cnt_tumors = 0
         dmp_samples = list()
@@ -244,7 +248,7 @@ class ArgosOperator(Operator):
                 normal_sample_id = normal_sample["sample_id"]
                 normals = list()
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
-                    run_ids, preservation_types, bait_set
+                    run_ids, preservation_types, bait_set, run_mode
                 )
                 for f in pooled_normal_files:
                     metadata = build_pooled_normal_sample_by_file(
