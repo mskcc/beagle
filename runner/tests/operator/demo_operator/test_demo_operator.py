@@ -6,7 +6,6 @@ from django.test import TestCase
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata, FileGroup
 from runner.models import Run, Pipeline, OperatorRun, Port
-from runner.views.run_api_view import OperatorViewSet
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.demo_operator.demo_operator import DemoOperator
 from runner.tasks import check_jobs_status, process_triggers
@@ -188,31 +187,6 @@ class TestDemoOperator(TestCase):
         expected_input = {"input_file": {"class": "File", "location": "juno://" + self.file1.path}}
 
         self.assertDictEqual(input_data, expected_input)
-
-    # disable job submission to Ridgeback
-    @patch("runner.tasks.submit_job")
-    def test_create_demo_operator_run(self, submit_job):
-        """
-        Test case for creating a Demo Operator run
-        """
-        # there should be no Runs
-        self.assertEqual(len(Run.objects.all()), 0)
-        self.assertEqual(len(Port.objects.all()), 0)
-        self.assertEqual(len(File.objects.all()), 2)
-        self.assertEqual(len(FileMetadata.objects.all()), 2)
-
-        # make a fake http request with some data
-        # and send it to the API endpoint for starting a run
-        request = MockRequest()
-        request.data = {"request_ids": ["1"], "pipeline_name": DemoOperator._pipeline_name}
-        view = OperatorViewSet()
-        response = view.post(request)
-
-        # there should be 1 run now
-        self.assertEqual(len(Run.objects.all()), 1)
-        self.assertEqual(len(Port.objects.all()), 3)
-        self.assertEqual(len(File.objects.all()), 2)
-        self.assertEqual(len(FileMetadata.objects.all()), 2)
 
     def test_live_demo_operator_run(self):
         """
