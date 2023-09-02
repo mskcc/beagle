@@ -13,6 +13,7 @@ from .models import (
     Patient,
     Request,
     FileExtension,
+    MachineRunMode,
 )
 
 
@@ -62,6 +63,10 @@ class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     search_fields = ("file__id",)
 
 
+class MachineRunModeAdmin(admin.ModelAdmin):
+    list_display = ("machine_name", "machine_class", "machine_type")
+
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
@@ -74,3 +79,4 @@ admin.site.register(FileMetadata, FileMetadataAdmin)
 admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
 admin.site.register(FileRunMap, FileRunMapAdmin)
+admin.site.register(MachineRunMode, MachineRunModeAdmin)

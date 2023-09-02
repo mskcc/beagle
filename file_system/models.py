@@ -424,3 +424,15 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
+
+
+class MachineRunMode(BaseModel):
+    machine_name = models.CharField(max_length=32, null=False, blank=False, unique=True)
+    machine_class = models.CharField(max_length=32, null=False, blank=False)
+    machine_type = models.CharField(max_length=32, null=False, blank=False)
+
+    def __repr__(self):
+        return "MACHINE: %s; CLASS: %s; TYPE: %s" % (self.machine_name, self.machine_class, self.machine_type)
+
+    def __str__(self):
+        return "{}".format(self.machine_name)
