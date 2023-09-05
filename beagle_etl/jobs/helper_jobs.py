@@ -68,7 +68,7 @@ def check_file_permissions(path):
 
 def check_file_exist(path):
     """
-    Helper job to
+    Confirm file is registered correctly
     """
     file_cnt = FileRepository.filter(path=path, file_group=settings.IMPORT_FILE_GROUP).count()
     if file_cnt == 0:
