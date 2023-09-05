@@ -78,13 +78,12 @@ class AccessLegacyMSIOperator(Operator):
 
             matched_normal_bam = matched_normal_bam.order_by("-created_date").first()
 
-
-            sample_tumor_normal[tumor_sample_id] = {'normal': matched_normal_bam, 
-                                                    'tumor': standard_tumor_bam}
+            sample_tumor_normal[tumor_sample_id] = {"normal": matched_normal_bam, "tumor": standard_tumor_bam}
 
         sample_inputs = [
-                  self.construct_sample_inputs(key, value['tumor'], value['normal'])
-                  for key, value in sample_tumor_normal.items()]
+            self.construct_sample_inputs(key, value["tumor"], value["normal"])
+            for key, value in sample_tumor_normal.items()
+        ]
 
         return sample_inputs
 
