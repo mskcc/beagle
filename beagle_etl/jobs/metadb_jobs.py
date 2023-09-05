@@ -287,7 +287,7 @@ def new_request(message_id):
         send_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
         for email in send_to:
             event = ErrorImportingFilesEvent(
-                job_notifier=None,
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject=f"Error while registering files for {request_id}",
