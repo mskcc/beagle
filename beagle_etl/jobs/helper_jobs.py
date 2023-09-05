@@ -1,9 +1,15 @@
 import os
 import logging
 from time import sleep
+from django.conf import settings
 from file_system.models import File
+from file_system.repository import FileRepository
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
-from beagle_etl.exceptions import FailedToCopyFilePermissionDeniedException
+from beagle_etl.exceptions import (
+    FailedToCopyFilePermissionDeniedException,
+    DuplicatedFilesException,
+    FailedToRegisterFileException,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -58,3 +64,14 @@ def calculate_file_checksum(file_id):
 def check_file_permissions(path):
     if not os.access(path, os.R_OK):
         raise FailedToCopyFilePermissionDeniedException()
+
+
+def check_file_exist(path):
+    """
+    Helper job to
+    """
+    file_cnt = FileRepository.filter(path=path, file_group=settings.IMPORT_FILE_GROUP).count()
+    if file_cnt == 0:
+        raise FailedToRegisterFileException("File %s not registered", path)
+    elif file_cnt > 1:
+        raise DuplicatedFilesException("Duplicated file %s", path)
