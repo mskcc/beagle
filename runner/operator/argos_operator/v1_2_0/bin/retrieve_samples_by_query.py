@@ -223,9 +223,7 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    pooled_normals, descriptor, sample_name = get_descriptor(
-        bait_set, pooled_normals, preservation_types, run_ids
-    )
+    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids)
 
     return pooled_normals, descriptor, sample_name
 
