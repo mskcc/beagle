@@ -25,13 +25,8 @@ class ArgosOperator(Operator):
 
         argos_jobs = list()
         dmp_samples = list()
-        run_mode = get_run_mode(
-            FileRepository.filter(
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id}, values_metadata="runMode"
-            ).first()
-        )
         if self.pairing:
-            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing, run_mode)
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
         elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
@@ -225,7 +220,7 @@ class ArgosOperator(Operator):
                 samples.append(build_sample(igo_id_group[igo_id]))
         return samples
 
-    def get_files_for_pairs(self, pairing, run_mode):
+    def get_files_for_pairs(self, pairing):
         all_files = []
         cnt_tumors = 0
         dmp_samples = list()
@@ -248,7 +243,7 @@ class ArgosOperator(Operator):
                 normal_sample_id = normal_sample["sample_id"]
                 normals = list()
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
-                    run_ids, preservation_types, bait_set, run_mode
+                    run_ids, preservation_types, bait_set
                 )
                 for f in pooled_normal_files:
                     metadata = build_pooled_normal_sample_by_file(
