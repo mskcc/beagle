@@ -6,10 +6,10 @@ For example, get all samples by a patient ID or pooled normals based on the bait
 and preservation type
 """
 import logging
-import os
-from file_system.models import File, FileMetadata, FileGroup
+from file_system.models import MachineRunMode
+from file_system.models import FileGroup
 from file_system.repository.file_repository import FileRepository
-from django.db.models import Prefetch, Q
+from django.db.models import Q
 from django.conf import settings
 from .make_sample import build_sample, remove_with_caveats, format_sample_name
 from runner.operator.helper import get_r_orientation, spoof_barcode, init_metadata
@@ -150,20 +150,12 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, run_mo
     return pooled_normals, descriptor, sample_name
 
 
-def get_sequencer_type(run_ids_list, run_mode):
-    hiseq_machines = ["jax", "pitt"]
-    novaseq_machines = ["diana", "michelle", "aa00227", "ruth"]
+def get_sequencer_type(run_ids_list):
     run_ids_lower = [i.lower() for i in run_ids_list if i]
-    for machine in hiseq_machines:
-        is_hiseq = find_substr(machine, run_ids_lower)
-        if is_hiseq:
-            return "hiseq"
-    for machine in novaseq_machines:
-        is_novaseq = find_substr(machine, run_ids_lower)
-        if is_novaseq:
-            return "novaseq"
-    else:
-        return run_mode
+    machine_modes = MachineRunMode.objects.all()
+    for machine in machine_modes:
+        if find_substr(machine.machine_name, run_ids_lower):
+            return machine.machine_class
 
 
 def find_substr(s, l):

@@ -18,8 +18,10 @@ data = [
 def load_machine_names(apps, schema_editor):
     MachineRunMode = apps.get_model("file_system", "MachineRunMode")
     for row in data:
-        obj = MachineRunMode(machine_name=row[0], machine_class=row[1], machine_type=row[2])
-        obj.save()
+        try:
+            MachineRunMode.objects.create(machine_name=row[0], machine_class=row[1], machine_type=row[2])
+        except Exception:
+            pass
 
 
 class Migration(migrations.Migration):
