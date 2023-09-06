@@ -100,11 +100,11 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
-        if machine is "hiseq":
+        if machine == "hiseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
@@ -119,11 +119,11 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
-        if machine is "hiseq":
+        if machine == "hiseq":
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
@@ -138,7 +138,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal for $s; new machine name?", sample_name)
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V1"
