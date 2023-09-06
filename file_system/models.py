@@ -426,9 +426,15 @@ class FileRunMap(BaseModel):
     run = JSONField(default=list)
 
 
+class LowercaseCharField(models.CharField):
+    def get_prep_value(self, value):
+        value = super().get_prep_value(value)
+        return value if value is None else value.lower()
+
+
 class MachineRunMode(BaseModel):
-    machine_name = models.CharField(max_length=32, null=False, blank=False, unique=True)
-    machine_class = models.CharField(max_length=32, null=False, blank=False)
+    machine_name = LowercaseCharField(max_length=32, null=False, blank=False, unique=True)
+    machine_class = LowercaseCharField(max_length=32, null=False, blank=False)
     machine_type = models.CharField(max_length=32, null=False, blank=False)
 
     def __repr__(self):
