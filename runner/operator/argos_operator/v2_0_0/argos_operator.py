@@ -82,8 +82,8 @@ class ArgosOperator(Operator):
         argos_jobs = list()
         number_of_inputs = len(argos_inputs)
         for i, job in enumerate(argos_inputs):
-            tumor_sample_name = job["tumors"]["ID"]
-            normal_sample_name = job["normals"]["ID"]
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
 
             name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job["assay"]
@@ -108,8 +108,8 @@ class ArgosOperator(Operator):
         check_for_duplicates = list()
         filepaths = list()
         for i, job in enumerate(argos_inputs):
-            tumor_sample_name = job["tumors"]["ID"]
-            for p in job["tumors"]["R1"]:
+            tumor_sample_name = job["tumor"]["ID"]
+            for p in job["tumor"]["R1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -117,7 +117,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["tumors"]["R2"]:
+            for p in job["tumor"]["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -125,7 +125,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["tumors"]["zR1"]:
+            for p in job["tumor"]["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -133,7 +133,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["tumors"]["zR2"]:
+            for p in job["tumor"]["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -141,7 +141,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["tumors"]["bam"]:
+            for p in job["tumor"]["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([tumor_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -150,8 +150,8 @@ class ArgosOperator(Operator):
                 if filepath not in filepaths:
                     filepaths.append(filepath)
 
-            normal_sample_name = job["normals"]["ID"]
-            for p in job["normals"]["R1"]:
+            normal_sample_name = job["normal"]["ID"]
+            for p in job["normal"]["R1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -159,7 +159,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["normals"]["R2"]:
+            for p in job["normal"]["R2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -167,7 +167,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["normals"]["zR1"]:
+            for p in job["normal"]["zR1"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -175,7 +175,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["normals"]["zR2"]:
+            for p in job["normal"]["zR2"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -183,7 +183,7 @@ class ArgosOperator(Operator):
                     sample_mapping += file_str
                 if filepath not in filepaths:
                     filepaths.append(filepath)
-            for p in job["normals"]["bam"]:
+            for p in job["normal"]["bam"]:
                 filepath = FileProcessor.parse_path_from_uri(p["location"])
                 file_str = "\t".join([normal_sample_name, filepath]) + "\n"
                 if file_str not in check_for_duplicates:
@@ -196,8 +196,8 @@ class ArgosOperator(Operator):
     def get_pairing_from_argos_inputs(self, argos_inputs):
         sample_pairing = ""
         for i, job in enumerate(argos_inputs):
-            tumor_sample_name = job["tumors"]["ID"]
-            normal_sample_name = job["normals"]["ID"]
+            tumor_sample_name = job["tumor"]["ID"]
+            normal_sample_name = job["normal"]["ID"]
             sample_pairing += "\t".join([normal_sample_name, tumor_sample_name]) + "\n"
         return sample_pairing
 
@@ -335,8 +335,8 @@ class ArgosOperator(Operator):
         num_within_req = 0
         other_requests_matched = list()
         for i, job in enumerate(argos_inputs):
-            tumor = job["tumors"]
-            normal = job["normals"]
+            tumor = job["tumor"]
+            normal = job["normal"]
             req_t = tumor["request_id"]
             req_n = normal["request_id"]
             specimen_type_n = normal["specimen_type"]
