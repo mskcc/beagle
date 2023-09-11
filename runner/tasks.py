@@ -54,7 +54,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
         for email in send_to:
             event = VoyagerActionRequiredForRunningEvent(
-                job_notifier=job_group_id,
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject=f"Action Required for Project {operator.request_id}",
