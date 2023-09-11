@@ -220,7 +220,6 @@ class ArgosOperator(Operator):
                 samples.append(build_sample(igo_id_group[igo_id]))
         return samples
 
-
     def get_files_for_pairs(self, pairing):
         all_files = []
         cnt_tumors = 0
@@ -235,9 +234,9 @@ class ArgosOperator(Operator):
                 normal = list()
                 run_ids = list()
                 for t_files in tumor:
-                   run_id = t_files.metadata["runId"]
-                   if run_id:
-                       run_ids.append(run_id)
+                    run_id = t_files.metadata["runId"]
+                    if run_id:
+                        run_ids.append(run_id)
                 run_ids.sort()
                 tumor_current = tumor.first()
                 bait_set = tumor_current.metadata["baitSet"]
