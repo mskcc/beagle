@@ -121,33 +121,33 @@ def generate_sample_pairing_and_mapping_files(run_ids):
         request_id_set.add(r.tags[settings.REQUEST_ID_METADATA_KEY])
         tumor_sample = Port.objects.filter(run_id=r.id, name="tumor").first()
         normal_sample = Port.objects.filter(run_id=r.id, name="normal").first()
-        tumor_sample_name = tumor_sample.value["ID"]
-        normal_sample_name = normal_sample["ID"]
-        for p in tumor_sample["R1"]:
+        tumor_sample_name = tumor_sample.db_value["ID"]
+        normal_sample_name = normal_sample.db_value["ID"]
+        for p in tumor_sample.db_value["R1"]:
             sample_mapping += "\t".join([tumor_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in tumor_sample["R2"]:
+        for p in tumor_sample.db_value["R2"]:
             sample_mapping += "\t".join([tumor_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in tumor_sample["zR1"]:
+        for p in tumor_sample.db_value["zR1"]:
             sample_mapping += "\t".join([tumor_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in tumor_sample["zR2"]:
+        for p in tumor_sample.db_value["zR2"]:
             sample_mapping += "\t".join([tumor_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in normal_sample["R1"]:
+        for p in normal_sample.db_value["R1"]:
             sample_mapping += "\t".join([normal_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in normal_sample["R2"]:
+        for p in normal_sample.db_value["R2"]:
             sample_mapping += "\t".join([normal_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in normal_sample["zR1"]:
+        for p in normal_sample.db_value["zR1"]:
             sample_mapping += "\t".join([normal_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in normal_sample["zR2"]:
+        for p in normal_sample.db_value["zR2"]:
             sample_mapping += "\t".join([normal_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
-        for p in normal_sample["bam"]:
+        for p in normal_sample.db_value["bam"]:
             sample_mapping += "\t".join([normal_sample_name, FileProcessor.get_file_path(p["location"])]) + "\n"
             files.append(FileProcessor.get_file_path(p["location"]))
 

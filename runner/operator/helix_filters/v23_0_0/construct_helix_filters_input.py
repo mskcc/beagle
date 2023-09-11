@@ -159,7 +159,7 @@ def construct_helix_filters_input(argos_run_id_list):
             if name == "normal":
                 normal_id = value["ID"]
                 pair_info["normal_id"] = normal_id
-            if name == "normal":
+            if name == "tumor":
                 tumor_id = value["ID"]
                 pair_info["tumor_id"] = tumor_id
             if name == "maf_file":
@@ -238,16 +238,16 @@ def create_data_clinical_file(run_id_list):
 
 def get_files_from_run(r):
     files = list()
-    inp_port = Port.objects.filter(run_id=r.id, name="pair").first()
-    for p in inp_port.db_value[0]["R1"]:
+    inp_port = Port.objects.filter(run_id=r.id, name="tumor").first()
+    for p in inp_port.db_value["R1"]:
         files.append(FileProcessor.get_file_path(p["location"]))
-    for p in inp_port.db_value[0]["R2"]:
+    for p in inp_port.db_value["R2"]:
         files.append(FileProcessor.get_file_path(p["location"]))
-    for p in inp_port.db_value[0]["zR1"]:
+    for p in inp_port.db_value["zR1"]:
         files.append(FileProcessor.get_file_path(p["location"]))
-    for p in inp_port.db_value[0]["zR2"]:
+    for p in inp_port.db_value["zR2"]:
         files.append(FileProcessor.get_file_path(p["location"]))
-    for p in inp_port.db_value[0]["bam"]:
+    for p in inp_port.db_value["bam"]:
         files.append(FileProcessor.get_file_path(p["location"]))
     return files
 
