@@ -40,10 +40,10 @@ make runserver
 
 Remember to export these environment variables for IGO LIMS access by Beagle before starting services and Django servers:
 
-export BEAGLE_LIMS_USERNAME=some_username
-export BEAGLE_LIMS_PASSWORD=some_password
-export BEAGLE_LIMS_URL=beagle_lims_url_goes_here
-export BEAGLE_AUTH_LDAP_SERVER_URI=ldap_url_goes_here
+export SINGULARITYENV_BEAGLE_LIMS_USERNAME=some_username
+export SINGULARITYENV_BEAGLE_LIMS_PASSWORD=some_password
+export SINGULARITYENV_BEAGLE_METADB_NATS_URL=beagle_lims_url_goes_here
+export SINGULARITYENV_BEAGLE_AUTH_LDAP_SERVER_URI=ldap_url_goes_here
 
 Demo Usage
 ----------
@@ -149,12 +149,12 @@ install-m1: conda
 		pip install -r requirements.txt && \
 		pip install -r requirements-dev.txt)
 
-export ENVIRONMENT=dev
+export SINGULARITYENV_ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
-export BEAGLE_DB_NAME=db
-export BEAGLE_DB_USERNAME=$(shell whoami)
-export BEAGLE_DB_PASSWORD=admin
-export BEAGLE_DB_PORT:=65527
+export SINGULARITYENV_BEAGLE_DB_NAME=db
+export SINGULARITYENV_BEAGLE_DB_USERNAME=$(shell whoami)
+export SINGULARITYENV_BEAGLE_DB_PASSWORD=admin
+export SINGULARITYENV_BEAGLE_DB_PORT:=65527
 export BEAGLE_DB_URL:=localhost
 
 export PGDATA=$(BEAGLE_DB_NAME)
@@ -217,11 +217,11 @@ db-inter:
 
 # ~~~~~~ Celery tasks & RabbitMQ setup ~~~~~ #
 # !! need to start RabbitMQ before celery, and both before running Django app servers !!
-export BEAGLE_RABBITMQ_USERNAME:=guest
-export BEAGLE_RABBITMQ_PASSWORD:=guest
-export BEAGLE_RUNNER_QUEUE:=beagle_runner_queue
-export BEAGLE_DEFAULT_QUEUE:=beagle_default_queue
-export BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
+export SINGULARITYENV_BEAGLE_RABBITMQ_USERNAME:=guest
+export SINGULARITYENV_BEAGLE_RABBITMQ_PASSWORD:=guest
+export SINGULARITYENV_BEAGLE_RUNNER_QUEUE:=beagle_runner_queue
+export SINGULARITYENV_BEAGLE_DEFAULT_QUEUE:=beagle_default_queue
+export SINGULARITYENV_BEAGLE_JOB_SCHEDULER_QUEUE:=beagle_job_scheduler_queue
 # these environment variables are required for IGO LIMS access by Beagle (values not included here):
 # export BEAGLE_LIMS_USERNAME=some_username
 # export BEAGLE_LIMS_PASSWORD=some_password
@@ -250,7 +250,8 @@ export CELERY_WORKER_JOB_SCHEDULER_PID_FILE:=$(LOG_DIR_ABS)/celery.worker.beagle
 export CELERY_WORKER_JOB_SCHEDULER_LOGFILE:=$(LOG_DIR_ABS)/celery.worker.beagle_job_scheduler.log
 export CELERY_WORKER_RUNNER_PID_FILE:=$(LOG_DIR_ABS)/celery.worker.runner.pid
 export CELERY_WORKER_RUNNER_LOGFILE:=$(LOG_DIR_ABS)/celery.worker.runner.log
-export CELERY_BROKER_URL:=$(BEAGLE_RABBITMQ_URL)
+export SINGULARITYENV_BEAGLE_CELERY_BROKER_URL:=$(BEAGLE_RABBITMQ_URL)
+ 
 
 # check for the presence of extra required env variables
 check-env:
