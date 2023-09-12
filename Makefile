@@ -28,6 +28,8 @@ make db-init
 - NOTE: you might need to adjust the PostgreSQL port variable BEAGLE_DB_PORT to avoid conflicts on a shared server
 
 2b. run the test suite with:
+make test
+
 
 3. initialize the Django database and set a admin (superuser) account with:
 make django-init
