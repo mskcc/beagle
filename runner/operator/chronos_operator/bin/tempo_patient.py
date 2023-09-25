@@ -120,6 +120,8 @@ class Patient:
             if normal_sample not in seen:
                 mapping.extend(self.get_mapping_for_sample(normal_sample))
                 seen.add(normal_sample)
+        for unpaired in self.unpaired_samples:
+            mapping.extend(self.get_mapping_for_sample(unpaired))
         return mapping
 
     def get_mapping_for_sample(self, sample):
