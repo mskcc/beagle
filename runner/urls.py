@@ -12,6 +12,7 @@ from runner.views.run_api_view import (
     RunOperatorViewSet,
     AionViewSet,
     TempoMPGenViewSet,
+    ArgosPairingViewSet,
     CWLJsonViewSet,
     PairsOperatorViewSet,
     RunApiRestartViewSet,
@@ -47,5 +48,6 @@ urlpatterns = [
     path("operator/pairs/", PairsOperatorViewSet.as_view()),
     path("operator/aion/", AionViewSet.as_view()),
     path("operator/tempo_mpgen/", TempoMPGenViewSet.as_view()),
+    path("operator/argos-pairing/", ArgosPairingViewSet.as_view()),
     path("cwljson/", CWLJsonViewSet.as_view()),
 ]
