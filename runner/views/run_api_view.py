@@ -696,7 +696,11 @@ class ArgosPairingViewSet(GenericAPIView):
             samples = operator.get_samples_from_data(data)
             argos_inputs, error_samples = construct_argos_jobs(samples)
             sample_pairing = operator.get_pairing_from_argos_inputs(argos_inputs)
-            body = {"details": sample_pairing}
+            if sample_pairing:
+                body = {"details": sample_pairing}
+            else:
+                message = "$s: No samples found." % igo_request_id
+                body = {"details": message}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
 
