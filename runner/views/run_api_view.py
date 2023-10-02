@@ -699,7 +699,7 @@ class ArgosPairingViewSet(GenericAPIView):
             if sample_pairing:
                 body = {"details": sample_pairing}
             else:
-                message = "$s: No samples found." % igo_request_id
+                message = "%s: No samples found." % igo_request_id
                 body = {"details": message}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
