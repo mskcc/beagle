@@ -686,11 +686,10 @@ class ArgosPairingViewSet(GenericAPIView):
         argos_slug = request.data.get("argos_slug", None)
         if igo_request_id and argos_slug:
             operator_model = Operator.objects.get(slug=argos_slug)
-            operator = OperatorFactory.get_by_model(
-            operator_model, request_id=igo_request_id
-            )
+            operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
             # construct_argos_jobs() is sloppily separate from the Operator module
             from runner.operator.argos_operator.v2_0_0.construct_argos_pair import construct_argos_jobs
+
             files, cnt_tumors = operator.get_files(operator.request_id)
             data = operator.build_data_list(files)
             samples = operator.get_samples_from_data(data)
