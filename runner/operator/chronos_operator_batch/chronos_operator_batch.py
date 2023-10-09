@@ -168,7 +168,7 @@ class ChronosOperatorBatch(Operator):
             "workflows": "",
             "assayType": "exome",
             "genome": "GRCh37",
-            "-process.clusterOptions": "-sla CMOPI",
+            "process.clusterOptions": "-sla CMOPI",
             "params.outname": f"{output_directory}/bamMapping.tsv"
         }
 
