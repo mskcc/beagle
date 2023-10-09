@@ -168,8 +168,8 @@ class ChronosOperatorBatch(Operator):
             "workflows": "",
             "assayType": "exome",
             "genome": "GRCh37",
-            "-process.clusterOptions=-sla CMOPI": True,
-            f"-params.outname={output_directory}/bamMapping.tsv": True
+            "-process.clusterOptions": "-sla CMOPI",
+            "params.outname": f"{output_directory}/bamMapping.tsv"
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
