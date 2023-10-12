@@ -609,6 +609,8 @@ class TestPairRequest(TestCase):
         dmp_bam_filegroup_instance = FileGroup.objects.get(name="DMP BAMs")
         bam_filetype_instance = FileType.objects.get(name="bam")
 
+        settings.POOLED_NORMAL_FILE_GROUP = str(poolednormal_filegroup_instance.id)
+
         # generate tumor samples
         # Sample 1 C-8VK0V7
         tumor1_R1_file_instance = File.objects.create(

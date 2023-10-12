@@ -424,3 +424,21 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
+
+
+class LowercaseCharField(models.CharField):
+    def get_prep_value(self, value):
+        value = super().get_prep_value(value)
+        return value if value is None else value.lower()
+
+
+class MachineRunMode(BaseModel):
+    machine_name = LowercaseCharField(max_length=32, null=False, blank=False, unique=True)
+    machine_class = LowercaseCharField(max_length=32, null=False, blank=False)
+    machine_type = models.CharField(max_length=32, null=False, blank=False)
+
+    def __repr__(self):
+        return "MACHINE: %s; CLASS: %s; TYPE: %s" % (self.machine_name, self.machine_class, self.machine_type)
+
+    def __str__(self):
+        return "{}".format(self.machine_name)

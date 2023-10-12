@@ -71,8 +71,9 @@ class TestCopyOutputs(TestCase):
             operator_model, version="v1.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
         )
         input_json_valid = False
-        if operator.get_jobs()[0][0].is_valid():
-            input_json = operator.get_jobs()[0][0].initial_data["inputs"]
+        jobs = operator.get_jobs()
+        if jobs[0].is_valid():
+            input_json = jobs[0].inputs
             input_json_valid = self.validate_copy_outputs_input(input_json)
             print(json.dumps(input_json, cls=UUIDEncoder))
         self.assertEqual(input_json_valid, True)

@@ -436,7 +436,8 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
 
 
 @shared_task
-def update_request_job(message_id):
+def update_request_job(message_id, job_group, job_group_notifier):
+    job_group_notifier_id = str(job_group_notifier.id)
     message = SMILEMessage.objects.get(id=message_id)
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata["requestMetadataJson"])
@@ -445,11 +446,6 @@ def update_request_job(message_id):
 
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
-    job_group = JobGroup()
-    job_group.save()
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
@@ -522,14 +518,31 @@ def update_request_job(message_id):
             pooled_normal_jobs.append(
                 {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
             )
-
-    _generate_ticket_description(
-        request_id, str(job_group.id), job_group_notifier_id, sample_status_list, pooled_normal_jobs, request_metadata
-    )
-
     message.status = SmileMessageStatus.COMPLETED
     message.save()
     create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier)
+    return request_metadata, pooled_normal
+
+
+def fetch_request_metadata(request_id):
+    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
+    request_metadata = {
+        settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
+        settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
+        settings.RECIPE_METADATA_KEY: file_example.metadata[settings.RECIPE_METADATA_KEY],
+        "projectManagerName": file_example.metadata["projectManagerName"],
+        "piEmail": file_example.metadata["piEmail"],
+        "labHeadName": file_example.metadata["labHeadName"],
+        "labHeadEmail": file_example.metadata["labHeadEmail"],
+        "investigatorName": file_example.metadata["investigatorName"],
+        "investigatorEmail": file_example.metadata["investigatorEmail"],
+        "dataAnalystName": file_example.metadata["dataAnalystName"],
+        "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
+        "otherContactEmails": file_example.metadata["otherContactEmails"],
+        "dataAccessEmails": file_example.metadata["dataAccessEmails"],
+        "qcAccessEmails": file_example.metadata["qcAccessEmails"],
+    }
+    return request_metadata
 
 
 @shared_task
@@ -552,15 +565,36 @@ def update_job(request_id):
         .order_by("created_date")
         .all()
     )
+
+    job_group = JobGroup()
+    job_group.save()
+    job_group_notifier_id = notifier_start(job_group, request_id)
+    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+
+    sample_status = []
     for msg in sample_update_messages:
-        update_sample_job(str(msg.id))
+        sample_status.extend(update_sample_job(str(msg.id), job_group, job_group_notifier))
+    request_metadata = dict()
+    pooled_normal = list()
     for msg in request_update_messages:
-        update_request_job(str(msg.id))
+        request_metadata, pooled_normal = update_request_job(str(msg.id), job_group, job_group_notifier)
+
+    if not request_metadata:
+        request_metadata = fetch_request_metadata(request_id)
+
+    recipe = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
+    ).first()
+    _generate_ticket_description(
+        request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
+    )
+    create_request_callback_instance(request_id, recipe, sample_status, job_group, job_group_notifier)
 
 
 @shared_task
-def update_sample_job(message_id):
+def update_sample_job(message_id, job_group, job_group_notifier):
     message = SMILEMessage.objects.get(id=message_id)
+    job_group_notifier_id = str(job_group_notifier.id)
     data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
@@ -640,11 +674,6 @@ def update_sample_job(message_id):
         "smilePatientId": smile_patient_id,
     }
 
-    job_group = JobGroup()
-    job_group.save()
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
@@ -712,8 +741,6 @@ def update_sample_job(message_id):
                     logger.error(e)
 
     # Remove unnecessary files
-    print(file_paths)
-    print(new_files)
     files_to_remove = set(file_paths) - set(new_files)
     for fi in list(files_to_remove):
         logger.info(f"Removing file {fi}.")
@@ -729,7 +756,7 @@ def update_sample_job(message_id):
         "message": "File %s request metadata updated",
         "code": None,
     }
-    create_request_callback_instance(request_id, recipe, [sample_status], job_group, job_group_notifier)
+    return [sample_status]
 
 
 @shared_task

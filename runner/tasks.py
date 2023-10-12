@@ -48,13 +48,13 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
     try:
         jobs = operator.get_jobs()
     except Exception as e:
-        logger.error(f"Exception in Operator get_jobs for: {operator}")
+        logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
         gene_panel = get_gene_panel(operator.request_id)
         number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
         for email in send_to:
             event = VoyagerActionRequiredForRunningEvent(
-                job_notifier=job_group_id,
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
                 email_to=email,
                 email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
                 subject=f"Action Required for Project {operator.request_id}",
@@ -63,10 +63,14 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
                 number_of_samples=number_of_samples,
             ).to_dict()
             send_notification.delay(event)
-    log_directory = operator.get_log_directory()
-    create_operator_run_from_jobs(
-        operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory, notify=notify
-    )
+        logger.info(
+            format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id)
+        )
+    else:
+        log_directory = operator.get_log_directory()
+        create_operator_run_from_jobs(
+            operator, jobs, job_group_id, job_group_notifier_id, parent, log_directory, notify=notify
+        )
 
 
 def create_operator_run_from_jobs(
@@ -649,9 +653,23 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
             completed_runs, failed_runs = 0, 1
         running_runs = 0
 
+    request_id = "UNKNOWN REQUEST"
+    for sample in run.samples:
+        tumor_or_normal = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: sample.sample_id},
+            values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
+        ).first()
+
+        if tumor_or_normal == "Tumor":
+            request_id = FileRepository.filter(
+                metadata={settings.SAMPLE_ID_METADATA_KEY: sample.sample_id},
+                values_metadata=settings.REQUEST_ID_METADATA_KEY,
+            ).first()
+            break
+
     event = RunFinishedEvent(
         job_group_notifier_id,
-        run.tags.get(settings.REQUEST_ID_METADATA_KEY, "UNKNOWN REQUEST"),
+        request_id,
         str(run.run_id),
         pipeline_name,
         pipeline_version,

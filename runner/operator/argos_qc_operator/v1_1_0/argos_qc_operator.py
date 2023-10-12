@@ -22,7 +22,7 @@ class ArgosQcOperator(Operator):
     """
 
     ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.1.2"
+    ARGOS_VERSION = "1.5.0"
 
     def get_jobs(self):
         """

@@ -60,8 +60,8 @@ class AccessLegacyMSIOperator(Operator):
 
         standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
 
-        sample_ids = []
-        matched_normal_bams = []
+        # Dictionary that associates tumor bam with standard bam with tumor_sample_id
+        sample_tumor_normal = {}
         for standard_tumor_bam in standard_tumor_bams:
             tumor_sample_id = standard_tumor_bam.file_name.split("_cl_aln")[0]
             patient_id = "-".join(tumor_sample_id.split("-")[0:2])
@@ -78,12 +78,11 @@ class AccessLegacyMSIOperator(Operator):
 
             matched_normal_bam = matched_normal_bam.order_by("-created_date").first()
 
-            sample_ids.append(tumor_sample_id)
-            matched_normal_bams.append(matched_normal_bam)
+            sample_tumor_normal[tumor_sample_id] = {"normal": matched_normal_bam, "tumor": standard_tumor_bam}
 
         sample_inputs = [
-            self.construct_sample_inputs(sample_ids[i], standard_tumor_bams[i], matched_normal_bams[i])
-            for i in range(0, len(sample_ids))
+            self.construct_sample_inputs(key, value["tumor"], value["normal"])
+            for key, value in sample_tumor_normal.items()
         ]
 
         return sample_inputs

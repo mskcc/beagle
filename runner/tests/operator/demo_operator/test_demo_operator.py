@@ -138,7 +138,7 @@ class TestDemoOperator(TestCase):
         # Pipeline entry for the Operator
         self.pipeline = Pipeline.objects.create(
             name=DemoOperator._pipeline_name,
-            github="git@github.com:stevekm/copy-cwl",
+            github="https://github.com/stevekm/copy-cwl",
             version="master",
             entrypoint="copy.cwl",
             output_file_group=self.filegroup,
@@ -182,15 +182,12 @@ class TestDemoOperator(TestCase):
         jobs = operator.get_jobs()
         self.assertEqual(len(jobs), 1)
 
-        serialized_run, job = jobs[0]
-        initial_data = serialized_run.initial_data
+        job = jobs[0]
+        input_data = job.inputs
 
         expected_input = {"input_file": {"class": "File", "location": "juno://" + self.file1.path}}
-        expected_initial_data = {"app": pipeline_instance.id, "inputs": expected_input, "name": "DEMO JOB", "tags": {}}
-        expected_job = expected_input
 
-        self.assertDictEqual(initial_data, expected_initial_data)
-        self.assertDictEqual(job, expected_job)
+        self.assertDictEqual(input_data, expected_input)
 
     # disable job submission to Ridgeback
     @patch("runner.tasks.submit_job")
