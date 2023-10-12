@@ -36,7 +36,8 @@ def get_samples_from_patient_id(patient_id):
     q_pid = Q(("metadata__{}".format(settings.PATIENT_ID_METADATA_KEY), patient_id))
     q_fg = build_argos_file_groups_query()
     q = q_pid & q_fg
-    files = FileRepository.filter(queryset=all_files, q=q, filter_redact=True)
+    files = FileRepository.filter(queryset=all_files, q=q)
+    files = FileRepository.filter(queryset=files, filter_redact=True)
     data = list()
     for current_file in files:
         sample = dict()

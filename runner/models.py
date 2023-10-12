@@ -221,6 +221,11 @@ class Run(BaseModel):
         self.status = RunStatus.READY
         return self
 
+    def reset_counters(self):
+        self.resume_attempts = 2
+        self.restart_attempts = 3
+        return self
+
     def set_for_restart(self):
         run_id = self.pk
         output_directory = self.output_directory
@@ -250,6 +255,8 @@ class Run(BaseModel):
             restart_attempts = self.restart_attempts - 1
             if "restart" not in message:
                 message["restart"] = []
+                if "resume" not in message:
+                    message["resume"] = []
                 message["resume"].append(job_tuple)
             else:
                 message["restart"].append(job_tuple)
