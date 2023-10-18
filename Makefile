@@ -431,7 +431,7 @@ $(AUTH_FILE):
 # example request ID to use for testing LIMS request import
 REQID:=07264_G
 # fill this in with the token that was generated with `auth` above
-TOKEN:=IUzI1NiJ9.eyJ0
+TOKEN:=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NjU3NTM5LCJqdGkiOiI0ZDQ0YTc3MDdlZDA0ZjBjYmQxMTkxMTliNjJhZDhmZSIsInVzZXJfaWQiOjEsInVzZXIiOnsiZW1haWwiOiIiLCJncm91cHMiOlsibXNrY2MiXX19.BOM0ShSbZFOy1uWFUzYyIYpd-w8OVQHQIuVOsu2OOWg
 # import files data about samples in a request from the IGO LIMS
 import:
 	curl -H "Content-Type: application/json" \
