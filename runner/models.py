@@ -8,7 +8,7 @@ from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
-
+from django.conf import settings
 
 class ProtocolType(IntEnum):
     CWL = 0
@@ -201,8 +201,8 @@ class Run(BaseModel):
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
-    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=2)
-    restart_attempts = models.IntegerField(blank=False, null=False, editable=True, default=3)
+    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=settings.DEFAULT_RESUME_COUNT)
+    restart_attempts = models.IntegerField(blank=False, null=False, editable=True, default=settings.DEFAULT_RESTART_COUNT)
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
