@@ -189,8 +189,8 @@ class NextflowRunObject(RunObject):
         inputs["inputs"] = input_files
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
-        output_file_path = os.path.join(output_directory, "bamMapping.tsv")
-        trace_file_path = os.path.join(output_directory, "trace.txt")
+        output_file_path = os.path.join(log_directory, "bamMapping.tsv")
+        trace_file_path = os.path.join(log_directory, "trace.txt")
         config = bytes(self.run_obj.app.config, "utf-8").decode("unicode_escape")
         render_value = dict()
         render = False
