@@ -10,6 +10,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
 
+
 class ProtocolType(IntEnum):
     CWL = 0
     NEXTFLOW = 1
@@ -202,7 +203,9 @@ class Run(BaseModel):
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
     resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=settings.DEFAULT_RESUME_COUNT)
-    restart_attempts = models.IntegerField(blank=False, null=False, editable=True, default=settings.DEFAULT_RESTART_COUNT)
+    restart_attempts = models.IntegerField(
+        blank=False, null=False, editable=True, default=settings.DEFAULT_RESTART_COUNT
+    )
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
