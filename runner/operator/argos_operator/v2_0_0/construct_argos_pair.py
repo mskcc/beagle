@@ -62,9 +62,9 @@ def format_sample(data):
     return sample
 
 
-def construct_argos_jobs(samples, pairs=None):
+def construct_argos_jobs(samples, pairs=None, logger=None):
     samples, error_samples = remove_with_caveats(samples)
-    pairs = compile_pairs(samples, pairs)
+    pairs = compile_pairs(samples, pairs, logger=logger)
     number_of_tumors = len(pairs["tumor"])
     argos_jobs = list()
     for i in range(0, number_of_tumors):
