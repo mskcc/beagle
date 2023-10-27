@@ -40,7 +40,7 @@ class ArgosOperator(Operator):
         data = self.build_data_list(files)
 
         samples = self.get_samples_from_data(data)
-        argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing)
+        argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing, logger=self.logger)
         sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
         sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
         argos_jobs = self.get_argos_jobs(argos_inputs)
