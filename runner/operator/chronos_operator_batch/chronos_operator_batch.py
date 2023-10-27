@@ -164,7 +164,7 @@ class ChronosOperatorBatch(Operator):
 
         input_json = {
             "mapping": mapping_all,
-            "workflows": "",
+            "workflows": "qc",
             "assayType": "exome",
             "genome": "GRCh37",
             "process.clusterOptions": "-sla CMOPI"
