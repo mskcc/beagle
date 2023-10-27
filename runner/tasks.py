@@ -24,6 +24,7 @@ from notifier.events import (
     SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
     VoyagerActionRequiredForRunningEvent,
+    OperatorErrorEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
@@ -47,6 +48,9 @@ logger = logging.getLogger(__name__)
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
     try:
         jobs = operator.get_jobs()
+        if operator.logger.message:
+            event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
+            send_notification.delay(event.to_dict())
     except Exception as e:
         logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
         gene_panel = get_gene_panel(operator.request_id)
