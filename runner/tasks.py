@@ -1,8 +1,7 @@
 import os
 import logging
 import requests
-import csv
-import re
+import traceback
 from datetime import datetime, timedelta
 from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
@@ -52,7 +51,8 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
             event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
             send_notification.delay(event.to_dict())
     except Exception as e:
-        logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
+        logger.error(f"Exception in Operator get_jobs for: {operator}")
+        logger.error(f"Traceback:\n{traceback.format_exc()}")
         gene_panel = get_gene_panel(operator.request_id)
         number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
