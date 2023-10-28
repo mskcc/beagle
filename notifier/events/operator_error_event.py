@@ -16,7 +16,7 @@ class OperatorErrorEvent(Event):
 
     def __str__(self):
         OPERATOR_ERROR_TEMPLATE = """
-        Operator Error:
+        Operator Log:
         
         Error: {error}
         """
