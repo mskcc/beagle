@@ -128,7 +128,7 @@ class CMOCHChipVarOperator(Operator):
         for o, i in zip(nucleo_output_port_names, qc_input_port_names):
             # We are running a multi-sample workflow on just one sample,
             # so we create single-element lists here
-            bam = [self.parse_nucleo_output_ports(run, o)]
+            bam = self.parse_nucleo_output_ports(run, o)
             bams[i] = json.dumps(bam)
         sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         concat_output_name = sample_name + "_concat.vcf.gz"
@@ -142,18 +142,19 @@ class CMOCHChipVarOperator(Operator):
         samples_json_content = self.create_sample_json(run)
 
         input_file = template.render(
-            sample_name=json.dumps([sample_name]),
-            concat_output_name=json.dumps([concat_output_name]),
-            vardict_output_vcf_name=json.dumps([vardict_output_vcf_name]),
-            snpsift_countOpName=json.dumps([snpsift_countOpName]),
-            snpsift_prevalOpName=json.dumps([snpsift_prevalOpName]),
-            opOncoKbMafName=json.dumps([opOncoKbMafName]),
-            output_mappability_filename=json.dumps([output_mappability_filename]),
-            output_complexity_filename=json.dumps([output_complexity_filename]),
+            sample_name=json.dumps(sample_name),
+            concat_output_name=json.dumps(concat_output_name),
+            vardict_output_vcf_name=json.dumps(vardict_output_vcf_name),
+            snpsift_countOpName=json.dumps(snpsift_countOpName),
+            snpsift_prevalOpName=json.dumps(snpsift_prevalOpName),
+            opOncoKbMafName=json.dumps(opOncoKbMafName),
+            output_mappability_filename=json.dumps(output_mappability_filename),
+            output_complexity_filename=json.dumps(output_complexity_filename),
             output_vcf2mafName=json.dumps([output_vcf2mafName]),
             samples_json_content=json.dumps(samples_json_content),
             **bams,
         )
+
         sample_input = json.loads(input_file)
         return sample_input
 

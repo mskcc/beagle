@@ -55,4 +55,4 @@ class TestNucleoQCOperator(TestCase):
         for job in jobs:
             self.assertEqual(job.is_valid(), True)
             input_json = job.inputs
-            self.assertEqual(len(input_json["input_bam_case"]), 1)
+            self.assertEqual(len(input_json["input_bam_case"]), 3)
