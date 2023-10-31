@@ -1,47 +1,51 @@
 {
-  "input_bam_case": {{ input_bam_case }},
-  "output_vcf2mafName": {{ output_vcf2mafName }},
-  "output_mappability_filename": {{ output_mappability_filename }}, 
-  "output_complexity_filename": {{ output_complexity_filename }},
-  "concat_output_name": {{ concat_output_name }},
-  "sample_name": {{ sample_name }},
-  "vardict_output_vcf_name": {{ vardict_output_vcf_name }},
-  "snpsift_countOpName": {{ snpsift_countOpName }},
-  "snpsift_prevalOpName": {{ snpsift_prevalOpName }},
-  "opOncoKbMafName": {{ opOncoKbMafName }},
-
-  "bedfile": {
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/cmo-ch/current/regions_of_interest/current/CH_target_3bp.bed"
-  }, 
-  "input_cosmicCountDB_vcf": { 
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/cosmic/current/v96/CosmicCodingMuts.vcf.gz"
-  },
-  "input_cosmicprevalenceDB_vcf": { 
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/cosmic/current/v96/CosmicCodingMuts_GRCh37_processed.vcf.gz"
-  },
-  "reference_fasta": {
+    "input_bam_case": {{input_bam_case}},
+    "output_vcf2mafName": {{output_vcf2mafName}},
+    "output_mappability_filename": {{output_mappability_filename}},
+    "output_complexity_filename": {{output_complexity_filename}},
+    "concat_output_name": {{concat_output_name}},
+    "sample_name": {{sample_name}},
+    "vardict_output_vcf_name": {{vardict_output_vcf_name}},
+    "snpsift_countOpName": {{snpsift_countOpName}},
+    "snpsift_prevalOpName": {{snpsift_prevalOpName}},
+    "opOncoKbMafName": {{opOncoKbMafName}},
+    "bedfile": {
         "class": "File",
-        "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta"
-  },
-  "oncoKbApiToken": {
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/oncoKB/current/apiToken.txt"
-  },
-  "input_mappability_bed": {
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/beds/current/wgEncodeDacMapabilityConsensusExcludable_4cols.bed"
-  },
-  "input_complexity_bed": {
-    "class": "File",
-    "location": "juno:///work/cch/production/resources/beds/current/rmsk_mod.bed"
-  },
-
-  "retain_info": "CNT,TUMOR_TYPE",
-  "vardict_allele_frequency_threshold": 0,
-  "oncoKbAnnotateHotspots": true,
-  "column_name_mappability": "mappability",
-  "column_name_complexity": "complexity"
+        "location": "juno:///work/cch/production/resources/cmo-ch/current/regions_of_interest/current/CH_target_3bp.bed",
+    },
+    "input_cosmicCountDB_vcf": {
+        "class": "File",
+        "location": "juno:///work/cch/production/resources/cosmic/current/v96/CosmicCodingMuts.vcf.gz",
+    },
+    "input_cosmicprevalenceDB_vcf": {
+        "class": "File",
+        "location": "juno:///work/cch/production/resources/cosmic/current/v96/CosmicCodingMuts_GRCh37_processed.vcf.gz",
+        "secondaryFiles": [
+            {
+                "path": "juno:///work/cch/production/resources/cosmic/current/v96/CosmicCodingMuts_GRCh37_processed.vcf.gz.tbi",
+                "class": "File",
+            }
+        ],
+    },
+    "reference_fasta": {
+        "class": "File",
+        "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+    },
+    "oncoKbApiToken": {
+        "class": "File",
+        "location": "juno:///work/cch/production/resources/oncoKB/current/apiToken.txt",
+    },
+    "input_mappability_bed": {
+        "class": "File",
+        "location": "juno:///work/cch/production/resources/beds/current/wgEncodeDacMapabilityConsensusExcludable_4cols.bed",
+    },
+    "input_complexity_bed": {
+        "class": "File",
+        "location": "juno:///work/cch/production/resources/beds/current/rmsk_mod.bed",
+    },
+    "retain_info": "CNT,TUMOR_TYPE",
+    "vardict_allele_frequency_threshold": 0,
+    "oncoKbAnnotateHotspots": true,
+    "column_name_mappability": "mappability",
+    "column_name_complexity": "complexity",
 }
