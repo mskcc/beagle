@@ -150,7 +150,7 @@ class CMOCHChipVarOperator(Operator):
             opOncoKbMafName=json.dumps(opOncoKbMafName),
             output_mappability_filename=json.dumps(output_mappability_filename),
             output_complexity_filename=json.dumps(output_complexity_filename),
-            output_vcf2mafName=json.dumps([output_vcf2mafName]),
+            output_vcf2mafName=json.dumps(output_vcf2mafName),
             samples_json_content=json.dumps(samples_json_content),
             **bams,
         )
