@@ -30,7 +30,13 @@
   },
   "reference_fasta": {
         "class": "File",
-        "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta"
+        "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+        "secondaryFiles": [
+            {
+                "class": "File",
+                "location": "juno:///juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta.fai"
+            }
+        ]
   },
   "oncoKbApiToken": {
     "class": "File",
