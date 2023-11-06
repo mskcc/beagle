@@ -75,6 +75,10 @@ def check_and_return_single_values(data):
             LOGGER.error("Check import, something went wrong.")
 
     # concatenating pi and pi_email
+    if data["pi"] == [None]:
+        data["pi"] = [""]
+    if data["pi_email"] == [None]:
+        data["pi_email"] = [""]
     data["pi"] = "; ".join(set(data["pi"]))
     data["pi_email"] = "; ".join(set(data["pi_email"]))
 
