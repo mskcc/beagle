@@ -7,13 +7,15 @@ import study.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('study', '0003_auto_20230608_1153'),
+        ("study", "0003_auto_20230608_1153"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='jobgroupwatcher',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'WAITING'), (1, 'COMPLETED')], db_index=True, default=study.models.JobGroupWatcherStatus(0)),
+            model_name="jobgroupwatcher",
+            name="status",
+            field=models.IntegerField(
+                choices=[(0, "WAITING"), (1, "COMPLETED")], db_index=True, default=study.models.JobGroupWatcherStatus(0)
+            ),
         ),
     ]
