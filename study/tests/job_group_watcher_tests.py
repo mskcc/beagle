@@ -25,16 +25,18 @@ class TestStudy(APITestCase):
             operator=self.operator_1,
             num_total_runs=2,
             num_completed_runs=1,
-            job_group=self.job_group
+            job_group=self.job_group,
         )
         self.operator_run_2 = OperatorRun.objects.create(
             status=RunStatus.RUNNING,
             operator=self.operator_2,
             num_total_runs=2,
             num_completed_runs=1,
-            job_group=self.job_group
+            job_group=self.job_group,
         )
-        self.job_group_watcher_config = JobGroupWatcherConfig.objects.create(name="TestWatcher", )
+        self.job_group_watcher_config = JobGroupWatcherConfig.objects.create(
+            name="TestWatcher",
+        )
         self.job_group_watcher_config.operators.add(self.operator_1)
         self.job_group_watcher_config.operators.add(self.operator_2)
         self.job_group_watcher_config.post_processors.add(self.operator_3)
@@ -42,7 +44,7 @@ class TestStudy(APITestCase):
             study=self.study,
             job_group=self.job_group,
             config=self.job_group_watcher_config,
-            status=JobGroupWatcherStatus.WAITING
+            status=JobGroupWatcherStatus.WAITING,
         )
 
     @patch("study.tasks.kick_off_postprocessing")
