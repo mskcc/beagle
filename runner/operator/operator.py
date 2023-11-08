@@ -3,6 +3,7 @@ from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
+from runner.operator.operator_logger import OperatorLogger
 from runner.run.objects.run_creator_object import RunCreator
 
 
@@ -40,6 +41,7 @@ class Operator(object):
         self.output_directory_prefix = output_directory_prefix
         self._jobs = []
         self._pipeline = pipeline
+        self.logger = OperatorLogger()
 
     def get_pipeline_id(self):
         if self._pipeline:
