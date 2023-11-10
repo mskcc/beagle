@@ -12,7 +12,7 @@ from .models import (
     RequestCallbackJob,
     NormalizerModel,
     ValidatorModel,
-    SkipProject
+    SkipProject,
 )
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
