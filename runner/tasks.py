@@ -748,9 +748,11 @@ def check_job_timeouts():
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
 
-def send_hanging_job_alert(run_id):
+def send_hanging_job_alert(run_id, message):
     for email in settings.JOB_HANGING_ALERT_EMAILS:
-        content = f"Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging."
+        content = f"""Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging.
+        
+                      {message}"""
         email = SendEmailEvent(
             job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
             email_to=email,
@@ -789,7 +791,7 @@ def check_jobs_status():
             if not run.message.get("alerts") and message.get("alerts"):
                 run.message = dict(details=status.get("message", {}))
                 run.save(update_fields=("message",))
-                send_hanging_job_alert(str(run.id))
+                send_hanging_job_alert(str(run.id), message.get("alerts"))
 
             if status["started"] and not run.started:
                 run.started = status["started"]
