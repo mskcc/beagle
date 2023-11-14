@@ -457,6 +457,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
 
 PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
 PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
+JOB_HANGING_ALERT_EMAILS = os.environ.get("BEAGLE_JOB_HANGING_ALERT_EMAILS").split(",")
 
 # Tempo
 

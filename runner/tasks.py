@@ -23,6 +23,7 @@ from notifier.events import (
     SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
     VoyagerActionRequiredForRunningEvent,
+    SendEmailEvent,
     OperatorErrorEvent,
 )
 from notifier.tasks import send_notification, notifier_start
@@ -747,6 +748,21 @@ def check_job_timeouts():
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
 
+def send_hanging_job_alert(run_id):
+    for email in settings.JOB_HANGING_ALERT_EMAILS:
+        content = (
+                f"Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging."
+        )
+        email = SendEmailEvent(
+            job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+            email_to=email,
+            email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+            subject=f"ALERT: Hanging job detected {settings.BEAGLE_URL}/v0/run/api/{run_id}/",
+            content=content,
+        )
+        send_notification.delay(email.to_dict())
+
+
 @shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
@@ -771,6 +787,12 @@ def check_jobs_status():
                 continue
 
             status = remote_statuses[str(run.execution_id)]
+            message = dict(details=status.get("message", {}))
+            if not run.message.get("alerts") and message.get("alerts"):
+                run.message = dict(details=status.get("message", {}))
+                run.save(update_fields=("message",))
+                send_hanging_job_alert(str(run.id))
+
             if status["started"] and not run.started:
                 run.started = status["started"]
                 run.save(update_fields=("started",))
