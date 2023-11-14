@@ -135,11 +135,13 @@ class OperatorRun(BaseModel):
         self.save()
 
     def increment_failed_run(self):
-        self.num_failed_runs = F("num_failed_runs") + 1
+        self.refresh_from_db()
+        self.num_failed_runs += 1
         self.save()
 
     def increment_completed_run(self):
-        self.num_completed_runs = F("num_completed_runs") + 1
+        self.refresh_from_db()
+        self.num_completed_runs += 1
         self.save()
 
     @property
@@ -177,6 +179,11 @@ class OperatorRun(BaseModel):
     def running_runs(self):
         self.refresh_from_db()
         return self.num_total_runs - (self.num_completed_runs + self.num_failed_runs)
+
+    @property
+    def operator_finished(self):
+        self.refresh_from_db()
+        return (self.num_failed_runs + self.num_completed_runs) == self.num_total_runs
 
 
 class Run(BaseModel):
