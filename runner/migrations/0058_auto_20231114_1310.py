@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0057_auto_20230424_0743'),
+        ("runner", "0057_auto_20230424_0743"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='tool_walltime',
+            model_name="pipeline",
+            name="tool_walltime",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='run',
-            name='restart_attempts',
+            model_name="run",
+            name="restart_attempts",
             field=models.IntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='run',
-            name='resume_attempts',
+            model_name="run",
+            name="resume_attempts",
             field=models.IntegerField(default=3),
         ),
     ]
