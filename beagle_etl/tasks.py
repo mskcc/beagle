@@ -13,6 +13,7 @@ from beagle_etl.models import (
     SmileMessageStatus,
     RequestCallbackJobStatus,
     RequestCallbackJob,
+    SkipProject,
 )
 from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
@@ -20,8 +21,6 @@ from beagle_etl.nats_client.nats_client import run
 from beagle_etl.jobs.metadb_jobs import (
     new_request,
     update_job,
-    update_request_job,
-    update_sample_job,
     not_supported,
     request_callback,
 )
@@ -85,7 +84,11 @@ def process_smile_events():
 def process_request_callback_jobs():
     requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
     for request in requests:
-        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+        skip_projects_config = SkipProject.objects.first()
+        if request.request_id in skip_projects_config.skip_projects:
+            # TODO: Remove this when problem with redeliveries of old projects is gone
+            pass
+        elif datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
             logger.info("Submitting request callback %s" % request.request_id)
             request_callback.delay(
                 request.request_id,
