@@ -750,9 +750,7 @@ def check_job_timeouts():
 
 def send_hanging_job_alert(run_id):
     for email in settings.JOB_HANGING_ALERT_EMAILS:
-        content = (
-                f"Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging."
-        )
+        content = f"Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging."
         email = SendEmailEvent(
             job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
             email_to=email,
