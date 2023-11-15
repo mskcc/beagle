@@ -6,7 +6,6 @@ from runner.views.port_view import PortViewSet
 from runner.views.operator_run_view import OperatorRunViewSet
 from runner.views.run_api_view import (
     RunApiViewSet,
-    OperatorViewSet,
     OperatorErrorViewSet,
     RequestOperatorViewSet,
     RunOperatorViewSet,
@@ -41,7 +40,6 @@ urlpatterns = [
     path("run/start/<uuid:pk>", StartRunViewSet.as_view()),
     path("run/update/<uuid:pk>", UpdateJob.as_view()),
     path("restart/", RunApiRestartViewSet.as_view()),
-    path("request/", OperatorViewSet.as_view()),
     path("operator-runs/", OperatorRunViewSet.as_view({"get": "list"})),
     path("operator/request/", RequestOperatorViewSet.as_view()),
     path("operator/runs/", RunOperatorViewSet.as_view()),
