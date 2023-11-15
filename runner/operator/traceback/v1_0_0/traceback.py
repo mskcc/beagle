@@ -6,7 +6,7 @@ from pathlib import Path
 from jinja2 import Template
 from beagle import settings
 from runner.operator.operator import Operator
-from runner.models import RunStatus, Port, Run
+from runner.models import RunStatus, Port, Run, OperatorRun
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
 from file_system.repository import FileRepository
@@ -76,131 +76,37 @@ class AccessManifestOperator(Operator):
         access_fastq = lims_fastq.filter(file__request_id="13893_N")
         cmoPatientId = list(set(access_fastq.values_list('metadata__cmoPatientId', flat = True)))
         cmoPatientId_trunc = [patient.strip('C-') for patient in cmoPatientId]
-        # CMO IMPACT mafs and bams 
-        # Get IMPACT Fastqs using ACCESS Request cmoPatientId 
-        # Identify IMPACT Requests that contain ACCESS Request cmoPatientId 
-        impact_fastq = lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
-        impact_requests = list(set([fastq.metadata["igoRequestId"] for fastq in impact_fastq]))
-        # Use IMPACT Requests to get tumor_bam 
-        argos_runs = []
-        for request in impact_requests:
-            argos_r = Run.objects.filter(app__name__regex="argos",operator_run__status=RunStatus.COMPLETED, tags__igoRequestId=request)
-            if len(argos_r) == 1:
-                argos_runs.append(argos_r[0].id)
-            if len(argos_r) > 1:
-                argos_last = argos_r.order_by('-finished_date').first()
-                argos_runs.append(argos_last.id)
-        impact_match_bam = {}
-        #TODO CMO IMPACT NORMALS
-        for run in argos_runs:
-            request_bams = Port.objects.filter(name__in=["tumor_bam"], 
-                                                run__id=run, 
-                                                run__status=RunStatus.COMPLETED)
-            
-            # find which cmo patient bam this maps to and save in a dict
-            for sbam in request_bams:
-               sbam_cpid = re.search(r's_C_(\w{6})_',sbam.value['basename']).group(1)
-               sbam_sample = re.search(r'(s_C_\w{6}_\w{4}_d\w*)\.',sbam.value['basename']).group(1)
-               if sbam_cpid in cmoPatientId_trunc:
-                        # self.dict_list_append(impact_match_bam,sbam_cpid, sbam)
-                        if impact_match_bam.get(sbam_sample) is None:
-                            impact_match_bam[sbam_sample] = [sbam.value['location']]
-                        else:
-                            impact_match_bam[sbam_sample].append(sbam.value['location'])
-        impact_samples = list(impact_match_bam.keys())
-        # Use IMPACT Requests to get MAF  
-        argos_helix_ids = []
-        # Mafs are in Helix filters
-        for request in impact_requests:
-            argos_qc_r = Run.objects.filter(app__name__regex="argos_helix_.*",operator_run__status=RunStatus.COMPLETED, tags__project_prefix=request)
-            if len(argos_qc_r) == 1:
-                argos_helix_ids.append(argos_qc_r[0].id)
-            if len(argos_qc_r) > 1:
-                argos_helix_last = argos_qc_r.order_by('-finished_date').first()
-                argos_helix_ids.append(argos_helix_last.id)
-        
-        argos_helix_portal = Port.objects.filter(name__in=["portal_dir"],run__id__in=argos_helix_ids, run__status=RunStatus.COMPLETED)
-        mut_paths = []
-        for dir in argos_helix_portal:
-            listing = dir.value['listing']
-            for file in listing:
-                if file['basename'] == 'data_mutations_extended.txt':
-                    mut_paths.append(file['location'])
-        impact_match_maf = {}
-        for sample in impact_samples:
-            for path in mut_paths:
-                # Open the TSV file for reading
-                with open(path.strip("file:"), 'r') as tsvfile:
-                        # Initialize a list to store the matching rows
-                        matching_rows = []
-                        # Read the file line by line
-                        for i, line in enumerate(tsvfile):
-                            columns = line.strip().split('\t') 
-                            line = line.strip()  # Remove leading/trailing whitespace
-                    
-                            # If the line contains the header, add it to the matching rows
-                            if i == 1:
-                                matching_rows.append(line)
-                            if i > 1:
-                                # Check if the line matches the pattern
-                                if re.match(sample, columns[15]):
-                                    matching_rows.append(line)
-                if len(matching_rows) > 1: 
-                    # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                    # impact_maf_path = write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                    impact_maf_path = path
-                    # self.dict_list_append(impact_match_maf,pattern, impact_maf_path)
-                    # dict_list_append(impact_match_maf,sample, impact_maf_path)
-                    if impact_match_maf.get(sample) is None:
-                        impact_match_maf[sample] = [impact_maf_path]
-                    else:
-                        impact_match_maf[sample].append(impact_maf_path)
-        # I'd like simplify this by adding the all cmoPatientIds to the helix filter maf
-        # And the cmoPatientId to each of the argos generated bams         
-        # CMO ACCESS mafs and bams 
-        cmo_bams = self.find_cmo_bams()
-        cmo_mafs = self.find_cmo_mafs()
-        # DMP mafs and bams 
 
+        # CMO ACCESS mafs and bams 
+        cmo_bams_xs_tumor, cmo_bams_xs_normal = self.find_cmo_xs_bams(cmoPatientId)
+        cmo_mafs_xs = self.find_cmo_xs_mafs(cmoPatientId)
+        
+        # TODO MAF/BAM CHECK FOR ACCESS 
+        # CMO IMPACT BAMS 
+        cmo_bams_imp_tumor, cmo_bams_imp_normal = self.find_cmo_imp_bams(cmoPatientId, cmoPatientId_trunc)
+        cmo_mafs_imp = self.find_cmo_imp_mafs(cmoPatientId, cmoPatientId_trunc)
+        impact_samples_tumor = list(cmo_bams_imp_tumor.keys())
+        sample_level_mafs = self.subset_helix_maf(impact_samples_tumor, cmo_mafs_imp)
+        # CMO IMPACT BAMS 
+        # only use bams that have mafs 
+        usable_tumors = list(set(cmo_bams_imp_tumor.keys()).intersection(set(sample_level_mafs.keys())))
+        sample_level_mafs = {k:v for k,v in sample_level_mafs.items() if k in usable_tumors}
+        impact_samples_tumor = {k:v for k,v in impact_samples_tumor.items() if k in usable_tumors}
+
+
+        # DMP BAM (IMPACT AND XS)
         dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
         # subset DMP BAM file group to patients in the provided requests
-        pDmps = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc)
-        dmp_samples = list(pDmps.values_list('metadata__sample', flat = True))
-
-        # subset_maf = self.read_dmp_combined_maf()
-
-        # with open(settings.DMP_MUTATIONS, 'r') as tsvfile
-        # :
-        dmp_match_maf = {}
-        for sample in impact_samples:
-            #TODO Need to make the is accessible to voyager
-            with open(DMP_MUTATIONS, 'r') as tsvfile:
-                    # Initialize a list to store the matching rows
-                    matching_rows = []
-                    # Read the file line by line
-                    for i, line in enumerate(tsvfile):
-                        columns = line.strip().split('\t') 
-                        line = line.strip()  # Remove leading/trailing whitespace
-                
-                        # If the line contains the header, add it to the matching rows
-                        if i == 1:
-                            matching_rows.append(line)
-                        if i > 1:
-                            # Check if the line matches the pattern
-                            if re.match(sample, columns[15]):
-                                matching_rows.append(line)
-                    if len(matching_rows) > 1: 
-                        # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                        # impact_maf_path = write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                        impact_maf_path = path
-                        # self.dict_list_append(impact_match_maf,pattern, impact_maf_path)
-                        # dict_list_append(impact_match_maf,sample, impact_maf_path)
-                        if dmp_match_maf.get(sample) is None:
-                            dmp_match_maf[sample] = [impact_maf_path]
-                        else:
-                            dmp_match_maf[sample].append(impact_maf_path)
-
-        # subset_maf = self.read_dmp_combined_maf(path)
+        pDmpsTumor = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='T')
+        pDmpsNormal = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='N')
+        pDmpsTumorBam = [r.file.path for r in pDmpsTumor] 
+        pDmpsNormalBam = [r.file.path for r in pDmpsNormal] 
+        #TODO standard BAM for XS normals and simplex / duplex for XS tumors 
+        #NOTE string method will have to be used we only track standards in Voyager
+        # DMP BAM (IMPACT AND XS)
+        #TODO MAF/BAM check for DMP 
+        dmp_samples_tumor = list(pDmpsTumor.values_list('metadata__sample', flat = True))
+        sample_level_mafs_dmp = subset_dmp_maf(dmp_samples_tumor)
         
         # # create job input json with manifest path
         # job = self.construct_sample_input(manifest_path)
@@ -265,41 +171,256 @@ class AccessManifestOperator(Operator):
             print("Registering temp file %s" % path)
             f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
             f.save()
-    def find_cmo_bams(self):
+
+    def find_cmo_xs_bams(self, cmoPatientId):
         """
         creates manifest csv, write contents to file
         :return: manifest csv path
         """
         # get DMP BAM file group
-        cmo_access = FileRepository.filter(file_group=settings.ACCESS_COLLAPSE_FILE_GROUP).all()
-        cmo_access = FileRepository.filter(file_group="70b6484e-b45f-4007-b66e-2d47b3504111").all()
-        #TODO Still start with request, but need to get all other access samples in Voyager
-        cmo_access_request = cmo_access.filter(file__request_id="13893_N")
-        # Need to be dynamic to tumor / or normal
-        # This for tumor: simplex duplex 
-        cmo_bams_request_simplex =  cmo_access_request.filter(file__file_name__regex=r".*.simplex.bam$")
-        cmo_bams_request_duplex =  cmo_access_request.filter(file__file_name__regex=r".*.duplex.bam$")
-        # TODO add normal bam: unfilitered bam 
-        if len(cmo_bams_request_simplex) != len(cmo_bams_request_duplex):
-            raise Exception("simplex and duplex bams must match for a given request.")
-        cmo_duplex_bams = cmo_bams_request_duplex.values_list('file__path', flat = True)
-        cmo_simplex_bams = cmo_bams_request_simplex.values_list('file__path', flat = True)
-        # For a given patient -> <bams> combined_maf
-        # # impact
-        # patients =  File.objects.filter(file_group="40ad84eb-0694-446b-beac-59e35e154f3c", file_name__regex=".*.bam$")
-        # argos =  Run.objects.filter(app="bdf41094-4c1c-11ee-b83b-ac1f6bb4ad16",operator_run__status=4)
-
-        return cmo_duplex_bams, cmo_simplex_bams
+        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastq_tumor = xs_fastqs.filter(metadata__tumorOrNormal="Tumor")
+        xs_fastq_norm = xs_fastqs.filter(metadata__tumorOrNormal="Normal")
+        xs_requests = list(set([fastq.metadata["igoRequestId"] for fastq in xs_fastqs]))
+        xs_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in xs_fastq_tumor]))
+        xs_samples_normal= list(set([fastq.metadata["cmoSampleName"] for fastq in xs_fastq_norm]))
+        # xs_runs = self.find_recent_runs(xs_requests, ["59a8d3f6-d54d-46d6-a412-5f4f3b25f22d","48008842-625e-4af5-827f-fb4b92d7e0e7"])
+        xs_runs = self.find_recent_runs_xs(xs_requests, "AccessLegacyOperator", xs_samples_tumor + xs_samples_tumor)
+        xs_bams_tumor = self.find_run_files_xs(xs_runs, ['simplex_bams','duplex_bams'], xs_samples_tumor)
+        xs_bams_norm = self.find_run_files_xs(xs_runs, ['standard_bams'], xs_samples_normal)
+        return xs_bams_tumor, xs_bams_norm
     
-    def find_cmo_mafs(self):
-        cmo_access_sv = FileRepository.filter(file_group="fcec5b6e-905b-4e29-a959-f9d9e28724d3").all()
-        cmo_access_svr = cmo_access_sv.filter(file__request_id="12524_D")
-        cmo_mafs =  cmo_access_svr.filter(file__file_name__regex=r".*taggedHotspots_fillout_filtered.maf$")
-        cmo_mafs = cmo_mafs.values_list('file__path', flat = True)
-        # What to do if mafs and BAMS don't match 
-        return cmo_mafs
+    def find_cmo_xs_mafs(self, cmoPatientId):
+        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastq_tumor = xs_fastqs.filter(metadata__tumorOrNormal="Tumor")
+        xs_fastq_norm = xs_fastqs.filter(metadata__tumorOrNormal="Normal")
+        xs_requests = list(set([fastq.metadata["igoRequestId"] for fastq in xs_fastqs]))
+        xs_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in xs_fastq_tumor]))
+        xs_runs_maf = self.find_recent_runs_xs(xs_requests, 
+                                    "AccessLegacySNVOperator", 
+                                    xs_samples_tumor)
+        xs_mafs = self.find_run_files_xs(xs_runs_maf, ['final_filtered_maf'], xs_samples_tumor)
+        return xs_mafs
         
 
+    def find_cmo_imp_mafs(self, cmoPatientId, cmoPatientId_trunc):
+        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        impact_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
+        impact_fastq_tumor = impact_fastqs.filter(metadata__tumorOrNormal="Tumor")
+        impact_fastq_norm = impact_fastqs.filter(metadata__tumorOrNormal="Normal")
+        impact_requests = list(set([fastq.metadata["igoRequestId"] for fastq in impact_fastqs]))
+        impact_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_tumor]))
+        impact_runs_maf = self.find_recent_runs_helix(impact_requests, "HelixFiltersOperator*")
+        impact_mafs = self.find_run_files_helix(impact_runs_maf, ['portal_dir'], cmoPatientId_trunc)
+        # TODO: subset and combine mafs
+        return impact_mafs
+    
+    def find_cmo_imp_bams(self, cmoPatientId, cmoPatientId_trunc):
+        impact_fastq = lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
+        impact_fastq_tumor = impact_fastq.filter(metadata__tumorOrNormal="Tumor")
+        impact_fastq_norm = impact_fastq.filter(metadata__tumorOrNormal="Normal")
+        impact_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_tumor]))
+        impact_samples_normal= list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_norm]))
+        impact_requests = list(set([fastq.metadata["igoRequestId"] for fastq in impact_fastq]))
+        impact_runs = self.find_recent_runs_argos(impact_requests, "ArgosOperator*", cmoPatientId_trunc)
+        impact_bams_tumor = self.find_run_files_impact(impact_runs, ['tumor_bam'], cmoPatientId_trunc)
+        impact_bams_norm = self.find_run_files_impact(impact_runs, ['normal_bam'], cmoPatientId_trunc)
+        return impact_bams_tumor, impact_bams_norm
+
+            
+    def find_recent_runs_xs(requests, slug, samples):
+        request_runs = []
+        for request in requests:
+            opRun = OperatorRun.objects.filter( status=RunStatus.COMPLETED,
+                                               operator__slug__regex=slug)
+            # opRunReq = self.query_from_dict(opRun, {'igoRequestId':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            opRunReq = query_from_dict(opRun, {'igoRequestId':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            try: 
+                latest_runs = opRunReq.runs.all()
+            except:
+                continue
+            for r in latest_runs:
+                cmoSampleId = set(r.tags['cmoSampleIds'])
+                if cmoSampleId.intersection(set(samples)):
+                        request_runs.append(r.id)
+        return request_runs
+    
+    def find_recent_runs_argos(requests, slug, patient):
+        request_runs = []
+        for request in requests:
+            opRun = OperatorRun.objects.filter( status=RunStatus.COMPLETED,
+                                               operator__slug__regex=slug)
+            # opRunReq = self.query_from_dict(opRun, {'igoRequestId':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            opRunReq = query_from_dict(opRun, {'igoRequestId':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            try: 
+                latest_runs = opRunReq.runs.all()
+            except:
+                continue
+            for r in latest_runs:
+                cmoSampleId_tumor = r.tags['sampleNameTumor']
+                cmoSampleId_norm = r.tags['sampleNameNormal']
+                try: 
+                    cpidt = re.search(r'C(_|-)(\w{6})',cmoSampleId_tumor).group(2)
+                except:
+                    cpidt = "other"
+                try:
+                    cpidn = re.search(r'C(_|-)(\w{6})',cmoSampleId_norm).group(2)
+                except:
+                    cpidn = "other"
+                pids = set([cpidt,cpidn])
+                if pids.intersection(patient):
+                        request_runs.append(r.id)
+        return request_runs
+    
+
+
+    def find_recent_runs_helix(requests, slug):
+        request_runs = []
+        for request in requests:
+            opRun = OperatorRun.objects.filter( status=RunStatus.COMPLETED,
+                                               operator__slug__regex=slug)
+            # opRunReq = self.query_from_dict(opRun, {'igoRequestId':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            opRunReq = query_from_dict(opRun, {'project_prefix':request}, "runs__tags__%s__contains").order_by('-finished_date').first()
+            try: 
+                latest_runs = opRunReq.runs.all()
+            except:
+                continue
+            if len(latest_runs) == 1:
+                request_runs.append(latest_runs[0].id)
+            if len(latest_runs) > 1:
+                argos_helix_last = latest_runs.order_by('-finished_date').first()
+                request_runs.append(argos_helix_last.id)
+        return request_runs
+
+    def query_from_dict(queryset, dictionary, query_filter):
+        query = {query_filter % key: val for (key, val) in dictionary.items()}
+        return queryset.filter(**query)
+    
+    def find_run_files_impact(runs, ports, patients):
+        file_match = {}
+        for run in runs:
+            file_port = Port.objects.filter(name__in=ports, 
+                                                run__id=run, 
+                                                run__status=RunStatus.COMPLETED)
+            for port in file_port:
+                file_name = port.value['basename']
+                file_location = port.value['location']
+                try: 
+                    sbam_cpid = re.search(r's_C_(\w{6})_',file_name).group(1)
+                except: 
+                    sbam_cpid = None 
+                try:
+                    sbam_sample = re.search(r'(s_C_\w{6}_\w{4}_d\w*)\.',file_name).group(1)
+                except: 
+                    sbam_sample = None 
+                if sbam_cpid in patients:
+                        if file_match.get(sbam_sample) is None:
+                            file_match[sbam_sample] = [file_location]
+                        else:
+                            file_match[sbam_sample].append(file_location)
+        return file_match
+    
+    def find_run_files_xs(runs, ports, samples):
+        file_match = {}
+        for run in runs:
+            file_port = Port.objects.filter(name__in=ports, 
+                                                run__id=run, 
+                                                run__status=RunStatus.COMPLETED)
+            for port in file_port:
+                files = port.value
+            # find which cmo patient file this maps to and save in a dict
+                for sfile in files:
+                    try: 
+                        file_name = sfile['file']['basename']
+                        file_location = sfile['file']['location']
+                    except:
+                        file_name = sfile['basename']
+                        file_location = sfile['location']
+                    # sfile_cpid = re.search(r'C-(\w{6})-',file_name).group(1)
+                    sfile_sample = re.search(r'(C-\w{6}-\w{4}-d\d{0,2})',file_name).group(1)
+                    if sfile_sample in samples:
+                            if file_match.get(sfile_sample) is None:
+                                file_match[sfile_sample] = [file_location]
+                            else:
+                                file_match[sfile_sample].append(file_location)
+        return file_match
+    
+    def subset_helix_maf(impact_samples, mut_paths):
+        impact_match_maf = {}
+        for sample in impact_samples:
+            for path in mut_paths:
+                # Open the TSV file for reading
+                with open(path.strip("file:"), 'r') as tsvfile:
+                        # Initialize a list to store the matching rows
+                        matching_rows = []
+                        # Read the file line by line
+                        for i, line in enumerate(tsvfile):
+                            columns = line.strip().split('\t') 
+                            line = line.strip()  # Remove leading/trailing whitespace
+                    
+                            # If the line contains the header, add it to the matching rows
+                            if i == 1:
+                                matching_rows.append(line)
+                            if i > 1:
+                                # Check if the line matches the pattern
+                                if re.match(sample, columns[15]):
+                                    matching_rows.append(line)
+                if len(matching_rows) > 1: 
+                    # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
+                    impact_maf_path = write_to_file(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
+                    # self.dict_list_append(impact_match_maf,pattern, impact_maf_path)
+                    # dict_list_append(impact_match_maf,sample, impact_maf_path)
+                    if impact_match_maf.get(sample) is None:
+                        impact_match_maf[sample] = [impact_maf_path]
+                    else:
+                        impact_match_maf[sample].append(impact_maf_path)
+        return impact_match_maf
+
+    def find_run_files_helix(runs, ports):
+        file_match = []
+        for run in runs:
+            file_port = Port.objects.filter(name__in=ports, 
+                                                run__id=run, 
+                                                run__status=RunStatus.COMPLETED)
+            for dir in file_port:
+                listing = dir.value['listing']
+                for file in listing:
+                    if file['basename'] == 'data_mutations_extended.txt':
+                        file_match.append(file['location'])
+        return file_match
+    
+    def subset_dmp_maf(dmp_samples):
+        dmp_match_maf = {}
+        for sample in dmp_samples:
+            # with open(settings.DMP_MUTATIONS, 'r') as tsvfile:
+            #TODO Need to make the is accessible to voyager
+            with open(DMP_MUTATIONS, 'r') as tsvfile:
+                    # Initialize a list to store the matching rows
+                    matching_rows = []
+                    # Read the file line by line
+                    for i, line in enumerate(tsvfile):
+                        columns = line.strip().split('\t') 
+                        line = line.strip()  # Remove leading/trailing whitespace
+                
+                        # If the line contains the header, add it to the matching rows
+                        if i == 1:
+                            matching_rows.append(line)
+                        if i > 1:
+                            # Check if the line matches the pattern
+                            if re.match(sample, columns[16]):
+                                matching_rows.append(line)
+                    if len(matching_rows) > 1:
+                        # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
+                        impact_maf_path = write_to_file(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
+                        if dmp_match_maf.get(sample) is None:
+                            dmp_match_maf[sample] = [impact_maf_path]
+                        else:
+                            dmp_match_maf[sample].append(impact_maf_path)
+
+        return dmp_match_maf 
+    
 
     def write_to_file(self, fname, s):
         """
