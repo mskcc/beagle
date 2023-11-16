@@ -64,7 +64,6 @@ class AccessManifestOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
-        # TODO: NORMALS or NOT
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         self.OUTPUT_DIR = pipeline.output_directory
@@ -258,7 +257,6 @@ class AccessManifestOperator(Operator):
         impact_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_tumor]))
         impact_runs_maf = self.find_recent_runs_helix(impact_requests, "HelixFiltersOperator*")
         impact_mafs = self.find_run_files_helix(impact_runs_maf, ['portal_dir'])
-        # TODO: subset and combine mafs
         return impact_mafs
     
     def find_cmo_imp_bams(self, cmoPatientId, cmoPatientId_trunc):
@@ -438,8 +436,7 @@ class AccessManifestOperator(Operator):
         dmp_match_maf = {}
         for sample in dmp_samples:
             # with open(settings.DMP_MUTATIONS, 'r') as tsvfile:
-            #TODO Need to make the is accessible to voyager
-            with open(DMP_MUTATIONS, 'r') as tsvfile:
+            with open(settings.DMP_MUTATIONS, 'r') as tsvfile:
                     # Initialize a list to store the matching rows
                     matching_rows = []
                     # Read the file line by line
