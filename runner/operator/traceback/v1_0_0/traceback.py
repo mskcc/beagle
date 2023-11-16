@@ -73,40 +73,40 @@ class AccessManifestOperator(Operator):
         # get fastq metadata for a given request
         lims_fastq = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe")
         # access_fastq = lims_fastq.filter(file__request_id=self.request_ids)
-        access_fastq = lims_fastq.filter(file__request_id="13893_N")
+        
+        access_fastq = lims_fastq.filter(file__request_id="09780_O")
         cmoPatientId = list(set(access_fastq.values_list('metadata__cmoPatientId', flat = True)))
         cmoPatientId_trunc = [patient.strip('C-') for patient in cmoPatientId]
 
-        # CMO ACCESS mafs and bams 
+        # CMO ACCESS BAMS and MAFs 
         cmo_bams_xs_tumor, cmo_bams_xs_normal = self.find_cmo_xs_bams(cmoPatientId)
-        cmo_mafs_xs = self.find_cmo_xs_mafs(cmoPatientId)
-        
-        # TODO MAF/BAM CHECK FOR ACCESS 
-        # CMO IMPACT BAMS 
+        cmo_xs_mafs = self.find_cmo_xs_mafs(cmoPatientId)
+        # record those bams missing mafs
+        cmo_xs_missing_maf = list(set(cmo_bams_xs_tumor.keys()) - set(cmo_mafs_xs.keys()))
+
+        # CMO IMPACT BAMS and MAFs
         cmo_bams_imp_tumor, cmo_bams_imp_normal = self.find_cmo_imp_bams(cmoPatientId, cmoPatientId_trunc)
         cmo_mafs_imp = self.find_cmo_imp_mafs(cmoPatientId, cmoPatientId_trunc)
         impact_samples_tumor = list(cmo_bams_imp_tumor.keys())
-        sample_level_mafs = self.subset_helix_maf(impact_samples_tumor, cmo_mafs_imp)
-        # CMO IMPACT BAMS 
-        # only use bams that have mafs 
-        usable_tumors = list(set(cmo_bams_imp_tumor.keys()).intersection(set(sample_level_mafs.keys())))
-        sample_level_mafs = {k:v for k,v in sample_level_mafs.items() if k in usable_tumors}
-        impact_samples_tumor = {k:v for k,v in impact_samples_tumor.items() if k in usable_tumors}
+        cmo_imp_mafs = self.subset_helix_maf(impact_samples_tumor, cmo_mafs_imp)
+        # record those bams missing mafs
+        cmo_imp_missing_maf = list(set(cmo_bams_imp_tumor.keys()) - set(cmo_imp_mafs.keys()))
 
 
-        # DMP BAM (IMPACT AND XS)
-        dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
-        # subset DMP BAM file group to patients in the provided requests
-        pDmpsTumor = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='T')
-        pDmpsNormal = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='N')
-        pDmpsTumorBam = [r.file.path for r in pDmpsTumor] 
-        pDmpsNormalBam = [r.file.path for r in pDmpsNormal] 
-        #TODO standard BAM for XS normals and simplex / duplex for XS tumors 
-        #NOTE string method will have to be used we only track standards in Voyager
-        # DMP BAM (IMPACT AND XS)
-        #TODO MAF/BAM check for DMP 
-        dmp_samples_tumor = list(pDmpsTumor.values_list('metadata__sample', flat = True))
-        sample_level_mafs_dmp = subset_dmp_maf(dmp_samples_tumor)
+        # DMP BAMS and MAFS (IMPACT AND XS)
+        dmp_bams_tumor_imp, dmp_bams_tumor_xs, dmp_bams_normal = self.find_dmp_bams(cmoPatientId_trunc)
+        dmp_samples_tumor = list(dmp_bams_tumor_imp.keys()) + list(dmp_bams_tumor_xs)
+        dmp_mafs = self.subset_dmp_maf(dmp_samples_tumor)
+        cmo_imp_missing_maf = list(set(dmp_samples_tumor) - set(dmp_mafs.keys()))
+
+        bams_missing_mafs = cmo_imp_missing_maf + cmo_imp_missing_maf + cmo_xs_missing_maf
+        
+        mafs = {**cmo_imp_mafs, **dmp_mafs,**cmo_xs_mafs}
+        standard_bams = {**dmp_bams_tumor_imp,**dmp_bams_tumor_imp,**cmo_bams_imp_normal, **cmo_bams_xs_normal,**dmp_bams_normal}
+        xs_bams = {**cmo_bams_xs_tumor,**dmp_bams_tumor_xs}
+        self.write_sample_sheet(standard_bams, ['sample','standard'], 'standard_bams.txt')
+        self.write_sample_sheet(xs_bams, ['sample','simplex','duplex'], 'xs_bams.txt')
+        self.write_sample_sheet(xs_bams, ['sample','maf'], 'mafs.txt')
         
         # # create job input json with manifest path
         # job = self.construct_sample_input(manifest_path)
@@ -125,6 +125,52 @@ class AccessManifestOperator(Operator):
         #     )
         # ]
 
+    def write_sample_sheet_test(data, header, fname):
+        output = os.path.join("/home/buehlere/voyager_test", fname)
+        with open(output, 'w') as file:
+            # Write the header
+            file.write(f"{', '.join(header)}\n")
+            # Write the data
+            for key, values in data.items():
+                values = [value.replace("file://", "") for value in values]
+                line = f"{key}, {', '.join(map(str, values))}\n"
+                file.write(line)
+        os.chmod(output, 0o777)
+        # self.register_tmp_file(output, "traceback_sample_sheets")
+        return output
+
+    def write_sample_sheet(self, data, header, fname):
+        output = os.path.join(self.OUTPUT_DIR, fname)
+        with open(output, 'w') as file:
+            # Write the header
+            file.write(f"{', '.join(header)}\n")
+            print(f"{', '.join(header)}\n")
+            
+            # Write the data
+            for key, values in data.items():
+                values = [value.replace("file://", "") for value in values]
+                line = f"{key}, {', '.join(map(str, values))}\n"
+                print(line)
+                file.write(line)
+        os.chmod(output, 0o777)
+        self.register_tmp_file(output, "traceback_sample_sheets")
+        return output
+
+    def find_dmp_bams(self, cmoPatientId_trunc):
+        dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)
+        # subset DMP BAM file group to patients in the provided requests
+        pDmpsTumor = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='T')
+        pDmpsNormal = dmp_bams.filter(metadata__patient__cmo__in=cmoPatientId_trunc, metadata__type='N')
+        pDmpsTumorBamImp =  {}
+        pDmpsTumorBamXs =  {}
+        for r in pDmpsTumor:
+            if "XS" in r.metadata["sample"]:
+                pDmpsTumorBamXs[r.metadata["sample"]] = [r.file.path.replace("standard","simplex"), r.file.path.replace("standard","duplex")]
+            else:
+                pDmpsTumorBamImp[r.metadata["sample"]] =  [r.file.path]
+        pDmpsNormalBam = {r.metadata["sample"]: [r.file.path] for r in pDmpsNormal}
+        return pDmpsTumorBamImp, pDmpsTumorBamXs, pDmpsNormalBam
+    
 
     def read_dmp_combined_maf(self):
         with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
@@ -138,7 +184,7 @@ class AccessManifestOperator(Operator):
             d[key].append(item)
         return d
 
-    def write_to_file(self, fname, s):
+    def write_to_file_maf(self, fname, s):
         """
         Writes file to temporary location, then registers it to the temp file group
         Also uploads it to notifier if there is a job group id
@@ -147,10 +193,10 @@ class AccessManifestOperator(Operator):
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
-        self.register_tmp_file(output)
+        self.register_tmp_file(output, "subset_mafs_traceback")
         return output
     
-    def write_to_file(fname, s):
+    def write_to_file_test(fname, s):
         """
         Writes file to temporary location, then registers it to the temp file group
         Also uploads it to notifier if there is a job group id
@@ -161,9 +207,9 @@ class AccessManifestOperator(Operator):
         os.chmod(output, 0o777)
         return output
 
-    def register_tmp_file(self, path):
+    def register_tmp_file(self, path, slug):
         fname = os.path.basename(path)
-        temp_file_group = FileGroup.objects.get(slug="impact_maf_traceback")
+        temp_file_group = FileGroup.objects.get(slug=slug)
         file_type = FileType.objects.get(name="txt")
         try:
             File.objects.get(path=path)
@@ -178,8 +224,7 @@ class AccessManifestOperator(Operator):
         :return: manifest csv path
         """
         # get DMP BAM file group
-        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
-        xs_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
         xs_fastq_tumor = xs_fastqs.filter(metadata__tumorOrNormal="Tumor")
         xs_fastq_norm = xs_fastqs.filter(metadata__tumorOrNormal="Normal")
         xs_requests = list(set([fastq.metadata["igoRequestId"] for fastq in xs_fastqs]))
@@ -192,8 +237,7 @@ class AccessManifestOperator(Operator):
         return xs_bams_tumor, xs_bams_norm
     
     def find_cmo_xs_mafs(self, cmoPatientId):
-        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
-        xs_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
+        xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
         xs_fastq_tumor = xs_fastqs.filter(metadata__tumorOrNormal="Tumor")
         xs_fastq_norm = xs_fastqs.filter(metadata__tumorOrNormal="Normal")
         xs_requests = list(set([fastq.metadata["igoRequestId"] for fastq in xs_fastqs]))
@@ -206,19 +250,18 @@ class AccessManifestOperator(Operator):
         
 
     def find_cmo_imp_mafs(self, cmoPatientId, cmoPatientId_trunc):
-        # xs_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*ACCESS.*")
-        impact_fastqs= lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
+        impact_fastqs= self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
         impact_fastq_tumor = impact_fastqs.filter(metadata__tumorOrNormal="Tumor")
         impact_fastq_norm = impact_fastqs.filter(metadata__tumorOrNormal="Normal")
         impact_requests = list(set([fastq.metadata["igoRequestId"] for fastq in impact_fastqs]))
         impact_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_tumor]))
         impact_runs_maf = self.find_recent_runs_helix(impact_requests, "HelixFiltersOperator*")
-        impact_mafs = self.find_run_files_helix(impact_runs_maf, ['portal_dir'], cmoPatientId_trunc)
+        impact_mafs = self.find_run_files_helix(impact_runs_maf, ['portal_dir'])
         # TODO: subset and combine mafs
         return impact_mafs
     
     def find_cmo_imp_bams(self, cmoPatientId, cmoPatientId_trunc):
-        impact_fastq = lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
+        impact_fastq = self.lims_fastq.filter(metadata__cmoPatientId__in=cmoPatientId,metadata__genePanel__regex=".*IMPACT.*")
         impact_fastq_tumor = impact_fastq.filter(metadata__tumorOrNormal="Tumor")
         impact_fastq_norm = impact_fastq.filter(metadata__tumorOrNormal="Normal")
         impact_samples_tumor = list(set([fastq.metadata["cmoSampleName"] for fastq in impact_fastq_tumor]))
@@ -270,7 +313,9 @@ class AccessManifestOperator(Operator):
                 except:
                     cpidn = "other"
                 pids = set([cpidt,cpidn])
-                if pids.intersection(patient):
+                # sample should be in our list of patients
+                # and we shouldn't have seen this sample in another run (normals can be re-used)
+                if bool(pids.intersection(patient)):
                         request_runs.append(r.id)
         return request_runs
     
@@ -316,10 +361,7 @@ class AccessManifestOperator(Operator):
                 except: 
                     sbam_sample = None 
                 if sbam_cpid in patients:
-                        if file_match.get(sbam_sample) is None:
-                            file_match[sbam_sample] = [file_location]
-                        else:
-                            file_match[sbam_sample].append(file_location)
+                        file_match[sbam_sample] = [file_location]
         return file_match
     
     def find_run_files_xs(runs, ports, samples):
@@ -347,7 +389,7 @@ class AccessManifestOperator(Operator):
                                 file_match[sfile_sample].append(file_location)
         return file_match
     
-    def subset_helix_maf(impact_samples, mut_paths):
+    def subset_helix_maf(self, impact_samples, mut_paths):
         impact_match_maf = {}
         for sample in impact_samples:
             for path in mut_paths:
@@ -369,7 +411,7 @@ class AccessManifestOperator(Operator):
                                     matching_rows.append(line)
                 if len(matching_rows) > 1: 
                     # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                    impact_maf_path = write_to_file(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
+                    impact_maf_path = self.write_to_file_maf(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
                     # self.dict_list_append(impact_match_maf,pattern, impact_maf_path)
                     # dict_list_append(impact_match_maf,sample, impact_maf_path)
                     if impact_match_maf.get(sample) is None:
@@ -391,7 +433,7 @@ class AccessManifestOperator(Operator):
                         file_match.append(file['location'])
         return file_match
     
-    def subset_dmp_maf(dmp_samples):
+    def subset_dmp_maf(self, dmp_samples):
         dmp_match_maf = {}
         for sample in dmp_samples:
             # with open(settings.DMP_MUTATIONS, 'r') as tsvfile:
@@ -413,7 +455,7 @@ class AccessManifestOperator(Operator):
                                 matching_rows.append(line)
                     if len(matching_rows) > 1:
                         # impact_maf_path = self.write_to_file(f"{patient}_data_mutations.txt",'\n'.join(matching_rows))
-                        impact_maf_path = write_to_file(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
+                        impact_maf_path = self.write_to_file_maf(f"{sample}_data_mutations.txt",'\n'.join(matching_rows))
                         if dmp_match_maf.get(sample) is None:
                             dmp_match_maf[sample] = [impact_maf_path]
                         else:
@@ -421,34 +463,3 @@ class AccessManifestOperator(Operator):
 
         return dmp_match_maf 
     
-
-    def write_to_file(self, fname, s):
-        """
-        Writes manifest csv to temporary location, registers it as tmp file
-        :return: manifest csv path
-        """
-        # Split the string into rows using "\r\n" as the delimiter
-        rows = s.split("\r\n")
-        # Split each row into columns using "," as the delimiter
-        data = [row.split(",") for row in rows]
-        # tmp file creation
-        tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
-        Path(tmpdir).mkdir(parents=True, exist_ok=True)
-        output = os.path.join(tmpdir, fname)
-        # write csv to tmp file group
-        with open(output, "w+", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(data)
-        # register output as tmp file
-        self.register_temp_file(output)
-        # return with juno formatting
-        return {"class": "File", "location": "juno://" + output}
-
-    @staticmethod
-    def register_temp_file(output):
-        os.chmod(output, 0o777)
-        fname = os.path.basename(output)
-        temp_file_group = FileGroup.objects.get(slug="temp")
-        file_type = FileType.objects.get(name="unknown")
-        f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
-        f.save()
