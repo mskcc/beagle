@@ -106,8 +106,9 @@ class AccessManifestOperator(Operator):
         xs_bams = {**cmo_bams_xs_tumor,**dmp_bams_tumor_xs}
         self.write_sample_sheet(standard_bams, ['sample','standard'], 'standard_bams.txt')
         self.write_sample_sheet(xs_bams, ['sample','simplex','duplex'], 'xs_bams.txt')
-        self.write_sample_sheet(xs_bams, ['sample','maf'], 'mafs.txt')
+        self.write_sample_sheet(mafs, ['sample','maf'], 'mafs.txt')
         
+        # TODO finish traceback pipeline and construct input 
         # # create job input json with manifest path
         # job = self.construct_sample_input(manifest_path)
         # # submit file to RunCreator
