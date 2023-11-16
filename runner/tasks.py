@@ -788,10 +788,11 @@ def check_jobs_status():
 
             status = remote_statuses[str(run.execution_id)]
             message = dict(details=status.get("message", {}))
-            if not run.message.get("alerts") and message.get("alerts"):
+            old_alert = run.message.get("alerts")
+            if old_alert != message.get("alerts"):
                 run.message = dict(details=status.get("message", {}))
                 run.save(update_fields=("message",))
-                send_hanging_job_alert(str(run.id), message.get("alerts"))
+                send_hanging_job_alert(str(run.id), message.get("alerts")[0]['message'])
 
             if status["started"] and not run.started:
                 run.started = status["started"]
