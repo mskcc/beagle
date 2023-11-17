@@ -70,10 +70,8 @@ class AccessManifestOperator(Operator):
         # get request id
         self.request_ids = get_request_id(self.run_ids, self.request_id)
         # get fastq metadata for a given request
-        lims_fastq = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe")
-        # access_fastq = lims_fastq.filter(file__request_id=self.request_ids)
-        
-        access_fastq = lims_fastq.filter(file__request_id="09780_O")
+        lims_fastq = FileRepository.filter(file_group=settings.LIMS_FILE_GROUP)
+        access_fastq = lims_fastq.filter(file__request_id=self.request_ids)
         cmoPatientId = list(set(access_fastq.values_list('metadata__cmoPatientId', flat = True)))
         cmoPatientId_trunc = [patient.strip('C-') for patient in cmoPatientId]
 

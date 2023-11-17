@@ -340,6 +340,8 @@ ACCESS_COLLAPSE_FILE_GROUP = os.environ.get("ACCESS_COLLAPSE_FILE_GROUP", "70b64
 
 DMP_MUTATIONS = os.environ.get("DMP_MUTATIONS", "/juno/work/access/production/resources/cbioportal/current/msk_solid_heme/data_mutations_extended.txt")
 
+LIMS_FILE_GROUP = os.environ.get("LIMS_FILE_GROUP", "b54d035d-f63c-4ea8-86fb-9dbc976bb7fe")
+
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
