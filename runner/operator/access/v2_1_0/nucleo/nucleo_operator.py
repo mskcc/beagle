@@ -119,9 +119,13 @@ class AccessNucleoOperator(Operator):
     """
 
     def get_jobs(self, seq):
+        request_id = self.request_id
+        seqs = ["_NovaSeq", "_NovaSeq_X", "_NovaSeq_X_max"]
+        for seq in seqs:
+            request_id = request_id.replace(seq, "")
         files = FileRepository.filter(
             queryset=self.files,
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
         )
         runId = runIds[seq]
         files = files.filter(metadata__runId = runId)
@@ -129,7 +133,7 @@ class AccessNucleoOperator(Operator):
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
         self.seq = seq
-        sample_inputs = construct_sample_inputs(data, self.request_id)
+        sample_inputs = construct_sample_inputs(data, request_id)
         number_of_inputs = len(sample_inputs)
         return [
             RunCreator(
