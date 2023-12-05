@@ -382,7 +382,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         logger.info(f"Request doesn't have run_date specified. Skip running.")
         return []
     elif datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
-        logger.info(f"Request older then {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
+        logger.info(f"Request older than {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
         return []
 
     for job in sample_jobs:
