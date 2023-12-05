@@ -17,7 +17,7 @@ class Command(BaseCommand):
         operator_path = options["operator"]
         operator_version = options["operator_version"]
         print(f"Running {request_id} with operator {operator_path} version {operator_version}")
-        if operator_path == "access nucleo":
+        if operator_path == "runner.operator.access.v2_0_0.nucleo.AccessNucleoOperator":
             seqs = ["NovaSeq", "NovaSeq_X", "NovaSeq_X_max"]
             for seq in seqs:
                 operator = OperatorFactory.get_by_model(
