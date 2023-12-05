@@ -34,7 +34,8 @@ METADATA_OUTPUT_FIELDS = [
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY,
 ]
-
+runIds = {"NovaSeq": 'RUTH_0275', "NovaSeq_X": 'FAUCI_0070', "NovaSeq_X_max": 'FAUCI_0070'}
+maxReads = {"NovaSeq": 95, "NovaSeq_X": 95, "NovaSeq_X_max": 96}
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
@@ -90,9 +91,12 @@ def construct_sample_inputs(samples, request_id):
             ]
             for s in fgbio_fastq_to_bam_input
         ]
-
+        fastp_max_len_read1 = maxReads[seq]
+        fastp_max_len_read2 = maxReads[seq]
         input_file = template.render(
             sample_id=sample_id,
+            fastp_max_len_read1=fastp_max_len_read1,
+            fastp_max_len_read2=fastp_max_len_read2,
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
             barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
@@ -114,16 +118,17 @@ class AccessNucleoOperator(Operator):
     This Operator will search for fastq files based on an IGO Request ID
     """
 
-    def get_jobs(self):
+    def get_jobs(self, seq):
         files = FileRepository.filter(
             queryset=self.files,
             metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
         )
-
+        runId = runIds[seq]
+        files = files.filter(metadata__runId = runId)
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
-
+        self.seq = seq
         sample_inputs = construct_sample_inputs(data, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [
