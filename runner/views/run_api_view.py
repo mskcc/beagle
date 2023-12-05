@@ -419,13 +419,13 @@ class RequestOperatorViewSet(GenericAPIView):
                 for req in request_ids:
                     seqs = ["NovaSeq", "NovaSeq_X", "NovaSeq_X_max"]
                     for seq in seqs:
-                        req = f"{req}_{seq}"
+                        req_seq = f"{req}_{seq}"
                         job_group = JobGroup()
                         job_group.save()
                         job_group_id = str(job_group.id)
-                        logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
+                        logging.info("Submitting requestId %s to pipeline %s" % (req_seq, pipeline))
                         create_jobs_from_request.delay(
-                            req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
+                            req_seq, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
                         )
             else:
                 return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
