@@ -35,7 +35,7 @@ METADATA_OUTPUT_FIELDS = [
     settings.REQUEST_ID_METADATA_KEY,
 ]
 runIds = {"NovaSeq": 'RUTH_0275', "NovaSeq_X": 'FAUCI_0070', "NovaSeq_X_max": 'FAUCI_0070'}
-maxReads = {"NovaSeq": 95, "NovaSeq_X": 95, "NovaSeq_X_max": 96}
+maxReads = {"NovaSeq": 95, "NovaSeq_X": 95, "NovaSeq_X_max": 0}
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
