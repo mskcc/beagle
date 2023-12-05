@@ -417,13 +417,16 @@ class RequestOperatorViewSet(GenericAPIView):
         if not job_group_id:
             if for_each:
                 for req in request_ids:
-                    job_group = JobGroup()
-                    job_group.save()
-                    job_group_id = str(job_group.id)
-                    logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
-                    create_jobs_from_request.delay(
-                        req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
-                    )
+                    seqs = ["NovaSeq", "NovaSeq_X", "NovaSeq_X_max"]
+                    for seq in seqs:
+                        req = f"{req}_{seq}"
+                        job_group = JobGroup()
+                        job_group.save()
+                        job_group_id = str(job_group.id)
+                        logging.info("Submitting requestId %s to pipeline %s" % (req, pipeline))
+                        create_jobs_from_request.delay(
+                            req, pipeline.operator_id, job_group_id, pipeline=str(pipeline.id), file_group=file_group_id
+                        )
             else:
                 return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
         else:

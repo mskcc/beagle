@@ -16,40 +16,20 @@ class Command(BaseCommand):
         request_id = options["request_id"]
         operator_path = options["operator"]
         operator_version = options["operator_version"]
-        print(f"Running {request_id} with operator {operator_path} version {operator_version}")
-        if operator_path == "runner.operator.access.v2_1_0.nucleo.AccessNucleoOperator":
-            seqs = ["NovaSeq", "NovaSeq_X", "NovaSeq_X_max"]
-            for seq in seqs:
-                operator = OperatorFactory.get_by_model(
-                    Operator.objects.get(class_name=operator_path, version=operator_version)
-                )
-                operator.request_id = f"{request_id}_{seq}"
+        print(f"Running {request_id} with operator {operator_path} version {operator_version}") 
+        operator = OperatorFactory.get_by_model(
+            Operator.objects.get(class_name=operator_path, version=operator_version)
+        )
+        operator.request_id = request_id
 
-                jobs = operator.get_jobs(seq)
-                runs = []
-                results = []
-                for job in jobs:
-                    run = job.create()
-                    runs.append(run)
-                    run_obj = RunObjectFactory.from_definition(str(run.id), job.inputs)
-                    run_obj.ready()
-                    run_obj.to_db()
-                    results.append(run_obj.dump_job())
-                    print(results)
-        else: 
-            operator = OperatorFactory.get_by_model(
-                Operator.objects.get(class_name=operator_path, version=operator_version)
-            )
-            operator.request_id = request_id
-
-            jobs = operator.get_jobs()
-            runs = []
-            results = []
-            for job in jobs:
-                run = job.create()
-                runs.append(run)
-                run_obj = RunObjectFactory.from_definition(str(run.id), job.inputs)
-                run_obj.ready()
-                run_obj.to_db()
-                results.append(run_obj.dump_job())
-                print(results)
+        jobs = operator.get_jobs()
+        runs = []
+        results = []
+        for job in jobs:
+            run = job.create()
+            runs.append(run)
+            run_obj = RunObjectFactory.from_definition(str(run.id), job.inputs)
+            run_obj.ready()
+            run_obj.to_db()
+            results.append(run_obj.dump_job())
+            print(results)
