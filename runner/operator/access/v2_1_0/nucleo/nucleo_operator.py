@@ -60,7 +60,7 @@ def calc_avg(sample_files, field):
     return avg
 
 
-def construct_sample_inputs(samples, request_id):
+def construct_sample_inputs(samples, request_id, seq):
     with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
         template = Template(file.read())
 
@@ -120,9 +120,10 @@ class AccessNucleoOperator(Operator):
 
     def get_jobs(self, seq):
         request_id = self.request_id
-        seqs = ["_NovaSeq", "_NovaSeq_X", "_NovaSeq_X_max"]
-        for seq in seqs:
-            request_id = request_id.replace(seq, "")
+        seq_ext = ["_NovaSeq", "_NovaSeq_X", "_NovaSeq_X_max"]
+        for ext in seq_ext:
+            request_id = request_id.replace(ext, "")
+        # files = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe").all()
         files = FileRepository.filter(
             queryset=self.files,
             metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
@@ -132,8 +133,7 @@ class AccessNucleoOperator(Operator):
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
-        self.seq = seq
-        sample_inputs = construct_sample_inputs(data, request_id)
+        sample_inputs = construct_sample_inputs(data, request_id, seq)
         number_of_inputs = len(sample_inputs)
         return [
             RunCreator(
