@@ -79,7 +79,7 @@ class AccessManifestOperator(Operator):
         cmo_bams_xs_tumor, cmo_bams_xs_normal = self.find_cmo_xs_bams(cmoPatientId)
         cmo_xs_mafs = self.find_cmo_xs_mafs(cmoPatientId)
         # record those bams missing mafs
-        cmo_xs_missing_maf = list(set(cmo_bams_xs_tumor.keys()) - set(cmo_mafs_xs.keys()))
+        cmo_xs_missing_maf = list(set(cmo_bams_xs_tumor.keys()) - set(cmo_xs_mafs.keys()))
 
         # CMO IMPACT BAMS and MAFs
         cmo_bams_imp_tumor, cmo_bams_imp_normal = self.find_cmo_imp_bams(cmoPatientId, cmoPatientId_trunc)
@@ -101,9 +101,9 @@ class AccessManifestOperator(Operator):
         mafs = {**cmo_imp_mafs, **dmp_mafs,**cmo_xs_mafs}
         standard_bams = {**dmp_bams_tumor_imp,**dmp_bams_tumor_imp,**cmo_bams_imp_normal, **cmo_bams_xs_normal,**dmp_bams_normal}
         xs_bams = {**cmo_bams_xs_tumor,**dmp_bams_tumor_xs}
-        self.write_sample_sheet(standard_bams, ['sample','standard'], 'standard_bams.txt')
-        self.write_sample_sheet(xs_bams, ['sample','simplex','duplex'], 'xs_bams.txt')
-        self.write_sample_sheet(mafs, ['sample','maf'], 'mafs.txt')
+        self.write_sample_sheet(standard_bams, ['sample','standard'], 'standard_bams.tsv', '\t')
+        self.write_sample_sheet(xs_bams, ['sample','simplex','duplex'], 'xs_bams.tsv', '\t')
+        self.write_sample_sheet(mafs, ['sample','maf'], 'mafs.tsv', '\t')
         
         # TODO finish traceback pipeline and construct input 
         # # create job input json with manifest path
@@ -123,15 +123,17 @@ class AccessManifestOperator(Operator):
         #     )
         # ]
 
-    def write_sample_sheet_test(data, header, fname):
-        output = os.path.join("/home/buehlere/voyager_test", fname)
+    def write_sample_sheet_test(data, header, fname, sep):
+        output = os.path.join("/home/buehlere/voyager_test/traceback", fname)
         with open(output, 'w') as file:
             # Write the header
-            file.write(f"{', '.join(header)}\n")
+            line = f'{sep}'.join(header)
+            file.write(f"{line}\n")
             # Write the data
             for key, values in data.items():
                 values = [value.replace("file://", "") for value in values]
-                line = f"{key}, {', '.join(map(str, values))}\n"
+                paths = sep.join(map(str, values))
+                line = f"{key}{sep}{paths}\n"
                 file.write(line)
         os.chmod(output, 0o777)
         # self.register_tmp_file(output, "traceback_sample_sheets")
@@ -141,14 +143,13 @@ class AccessManifestOperator(Operator):
         output = os.path.join(self.OUTPUT_DIR, fname)
         with open(output, 'w') as file:
             # Write the header
-            file.write(f"{', '.join(header)}\n")
-            print(f"{', '.join(header)}\n")
-            
+            line = f'{sep}'.join(header)
+            file.write(f"{line}\n")
             # Write the data
             for key, values in data.items():
                 values = [value.replace("file://", "") for value in values]
-                line = f"{key}, {', '.join(map(str, values))}\n"
-                print(line)
+                paths = sep.join(map(str, values))
+                line = f"{key}{sep}{paths}\n"
                 file.write(line)
         os.chmod(output, 0o777)
         self.register_tmp_file(output, "traceback_sample_sheets")
