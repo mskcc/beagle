@@ -120,7 +120,7 @@ class AccessNucleoOperator(Operator):
 
     def get_jobs(self, seq):
         request_id = self.request_id
-        seq_ext = ["_NovaSeq", "_NovaSeq_X", "_NovaSeq_X_max"]
+        seq_ext = ["_NovaSeq", "_X", "_max"]
         for ext in seq_ext:
             request_id = request_id.replace(ext, "")
         # files = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe").all()
