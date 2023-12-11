@@ -34,8 +34,9 @@ METADATA_OUTPUT_FIELDS = [
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY,
 ]
-runIds = {"NovaSeq": 'RUTH_0275', "NovaSeq_X": 'FAUCI_0070', "NovaSeq_X_max": 'FAUCI_0070'}
+runIds = {"NovaSeq": "RUTH_0275", "NovaSeq_X": "FAUCI_0070", "NovaSeq_X_max": "FAUCI_0070"}
 maxReads = {"NovaSeq": 95, "NovaSeq_X": 95, "NovaSeq_X_max": 0}
+
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
@@ -129,7 +130,7 @@ class AccessNucleoOperator(Operator):
             metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.IGO_COMPLETE_METADATA_KEY: True},
         )
         runId = runIds[seq]
-        files = files.filter(metadata__runId = runId)
+        files = files.filter(metadata__runId=runId)
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
