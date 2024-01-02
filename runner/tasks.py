@@ -49,7 +49,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
         logger.info(
             f'HERES THE REQUEST ID {operator.request_id}'
         )
-        jobs = operator.get_jobs(operator.request_id.split("P_", 1)[1])
+        jobs = operator.get_jobs(operator.request_id.split("_NovaSeq", 1)[0])
     except Exception as e:
         logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
         gene_panel = get_gene_panel(operator.request_id)
