@@ -36,7 +36,7 @@ METADATA_OUTPUT_FIELDS = [
 ]
 runIds = {"NovaSeq": "RUTH_0275", "NovaSeq_X": "FAUCI_0070", "NovaSeq_X_max": "FAUCI_0070"}
 maxReads = {"NovaSeq": 95, "NovaSeq_X": 95, "NovaSeq_X_max": 0}
-trim = {"NovaSeq": True, "NovaSeq_X": True, "NovaSeq_X_max": False}
+
 
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
@@ -62,12 +62,9 @@ def calc_avg(sample_files, field):
 
 
 def construct_sample_inputs(samples, request_id, seq):
-    if trim: 
-        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
-            template = Template(file.read())
-    else:
-        with open(os.path.join(WORKDIR, "input_template_max_read_zero.json.jinja2")) as file:
-            template = Template(file.read())
+    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+        template = Template(file.read())
+
     sample_inputs = list()
     samples_groups = list(group_by_sample_id(samples).values())
 
@@ -99,6 +96,8 @@ def construct_sample_inputs(samples, request_id, seq):
         fastp_max_len_read2 = maxReads[seq]
         input_file = template.render(
             sample_id=sample_id,
+            fastp_max_len_read1=fastp_max_len_read1,
+            fastp_max_len_read2=fastp_max_len_read2,
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
             barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
