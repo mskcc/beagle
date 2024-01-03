@@ -229,6 +229,17 @@
       "version": "v1.2.0",
       "slug": "ArgosOperator_v1_2_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 23,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.argos_operator.v2_0_0.argos_operator.ArgosOperator",
+      "version": "v2.0.0",
+      "slug": "ArgosOperator_v2_0_0"
+    }
   }
 
 ]

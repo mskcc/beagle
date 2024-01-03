@@ -5,7 +5,7 @@ import os
 from mock import patch, call
 from rest_framework import status
 from rest_framework.test import APITestCase
-from runner.views.run_api_view import OperatorViewSet
+from runner.views.run_api_view import OperatorViewSet, PairsOperatorViewSet
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import FileGroup
 from runner.models import Run, RunStatus, Pipeline, OperatorRun, Port, PortType
@@ -90,6 +90,7 @@ class TestRunAPIView(APITestCase):
         "file_system.storage.json",
         "beagle_etl.operator.json",
         "runner.pipeline.json",
+        "file_system.sample.json",
     ]
 
     def setUp(self):
@@ -118,6 +119,50 @@ class TestRunAPIView(APITestCase):
 
         self.assertEqual(response.data, {"details": "Operator Job submitted {}".format(request_ids)})
         self.assertEqual(response.status_code, 200)
+
+    def test_post_to_pairs(self):
+        """
+        Test that data sent through the API view 'post' method returns a successful status and expected response
+        """
+        pairs = [
+            {
+                "tumor": {
+                    "sample_id": "s_C_4LM16H_X001_d",
+                    "bait_set": "IMPACT468_BAITS",
+                    "patient_id": "C-4LM16H",
+                    "pi": "my_investigator",
+                    "pi_email": "my_pi_email@mskcc.org",
+                },
+                "normal": {
+                    "sample_id": "s_C_4LM16H_N001_d",
+                    "bait_set": "IMPACT468_BAITS",
+                    "patient_id": "C-4LM16H",
+                    "pi": "my_investigator",
+                    "pi_email": "my_pi_email@mskcc.org",
+                },
+            }
+        ]
+        pipelines = ["argos"]
+        pipeline_versions = ["1.1.2"]
+        request_id = "08944_B"
+        lab_head_name = "my_labhead"
+        investigator_name = "my_investigator"
+        assay = "IMPACT468"
+
+        request = MockRequest()
+        request.data = {}
+        request.data["pairs"] = pairs
+        request.data["pipelines"] = pipelines
+        request.data["pipeline_versions"] = pipeline_versions 
+        request.data["request_id"] = request_id
+        request.data["labHeadName"] = lab_head_name
+        request.data["investigatorName"] = investigator_name
+        request.data["assay"] = assay
+
+        view = PairsOperatorViewSet()
+        response = view.post(request)
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
     # disable job submission to Ridgeback
     @patch("runner.tasks.submit_job")
