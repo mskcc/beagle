@@ -94,6 +94,7 @@ def construct_sample_inputs(samples, request_id, seq):
         ]
         fastp_max_len_read1 = maxReads[seq]
         fastp_max_len_read2 = maxReads[seq]
+        logger.info('before render')
         input_file = template.render(
             sample_id=sample_id,
             fastp_max_len_read1=fastp_max_len_read1,
@@ -103,7 +104,7 @@ def construct_sample_inputs(samples, request_id, seq):
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
             library_id=meta[settings.LIBRARY_ID_METADATA_KEY],
         )
-
+        logger.info('after render')
         sample = json.loads(input_file)
         sample_inputs.append((sample, meta))
 
@@ -120,6 +121,7 @@ class AccessNucleoOperator(Operator):
     """
 
     def get_jobs(self, seq):
+        logger.info('function set up')
         request_id = request_id.split("_NovaSeq", 1)[0]
         # files = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe").all()
         files = FileRepository.filter(
@@ -131,7 +133,9 @@ class AccessNucleoOperator(Operator):
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
+        logger.info('before construct sample inputs')
         sample_inputs = construct_sample_inputs(data, request_id, seq)
+        logger.info('after construct sample inputs')
         number_of_inputs = len(sample_inputs)
         return [
             RunCreator(
