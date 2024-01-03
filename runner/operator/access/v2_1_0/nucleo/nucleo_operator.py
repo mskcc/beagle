@@ -97,8 +97,6 @@ def construct_sample_inputs(samples, request_id, seq):
         logger.info('before render')
         input_file = template.render(
             sample_id=sample_id,
-            fastp_max_len_read1=fastp_max_len_read1,
-            fastp_max_len_read2=fastp_max_len_read2,
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
             barcode_id=meta["barcodeId"],
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
@@ -106,6 +104,8 @@ def construct_sample_inputs(samples, request_id, seq):
         )
         logger.info('after render')
         sample = json.loads(input_file)
+        sample["fastp_max_len_read1"] = fastp_max_len_read1
+        sample["fastp_max_len_read2"] = fastp_max_len_read2
         sample_inputs.append((sample, meta))
 
     return sample_inputs
