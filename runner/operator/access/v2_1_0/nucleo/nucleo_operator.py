@@ -122,7 +122,7 @@ class AccessNucleoOperator(Operator):
 
     def get_jobs(self, seq):
         logger.info('function set up')
-        request_id = request_id.split("_NovaSeq", 1)[0]
+        request_id = self.request_id.split("_NovaSeq", 1)[0]
         # files = FileRepository.filter(file_group="b54d035d-f63c-4ea8-86fb-9dbc976bb7fe").all()
         files = FileRepository.filter(
             queryset=self.files,
