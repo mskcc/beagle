@@ -40,7 +40,7 @@ from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
-
+import traceback
 logger = logging.getLogger(__name__)
 
 
@@ -66,6 +66,7 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
                 number_of_samples=number_of_samples,
             ).to_dict()
             send_notification.delay(event)
+        logger.info(traceback.format_exc())
         logger.info(
             format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id)
         )
