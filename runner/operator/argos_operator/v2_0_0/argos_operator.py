@@ -16,6 +16,7 @@ from file_system.repository.file_repository import FileRepository
 from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
 from .bin.make_sample import format_sample_name, get_run_mode
 
+from pprint import pprint
 
 class ArgosOperator(Operator):
     ARGOS_NAME = "argos"
@@ -26,7 +27,8 @@ class ArgosOperator(Operator):
         argos_jobs = list()
         dmp_samples = list()
         if self.pairing:
-            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
+            pprint(self.pairing)
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)        
         elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
@@ -296,6 +298,7 @@ class ArgosOperator(Operator):
 
     def get_regular_sample(self, sample_data, tumor_type):
         sample_id = sample_data["sample_id"]
+        pprint(sample_data)
         sample = FileRepository.filter(
             queryset=self.files,
             metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
