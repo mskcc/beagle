@@ -70,6 +70,7 @@ class Pipeline(BaseModel):
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
+    tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
     config = models.CharField(blank=True, null=True, max_length=1000, default=None)
 

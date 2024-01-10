@@ -493,6 +493,8 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         url = settings.RIDGEBACK_URL + "/v0/jobs/"
     if run.app.walltime:
         job["walltime"] = run.app.walltime
+    if run.app.tool_walltime:
+        job["tool_walltime"] = run.app.tool_walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
     if run.app.output_permission:
