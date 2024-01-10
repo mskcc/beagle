@@ -611,6 +611,7 @@ class TestImportSample(APITestCase):
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "TestAssay",
                 "labHeadEmail": "test@email.com",
+                "runDate": "2023-11-10",
             },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
@@ -647,6 +648,7 @@ class TestImportSample(APITestCase):
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "TestAssay",
                 "labHeadEmail": "test@email.com",
+                "runDate": "2023-11-10",
             },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
