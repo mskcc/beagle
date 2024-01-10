@@ -2,17 +2,15 @@
 Tests for LIMS ETL jobs
 """
 
-import os
+
 from mock import patch, call
-from unittest import skipIf
-from uuid import UUID
+from datetime import date
 from django.test import TestCase
 from django.conf import settings
-from beagle_etl.models import JobStatus, Job, ETLConfiguration, SMILEMessage, SmileMessageStatus
+from beagle_etl.models import ETLConfiguration
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
-from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback
 
@@ -604,6 +602,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
+        date_now = date.today().strftime("%Y-%m-%d")
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
@@ -611,7 +610,7 @@ class TestImportSample(APITestCase):
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "TestAssay",
                 "labHeadEmail": "test@email.com",
-                "runDate": "2023-11-10",
+                "runDate": date_now,
             },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
@@ -641,6 +640,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
+        date_now = date.today().strftime("%Y-%m-%d")
         file_metadata = FileMetadata.objects.create(
             file=file_conflict,
             version=1,
@@ -648,7 +648,7 @@ class TestImportSample(APITestCase):
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "TestAssay",
                 "labHeadEmail": "test@email.com",
-                "runDate": "2023-11-10",
+                "runDate": date_now,
             },
         )
         operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
