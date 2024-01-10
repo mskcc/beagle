@@ -3,7 +3,8 @@ import copy
 import json
 import logging
 from deepdiff import DeepDiff
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 from celery import shared_task
 from django.conf import settings
 from beagle_etl.jobs import TYPES
@@ -370,6 +371,18 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     ):
         no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
+        return []
+
+    run_dates = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RUN_DATE_METADATA_KEY
+    ).all()
+    run_dates = sorted([parse(d) for d in run_dates])
+
+    if not run_dates:
+        logger.info(f"Request doesn't have run_date specified. Skip running.")
+        return []
+    elif datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
+        logger.info(f"Request older than {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
         return []
 
     for job in sample_jobs:
