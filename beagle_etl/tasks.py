@@ -27,7 +27,7 @@ from beagle_etl.jobs.metadb_jobs import (
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
-
+from ddtrace import tracer
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ def fetch_request_nats():
 
 
 @shared_task
+@tracer.wrap(service="beagle")
 def process_smile_events():
     update_requests = set()
 
@@ -60,6 +61,9 @@ def process_smile_events():
     for message in messages:
         if message.request_id in update_requests:
             update_requests.remove(message.request_id)
+            current_span = tracer.current_span()
+            request_id = message.request_id
+            current_span.set_tag("request.id", request_id)
         logger.info(f"New request: {message.request_id}")
         new_request.delay(str(message.id))
 
