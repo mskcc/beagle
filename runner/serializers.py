@@ -349,6 +349,11 @@ class TempoMPGenOperatorSerializer(serializers.Serializer):
     tumors_override = serializers.ListField(child=serializers.CharField(max_length=30), allow_empty=True)
 
 
+class ArgosPairingSerializer(serializers.Serializer):
+    argos_slug = serializers.CharField(default="ArgosOperator 2.0.0", allow_blank=False)
+    igo_request_id = serializers.CharField(required=True, allow_blank=False)
+
+
 class RunSamplesSerializer(serializers.Serializer):
     job_group = (serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False),)
     samples = serializers.ListField(child=serializers.CharField(), allow_empty=False, required=True)

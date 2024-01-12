@@ -25,13 +25,8 @@ class ArgosOperator(Operator):
 
         argos_jobs = list()
         dmp_samples = list()
-        run_mode = get_run_mode(
-            FileRepository.filter(
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id}, values_metadata="runMode"
-            ).first()
-        )
         if self.pairing:
-            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing, run_mode)
+            files, cnt_tumors, dmp_samples = self.get_files_for_pairs(self.pairing)
         elif self.request_id:
             files, cnt_tumors = self.get_files(self.request_id)
 
@@ -225,30 +220,29 @@ class ArgosOperator(Operator):
                 samples.append(build_sample(igo_id_group[igo_id]))
         return samples
 
-    def get_files_for_pairs(self, pairing, run_mode):
+    def get_files_for_pairs(self, pairing):
         all_files = []
         cnt_tumors = 0
         dmp_samples = list()
         for pair in pairing.get("pairs"):
             tumor_sample = pair["tumor"]
             normal_sample = pair["normal"]
-            tumors = self.get_regular_sample(tumor_sample, "Tumor")
             tumor, is_dmp_tumor_sample = self.get_regular_sample(tumor_sample, "Tumor")
             cnt_tumors += 1
             normal, is_dmp_normal_sample = self.get_regular_sample(normal_sample, "Normal")
             if not normal and tumor:  # get from pooled normal
-                bait_set = tumors[0].metadata["baitSet"]
+                normal = list()
                 run_ids = list()
-                for tumor in tumors:
-                    run_id = tumor.metadata["runId"]
+                for t_files in tumor:
+                    run_id = t_files.metadata["runId"]
                     if run_id:
                         run_ids.append(run_id)
                 run_ids.sort()
-                preservation_types = tumors[0].metadata["preservation"]
-                normal_sample_id = normal_sample["sample_id"]
-                normals = list()
+                tumor_current = tumor.first()
+                bait_set = tumor_current.metadata["baitSet"]
+                preservation_types = tumor_current.metadata["preservation"]
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
-                    run_ids, preservation_types, bait_set, run_mode
+                    run_ids, preservation_types, bait_set
                 )
                 for f in pooled_normal_files:
                     metadata = build_pooled_normal_sample_by_file(
@@ -256,7 +250,7 @@ class ArgosOperator(Operator):
                     )["metadata"]
                     sample = f
                     sample.metadata = metadata
-                    normals.append(sample)
+                    normal.append(sample)
             for file in list(tumor):
                 if file not in all_files:
                     all_files.append(file)

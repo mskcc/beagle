@@ -11,7 +11,7 @@ addons:
     - postgresql-11
     - postgresql-client-11
 python:
-  - "3.7.3"
+  - "3.8"
 before_install:
   - sudo apt-get update
   - sudo apt-get --yes remove postgresql\*
@@ -20,6 +20,7 @@ before_install:
   - sudo service postgresql restart 11
 install:
   - psql -p 5433 -c 'create database travis_ci_test;' -U postgres
+  - pip install --upgrade pip
   - pip install -r requirements-dev.txt
   - source travis_env.sh
   - python manage.py migrate

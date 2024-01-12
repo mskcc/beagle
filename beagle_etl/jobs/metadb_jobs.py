@@ -3,7 +3,8 @@ import copy
 import json
 import logging
 from deepdiff import DeepDiff
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 from celery import shared_task
 from django.conf import settings
 from beagle_etl.jobs import TYPES
@@ -28,6 +29,7 @@ from notifier.events import (
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
+    ErrorImportingFilesEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
@@ -56,13 +58,15 @@ from beagle_etl.exceptions import (
     FailedToCalculateChecksum,
     FailedToCopyFilePermissionDeniedException,
     FailedToCopyFileException,
+    FailedToRegisterFileException,
+    DuplicatedFilesException,
 )
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
-from runner.operator.helper import format_sample_name, format_patient_id
+from runner.operator.helper import format_sample_name
 from beagle_etl.copy_service import CopyService
-from beagle_etl.jobs.helper_jobs import check_file_permissions
+from beagle_etl.jobs.helper_jobs import check_file_permissions, check_file_exist
 from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
@@ -278,6 +282,20 @@ def new_request(message_id):
     message.status = SmileMessageStatus.COMPLETED
     message.save()
     create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
+    # Validation step
+    failed, msg = check_files_registered(recipe, data.get("samples"))
+    if failed:
+        send_to = settings.BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO
+        for email in send_to:
+            event = ErrorImportingFilesEvent(
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                email_to=email,
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                subject=f"Error while registering files for {request_id}",
+                request_id=request_id,
+                msg=msg,
+            ).to_dict()
+            send_notification.delay(event)
 
 
 @shared_task
@@ -353,6 +371,18 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     ):
         no_samples_event = AdminHoldEvent(job_group_notifier_id).to_dict()
         send_notification.delay(no_samples_event)
+        return []
+
+    run_dates = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RUN_DATE_METADATA_KEY
+    ).all()
+    run_dates = sorted([parse(d) for d in run_dates])
+
+    if not run_dates:
+        logger.info(f"Request doesn't have run_date specified. Skip running.")
+        return []
+    elif datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
+        logger.info(f"Request older than {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
         return []
 
     for job in sample_jobs:
@@ -1106,3 +1136,28 @@ def check_files_permissions(samples):
                     for fastq_path in fastqs:
                         logger.info("Checking file permissions for %s" % fastq_path)
                         check_file_permissions(fastq_path)
+
+
+def check_files_registered(recipe, samples):
+    msg = ""
+    failed = False
+    for sample in samples:
+        libraries = sample.get("libraries", [])
+        for library in libraries:
+            runs = library.get("runs")
+            if runs:
+                run_dict = convert_to_dict(runs)
+                for run in run_dict.values():
+                    fastqs = run.get("fastqs", [])
+                    for fastq_path in fastqs:
+                        logger.info("Checking file permissions for %s" % fastq_path)
+                        new_path = CopyService.remap(recipe, fastq_path)
+                        try:
+                            check_file_exist(new_path)
+                        except FailedToRegisterFileException as fe:
+                            failed = True
+                            msg += f"{fe}\n"
+                        except DuplicatedFilesException(new_path) as de:
+                            failed = True
+                            msg += f"{de}\n"
+    return failed, msg

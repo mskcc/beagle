@@ -8,6 +8,7 @@ from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
+from django.conf import settings
 
 
 class ProtocolType(IntEnum):
@@ -69,6 +70,7 @@ class Pipeline(BaseModel):
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
+    tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
     config = models.CharField(blank=True, null=True, max_length=1000, default=None)
 
@@ -134,11 +136,13 @@ class OperatorRun(BaseModel):
         self.save()
 
     def increment_failed_run(self):
-        self.num_failed_runs = F("num_failed_runs") + 1
+        self.refresh_from_db()
+        self.num_failed_runs += 1
         self.save()
 
     def increment_completed_run(self):
-        self.num_completed_runs = F("num_completed_runs") + 1
+        self.refresh_from_db()
+        self.num_completed_runs += 1
         self.save()
 
     @property
@@ -177,6 +181,11 @@ class OperatorRun(BaseModel):
         self.refresh_from_db()
         return self.num_total_runs - (self.num_completed_runs + self.num_failed_runs)
 
+    @property
+    def operator_finished(self):
+        self.refresh_from_db()
+        return (self.num_failed_runs + self.num_completed_runs) == self.num_total_runs
+
 
 class Run(BaseModel):
     run_type = models.IntegerField(
@@ -201,8 +210,10 @@ class Run(BaseModel):
     submitted = models.DateTimeField(blank=True, null=True)
     finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
     resume = models.UUIDField(blank=True, null=True)
-    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=2)
-    restart_attempts = models.IntegerField(blank=False, null=False, editable=True, default=3)
+    resume_attempts = models.IntegerField(blank=False, null=False, editable=True, default=settings.DEFAULT_RESUME_COUNT)
+    restart_attempts = models.IntegerField(
+        blank=False, null=False, editable=True, default=settings.DEFAULT_RESTART_COUNT
+    )
 
     def __init__(self, *args, **kwargs):
         super(Run, self).__init__(*args, **kwargs)
