@@ -12,6 +12,7 @@ from .models import (
     RequestCallbackJob,
     NormalizerModel,
     ValidatorModel,
+    SkipProject,
 )
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 from lib.admin import pretty_json
@@ -126,6 +127,10 @@ class ValidatorAdmin(ModelAdmin):
     list_display = ("name",)
 
 
+class SkipProjectAdmin(ModelAdmin):
+    list_display = ("skip_projects",)
+
+
 admin.site.register(Job, JobAdmin)
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
@@ -133,3 +138,4 @@ admin.site.register(SMILEMessage, SMILEMessagesAdmin)
 admin.site.register(RequestCallbackJob, RequestCallbackJobAdmin)
 admin.site.register(NormalizerModel, NormalizerAdmin)
 admin.site.register(ValidatorModel, ValidatorAdmin)
+admin.site.register(SkipProject, SkipProjectAdmin)

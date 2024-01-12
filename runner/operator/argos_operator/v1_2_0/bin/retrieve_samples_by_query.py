@@ -6,10 +6,10 @@ For example, get all samples by a patient ID or pooled normals based on the bait
 and preservation type
 """
 import logging
-import os
-from file_system.models import File, FileMetadata, FileGroup
+from file_system.models import MachineRunMode
+from file_system.models import FileGroup
 from file_system.repository.file_repository import FileRepository
-from django.db.models import Prefetch, Q
+from django.db.models import Q
 from django.conf import settings
 from .make_sample import build_sample, remove_with_caveats, format_sample_name
 from runner.operator.helper import get_r_orientation, spoof_barcode, init_metadata
@@ -100,11 +100,11 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
-        if machine is "hiseq":
+        if machine == "hiseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
@@ -119,11 +119,11 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
-        if machine is "hiseq":
+        if machine == "hiseq":
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
@@ -138,7 +138,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         machine = get_sequencer_type(run_ids)
         if not machine:
             LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal for $s; new machine name?", sample_name)
-        if machine is "novaseq":
+        if machine == "novaseq":
             sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V1"
@@ -150,20 +150,12 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     return pooled_normals, descriptor, sample_name
 
 
-def get_sequencer_type(run_ids_list, run_mode):
-    hiseq_machines = ["jax", "pitt"]
-    novaseq_machines = ["diana", "michelle", "aa00227", "ruth"]
+def get_sequencer_type(run_ids_list):
     run_ids_lower = [i.lower() for i in run_ids_list if i]
-    for machine in hiseq_machines:
-        is_hiseq = find_substr(machine, run_ids_lower)
-        if is_hiseq:
-            return "hiseq"
-    for machine in novaseq_machines:
-        is_novaseq = find_substr(machine, run_ids_lower)
-        if is_novaseq:
-            return "novaseq"
-    else:
-        return run_mode
+    machine_modes = MachineRunMode.objects.all()
+    for machine in machine_modes:
+        if run_ids_lower.split("_")[0].lower() == machine.machine_name:
+            return machine.machine_class
 
 
 def find_substr(s, l):
@@ -203,11 +195,11 @@ def build_preservation_query(data):
     return query
 
 
-def get_pooled_normals(run_ids, preservation_types, bait_set, run_mode):
+def get_pooled_normals(run_ids, preservation_types, bait_set):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
         sample_file = build_pooled_normal_sample_by_file(
@@ -219,7 +211,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set, run_mode):
     return pooled_normal
 
 
-def get_pooled_normal_files(run_ids, preservation_types, bait_set, run_mode):
+def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.all()
 

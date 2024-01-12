@@ -6,12 +6,12 @@ from runner.views.port_view import PortViewSet
 from runner.views.operator_run_view import OperatorRunViewSet
 from runner.views.run_api_view import (
     RunApiViewSet,
-    OperatorViewSet,
     OperatorErrorViewSet,
     RequestOperatorViewSet,
     RunOperatorViewSet,
     AionViewSet,
     TempoMPGenViewSet,
+    ArgosPairingViewSet,
     CWLJsonViewSet,
     PairsOperatorViewSet,
     RunApiRestartViewSet,
@@ -40,12 +40,12 @@ urlpatterns = [
     path("run/start/<uuid:pk>", StartRunViewSet.as_view()),
     path("run/update/<uuid:pk>", UpdateJob.as_view()),
     path("restart/", RunApiRestartViewSet.as_view()),
-    path("request/", OperatorViewSet.as_view()),
     path("operator-runs/", OperatorRunViewSet.as_view({"get": "list"})),
     path("operator/request/", RequestOperatorViewSet.as_view()),
     path("operator/runs/", RunOperatorViewSet.as_view()),
     path("operator/pairs/", PairsOperatorViewSet.as_view()),
     path("operator/aion/", AionViewSet.as_view()),
     path("operator/tempo_mpgen/", TempoMPGenViewSet.as_view()),
+    path("operator/argos-pairing/", ArgosPairingViewSet.as_view()),
     path("cwljson/", CWLJsonViewSet.as_view()),
 ]

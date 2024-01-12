@@ -68,3 +68,19 @@ class FailedToCopyFilePermissionDeniedException(ETLExceptions):
     """
 
     code = 108
+
+
+class FailedToRegisterFileException(ETLExceptions):
+    """
+    Files registered twice from same Message
+    """
+
+    code = 109
+
+
+class DuplicatedFilesException(ETLExceptions):
+    """
+    Files registered multiple times
+    """
+
+    code = 110

@@ -3,7 +3,9 @@ from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
+from runner.operator.operator_logger import OperatorLogger
 from runner.run.objects.run_creator_object import RunCreator
+from ddtrace import tracer
 
 
 class Operator(object):
@@ -40,6 +42,7 @@ class Operator(object):
         self.output_directory_prefix = output_directory_prefix
         self._jobs = []
         self._pipeline = pipeline
+        self.logger = OperatorLogger()
 
     def get_pipeline_id(self):
         if self._pipeline:
@@ -64,7 +67,10 @@ class Operator(object):
         operator_error = OperatorErrorSerializer(
             data={"operator_name": self.model.slug, "request_id": self.request_id, "error": error}
         )
+        current_span = tracer.current_span()
         if operator_error.is_valid():
+            cmo_request_id = self.request_id
+            current_span.set_tag("request.id", cmo_request_id)
             operator_error.save()
             self.logger.info(
                 "Operator: %s failed to create a job for request_id: %s with error: %s"
@@ -75,6 +81,9 @@ class Operator(object):
 
     def ready_job(self, pipeline, tempo_inputs, job):
         self._jobs.append(RunCreator(app=pipeline, inputs=job))
+        current_span = tracer.current_span()
+        cmo_request_id = self.request_id
+        span.set_tag("request.id", cmo_request_id)
 
     def on_job_fail(self, run):
         pass

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "drf_multiple_model",
     "drf_yasg",
     "advanced_filters",
+    "ddtrace.contrib.django",
 ]
 
 
@@ -406,6 +407,7 @@ PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PE
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
+OLD_REQUEST_TIMEDELTA = os.environ.get("BEAGLE_OLD_REQUEST_TIMEDELTA", 60)
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
@@ -440,6 +442,7 @@ TUMOR_OR_NORMAL_METADATA_KEY = "tumorOrNormal"
 BAITSET_METADATA_KEY = "baitSet"
 PRESERVATION_METADATA_KEY = "preservation"
 SEX_METADATA_KEY = "sex"
+RUN_DATE_METADATA_KEY = "runDate"
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get("BEAGLE_NOTIFIER_EMAIL_GROUP", "946a922c-8c6b-4cba-8754-16df02f05d2a")
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get("BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS")
@@ -457,6 +460,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
 
 PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
 PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
+JOB_HANGING_ALERT_EMAILS = os.environ.get("BEAGLE_JOB_HANGING_ALERT_EMAILS", "").split(",")
 
 # Tempo
 
@@ -476,3 +480,6 @@ CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")
 
 DATADOG_RUN_ERROR_URL = os.environ.get("DATADOG_RUN_ERROR_URL", "")
 DATADOG_JOB_ERROR_URL = os.environ.get("DATADOG_JOB_ERROR_URL", "")
+
+DEFAULT_RESTART_COUNT = os.environ.get("DEFAULT_RESTART_COUNT", 0)
+DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)

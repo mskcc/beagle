@@ -352,6 +352,7 @@ class FileMetadata(BaseModel):
                 patient = Patient.objects.create(patient_id=patient_id, sex=sex)
             if sample not in patient.samples:
                 patient.samples.append(sample)
+                patient.save(do_not_version=True)
             return patient
 
     def save(self, *args, **kwargs):
@@ -424,3 +425,21 @@ class FileMetadata(BaseModel):
 class FileRunMap(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     run = JSONField(default=list)
+
+
+class LowercaseCharField(models.CharField):
+    def get_prep_value(self, value):
+        value = super().get_prep_value(value)
+        return value if value is None else value.lower()
+
+
+class MachineRunMode(BaseModel):
+    machine_name = LowercaseCharField(max_length=32, null=False, blank=False, unique=True)
+    machine_class = LowercaseCharField(max_length=32, null=False, blank=False)
+    machine_type = models.CharField(max_length=32, null=False, blank=False)
+
+    def __repr__(self):
+        return "MACHINE: %s; CLASS: %s; TYPE: %s" % (self.machine_name, self.machine_class, self.machine_type)
+
+    def __str__(self):
+        return "{}".format(self.machine_name)

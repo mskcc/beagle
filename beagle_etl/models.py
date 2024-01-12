@@ -76,6 +76,10 @@ class ETLConfiguration(models.Model):
     hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
 
 
+class SkipProject(models.Model):
+    skip_projects = ArrayField(models.CharField(max_length=100), null=True, blank=True)
+
+
 class SmileMessageStatus(IntEnum):
     PENDING = 0
     IN_PROGRESS = 1

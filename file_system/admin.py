@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
+from django.core.exceptions import ValidationError
 from .models import (
     Storage,
     File,
@@ -13,6 +15,7 @@ from .models import (
     Patient,
     Request,
     FileExtension,
+    MachineRunMode,
 )
 
 
@@ -62,6 +65,23 @@ class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     search_fields = ("file__id",)
 
 
+class MachineRunModeAdminForm(forms.ModelForm):
+    def clean_machine_name(self):
+        if not self.cleaned_data["machine_name"].islower():
+            raise ValidationError("Machine name needs to be lowercase")
+        return self.cleaned_data["machine_name"]
+
+    def clean_machine_class(self):
+        if not self.cleaned_data["machine_class"].islower():
+            raise ValidationError("Machine class needs to be lowercase")
+        return self.cleaned_data["machine_class"]
+
+
+class MachineRunModeAdmin(admin.ModelAdmin):
+    form = MachineRunModeAdminForm
+    list_display = ("machine_name", "machine_class", "machine_type")
+
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
@@ -74,3 +94,4 @@ admin.site.register(FileMetadata, FileMetadataAdmin)
 admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
 admin.site.register(FileRunMap, FileRunMapAdmin)
+admin.site.register(MachineRunMode, MachineRunModeAdmin)
