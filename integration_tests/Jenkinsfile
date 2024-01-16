@@ -3,7 +3,7 @@ pipeline {
   stages {
       stage('Deploy to Stage') {
         steps {
-        build job: 'beagle-deploy/release/1.82.0', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'STAGE']],  propagate: true, wait: true
+        build job: 'beagle-deploy/release%2F1.82.0', parameters: [[$class: 'StringParameterValue', name: 'SERVER', value: 'STAGE']],  propagate: true, wait: true
         }
       }
       stage('Run integration tests') {
