@@ -62,7 +62,7 @@ from beagle_etl.exceptions import (
     FailedToCopyFileException,
     FailedToRegisterFileException,
     DuplicatedFilesException,
-    IncorrectlyFormattedPrimaryId
+    IncorrectlyFormattedPrimaryId,
 )
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
@@ -916,7 +916,9 @@ def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=Fa
         pattern = re.compile(settings.PRIMARY_ID_REGEX)
         if not pattern.fullmatch(sample_id):
             logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
-            raise IncorrectlyFormattedPrimaryId(f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
+            raise IncorrectlyFormattedPrimaryId(
+                f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
+            )
 
     if not libraries:
         if igocomplete:
