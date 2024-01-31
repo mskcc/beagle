@@ -84,3 +84,11 @@ class DuplicatedFilesException(ETLExceptions):
     """
 
     code = 110
+
+
+class IncorrectlyFormattedPrimaryId(ETLExceptions):
+    """
+    Incorrectly formatted primaryId
+    """
+
+    code = 111
