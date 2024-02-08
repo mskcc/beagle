@@ -1,6 +1,4 @@
-on:
-  push:
-    branches: [ "feature/githubactionsrelease1.82.0" ]
+on: push
 
 jobs:
   build:
