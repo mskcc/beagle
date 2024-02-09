@@ -26,11 +26,11 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
-        #pip install pip==19.3.1
+        pip install pip==19.3.1
         #pip install --force-reinstall 'setuptools<58.0.0'
-        #pip install -r requirements.txt
+        pip install -r requirements.txt
         #pip install -r requirements-toil.txt
-         pip install -r requirements-dev.txt
+        pip install -r requirements-dev.txt
         #python manage.py migrate
     - name: Run migrations
       run: python manage.py migrate
