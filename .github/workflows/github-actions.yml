@@ -27,8 +27,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
+        pip install --upgrade pip setuptools wheel
         #pip install pip==19.3.1
-        pip install --force-reinstall 'setuptools<58.0.0'
+        #pip install --force-reinstall 'setuptools<58.0.0'
         #pip install -r requirements.txt
         #pip install -r requirements-toil.txt
         pip install -r requirements-dev.txt
