@@ -43,7 +43,7 @@ jobs:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
           BEAGLE_DB_USERNAME: postgres
-    - name: Run test
+    #- name: Run test
       #run: python manage.py test
      # run: |
         #python manage.py test
