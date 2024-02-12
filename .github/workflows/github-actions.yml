@@ -48,7 +48,7 @@ jobs:
       uses: suo/flake8-github-action@releases/v1
       with:
           checkName: 'build'   # NOTE: this needs to be the same as the job name
-      env:
-          BEAGLE_DB_NAME: github_actions
-          BEAGLE_DB_PASSWORD: postgres
-          BEAGLE_DB_USERNAME: postgres
+      #env:
+          #BEAGLE_DB_NAME: github_actions
+          #BEAGLE_DB_PASSWORD: postgres
+          #BEAGLE_DB_USERNAME: postgres
