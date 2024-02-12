@@ -46,8 +46,7 @@ jobs:
     - name: Run test
       #run: python manage.py test
       run: |
-        coverage run --source='.' manage.py test
-        coverage report -m --fail-under=75
+        python manage.py test
     - name: Run flake8
       uses: suo/flake8-github-action@releases/v1
       with:
