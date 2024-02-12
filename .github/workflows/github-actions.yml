@@ -30,32 +30,18 @@ jobs:
       run: |
         pip install --upgrade pip
         python -m pip install python-ldap
-        #pip install --upgrade pip setuptools wheel
-        #pip install pip==19.3.1
-        #pip install --force-reinstall 'setuptools<58.0.0'
-        #pip install -r requirements.txt
-        #pip install -r requirements-toil.txt
         pip install -r requirements-dev.txt
-        #python manage.py migrate
     - name: Run migrations
       run: python manage.py migrate
       env:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
           BEAGLE_DB_USERNAME: postgres
-    #- name: Run test
-      #run: python manage.py test
-     # run: |
-        #python manage.py test
-      #env:
-          #BEAGLE_DB_NAME: github_actions
-          #BEAGLE_DB_PASSWORD: postgres
-          #BEAGLE_DB_USERNAME: postgres
-    - name: Run flake8
-      uses: suo/flake8-github-action@releases/v1
-      with:
-          checkName: 'build'   # NOTE: this needs to be the same as the job name
+    - name: Run test
+      run: |
+        python manage.py test
       env:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
           BEAGLE_DB_USERNAME: postgres
+   
