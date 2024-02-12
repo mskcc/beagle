@@ -47,6 +47,10 @@ jobs:
       #run: python manage.py test
       run: |
         python manage.py test
+      env:
+          BEAGLE_DB_NAME: github_actions
+          BEAGLE_DB_PASSWORD: postgres
+          BEAGLE_DB_USERNAME: postgres
     - name: Run flake8
       uses: suo/flake8-github-action@releases/v1
       with:
