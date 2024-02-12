@@ -39,6 +39,10 @@ jobs:
         #python manage.py migrate
     - name: Run migrations
       run: python manage.py migrate
+      env:
+          BEAGLE_DB_NAME: github_actions
+          BEAGLE_DB_PASSWORD: postgres
+          BEAGLE_DB_USERNAME: postgres
     - name: Run test
       #run: python manage.py test
       run: |
