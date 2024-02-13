@@ -43,7 +43,6 @@ jobs:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
           BEAGLE_DB_USERNAME: postgres
-          BEAGLE_DB_PORT: 5433
           BEAGLE_NOTIFIER_ACTIVE: False
           TMPDIR: /tmp
           BEAGLE_SHARED_TMPDIR: $TMPDIR
