@@ -17,7 +17,6 @@ jobs:
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.8
@@ -44,4 +43,11 @@ jobs:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
           BEAGLE_DB_USERNAME: postgres
+          BEAGLE_DB_PORT: 5433
+          BEAGLE_NOTIFIER_ACTIVE: False
+          TMPDIR: /tmp
+          BEAGLE_SHARED_TMPDIR: $TMPDIR
+
+
+
    
