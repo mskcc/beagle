@@ -47,6 +47,8 @@ jobs:
           BEAGLE_NOTIFIER_ACTIVE: False
           TMPDIR: /tmp
           BEAGLE_SHARED_TMPDIR: $TMPDIR
+          ENVIRONMENT: 'dev'
+
 
 
 
