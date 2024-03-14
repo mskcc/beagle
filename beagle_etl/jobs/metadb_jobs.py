@@ -118,6 +118,7 @@ def new_request(message_id):
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
 
     if not data.get(settings.IS_CMO_REQUEST):
+        print(f"Request {request_id} is not CMO Request")
         logger.info(f"Request {request_id} is not CMO Request")
         message.status = SmileMessageStatus.COMPLETED
         message.save()
@@ -129,12 +130,12 @@ def new_request(message_id):
     sample_jobs = []
 
     samples = data.get("samples")
-    try:
-        check_files_permissions(samples)
-    except FailedToCopyFilePermissionDeniedException as e:
-        message.status = SmileMessageStatus.FAILED
-        message.save()
-        return
+    # try:
+    #     check_files_permissions(samples)
+    # except FailedToCopyFilePermissionDeniedException as e:
+    #     message.status = SmileMessageStatus.FAILED
+    #     message.save()
+    #     return
 
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
