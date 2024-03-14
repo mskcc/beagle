@@ -31,6 +31,7 @@ class ArgosOperator(Operator):
             files, cnt_tumors = self.get_files(self.request_id)
 
         if cnt_tumors == 0:
+            print("All normals")
             cant_do = CantDoEvent(self.job_group_notifier_id).to_dict()
             send_notification.delay(cant_do)
             all_normals_event = SetLabelEvent(self.job_group_notifier_id, "all_normals").to_dict()
@@ -42,6 +43,7 @@ class ArgosOperator(Operator):
         samples = self.get_samples_from_data(data)
         argos_inputs, error_samples = construct_argos_jobs(samples, self.pairing, logger=self.logger)
         sample_pairing = self.get_pairing_from_argos_inputs(argos_inputs)
+        print(sample_pairing)
         sample_mapping, filepaths = self.get_mapping_from_argos_inputs(argos_inputs)
         argos_jobs = self.get_argos_jobs(argos_inputs)
         pipeline = self.get_pipeline_id()
