@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.environ.get("BEAGLE_ALLOWED_HOSTS", "localhost").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", 'beagle_prod_session')
 
 # Application definition
 
