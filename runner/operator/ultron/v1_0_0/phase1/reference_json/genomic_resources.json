@@ -1,4 +1,4 @@
 {
-  "ref_fasta": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
-  "exac_filter": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz"
+  "ref_fasta": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+  "exac_filter": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz"
 }
