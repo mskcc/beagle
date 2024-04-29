@@ -506,7 +506,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["root_permission"] = run.app.output_permission
 
     job["metadata"] = dict()
-    job["metadata"]["run_id"] = run_id
+    job["metadata"]["run_id"] = str(run_id)
     job["metadata"]["pipeline_id"] = str(run.app.id)
     job["metadata"][
         "pipeline_link"
@@ -523,7 +523,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         logger.info(format_log("Job successfully submitted", obj=run))
         run.save()
     else:
-        raise Exception("Failed to submit job %s" % run_id)
+        raise Exception("Failed to submit job %s" % str(run_id))
 
 
 @shared_task

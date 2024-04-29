@@ -141,13 +141,7 @@ class ChronosOperatorBatch(Operator):
         tags = {"beagle_version": beagle_version, "run_date": run_date}
         jobs = []
         jg = JobGroup.objects.get(id=self.job_group_id)
-        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-        output_directory = os.path.join(
-            output_directory, self.CHRONOS_NAME, self.request_id, self.CHRONOS_VERSION, jg_created_date
-        )
-
         name = f"Tempo Run requestId:{self.request_id} {run_date}"
-
         pairing_for_request = []
         mapping_for_request = []
         tumors = FileRepository.filter(
@@ -160,11 +154,14 @@ class ChronosOperatorBatch(Operator):
             pairing_for_request.append(pairing)
             mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
 
+        # TODO: Get pairing for different request and submit bam generation for them
+
         input_json = {
-            "pairing": pairing_for_request,
             "mapping": mapping_for_request,
-            "somatic": True,
-            "aggregate": True,
+            "somatic": False,
+            "aggregate": False,
+            "workflows": "qc",
+            "assayType": "exome"
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
