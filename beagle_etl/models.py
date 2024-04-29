@@ -99,7 +99,7 @@ class SMILEMessage(BaseModel):
     )
 
     def in_progress(self):
-        self.status.status = SmileMessageStatus.IN_PROGRESS
+        self.status = SmileMessageStatus.IN_PROGRESS
         self.save(update_fields=("status",))
 
 
