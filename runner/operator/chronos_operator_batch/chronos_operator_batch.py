@@ -70,7 +70,6 @@ class ChronosOperatorBatch(Operator):
         LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
         output_directory = pipeline.output_directory
         self.OUTPUT_DIR = output_directory
 
@@ -141,6 +140,10 @@ class ChronosOperatorBatch(Operator):
         tags = {"beagle_version": beagle_version, "run_date": run_date}
         jobs = []
         jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        output_directory = os.path.join(
+            output_directory, self.CHRONOS_NAME, self.request_id, self.CHRONOS_VERSION, jg_created_date
+        )
         name = f"Tempo Run requestId:{self.request_id} {run_date}"
         pairing_for_request = []
         mapping_for_request = []
