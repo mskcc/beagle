@@ -1,20 +1,28 @@
 import io
 import os
-from os.path import join, abspath
-from django.conf import settings
+import logging
+from os.path import join
 from runner.models import Pipeline
 from runner.models import Run
 from runner.operator.operator import Operator
 
 
-class ChronosOutputOperator(Operator):
+LOGGER = logging.getLogger(__name__)
+
+
+class ChronosCopyOutputOperator(Operator):
     CHRONOS_NAME = "chronos"
     CHRONOS_VERSION = "0.1.0"
 
     def get_jobs(self):
         destination_directory = Pipeline.objects.get(id=self.get_pipeline_id()).output_directory
         for run_id in self.run_ids:
+            LOGGER.info(f"Copy outputs for {run_id} for {destination_directory}")
             run = Run.objects.get(run_id)
+            self.copy_bams(run, destination_directory)
+            self.append_trace(run, destination_directory)
+            self.copy_bams(run, destination_directory)
+        return []
 
     def copy_bams(self, run, destination_directory):
         source_bam_directory = os.path.join(run.output_directory, 'bams')
