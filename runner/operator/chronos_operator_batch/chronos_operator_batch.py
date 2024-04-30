@@ -70,7 +70,6 @@ class ChronosOperatorBatch(Operator):
         LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
         output_directory = pipeline.output_directory
         self.OUTPUT_DIR = output_directory
 
@@ -155,16 +154,27 @@ class ChronosOperatorBatch(Operator):
             values_metadata="ciTag",
         )
         used_normals = set()
+        used_normals_requests = set()
+
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
             pairing_for_request.append(pairing)
             mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
+            normal_request_id = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                                                      values_metadata=settings.REQUEST_ID_METADATA_KEY)
+            used_normals_requests.add(normal_request_id)
+
+        used_normals_requests.remove(self.request_id)
+
+        if used_normals_requests:
+            LOGGER.info(f"Normals from different requests {','.join(list(used_normals_requests))}.")
 
         input_json = {
-            "pairing": pairing_for_request,
             "mapping": mapping_for_request,
             "somatic": True,
             "aggregate": True,
+            "workflows": "qc",
+            "assayType": "exome"
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
