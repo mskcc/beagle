@@ -173,8 +173,8 @@ class ChronosOperatorBatch(Operator):
 
         input_json = {
             "mapping": mapping_for_request,
-            "somatic": True,
-            "aggregate": True,
+            "somatic": False,
+            "aggregate": False,
             "workflows": "qc",
             "assayType": "exome",
         }
