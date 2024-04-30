@@ -93,7 +93,10 @@ class TestUltron(TestCase):
                 }
             ],
             "sample_ids": ["s_C_ALLANT_T003_d"],
-            "ref_fasta": {"class": "File", "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "exac_filter": {
                 "class": "File",
                 "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
@@ -135,7 +138,10 @@ class TestUltron(TestCase):
             },
             "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
             "is_impact": True,
-            "ref_fasta": {"class": "File", "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "sample_groups": [
                 [
                     {
