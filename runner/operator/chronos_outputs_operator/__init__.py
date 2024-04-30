@@ -25,11 +25,12 @@ class ChronosCopyOutputOperator(Operator):
         return []
 
     def copy_bams(self, run, destination_directory):
-        source_bam_directory = os.path.join(run.output_directory, 'bams')
+        source_bam_directory = os.path.join(run.output_directory, "bams")
         destination_bam_directory = destination_directory
         for directory in os.listdir(source_bam_directory):
-            self._hard_copy(os.path.join(source_bam_directory, directory),
-                            os.path.join(destination_bam_directory, directory))
+            self._hard_copy(
+                os.path.join(source_bam_directory, directory), os.path.join(destination_bam_directory, directory)
+            )
 
     def _hard_copy(self, src, dst):
         if not os.path.exists(dst):
@@ -44,19 +45,19 @@ class ChronosCopyOutputOperator(Operator):
                 os.link(fromfile, to)
 
     def append_trace(self, run, destination_directory):
-        trace_file_path = os.path.join(run.output_directory, 'trace.txt')
-        trace_file_global = os.path.join(destination_directory, 'trace.txt')
-        with open(trace_file_path, 'r') as f:
+        trace_file_path = os.path.join(run.output_directory, "trace.txt")
+        trace_file_global = os.path.join(destination_directory, "trace.txt")
+        with open(trace_file_path, "r") as f:
             # Read trace file content without header
             trace_file_content = f.readlines()[1:]
-        with io.open(trace_file_global, 'a') as f:
+        with io.open(trace_file_global, "a") as f:
             f.writelines(trace_file_content)
 
     def append_bam_outputs(self, run, destination_directory):
-        bam_outputs_path = os.path.join(run.output_directory, 'pipeline_output.csv')
-        bam_outputs_file_global = os.path.join(destination_directory, 'pipeline_output.csv')
-        with open(bam_outputs_path, 'r') as f:
+        bam_outputs_path = os.path.join(run.output_directory, "pipeline_output.csv")
+        bam_outputs_file_global = os.path.join(destination_directory, "pipeline_output.csv")
+        with open(bam_outputs_path, "r") as f:
             # Read output bam file content without header
             trace_file_content = f.readlines()[1:]
-        with io.open(bam_outputs_file_global, 'a') as f:
+        with io.open(bam_outputs_file_global, "a") as f:
             f.writelines(trace_file_content)

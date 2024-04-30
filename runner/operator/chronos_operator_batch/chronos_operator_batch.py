@@ -160,8 +160,10 @@ class ChronosOperatorBatch(Operator):
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
             pairing_for_request.append(pairing)
             mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
-            normal_request_id = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
-                                                      values_metadata=settings.REQUEST_ID_METADATA_KEY)
+            normal_request_id = FileRepository.filter(
+                metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                values_metadata=settings.REQUEST_ID_METADATA_KEY,
+            )
             used_normals_requests.add(normal_request_id)
 
         used_normals_requests.remove(self.request_id)
@@ -174,7 +176,7 @@ class ChronosOperatorBatch(Operator):
             "somatic": True,
             "aggregate": True,
             "workflows": "qc",
-            "assayType": "exome"
+            "assayType": "exome",
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
