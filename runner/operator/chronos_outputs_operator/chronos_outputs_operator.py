@@ -18,7 +18,7 @@ class ChronosCopyOutputOperator(Operator):
         destination_directory = Pipeline.objects.get(id=self.get_pipeline_id()).output_directory
         for run_id in self.run_ids:
             LOGGER.info(f"Copy outputs for {run_id} for {destination_directory}")
-            run = Run.objects.get(run_id)
+            run = Run.objects.get(id=run_id)
             self.copy_bams(run, destination_directory)
             self.append_trace(run, destination_directory)
             self.copy_bams(run, destination_directory)
