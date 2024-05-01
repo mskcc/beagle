@@ -1,7 +1,7 @@
 import io
 import os
 import logging
-from os.path import join
+import subprocess
 from runner.models import Pipeline
 from runner.models import Run
 from runner.operator.operator import Operator
@@ -18,7 +18,7 @@ class ChronosCopyOutputOperator(Operator):
         destination_directory = Pipeline.objects.get(id=self.get_pipeline_id()).output_directory
         for run_id in self.run_ids:
             LOGGER.info(f"Copy outputs for {run_id} for {destination_directory}")
-            run = Run.objects.get(run_id)
+            run = Run.objects.get(id=run_id)
             self.copy_bams(run, destination_directory)
             self.append_trace(run, destination_directory)
             self.copy_bams(run, destination_directory)
@@ -26,23 +26,16 @@ class ChronosCopyOutputOperator(Operator):
 
     def copy_bams(self, run, destination_directory):
         source_bam_directory = os.path.join(run.output_directory, "bams")
-        destination_bam_directory = destination_directory
+        destination_bam_directory = os.path.join(destination_directory, "bams")
         for directory in os.listdir(source_bam_directory):
             self._hard_copy(
-                os.path.join(source_bam_directory, directory), os.path.join(destination_bam_directory, directory)
+                os.path.join(source_bam_directory, directory), destination_bam_directory
             )
 
     def _hard_copy(self, src, dst):
-        if not os.path.exists(dst):
-            os.mkdir(dst)
-        for root, dirs, files in os.walk(src):
-            curdst = join(dst, root)
-            for d in dirs:
-                os.mkdir(join(curdst, d))
-            for f in files:
-                fromfile = join(root, f)
-                to = join(curdst, f)
-                os.link(fromfile, to)
+        ret = subprocess.call(f'cp -lr {src} {dst}', shell=True)
+        if ret != 0:
+            LOGGER.error(f"Failed to copy {src}")
 
     def append_trace(self, run, destination_directory):
         trace_file_path = os.path.join(run.output_directory, "trace.txt")
