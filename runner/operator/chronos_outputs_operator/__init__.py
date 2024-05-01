@@ -52,5 +52,15 @@ class ChronosCopyOutputOperator(Operator):
         with open(bam_outputs_path, "r") as f:
             # Read output bam file content without header
             trace_file_content = f.readlines()[1:]
+            trace_file_result = []
+        for line in trace_file_content:
+            elements = line.split("\t")
+            file_name = elements[2].split("/")[-1]
+            sample = elements[2].split("/")[-2]
+            elements[2] = os.path.join(destination_directory, 'bams', sample, file_name)
+            file_name = elements[3].split("/")[-1]
+            sample = elements[3].split("/")[-2]
+            elements[3] = os.path.join(destination_directory, 'bams', sample, file_name)
+            trace_file_result.append("\t".join(elements))
         with io.open(bam_outputs_file_global, "a") as f:
-            f.writelines(trace_file_content)
+            f.writelines(trace_file_result)
