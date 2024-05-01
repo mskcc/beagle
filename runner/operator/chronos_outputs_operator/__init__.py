@@ -21,7 +21,7 @@ class ChronosCopyOutputOperator(Operator):
             run = Run.objects.get(id=run_id)
             self.copy_bams(run, destination_directory)
             self.append_trace(run, destination_directory)
-            self.copy_bams(run, destination_directory)
+            self.append_bam_outputs(run, destination_directory)
         return []
 
     def copy_bams(self, run, destination_directory):
