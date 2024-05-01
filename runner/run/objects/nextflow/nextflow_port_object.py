@@ -66,7 +66,7 @@ class NextflowPortObject(PortObject):
             group_id=str(group.id),
             metadata=output_metadata,
             request_id=request_id,
-            samples=samples
+            samples=samples,
         )
         if self.notify:
             PortProcessor.process_files(
