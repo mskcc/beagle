@@ -26,7 +26,7 @@ class ChronosCopyOutputOperator(Operator):
 
     def copy_bams(self, run, destination_directory):
         source_bam_directory = os.path.join(run.output_directory, 'bams')
-        destination_bam_directory = destination_directory
+        destination_bam_directory = os.path.join(destination_directory, 'bams')
         for directory in os.listdir(source_bam_directory):
             self._hard_copy(os.path.join(source_bam_directory, directory),
                             os.path.join(destination_bam_directory, directory))
