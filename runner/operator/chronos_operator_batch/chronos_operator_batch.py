@@ -327,6 +327,8 @@ class ChronosOperatorBatch(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             mapping.extend(patient.create_mapping_json())
+            if patient.unpaired_samples:
+                mapping.extend(patient.create_unpaired_mapping_json())
         self.write_to_file("sample_mapping_json.json", json.dumps(mapping))
         return mapping
 
