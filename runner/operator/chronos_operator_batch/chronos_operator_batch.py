@@ -166,10 +166,11 @@ class ChronosOperatorBatch(Operator):
             )
             used_normals_requests.add(normal_request_id)
 
-        used_normals_requests.remove(self.request_id)
+        if self.request_id in used_normals_requests:
+            used_normals_requests.remove(self.request_id)
 
         if used_normals_requests:
-            LOGGER.info(f"Normals from different requests {','.join(list(used_normals_requests))}.")
+            LOGGER.info(f"Normals from different requests {','.join(map(str,list(used_normals_requests)))}.")
 
         input_json = {
             "mapping": mapping_for_request,
