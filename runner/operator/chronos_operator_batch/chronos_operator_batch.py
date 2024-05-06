@@ -155,21 +155,37 @@ class ChronosOperatorBatch(Operator):
         )
         used_normals = set()
         used_normals_requests = set()
+        unpaired_tumors = set()
 
         for tumor in tumors:
-            pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            pairing_for_request.append(pairing)
-            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
-            normal_request_id = FileRepository.filter(
-                metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
-                values_metadata=settings.REQUEST_ID_METADATA_KEY,
-            )
-            used_normals_requests.add(normal_request_id)
+            pairing = self.get_pairing_for_sample(tumor, pairing_all) 
+            if pairing:
+                pairing_for_request.append(pairing)
+                mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
+                normal_request_id = FileRepository.filter(
+                    metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                    values_metadata=settings.REQUEST_ID_METADATA_KEY,
+                )
+                used_normals_requests.add(normal_request_id)
+            else:
+                unpaired_tumors.add(tumor)
+                mapping_for_request.extend(self.get_mapping_for_unpaired_tumor(tumor, mapping_all))
 
-        used_normals_requests.remove(self.request_id)
+        if unpaired_tumors:
+            self.send_message(
+                """
+                Unpaired tumors in mapping file:
+                {tumors}
+                """.format(
+                    tumors="\t\n".join(list(unpaired_tumors))
+                )
+            )
+
+        if self.request_id in used_normals_requests:
+            used_normals_requests.remove(self.request_id)
 
         if used_normals_requests:
-            LOGGER.info(f"Normals from different requests {','.join(list(used_normals_requests))}.")
+            LOGGER.info(f"Normals from different requests {','.join(map(str,list(used_normals_requests)))}.")
 
         input_json = {
             "mapping": mapping_for_request,
@@ -197,6 +213,13 @@ class ChronosOperatorBatch(Operator):
                 if normal not in used_normals:
                     map.append(m)
                     used_normals.add(normal)
+        return map
+
+    def get_mapping_for_unpaired_tumor(self, tumor, mapping):
+        map = []
+        for m in mapping:
+            if m["sample"] == tumor:
+                map.append(m)
         return map
 
     def load_pairing_file(self, tsv_file):
