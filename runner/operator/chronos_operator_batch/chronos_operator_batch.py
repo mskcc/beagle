@@ -11,7 +11,7 @@ from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
+import runner.operator.chronos_operator_batch.bin.tempo_patient as patient_obj
 from notifier.models import JobGroup
 from notifier.events import OperatorRequestEvent
 from notifier.tasks import send_notification
