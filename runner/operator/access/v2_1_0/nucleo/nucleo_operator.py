@@ -151,13 +151,13 @@ class AccessNucleoOperator(Operator):
         logger.info('after construct sample inputs')
         number_of_inputs = len(sample_inputs)
         for i, (job, metadata) in enumerate(sample_inputs):
-            if metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] == 'C-P7VRR4-N004-d05':
+                sample = metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
+                logger.debug("WRITING SAMPLE JOBS")
                 # File path
-                file_path = "/srv/services/beagle_dev/job.json"
+                file_path = f"/srv/services/beagle_dev/test_json/{sample}_job.json"
                 # Write JSON object to file
                 with open(file_path, "w") as json_file:
                     json.dump(job, json_file)
-                logger.debug("PLEASE FIND ME SAMPLE: C-P7VRR4-N004-d05")
                 logger.debug(json.dumps(job, indent=4))
                 logger.debug(self.request_id)
 
