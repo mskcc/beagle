@@ -153,7 +153,7 @@ class AccessNucleoOperator(Operator):
         for i, (job, metadata) in enumerate(sample_inputs):
             if metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] == 'C-P7VRR4-N004-d05':
                 # File path
-                file_path = "/work/access/production/runs/voyager/staging/job.json"
+                file_path = "/srv/services/beagle_dev/job.json"
                 # Write JSON object to file
                 with open(file_path, "w") as json_file:
                     json.dump(job, json_file)
