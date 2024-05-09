@@ -144,10 +144,9 @@ class AccessNucleoOperator(Operator):
                 # Write JSON object to file
                 with open(file_path, "w") as json_file:
                     json.dump(job, json_file)
-                logger.info("PLEASE FIND ME SAMPLE: C-P7VRR4-N004-d05")
-                logger.info(json.dumps(job))
-                logger.info(json.dumps(job))
-                logger.info(self.request_id)
+                logger.debug("PLEASE FIND ME SAMPLE: C-P7VRR4-N004-d05")
+                logger.debug(json.dumps(job, indent=4))
+                logger.debug(self.request_id)
 
 
         return [
