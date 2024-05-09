@@ -70,6 +70,13 @@ def construct_sample_inputs(samples, request_id, seq):
 
     for sample_group in samples_groups:
         meta = sample_group[0]["metadata"]
+        logger.debug('BEFORE UPDATE OF DICTIONARY WITH METADATA')
+        logger.debug('SEE VALUES:')
+        logger.debug(calc_avg(sample_group, "dnaInputNg"))
+        logger.debug(calc_avg(sample_group, "captureInputNg"))
+        logger.debug(calc_avg(sample_group, "libraryVolume"))
+        logger.debug(calc_avg(sample_group, "libraryConcentrationNgul"))
+        logger.debug(calc_avg(sample_group, "captureConcentrationNm"))
         meta.update(
             {
                 "dnaInputNg": calc_avg(sample_group, "dnaInputNg"),
@@ -80,6 +87,7 @@ def construct_sample_inputs(samples, request_id, seq):
                 settings.REQUEST_ID_METADATA_KEY: request_id,
             }
         )
+        logger.debug('AFTER UPDATE OF DICTIONARY WITH METADATA')
 
         sample_group = list(sample_group)
         sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
@@ -92,9 +100,9 @@ def construct_sample_inputs(samples, request_id, seq):
             ]
             for s in fgbio_fastq_to_bam_input
         ]
+        logger.info('BEFORE RENDER')
         fastp_max_len_read1 = maxReads[seq]
         fastp_max_len_read2 = maxReads[seq]
-        logger.info('before render')
         input_file = template.render(
             sample_id=sample_id,
             fgbio_fastq_to_bam_input=json.dumps(fgbio_fastq_to_bam_input),
@@ -102,11 +110,16 @@ def construct_sample_inputs(samples, request_id, seq):
             # Todo: Nucleo needs to take multiple library IDs, so that MD doesn't mark dups incorrectly
             library_id=meta[settings.LIBRARY_ID_METADATA_KEY],
         )
-        logger.info('after render')
+        logger.info('AFTER RENDER')
         sample = json.loads(input_file)
+        logger.debug('BEFORE UPDATE OF DICTIONARY WITH READ LENGTH')
+        logger.debug('READ LENGTH VALUES:')
+        logger.debug(fastp_max_len_read1)
+        logger.debug(fastp_max_len_read2)
         sample["fastp_max_len_read1"] = fastp_max_len_read1
         sample["fastp_max_len_read2"] = fastp_max_len_read2
         sample_inputs.append((sample, meta))
+        logger.debug('BEFORE UPDATE OF DICTIONARY WITH READ LENGTH')
 
     return sample_inputs
 
