@@ -137,6 +137,19 @@ class AccessNucleoOperator(Operator):
         sample_inputs = construct_sample_inputs(data, request_id, seq)
         logger.info('after construct sample inputs')
         number_of_inputs = len(sample_inputs)
+        for i, (job, metadata) in enumerate(sample_inputs):
+            if metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] == 'C-P7VRR4-N004-d05':
+                # File path
+                file_path = "/work/access/production/runs/voyager/staging/job.json"
+                # Write JSON object to file
+                with open(file_path, "w") as json_file:
+                    json.dump(job, json_file)
+                logger.info("PLEASE FIND ME SAMPLE: C-P7VRR4-N004-d05")
+                logger.info(json.dumps(job))
+                logger.info(json.dumps(job))
+                logger.info(self.request_id)
+
+
         return [
             RunCreator(
                 **{
