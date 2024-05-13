@@ -105,7 +105,7 @@ def construct_sample_inputs(samples, request_id):
     return sample_inputs
 
 
-class AccessNucleoVirusOperator(Operator):
+class AccessNucleoOperator(Operator):
     """
     Operator for the ACCESS Nucleo workflow:
 
