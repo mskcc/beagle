@@ -136,7 +136,12 @@ class TempoMPGenOperator(Operator):
             if "C-" in patient_id[:2]:
                 self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
             else:
-                self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+                patient_file = patient_files[patient_id][0]
+                specimen_type = patient_file.metadata[settings.SAMPLE_CLASS_METADATA_KEY]
+                if "cellline" in specimen_type.lower():
+                    self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
+                else:
+                    self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
         input_json = dict()
         # output these strings to file
