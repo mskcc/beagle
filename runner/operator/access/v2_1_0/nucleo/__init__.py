@@ -1,1 +1,1 @@
-from .nucleo_operator import AccessNucleoVirusOperator
+from .nucleo_operator import AccessNucleoOperator
