@@ -64,7 +64,7 @@ def calc_avg(sample_files, field):
 def construct_sample_inputs(samples, request_id):
     # Check Gene Panel
     gene_panel = get_gene_panel(request_id)
-    # Use virus template for Heme requests 
+    # Use virus template for Heme requests
     if gene_panel == "ACCESS-Heme":
         template_f = "input_template_virus.json.jinja2"
     else:
@@ -132,12 +132,6 @@ class AccessNucleoOperator(Operator):
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
-        panel = [d['metadata']['genePanel'] for d in data]
-        # check that panel is non-empty 
-        if panel:
-            # check that all elements are the same
-            if panel.count(panel[0]) == len(panel):
-                panel = panel[0]
         sample_inputs = construct_sample_inputs(data, self.request_id, panel)
         number_of_inputs = len(sample_inputs)
         return [
