@@ -64,7 +64,6 @@ def calc_avg(sample_files, field):
 def construct_sample_inputs(samples, request_id):
     # Check Gene Panel
     gene_panel = get_gene_panel(request_id)
-    gene_panel = "ACCESS-Heme"
     # Use virus template for Heme requests
     if gene_panel == "ACCESS-Heme":
         template_f = "input_template_heme.json.jinja2"
