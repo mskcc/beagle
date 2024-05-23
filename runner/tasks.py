@@ -1,8 +1,7 @@
 import os
 import logging
 import requests
-import csv
-import re
+import traceback
 from datetime import datetime, timedelta
 from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
@@ -39,16 +38,15 @@ from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
-from django.http import HttpResponse
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
     try:
         jobs = operator.get_jobs()
     except Exception as e:
-        logger.error(f"Exception in Operator get_jobs for: {operator}, Exception {str(e)}")
+        logger.error(f"Exception in Operator get_jobs for: {operator},\nError:\n{traceback.format_exc()}")
         gene_panel = get_gene_panel(operator.request_id)
         number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
