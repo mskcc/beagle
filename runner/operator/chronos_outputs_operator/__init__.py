@@ -28,12 +28,10 @@ class ChronosCopyOutputOperator(Operator):
         source_bam_directory = os.path.join(run.output_directory, "bams")
         destination_bam_directory = os.path.join(destination_directory, "bams")
         for directory in os.listdir(source_bam_directory):
-            self._hard_copy(
-                os.path.join(source_bam_directory, directory), destination_bam_directory
-            )
+            self._hard_copy(os.path.join(source_bam_directory, directory), destination_bam_directory)
 
     def _hard_copy(self, src, dst):
-        ret = subprocess.call(f'cp -lr {src} {dst}', shell=True)
+        ret = subprocess.call(f"cp -lr {src} {dst}", shell=True)
         if ret != 0:
             LOGGER.error(f"Failed to copy {src}")
 
@@ -57,10 +55,10 @@ class ChronosCopyOutputOperator(Operator):
             elements = line.split("\t")
             file_name = elements[2].split("/")[-1]
             sample = elements[2].split("/")[-2]
-            elements[2] = os.path.join(destination_directory, 'bams', sample, file_name)
+            elements[2] = os.path.join(destination_directory, "bams", sample, file_name)
             file_name = elements[3].split("/")[-1]
             sample = elements[3].split("/")[-2]
-            elements[3] = os.path.join(destination_directory, 'bams', sample, file_name)
+            elements[3] = os.path.join(destination_directory, "bams", sample, file_name)
             trace_file_result.append("\t".join(elements))
         with io.open(bam_outputs_file_global, "a") as f:
             f.writelines(trace_file_result)
