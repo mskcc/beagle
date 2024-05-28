@@ -163,10 +163,12 @@ class ChronosOperatorBatch(Operator):
         unpaired_tumors = set()
 
         for tumor in tumors:
-            pairing = self.get_pairing_for_sample(tumor, pairing_all) 
+            pairing = self.get_pairing_for_sample(tumor, pairing_all)
             if pairing:
                 pairing_for_request.append(pairing)
-                mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
+                mapping_for_request.extend(
+                    self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals)
+                )
                 normal_request_id = FileRepository.filter(
                     metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
                     values_metadata=settings.REQUEST_ID_METADATA_KEY,

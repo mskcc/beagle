@@ -80,7 +80,7 @@ def check_and_return_single_values(data):
         data["pi_email"] = "; ".join(set(data["pi_email"]))
     except Exception as e:
         LOGGER.error("Operator fail.")
-        LOGGER.error(f'Data: {data}')
+        LOGGER.error(f"Data: {data}")
         raise
 
     # hack; formats LB field so that it is a string
