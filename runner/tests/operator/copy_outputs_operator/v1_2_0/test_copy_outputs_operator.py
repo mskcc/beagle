@@ -3,12 +3,11 @@ Test for constructing Argos pair and jobs
 """
 import os
 import json
-from pprint import pprint
 from uuid import UUID
+from mock import patch
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
 from beagle_etl.models import Operator
-from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
 
@@ -56,11 +55,13 @@ class TestCopyOutputs(TestCase):
                     return False
         return True
 
-    def test_create_copy_output_jobs(self):
+    @patch("runner.operator.copy_outputs_operator.v1_2_0.copy_outputs_operator.CopyOutputsOperator.write_to_file")
+    def test_create_copy_output_jobs(self, write_to_file):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
+        write_to_file.return_value = True
         # Load fixtures
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json"
