@@ -43,7 +43,7 @@ from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
 from ddtrace import tracer
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):

@@ -32,6 +32,7 @@ class GithubCache(object):
     @staticmethod
     def _generate_directory_name(github, version):
         github_name = github.split(".com/")[-1].replace("/", "_")
+        github_name = github_name.split(".com/")[-1].replace(":", "_")
         path = os.path.join(settings.APP_CACHE, github_name, version)
         return path
 

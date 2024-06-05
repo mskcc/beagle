@@ -61,11 +61,11 @@ app.conf.task_routes = {
 }
 
 app.conf.beat_schedule = {
-    "process_request_callback_jobs": {
-        "task": "beagle_etl.tasks.process_request_callback_jobs",
-        "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    },
+    # "process_request_callback_jobs": {
+    #     "task": "beagle_etl.tasks.process_request_callback_jobs",
+    #     "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
+    #     "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    # },
     "process_smile_imports": {
         "task": "beagle_etl.tasks.process_smile_events",
         "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
