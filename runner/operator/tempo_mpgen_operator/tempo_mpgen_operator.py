@@ -255,6 +255,7 @@ class TempoMPGenOperator(Operator):
 
     def get_recipes(self):
         recipe = [
+            "WES_Human",  # TODO: Fix for bad recipe name in LIMS. Remove when problem in LIMS is resolved
             "WES_HUMAN",
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
