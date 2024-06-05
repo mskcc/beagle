@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0057_auto_20230424_0743'),
+        ("runner", "0057_auto_20230424_0743"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pipeline',
-            name='config',
+            model_name="pipeline",
+            name="config",
             field=models.CharField(blank=True, default=None, max_length=3000, null=True),
         ),
     ]
