@@ -82,9 +82,10 @@ class SkipProject(models.Model):
 
 class SmileMessageStatus(IntEnum):
     PENDING = 0
-    COMPLETED = 1
-    NOT_SUPPORTED = 2
-    FAILED = 3
+    IN_PROGRESS = 1
+    COMPLETED = 2
+    NOT_SUPPORTED = 3
+    FAILED = 4
 
 
 class SMILEMessage(BaseModel):
@@ -96,6 +97,10 @@ class SMILEMessage(BaseModel):
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+    def in_progress(self):
+        self.status.status = SmileMessageStatus.IN_PROGRESS
+        self.save(update_fields=("status",))
 
 
 class RequestCallbackJobStatus(IntEnum):
