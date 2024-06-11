@@ -488,9 +488,13 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["walltime"] = run.app.walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
-    if run.app.output_permission:
-        job["root_permission"] = run.app.output_permission
 
+    root_permissions = run.app.output_permission if run.app.output_permission else settings.DEFAULT_OUTPUTS_PERMISSIONS
+    output_uid = run.app.output_uid if run.app.output_uid else settings.DEFAULT_OUTPUTS_UID
+    output_gid = run.app.output_gid if run.app.output_gid else settings.DEFAULT_OUTPUTS_GID
+    job["root_permission"] = root_permissions
+    job["output_uid"] = output_uid
+    job["output_gid"] = output_gid
     job["metadata"] = dict()
     job["metadata"]["run_id"] = run_id
     job["metadata"]["pipeline_id"] = str(run.app.id)
