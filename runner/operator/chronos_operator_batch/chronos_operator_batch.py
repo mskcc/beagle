@@ -255,11 +255,6 @@ class ChronosOperatorBatch(Operator):
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
-        # self.register_tmp_file(output)
-        # if self.job_group_notifier_id:
-        #     upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
-        #     send_notification.delay(upload_file_event)
-        # return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
         """
@@ -270,17 +265,6 @@ class ChronosOperatorBatch(Operator):
         with open(output, "w+") as fh:
             fh.write(pairing_file_str)
         os.chmod(output, 0o777)
-
-    def register_tmp_file(self, path):
-        fname = os.path.basename(path)
-        temp_file_group = FileGroup.objects.get(slug="temp")
-        file_type = FileType.objects.get(name="txt")
-        try:
-            File.objects.get(path=path)
-        except:
-            print("Registering temp file %s" % path)
-            f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
-            f.save()
 
     def create_unpaired_txt_file(self):
         # Add runDate
