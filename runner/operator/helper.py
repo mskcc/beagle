@@ -22,7 +22,7 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
     ignore_sample_formatting is applied if we want to return a sample name regardless of
     formatting
     """
-    sample_pattern = re.compile(r"C-\w{6,}-\w{4}-\w")
+    sample_pattern = re.compile(r"^[^0-9].*$")
 
     if not ignore_sample_formatting:
         try:
