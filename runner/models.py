@@ -67,6 +67,8 @@ class Pipeline(BaseModel):
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     output_permission = models.IntegerField(blank=True, null=True, editable=True)
+    output_uid = models.IntegerField(blank=True, null=True, editable=True)
+    output_gid = models.IntegerField(blank=True, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
