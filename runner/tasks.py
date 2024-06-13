@@ -23,6 +23,8 @@ from notifier.events import (
     SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
     VoyagerActionRequiredForRunningEvent,
+    SendEmailEvent,
+    OperatorErrorEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
@@ -38,6 +40,8 @@ from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
+from django.http import HttpResponse
+from ddtrace import tracer
 
 logger = logging.getLogger("django")
 
@@ -45,8 +49,12 @@ logger = logging.getLogger("django")
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
     try:
         jobs = operator.get_jobs()
+        if operator.logger.message:
+            event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
+            send_notification.delay(event.to_dict())
     except Exception as e:
-        logger.error(f"Exception in Operator get_jobs for: {operator},\nError:\n{traceback.format_exc()}")
+        logger.error(f"Exception in Operator get_jobs for: {operator}")
+        logger.error(f"Traceback:\n{traceback.format_exc()}")
         gene_panel = get_gene_panel(operator.request_id)
         number_of_samples = get_samples(operator.request_id).count()
         send_to = get_emails_to_notify(operator.request_id, "VoyagerActionRequiredForRunningEvent")
@@ -180,9 +188,13 @@ def create_operator_run_from_jobs(
 
 
 @shared_task
+@tracer.wrap(service="beagle")
 def create_jobs_from_request(
     request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None, notify=False
 ):
+    current_span = tracer.current_span()
+    current_span.set_tag("request.id", request_id)
+
     logger.info(format_log("Creating operator with %s" % operator_id, job_group_id=job_group_id, request_id=request_id))
     operator_model = Operator.objects.get(id=operator_id)
 
@@ -486,6 +498,8 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         url = settings.RIDGEBACK_URL + "/v0/jobs/"
     if run.app.walltime:
         job["walltime"] = run.app.walltime
+    if run.app.tool_walltime:
+        job["tool_walltime"] = run.app.tool_walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
 
@@ -745,6 +759,21 @@ def check_job_timeouts():
         fail_job(run.id, "Run timedout after %s days" % TIMEOUT_BY_DAYS)
 
 
+def send_hanging_job_alert(run_id, message):
+    for email in settings.JOB_HANGING_ALERT_EMAILS:
+        content = f"""Run {settings.BEAGLE_URL}/v0/run/api/{run_id}/ possible hanging.
+        
+                      {message}"""
+        email = SendEmailEvent(
+            job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+            email_to=email,
+            email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+            subject=f"ALERT: Hanging job detected {settings.BEAGLE_URL}/v0/run/api/{run_id}/",
+            content=content,
+        )
+        send_notification.delay(email.to_dict())
+
+
 @shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
@@ -769,6 +798,15 @@ def check_jobs_status():
                 continue
 
             status = remote_statuses[str(run.execution_id)]
+            message = dict(details=status.get("message", {}))
+            new_alert = message.get("details", {}).get("alerts")
+            old_alert = run.message.get("details", {}).get("alerts")
+            if old_alert != new_alert:
+                logger.error(format_log("Hanging Job detected", obj=run))
+                run.message = dict(details=status.get("message", {}))
+                run.save(update_fields=("message",))
+                send_hanging_job_alert(str(run.id), new_alert[0]["message"])
+
             if status["started"] and not run.started:
                 run.started = status["started"]
                 run.save(update_fields=("started",))
