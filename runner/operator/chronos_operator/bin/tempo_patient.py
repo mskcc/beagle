@@ -122,6 +122,14 @@ class Patient:
                 seen.add(normal_sample)
         return mapping
 
+    def create_unpaired_mapping_json(self):
+        mapping = []
+        seen = set()
+        for sample in self.unpaired_samples:
+            tumor_sample = sample
+            mapping.extend(self.get_mapping_for_sample(tumor_sample))
+        return mapping
+
     def get_mapping_for_sample(self, sample):
         target = sample.bait_set
         fastqs = sample.fastqs

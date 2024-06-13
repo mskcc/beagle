@@ -805,7 +805,7 @@ def check_jobs_status():
                 logger.error(format_log("Hanging Job detected", obj=run))
                 run.message = dict(details=status.get("message", {}))
                 run.save(update_fields=("message",))
-                send_hanging_job_alert(str(run.id), new_alert[0]["message"])
+                # send_hanging_job_alert(str(run.id), new_alert[0]["message"])
 
             if status["started"] and not run.started:
                 run.started = status["started"]
