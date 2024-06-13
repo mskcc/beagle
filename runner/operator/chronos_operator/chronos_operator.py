@@ -182,18 +182,18 @@ class ChronosOperator(Operator):
                     )
                 )
 
-            for m in mapping:
-                name = "Tempo Run {sample_id}: {run_date}".format(sample_id=m["sample"], run_date=run_date)
+            for sample, files in mapping.items():
+                name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
                 output_directory = os.path.join(
                     self.OUTPUT_DIR,
                     self.CHRONOS_NAME,
                     self.request_id,
-                    m["sample"],
+                    sample,
                     self.CHRONOS_VERSION,
                     jg_created_date,
                 )
                 input_json = {
-                    "mapping": m,
+                    "mapping": files,
                     "somatic": False,
                     "aggregate": False,
                     "workflows": "qc",
@@ -215,21 +215,24 @@ class ChronosOperator(Operator):
                 return p
 
     def get_mapping_for_sample(self, tumor, normal, mapping, used_normals):
-        map = []
+        map = dict()
+        map[tumor] = []
+        map[normal] = []
         for m in mapping:
             if m["sample"] == tumor:
-                map.append(m)
+                map[tumor].append(m)
             if m["sample"] == normal:
+                map[normal].append(m)
                 if normal not in used_normals:
-                    map.append(m)
                     used_normals.add(normal)
         return map
 
     def get_mapping_for_unpaired_tumor(self, tumor, mapping):
-        map = []
+        map = dict()
+        map[tumor] = []
         for m in mapping:
             if m["sample"] == tumor:
-                map.append(m)
+                map[tumor].append(m)
         return map
 
     def load_pairing_file(self, tsv_file):
