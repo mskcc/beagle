@@ -217,8 +217,8 @@ class ChronosOperatorBatch(Operator):
             if m["sample"] == tumor:
                 map.append(m)
             if m["sample"] == normal:
+                map.append(m)
                 if normal not in used_normals:
-                    map.append(m)
                     used_normals.add(normal)
         return map
 
