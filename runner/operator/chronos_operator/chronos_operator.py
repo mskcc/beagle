@@ -185,7 +185,7 @@ class ChronosOperator(Operator):
             for m in mapping:
                 name = "Tempo Run {sample_id}: {run_date}".format(sample_id=m["sample"], run_date=run_date)
                 output_directory = os.path.join(
-                    output_directory,
+                    self.OUTPUT_DIR,
                     self.CHRONOS_NAME,
                     self.request_id,
                     m["sample"],
