@@ -352,6 +352,7 @@ class FileMetadata(BaseModel):
                 patient = Patient.objects.create(patient_id=patient_id, sex=sex)
             if sample not in patient.samples:
                 patient.samples.append(sample)
+                patient.save(do_not_version=True)
             return patient
 
     def save(self, *args, **kwargs):

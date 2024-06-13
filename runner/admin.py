@@ -189,8 +189,8 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
         new_nodes = [
             {
                 "key": str(node.to_operator.id),
-                "pipeline": str(operator.pipeline_set.filter(default=True).first().id)
-                if operator.pipeline_set.filter(default=True).first()
+                "pipeline": str(node.to_operator.pipeline_set.filter(default=True).first().id)
+                if node.to_operator.pipeline_set.filter(default=True).first()
                 else "",
                 "text": node.to_operator.slug,
                 "category": "Default",
