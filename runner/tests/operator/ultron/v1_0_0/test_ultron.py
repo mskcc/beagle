@@ -93,10 +93,13 @@ class TestUltron(TestCase):
                 }
             ],
             "sample_ids": ["s_C_ALLANT_T003_d"],
-            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
         self.maf_runner_ports = ["7f743915-a0d6-466c-b1eb-3f8501089a36", "b946625d-2753-4e5a-89b8-cc08beb1bc40"]
@@ -131,11 +134,14 @@ class TestUltron(TestCase):
             "argos_version_string": "1.1.2",
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
             "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
             "is_impact": True,
-            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "sample_groups": [
                 [
                     {
