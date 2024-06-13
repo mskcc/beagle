@@ -3,18 +3,6 @@ from runner.operator.helper import format_sample_name
 
 
 class TestHelper(TestCase):
-    fixtures = {
-        "file_system.filegroup.json",
-        "file_system.filetype.json",
-        "file_system.storage.json",
-        "runner.pipeline.json",
-        "beagle_etl.operator.json",
-        "runner.operator_run.json",
-        "runner.run.json",
-        "file_system.sample.json",
-        "runner.operator_trigger.json",
-    }
-
     def test_format_sample_name(self):
         """
         Test that format sample name works as expected
