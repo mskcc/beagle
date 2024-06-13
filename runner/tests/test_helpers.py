@@ -24,6 +24,6 @@ class TestHelper(TestCase):
         sample_name_random = "ABCDEFGHIJKLMN"
 
         self.assertEqual(format_sample_name(sample_name_malformed, "Primary"), "sampleNameMalformed") 
-        self.assertEqual(format_sample_name(sample_name_random, "Primary"), sample_name_random) # should be unchanged
+        self.assertEqual(format_sample_name(sample_name_random, "Primary"), "s_" + sample_name_random) # should be prefixed with 's_'
         self.assertEqual(format_sample_name(sample_name_ci_tag, "Primary"), sample_name_ci_tag) # should be unchanged
         self.assertEqual(format_sample_name(sample_name_old, "Primary"), sample_name_ci_tag) # should be converted
