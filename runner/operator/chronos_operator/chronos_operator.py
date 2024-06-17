@@ -209,6 +209,10 @@ class ChronosOperator(Operator):
                     metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                     values_metadata=settings.RECIPE_METADATA_KEY,
                 ).first()
+                primary_id = FileRepository.filter(
+                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                    values_metadata=settings.SAMPLE_ID_METADATA_KEY,
+                ).first()
                 job_json = {
                     "name": name,
                     "app": app,
@@ -219,9 +223,10 @@ class ChronosOperator(Operator):
                         "pipeline": pipeline.name,
                         "pipeline_version": pipeline.version,
                         settings.PATIENT_ID_METADATA_KEY: patient_id,
-                        settings.SAMPLE_ID_METADATA_KEY: sample,
+                        settings.SAMPLE_ID_METADATA_KEY: primary_id,
                         settings.REQUEST_ID_METADATA_KEY: request_id,
                         settings.RECIPE_METADATA_KEY: gene_panel,
+                        settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
                     },
                 }
                 jobs.append(job_json)
