@@ -198,15 +198,15 @@ class ChronosOperator(Operator):
                     "assayType": "exome",
                 }
                 patient_id = FileRepository.filter(
-                    metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
+                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                     values_metadata=settings.PATIENT_ID_METADATA_KEY,
                 ).first()
                 request_id = FileRepository.filter(
-                    metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
+                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                     values_metadata=settings.REQUEST_ID_METADATA_KEY,
                 ).first()
                 gene_panel = FileRepository.filter(
-                    metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
+                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                     values_metadata=settings.RECIPE_METADATA_KEY,
                 ).first()
                 job_json = {

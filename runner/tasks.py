@@ -582,7 +582,10 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
             restart_run = run.run_obj.set_for_restart()
 
             if not restart_run:
-                run.fail(error_message)
+                if isinstance(error_message, dict):
+                    run.fail(error_message)
+                else:
+                    run.fail({"Error": str(error_message)})
                 run.to_db()
 
                 job_group_notifier = run.job_group_notifier
