@@ -1,1 +1,1 @@
-from .access_manifest_operator import AccessManifestOperator
+from .access_manifest_operator import AccessV2ManifestOperator
