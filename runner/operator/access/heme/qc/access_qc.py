@@ -48,7 +48,7 @@ meta_fields = [
 ]
 
 
-class AccessV2QCOperator(Operator):
+class AccessHemeQCOperator(Operator):
     """
     Operator for the ACCESS QC workflow:
 
