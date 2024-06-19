@@ -108,7 +108,7 @@ def construct_sample_inputs(samples, request_id):
     return sample_inputs
 
 
-class AccessV2NucleoOperator(Operator):
+class AccessHemeNucleoOperator(Operator):
     """
     Operator for the ACCESS Nucleo workflow:
 
