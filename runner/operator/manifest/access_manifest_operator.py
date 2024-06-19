@@ -51,7 +51,7 @@ meta_fields = [
 ]
 
 
-class AccessV2ManifestOperator(Operator):
+class AccessManifestOperator(Operator):
     """
     Operator to create a manifest report (merged dmp and fastq metadata) for a given access request.
     """
