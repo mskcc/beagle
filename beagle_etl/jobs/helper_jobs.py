@@ -9,6 +9,7 @@ from beagle_etl.exceptions import (
     FailedToCopyFilePermissionDeniedException,
     DuplicatedFilesException,
     FailedToRegisterFileException,
+    FailedToLocateTheFileException,
 )
 
 
@@ -75,3 +76,15 @@ def check_file_exist(path):
         raise FailedToRegisterFileException("File %s not registered", path)
     elif file_cnt > 1:
         raise DuplicatedFilesException("Duplicated file %s", path)
+
+
+def locate_file(path):
+    if os.path.exists(path):
+        return path
+    for k, v in settings.MAPPING.items():
+        if path.startswith(k):
+            for r in v:
+                check_path = path.replace(k, r)
+                if os.path.exists(check_path):
+                    return check_path
+    raise FailedToLocateTheFileException(f"Unable to locate file: {path} on file system")
