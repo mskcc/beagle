@@ -98,6 +98,7 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
     def test_new_request(
         self,
         populate_job_group_notifier_metadata,
@@ -105,6 +106,7 @@ class TestNewRequest(TestCase):
         send_notification,
         notifier_start,
         check_files_permissions,
+        path_exists,
     ):
         populate_job_group_notifier_metadata.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
@@ -112,6 +114,7 @@ class TestNewRequest(TestCase):
         send_notification.return_value = True
         check_files_permissions.return_value = True
         settings.NOTIFIER_ACTIVE = False
+        path_exists.return_value = True
         msg = SMILEMessage.objects.create(topic="new-request", message=self.new_request_str)
         new_request(str(msg.id))
         request = Request.objects.filter(request_id="08944_B")
@@ -143,8 +146,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
+    @patch("os.path.exists")
     def test_update_request_metadata(
-        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet, path_exists
     ):
         """
         Test if request metadata update is properly updating fields
@@ -167,6 +171,7 @@ class TestNewRequest(TestCase):
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
+            path_exists.return_value = True
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             job_group = JobGroup()
             job_group_notifier = JobGroupNotifier(job_group=job_group)
@@ -195,8 +200,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
+    @patch("os.path.exists")
     def test_update_request_ticket(
-        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet, path_exists
     ):
         """
         Test that generate ticket is called properly in update request
@@ -206,6 +212,7 @@ class TestNewRequest(TestCase):
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
+            path_exists.return_value = True
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             job_group = JobGroup()
             job_group_notifier = JobGroupNotifier(job_group=job_group)
@@ -353,8 +360,15 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
     def test_update_sample_new_fastqs(
-        self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions
+        self,
+        populate_job_group,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        check_files_permissions,
+        path_exists,
     ):
         """
         Test sample updates for new fastqs
@@ -366,6 +380,7 @@ class TestNewRequest(TestCase):
         send_notification.return_value = True
         check_files_permissions.return_value = True
         settings.NOTIFIER_ACTIVE = False
+        path_exists.return_value = True
 
         new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
         update_sample_msg = SMILEMessage.objects.create(
