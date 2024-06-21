@@ -470,7 +470,7 @@ DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
 """
 
 """
-MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "[]"))
+MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
