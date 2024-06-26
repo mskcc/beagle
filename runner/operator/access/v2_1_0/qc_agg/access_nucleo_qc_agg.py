@@ -81,7 +81,7 @@ class AccessV2NucleoQcAggOperator(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="access nucleo qc",
+                    app__name="access v2 nucleo qc",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
