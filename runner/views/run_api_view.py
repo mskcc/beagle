@@ -417,7 +417,7 @@ class RequestOperatorViewSet(GenericAPIView):
         if not job_group_id:
             if for_each:
                 for req in request_ids:
-                    seqs = ["NovaSeq_X_max"]
+                    seqs = ["NovaSeq"]
                     for seq in seqs:
                         req_seq = f"{req}_{seq}"
                         job_group = JobGroup()
