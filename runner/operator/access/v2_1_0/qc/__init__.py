@@ -1,1 +1,1 @@
-from .access_nucleo_qc import AccessV2NucleoQCOperator
+from .access_nucleo_qc import AccessV2NucleoQcOperator
