@@ -48,7 +48,7 @@ meta_fields = [
 ]
 
 
-class AccessHemeQCOperator(Operator):
+class HemeNucleoQcOperator(Operator):
     """
     Operator for the ACCESS QC workflow:
 
@@ -81,7 +81,7 @@ class AccessHemeQCOperator(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="access nucleo",
+                    app__name="heme nucleo",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
