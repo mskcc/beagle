@@ -110,7 +110,7 @@ def construct_sample_inputs(samples, request_id):
 
 class HemeNucleoOperator(Operator):
     """
-    Operator for the Access HEME Nucleo workflow:
+    Operator for the HEME Nucleo workflow:
 
     https://github.com/msk-access/nucleo/blob/master/nucleo.cwl
 
@@ -131,7 +131,7 @@ class HemeNucleoOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "Access Heme Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "name": "Heme Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
