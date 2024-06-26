@@ -64,7 +64,7 @@ class HemeNucleoQcAggOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "Heme QC Aggregate: %s" % (self.request_id),
+                    "name": "Heme Nucleo QC Aggregate: %s" % (self.request_id),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleIds": sample_list},
@@ -91,7 +91,7 @@ class HemeNucleoQcAggOperator(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching Heme QC runs found for request {}".format(self.request_id))
+                raise Exception("No matching Heme Nucleo QC runs found for request {}".format(self.request_id))
 
         input = self.construct_sample_input(most_recent_runs_for_request)
         sample_list = []

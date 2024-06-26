@@ -64,7 +64,7 @@ class AccessV2NucleoQcAggOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "CMO-CH QC Aggregate: %s" % (self.request_id),
+                    "name": "Access Nucleo QC Aggregate: %s" % (self.request_id),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleIds": sample_list},
@@ -81,7 +81,7 @@ class AccessV2NucleoQcAggOperator(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="CMO-CH QC",
+                    app__name="access nucleo qc",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
@@ -91,7 +91,7 @@ class AccessV2NucleoQcAggOperator(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching CMO-CH QC runs found for request {}".format(self.request_id))
+                raise Exception("No matching Access Nucleo QC runs found for request {}".format(self.request_id))
 
         input = self.construct_sample_input(most_recent_runs_for_request)
         sample_list = []
