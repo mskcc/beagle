@@ -136,9 +136,14 @@ class CMOCHChipVarOperator(Operator):
         snpsift_countOpName = sample_name + "_snpsift_cosmic.vcf"
         snpsift_prevalOpName = sample_name + "_snpsift_preval.vcf"
         opOncoKbMafName = sample_name + "_oncoKB.maf"
-        output_mappability_filename = sample_name + "_dust"
-        output_complexity_filename = sample_name + "_complexity"
+        output_mappability_filename = sample_name + "_mappability.maf"
+        output_complexity_filename = sample_name + "_complexity.maf"
         output_vcf2mafName = sample_name + "_vcf2maf.maf"
+        output_panmyeloid_maf = sample_name + "_panmyeloid.maf"
+        output_47kchpd_maf = sample_name + "_47kchpd.maf"
+        output_hotspot_maf = sample_name + "_hotspot.maf"
+        output_filter_maf = sample_name + "_filter.maf"
+        output_tag_maf = sample_name + "_tag.maf"
         samples_json_content = self.create_sample_json(run)
 
         input_file = template.render(
@@ -152,9 +157,13 @@ class CMOCHChipVarOperator(Operator):
             output_complexity_filename=json.dumps(output_complexity_filename),
             output_vcf2mafName=json.dumps(output_vcf2mafName),
             samples_json_content=json.dumps(samples_json_content),
+            output_maf_name_panmyeloid=json.dumps(output_panmyeloid_maf),
+            output_47kchpd_maf_name=json.dumps(output_47kchpd_maf),
+            output_hotspot_maf_name=json.dumps(output_hotspot_maf),
+            output_maf_name_filter=json.dumps(output_filter_maf),
+            output_maf_name_tag=json.dumps(output_tag_maf),
             **bams,
         )
-
         sample_input = json.loads(input_file)
         return sample_input
 

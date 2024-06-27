@@ -9,7 +9,11 @@
   "snpsift_countOpName": {{ snpsift_countOpName }},
   "snpsift_prevalOpName": {{ snpsift_prevalOpName }},
   "opOncoKbMafName": {{ opOncoKbMafName }},
-
+  "output_maf_name_panmyeloid": {{ output_maf_name_panmyeloid }},
+  "output_47kchpd_maf_name": {{ output_47kchpd_maf_name }},
+  "output_hotspot_maf_name": {{ output_hotspot_maf_name }},
+  "output_maf_name_filter": {{ output_maf_name_filter }},
+  "output_maf_name_tag": {{ output_maf_name_tag }},
   "bedfile": {
     "class": "File",
     "location": "juno:///work/cch/production/resources/cmo-ch/current/regions_of_interest/current/CH_target_3bp.bed"
@@ -47,10 +51,24 @@
     "class": "File",
     "location": "juno:///work/cch/production/resources/beds/current/rmsk_mod.bed"
   },
-
+  "input_47kchpd_tsv_file": {
+    "class": "File",
+	  "path": "juno:///work/cch/production/resources/ch_47k_impact/versions/v1/chpd47k_prevalence.tsv"
+  },
+  "input_panmeloid_tsv_file": {
+    "class": "File",
+	  "path": "juno:///work/cch/production/resources/pan_myeloid/versions/v1/pan_myeloid_variant_count.tsv"
+  },
+  "input_hotspot_tsv_file": {
+    "class": "File",
+    "path": "juno:///work/cch/production/resources/ch_47k_impact/versions/v1/hotspots_47kchpd.tsv"
+  },
   "retain_info": "CNT,TUMOR_TYPE",
   "vardict_allele_frequency_threshold": 0,
   "oncoKbAnnotateHotspots": true,
   "column_name_mappability": "mappability",
-  "column_name_complexity": "complexity"
+  "column_name_complexity": "complexity",
+  "output_column_name_panmyeloid": "panmyeloid",
+  "output_column_name_47kchpd": "47kchpd",
+  "output_column_name_hotspot": "hotspot"
 }
