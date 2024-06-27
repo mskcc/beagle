@@ -447,6 +447,8 @@ class CWLRunObjectTest(APITestCase):
         run = cwl_run.run_obj
         run_uuid = uuid.uuid4()
         run.execution_id = run_uuid
+        run.resume_attempts = 2
+        run.restart_attempts = 3
         run.save()
         fail_job(run.pk, {"details": "Error has happened"})
         _, _, execution_id = run.set_for_restart()

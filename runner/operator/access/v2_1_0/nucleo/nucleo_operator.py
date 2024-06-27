@@ -10,6 +10,8 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
+from notifier.helper import get_gene_panel
+
 
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
@@ -60,7 +62,8 @@ def calc_avg(sample_files, field):
 
 
 def construct_sample_inputs(samples, request_id):
-    with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+    template_f = "input_template.json.jinja2"
+    with open(os.path.join(WORKDIR, template_f)) as file:
         template = Template(file.read())
 
     sample_inputs = list()
@@ -105,7 +108,7 @@ def construct_sample_inputs(samples, request_id):
     return sample_inputs
 
 
-class AccessNucleoOperator(Operator):
+class AccessV2NucleoOperator(Operator):
     """
     Operator for the ACCESS Nucleo workflow:
 
@@ -123,7 +126,6 @@ class AccessNucleoOperator(Operator):
         data = [
             {"id": f.file.id, "path": f.file.path, "file_name": f.file.file_name, "metadata": f.metadata} for f in files
         ]
-
         sample_inputs = construct_sample_inputs(data, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [

@@ -13,6 +13,7 @@ from beagle_etl.models import (
     SmileMessageStatus,
     RequestCallbackJobStatus,
     RequestCallbackJob,
+    SkipProject,
 )
 from beagle_etl.jobs.metadb_jobs import TYPES
 from beagle_etl.exceptions import ETLExceptions
@@ -20,15 +21,13 @@ from beagle_etl.nats_client.nats_client import run
 from beagle_etl.jobs.metadb_jobs import (
     new_request,
     update_job,
-    update_request_job,
-    update_sample_job,
     not_supported,
     request_callback,
 )
 from file_system.repository import FileRepository
 from notifier.tasks import send_notification
 from notifier.events import ETLImportEvent, ETLJobsLinksEvent, PermissionDeniedEvent, SendEmailEvent
-
+from ddtrace import tracer
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +40,7 @@ def fetch_request_nats():
 
 
 @shared_task
+@tracer.wrap(service="beagle")
 def process_smile_events():
     update_requests = set()
 
@@ -61,6 +61,9 @@ def process_smile_events():
     for message in messages:
         if message.request_id in update_requests:
             update_requests.remove(message.request_id)
+            current_span = tracer.current_span()
+            request_id = message.request_id
+            current_span.set_tag("request.id", request_id)
         logger.info(f"New request: {message.request_id}")
         new_request.delay(str(message.id))
 
@@ -85,7 +88,11 @@ def process_smile_events():
 def process_request_callback_jobs():
     requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
     for request in requests:
-        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+        skip_projects_config = SkipProject.objects.first()
+        if request.request_id in skip_projects_config.skip_projects:
+            # TODO: Remove this when problem with redeliveries of old projects is gone
+            pass
+        elif datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
             logger.info("Submitting request callback %s" % request.request_id)
             request_callback.delay(
                 request.request_id,

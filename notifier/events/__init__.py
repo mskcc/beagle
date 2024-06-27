@@ -40,3 +40,4 @@ from .voyager_cant_process_request_all_normals_event import VoyagerCantProcessRe
 from .not_all_normals_used_event import NotAllNormalsUsedEvent
 from .voyager_action_required_for_running import VoyagerActionRequiredForRunningEvent
 from .smile_update_event import SMILEUpdateEvent
+from .error_importing_files import ErrorImportingFilesEvent

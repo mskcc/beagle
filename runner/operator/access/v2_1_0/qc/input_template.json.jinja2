@@ -13,15 +13,15 @@
 
     "multiqc_config": {
       "class": "File",
-      "location": "juno:///juno/work/access/testing/users/johnsoni/access_qc/access_qc_generation/multiqc_configs/config.yaml"
+      "location": "juno:///work/access/production/resources/msk-access/v2.0/multi_qc/v1.0/config_accessv2.yaml"
     },
     "biometrics_bed_file": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-B.sorted.bed"
+      "location": "juno:///work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_probes_Y_only.bed"
     },
     "biometrics_vcf_file": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/current/regions_of_interest/current/MSK-ACCESS-v1_0-TilingaAndFpSNPs.vcf"
+      "location": "juno:///work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_0-TilingaAndFpSNPs.vcf"
     },
     "biometrics_json": true,
     "biometrics_plot": true,
@@ -32,44 +32,51 @@
 
     "noise_sites_bed": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-A_no_msi_sorted_deduped.bed"
+      "location": "juno:///work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_targetsAllwFP.bed"
     },
-    "pool_a_bait_intervals": {
+    "bait_intervals": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-A.sorted.interval_list"
+      "location": "juno:///juno/work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_probesAllwFP.interval_list"
     },
-    "pool_a_target_intervals": {
+    "target_intervals": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0_panelA_canonicaltargets.interval_list"
-    },
-    "pool_b_bait_intervals": {
-      "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-B.sorted.interval_list"
-    },
-    "pool_b_target_intervals": {
-      "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0-probe-B.sorted.interval_list"
+      "location": "juno:///juno/work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_canonicaltargets.interval_list"
     },
 
     "reference": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+      "location": "juno:///juno/work/access/production/resources/reference/versions/hg19_virus_special/hg19_virus.fasta",
       "secondaryFiles": [
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.amb"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.ann"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.bwt"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.sa"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.pac"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai"},
-        {"class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict"}
+        {"class": "File", "location": "juno:///juno/work/access/production/resources/reference/versions/hg19_virus_special/hg19_virus.fasta.fai"},
+        {"class": "File", "location": "juno:///juno/work/access/production/resources/reference/versions/hg19_virus_special/hg19_virus.dict"}
       ]
     },
 
     "hotspots_maf": {
       "class": "File",
-      "location": "juno:///juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT.maf"
+      "location": "juno:///juno/work/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT_with_aa.maf"
     },
 
     "sequence_qc_min_basq": 1,
-    "sequence_qc_min_mapq": 1
+    "sequence_qc_min_mapq": 1,
+    "sequence_qc_threshold": null,
+    "sequence_qc_truncate": null,
+    "collapsed_biometrics_coverage_threshold": null,
+    "collapsed_biometrics_major_threshold": null,
+    "collapsed_biometrics_min_base_quality": null,
+    "collapsed_biometrics_min_coverage": null,
+    "collapsed_biometrics_min_homozygous_thresh": null,
+    "collapsed_biometrics_min_mapping_quality": null,
+    "collapsed_biometrics_minor_threshold": null,
+
+    "duplex_biometrics_major_threshold": null,
+    "duplex_biometrics_min_base_quality": null,
+    "duplex_biometrics_min_coverage": null,
+    "duplex_biometrics_min_homozygous_thresh": null,
+    "duplex_biometrics_min_mapping_quality": null,
+    "duplex_biometrics_minor_threshold": null,
+    "fragment_count": 1,
+    "filter_duplicate": 0,
+    "omaf": true,
+    "generic_counting": true
 }
