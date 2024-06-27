@@ -61,11 +61,11 @@ app.conf.task_routes = {
 }
 
 app.conf.beat_schedule = {
-    "process_request_callback_jobs": {
-        "task": "beagle_etl.tasks.process_request_callback_jobs",
-        "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
-        "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    },
+    # "process_request_callback_jobs": {
+    #     "task": "beagle_etl.tasks.process_request_callback_jobs",
+    #     "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
+    #     "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    # },
     "process_smile_imports": {
         "task": "beagle_etl.tasks.process_smile_events",
         "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
@@ -83,6 +83,11 @@ app.conf.beat_schedule = {
     },
     "timeout_runs": {
         "task": "runner.tasks.check_job_timeouts",
+        "schedule": settings.CHECK_JOB_TIMEOUTS,
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
+    "check_job_group_watcher": {
+        "task": "study.tasks.check_job_group_watcher",
         "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },

@@ -11,7 +11,7 @@ from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
+import runner.operator.chronos_operator_batch.bin.tempo_patient as patient_obj
 from notifier.models import JobGroup
 from notifier.events import OperatorRequestEvent
 from notifier.tasks import send_notification
@@ -70,7 +70,6 @@ class ChronosOperatorBatch(Operator):
         LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
         output_directory = pipeline.output_directory
         self.OUTPUT_DIR = output_directory
 
@@ -131,7 +130,12 @@ class ChronosOperatorBatch(Operator):
             if "C-" in patient_id[:2]:
                 self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
             else:
-                self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+                patient_file = patient_files[patient_id][0]
+                specimen_type = patient_file.metadata[settings.SAMPLE_CLASS_METADATA_KEY]
+                if "cellline" in specimen_type.lower():
+                    self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
+                else:
+                    self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
         mapping_all = self.create_mapping_input()
         pairing_all = self.create_pairing_input()
@@ -155,16 +159,47 @@ class ChronosOperatorBatch(Operator):
             values_metadata="ciTag",
         )
         used_normals = set()
+        used_normals_requests = set()
+        unpaired_tumors = set()
+
         for tumor in tumors:
             pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            pairing_for_request.append(pairing)
-            mapping_for_request.extend(self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals))
+            if pairing:
+                pairing_for_request.append(pairing)
+                mapping_for_request.extend(
+                    self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals)
+                )
+                normal_request_id = FileRepository.filter(
+                    metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                    values_metadata=settings.REQUEST_ID_METADATA_KEY,
+                )
+                used_normals_requests.add(normal_request_id)
+            else:
+                unpaired_tumors.add(tumor)
+                mapping_for_request.extend(self.get_mapping_for_unpaired_tumor(tumor, mapping_all))
+
+        if unpaired_tumors:
+            self.send_message(
+                """
+                Unpaired tumors in mapping file:
+                {tumors}
+                """.format(
+                    tumors="\t\n".join(list(unpaired_tumors))
+                )
+            )
+
+        if self.request_id in used_normals_requests:
+            used_normals_requests.remove(self.request_id)
+
+        if used_normals_requests:
+            LOGGER.info(f"Normals from different requests {','.join(map(str,list(used_normals_requests)))}.")
 
         input_json = {
-            "pairing": pairing_for_request,
             "mapping": mapping_for_request,
-            "somatic": True,
-            "aggregate": True,
+            "somatic": False,
+            "aggregate": False,
+            "workflows": "qc",
+            "assayType": "exome",
         }
 
         job_json = {"name": name, "app": app, "inputs": input_json, "tags": tags, "output_directory": output_directory}
@@ -182,9 +217,16 @@ class ChronosOperatorBatch(Operator):
             if m["sample"] == tumor:
                 map.append(m)
             if m["sample"] == normal:
+                map.append(m)
                 if normal not in used_normals:
-                    map.append(m)
                     used_normals.add(normal)
+        return map
+
+    def get_mapping_for_unpaired_tumor(self, tumor, mapping):
+        map = []
+        for m in mapping:
+            if m["sample"] == tumor:
+                map.append(m)
         return map
 
     def load_pairing_file(self, tsv_file):
@@ -213,11 +255,6 @@ class ChronosOperatorBatch(Operator):
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
-        # self.register_tmp_file(output)
-        # if self.job_group_notifier_id:
-        #     upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
-        #     send_notification.delay(upload_file_event)
-        # return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
         """
@@ -228,17 +265,6 @@ class ChronosOperatorBatch(Operator):
         with open(output, "w+") as fh:
             fh.write(pairing_file_str)
         os.chmod(output, 0o777)
-
-    def register_tmp_file(self, path):
-        fname = os.path.basename(path)
-        temp_file_group = FileGroup.objects.get(slug="temp")
-        file_type = FileType.objects.get(name="txt")
-        try:
-            File.objects.get(path=path)
-        except:
-            print("Registering temp file %s" % path)
-            f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
-            f.save()
 
     def create_unpaired_txt_file(self):
         # Add runDate
@@ -266,6 +292,7 @@ class ChronosOperatorBatch(Operator):
 
     def get_recipes(self):
         recipe = [
+            "WES_HUMAN",
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
             "WholeExomeSequencing",
@@ -292,6 +319,8 @@ class ChronosOperatorBatch(Operator):
         for patient_id in self.patients:
             patient = self.patients[patient_id]
             mapping.extend(patient.create_mapping_json())
+            if patient.unpaired_samples:
+                mapping.extend(patient.create_unpaired_mapping_json())
         self.write_to_file("sample_mapping_json.json", json.dumps(mapping))
         return mapping
 

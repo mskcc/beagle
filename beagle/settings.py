@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.environ.get("BEAGLE_ALLOWED_HOSTS", "localhost").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", "beagle_prod_session")
 
 # Application definition
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     "drf_multiple_model",
     "drf_yasg",
     "advanced_filters",
+    "ddtrace.contrib.django",
 ]
 
 
@@ -305,8 +307,6 @@ LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
-# NATS
-
 # SSL
 NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
 NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
@@ -368,7 +368,7 @@ LOGGING = {
         "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": True,
         },
     },
@@ -406,6 +406,7 @@ PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PE
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
+OLD_REQUEST_TIMEDELTA = os.environ.get("BEAGLE_OLD_REQUEST_TIMEDELTA", 60)
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PROJECT_DIR)
@@ -440,6 +441,7 @@ TUMOR_OR_NORMAL_METADATA_KEY = "tumorOrNormal"
 BAITSET_METADATA_KEY = "baitSet"
 PRESERVATION_METADATA_KEY = "preservation"
 SEX_METADATA_KEY = "sex"
+RUN_DATE_METADATA_KEY = "runDate"
 
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get("BEAGLE_NOTIFIER_EMAIL_GROUP", "946a922c-8c6b-4cba-8754-16df02f05d2a")
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get("BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS")
@@ -457,6 +459,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
 
 PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
 PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
+JOB_HANGING_ALERT_EMAILS = os.environ.get("BEAGLE_JOB_HANGING_ALERT_EMAILS", "").split(",")
 
 # Tempo
 
@@ -464,6 +467,10 @@ WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing"
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
 
 DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
+"""
+
+"""
+MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
@@ -476,3 +483,12 @@ CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")
 
 DATADOG_RUN_ERROR_URL = os.environ.get("DATADOG_RUN_ERROR_URL", "")
 DATADOG_JOB_ERROR_URL = os.environ.get("DATADOG_JOB_ERROR_URL", "")
+
+# Pipeline Default Permissions
+
+DEFAULT_OUTPUTS_PERMISSIONS = os.environ.get("BEAGLE_DEFAULT_PERMISSIONS")
+DEFAULT_OUTPUTS_UID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_UID", 0))
+DEFAULT_OUTPUTS_GID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_GID", 0))
+
+DEFAULT_RESTART_COUNT = os.environ.get("DEFAULT_RESTART_COUNT", 0)
+DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)
