@@ -316,7 +316,7 @@ class RunApiRestartViewSet(GenericAPIView):
                 p.save()
                 p.files.add(*files)
 
-            submit_job.delay(r.pk, r.output_directory)
+            submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
 
         return Response(
