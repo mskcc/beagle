@@ -691,13 +691,19 @@ class ArgosDataClinicalViewSet(GenericAPIView):
         if igo_request_id and argos_slug:
             operator_model = Operator.objects.get(slug=argos_slug)
             operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
-            # construct_argos_jobs() is sloppily separate from the Operator module
+            # construct_argos_jobs() and compile_pairs() are sloppily separate from the Operator module
             from runner.operator.argos_operator.v2_0_0.construct_argos_pair import construct_argos_jobs
+            from runner.operator.argos_operator.v2_0_0.bin.pair_request import compile_pairs
 
             files, cnt_tumors = operator.get_files(operator.request_id)
-            dmp_samples = list()
             data = operator.build_data_list(files)
             samples = operator.get_samples_from_data(data)
+            dmp_samples = list()
+            for sample in samples:
+                sample_type = sample["tumor_type"]
+                this_sample, is_dmp_sample = operator.get_regular_sample(sample, sample_type)
+                if is_dmp_sample:
+                    dmp_samples.append(this_sample)
             argos_inputs, error_samples = construct_argos_jobs(samples)
             sample_mapping, filepaths = operator.get_mapping_from_argos_inputs(argos_inputs)
             pipeline = operator.get_pipeline_id()
@@ -713,7 +719,7 @@ class ArgosDataClinicalViewSet(GenericAPIView):
                 dmp_samples=dmp_samples,
             )
             if data_clinical:
-                body = {"details": data_clinical}
+                body = {"details": data_clinical, "dmp_samples": dmp_samples}
             else:
                 message = "%s: No samples found." % igo_request_id
                 body = {"details": message}
