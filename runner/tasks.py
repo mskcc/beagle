@@ -376,11 +376,13 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
+                            run_ids = [str(run_id) for run_id in
+                                       list(operator_run.runs.order_by("id").values_list("id", flat=True))]
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.order_by("id").values_list("id", flat=True)),
+                                run_ids,
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
                                 parent=str(operator_run.id),
