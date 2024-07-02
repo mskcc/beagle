@@ -53,6 +53,7 @@ from rest_framework.viewsets import GenericViewSet
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start
 from notifier.tasks import send_notification
+from notifier.helper import generate_sample_data_content
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
@@ -646,6 +647,73 @@ class ArgosPairingViewSet(GenericAPIView):
             sample_pairing = operator.get_pairing_from_argos_inputs(argos_inputs)
             if sample_pairing:
                 body = {"details": sample_pairing}
+            else:
+                message = "%s: No samples found." % igo_request_id
+                body = {"details": message}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class ArgosMappingViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = ArgosPairingSerializer
+
+    def post(self, request):
+        igo_request_id = request.data.get("igo_request_id", None)
+        argos_slug = request.data.get("argos_slug", None)
+        if igo_request_id and argos_slug:
+            operator_model = Operator.objects.get(slug=argos_slug)
+            operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
+            # construct_argos_jobs() is sloppily separate from the Operator module
+            from runner.operator.argos_operator.v2_0_0.construct_argos_pair import construct_argos_jobs
+
+            files, cnt_tumors = operator.get_files(operator.request_id)
+            data = operator.build_data_list(files)
+            samples = operator.get_samples_from_data(data)
+            argos_inputs, error_samples = construct_argos_jobs(samples)
+            sample_mapping, filepaths = operator.get_mapping_from_argos_inputs(argos_inputs)
+            if sample_mapping:
+                body = {"details": sample_mapping}
+            else:
+                message = "%s: No samples found." % igo_request_id
+                body = {"details": message}
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class ArgosDataClinicalViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = ArgosPairingSerializer
+
+    def post(self, request):
+        igo_request_id = request.data.get("igo_request_id", None)
+        argos_slug = request.data.get("argos_slug", None)
+        if igo_request_id and argos_slug:
+            operator_model = Operator.objects.get(slug=argos_slug)
+            operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
+            # construct_argos_jobs() is sloppily separate from the Operator module
+            from runner.operator.argos_operator.v2_0_0.construct_argos_pair import construct_argos_jobs
+
+            files, cnt_tumors = operator.get_files(operator.request_id)
+            dmp_samples = list()
+            data = operator.build_data_list(files)
+            samples = operator.get_samples_from_data(data)
+            argos_inputs, error_samples = construct_argos_jobs(samples)
+            sample_mapping, filepaths = operator.get_mapping_from_argos_inputs(argos_inputs)
+            pipeline = operator.get_pipeline_id()
+            try:
+                pipeline_obj = Pipeline.objects.get(id=pipeline)
+            except Pipeline.DoesNotExist:
+                pass
+            data_clinical = generate_sample_data_content(
+                filepaths,
+                pipeline_name=pipeline_obj.name,
+                pipeline_github=pipeline_obj.github,
+                pipeline_version=pipeline_obj.version,
+                dmp_samples=dmp_samples,
+            )
+            if data_clinical:
+                body = {"details": data_clinical}
             else:
                 message = "%s: No samples found." % igo_request_id
                 body = {"details": message}
