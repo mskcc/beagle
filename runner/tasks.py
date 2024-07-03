@@ -43,7 +43,7 @@ from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
 from ddtrace import tracer
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
@@ -376,11 +376,15 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
+                            run_ids = [
+                                str(run_id)
+                                for run_id in list(operator_run.runs.order_by("id").values_list("id", flat=True))
+                            ]
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.order_by("id").values_list("id", flat=True)),
+                                run_ids,
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
                                 parent=str(operator_run.id),
@@ -502,9 +506,13 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["tool_walltime"] = run.app.tool_walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
-    if run.app.output_permission:
-        job["root_permission"] = run.app.output_permission
 
+    root_permissions = run.app.output_permission if run.app.output_permission else settings.DEFAULT_OUTPUTS_PERMISSIONS
+    output_uid = run.app.output_uid if run.app.output_uid else settings.DEFAULT_OUTPUTS_UID
+    output_gid = run.app.output_gid if run.app.output_gid else settings.DEFAULT_OUTPUTS_GID
+    job["root_permission"] = root_permissions
+    job["output_uid"] = output_uid
+    job["output_gid"] = output_gid
     job["metadata"] = dict()
     job["metadata"]["run_id"] = run_id
     job["metadata"]["pipeline_id"] = str(run.app.id)
@@ -578,7 +586,10 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
             restart_run = run.run_obj.set_for_restart()
 
             if not restart_run:
-                run.fail(error_message)
+                if isinstance(error_message, dict):
+                    run.fail(error_message)
+                else:
+                    run.fail({"Error": str(error_message)})
                 run.to_db()
 
                 job_group_notifier = run.job_group_notifier
@@ -801,7 +812,7 @@ def check_jobs_status():
                 logger.error(format_log("Hanging Job detected", obj=run))
                 run.message = dict(details=status.get("message", {}))
                 run.save(update_fields=("message",))
-                send_hanging_job_alert(str(run.id), new_alert[0]["message"])
+                # send_hanging_job_alert(str(run.id), new_alert[0]["message"])
 
             if status["started"] and not run.started:
                 run.started = status["started"]

@@ -48,7 +48,7 @@ meta_fields = [
 ]
 
 
-class AccessQCOperator(Operator):
+class AccessV2NucleoQcOperator(Operator):
     """
     Operator for the ACCESS QC workflow:
 
@@ -64,36 +64,40 @@ class AccessQCOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "ACCESS QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "Access V2 Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
-            for i, job in enumerate(sample_inputs)
+            for i, (job, output_metadata) in enumerate(sample_inputs)
         ]
 
     def get_nucleo_outputs(self):
-        # Use most recent set of runs that completed successfully
-        most_recent_runs_for_request = (
-            Run.objects.filter(
-                app__name="access nucleo",
-                tags__igoRequestId=self.request_id,
-                status=RunStatus.COMPLETED,
-                operator_run__status=RunStatus.COMPLETED,
+        if not self.request_id:
+            most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
+            self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
+        else:
+            # Use most recent set of runs that completed successfully
+            most_recent_runs_for_request = (
+                Run.objects.filter(
+                    app__name="access v2 nucleo",
+                    tags__igoRequestId=self.request_id,
+                    status=RunStatus.COMPLETED,
+                    operator_run__status=RunStatus.COMPLETED,
+                )
+                .order_by("-created_date")
+                .first()
+                .operator_run.runs.all()
             )
-            .order_by("-created_date")
-            .first()
-            .operator_run.runs.all()
-        )
-
-        if not len(most_recent_runs_for_request):
-            raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
+            if not len(most_recent_runs_for_request):
+                raise Exception("No matching Access V2 Nucleo runs found for request {}".format(self.request_id))
 
         inputs = []
         for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
-            inputs.append(inp)
+            output_metadata = r.output_metadata
+            inputs.append((inp, output_metadata))
         return inputs
 
     def parse_nucleo_output_ports(self, run, port_name):

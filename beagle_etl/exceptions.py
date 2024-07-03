@@ -86,9 +86,17 @@ class DuplicatedFilesException(ETLExceptions):
     code = 110
 
 
+class FailedToLocateTheFileException(ETLExceptions):
+    """
+    File not located in the file_system
+    """
+
+    code = 111
+
+
 class IncorrectlyFormattedPrimaryId(ETLExceptions):
     """
     Incorrectly formatted primaryId
     """
 
-    code = 111
+    code = 112

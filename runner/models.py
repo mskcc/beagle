@@ -67,12 +67,14 @@ class Pipeline(BaseModel):
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     output_permission = models.IntegerField(blank=True, null=True, editable=True)
+    output_uid = models.IntegerField(blank=True, null=True, editable=True)
+    output_gid = models.IntegerField(blank=True, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
-    config = models.CharField(blank=True, null=True, max_length=1000, default=None)
+    config = models.CharField(blank=True, null=True, max_length=3000, default=None)
 
     @property
     def pipeline_link(self):
@@ -238,7 +240,7 @@ class Run(BaseModel):
         return self
 
     def set_for_restart(self):
-        run_id = self.pk
+        run_id = str(self.pk)
         output_directory = self.output_directory
         message = self.message
         started = self.started
@@ -249,7 +251,9 @@ class Run(BaseModel):
         if not message:
             message = {}
         execution_id = self.execution_id
+
         job_tuple = (started_strftime, exited_strftime, str(execution_id))
+
         if self.resume_attempts > 0:
             resume_attempts = self.resume_attempts - 1
             if "resume" not in message:
@@ -262,6 +266,7 @@ class Run(BaseModel):
             self.message = message
             self.output_directory = output_directory
             self.save()
+
         elif self.restart_attempts > 0:
             restart_attempts = self.restart_attempts - 1
             if "restart" not in message:

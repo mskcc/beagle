@@ -232,5 +232,5 @@ SAMPLE-NORMAL-001\tSAMPLE-TUMOR-001
         run_object = NextflowRunObject.from_definition(str(run.id), input_dict)
         run_object.ready()
         job_json = run_object.dump_job(output_directory="/tmp/test/output")
-        self.assertEqual(job_json["inputs"]["outputs"], "/tmp/test/output/nextflow_output.txt")
-        self.assertTrue("/tmp/test/output/nextflow_output.txt" in job_json["inputs"]["config"])
+        self.assertEqual(job_json["inputs"]["outputs"], "/tmp/test/output/pipeline_output.csv")
+        self.assertTrue("/tmp/test/output/pipeline_output.csv" in job_json["inputs"]["config"])
