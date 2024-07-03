@@ -131,7 +131,7 @@ class AccessV2NucleoOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "ACCESS Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
+                    "name": "ACCESS V2 Nucleo: %s, %i of %i" % (self.request_id, i + 1, number_of_inputs),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": {key: metadata[key] for key in METADATA_OUTPUT_FIELDS if key in metadata},
