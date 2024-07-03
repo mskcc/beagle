@@ -514,7 +514,7 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
     job["output_uid"] = output_uid
     job["output_gid"] = output_gid
     job["metadata"] = dict()
-    job["metadata"]["run_id"] = run_id
+    job["metadata"]["run_id"] = str(run_id)
     job["metadata"]["pipeline_id"] = str(run.app.id)
     job["metadata"][
         "pipeline_link"
