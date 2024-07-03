@@ -36,6 +36,7 @@ from runner.serializers import (
     RunSerializerCWLOutput,
     CWLJsonSerializer,
     TempoMPGenOperatorSerializer,
+    ArgosPairingSerializer,
     PairOperatorSerializer,
     RestartRunSerializer,
     RunSamplesSerializer,
@@ -315,7 +316,7 @@ class RunApiRestartViewSet(GenericAPIView):
                 p.save()
                 p.files.add(*files)
 
-            submit_job.delay(r.pk, r.output_directory)
+            submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
 
         return Response(
@@ -337,57 +338,6 @@ class RunApiRestartViewSet(GenericAPIView):
             job_group_notifier_id, str(run.id), run.app.name, run.app.pipeline_link, run.output_directory, run.tags
         ).to_dict()
         send_notification.delay(run_event)
-
-
-class OperatorViewSet(GenericAPIView):
-    serializer_class = RequestIdOperatorSerializer
-
-    logger = logging.getLogger(__name__)
-
-    def post(self, request):
-        request_ids = request.data.get("request_ids", [])
-        run_ids = request.data.get("run_ids", [])
-        job_group_id = request.data.get("job_group_id", [])
-        pipeline_name = request.data["pipeline_name"]
-        pipeline = get_object_or_404(Pipeline, name=pipeline_name)
-
-        if request_ids:
-            for request_id in request_ids:
-                logging.info("Submitting requestId %s to pipeline %s" % (request_id, pipeline_name))
-                if not job_group_id:
-                    job_group = JobGroup.objects.create()
-                    job_group_id = str(job_group.id)
-                create_jobs_from_request.delay(request_id, pipeline.operator_id, job_group_id)
-            body = {"details": "Operator Job submitted %s" % str(request_ids)}
-        else:
-            if run_ids:
-                operator_model = Operator.objects.get(id=pipeline.operator_id)
-                if job_group_id:
-                    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids, job_group_id=job_group_id)
-                    create_jobs_from_operator(operator, job_group_id)
-                    body = {
-                        "details": "Operator Job submitted to pipeline %s, job group id %s,  with runs %s"
-                        % (pipeline_name, job_group_id, str(run_ids))
-                    }
-                else:
-                    operator = OperatorFactory.get_by_model(operator_model, run_ids=run_ids)
-                    create_jobs_from_operator(operator)
-                    body = {
-                        "details": "Operator Job submitted to pipeline %s with runs %s" % (pipeline_name, str(run_ids))
-                    }
-            else:
-                operator_model = Operator.objects.get(id=pipeline.operator_id)
-                if job_group_id:
-                    operator = OperatorFactory.get_by_model(operator_model, job_group_id=job_group_id)
-                    run_routine_operator_job(operator, job_group_id)
-                    body = {
-                        "details": "Operator Job submitted to operator %s (JobGroupId: %s)" % (operator, job_group_id)
-                    }
-                else:
-                    operator = OperatorFactory.get_by_model(operator_model)
-                    run_routine_operator_job(operator)
-                    body = {"details": "Operator Job submitted to operator %s" % operator}
-        return Response(body, status=status.HTTP_200_OK)
 
 
 class RequestOperatorViewSet(GenericAPIView):
@@ -672,6 +622,33 @@ class TempoMPGenViewSet(GenericAPIView):
         else:
             body = {"details": "TempoMPGen Job submitted."}
         create_tempo_mpgen_job(operator, pairing_override, job_group_id, job_group_notifier_id)
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class ArgosPairingViewSet(GenericAPIView):
+    logger = logging.getLogger(__name__)
+
+    serializer_class = ArgosPairingSerializer
+
+    def post(self, request):
+        igo_request_id = request.data.get("igo_request_id", None)
+        argos_slug = request.data.get("argos_slug", None)
+        if igo_request_id and argos_slug:
+            operator_model = Operator.objects.get(slug=argos_slug)
+            operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
+            # construct_argos_jobs() is sloppily separate from the Operator module
+            from runner.operator.argos_operator.v2_0_0.construct_argos_pair import construct_argos_jobs
+
+            files, cnt_tumors = operator.get_files(operator.request_id)
+            data = operator.build_data_list(files)
+            samples = operator.get_samples_from_data(data)
+            argos_inputs, error_samples = construct_argos_jobs(samples)
+            sample_pairing = operator.get_pairing_from_argos_inputs(argos_inputs)
+            if sample_pairing:
+                body = {"details": sample_pairing}
+            else:
+                message = "%s: No samples found." % igo_request_id
+                body = {"details": message}
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
 

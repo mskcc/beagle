@@ -75,13 +75,12 @@ def check_and_return_single_values(data):
             LOGGER.error("Check import, something went wrong.")
 
     # concatenating pi and pi_email
-    try:
-        data["pi"] = "; ".join(set(data["pi"]))
-        data["pi_email"] = "; ".join(set(data["pi_email"]))
-    except Exception as e:
-        LOGGER.error("Operator fail.")
-        LOGGER.error(f"Data: {data}")
-        raise
+    if data["pi"] == [None]:
+        data["pi"] = [""]
+    if data["pi_email"] == [None]:
+        data["pi_email"] = [""]
+    data["pi"] = "; ".join(set(data["pi"]))
+    data["pi_email"] = "; ".join(set(data["pi_email"]))
 
     # hack; formats LB field so that it is a string
     library_id = [i for i in data["LB"] if i]

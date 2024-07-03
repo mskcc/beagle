@@ -86,4 +86,9 @@ app.conf.beat_schedule = {
         "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
+    "check_job_group_watcher": {
+        "task": "study.tasks.check_job_group_watcher",
+        "schedule": settings.CHECK_JOB_TIMEOUTS,
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
 }
