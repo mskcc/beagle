@@ -72,6 +72,7 @@ def construct_argos_jobs(samples, pairs=None, logger=None):
         normal = pairs["normal"][i]
         project_id = tumor["request_id"]
         assay = tumor["bait_set"]
+        patient_id = tumor["patient_id"]
         pi = tumor["pi"]
         pi_email = tumor["pi_email"]
         job = dict()
@@ -82,6 +83,7 @@ def construct_argos_jobs(samples, pairs=None, logger=None):
         job["assay"] = assay
         job["pi"] = pi
         job["pi_email"] = pi_email
+        job["patient_id"] = patient_id
         references = convert_references(project_id, assay, pi, pi_email)
         job.update(references)
         argos_jobs.append(job)

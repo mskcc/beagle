@@ -706,6 +706,7 @@ class ArgosDataClinicalViewSet(GenericAPIView):
                     dmp_samples.append(this_sample)
             argos_inputs, error_samples = construct_argos_jobs(samples)
             sample_mapping, filepaths = operator.get_mapping_from_argos_inputs(argos_inputs)
+            dmp_samples = operator.get_dmp_samples_from_argos_inputs(argos_inputs)
             pipeline = operator.get_pipeline_id()
             try:
                 pipeline_obj = Pipeline.objects.get(id=pipeline)
@@ -719,7 +720,12 @@ class ArgosDataClinicalViewSet(GenericAPIView):
                 dmp_samples=dmp_samples,
             )
             if data_clinical:
-                body = {"details": data_clinical, "dmp_samples": dmp_samples}
+                body = {
+                    "details": data_clinical,
+                    "dmp_samples": dmp_samples,
+                    "samples": samples,
+                    "argos_inputs": argos_inputs,
+                }
             else:
                 message = "%s: No samples found." % igo_request_id
                 body = {"details": message}
