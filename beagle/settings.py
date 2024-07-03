@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.environ.get("BEAGLE_ALLOWED_HOSTS", "localhost").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", "beagle_prod_session")
 
 # Application definition
 
@@ -306,8 +307,6 @@ LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
-# NATS
-
 # SSL
 NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
 NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
@@ -369,7 +368,7 @@ LOGGING = {
         "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": True,
         },
     },
@@ -471,6 +470,10 @@ WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing"
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
 
 DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
+"""
+
+"""
+MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
@@ -483,6 +486,12 @@ CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")
 
 DATADOG_RUN_ERROR_URL = os.environ.get("DATADOG_RUN_ERROR_URL", "")
 DATADOG_JOB_ERROR_URL = os.environ.get("DATADOG_JOB_ERROR_URL", "")
+
+# Pipeline Default Permissions
+
+DEFAULT_OUTPUTS_PERMISSIONS = os.environ.get("BEAGLE_DEFAULT_PERMISSIONS")
+DEFAULT_OUTPUTS_UID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_UID", 0))
+DEFAULT_OUTPUTS_GID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_GID", 0))
 
 DEFAULT_RESTART_COUNT = os.environ.get("DEFAULT_RESTART_COUNT", 0)
 DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)

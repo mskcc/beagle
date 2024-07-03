@@ -98,14 +98,17 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
     def test_new_request(
         self,
+        path_exists,
         populate_job_group_notifier_metadata,
         job_group_notifier_get,
         send_notification,
         notifier_start,
         check_files_permissions,
     ):
+        path_exists.return_value = True
         populate_job_group_notifier_metadata.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
@@ -143,8 +146,9 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
+    @patch("os.path.exists")
     def test_update_request_metadata(
-        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+        self, path_exists, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):
         """
         Test if request metadata update is properly updating fields
@@ -163,6 +167,7 @@ class TestNewRequest(TestCase):
             "qcAccessEmails",
         ]
         with self.settings(ETL_USER=str(self.etl_user.username)):
+            path_exists.return_value = True
             request_callback.return_value = None
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
@@ -195,13 +200,15 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("beagle_etl.jobs.metadb_jobs.create_request_callback_instance")
+    @patch("os.path.exists")
     def test_update_request_ticket(
-        self, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
+        self, path_exists, request_callback, populate_job_group, send_notification, jobGroupNotifierObjectGet
     ):
         """
         Test that generate ticket is called properly in update request
         """
         with self.settings(ETL_USER=str(self.etl_user.username)):
+            path_exists.return_value = True
             request_callback.return_value = None
             populate_job_group.return_value = None
             jobGroupNotifierObjectGet.return_value = None
@@ -302,12 +309,20 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
     def test_update_sample(
-        self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions
+        self,
+        path_exists,
+        populate_job_group,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        check_files_permissions,
     ):
         """
         Test that sample metadata is updated properly
         """
+        path_exists.return_value = True
         populate_job_group.return_value = None
         send_notification.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
@@ -353,8 +368,15 @@ class TestNewRequest(TestCase):
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
     def test_update_sample_new_fastqs(
-        self, populate_job_group, job_group_notifier_get, send_notification, notifier_start, check_files_permissions
+        self,
+        path_exists,
+        populate_job_group,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        check_files_permissions,
     ):
         """
         Test sample updates for new fastqs
@@ -366,6 +388,7 @@ class TestNewRequest(TestCase):
         send_notification.return_value = True
         check_files_permissions.return_value = True
         settings.NOTIFIER_ACTIVE = False
+        path_exists.return_value = True
 
         new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
         update_sample_msg = SMILEMessage.objects.create(
