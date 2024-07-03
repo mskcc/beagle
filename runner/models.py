@@ -240,7 +240,7 @@ class Run(BaseModel):
         return self
 
     def set_for_restart(self):
-        run_id = self.pk
+        run_id = str(self.pk)
         output_directory = self.output_directory
         message = self.message
         started = self.started
@@ -251,7 +251,9 @@ class Run(BaseModel):
         if not message:
             message = {}
         execution_id = self.execution_id
+
         job_tuple = (started_strftime, exited_strftime, str(execution_id))
+
         if self.resume_attempts > 0:
             resume_attempts = self.resume_attempts - 1
             if "resume" not in message:
@@ -264,6 +266,7 @@ class Run(BaseModel):
             self.message = message
             self.output_directory = output_directory
             self.save()
+
         elif self.restart_attempts > 0:
             restart_attempts = self.restart_attempts - 1
             if "restart" not in message:

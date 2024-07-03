@@ -48,7 +48,7 @@ meta_fields = [
 ]
 
 
-class AccessHemeQCOperator(Operator):
+class AccessV2NucleoQcOperator(Operator):
     """
     Operator for the ACCESS QC workflow:
 
@@ -64,7 +64,7 @@ class AccessHemeQCOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "Access V2 Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
@@ -81,7 +81,7 @@ class AccessHemeQCOperator(Operator):
             # Use most recent set of runs that completed successfully
             most_recent_runs_for_request = (
                 Run.objects.filter(
-                    app__name="access nucleo",
+                    app__name="access v2 nucleo",
                     tags__igoRequestId=self.request_id,
                     status=RunStatus.COMPLETED,
                     operator_run__status=RunStatus.COMPLETED,
@@ -91,7 +91,7 @@ class AccessHemeQCOperator(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
+                raise Exception("No matching Access V2 Nucleo runs found for request {}".format(self.request_id))
 
         inputs = []
         for r in most_recent_runs_for_request:
