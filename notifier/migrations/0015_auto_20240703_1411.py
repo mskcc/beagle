@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0014_auto_20211005_1636'),
+        ("notifier", "0014_auto_20211005_1636"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='jobgroupnotifier',
-            name='PI',
+            model_name="jobgroupnotifier",
+            name="PI",
             field=models.CharField(blank=True, max_length=40, null=True),
         ),
         migrations.AlterField(
-            model_name='jobgroupnotifier',
-            name='investigator',
+            model_name="jobgroupnotifier",
+            name="investigator",
             field=models.CharField(blank=True, max_length=40, null=True),
         ),
     ]
