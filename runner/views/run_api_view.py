@@ -632,8 +632,8 @@ class ArgosPairingViewSet(GenericAPIView):
     serializer_class = ArgosPairingSerializer
 
     def post(self, request):
-        igo_request_id = request.data.get("igo_request_id", None)
-        argos_slug = request.data.get("argos_slug", None)
+        igo_request_id = request.data.get("igo_request_id")
+        argos_slug = request.data.get("argos_slug")
         if igo_request_id and argos_slug:
             operator_model = Operator.objects.get(slug=argos_slug)
             operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
@@ -659,8 +659,8 @@ class ArgosMappingViewSet(GenericAPIView):
     serializer_class = ArgosPairingSerializer
 
     def post(self, request):
-        igo_request_id = request.data.get("igo_request_id", None)
-        argos_slug = request.data.get("argos_slug", None)
+        igo_request_id = request.data.get("igo_request_id")
+        argos_slug = request.data.get("argos_slug")
         if igo_request_id and argos_slug:
             operator_model = Operator.objects.get(slug=argos_slug)
             operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
@@ -686,8 +686,8 @@ class ArgosDataClinicalViewSet(GenericAPIView):
     serializer_class = ArgosPairingSerializer
 
     def post(self, request):
-        igo_request_id = request.data.get("igo_request_id", None)
-        argos_slug = request.data.get("argos_slug", None)
+        igo_request_id = request.data.get("igo_request_id")
+        argos_slug = request.data.get("argos_slug")
         if igo_request_id and argos_slug:
             operator_model = Operator.objects.get(slug=argos_slug)
             operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
