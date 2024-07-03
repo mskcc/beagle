@@ -154,7 +154,7 @@ def get_sequencer_type(run_ids_list):
     run_ids_lower = [i.lower() for i in run_ids_list if i]
     machine_modes = MachineRunMode.objects.all()
     for machine in machine_modes:
-        if find_substr(machine.machine_name, run_ids_lower):
+        if run_ids_lower.split("_")[0].lower() == machine.machine_name:
             return machine.machine_class
 
 

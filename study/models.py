@@ -25,8 +25,7 @@ class JobGroupWatcherConfig(models.Model):
 
 class JobGroupWatcherStatus(IntEnum):
     WAITING = 0
-    RUNNING = 1
-    COMPLETED = 2
+    COMPLETED = 1
 
 
 class JobGroupWatcher(BaseModel):
@@ -38,3 +37,7 @@ class JobGroupWatcher(BaseModel):
     study = models.ForeignKey(Study, null=True, blank=True, on_delete=models.SET_NULL)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     config = models.ForeignKey(JobGroupWatcherConfig, null=False, blank=False, on_delete=models.CASCADE)
+
+    def complete(self):
+        self.status = JobGroupWatcherStatus.COMPLETED
+        self.save()
