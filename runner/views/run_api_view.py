@@ -722,9 +722,6 @@ class ArgosDataClinicalViewSet(GenericAPIView):
             if data_clinical:
                 body = {
                     "details": data_clinical,
-                    "dmp_samples": dmp_samples,
-                    "samples": samples,
-                    "argos_inputs": argos_inputs,
                 }
             else:
                 message = "%s: No samples found." % igo_request_id
