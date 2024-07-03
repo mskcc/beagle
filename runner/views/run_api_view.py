@@ -711,7 +711,7 @@ class ArgosDataClinicalViewSet(GenericAPIView):
             try:
                 pipeline_obj = Pipeline.objects.get(id=pipeline)
             except Pipeline.DoesNotExist:
-                pass
+                return Response({}, status=status.HTTP_404_NOT_FOUND)
             data_clinical = generate_sample_data_content(
                 filepaths,
                 pipeline_name=pipeline_obj.name,
