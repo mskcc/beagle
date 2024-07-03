@@ -457,3 +457,24 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "%s",
         )
         return output_directory
+
+    def get_dmp_samples_from_argos_inputs(self, argos_inputs):
+        dmp_samples = list()
+        for i, job in enumerate(argos_inputs):
+            pi = job["pi"]
+            pi_email = job["pi_email"]
+            patient_id = job["patient_id"]
+            bait_set = job["assay"]
+            tumor_id = job["tumor"]["ID"]
+            normal_id = job["normal"]["ID"]
+            sample_tumor = dict(pi=pi, bait_set=bait_set, pi_email=pi_email, patient_id=patient_id, sample_id=tumor_id)
+            this_sample, is_dmp_sample = self.get_regular_sample(sample_tumor, "Tumor")
+            if is_dmp_sample:
+                dmp_samples.append(this_sample)
+            sample_normal = dict(
+                pi=pi, bait_set=bait_set, pi_email=pi_email, patient_id=patient_id, sample_id=normal_id
+            )
+            this_sample, is_dmp_sample = self.get_regular_sample(sample_normal, "Normal")
+            if is_dmp_sample:
+                dmp_samples.append(this_sample)
+        return dmp_samples
