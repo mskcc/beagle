@@ -31,7 +31,7 @@ class ChronosCopyOutputOperator(Operator):
             self._hard_copy(os.path.join(source_bam_directory, directory), destination_bam_directory)
 
     def _hard_copy(self, src, dst):
-        ret = subprocess.call(f"cp -lr {src} {dst}", shell=True)
+        ret = subprocess.call(f"cp -lr --preserve=xattr {src} {dst}", shell=True)
         if ret != 0:
             LOGGER.error(f"Failed to copy {src}")
 
