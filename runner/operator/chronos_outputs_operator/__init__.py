@@ -27,12 +27,12 @@ class ChronosCopyOutputOperator(Operator):
     def recursive_copy(self, src, dst):
         for item in os.listdir(src):
             if os.path.isdir(os.path.join(src, item)):
-                LOGGER.info(f"Creating directory {os.path.join(dst, item)}")
                 if not os.path.exists(os.path.join(dst, item)):
+                    LOGGER.info(f"Creating directory {os.path.join(dst, item)}")
                     os.mkdir(os.path.join(dst, item))
                 else:
                     LOGGER.info(f"Directory already exists {os.path.join(dst, item)}")
-                    self.recursive_copy(os.path.join(src, item), os.path.join(dst, item))
+                self.recursive_copy(os.path.join(src, item), os.path.join(dst, item))
             else:
                 LOGGER.info(f"Copying file {os.path.join(src, item)}")
                 self._copy(os.path.join(src, item), os.path.join(dst, item))
