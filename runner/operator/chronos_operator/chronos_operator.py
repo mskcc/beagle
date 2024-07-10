@@ -229,7 +229,6 @@ class ChronosOperator(Operator):
                 "workflows": "qc",
                 "assayType": "exome",
             }
-            print(input_json)
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
