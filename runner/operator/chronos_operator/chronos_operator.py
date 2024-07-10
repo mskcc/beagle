@@ -1,13 +1,10 @@
 import os
-import json
 import csv
 import logging
-import unicodedata
 from django.db.models import Q
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
@@ -140,96 +137,127 @@ class ChronosOperator(Operator):
         mapping_all = self.create_mapping_input()
         pairing_all = self.create_pairing_input()
 
+        mapping = dict()
         beagle_version = __version__
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
-        tags = {"beagle_version": beagle_version, "run_date": run_date}
-        jobs = []
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        tags = {"beagle_version": beagle_version, "run_date": run_date}
 
-        pairing_for_request = []
-        tumors = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
-            values_metadata="ciTag",
-        )
-        used_normals = set()
-        used_normals_requests = set()
-        unpaired_tumors = set()
+        if not self.pairing:
+            pairing_for_request = []
+            tumors = FileRepository.filter(
+                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
+                values_metadata="ciTag",
+            )
+            used_normals = set()
+            used_normals_requests = set()
+            unpaired_tumors = set()
 
-        for tumor in tumors:
-            pairing = self.get_pairing_for_sample(tumor, pairing_all)
-            if pairing:
-                pairing_for_request.append(pairing)
-                mapping = self.get_mapping_for_sample(tumor, pairing["normal"], mapping_all, used_normals)
-                normal_request_id = FileRepository.filter(
-                    metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
-                    values_metadata=settings.REQUEST_ID_METADATA_KEY,
-                )
-                used_normals_requests.add(normal_request_id)
-            else:
-                unpaired_tumors.add(tumor)
-                mapping = self.get_mapping_for_unpaired_tumor(tumor, mapping_all)
-
-            if unpaired_tumors:
-                self.send_message(
-                    """
-                    Unpaired tumors in mapping file:
-                    {tumors}
-                    """.format(
-                        tumors="\t\n".join(list(unpaired_tumors))
+            for tumor in tumors:
+                pairing = self.get_pairing_for_sample(tumor, pairing_all)
+                if pairing:
+                    pairing_for_request.append(pairing)
+                    mapping = self.get_mapping_for_pair(tumor, pairing["normal"], mapping_all, used_normals)
+                    normal_request_id = FileRepository.filter(
+                        metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                        values_metadata=settings.REQUEST_ID_METADATA_KEY,
                     )
-                )
+                    used_normals_requests.add(normal_request_id)
+                else:
+                    unpaired_tumors.add(tumor)
+                    mapping = self.get_mapping_for_unpaired_tumor(tumor, mapping_all)
 
-            for sample, files in mapping.items():
-                name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
-                output_directory = os.path.join(
-                    self.OUTPUT_DIR,
-                    self.CHRONOS_NAME,
-                    self.request_id,
-                    sample,
-                    self.CHRONOS_VERSION,
-                    jg_created_date,
-                )
-                input_json = {
-                    "mapping": files,
-                    "somatic": False,
-                    "aggregate": False,
-                    "workflows": "qc",
-                    "assayType": "exome",
+                if unpaired_tumors:
+                    self.send_message(
+                        """
+                        Unpaired tumors in mapping file:
+                        {tumors}
+                        """.format(
+                            tumors="\t\n".join(list(unpaired_tumors))
+                        )
+                    )
+        else:
+            for pair in self.pairing.get("pairs"):
+                tumor_sample = pair["tumor"]
+                normal_sample = pair["normal"]
+                if tumor_sample:
+                    sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
+                    mapping[tumor_sample] = sample_map
+                if normal_sample:
+                    sample_map = self.get_mapping_for_sample(normal_sample, mapping_all)
+                    mapping[normal_sample] = sample_map
+
+        jobs = []
+        for sample, files in mapping.items():
+            name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
+            output_directory = os.path.join(
+                self.OUTPUT_DIR,
+                self.CHRONOS_NAME,
+                self.request_id,
+                sample,
+                self.CHRONOS_VERSION,
+                jg_created_date,
+            )
+            """
+            {
+              "mapping": [
+                {
+                  "sample": "sample_id",
+                  "target": "idt",
+                  "fastq_pe1": {
+                    "class": "File",
+                    "location": "juno:///path/to/fastq_R1.fastq.gz"
+                  },
+                  "fastq_pe2": {
+                    "class": "File",
+                    "location": "juno:///path/to/fastq_R2.fastq.gz"
+                  },
+                  "num_fq_pairs": 1
                 }
-                patient_id = FileRepository.filter(
-                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                    values_metadata=settings.PATIENT_ID_METADATA_KEY,
-                ).first()
-                request_id = FileRepository.filter(
-                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                    values_metadata=settings.REQUEST_ID_METADATA_KEY,
-                ).first()
-                gene_panel = FileRepository.filter(
-                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                    values_metadata=settings.RECIPE_METADATA_KEY,
-                ).first()
-                primary_id = FileRepository.filter(
-                    metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                    values_metadata=settings.SAMPLE_ID_METADATA_KEY,
-                ).first()
-                job_json = {
-                    "name": name,
-                    "app": app,
-                    "inputs": input_json,
-                    "tags": tags,
-                    "output_directory": output_directory,
-                    "output_metadata": {
-                        "pipeline": pipeline.name,
-                        "pipeline_version": pipeline.version,
-                        settings.PATIENT_ID_METADATA_KEY: patient_id,
-                        settings.SAMPLE_ID_METADATA_KEY: primary_id,
-                        settings.REQUEST_ID_METADATA_KEY: request_id,
-                        settings.RECIPE_METADATA_KEY: gene_panel,
-                        settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
-                    },
-                }
-                jobs.append(job_json)
+              ]
+            }
+            """
+            input_json = {
+                "mapping": files,
+                "somatic": False,
+                "aggregate": False,
+                "workflows": "qc",
+                "assayType": "exome",
+            }
+            patient_id = FileRepository.filter(
+                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                values_metadata=settings.PATIENT_ID_METADATA_KEY,
+            ).first()
+            request_id = FileRepository.filter(
+                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                values_metadata=settings.REQUEST_ID_METADATA_KEY,
+            ).first()
+            gene_panel = FileRepository.filter(
+                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                values_metadata=settings.RECIPE_METADATA_KEY,
+            ).first()
+            primary_id = FileRepository.filter(
+                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                values_metadata=settings.SAMPLE_ID_METADATA_KEY,
+            ).first()
+            job_json = {
+                "name": name,
+                "app": app,
+                "inputs": input_json,
+                "tags": tags,
+                "output_directory": output_directory,
+                "output_metadata": {
+                    "pipeline": pipeline.name,
+                    "pipeline_version": pipeline.version,
+                    settings.PATIENT_ID_METADATA_KEY: patient_id,
+                    settings.SAMPLE_ID_METADATA_KEY: primary_id,
+                    settings.REQUEST_ID_METADATA_KEY: request_id,
+                    settings.RECIPE_METADATA_KEY: gene_panel,
+                    settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
+                },
+            }
+            jobs.append(job_json)
         return [RunCreator(**job) for job in jobs]
 
     def get_pairing_for_sample(self, tumor, pairing):
@@ -237,7 +265,7 @@ class ChronosOperator(Operator):
             if p["tumor"] == tumor:
                 return p
 
-    def get_mapping_for_sample(self, tumor, normal, mapping, used_normals):
+    def get_mapping_for_pair(self, tumor, normal, mapping, used_normals):
         map = dict()
         map[tumor] = []
         map[normal] = []
@@ -249,6 +277,13 @@ class ChronosOperator(Operator):
                 if normal not in used_normals:
                     used_normals.add(normal)
         return map
+
+    def get_mapping_for_sample(self, sample_id, mapping):
+        result = []
+        for m in mapping:
+            if m["sample"] == sample_id:
+                result.append(m)
+        return result
 
     def get_mapping_for_unpaired_tumor(self, tumor, mapping):
         map = dict()
@@ -312,6 +347,9 @@ class ChronosOperator(Operator):
             if patient.unpaired_samples:
                 mapping.extend(patient.create_unpaired_mapping_json())
         return mapping
+
+    def create_mapping_for_single_sample(self, sample_id):
+        mapping = []
 
     def create_pairing_input(self):
         pairing_json = []
