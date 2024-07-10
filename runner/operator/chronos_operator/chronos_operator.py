@@ -185,7 +185,7 @@ class ChronosOperator(Operator):
                     sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
                     mapping[tumor_sample] = sample_map
                 if normal_sample:
-                    sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
+                    sample_map = self.get_mapping_for_sample(normal_sample, mapping_all)
                     mapping[normal_sample] = sample_map
 
         jobs = []
