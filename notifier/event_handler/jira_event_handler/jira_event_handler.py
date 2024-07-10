@@ -138,11 +138,12 @@ class JiraEventHandler(EventHandler):
         self.process_transition_event(event, through_ci_review=True)
 
     def process_upload_attachment_event(self, event):
-        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
-        self.client.add_attachment(job_notifier.jira_id, event.file_name, event.get_content(), download=event.download)
+        """
+        Disable uploading attachments
+        """
+        self.process_local_store_file_event(event)
 
     def process_local_store_file_event(self, event):
-        print("Started processing")
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         dir_path = os.path.join(settings.NOTIFIER_STORAGE_DIR, job_notifier.jira_id)
         if not os.path.exists(dir_path):
