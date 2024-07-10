@@ -1,13 +1,10 @@
 import os
-import json
 import csv
 import logging
-import unicodedata
 from django.db.models import Q
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
@@ -141,15 +138,13 @@ class ChronosOperator(Operator):
         pairing_all = self.create_pairing_input()
 
         mapping = dict()
+        beagle_version = __version__
+        run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
+        jg = JobGroup.objects.get(id=self.job_group_id)
+        jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+        tags = {"beagle_version": beagle_version, "run_date": run_date}
 
         if not self.pairing:
-            beagle_version = __version__
-            run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
-            tags = {"beagle_version": beagle_version, "run_date": run_date}
-            jobs = []
-            jg = JobGroup.objects.get(id=self.job_group_id)
-            jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-
             pairing_for_request = []
             tumors = FileRepository.filter(
                 metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
@@ -193,6 +188,7 @@ class ChronosOperator(Operator):
                     sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
                     mapping[normal_sample] = sample_map
 
+        jobs = []
         for sample, files in mapping.items():
             name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
             output_directory = os.path.join(
