@@ -54,6 +54,6 @@ class JobGroupNotifier(BaseModel):
     status = models.IntegerField(
         choices=[(status.value, status.name) for status in JiraStatus], default=JiraStatus.UNKNOWN
     )
-    investigator = models.CharField(max_length=30, blank=True, null=True)
-    PI = models.CharField(max_length=30, blank=True, null=True)
+    investigator = models.CharField(max_length=40, blank=True, null=True)
+    PI = models.CharField(max_length=40, blank=True, null=True)
     assay = models.CharField(max_length=30, blank=True, null=True)
