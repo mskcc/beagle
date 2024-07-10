@@ -24,14 +24,26 @@ class ChronosCopyOutputOperator(Operator):
             self.append_bam_outputs(run, destination_directory)
         return []
 
+    def recursive_copy(self, src, dst):
+        for item in os.listdir(src):
+            if os.path.isdir(os.path.join(src, item)):
+                if not os.path.exists(os.path.join(dst, item)):
+                    LOGGER.info(f"Creating directory {os.path.join(dst, item)}")
+                    os.mkdir(os.path.join(dst, item))
+                else:
+                    LOGGER.info(f"Directory already exists {os.path.join(dst, item)}")
+                self.recursive_copy(os.path.join(src, item), os.path.join(dst, item))
+            else:
+                LOGGER.info(f"Copying file {os.path.join(src, item)}")
+                self._copy(os.path.join(src, item), os.path.join(dst, item))
+
     def copy_bams(self, run, destination_directory):
         source_bam_directory = os.path.join(run.output_directory, "bams")
         destination_bam_directory = os.path.join(destination_directory, "bams")
-        for directory in os.listdir(source_bam_directory):
-            self._hard_copy(os.path.join(source_bam_directory, directory), destination_bam_directory)
+        self.recursive_copy(source_bam_directory, destination_bam_directory)
 
-    def _hard_copy(self, src, dst):
-        ret = subprocess.call(f"cp -lr {src} {dst}", shell=True)
+    def _copy(self, src, dst):
+        ret = subprocess.call(f"cp {src} {dst}", shell=True)
         if ret != 0:
             LOGGER.error(f"Failed to copy {src}")
 
