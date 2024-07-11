@@ -22,7 +22,7 @@ class HelixFiltersOperator(Operator):
     """
 
     ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.5.0"
+    ARGOS_VERSION = "1.6.1"
 
     def get_jobs(self):
         """
@@ -62,7 +62,7 @@ class HelixFiltersOperator(Operator):
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
                 output_directory = os.path.join(
-                    pipeline.output_directory, "argos", project_prefix, argos_pipeline.version, jg_created_date
+                    pipeline.output_directory, self.ARGOS_NAME, project_prefix, self.ARGOS_VERSION, jg_created_date
                 )
             helix_filters_outputs_job_data["output_directory"] = output_directory
         helix_filters_outputs_job = [RunCreator(**helix_filters_outputs_job_data)]
