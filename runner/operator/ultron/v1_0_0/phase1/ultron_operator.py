@@ -42,6 +42,9 @@ def get_project_prefix(run_id):
 
 
 class UltronOperator(Operator):
+    ARGOS_NAME = "argos"
+    ARGOS_VERSION = "1.6.1"
+
     def get_jobs(self):
         """ """
         run_ids = self.run_ids
@@ -57,15 +60,18 @@ class UltronOperator(Operator):
 
     def _get_output_directory(self, run_id):
         project_prefix = get_project_prefix(run_id)
-        app = self.get_pipeline_id()
         pipeline = self._get_prev_pipeline(run_id)
-        pipeline_version = pipeline.version
         output_directory = None
         if self.job_group_id:
             jg = JobGroup.objects.get(id=self.job_group_id)
             jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
             output_directory = os.path.join(
-                pipeline.output_directory, "argos", project_prefix, pipeline_version, jg_created_date, "analysis"
+                pipeline.output_directory,
+                self.ARGOS_NAME,
+                project_prefix,
+                self.ARGOS_VERSION,
+                jg_created_date,
+                "analysis",
             )
         return output_directory
 
