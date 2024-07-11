@@ -2,18 +2,14 @@
 Test for constructing ultron inputs
 """
 import os
-import json
-from pprint import pprint
-from uuid import UUID
 from django.test import TestCase
 from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, SampleData, BamData
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
-from runner.models import Run, Port
-from file_system.models import File, FileMetadata, FileGroup, FileType
+from runner.models import Port
+from file_system.models import FileMetadata, FileGroup
 from file_system.repository.file_repository import FileRepository
 from django.conf import settings
-from django.core.management import call_command
 
 
 class TestUltron(TestCase):
@@ -103,7 +99,7 @@ class TestUltron(TestCase):
             },
         }
         self.maf_runner_ports = ["7f743915-a0d6-466c-b1eb-3f8501089a36", "b946625d-2753-4e5a-89b8-cc08beb1bc40"]
-        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.1.2/"
+        self.expected_output_directory = f"/juno/work/pi/beagle/output/argos_pair_sv/{UltronOperator.ARGOS_NAME}/ALN-REQ-ID/{UltronOperator.ARGOS_VERSION}/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
     def test_construct_output_directory(self):
