@@ -204,9 +204,9 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        if self.job_group_notifier_id:
-            upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
-            send_notification.delay(upload_file_event)
+        # if self.job_group_notifier_id:
+            # upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
+            # send_notification.delay(upload_file_event)
         return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
