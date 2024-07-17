@@ -229,7 +229,7 @@ class ChronosOperator(Operator):
                 "workflows": "qc",
                 "assayType": "exome",
             }
-            if not files.get("mapping"):
+            if self.missing_fastqs(files):
                 missing_samples.add(sample)
                 continue
             patient_id = FileRepository.filter(
@@ -384,6 +384,11 @@ class ChronosOperator(Operator):
         return FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
         ).first()
+
+    def missing_fastqs(self, files):
+        for f in files:
+            if not f["fastq_pe1"] or not f["fastq_pe2"]:
+                return True
 
     def get_log_directory(self):
         pipeline = Pipeline.objects.get(id=self.get_pipeline_id())
