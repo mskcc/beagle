@@ -41,3 +41,4 @@ from .not_all_normals_used_event import NotAllNormalsUsedEvent
 from .voyager_action_required_for_running import VoyagerActionRequiredForRunningEvent
 from .smile_update_event import SMILEUpdateEvent
 from .error_importing_files import ErrorImportingFilesEvent
+from .chronos_missing_samples_event import ChronosMissingSamplesEvent
