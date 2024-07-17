@@ -229,8 +229,9 @@ class ChronosOperator(Operator):
                 "workflows": "qc",
                 "assayType": "exome",
             }
-            if not files:
+            if not files.get("mapping"):
                 missing_samples.add(sample)
+                continue
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
