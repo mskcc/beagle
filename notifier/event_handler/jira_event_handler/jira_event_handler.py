@@ -156,6 +156,9 @@ class JiraEventHandler(EventHandler):
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)
 
+    def process_chronos_missing_samples_event(self, event):
+        self._add_comment_event(event)
+
     def _register_as_file(self, path, metadata):
         print("Registering file")
         try:
