@@ -1,3 +1,4 @@
+import copy
 import os
 import csv
 import logging
@@ -141,7 +142,10 @@ class ChronosOperator(Operator):
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-        tags = {"beagle_version": beagle_version, "run_date": run_date}
+        tags = {
+            "beagle_version": beagle_version,
+            "run_date": run_date,
+        }
 
         if not self.pairing:
             pairing_for_request = []
@@ -248,11 +252,21 @@ class ChronosOperator(Operator):
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.SAMPLE_ID_METADATA_KEY,
             ).first()
+            job_tags = copy.deepcopy(tags)
+            job_tags.update(
+                {
+                    settings.PATIENT_ID_METADATA_KEY: patient_id,
+                    settings.SAMPLE_ID_METADATA_KEY: primary_id,
+                    settings.REQUEST_ID_METADATA_KEY: request_id,
+                    settings.RECIPE_METADATA_KEY: gene_panel,
+                    settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
+                }
+            )
             job_json = {
                 "name": name,
                 "app": app,
                 "inputs": input_json,
-                "tags": tags,
+                "tags": job_tags,
                 "output_directory": output_directory,
                 "output_metadata": {
                     "pipeline": pipeline.name,
