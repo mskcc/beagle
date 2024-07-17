@@ -187,19 +187,12 @@ class ChronosOperator(Operator):
                 if tumor_sample:
                     sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
                     mapping[tumor_sample] = sample_map
-                else:
-                    missing_samples.add(tumor_sample)
                 if normal_sample:
                     sample_map = self.get_mapping_for_sample(normal_sample, mapping_all)
                     mapping[normal_sample] = sample_map
-                    missing_samples.add(normal_sample)
-            if missing_samples:
-                missing_samples_event = ChronosMissingSamplesEvent(
-                    job_notifier=self.job_group_id, samples=", ".join(list(missing_samples))
-                )
-                send_notification.delay(missing_samples_event.to_dict())
 
         jobs = []
+        missing_samples = set()
         for sample, files in mapping.items():
             name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
             output_directory = os.path.join(
@@ -236,6 +229,8 @@ class ChronosOperator(Operator):
                 "workflows": "qc",
                 "assayType": "exome",
             }
+            if not files:
+                missing_samples.add(sample)
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
@@ -269,6 +264,11 @@ class ChronosOperator(Operator):
                 },
             }
             jobs.append(job_json)
+        if missing_samples:
+            missing_samples_event = ChronosMissingSamplesEvent(
+                job_notifier=self.job_group_id, samples=", ".join(list(missing_samples))
+            )
+            send_notification.delay(missing_samples_event.to_dict())
         return [RunCreator(**job) for job in jobs]
 
     def get_pairing_for_sample(self, tumor, pairing):
