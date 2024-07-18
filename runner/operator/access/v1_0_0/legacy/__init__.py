@@ -307,4 +307,3 @@ def get_request_id_runs(request_id):
         operator_run_id=operator_run_id, app__name__in=["fastq-merge"], status=RunStatus.COMPLETED
     )
     return request_id_runs
-
