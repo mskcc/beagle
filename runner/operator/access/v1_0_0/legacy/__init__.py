@@ -10,7 +10,7 @@ from collections import defaultdict
 from runner.models import Port, PortType
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-
+from runner.operator.access import get_request_id_runs
 from notifier.events import InputCreationFailedEvent
 from notifier.tasks import send_notification
 
@@ -235,7 +235,9 @@ def construct_sample_inputs(samples, request_id, group_id):
 
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
-        ports = Port.objects.filter(run_id__in=self.run_ids, port_type=PortType.OUTPUT)
+
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
+        ports = Port.objects.filter(run_id__in=run_ids, port_type=PortType.OUTPUT)
 
         data = [
             {"id": f.id, "path": f.path, "file_name": f.file_name, "metadata": f.filemetadata_set.first().metadata}
