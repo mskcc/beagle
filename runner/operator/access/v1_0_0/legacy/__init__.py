@@ -7,10 +7,9 @@ import logging
 import os
 from django.conf import settings
 from collections import defaultdict
-from runner.models import Port, PortType
+from runner.models import Port, PortType, Run, RunStatus, Port
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from runner.operator.access import get_request_id_runs
 from notifier.events import InputCreationFailedEvent
 from notifier.tasks import send_notification
 
@@ -283,3 +282,28 @@ def group_by_sample_id(samples):
         sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs
+
+
+def get_request_id_runs(request_id):
+    """
+    Get the latest completed bam-generation runs for the given request ID
+
+    :param request_id: str - IGO request ID
+    :return: List[str] - List of most recent runs from given request ID
+    """
+    operator_run_id = (
+        Run.objects.filter(
+            tags__igoRequestId=request_id,
+            app__name__in=["fastq-merge"],
+            operator_run__status=RunStatus.COMPLETED,
+        )
+        .exclude(finished_date__isnull=True)
+        .order_by("-finished_date")
+        .first()
+        .operator_run_id
+    )
+
+    request_id_runs = Run.objects.filter(
+        operator_run_id=operator_run_id, app__name__in=["fastq-merge"], status=RunStatus.COMPLETED
+    )
+    return request_id_runs
