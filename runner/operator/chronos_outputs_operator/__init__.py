@@ -23,11 +23,19 @@ class ChronosCopyOutputOperator(Operator):
         for run_id in self.run_ids:
             LOGGER.info(f"Copy outputs for {run_id} for {destination_directory}")
             run = Run.objects.get(id=run_id)
-            metadata = run.tags
+            metadata = self.construct_metadata(run)
             self.copy_bams(run, destination_directory, metadata)
             self.append_trace(run, destination_directory)
             self.append_bam_outputs(run, destination_directory)
         return []
+
+    def construct_metadata(self, run):
+        metadata = run.tags
+        if not all(k in run.tags for k in (settings.REQUEST_ID_METADATA_KEY, settings.SAMPLE_ID_METADATA_KEY)):
+            sample = run.samples.first()
+            metadata[settings.REQUEST_ID_METADATA_KEY] = sample.request_id
+            metadata[settings.SAMPLE_ID_METADATA_KEY] = sample.sample_id
+        return metadata
 
     def recursive_copy(self, src, dst, metadata={}):
         for item in os.listdir(src):
