@@ -72,7 +72,7 @@ class JiraClient(object):
             }
         }
         if settings.JIRA_CLOUD:
-            body.pop("reporter")
+            body["fields"].pop("reporter")
         response = self._post(create_url, body)
         return response
 
