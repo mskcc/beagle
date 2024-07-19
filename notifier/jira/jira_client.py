@@ -71,6 +71,8 @@ class JiraClient(object):
                 "description": message,
             }
         }
+        if settings.JIRA_CLOUD:
+            body.pop("reporter")
         response = self._post(create_url, body)
         return response
 
