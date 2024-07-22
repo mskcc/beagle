@@ -45,7 +45,7 @@ class ChronosCopyOutputOperator(Operator):
                     os.mkdir(os.path.join(dst, item))
                 else:
                     LOGGER.info(f"Directory already exists {os.path.join(dst, item)}")
-                self.recursive_copy(os.path.join(src, item), os.path.join(dst, item))
+                self.recursive_copy(os.path.join(src, item), os.path.join(dst, item), metadata)
             else:
                 LOGGER.info(f"Copying file {os.path.join(src, item)}")
                 self._copy(os.path.join(src, item), os.path.join(dst, item), metadata)
