@@ -28,7 +28,7 @@ class CopyOutputsOperator(Operator):
     """
 
     ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.5.0"
+    ARGOS_VERSION = "1.6.1"
 
     def get_jobs(self):
         """
@@ -53,7 +53,6 @@ class CopyOutputsOperator(Operator):
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        pipeline_version = pipeline.version
         project_prefix = input_json["project_prefix"]
         output_directory_prefix = get_output_directory_prefix(self.run_ids)
 

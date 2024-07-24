@@ -17,7 +17,7 @@ from notifier.tasks import send_notification
 LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
-ARGOS_VERSION = "1.5.0"
+ARGOS_VERSION = "1.6.1"
 ONCOKB_FG_SLUG = "oncokb-file-group"
 
 

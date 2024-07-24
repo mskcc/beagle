@@ -1,28 +1,20 @@
-import uuid
-import re
 import os
-import json
 import csv
 import pickle
 import logging
 import unicodedata
 from django.db.models import Q
 from django.conf import settings
-from pathlib import Path
 from beagle import __version__
 from datetime import datetime
 from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.tempo_mpgen_operator.bin.tempo_sample as sample_obj
 import runner.operator.tempo_mpgen_operator.bin.tempo_patient as patient_obj
 from notifier.events import OperatorRequestEvent
-from notifier.models import JobGroup
 from notifier.tasks import send_notification
-from notifier.events import UploadAttachmentEvent
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
+
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing.tsv")  # used for historical pairing
@@ -204,9 +196,9 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        if self.job_group_notifier_id:
-            upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
-            send_notification.delay(upload_file_event)
+        # if self.job_group_notifier_id:
+        # upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
+        # send_notification.delay(upload_file_event)
         return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
