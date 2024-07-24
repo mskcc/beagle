@@ -45,12 +45,14 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
         if notifier_id.startswith(settings.JIRA_PREFIX):
             file_obj = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
             if file_obj:
-                job_group_notifier.PI = file_obj.metadata.get("labHeadName")[:40]
-                job_group_notifier.investigator = file_obj.metadata.get("investigatorName")[:40]
-                job_group_notifier.assay = file_obj.metadata.get(settings.RECIPE_METADATA_KEY)
+                job_group_notifier.PI = file_obj.metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, "")[:40]
+                job_group_notifier.investigator = file_obj.metadata.get(settings.INVESTIGATOR_NAME_METADATA_KEY, "")[
+                    :40
+                ]
+                job_group_notifier.assay = file_obj.metadata.get(settings.RECIPE_METADATA_KEY, "")
             else:
-                job_group_notifier.PI = metadata.get("labHeadName")[:40]
-                job_group_notifier.investigator = metadata.get("investigatorName")[:40]
+                job_group_notifier.PI = metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY, "")[:40]
+                job_group_notifier.investigator = metadata.get(settings.INVESTIGATOR_NAME_METADATA_KEY, "")[:40]
                 job_group_notifier.assay = metadata.get(settings.RECIPE_METADATA_KEY)
         job_group_notifier.save()
         return str(job_group_notifier.id)

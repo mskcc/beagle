@@ -1,3 +1,4 @@
+import copy
 import os
 import csv
 import logging
@@ -10,7 +11,7 @@ from runner.operator.operator import Operator
 from runner.models import Pipeline
 import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
 from notifier.models import JobGroup
-from notifier.events import OperatorRequestEvent
+from notifier.events import OperatorRequestEvent, ChronosMissingSamplesEvent
 from notifier.tasks import send_notification
 from runner.run.objects.run_creator_object import RunCreator
 
@@ -69,7 +70,6 @@ class ChronosOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         output_directory = pipeline.output_directory
         self.OUTPUT_DIR = output_directory
-
         recipe_query = self.build_recipe_query()
         assay_query = self.build_assay_query()
         igocomplete_query = Q(metadata__igoComplete=True)
@@ -142,13 +142,19 @@ class ChronosOperator(Operator):
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         jg = JobGroup.objects.get(id=self.job_group_id)
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-        tags = {"beagle_version": beagle_version, "run_date": run_date}
+        tags = {
+            "beagle_version": beagle_version,
+            "run_date": run_date,
+        }
 
         if not self.pairing:
             pairing_for_request = []
             tumors = FileRepository.filter(
-                metadata={settings.REQUEST_ID_METADATA_KEY: self.request_id, "tumorOrNormal": "Tumor"},
-                values_metadata="ciTag",
+                metadata={
+                    settings.REQUEST_ID_METADATA_KEY: self.request_id,
+                    settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
+                },
+                values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
             )
             used_normals = set()
             used_normals_requests = set()
@@ -178,9 +184,10 @@ class ChronosOperator(Operator):
                         )
                     )
         else:
+            missing_samples = set()
             for pair in self.pairing.get("pairs"):
-                tumor_sample = pair["tumor"]
-                normal_sample = pair["normal"]
+                tumor_sample = self.get_ci_tag(pair["tumor"])
+                normal_sample = self.get_ci_tag(pair["normal"])
                 if tumor_sample:
                     sample_map = self.get_mapping_for_sample(tumor_sample, mapping_all)
                     mapping[tumor_sample] = sample_map
@@ -189,6 +196,7 @@ class ChronosOperator(Operator):
                     mapping[normal_sample] = sample_map
 
         jobs = []
+        missing_samples = set()
         for sample, files in mapping.items():
             name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
             output_directory = os.path.join(
@@ -225,6 +233,9 @@ class ChronosOperator(Operator):
                 "workflows": "qc",
                 "assayType": "exome",
             }
+            if self.missing_fastqs(files):
+                missing_samples.add(sample)
+                continue
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
@@ -241,11 +252,21 @@ class ChronosOperator(Operator):
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
                 values_metadata=settings.SAMPLE_ID_METADATA_KEY,
             ).first()
+            job_tags = copy.deepcopy(tags)
+            job_tags.update(
+                {
+                    settings.PATIENT_ID_METADATA_KEY: patient_id,
+                    settings.SAMPLE_ID_METADATA_KEY: primary_id,
+                    settings.REQUEST_ID_METADATA_KEY: request_id,
+                    settings.RECIPE_METADATA_KEY: gene_panel,
+                    settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
+                }
+            )
             job_json = {
                 "name": name,
                 "app": app,
                 "inputs": input_json,
-                "tags": tags,
+                "tags": job_tags,
                 "output_directory": output_directory,
                 "output_metadata": {
                     "pipeline": pipeline.name,
@@ -258,6 +279,11 @@ class ChronosOperator(Operator):
                 },
             }
             jobs.append(job_json)
+        if missing_samples:
+            missing_samples_event = ChronosMissingSamplesEvent(
+                job_notifier=self.job_group_id, samples=", ".join(list(missing_samples))
+            )
+            send_notification.delay(missing_samples_event.to_dict())
         return [RunCreator(**job) for job in jobs]
 
     def get_pairing_for_sample(self, tumor, pairing):
@@ -317,6 +343,7 @@ class ChronosOperator(Operator):
 
     def get_recipes(self):
         recipe = [
+            "WES_Human",
             "WES_HUMAN",
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
@@ -348,9 +375,6 @@ class ChronosOperator(Operator):
                 mapping.extend(patient.create_unpaired_mapping_json())
         return mapping
 
-    def create_mapping_for_single_sample(self, sample_id):
-        mapping = []
-
     def create_pairing_input(self):
         pairing_json = []
         for patient_id in self.patients:
@@ -369,6 +393,16 @@ class ChronosOperator(Operator):
     def get_exclusions(self):
         exclude_reqs = ["09315"]
         return self.exclude_requests(exclude_reqs)
+
+    def get_ci_tag(self, primary_id):
+        return FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
+        ).first()
+
+    def missing_fastqs(self, files):
+        for f in files:
+            if not f["fastq_pe1"] or not f["fastq_pe2"]:
+                return True
 
     def get_log_directory(self):
         pipeline = Pipeline.objects.get(id=self.get_pipeline_id())
