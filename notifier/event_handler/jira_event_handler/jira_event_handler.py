@@ -155,6 +155,15 @@ class JiraEventHandler(EventHandler):
             f.write(event.get_content())
         self._register_as_file(file_path, metadata)
 
+    def process_local_store_attachments(self, event):
+        job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
+        dir_path = os.path.join(settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_notifier.request_id, job_notifier.jira_id)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        file_path = os.path.join(dir_path, event.file_name)
+        with open(file_path, "w") as f:
+            f.write(str(event))
+
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)
 
