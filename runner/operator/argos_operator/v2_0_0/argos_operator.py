@@ -8,13 +8,19 @@ from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
 from notifier.models import JobGroup
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
+from notifier.events import (
+    UploadAttachmentEvent,
+    OperatorRequestEvent,
+    CantDoEvent,
+    SetLabelEvent,
+    LocalStoreAttachmentsEvent,
+)
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
-from .bin.make_sample import format_sample_name, get_run_mode
+from .bin.make_sample import format_sample_name
 
 
 class ArgosOperator(Operator):
@@ -55,11 +61,19 @@ class ArgosOperator(Operator):
             self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
         ).to_dict()
         send_notification.delay(operator_run_summary)
+        operator_run_summary_local = LocalStoreAttachmentsEvent(
+            self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
+        ).to_dict()
+        send_notification.delay(operator_run_summary_local)
 
         mapping_file_event = UploadAttachmentEvent(
             self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
         ).to_dict()
         send_notification.delay(mapping_file_event)
+        mapping_file_event_local = LocalStoreAttachmentsEvent(
+            self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
+        ).to_dict()
+        send_notification.delay(mapping_file_event_local)
 
         data_clinical = generate_sample_data_content(
             filepaths,
@@ -72,6 +86,10 @@ class ArgosOperator(Operator):
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
         ).to_dict()
         send_notification.delay(sample_data_clinical_event)
+        sample_data_clinical_local = LocalStoreAttachmentsEvent(
+            self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
+        ).to_dict()
+        send_notification.delay(sample_data_clinical_local)
 
         self.evaluate_sample_errors(error_samples)
         self.summarize_pairing_info(argos_inputs)
