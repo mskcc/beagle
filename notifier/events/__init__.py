@@ -42,3 +42,4 @@ from .voyager_action_required_for_running import VoyagerActionRequiredForRunning
 from .smile_update_event import SMILEUpdateEvent
 from .error_importing_files import ErrorImportingFilesEvent
 from .chronos_missing_samples_event import ChronosMissingSamplesEvent
+from .local_store_attachments_event import LocalStoreAttachmentsEvent
