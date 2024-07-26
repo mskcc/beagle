@@ -219,6 +219,7 @@ class File(BaseModel):
     sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
     samples = ArrayField(models.CharField(max_length=100), default=list)
     patient_id = models.CharField(max_length=100, null=True, blank=True)
+    missing = models.BooleanField(default=False)
 
     def get_request(self):
         return Request.objects.filter(request_id=self.request_id, latest=True).first()
@@ -228,6 +229,14 @@ class File(BaseModel):
 
     def get_samples(self):
         return Sample.objects.filter(sample_id__in=self.samples, latest=True).all()
+
+    def set_not_missing(self):
+        self.missing = False
+        self.save(update_fields=["missing"])
+
+    def set_missing(self):
+        self.missing = True
+        self.save(update_fields=["missing"])
 
     def save(self, *args, **kwargs):
         if not self.size:
