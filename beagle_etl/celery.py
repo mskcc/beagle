@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
+from celery.schedules import crontab
 from django.conf import settings
 from celery.app.log import TaskFormatter
 from celery.signals import after_setup_task_logger, worker_ready
@@ -58,6 +59,7 @@ app.conf.task_routes = {
     "beagle_etl.jobs.metadb_jobs.update_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_system.tasks.generate_report_of_missing_files": {"queue": settings.BEAGLE_FILE_CHECKER_QUEUE},
 }
 
 app.conf.beat_schedule = {
@@ -90,5 +92,14 @@ app.conf.beat_schedule = {
         "task": "study.tasks.check_job_group_watcher",
         "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
+    "file_checker": {
+        "task": "file_system.tasks.check_for_missing_files",
+        "schedule": crontab(
+            hour=int(settings.BEAGLE_FILE_CHECKER_TIME_HOURS),
+            minute=int(settings.BEAGLE_FILE_CHECKER_TIME_MINUTES),
+            day_of_week=settings.BEAGLE_FILE_CHECKER_DAY_VALUE,
+        ),
+        "options": {"queue": settings.BEAGLE_FILE_CHECKER_QUEUE},
     },
 }

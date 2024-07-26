@@ -336,6 +336,8 @@ POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP", "b6
 
 DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP", "9ace63bf-ed55-461c-9ac0-1c5ee710d957")
 
+CHECK_FILE_GROUPS = os.environ.get("BEAGLE_CHECK_FILE_GROUPS", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a").split(",")
+
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
@@ -392,6 +394,12 @@ JIRA_DELIVERY_DATE_FIELD_ID = os.environ.get("JIRA_DELIVERY_DATE_FIELD_ID", "cus
 
 BEAGLE_URL = os.environ.get("BEAGLE_URL", "http://silo:5001")
 
+BEAGLE_FILE_CHECKER_TIME_HOURS = 0
+BEAGLE_FILE_CHECKER_TIME_MINUTES = 0
+BEAGLE_FILE_CHECKER_DAY_VALUE = 6
+
+
+BEAGLE_FILE_CHECKER_QUEUE = os.environ.get("BEAGLE_FILE_CHECKER_QUEUE", "beagle_file_checker_queue")
 BEAGLE_NATS_NEW_REQUEST_QUEUE = os.environ.get("BEAGLE_NATS_NEW_REQUEST_QUEUE", "beagle_nats_queue")
 BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get(
     "BEAGLE_NATS_UPDATE_REQUEST_QUEUE", "beagle_nats_update_request_queue"
