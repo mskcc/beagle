@@ -243,6 +243,47 @@ def create_jobs_from_request(
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
 
 
+@shared_task
+def create_jobs_from_pairs(
+    pipeline_id,
+    pairs,
+    name,
+    assay,
+    investigatorName,
+    labHeadName,
+    file_group_id,
+    job_group_id,
+    request_id=None,
+    output_directory_prefix=None,
+):
+    pipeline = Pipeline.objects.get(id=pipeline_id)
+    job_group = JobGroup.objects.get(id=job_group_id)
+
+    try:
+        job_group_notifier = JobGroupNotifier.objects.get(
+            job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
+        )
+        job_group_notifier_id = str(job_group_notifier.id)
+    except JobGroupNotifier.DoesNotExist:
+        metadata = {"assay": assay, "investigatorName": investigatorName, "labHeadName": labHeadName}
+        job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator, metadata=metadata)
+
+    operator_model = Operator.objects.get(id=pipeline.operator_id)
+    operator = OperatorFactory.get_by_model(
+        operator_model,
+        pairing={"pairs": pairs},
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        request_id=request_id,
+        file_group=file_group_id,
+        output_directory_prefix=output_directory_prefix,
+    )
+    _set_link_to_run_ticket(request_id, job_group_notifier_id)
+    generate_description(job_group_id, job_group_notifier_id, request_id)
+    generate_label(job_group_notifier_id, request_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
+
+
 def _set_link_to_run_ticket(request_id, job_group_notifier_id):
     jira_id = None
     import_job = Job.objects.filter(run=TYPES["REQUEST"], args__request_id=request_id).order_by("-created_date").first()
