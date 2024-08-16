@@ -58,7 +58,7 @@ class ChronosCopyOutputOperator(Operator):
         self.recursive_copy(source_bam_directory, destination_bam_directory, output_file_group, metadata)
 
     def _copy(self, src, dst, output_file_group, metadata):
-        ret = subprocess.call(f"cp {src} {dst}", shell=True)
+        ret = subprocess.call(f"cp -lR {src} {dst}", shell=True)
         if ret != 0:
             LOGGER.error(f"Failed to copy {src}")
         else:
