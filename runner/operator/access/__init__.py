@@ -29,7 +29,7 @@ def get_request_id(run_ids, request_id=None):
     raise Exception("Could not get find request id")
 
 
-def get_request_id_runs(request_id):
+def get_request_id_runs(request_id, app):
     """
     Get the latest completed bam-generation runs for the given request ID
 
@@ -39,7 +39,7 @@ def get_request_id_runs(request_id):
     operator_run_id = (
         Run.objects.filter(
             tags__igoRequestId=request_id,
-            app__name__in=["access legacy", "access nucleo"],
+            app__name__in=app,
             operator_run__status=RunStatus.COMPLETED,
         )
         .exclude(finished_date__isnull=True)
@@ -49,7 +49,7 @@ def get_request_id_runs(request_id):
     )
 
     request_id_runs = Run.objects.filter(
-        operator_run_id=operator_run_id, app__name__in=["access legacy", "access nucleo"], status=RunStatus.COMPLETED
+        operator_run_id=operator_run_id, app__name__in=app, status=RunStatus.COMPLETED
     )
     return request_id_runs
 

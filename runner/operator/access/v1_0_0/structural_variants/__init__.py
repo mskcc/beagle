@@ -41,7 +41,7 @@ class AccessLegacySVOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id, ["access legacy", "access nucleo"])]
 
         # Get all standard bam ports for these runs
         standard_bam_ports = Port.objects.filter(
