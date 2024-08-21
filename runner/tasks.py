@@ -850,13 +850,13 @@ def check_operator_run_alerts():
             if "details" in message:
                 if "log" in message["details"]:
                     log_file = message["details"]["log"]
-            run_message_line = "{}. Run {}\n".format(str(counter), run_name)
-            run_message_line += "\tSamples: {}\n".format(samples_str)
-            run_message_line += "\tPipeline: {}\n".format(pipeline)
-            run_message_line += "\tStarted: {}, Failed: {}, Total time: {} hour(s)\n".format(
+            run_message_line = "{}. Name: Run {}\n".format(str(counter), run_name)
+            run_message_line += "Sample: {}\n".format(samples_str)
+            run_message_line += "Pipeline: {}\n".format(pipeline)
+            run_message_line += "Started: {}, Failed: {}, Total time: {} hour(s)\n".format(
                 started_str, finished_str, delta_hours
             )
-            run_message_line += "\tLog File: {}\n".format(log_file)
+            run_message_line += "Log_file: {}\n".format(log_file)
             run_info.append(run_message_line)
             counter += 1
         if len(run_info) == 0:
