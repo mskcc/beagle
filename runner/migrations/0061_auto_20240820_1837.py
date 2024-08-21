@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0060_merge_20240613_1113'),
+        ("runner", "0060_merge_20240613_1113"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operatorrun',
-            name='num_manual_restarts',
+            model_name="operatorrun",
+            name="num_manual_restarts",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='operatorrun',
-            name='triggered_alert',
+            model_name="operatorrun",
+            name="triggered_alert",
             field=models.BooleanField(default=False),
         ),
     ]

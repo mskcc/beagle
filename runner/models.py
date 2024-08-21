@@ -148,7 +148,7 @@ class OperatorRun(BaseModel):
         self.refresh_from_db()
         self.num_completed_runs += 1
         self.save()
-    
+
     def increment_manual_restart(self):
         self.refresh_from_db()
         self.num_manual_restarts += 1

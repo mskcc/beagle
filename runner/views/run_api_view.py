@@ -319,10 +319,12 @@ class RunApiRestartViewSet(GenericAPIView):
 
             submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
-        
+
         o.increment_manual_restart()
 
-        message = "This is restart number: {}, restarted {} runs and copied {} runs".format(o.num_manual_restarts, str(len(runs_to_restart)), str(len(runs_to_copy_over)))
+        message = "This is restart number: {}, restarted {} runs and copied {} runs".format(
+            o.num_manual_restarts, str(len(runs_to_restart)), str(len(runs_to_copy_over))
+        )
 
         return Response(
             message,
