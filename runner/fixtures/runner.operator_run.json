@@ -51,6 +51,9 @@
       "num_total_runs": 1,
       "num_completed_runs": 1,
       "num_failed_runs": 0,
+      "num_manual_restarts": 10,
+      "triggered_alert": false,
+      "job_group_notifier": "f7fad10e-4a22-4363-bf33-e57be83f3cb1",
       "status": 4
     }
   },

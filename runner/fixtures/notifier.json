@@ -1,0 +1,57 @@
+[
+    {
+        "model": "notifier.BaseModel",
+        "pk": "12d32c70-0431-4f6d-a590-ee1dd29f3e6b",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z"
+        }
+    },
+    {
+        "model": "notifier.BaseModel",
+        "pk": "b0183966-7ebb-48ee-9a24-a22084df6fa8",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z"
+        }
+    },
+    {
+        "model": "notifier.BaseModel",
+        "pk": "f7fad10e-4a22-4363-bf33-e57be83f3cb1",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z"
+        }
+    },
+    {
+        "model": "notifier.Notifier",
+        "pk": "12d32c70-0431-4f6d-a590-ee1dd29f3e6b",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "notifier_type": "JIRA",
+            "default": false,
+            "board": "TEST"
+        }
+    },
+    {
+        "model": "notifier.JobGroup",
+        "pk": "b0183966-7ebb-48ee-9a24-a22084df6fa8",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z"
+        }
+    },
+    {
+        "model": "notifier.JobGroupNotifier",
+        "pk": "f7fad10e-4a22-4363-bf33-e57be83f3cb1",
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "jira_id": "TEST-1",
+            "request_id": "TEST-1",
+            "job_group": "b0183966-7ebb-48ee-9a24-a22084df6fa8",
+            "notifier_type": "12d32c70-0431-4f6d-a590-ee1dd29f3e6b"
+        }
+    }
+]
