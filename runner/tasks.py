@@ -780,7 +780,76 @@ def send_hanging_job_alert(run_id, message):
         )
         send_notification.delay(email.to_dict())
 
+@shared_task
+@memcache_lock("check_operator_run_alerts")
+def check_operator_run_alerts():
 
+    def _create_sample_str(single_run):
+        samples_str = "NA"
+        if single_run.samples:
+            samples = []
+            for single_sample in single_run.samples.all():
+                samples.append(single_sample.sample_id)
+            samples_str = ", ".join(samples)
+        return samples_str
+
+    triggered_operator_runs = OperatorRun.objects.all().prefetch_related("runs","job_group_notifier").filter(num_manual_restarts__gte=settings.MANUAL_RESTART_REPORT_THRESHOLD, triggered_alert=False)
+    for single_operator_run in triggered_operator_runs:
+        failed_runs = single_operator_run.runs.filter(status=RunStatus.FAILED).prefetch_related("app","samples").order_by("-started")
+        completed_dict = {}
+        error_dict = {}
+        completed_runs = single_operator_run.runs.filter(status=RunStatus.COMPLETED).prefetch_related("app","samples")
+        for single_run in completed_runs:
+            samples_str = _create_sample_str(single_run)
+            pipeline = single_run.app.name
+            finished = single_run.finished_date
+            completed_dict[(samples_str, pipeline)] = finished
+        requestID = single_operator_run.job_group_notifier.request_id
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        num_manual_restarts_str = str(single_operator_run.num_manual_restarts)
+        alert_message = "-------------- Manual Restart Alert for {} on {} after {} restarts --------------\n".format(requestID, current_time, num_manual_restarts_str)
+        run_info = []
+        counter = 1
+        for single_run in failed_runs:            
+            started = single_run.started
+            finished = single_run.finished_date
+            delta = (finished - started)
+            delta_seconds = delta.total_seconds()
+            delta_hours = divmod(delta_seconds, 3600)[0] 
+            started_str = started.strftime("%Y-%m-%d %H:%M:%S")
+            finished_str = finished.strftime("%Y-%m-%d %H:%M:%S")
+            run_name = single_run.name
+            pipeline = single_run.app.name
+            message = single_run.message
+            log_file = "NA"
+            samples_str = _create_sample_str(single_run)
+            run_key = (samples_str,pipeline)
+            if run_key in completed_dict:
+                if completed_dict[run_key] > started:
+                    continue
+            if run_key in error_dict:
+                continue
+            else:
+                error_dict[run_key] = finished
+            if "details" in message:
+                if "log" in message["details"]:
+                    log_file = message["details"]["log"]
+            run_message_line = "{}. Run {}\n".format(str(counter),run_name)
+            run_message_line+= "\tSamples: {}\n".format(samples_str)
+            run_message_line+= "\tPipeline: {}\n".format(pipeline)
+            run_message_line+= "\tStarted: {}, Failed: {}, Total time: {} hour(s)\n".format(started_str, finished_str,delta_hours)
+            run_message_line+= "\tLog File: {}\n".format(log_file)
+            run_info.append(run_message_line)
+            counter+=1
+        if len(run_info) == 0:
+            alert_message += " Sorry we could not retrieving the run info"
+        else:
+            alert_message += "\n".join(run_info)
+        with open(settings.MANUAL_RESTART_REPORT_PATH, "a+") as alert_file:
+            alert_file.write(alert_message)
+        single_operator_run.triggered_alert = True
+        single_operator_run.save()
+            
 @shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
