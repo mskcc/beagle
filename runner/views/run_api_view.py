@@ -319,7 +319,7 @@ class RunApiRestartViewSet(GenericAPIView):
 
             submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
-        
+
         operator_run = OperatorRun.objects.get(id=operator_run_id)
         operator_run.increment_manual_restart()
 

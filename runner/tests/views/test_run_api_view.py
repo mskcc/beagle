@@ -158,7 +158,7 @@ class TestRunAPIView(APITestCase):
         operator_run.refresh_from_db()
         new_manual_restart = operator_run.num_manual_restarts
 
-        self.assertEqual(manual_restart+1,new_manual_restart)
+        self.assertEqual(manual_restart + 1, new_manual_restart)
 
         # Restarted run should have a new ID
         restart_run_id = submit_job_task.call_args[0][0]
