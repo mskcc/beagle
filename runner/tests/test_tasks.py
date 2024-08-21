@@ -21,6 +21,7 @@ class TestRunnerTasks(TestCase):
         "runner.run.json",
         "file_system.sample.json",
         "notifier.json",
+        "operator_run_manual_restart",
         "runner.operator_trigger.json",
         "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.files.json",
         "28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.port.input.json",
