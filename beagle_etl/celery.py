@@ -77,7 +77,7 @@ app.conf.beat_schedule = {
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
-    "check_operator_run_alerts":{
+    "check_operator_run_alerts": {
         "task": "runner.tasks.check_operator_run_alerts",
         "schedule": crontab(minute=0, hour=0),
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
