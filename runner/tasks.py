@@ -838,6 +838,7 @@ def check_operator_run_alerts():
             pipeline = single_run.app.name
             message = single_run.message
             log_file = "NA"
+            failed_jobs = []
             samples_str = _create_sample_str(single_run)
             run_key = (samples_str, pipeline)
             if run_key in completed_dict:
@@ -850,6 +851,10 @@ def check_operator_run_alerts():
             if "details" in message:
                 if "log" in message["details"]:
                     log_file = message["details"]["log"]
+                if "failed_jobs" in message["details"]:
+                    for single_tool in message["details"]["failed_jobs"].keys():
+                        if single_tool not in failed_jobs:
+                            failed_jobs.append(single_tool)
             run_message_line = "{}. Name: Run {}\n".format(str(counter), run_name)
             run_message_line += "Sample: {}\n".format(samples_str)
             run_message_line += "Pipeline: {}\n".format(pipeline)
@@ -857,6 +862,8 @@ def check_operator_run_alerts():
                 started_str, finished_str, delta_hours
             )
             run_message_line += "Log_file: {}\n".format(log_file)
+            if failed_jobs:
+                run_message_line += "Failed Jobs: " + ", ".join(failed_jobs)
             run_info.append(run_message_line)
             counter += 1
         if len(run_info) == 0:
