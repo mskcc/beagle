@@ -166,9 +166,13 @@ class JiraEventHandler(EventHandler):
         logging.debug(f"Creating {file_path}")
         with open(file_path, "w+") as f:
             f.write(str(event))
-        # Add logging to test file existence for DEBUG purposes
+
         if os.path.exists(file_path):
+            # Add logging to test file existence for DEBUG purposes
             logging.debug(f"File created {file_path}")
+            # Add comment to JIRA to signal a local store attachment was created
+            ticket_comment = "Added attachment {}: to local path: {}".format(event.file_name, file_path)
+            self.client.comment(job_notifier.jira_id, ticket_comment)
 
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)
