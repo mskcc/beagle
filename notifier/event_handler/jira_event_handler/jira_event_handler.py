@@ -166,6 +166,7 @@ class JiraEventHandler(EventHandler):
         logging.debug(f"Creating {file_path}")
         with open(file_path, "w+") as f:
             f.write(str(event))
+
         # Add logging to test file existence for DEBUG purposes
         if os.path.exists(file_path):
             logging.debug(f"File created {file_path}")
