@@ -262,17 +262,6 @@ class ChronosOperator(Operator):
                     settings.CMO_SAMPLE_TAG_METADATA_KEY: sample,
                 }
             )
-            if (
-                Run.objects.filter(
-                    app=app,
-                    tags__primaryId=primary_id,
-                    status__in=(RunStatus.CREATING, RunStatus.READY, RunStatus.RUNNING, RunStatus.COMPLETED),
-                ).count()
-                > 0
-            ):
-                logging.debug(f"Skip running. Sample {primary_id}: {sample} already generated")
-                continue
-
             job_json = {
                 "name": name,
                 "app": app,
