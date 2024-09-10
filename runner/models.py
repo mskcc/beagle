@@ -113,6 +113,8 @@ class OperatorRun(BaseModel):
     )
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
+    num_manual_restarts = models.IntegerField(null=False, default=0)
+    triggered_alert = models.BooleanField(default=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
@@ -145,6 +147,11 @@ class OperatorRun(BaseModel):
     def increment_completed_run(self):
         self.refresh_from_db()
         self.num_completed_runs += 1
+        self.save()
+
+    def increment_manual_restart(self):
+        self.refresh_from_db()
+        self.num_manual_restarts += 1
         self.save()
 
     @property
