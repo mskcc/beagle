@@ -320,8 +320,15 @@ class RunApiRestartViewSet(GenericAPIView):
             submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
 
+        operator_run = OperatorRun.objects.get(id=operator_run_id)
+        operator_run.increment_manual_restart()
+
+        message = "This is restart number: {}, restarted {} runs and copied {} runs".format(
+            operator_run.num_manual_restarts, str(len(runs_to_restart)), str(len(runs_to_copy_over))
+        )
+
         return Response(
-            {"runs_restarted": [r.pk for r in runs_to_restart], "runs_copied": [r.pk for r in runs_to_copy_over]},
+            message,
             status=status.HTTP_201_CREATED,
         )
 
