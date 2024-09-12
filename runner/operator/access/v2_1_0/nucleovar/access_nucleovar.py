@@ -569,7 +569,7 @@ class NucleoVarOperator(Operator):
         return(bams, aux_bams)
     
 
-    def get_request_id_runs(request_id, app):
+    def get_request_id_runs(self, app):
         """
         Get the latest completed bam-generation runs for the given request ID
 
@@ -582,7 +582,7 @@ class NucleoVarOperator(Operator):
         # else: 
         operator_run_id = (
             Run.objects.filter(
-                tags__igoRequestId=request_id,
+                tags__igoRequestId=self.request_id,
                 app__name__in=app,
                 operator_run__status=RunStatus.COMPLETED,
             )
@@ -616,7 +616,7 @@ class NucleoVarOperator(Operator):
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
             self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
         else:
-            runs = self.get_request_id_runs(self.request_id, ["access v2 nucleo"])
+            runs = self.get_request_id_runs( ["access v2 nucleo"])
         
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
