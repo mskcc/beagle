@@ -19,6 +19,7 @@ from runner.tasks import (
     terminate_job_task,
     submit_job,
     create_jobs_from_request,
+    create_jobs_from_pairs,
     create_aion_job,
     create_tempo_mpgen_job,
 )
@@ -26,7 +27,6 @@ from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operat
 from runner.serializers import (
     RunSerializerPartial,
     RunSerializerFull,
-    RequestIdOperatorSerializer,
     OperatorErrorSerializer,
     RunApiListSerializer,
     RequestIdsOperatorSerializer,
@@ -320,8 +320,15 @@ class RunApiRestartViewSet(GenericAPIView):
             submit_job.delay(str(r.pk), r.output_directory)
             self._send_notifications(o.job_group_notifier_id, r)
 
+        operator_run = OperatorRun.objects.get(id=operator_run_id)
+        operator_run.increment_manual_restart()
+
+        message = "This is restart number: {}, restarted {} runs and copied {} runs".format(
+            operator_run.num_manual_restarts, str(len(runs_to_restart)), str(len(runs_to_copy_over))
+        )
+
         return Response(
-            {"runs_restarted": [r.pk for r in runs_to_restart], "runs_copied": [r.pk for r in runs_to_copy_over]},
+            message,
             status=status.HTTP_201_CREATED,
         )
 
@@ -490,27 +497,18 @@ class PairsOperatorViewSet(GenericAPIView):
         for i, pipeline_name in enumerate(pipeline_names):
             pipeline_version = pipeline_versions[i]
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
-
-            try:
-                job_group_notifier = JobGroupNotifier.objects.get(
-                    job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
-                )
-                job_group_notifier_id = str(job_group_notifier.id)
-            except JobGroupNotifier.DoesNotExist:
-                metadata = {"assay": assay, "investigatorName": investigatorName, "labHeadName": labHeadName}
-                job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator, metadata=metadata)
-
-            operator_model = Operator.objects.get(id=pipeline.operator_id)
-            operator = OperatorFactory.get_by_model(
-                operator_model,
-                pairing={"pairs": pairs},
-                job_group_id=job_group_id,
-                job_group_notifier_id=job_group_notifier_id,
-                request_id=request_id,
-                file_group=file_group_id,
-                output_directory_prefix=output_directory_prefix,
+            create_jobs_from_pairs.delay(
+                str(pipeline.id),
+                pairs,
+                name,
+                assay,
+                investigatorName,
+                labHeadName,
+                file_group_id,
+                job_group_id,
+                request_id,
+                output_directory_prefix,
             )
-            create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
 
         body = {
             "details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s"
