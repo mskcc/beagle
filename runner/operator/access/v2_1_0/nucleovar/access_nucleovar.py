@@ -418,7 +418,7 @@ def get_dmp_matched_patient_geno_samples(patient_id):
 class NucleoVarOperator(Operator):
 
 
-    def find_request_bams(run):
+    def find_request_bams(self, run):
         """
         Find simplex and duplex bams from a request's nucleo run
         - run_ids: run_ids from a request's nucleo run
@@ -442,7 +442,7 @@ class NucleoVarOperator(Operator):
         return bams
 
     
-    def find_curated_normal_bams():
+    def find_curated_normal_bams(self):
         """
         Find curated normal bams from access curated bam file group
 
@@ -457,7 +457,7 @@ class NucleoVarOperator(Operator):
         curated_normal_bams = make_pairs(d, s)
         return curated_normal_bams
     
-    def create_sample_info(tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors):
+    def create_sample_info(self, tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors):
         """
         Query DB for all relevant files / metadata necessary for SNV pipeline input:
 
@@ -507,7 +507,7 @@ class NucleoVarOperator(Operator):
 
         return sample_info
     
-    def mapping_bams(sample_info):
+    def mapping_bams(self, sample_info):
         # sample_id,normal_path,duplex_path,simplex_path,type
         # patient_id,sample_id,type,maf,standard_bam,standard_bai,duplex_bam,duplex_bai,simplex_bam,simplex_bai
         bams = []
