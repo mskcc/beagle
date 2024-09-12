@@ -457,7 +457,7 @@ class NucleoVarOperator(Operator):
         curated_normal_bams = make_pairs(d, s)
         return curated_normal_bams
     
-    def create_sample_info(self, tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors):
+    def create_sample_info(self, tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors, curated_normal_bams):
         """
         Query DB for all relevant files / metadata necessary for SNV pipeline input:
 
@@ -502,7 +502,7 @@ class NucleoVarOperator(Operator):
         sample_info = {
             "matched_normal_unfiltered": [matched_normal_unfiltered_bam],
             "geno_samples": geno_samples,
-            "geno_samples_normal_unfiltered": geno_samples_normal_unfiltered,
+            "geno_samples_normal_unfiltered": geno_samples_normal_unfiltered + curated_normal_bams,
         }
 
         return sample_info
@@ -615,7 +615,7 @@ class NucleoVarOperator(Operator):
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
             self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
         else:
-            runs = self.get_request_id_runs(["access v2 nucleo", "access legacy"])
+            runs = self.get_request_id_runs(["access v2 nucleo", "access nucleo"])
         
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
@@ -641,7 +641,7 @@ class NucleoVarOperator(Operator):
         for d, s in tumor_bams:
             tumor_sample_id = d.file_name.replace(DUPLEX_BAM_STEM, "")
             patient_id = "-".join(tumor_sample_id.split("-")[0:2])
-            sample_info = self.create_sample_info(tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors)
+            sample_info = self.create_sample_info(tumor_sample_id, patient_id, fillout_unfiltered_normals, fillout_simplex_tumors, fillout_duplex_tumors, curated_normal_bams)
             sample_info["normal_bam"] = [normal_bam]
             sample_info["tumor_bam"] = [(d, s)]
             sample_infos.append(sample_info)
