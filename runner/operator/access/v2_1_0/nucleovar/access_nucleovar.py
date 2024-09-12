@@ -568,6 +568,35 @@ class NucleoVarOperator(Operator):
             }
         return(bams, aux_bams)
     
+
+    def get_request_id_runs(request_id, app):
+        """
+        Get the latest completed bam-generation runs for the given request ID
+
+        :param request_id: str - IGO request ID
+        :return: List[str] - List of most recent runs from given request ID
+        """
+        # if not request_id:
+        #         request_id_runs = Run.objects.filter(pk__in=self.run_ids)
+        #         self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
+        # else: 
+        operator_run_id = (
+            Run.objects.filter(
+                tags__igoRequestId=request_id,
+                app__name__in=app,
+                operator_run__status=RunStatus.COMPLETED,
+            )
+            .exclude(finished_date__isnull=True)
+            .order_by("-finished_date")
+            .first()
+            .operator_run_id
+        )
+
+        request_id_runs = Run.objects.filter(
+            operator_run_id=operator_run_id, app__name__in=app, status=RunStatus.COMPLETED
+        )
+        return request_id_runs
+    
     def get_jobs(self):
         """
         get_job information tor run NucleoVar Pipeline
