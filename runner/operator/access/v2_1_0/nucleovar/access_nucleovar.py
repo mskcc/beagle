@@ -245,7 +245,7 @@ def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, reques
     return unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id
 
 
-def get_normal_geno_samples(tumor_sample_id, matched_normal_unfiltered_id, fillout_unfiltered_normals):
+def get_normal_geno_samples(request_id, tumor_sample_id, matched_normal_unfiltered_id, fillout_unfiltered_normals):
     """
     20 first Normal fillout samples
 
@@ -469,12 +469,13 @@ class NucleoVarOperator(Operator):
 
         :return:
         """
+        request_id = self.request_id
         # Get the Matched, Unfiltered, Normal BAM
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, request_id)
 
         # Get genotyping bams for Unfiltered Normal samples from the same Study
         geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids = get_normal_geno_samples(
-            tumor_sample_id, matched_normal_unfiltered_id, fillout_unfiltered_normals
+            request_id, tumor_sample_id, matched_normal_unfiltered_id, fillout_unfiltered_normals
         )
         # Get genotyping bams for Simplex and Duplex Tumor samples from the same Patient or in the same Capture
         geno_samples_duplex, geno_samples_simplex = get_geno_samples(
