@@ -628,6 +628,17 @@ class NucleoVarOperator(Operator):
             input_json = {
                 "input": bams,
                 "aux_bams": aux_bams,
+                "fasta": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta",
+                "fai": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai",
+                "dict": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict",
+                "canonical_bed": "/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
+                "target_bed": '/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed',
+                "rules_json": "/juno/work/access/production/resources/nucleovar/rules.json",
+                "header_file": '/juno/work/access/production/resources/nucleovar/mutect_annotate_concat_header.txt',
+                "sample_order_file": '',
+                "blocklist": "/juno/work/access/production/resources/nucleovar/access_blocklist.txt",
+                "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv"
+
             }
             sample_metadata = {
                     settings.PATIENT_ID_METADATA_KEY: patient_id,
