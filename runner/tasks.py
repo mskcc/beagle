@@ -812,7 +812,10 @@ def check_operator_run_alerts():
             pipeline = single_run.app.name
             finished = single_run.finished_date
             completed_dict[(samples_str, pipeline)] = finished
-        requestID = single_operator_run.job_group_notifier.request_id
+        if single_operator_run.job_group_notifier:
+            requestID = single_operator_run.job_group_notifier.request_id
+        else:
+            requestID = "NA"
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         num_manual_restarts_str = str(single_operator_run.num_manual_restarts)
         alert_message = "-------------- Manual Restart Alert for {} on {} after {} restarts --------------\n".format(
@@ -821,7 +824,10 @@ def check_operator_run_alerts():
         run_info = []
         counter = 1
         for single_run in failed_runs:
-            started = single_run.started
+            if not single_run.started:
+                started = single_run.created_date
+            else:
+                started = single_run.started
             finished = single_run.finished_date
             delta = finished - started
             delta_seconds = delta.total_seconds()
