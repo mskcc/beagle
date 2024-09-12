@@ -580,22 +580,21 @@ class NucleoVarOperator(Operator):
         #         request_id_runs = Run.objects.filter(pk__in=self.run_ids)
         #         self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
         # else: 
-        operator_run_id = (
+        most_recent_runs_for_request = (
             Run.objects.filter(
                 tags__igoRequestId=self.request_id,
                 app__name__in=app,
-                operator_run__status=RunStatus.COMPLETED,
+                status=RunStatus.COMPLETED,
+                operator_run__status=RunStatus.COMPLETED
             )
-            .exclude(finished_date__isnull=True)
-            .order_by("-finished_date")
+            .order_by("-created_date")
             .first()
-            .operator_run_id
+            .operator_run.runs.all()
         )
+        if not len(most_recent_runs_for_request):
+            raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
 
-        request_id_runs = Run.objects.filter(
-            operator_run_id=operator_run_id, app__name__in=app, status=RunStatus.COMPLETED
-        )
-        return request_id_runs
+        return most_recent_runs_for_request
     
     def get_jobs(self):
         """
@@ -616,7 +615,7 @@ class NucleoVarOperator(Operator):
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
             self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
         else:
-            runs = self.get_request_id_runs( ["access v2 nucleo", "access legacy"])
+            runs = self.get_request_id_runs(["access v2 nucleo", "access legacy"])
         
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
