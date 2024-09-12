@@ -663,7 +663,6 @@ class NucleoVarOperator(Operator):
                 "target_bed": '/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed',
                 "rules_json": "/juno/work/access/production/resources/nucleovar/rules.json",
                 "header_file": '/juno/work/access/production/resources/nucleovar/mutect_annotate_concat_header.txt',
-                "sample_order_file": '',
                 "blocklist": "/juno/work/access/production/resources/nucleovar/access_blocklist.txt",
                 "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv"
 
