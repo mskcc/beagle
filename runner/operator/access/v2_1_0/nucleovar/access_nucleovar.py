@@ -616,7 +616,7 @@ class NucleoVarOperator(Operator):
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
             self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
         else:
-            runs = self.get_request_id_runs( ["access v2 nucleo"])
+            runs = self.get_request_id_runs( ["access v2 nucleo", "access legacy"])
         
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
