@@ -9,8 +9,9 @@ from datetime import datetime
 from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
+from runner.models import Run, RunStatus
 from notifier.models import JobGroup
+import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
 from notifier.events import OperatorRequestEvent, ChronosMissingSamplesEvent
 from notifier.tasks import send_notification
 from runner.run.objects.run_creator_object import RunCreator
@@ -184,7 +185,6 @@ class ChronosOperator(Operator):
                         )
                     )
         else:
-            missing_samples = set()
             for pair in self.pairing.get("pairs"):
                 tumor_sample = self.get_ci_tag(pair["tumor"])
                 normal_sample = self.get_ci_tag(pair["normal"])

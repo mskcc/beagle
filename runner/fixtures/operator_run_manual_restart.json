@@ -1,0 +1,18 @@
+[
+    {
+        "model": "runner.OperatorRun",
+        "pk": 10,
+        "fields": {
+            "created_date": "2019-10-08T22:59:41.044Z",
+            "modified_date": "2019-10-08T22:59:41.044Z",
+            "operator": 3,
+            "num_total_runs": 1,
+            "num_completed_runs": 1,
+            "num_failed_runs": 0,
+            "num_manual_restarts": 10,
+            "triggered_alert": false,
+            "job_group_notifier": "f7fad10e-4a22-4363-bf33-e57be83f3cb1",
+            "status": 4
+        }
+    }
+]

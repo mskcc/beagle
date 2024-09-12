@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
+from celery.schedules import crontab
 from django.conf import settings
 from celery.app.log import TaskFormatter
 from celery.signals import after_setup_task_logger, worker_ready
@@ -42,6 +43,7 @@ app.conf.task_routes = {
     "runner.tasks.submit_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_request": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_chaining": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_jobs_from_pairs": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.add_pipeline_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.running_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.terminate_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
@@ -74,6 +76,11 @@ app.conf.beat_schedule = {
     "check_status": {
         "task": "runner.tasks.check_jobs_status",
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
+    "check_operator_run_alerts": {
+        "task": "runner.tasks.check_operator_run_alerts",
+        "schedule": crontab(minute=0, hour=0),
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
     "process_triggers": {
