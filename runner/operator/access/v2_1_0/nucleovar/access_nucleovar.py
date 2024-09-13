@@ -54,6 +54,30 @@ def _create_cwl_bam_object(bam):
     return {"class": "File", "location": "juno://" + bam}
 
 
+
+def _remove_dups_by_file_name(duplex_geno_samples, simplex_geno_samples):
+    """
+    Simple util to avoid Genotyping same sample twice
+    (when bams come from different runs and can't be
+    de-duplicated based on PK)
+
+    :return:
+    """
+    duplex_geno_samples_dedup_ids = set()
+    duplex_geno_samples_dedup = []
+    for s in duplex_geno_samples:
+        if not s.file_name in duplex_geno_samples_dedup_ids:
+            duplex_geno_samples_dedup_ids.add(s.file_name)
+            duplex_geno_samples_dedup.append(s)
+    simplex_geno_samples_dedup_ids = set()
+    simplex_geno_samples_dedup = []
+    for s in simplex_geno_samples:
+        if not s.file_name in simplex_geno_samples_dedup_ids:
+            simplex_geno_samples_dedup_ids.add(s.file_name)
+            simplex_geno_samples_dedup.append(s)
+    return duplex_geno_samples_dedup, simplex_geno_samples_dedup
+
+
 def _remove_normal_dups(
     geno_samples_normal_unfiltered,
     geno_samples_normal_unfiltered_sample_ids,
@@ -624,12 +648,12 @@ class NucleoVarOperator(Operator):
             bams.append(self.find_request_bams(run))
 
         # TUMOR
-        tumor_bams = [(b['fgbio_filter_consensus_reads_duplex_bam'], b['fgbio_postprocessing_simplex_bam']) for b in bams if self.is_tumor_bam(b['fgbio_postprocessing_duplex_bam'].file_name)]
+        tumor_bams = [(b['fgbio_filter_consensus_reads_duplex_bam'], b['fgbio_postprocessing_simplex_bam']) for b in bams if is_tumor_bam(b['fgbio_postprocessing_duplex_bam'].file_name)]
         
         # FILLOUT NORMAL AND TUMOR 
-        fillout_simplex_tumors = [b['fgbio_postprocessing_simplex_bam'] for b in bams if self.is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
-        fillout_duplex_tumors = [b['fgbio_filter_consensus_reads_duplex_bam'] for b in bams if self.is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
-        fillout_unfiltered_normals = [b['uncollapsed_bam'] for b in bams if not self.is_tumor_bam(b['uncollapsed_bam'].file_name)]
+        fillout_simplex_tumors = [b['fgbio_postprocessing_simplex_bam'] for b in bams if is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
+        fillout_duplex_tumors = [b['fgbio_filter_consensus_reads_duplex_bam'] for b in bams if is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
+        fillout_unfiltered_normals = [b['uncollapsed_bam'] for b in bams if not is_tumor_bam(b['uncollapsed_bam'].file_name)]
         
         # NORMAL BAM
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME)[0]
