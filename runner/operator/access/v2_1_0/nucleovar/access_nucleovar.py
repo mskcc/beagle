@@ -648,11 +648,11 @@ class NucleoVarOperator(Operator):
             bams.append(self.find_request_bams(run))
 
         # TUMOR
-        tumor_bams = [(b['fgbio_filter_consensus_reads_duplex_bam'], b['fgbio_postprocessing_simplex_bam']) for b in bams if is_tumor_bam(b['fgbio_postprocessing_duplex_bam'].file_name)]
+        tumor_bams = [(b['fgbio_filter_consensus_reads_duplex_bam'], b['fgbio_postprocessing_simplex_bam']) for b in bams if is_tumor_bam(b['fgbio_filter_consensus_reads_duplex_bam'].file_name)]
         
         # FILLOUT NORMAL AND TUMOR 
-        fillout_simplex_tumors = [b['fgbio_postprocessing_simplex_bam'] for b in bams if is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
-        fillout_duplex_tumors = [b['fgbio_filter_consensus_reads_duplex_bam'] for b in bams if is_tumor_bam(b['fgbio_postprocessing_simplex_bam'].file_name)]
+        fillout_simplex_tumors = [b['fgbio_postprocessing_simplex_bam'] for b in bams if is_tumor_bam(b['fgbio_filter_consensus_reads_duplex_bam'].file_name)]
+        fillout_duplex_tumors = [b['fgbio_filter_consensus_reads_duplex_bam'] for b in bams if is_tumor_bam(b['fgbio_filter_consensus_reads_duplex_bam'].file_name)]
         fillout_unfiltered_normals = [b['uncollapsed_bam'] for b in bams if not is_tumor_bam(b['uncollapsed_bam'].file_name)]
         
         # NORMAL BAM
