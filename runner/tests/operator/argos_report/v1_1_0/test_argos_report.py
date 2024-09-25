@@ -1,6 +1,7 @@
 """
 Test for constructing argos_report inputs
 """
+
 import os
 import tempfile
 import json
@@ -8,7 +9,7 @@ from pathlib import Path
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.argos_report.v1_0_0.argos_report_operator import ArgosReportOperator
+from runner.operator.argos_report.v1_1_0.argos_report_operator import ArgosReportOperator
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
 from runner.models import Run, Port, Pipeline
@@ -40,7 +41,7 @@ class TestArgosReportOperator(TestCase):
     def setUp(self):
         os.environ["TMPDIR"] = ""
         self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"]
-        self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.1.2/"
+        self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.6.1/"
         self.expected_project_prefix = "BALTO_REQID"
 
     def test_get_output_dir(self):
@@ -63,7 +64,7 @@ class TestArgosReportOperator(TestCase):
 
     def test_gen_inputs(self):
         expected_inputs = json.load(
-            open("runner/tests/operator/argos_report/v1_0_0/test_argos_report_expected_inputs.json", "rb")
+            open("runner/tests/operator/argos_report/v1_1_0/test_argos_report_expected_inputs.json", "rb")
         )
         argos_report_operator = self.load_operator()
         tmpdir = self._create_tmp_annotations_dir()
@@ -71,10 +72,11 @@ class TestArgosReportOperator(TestCase):
         argos_report_operator.annotations_path = "juno://" + tmpdir.name
         run = Run.objects.get(id=self.run_ids[0])
         my_generated_inputs = argos_report_operator.gen_inputs(run)
-        for i in my_generated_inputs:
-            i["oncokb_file"]["location"] = i["oncokb_file"]["location"].replace(tmpdir.name, "/my/oncokb/dir")
-        expected = json.dumps(sorted(expected_inputs, key=lambda d: d["sample_id"]))
-        actual = json.dumps(sorted(my_generated_inputs, key=lambda d: d["sample_id"]))
+        my_generated_inputs["oncokb_file"]["location"] = my_generated_inputs["oncokb_file"]["location"].replace(
+            tmpdir.name, "/tmp/oncokb/dir"
+        )
+        expected = json.dumps(expected_inputs)
+        actual = json.dumps(my_generated_inputs)
         self.maxDiff = None
         self.assertEqual(expected, actual)
 
@@ -96,7 +98,7 @@ class TestArgosReportOperator(TestCase):
         file_group = file_exists.file_group
         file_type = file_exists.file_type
         file_create_false = op._create_file_obj(path=file_exists.path, file_group=file_group, file_type=file_type)
-        file_not_exists = "/my/nonexistent/fake_file.txt"
+        file_not_exists = "/tmp/nonexistent_fake_file.txt"
         file_create_true = op._create_file_obj(path=file_not_exists, file_group=file_group, file_type=file_type)
         self.assertFalse(file_create_false)
         self.assertTrue(file_create_true)
