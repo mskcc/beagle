@@ -68,12 +68,12 @@ class ArgosReportOperator(Operator):
 
     def gen_inputs(self, hf_run):
         request_id = hf_run.tags["project_prefix"]
-        samples = hf_run.samples.all()
         ports = hf_run.port_set.all()
         analysis_dir_path = dict()
         portal_dir_path = dict()
-        normal_list, tumor_list = self.get_sample_ids(samples)
         for port in ports:
+            if port.name == "pairs":
+                normal_list, tumor_list = self.get_sample_ids(port.value)
             if port.name == "analysis_dir":
                 analysis_dir_path = {
                     "class": "Directory",
@@ -93,17 +93,12 @@ class ArgosReportOperator(Operator):
         input["oncokb_file"] = self.get_oncokb_file(self.annotations_path)
         return input
 
-    def get_sample_ids(self, samples):
+    def get_sample_ids(self, pair_dict):
         normal_list = []
         tumor_list = []
-        for single_sample in samples:
-            if single_sample.sample_type:
-                if "normal" in single_sample.sample_type.lower():
-                    sample_name = single_sample.cmo_sample_name
-                    normal_list.append(sample_name)
-                if "tumor" in single_sample.sample_type.lower():
-                    sample_name = single_sample.cmo_sample_name
-                    tumor_list.append(sample_name)
+        for single_pair in pair_dict:
+            normal_list.append(single_pair["normal_id"])
+            tumor_list.append(single_pair["tumor_id"])
         return normal_list, tumor_list
 
     def get_oncokb_file(self, annotations_path):
