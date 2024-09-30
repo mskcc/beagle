@@ -84,7 +84,7 @@ class OperatorStartEvent(Event):
         datadog_link = "[Voyager Job Error View ({})|{}]".format(self.job_group, datadog_url)
         job_group_notifier = JobGroupNotifier.objects.get(id=self.job_notifier)
         jira_output_path = os.path.join(
-            "'", settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_group_notifier.request_id, job_group_notifier.jira_id, "'"
+            "`", settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_group_notifier.request_id, job_group_notifier.jira_id, "`"
         )
 
         return OPERATOR_START_TEMPLATE.format(
