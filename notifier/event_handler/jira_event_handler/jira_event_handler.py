@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 from django.conf import settings
 from ..event_handler import EventHandler
 from file_system.models import FileGroup, File, FileMetadata, FileType
@@ -152,7 +152,7 @@ class JiraEventHandler(EventHandler):
             os.mkdir(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
         metadata = {"jiraId": job_notifier.jira_id}
-        with open(file_path, "w") as f:
+        with open(file_path, "w+") as f:
             f.write(event.get_content())
         self._register_as_file(file_path, metadata)
 
@@ -164,8 +164,12 @@ class JiraEventHandler(EventHandler):
             os.makedirs(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
         logging.debug(f"Creating {file_path}")
-        with open(file_path, "w") as f:
+        with open(file_path, "w+") as f:
             f.write(str(event))
+
+        # Add logging to test file existence for DEBUG purposes
+        if os.path.exists(file_path):
+            logging.debug(f"File created {file_path}")
 
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)

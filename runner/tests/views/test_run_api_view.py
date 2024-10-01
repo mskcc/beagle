@@ -150,9 +150,15 @@ class TestRunAPIView(APITestCase):
         input_port = Port.objects.create(run=failed_run, port_type=PortType.INPUT)
         output_port = Port.objects.create(run=failed_run, port_type=PortType.OUTPUT)
         operator_run_id = operator_run.id
+        manual_restart = operator_run.num_manual_restarts
 
         response = self.client.post("/v0/run/restart/", {"operator_run_id": operator_run_id}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        operator_run.refresh_from_db()
+        new_manual_restart = operator_run.num_manual_restarts
+
+        self.assertEqual(manual_restart + 1, new_manual_restart)
 
         # Restarted run should have a new ID
         restart_run_id = submit_job_task.call_args[0][0]
