@@ -34,6 +34,7 @@ class NextflowPortObject(PortObject):
         name = value.get("id")
         schema = value.get("schema")
         template = value.get("template")
+        logger = logging.getLogger(__name__)
         cls.logger.debug(template)
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
