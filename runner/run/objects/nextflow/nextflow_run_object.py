@@ -7,10 +7,10 @@ from runner.run.processors.file_processor import FileProcessor
 from runner.models import Run, RunStatus, Port, PortType, ProtocolType
 from runner.run.objects.nextflow.nextflow_port_object import NextflowPortObject
 from runner.exceptions import PortProcessorException, RunCreateException, RunObjectConstructException
-
+logger = logging.getLogger(__name__)
 
 class NextflowRunObject(RunObject):
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
 
     def __init__(
         self,
@@ -69,7 +69,7 @@ class NextflowRunObject(RunObject):
         try:
             app = PipelineCache.get_pipeline(run.app)
         except Exception as e:
-            raise RunCreateException("Failed to create run. Failed to resolve CWL %s" % str(e))
+            raise RunCreateException("Failed to create run. Failed to resolve Nextflow %s" % str(e))
         try:
             input_ports = [
                 NextflowPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in app.get("inputs", [])
