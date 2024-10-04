@@ -19,12 +19,14 @@ from runner.models import Port, RunStatus
 from file_system.models import FileMetadata
 from runner.models import RunStatus, Port, Run
 import json 
+from file_system.models import File, FileGroup, FileType
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "access_curated_normals"
 ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
-ACCESS_DEFAULT_NORMAL_FILENAME = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -40,9 +42,19 @@ DMP_IMPACT_ASSAYS = ["IMPACT341", "IMPACT410", "IMPACT468", "hemepact_v4"]
 DMP_FILE_GROUP = "d4775633-f53f-412f-afa5-46e9a86b654b"
 DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
-UNCOLLAPSED_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR"
+UNCOLLAPSED_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
 
-
+def register_file(file):
+    fname = os.path.basename(file)
+    file_group = FileGroup.objects.get(id=DMP_FILE_GROUP)
+    file_type = FileType.objects.get(name="bam")
+    try:
+        os.chmod(file, 0o777)
+        f = File(file_name=fname, path=file, file_type=file_type, file_group=file_group)
+        f.save()
+        return()
+    except Exception as e:
+        return()
 
 def _create_cwl_bam_object(bam):
     """
@@ -273,34 +285,42 @@ def get_normal_geno_samples(request_id, tumor_sample_id, matched_normal_unfilter
     """
     20 first Normal fillout samples
 
+    If less than 20 normal samples in the request, look for normals in the same study.
+
     :return:
     """
     geno_samples_normal_unfiltered = fillout_unfiltered_normals[:20]
     patient_id = "-".join(tumor_sample_id.split("-")[0:2])
+    # If less than 20 normal samples in the request, look for normals in the same study
     if len(geno_samples_normal_unfiltered) < 20:
         fillout_unfiltered_normals_ids = [s.file_name.replace(UNCOLLAPSED_BAM_STEM, "") for s in geno_samples_normal_unfiltered]
         patient_normals_search = patient_id + NORMAL_SAMPLE_SEARCH
+        collected_normals = fillout_unfiltered_normals_ids + [matched_normal_unfiltered_id]
+        exclude_request_normals = Q()
+        for normal in collected_normals:
+            exclude_request_normals |= Q(file_name__startswith=normal)
+        study_search = Q(file_name__startswith=patient_normals_search, file_name__endswith=IGO_UNFILTERED_REGEX, port__run__tags__igoRequestId__startswith=request_id.split("_")[0])
         study_level_normals = list(
-            File.objects.filter(file_name__startswith=patient_normals_search, 
-                                file_name__endswith=IGO_UNFILTERED_REGEX,
-                                port__run__tags__igoRequestId__startswith=request_id.split("_")[0]
-                                ).exclude(file_name__in=fillout_unfiltered_normals_ids).all()
-        )
+            File.objects.filter(study_search)
+                        .distinct("file_name")
+                        .order_by("file_name", "-created_date")
+                        .exclude(file_name__startswith=tumor_sample_id)
+                        .exclude(exclude_request_normals))
         geno_samples_normal_unfiltered = geno_samples_normal_unfiltered + study_level_normals
+    
     LOGGER.info(
         "Adding {} fillout samples to Nucleovar run for sample {}:".format(
             len(geno_samples_normal_unfiltered), tumor_sample_id
         )
     )
-    LOGGER.info([s.file_name for s in geno_samples_normal_unfiltered])
 
     # Exclude matched normal bam
     if matched_normal_unfiltered_id:
         geno_samples_normal_unfiltered = [
             s for s in geno_samples_normal_unfiltered if not s.file_name.startswith(matched_normal_unfiltered_id)
         ]
-    geno_samples_normal_unfiltered_sample_ids = [s.file_name.replace(UNCOLLAPSED_BAM_STEM, "") for s in geno_samples_normal_unfiltered]
-    return geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids
+    geno_samples_normal_unfiltered_sample_id = [s.file_name.replace(UNCOLLAPSED_BAM_STEM, "") for s in geno_samples_normal_unfiltered]
+    return geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_id
 
 
 def get_geno_samples(tumor_sample_id, matched_normal_id, fillout_simplex_tumors, fillout_duplex_tumors):
@@ -433,8 +453,12 @@ def get_dmp_matched_patient_geno_samples(patient_id):
     
     for d in matched_tumors_dmp_duplex:
         d.file_name = d.file_name.replace('-standard', '-duplex')
+        d.path = d.path.replace('-standard', '-duplex')
+        register_file(d.path)
     for s in matched_tumors_dmp_simplex:
         s.file_name = s.file_name.replace('-standard', '-simplex')
+        s.path = s.path.replace('-standard', '-simplex')
+        register_file(s.path)
     return (
         matched_tumors_dmp_duplex,
         matched_tumors_dmp_simplex
@@ -521,13 +545,16 @@ class NucleoVarOperator(Operator):
             dmp_matched_tumors_duplex,
             dmp_matched_tumors_simplex
         ) = get_dmp_matched_patient_geno_samples(patient_id)
-        geno_samples_duplex = geno_samples_duplex + dmp_matched_tumors_duplex
-        geno_samples_simplex = geno_samples_simplex + dmp_matched_tumors_simplex
+        #TODO not flipping file name 
+
+        geno_samples_duplex = geno_samples_duplex # + dmp_matched_tumors_duplex
+        geno_samples_simplex = geno_samples_simplex # + dmp_matched_tumors_simplex
         geno_samples = make_pairs(geno_samples_duplex, geno_samples_simplex)
         sample_info = {
             "matched_normal_unfiltered": [matched_normal_unfiltered_bam],
             "geno_samples": geno_samples,
-            "geno_samples_normal_unfiltered": geno_samples_normal_unfiltered + curated_normal_bams,
+            "geno_samples_normal_unfiltered": geno_samples_normal_unfiltered,
+            "curated_normal_bams": curated_normal_bams
         }
 
         return sample_info
@@ -541,32 +568,35 @@ class NucleoVarOperator(Operator):
             for v in value: 
                 map = {}
                 if key == 'tumor_bam':
-                    map['patient_id'] = ''
+                    map['patient_id'] = 'null'
                     map['sample_id'] =  v[0].file_name.replace(DUPLEX_BAM_STEM, '') 
-                    map['maf'] = ''
-                    map['standard_bam'] = ''
-                    map['standard_bai'] = ''
+                    map['maf'] = 'null'
+                    map['standard_bam'] = 'null'
+                    map['standard_bai'] = 'null'
                     map['duplex_bam'] = _create_cwl_bam_object(v[0].path)
-                    map['duplex_bai'] = _create_cwl_bam_object(v[0].path.replace('bam','bai'))
+                    map['duplex_bai'] = _create_cwl_bam_object(v[0].path.replace('.bam','.bai'))
                     map['simplex_bam'] = _create_cwl_bam_object(v[1].path)
-                    map['simplex_bai'] = _create_cwl_bam_object(v[1].path.replace('bam','bai'))
+                    map['simplex_bai'] = _create_cwl_bam_object(v[1].path.replace('.bam','.bai'))
                     map['type'] = 'CASE'
                     bams.append(map)
                 if key == 'normal_bam':
-                    map['patient_id'] = ''
-                    map['sample_id'] =  v.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
-                    map['maf'] = ''
-                    map['standard_bam'] = _create_cwl_bam_object(v.path)
-                    map['standard_bai'] = _create_cwl_bam_object(v.path.replace('bam','bai'))
-                    map['duplex_bam'] = ''
-                    map['duplex_bai'] = ''
-                    map['simplex_bam'] = ''
-                    map['simplex_bai'] = ''
+                    map['patient_id'] = 'null'
+                    map['sample_id'] =  v[0].file_name.replace("-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam", '') 
+                    map['maf'] = 'null'
+                    map['standard_bam'] = 'null'
+                    map['standard_bai'] = 'null'
+                    map['duplex_bam'] = _create_cwl_bam_object(v[0].path)
+                    map['duplex_bai'] = _create_cwl_bam_object(v[0].path.replace('.bam','.bai'))
+                    map['simplex_bam'] = _create_cwl_bam_object(v[1].path)
+                    map['simplex_bai'] = _create_cwl_bam_object(v[1].path.replace('.bam','.bai'))
                     map['type'] = 'CONTROL'
                     bams.append(map)
                 if key == 'geno_samples':
-                    map['sample_id'] =  v[0].file_name.replace(DUPLEX_BAM_STEM, "")
-                    map['normal_path'] = ''
+                    #TODO jsut do the replace here
+                    sample_id = v[0].file_name.replace(DUPLEX_BAM_STEM, "")
+                    sample_id = sample_id.replace(DMP_DUPLEX_REGEX, "")
+                    map['sample_id'] =  sample_id
+                    map['normal_path'] = 'null'
                     map['duplex_path'] = _create_cwl_bam_object(v[0].path)
                     map['simplex_path'] = _create_cwl_bam_object(v[1].path)
                     map['type'] = 'PLASMA'
@@ -574,23 +604,24 @@ class NucleoVarOperator(Operator):
                 if key == 'geno_samples_normal_unfiltered':
                     map['sample_id'] =  v.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
                     map['normal_path'] = _create_cwl_bam_object(v.path)
-                    map['duplex_path'] = ''
-                    map['simplex_path'] = ''
+                    map['duplex_path'] = 'null'
+                    map['simplex_path'] = 'null'
                     map['type'] = 'UNMATCHED_NORMAL'
+                    aux_bams.append(map)
+                if key == 'curated_normal_bams':
+                    map['sample_id'] =  v[0].file_name.replace(DUPLEX_BAM_STEM, "")
+                    map['normal_path'] = 'null'
+                    map['duplex_path'] = _create_cwl_bam_object(v[0].path)
+                    map['simplex_path'] = _create_cwl_bam_object(v[1].path)
+                    map['type'] = 'CURATED'
                     aux_bams.append(map)
                 if key == 'matched_normal_unfiltered':
                     map['sample_id'] =  v.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
                     map['normal_path'] = _create_cwl_bam_object(v.path)
-                    map['duplex_path'] = ''
-                    map['simplex_path'] = ''
+                    map['duplex_path'] = 'null'
+                    map['simplex_path'] = 'null'
                     map['type'] = 'MATCHED_NORMAL'
                     aux_bams.append(map)
-        bams = {
-                "input": bams,
-            }
-        aux_bams = {
-                "aux_bams": aux_bams,
-            }
         return(bams, aux_bams)
     
 
@@ -637,8 +668,8 @@ class NucleoVarOperator(Operator):
         # If no request_id, get request id from run information
         # else request_id given directly
         if not self.request_id:
-            most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
-            self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
+            runs = Run.objects.filter(pk__in=self.run_ids)
+            self.request_id = RunStatus[0].tags["igoRequestId"]
         else:
             runs = self.get_request_id_runs(["access v2 nucleo", "access nucleo"])
         
@@ -656,7 +687,7 @@ class NucleoVarOperator(Operator):
         fillout_unfiltered_normals = [b['uncollapsed_bam'] for b in bams if not is_tumor_bam(b['uncollapsed_bam'].file_name)]
         
         # NORMAL BAM
-        normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME)[0]
+        normal_bam = (File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX)[0], File.objects.filter(file_name=ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX)[0])
         
         # CURATED NORMAL
         curated_normal_bams = self.find_curated_normal_bams()
@@ -675,7 +706,7 @@ class NucleoVarOperator(Operator):
         # One job per Sample
         jobs = []
         for s in sample_infos:
-            sample = d.file_name.replace(DUPLEX_BAM_STEM, "")
+            sample = s["tumor_bam"][0][0].file_name.replace(DUPLEX_BAM_STEM, "")
             patient_id = "-".join(sample.split("-")[0:2])
             bams, aux_bams = self.mapping_bams(s)
             input_json = {
@@ -689,8 +720,10 @@ class NucleoVarOperator(Operator):
                 "rules_json": "/juno/work/access/production/resources/nucleovar/rules.json",
                 "header_file": '/juno/work/access/production/resources/nucleovar/mutect_annotate_concat_header.txt',
                 "blocklist": "/juno/work/access/production/resources/nucleovar/access_blocklist.txt",
-                "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv"
-
+                "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv",
+                "outdir": '/juno//work/access/production/runs/voyager/nucleo_qc',
+                "hotspots": '/juno/work/access/production/resources/nucleovar/hotspots.maf',
+                "annotator": "genomenexus"
             }
             sample_metadata = {
                     settings.PATIENT_ID_METADATA_KEY: patient_id,
@@ -714,4 +747,3 @@ class NucleoVarOperator(Operator):
             }
             jobs.append(job_json)
         return [RunCreator(**job) for job in jobs]
-    

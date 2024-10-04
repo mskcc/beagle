@@ -75,6 +75,7 @@ class Pipeline(BaseModel):
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
     config = models.CharField(blank=True, null=True, max_length=3000, default=None)
+    nfcore_template = models.BooleanField(default=False)
 
     @property
     def pipeline_link(self):
