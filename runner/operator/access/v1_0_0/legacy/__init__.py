@@ -235,7 +235,7 @@ def construct_sample_inputs(samples, request_id, group_id):
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
 
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id, ["access legacy", "access nucleo"])]
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
         ports = Port.objects.filter(run_id__in=run_ids, port_type=PortType.OUTPUT)
 
         data = [

@@ -43,7 +43,7 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id, ["access legacy", "access nucleo"])]
+        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # Get all unfiltered bam ports for these runs
         unfiltered_bam_ports = Port.objects.filter(
