@@ -159,17 +159,17 @@ class JiraEventHandler(EventHandler):
     def process_local_store_attachments(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         dir_path = os.path.join(settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_notifier.request_id, job_notifier.jira_id)
-        logging.debug(f"Creating {dir_path}")
+        logging.info(f"Creating {dir_path}")
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
-        logging.debug(f"Creating {file_path}")
+        logging.info(f"Creating {file_path}")
         with open(file_path, "w+") as f:
             f.write(str(event))
 
         # Add logging to test file existence for DEBUG purposes
         if os.path.exists(file_path):
-            logging.debug(f"File created {file_path}")
+            logging.info(f"File created {file_path}")
 
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)
