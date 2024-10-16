@@ -20,6 +20,7 @@ before_install:
   - sudo service postgresql restart 11
 install:
   - psql -p 5433 -c 'create database travis_ci_test;' -U postgres
+  - pip install --upgrade setuptools==70.0.0
   - pip install --upgrade pip
   - pip install -r requirements-dev.txt
   - source travis_env.sh

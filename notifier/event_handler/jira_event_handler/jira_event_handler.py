@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 from django.conf import settings
 from ..event_handler import EventHandler
 from file_system.models import FileGroup, File, FileMetadata, FileType
@@ -152,20 +152,26 @@ class JiraEventHandler(EventHandler):
             os.mkdir(dir_path)
         file_path = os.path.join(dir_path, event.file_name)
         metadata = {"jiraId": job_notifier.jira_id}
-        with open(file_path, "w") as f:
+        with open(file_path, "w+") as f:
             f.write(event.get_content())
         self._register_as_file(file_path, metadata)
 
     def process_local_store_attachments(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         dir_path = os.path.join(settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_notifier.request_id, job_notifier.jira_id)
-        logging.debug(f"Creating {dir_path}")
-        if not os.path.exists(dir_path):
+        try:
             os.makedirs(dir_path)
+            logging.info(f"{dir_path} successfully created")
+        except FileExistsError:
+            logging.info(f"{dir_path} already created")
         file_path = os.path.join(dir_path, event.file_name)
-        logging.debug(f"Creating {file_path}")
-        with open(file_path, "w") as f:
+        logging.info(f"Creating attachment file: {file_path}")
+        with open(file_path, "w+") as f:
             f.write(str(event))
+
+        # Add logging to test file existence for DEBUG purposes
+        if os.path.exists(file_path):
+            logging.info(f"JIRA attachment file created {file_path}")
 
     def process_wes_job_failed_event(self, event):
         self._add_comment_event(event)
