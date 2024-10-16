@@ -97,11 +97,10 @@ class JiraEventHandler(EventHandler):
     def process_add_attachment_links_to_description_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
         description = self.client.get_ticket_description(job_notifier.jira_id)
-        if description is None:
-            description = ""
-        if not str(event) in description:
-            description += str(event)
-            self.client.update_ticket_description(job_notifier.jira_id, description)
+        print(description)
+        description += str(event)
+        print(description)
+        self.client.update_ticket_description(job_notifier.jira_id, description)
 
     def process_set_pipeline_field_event(self, event):
         job_notifier = JobGroupNotifier.objects.get(id=event.job_notifier)
