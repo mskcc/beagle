@@ -25,6 +25,7 @@ class NextflowResolver(PipelineResolver):
 
     def schemas2template(self, nextflow_schema, location):
         # TODO Not sure if this is an exhaustive search of possible definitions
+        # TODO parse everything in definitions
         reference = nextflow_schema["definitions"]["reference_genome_options"]["properties"]
         input = nextflow_schema["definitions"]["input_output_options"]["properties"]
         properties = {**reference, **input}

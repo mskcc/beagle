@@ -176,6 +176,7 @@ class NextflowRunObject(RunObject):
                 "repository": self.run_obj.app.github,
                 "entrypoint": self.run_obj.app.entrypoint,
                 "version": self.run_obj.app.version,
+                "nfcore_template": self.run_obj.app.nfcore_template
             }
         }
         inputs = dict()
