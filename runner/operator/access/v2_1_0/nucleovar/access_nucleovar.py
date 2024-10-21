@@ -477,7 +477,6 @@ def get_dmp_matched_patient_geno_samples(patient_id):
 
 
 class NucleoVarOperator(Operator):
-
     def find_request_bams(self, run):
         """
         Find simplex and duplex bams from a request's nucleo run
