@@ -663,7 +663,7 @@ class NucleoVarOperator(Operator):
         LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        output_directory = pipeline.output_directory
+        # output_directory = pipeline.output_directory
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         # If no request_id, get request id from run information
         # else request_id given directly
@@ -718,10 +718,9 @@ class NucleoVarOperator(Operator):
                 "canonical_bed": "/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
                 "target_bed": '/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed',
                 "rules_json": "/juno/work/access/production/resources/nucleovar/rules.json",
-                "header_file": '/juno/work/access/production/resources/nucleovar/mutect_annotate_concat_header.txt',
+                "header_file": '/juno/work/access/production/resources/nucleovar/mutect1_annotate_concat_header.txt',
                 "blocklist": "/juno/work/access/production/resources/nucleovar/access_blocklist.txt",
                 "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv",
-                "outdir": '/juno//work/access/production/runs/voyager/nucleo_qc',
                 "hotspots": '/juno/work/access/production/resources/nucleovar/hotspots.maf',
                 "annotator": "genomenexus"
             }
@@ -742,7 +741,6 @@ class NucleoVarOperator(Operator):
                 "app": app,
                 "inputs": input_json,
                 "tags": job_tags,
-                "output_directory": output_directory,
                 "output_metadata": sample_metadata
             }
             jobs.append(job_json)
