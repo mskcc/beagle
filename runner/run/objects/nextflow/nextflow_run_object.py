@@ -7,7 +7,9 @@ from runner.run.processors.file_processor import FileProcessor
 from runner.models import Run, RunStatus, Port, PortType, ProtocolType
 from runner.run.objects.nextflow.nextflow_port_object import NextflowPortObject
 from runner.exceptions import PortProcessorException, RunCreateException, RunObjectConstructException
+
 logger = logging.getLogger(__name__)
+
 
 class NextflowRunObject(RunObject):
     # logger = logging.getLogger(__name__)
@@ -176,7 +178,7 @@ class NextflowRunObject(RunObject):
                 "repository": self.run_obj.app.github,
                 "entrypoint": self.run_obj.app.entrypoint,
                 "version": self.run_obj.app.version,
-                "nfcore_template": self.run_obj.app.nfcore_template
+                "nfcore_template": self.run_obj.app.nfcore_template,
             }
         }
         inputs = dict()
