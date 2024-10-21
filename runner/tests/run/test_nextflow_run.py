@@ -17,7 +17,7 @@ class NextflowRunObjectTest(APITestCase):
             entrypoint="pipeline.nf",
             output_file_group=self.nxf_file_group,
             output_directory="/output/directory/",
-            config="TEST CONFIG"
+            config="TEST CONFIG",
         )
         config = """process {\r\n  memory = \"8.GB\"\r\n  time = { task.attempt < 3 ? 3.h * task.attempt  : 500.h }\r\n  clusterOptions = \"\"\r\n  scratch = true\r\n  beforeScript = \". \/etc\/profile.d\/modules.sh; module load singularity\/3.1.1; unset R_LIBS; catch_term () { echo 'caught USR2\/TERM signal'; set +e; false; on_exit ; } ; trap catch_term USR2 TERM\"\r\n}\r\n\r\nparams {\r\n  fileTracking = \"{{output_directory}}\"\r\n}"""
         self.pipeline_config = Pipeline.objects.create(
@@ -190,7 +190,7 @@ SAMPLE-NORMAL-001\tSAMPLE-TUMOR-001
                     "repository": "https://github.com/nextflow_pipeline",
                     "entrypoint": "pipeline.nf",
                     "version": "1.0.0",
-                    "nfcore_template": False
+                    "nfcore_template": False,
                 }
             },
         )
