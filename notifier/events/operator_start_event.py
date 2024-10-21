@@ -1,6 +1,7 @@
-from notifier.event_handler.event import Event
-from django.conf import settings
 import os
+from django.conf import settings
+from notifier.event_handler.event import Event
+from notifier.models import JobGroupNotifier
 
 
 class OperatorStartEvent(Event):
@@ -73,7 +74,7 @@ class OperatorStartEvent(Event):
         Number of normal samples: {number_of_normals}
         Job Group ID: {job_group}
         Datadog link: {datadog_link}
-        JIRA local attachment path: {jira_output_path}
+        JIRA local attachment path: `{jira_output_path}`
         
         Pipelines:
         | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
@@ -81,8 +82,9 @@ class OperatorStartEvent(Event):
 
         datadog_url = settings.DATADOG_JOB_ERROR_URL + self.job_group
         datadog_link = "[Voyager Job Error View ({})|{}]".format(self.job_group, datadog_url)
+        job_group_notifier = JobGroupNotifier.objects.get(id=self.job_notifier)
         jira_output_path = os.path.join(
-            settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, self.job_notifier.request_id, self.job_notifier.jira_id
+            settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_group_notifier.request_id, job_group_notifier.jira_id
         )
 
         return OPERATOR_START_TEMPLATE.format(

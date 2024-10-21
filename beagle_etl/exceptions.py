@@ -92,3 +92,11 @@ class FailedToLocateTheFileException(ETLExceptions):
     """
 
     code = 111
+
+
+class IncorrectlyFormattedPrimaryId(ETLExceptions):
+    """
+    Incorrectly formatted primaryId
+    """
+
+    code = 112
