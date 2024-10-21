@@ -6,11 +6,10 @@ from django.db.models import Q
 from django.conf import settings
 from beagle import __version__
 from datetime import datetime
-from file_system.repository.file_repository import FileRepository
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-from runner.models import Run, RunStatus
 from notifier.models import JobGroup
+from file_system.repository.file_repository import FileRepository
 import runner.operator.chronos_operator.bin.tempo_patient as patient_obj
 from notifier.events import OperatorRequestEvent, ChronosMissingSamplesEvent
 from notifier.tasks import send_notification
@@ -76,7 +75,7 @@ class ChronosOperator(Operator):
         igocomplete_query = Q(metadata__igoComplete=True)
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
-        files = FileRepository.filter(filter_redact=True)
+        files = FileRepository.filter(filter_redact=True, file_group=settings.IMPORT_FILE_GROUP)
         tempo_files = FileRepository.filter(queryset=files, q=q)
         tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
@@ -155,6 +154,7 @@ class ChronosOperator(Operator):
                     settings.REQUEST_ID_METADATA_KEY: self.request_id,
                     settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
                 },
+                file_group=settings.IMPORT_FILE_GROUP,
                 values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
             )
             used_normals = set()
@@ -168,6 +168,7 @@ class ChronosOperator(Operator):
                     mapping = self.get_mapping_for_pair(tumor, pairing["normal"], mapping_all, used_normals)
                     normal_request_id = FileRepository.filter(
                         metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
+                        file_group=settings.IMPORT_FILE_GROUP,
                         values_metadata=settings.REQUEST_ID_METADATA_KEY,
                     )
                     used_normals_requests.add(normal_request_id)
@@ -238,18 +239,22 @@ class ChronosOperator(Operator):
                 continue
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                file_group=settings.IMPORT_FILE_GROUP,
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
             ).first()
             request_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                file_group=settings.IMPORT_FILE_GROUP,
                 values_metadata=settings.REQUEST_ID_METADATA_KEY,
             ).first()
             gene_panel = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                file_group=settings.IMPORT_FILE_GROUP,
                 values_metadata=settings.RECIPE_METADATA_KEY,
             ).first()
             primary_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
+                file_group=settings.IMPORT_FILE_GROUP,
                 values_metadata=settings.SAMPLE_ID_METADATA_KEY,
             ).first()
             job_tags = copy.deepcopy(tags)
@@ -396,7 +401,9 @@ class ChronosOperator(Operator):
 
     def get_ci_tag(self, primary_id):
         return FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY
+            metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
+            file_group=settings.IMPORT_FILE_GROUP,
+            values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
         ).first()
 
     def missing_fastqs(self, files):
