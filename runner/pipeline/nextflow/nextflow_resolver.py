@@ -14,10 +14,10 @@ class NextflowResolver(PipelineResolver):
         if self.nfcore_template:
             # Check main schema for CLI inputs
             with open(os.path.join(location, "nextflow_schema.json"), "r") as f:
-                nextflow_schema = json.load(f) 
+                nextflow_schema = json.load(f)
                 inputs = self.schemas2template(nextflow_schema, location)
-                pipeline = {"inputs": inputs }
-        else: 
+                pipeline = {"inputs": inputs}
+        else:
             with open(os.path.join(location, "inputs.template.json"), "r") as f:
                 pipeline = json.load(f)
         self._cleanup(location)
@@ -29,20 +29,24 @@ class NextflowResolver(PipelineResolver):
         reference = nextflow_schema["definitions"]["reference_genome_options"]["properties"]
         input = nextflow_schema["definitions"]["input_output_options"]["properties"]
         properties = {**reference, **input}
-        # Check for sample-sheet CLI inputs 
+        # Check for sample-sheet CLI inputs
         samplesheets = [key for key, val in properties.items() if val.get("format") == "sample-sheet"]
-        inputs = [{'id': key, 'schema': {'type': val.get("format")}} for key, val in properties.items() if val.get("format") != "sample-sheet"]
+        inputs = [
+            {"id": key, "schema": {"type": val.get("format")}}
+            for key, val in properties.items()
+            if val.get("format") != "sample-sheet"
+        ]
         # Check Assets for sample sheet schemas
         for schema in samplesheets:
-            with open(os.path.join(location, f'assets/schema_{schema}.json'), "r") as f:
+            with open(os.path.join(location, f"assets/schema_{schema}.json"), "r") as f:
                 nextflow_schema = json.load(f)
-                samplesheet_props = nextflow_schema['items']["properties"]
-                fields = [{'id': key, 'type': val.get("format")} for key, val in samplesheet_props.items()]
-                header = '\t'.join([f['id'] for f in fields]) + '\n'
-                body_start = f'{{{{#{schema}}}}}\n' 
-                body_end = f'\n{{{{/{schema}}}}}'
-                body = '\t'.join([f'{{{{{f["id"]}}}}}' for f in fields]) 
-                template =  header + body_start + body + body_end
-                samplesheet_input = {'id': schema, 'schema': {'items': {"fields": fields}}, 'template': template}
+                samplesheet_props = nextflow_schema["items"]["properties"]
+                fields = [{"id": key, "type": val.get("format")} for key, val in samplesheet_props.items()]
+                header = "\t".join([f["id"] for f in fields]) + "\n"
+                body_start = f"{{{{#{schema}}}}}\n"
+                body_end = f"\n{{{{/{schema}}}}}"
+                body = "\t".join([f'{{{{{f["id"]}}}}}' for f in fields])
+                template = header + body_start + body + body_end
+                samplesheet_input = {"id": schema, "schema": {"items": {"fields": fields}}, "template": template}
                 inputs.append(samplesheet_input)
         return inputs

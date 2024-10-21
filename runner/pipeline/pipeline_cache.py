@@ -25,7 +25,7 @@ class PipelineCache(object):
                     "github": pipeline.github,
                     "entrypoint": pipeline.entrypoint,
                     "version": pipeline.version,
-                    "nfcore_template": pipeline.nfcore_template
+                    "nfcore_template": pipeline.nfcore_template,
                 },
             )
         return resolved_dict
