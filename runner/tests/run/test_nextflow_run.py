@@ -190,6 +190,7 @@ SAMPLE-NORMAL-001\tSAMPLE-TUMOR-001
                     "repository": "https://github.com/nextflow_pipeline",
                     "entrypoint": "pipeline.nf",
                     "version": "1.0.0",
+                    "nfcore_template": False,
                 }
             },
         )

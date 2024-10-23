@@ -11,7 +11,7 @@ from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
 from file_system.repository import FileRepository
 from file_system.helper.access_helper import CmoDMPManifest
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
+from runner.operator.access import get_request_id
 import csv
 
 logger = logging.getLogger(__name__)
