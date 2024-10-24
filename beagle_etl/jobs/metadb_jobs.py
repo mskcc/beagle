@@ -132,6 +132,7 @@ def new_request(message_id):
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
+    valid_samples = set()
 
     samples = data.get("samples")
     try:
@@ -155,6 +156,7 @@ def new_request(message_id):
                 "code": None,
             }
             sample_jobs.append(sample_status)
+            valid_samples.add(sample["primaryId"])
         except Exception as e:
             if isinstance(e, ETLExceptions):
                 sample_status = {
@@ -236,6 +238,8 @@ def new_request(message_id):
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
+        if sample_id not in valid_samples:
+            continue
         igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
