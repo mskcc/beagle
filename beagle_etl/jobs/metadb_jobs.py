@@ -145,7 +145,7 @@ def new_request(message_id):
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
-            validate_sample(sample, sample.get("libraries", []), gene_panel, igocomplete)
+            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel)
             sample_status = {
                 "type": "SAMPLE",
                 "igocomplete": igocomplete,
@@ -917,7 +917,6 @@ def create_pooled_normal(filepath, file_group_id):
 def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
     conflict = False
     missing_fastq = False
-    invalid_number_of_fastq = False
     failed_runs = []
     conflict_files = []
 
