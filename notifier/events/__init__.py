@@ -43,3 +43,4 @@ from .smile_update_event import SMILEUpdateEvent
 from .error_importing_files import ErrorImportingFilesEvent
 from .chronos_missing_samples_event import ChronosMissingSamplesEvent
 from .local_store_attachments_event import LocalStoreAttachmentsEvent
+from .add_attachment_links_to_description_event import AddAttachmentLinksToDescriptionEvent
