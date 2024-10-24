@@ -920,13 +920,12 @@ def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=Fa
     failed_runs = []
     conflict_files = []
 
-    if gene_panel in settings.VALIDATE_PRIMARY_ID_FOR_GENE_PANELS:
-        pattern = re.compile(settings.PRIMARY_ID_REGEX)
-        if not pattern.fullmatch(sample_id):
-            logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
-            raise IncorrectlyFormattedPrimaryId(
-                f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
-            )
+    pattern = re.compile(settings.PRIMARY_ID_REGEX)
+    if not pattern.fullmatch(sample_id):
+        logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
+        raise IncorrectlyFormattedPrimaryId(
+            f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
+        )
 
     if not libraries:
         if igocomplete:
