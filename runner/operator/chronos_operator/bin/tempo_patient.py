@@ -111,6 +111,9 @@ class Patient:
         return date
 
     def create_mapping_json(self):
+        """
+        TODO: Remove it when you confirm it is not needed anymore
+        """
         mapping = []
         seen = set()
         for pair in self.sample_pairing:
@@ -120,6 +123,12 @@ class Patient:
             if normal_sample not in seen:
                 mapping.extend(self.get_mapping_for_sample(normal_sample))
                 seen.add(normal_sample)
+        return mapping
+
+    def create_mapping_json_all_samples_included(self):
+        mapping = []
+        for sample in self.all_samples:
+            mapping.extend(self.get_mapping_for_sample(self.all_samples[sample]))
         return mapping
 
     def create_unpaired_mapping_json(self):

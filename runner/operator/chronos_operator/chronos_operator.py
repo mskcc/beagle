@@ -76,8 +76,7 @@ class ChronosOperator(Operator):
         igocomplete_query = Q(metadata__igoComplete=True)
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
-        files = FileRepository.filter(filter_redact=True, file_group=settings.IMPORT_FILE_GROUP)
-        tempo_files = FileRepository.filter(queryset=files, q=q)
+        tempo_files = FileRepository.filter(queryset=FileRepository.all(), q=q, file_group=settings.IMPORT_FILE_GROUP)
         tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message(
@@ -380,9 +379,7 @@ class ChronosOperator(Operator):
         mapping = []
         for patient_id in self.patients:
             patient = self.patients[patient_id]
-            mapping.extend(patient.create_mapping_json())
-            if patient.unpaired_samples:
-                mapping.extend(patient.create_unpaired_mapping_json())
+            mapping.extend(patient.create_mapping_json_all_samples_included())
         return mapping
 
     def create_pairing_input(self):
