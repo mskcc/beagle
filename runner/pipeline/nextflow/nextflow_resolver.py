@@ -4,7 +4,7 @@ from runner.pipeline.pipeline_resolver import PipelineResolver
 
 
 class NextflowResolver(PipelineResolver):
-    def __init__(self, github, entrypoint, nfcore_template, version=None):
+    def __init__(self, github, entrypoint, version=None, nfcore_template=None):
         super().__init__(github, entrypoint, version)
         self.nfcore_template = nfcore_template
 
