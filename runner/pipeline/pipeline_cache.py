@@ -16,7 +16,7 @@ class PipelineCache(object):
             resolved_dict = _pipeline.get("app")
         else:
             resolver_class = PipelineCache._get_pipeline_resolver(pipeline.pipeline_type)
-            resolver = resolver_class(pipeline.github, pipeline.entrypoint, pipeline.nfcore_template, pipeline.version)
+            resolver = resolver_class(pipeline.github, pipeline.entrypoint, pipeline.version, pipeline.nfcore_template)
             resolved_dict = resolver.resolve()
             cache.set(
                 pipeline.id,
