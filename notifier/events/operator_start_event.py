@@ -94,7 +94,7 @@ class OperatorStartEvent(Event):
             LINKS = """Links:
             """
             for name, link in self.links.items():
-                LINKS += f"[{name}]({link})"
+                LINKS += f"[{name}]({link})\n"
 
         return OPERATOR_START_TEMPLATE.format(
             request_id=self.request_id,
