@@ -7,7 +7,7 @@ from runner.pipeline.pipeline_resolver import PipelineResolver
 
 
 class CWLResolver(PipelineResolver):
-    def __init__(self, github, entrypoint, version=None):
+    def __init__(self, github, entrypoint, version=None, nfcore_template=None):
         super().__init__(github, entrypoint, version)
 
     def resolve(self):
