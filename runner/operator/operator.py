@@ -1,11 +1,11 @@
 import logging
+from ddtrace import tracer
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
 from beagle_etl.models import Operator as OperatorModel
 from runner.operator.operator_logger import OperatorLogger
 from runner.run.objects.run_creator_object import RunCreator
-from ddtrace import tracer
 
 
 class Operator(object):
@@ -83,10 +83,17 @@ class Operator(object):
         self._jobs.append(RunCreator(app=pipeline, inputs=job))
         current_span = tracer.current_span()
         cmo_request_id = self.request_id
-        span.set_tag("request.id", cmo_request_id)
+        current_span.set_tag("request.id", cmo_request_id)
 
     def on_job_fail(self, run):
         pass
+
+    def links_to_files(self):
+        """
+        Override this method to put the list of operator generated files into the ticket description
+        :return: list[string]
+        """
+        return {}
 
     def get_log_directory(self):
         return settings.DEFAULT_LOG_PATH
