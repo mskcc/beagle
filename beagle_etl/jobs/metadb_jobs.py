@@ -132,6 +132,7 @@ def new_request(message_id):
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
+    valid_samples = set()
 
     samples = data.get("samples")
     try:
@@ -145,7 +146,7 @@ def new_request(message_id):
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
-            validate_sample(sample, sample.get("libraries", []), gene_panel, igocomplete)
+            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel)
             sample_status = {
                 "type": "SAMPLE",
                 "igocomplete": igocomplete,
@@ -155,6 +156,7 @@ def new_request(message_id):
                 "code": None,
             }
             sample_jobs.append(sample_status)
+            valid_samples.add(sample["primaryId"])
         except Exception as e:
             if isinstance(e, ETLExceptions):
                 sample_status = {
@@ -236,6 +238,8 @@ def new_request(message_id):
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
+        if sample_id not in valid_samples:
+            continue
         igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
@@ -917,17 +921,15 @@ def create_pooled_normal(filepath, file_group_id):
 def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
     conflict = False
     missing_fastq = False
-    invalid_number_of_fastq = False
     failed_runs = []
     conflict_files = []
 
-    if gene_panel in settings.VALIDATE_PRIMARY_ID_FOR_GENE_PANELS:
-        pattern = re.compile(settings.PRIMARY_ID_REGEX)
-        if not pattern.fullmatch(sample_id):
-            logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
-            raise IncorrectlyFormattedPrimaryId(
-                f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
-            )
+    pattern = re.compile(settings.PRIMARY_ID_REGEX)
+    if not pattern.fullmatch(sample_id):
+        logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
+        raise IncorrectlyFormattedPrimaryId(
+            f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
+        )
 
     if not libraries:
         if igocomplete:
