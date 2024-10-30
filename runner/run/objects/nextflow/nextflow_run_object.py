@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class NextflowRunObject(RunObject):
-
     def __init__(
         self,
         run_id,
