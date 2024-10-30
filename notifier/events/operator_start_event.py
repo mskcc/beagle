@@ -25,6 +25,7 @@ class OperatorStartEvent(Event):
         number_of_normals,
         data_access_emails,
         other_contact_emails,
+        links={},
     ):
         self.job_notifier = job_notifier
         self.job_group = job_group
@@ -44,6 +45,7 @@ class OperatorStartEvent(Event):
         self.qc_access_emails = qc_access_emails
         self.data_access_emails = data_access_emails
         self.other_contact_emails = other_contact_emails
+        self.links = links
 
     @classmethod
     def get_type(cls):
@@ -75,7 +77,8 @@ class OperatorStartEvent(Event):
         Job Group ID: {job_group}
         Datadog link: {datadog_link}
         JIRA local attachment path: `{jira_output_path}`
-        
+        {links}
+
         Pipelines:
         | PIPELINE_NAME | PIPELINE_VERSION | PIPELINE_LINK |
         """
@@ -86,6 +89,12 @@ class OperatorStartEvent(Event):
         jira_output_path = os.path.join(
             settings.NOTIFIER_LOCAL_ATTACHMENTS_DIR, job_group_notifier.request_id, job_group_notifier.jira_id
         )
+        LINKS = ""
+        if self.links:
+            LINKS = """Links:
+            """
+            for name, link in self.links:
+                LINKS += f"[{name}]({link})"
 
         return OPERATOR_START_TEMPLATE.format(
             request_id=self.request_id,
@@ -107,4 +116,5 @@ class OperatorStartEvent(Event):
             jira_output_path=jira_output_path,
             data_access_emails=self.data_access_emails,
             other_contact_emails=self.other_contact_emails,
+            links=LINKS,
         )

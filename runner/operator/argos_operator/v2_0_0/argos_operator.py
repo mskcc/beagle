@@ -77,16 +77,6 @@ class ArgosOperator(Operator):
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
         ).to_dict()
         send_notification.delay(sample_data_clinical_local)
-
-        jira_id = JobGroupNotifier.objects.get(id=self.job_group_notifier_id).jira_id
-        attach_links = AddAttachmentLinksToDescriptionEvent(
-            self.job_group_notifier_id,
-            self.request_id,
-            jira_id,
-            ["sample_pairing.txt", "sample_mapping.txt", "sample_data_clinical.txt"],
-        ).to_dict()
-        send_notification.delay(attach_links)
-
         self.evaluate_sample_errors(error_samples)
         self.summarize_pairing_info(argos_inputs)
 
@@ -492,3 +482,17 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             if is_dmp_sample:
                 dmp_samples.append(this_sample)
         return dmp_samples
+
+    def links_to_files(self):
+        jira_id = JobGroupNotifier.objects.get(id=self.job_group_notifier_id).jira_id
+        result = dict()
+        result[
+            "Sample Pairing"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_pairing.txt"
+        result[
+            "Sample Mapping"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_mapping.txt"
+        result[
+            "Sample Data Clinical"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_data_clinical.txt"
+        return result

@@ -63,9 +63,6 @@ class NoOpEventHandler(EventHandler):
     def process_add_pipeline_to_description_event(self, event):
         pass
 
-    def process_add_attachment_links_to_description_event(self, event):
-        pass
-
     def process_set_pipeline_field_event(self, event):
         pass
 
