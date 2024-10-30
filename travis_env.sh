@@ -6,3 +6,4 @@ export BEAGLE_NOTIFIER_ACTIVE=False
 export ENVIRONMENT='dev'
 export TMPDIR=/tmp
 export BEAGLE_SHARED_TMPDIR=$TMPDIR
+export BEAGLE_PRIMARY_ID_REGEX="^(0\d{4}|[1-9]\d{4,})(|_[B-Z]|_[A-Z]{2,})_\d+$"
