@@ -6,8 +6,8 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
-from notifier.models import JobGroup
 from .bin.make_sample import build_sample
+from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     UploadAttachmentEvent,
     OperatorRequestEvent,
@@ -57,24 +57,14 @@ class ArgosOperator(Operator):
         except Pipeline.DoesNotExist:
             pass
 
-        operator_run_summary = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
-        ).to_dict()
-        send_notification.delay(operator_run_summary)
         operator_run_summary_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
         ).to_dict()
         send_notification.delay(operator_run_summary_local)
-
-        mapping_file_event = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
-        ).to_dict()
-        send_notification.delay(mapping_file_event)
         mapping_file_event_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
         ).to_dict()
         send_notification.delay(mapping_file_event_local)
-
         data_clinical = generate_sample_data_content(
             filepaths,
             pipeline_name=pipeline_obj.name,
@@ -82,15 +72,10 @@ class ArgosOperator(Operator):
             pipeline_version=pipeline_obj.version,
             dmp_samples=dmp_samples,
         )
-        sample_data_clinical_event = UploadAttachmentEvent(
-            self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
-        ).to_dict()
-        send_notification.delay(sample_data_clinical_event)
         sample_data_clinical_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
         ).to_dict()
         send_notification.delay(sample_data_clinical_local)
-
         self.evaluate_sample_errors(error_samples)
         self.summarize_pairing_info(argos_inputs)
 
@@ -496,3 +481,17 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             if is_dmp_sample:
                 dmp_samples.append(this_sample)
         return dmp_samples
+
+    def links_to_files(self):
+        jira_id = JobGroupNotifier.objects.get(id=self.job_group_notifier_id).jira_id
+        result = dict()
+        result[
+            "Sample Pairing"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_pairing.txt"
+        result[
+            "Sample Mapping"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_mapping.txt"
+        result[
+            "Sample Data Clinical"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_data_clinical.txt"
+        return result
