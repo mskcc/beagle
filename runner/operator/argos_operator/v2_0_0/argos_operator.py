@@ -13,7 +13,7 @@ from notifier.events import (
     OperatorRequestEvent,
     CantDoEvent,
     SetLabelEvent,
-    LocalStoreAttachmentsEvent
+    LocalStoreAttachmentsEvent,
 )
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
