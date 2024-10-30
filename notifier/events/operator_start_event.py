@@ -93,7 +93,7 @@ class OperatorStartEvent(Event):
         if self.links:
             LINKS = """Links:
             """
-            for name, link in self.links:
+            for name, link in self.links.items():
                 LINKS += f"[{name}]({link})"
 
         return OPERATOR_START_TEMPLATE.format(
