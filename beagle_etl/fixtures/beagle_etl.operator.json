@@ -240,6 +240,16 @@
       "version": "v1.2.0",
       "slug": "CMOCHChipVarOperator_v1_2_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 24,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.argos_bam_operator.v1_0_0.argos_bam_operator.ArgosBamOperator",
+      "version": "v1.2.0",
+      "slug": "ArgosBamOperator_v1_0_0"
+    }
   }
-
 ]
