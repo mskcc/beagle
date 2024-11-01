@@ -522,7 +522,7 @@
       "default": true
     }
   },
-{
+  {
     "model": "runner.pipeline",
     "pk": "f3947928-b421-4c97-9ae1-8f76b7d19ec5",
     "fields": {
@@ -551,6 +551,22 @@
       "output_file_group": "b56f50ba-4052-4abd-9eff-0bbddc404bfd",
       "output_directory": "/work/access/production/runs/voyager/chip_var",
       "operator": 23,
+      "default": true
+    }
+  },
+  {
+    "model": "runner.pipeline",
+    "pk": "48775eda-2b56-42d7-940b-e410a26ab43d",
+    "fields": {
+      "created_date": "2019-11-18T17:46:45.118Z",
+      "modified_date": "2019-12-05T01:12:39.854Z",
+      "name": "argos pipeline with 1.2.0 operator",
+      "github": "https://github.com/mskcc/argos-cwl",
+      "version": "1.1.2",
+      "entrypoint": "modules/pair/alignment-pair.cwl",
+      "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
+      "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
+      "operator": 24,
       "default": true
     }
   }
