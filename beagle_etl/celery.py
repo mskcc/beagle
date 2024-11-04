@@ -51,6 +51,7 @@ app.conf.task_routes = {
     "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_system.tasks.check_fastq_files": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
@@ -60,6 +61,7 @@ app.conf.task_routes = {
     "beagle_etl.jobs.metadb_jobs.update_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+
 }
 
 app.conf.beat_schedule = {
