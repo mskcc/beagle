@@ -32,7 +32,7 @@ def check_fastq_files():
     files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
     current_date = datetime.now().strftime("%m_%d_%Y")
     file_name = f"missing_files_report_{current_date}.txt"
-    report_file = open(os.path.join(settings.MISSING_FILES_REPORT_PATH, file_name), 'w')
+    report_file = open(os.path.join(settings.MISSING_FILES_REPORT_PATH, file_name), "w")
     for f in files:
         if not os.path.exists(f.path):
             f.available = False
@@ -53,7 +53,7 @@ def remove_oldest_file(directory):
     for filename in os.listdir(directory):
         if filename.startswith("missing_files_report_") and filename.endswith(".txt"):
             count += 1
-            date_str = filename[len("missing_files_report_"):-len(".txt")]
+            date_str = filename[len("missing_files_report_") : -len(".txt")]
             file_date = datetime.strptime(date_str, "%m_%d_%Y")
             if oldest_date is None or file_date < oldest_date:
                 oldest_date = file_date
