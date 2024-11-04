@@ -401,6 +401,7 @@ BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get(
 BEAGLE_NATS_UPDATE_SAMPLE_QUEUE = os.environ.get("BEAGLE_NATS_UPDATE_SAMPLE_QUEUE", "beagle_nats_update_sample_queue")
 BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue")
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
+BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 
@@ -474,9 +475,7 @@ WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing"
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
 
 DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
-"""
 
-"""
 MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
@@ -502,3 +501,6 @@ DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)
 
 MANUAL_RESTART_REPORT_THRESHOLD = os.environ.get("MANUAL_RESTART_REPORT_THRESHOLD", 4)
 MANUAL_RESTART_REPORT_PATH = os.environ.get("MANUAL_RESTART_REPORT_PATH", "/tmp/report.txt")
+
+MISSING_FILES_REPORT_PATH = os.environ.get("BEAGLE_MISSING_FILES_REPORT_PATH")
+MISSING_FILES_REPORT_COUNT = int(os.environ.get("BEAGLE_MISSING_FILES_REPORT_COUNT", 10))
