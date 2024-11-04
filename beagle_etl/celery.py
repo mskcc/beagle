@@ -100,7 +100,7 @@ app.conf.beat_schedule = {
     },
     "check_missing_files": {
         "task": "file_system.tasks.check_fastq_files",
-        "schedule": crontab(day=1, hour=0, minute=0),
+        "schedule": crontab(day_of_week=1, hour=0, minute=0),
         "options": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     }
 }
