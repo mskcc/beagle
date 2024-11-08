@@ -219,6 +219,7 @@ class File(BaseModel):
     sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
     samples = ArrayField(models.CharField(max_length=100), default=list)
     patient_id = models.CharField(max_length=100, null=True, blank=True)
+    available = models.BooleanField(default=True, null=True, blank=True)
 
     def get_request(self):
         return Request.objects.filter(request_id=self.request_id, latest=True).first()

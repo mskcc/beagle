@@ -238,7 +238,7 @@ def create_jobs_from_request(
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
-    generate_description(job_group_id, job_group_notifier_id, request_id)
+    generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
 
@@ -278,8 +278,9 @@ def create_jobs_from_pairs(
         file_group=file_group_id,
         output_directory_prefix=output_directory_prefix,
     )
+
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
-    generate_description(job_group_id, job_group_notifier_id, request_id)
+    generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
 
@@ -314,7 +315,8 @@ def _generate_summary(req):
     return summary
 
 
-def generate_description(job_group, job_group_notifier, request):
+def generate_description(operator, job_group, job_group_notifier, request):
+    links = operator.links_to_files()
     files = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True}
     )
@@ -366,6 +368,7 @@ def generate_description(job_group, job_group_notifier, request):
             num_normals,
             data_access_emails,
             other_contact_emails,
+            links,
         ).to_dict()
         send_notification.delay(operator_start_event)
 

@@ -2,9 +2,7 @@ import io
 import os
 import logging
 import subprocess
-
 from django.conf import settings
-
 from file_system.helper.checksum import sha1
 from runner.models import Pipeline
 from runner.models import Run
@@ -27,6 +25,13 @@ class ChronosCopyOutputOperator(Operator):
             output_file_group = str(pipeline.output_file_group.id)
             metadata = self.construct_metadata(run)
             self.copy_bams(run, destination_directory, output_file_group, metadata)
+            count = 0
+            while not self.check_for_bams(run, destination_directory) and count < 5:
+                count += 1
+                self.copy_bams(run, destination_directory, output_file_group, metadata)
+            if not self.check_for_bams(run, destination_directory):
+                ci_tag = run.tags.get(settings.CMO_SAMPLE_TAG_METADATA_KEY)
+                raise Exception(f"Failed to copy bams for sample {ci_tag}")
             self.append_trace(run, destination_directory)
             self.append_bam_outputs(run, destination_directory)
         return []
@@ -50,24 +55,37 @@ class ChronosCopyOutputOperator(Operator):
                 self.recursive_copy(os.path.join(src, item), os.path.join(dst, item), output_file_group, metadata)
             else:
                 LOGGER.info(f"Copying file {os.path.join(src, item)}")
-                self._copy(os.path.join(src, item), os.path.join(dst, item), output_file_group, metadata)
+                if not self._copy(os.path.join(src, item), os.path.join(dst, item), output_file_group, metadata):
+                    LOGGER.info(f"Failed to copy file {os.path.join(src, item)}")
 
     def copy_bams(self, run, destination_directory, output_file_group, metadata={}):
         source_bam_directory = os.path.join(run.output_directory, "bams")
         destination_bam_directory = os.path.join(destination_directory, "bams")
         self.recursive_copy(source_bam_directory, destination_bam_directory, output_file_group, metadata)
 
+    def check_for_bams(self, run, destination_directory):
+        ci_tag = run.tags.get(settings.CMO_SAMPLE_TAG_METADATA_KEY)
+        destination_bam_directory = os.path.join(destination_directory, "bams")
+        bam_location = os.path.join(destination_bam_directory, ci_tag, f"{ci_tag}.bam")
+        bai_location = os.path.join(destination_bam_directory, ci_tag, f"{ci_tag}.bam.bai")
+        if os.path.exists(bam_location) and os.path.exists(bai_location):
+            LOGGER.info(f"Outputs for {ci_tag} successfully copied")
+            return True
+        LOGGER.info(f"Failed to copy outputs for {ci_tag} into {destination_directory}. Retrying...")
+        return False
+
     def _copy(self, src, dst, output_file_group, metadata):
         ret = subprocess.call(f"cp {src} {dst}", shell=True)
-        if ret != 0:
-            LOGGER.error(f"Failed to copy {src}")
-        else:
+        if ret == 0:
             path = f"juno://{dst}"
             size = os.path.getsize(dst)
             checksum = sha1(dst)
             request_id = metadata[settings.REQUEST_ID_METADATA_KEY]
             sample_id = metadata[settings.SAMPLE_ID_METADATA_KEY]
             FileProcessor.create_file_obj(path, size, checksum, output_file_group, metadata, request_id, [sample_id])
+            return True
+        else:
+            return False
 
     def append_trace(self, run, destination_directory):
         trace_file_path = os.path.join(run.output_directory, "trace.txt")
