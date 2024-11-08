@@ -18,6 +18,7 @@ from runner.run.objects.run_creator_object import RunCreator
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing_json.tsv")  # used for historical pairing
 LOGGER = logging.getLogger(__name__)
+DESTINATION_DIRECTORY = "/juno/work/tempo/wes_repo/Results/v2.0.x/bams"
 
 
 class ChronosOperator(Operator):
@@ -198,6 +199,10 @@ class ChronosOperator(Operator):
         jobs = []
         missing_samples = set()
         for sample, files in mapping.items():
+            check_bam_path = os.path.join(DESTINATION_DIRECTORY, f"{sample}", f"{sample}.bam")
+            if os.path.exists(check_bam_path):
+                LOGGER.info(f"{sample} already generated, {check_bam_path} exist. Skip")
+                continue
             name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
             output_directory = os.path.join(
                 self.OUTPUT_DIR,
