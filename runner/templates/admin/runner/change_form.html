@@ -1,0 +1,25 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}  {# This keeps all the existing head elements from the parent template #}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            const pipelineTypeField = document.getElementById("id_pipeline_type");
+            const nfcoreTemplateField = document.getElementById("id_nfcore_template").closest(".form-row");
+
+            function toggleNfcoreTemplate() {
+                if (pipelineTypeField.value == "1") {  // Assuming 1 is for NEXTFLOW
+                    nfcoreTemplateField.classList.remove("hidden");
+                } else {
+                    nfcoreTemplateField.classList.add("hidden");
+                }
+            }
+
+            // Initial toggle based on the current value
+            toggleNfcoreTemplate();
+
+            // Add event listener for changes to the pipeline type
+            pipelineTypeField.addEventListener("change", toggleNfcoreTemplate);
+        });
+    </script>
+{% endblock %}
