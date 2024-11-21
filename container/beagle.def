@@ -175,7 +175,7 @@ Includecmd: no
     echo "Removing PID files..."
     rm $BEAGLE_CELERY_BEAT_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_WORKER_PID_FILE > /dev/null 2>&1 < /dev/null &
-    rm BEAGLE_CELERY_CHECK_FILES_PID_FILE > /dev/null 2>&1 < /dev/null &
+    rm $BEAGLE_CELERY_CHECK_FILES_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_SCHEDULER_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_RUNNER_PID_FILE > /dev/null 2>&1 < /dev/null &
     rm $BEAGLE_CELERY_NATS_NEW_REQUEST_PID_FILE > /dev/null 2>&1 < /dev/null &
