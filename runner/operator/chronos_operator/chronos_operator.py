@@ -76,7 +76,7 @@ class ChronosOperator(Operator):
         igocomplete_query = Q(metadata__igoComplete=True)
         missing_fields_query = self.filter_out_missing_fields_query()
         q = recipe_query & assay_query & igocomplete_query & missing_fields_query
-        tempo_files = FileRepository.filter(queryset=FileRepository.all(), q=q, file_group=settings.IMPORT_FILE_GROUP)
+        tempo_files = FileRepository.filter(queryset=FileRepository.all(), q=q, file_group=self.file_group)
         tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
         self.send_message(
@@ -154,7 +154,7 @@ class ChronosOperator(Operator):
                     settings.REQUEST_ID_METADATA_KEY: self.request_id,
                     settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor",
                 },
-                file_group=settings.IMPORT_FILE_GROUP,
+                file_group=self.file_group,
                 values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
             )
             used_normals = set()
@@ -168,7 +168,7 @@ class ChronosOperator(Operator):
                     mapping = self.get_mapping_for_pair(tumor, pairing["normal"], mapping_all, used_normals)
                     normal_request_id = FileRepository.filter(
                         metadata={settings.SAMPLE_ID_METADATA_KEY: pairing["normal"]},
-                        file_group=settings.IMPORT_FILE_GROUP,
+                        file_group=self.file_group,
                         values_metadata=settings.REQUEST_ID_METADATA_KEY,
                     )
                     used_normals_requests.add(normal_request_id)
@@ -243,22 +243,22 @@ class ChronosOperator(Operator):
                 continue
             patient_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                file_group=settings.IMPORT_FILE_GROUP,
+                file_group=self.file_group,
                 values_metadata=settings.PATIENT_ID_METADATA_KEY,
             ).first()
             request_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                file_group=settings.IMPORT_FILE_GROUP,
+                file_group=self.file_group,
                 values_metadata=settings.REQUEST_ID_METADATA_KEY,
             ).first()
             gene_panel = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                file_group=settings.IMPORT_FILE_GROUP,
+                file_group=self.file_group,
                 values_metadata=settings.RECIPE_METADATA_KEY,
             ).first()
             primary_id = FileRepository.filter(
                 metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: sample},
-                file_group=settings.IMPORT_FILE_GROUP,
+                file_group=self.file_group,
                 values_metadata=settings.SAMPLE_ID_METADATA_KEY,
             ).first()
             job_tags = copy.deepcopy(tags)
@@ -404,7 +404,7 @@ class ChronosOperator(Operator):
     def get_ci_tag(self, primary_id):
         return FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
-            file_group=settings.IMPORT_FILE_GROUP,
+            file_group=self.file_group,
             values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
         ).first()
 
