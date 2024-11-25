@@ -121,8 +121,7 @@ class ArgosBamOperator(Operator):
                 "app": pipeline_id,
                 "inputs": job,
                 "name": name,
-                "tags": tags,
-                "output_directory": os.path.join(pipeline.output_directory, "argosBam"),
+                "tags": tags
             }
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
@@ -132,7 +131,7 @@ class ArgosBamOperator(Operator):
                     output_directory = os.path.join(
                         pipeline.output_directory, "argosBam", output_prefix, pipeline.version, jg_created_date
                     )
-                argos_bam_job_data["output_directory"] = output_directory
+                    argos_bam_job_data["output_directory"] = output_directory
             argos_jobs.append(RunCreator(**argos_bam_job_data))
         return argos_jobs
 
