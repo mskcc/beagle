@@ -103,7 +103,7 @@ class ArgosBamOperator(Operator):
             tumor_sample_name = job["tumor"]["ID"]
             normal_sample_name = job["normal"]["ID"]
 
-            name = "ARGOS %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
+            name = "ARGOS BAM %s, %i of %i" % (self.request_id, i + 1, number_of_inputs)
             assay = job["assay"]
             pi = job["pi"]
             pi_email = job["pi_email"]
@@ -115,10 +115,24 @@ class ArgosBamOperator(Operator):
                 "labHeadName": pi,
                 "labHeadEmail": pi_email,
             }
-            pipeline = self.get_pipeline_id()
+            pipeline_id = self.get_pipeline_id()
+            pipeline = Pipeline.objects.get(id=pipeline_id)
+            argos_bam_job_data = {
+                "app": pipeline_id,
+                "inputs": job,
+                "name": name,
+                "tags": tags,
+            }
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+                if self.job_group_id:
+                    jg = JobGroup.objects.get(id=self.job_group_id)
+                    jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
+                    output_directory = os.path.join(
+                        pipeline.output_directory, "argosBam", output_prefix, pipeline.version, jg_created_date
+                    )
+                argos_bam_job_data["output_directory"] = output_directory
+            argos_jobs.append(RunCreator(**argos_bam_job_data))
         return argos_jobs
 
     def get_mapping_from_argos_inputs(self, argos_inputs):
