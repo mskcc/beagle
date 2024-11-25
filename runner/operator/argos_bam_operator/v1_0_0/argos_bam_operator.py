@@ -117,12 +117,7 @@ class ArgosBamOperator(Operator):
             }
             pipeline_id = self.get_pipeline_id()
             pipeline = Pipeline.objects.get(id=pipeline_id)
-            argos_bam_job_data = {
-                "app": pipeline_id,
-                "inputs": job,
-                "name": name,
-                "tags": tags
-            }
+            argos_bam_job_data = {"app": pipeline_id, "inputs": job, "name": name, "tags": tags}
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
                 if self.job_group_id:
