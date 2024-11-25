@@ -203,7 +203,7 @@
     "fields": {
       "active": true,
       "recipes": "[\"None\"]",
-      "class_name": "runner.operator.access.v2_1_0.manifest.AccessManifestOperator",
+      "class_name": "runner.operator.manifest.AccessManifestOperator",
       "version": "v2.1.0",
       "slug": "AccessManifestOperator_2_1_0"
     }
@@ -229,6 +229,27 @@
       "version": "v1.2.0",
       "slug": "ArgosOperator_v1_2_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 23,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_1_0.chip_var.CMOCHChipVarOperator",
+      "version": "v1.2.0",
+      "slug": "CMOCHChipVarOperator_v1_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 24,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.argos_bam_operator.v1_0_0.argos_bam_operator.ArgosBamOperator",
+      "version": "v1.2.0",
+      "slug": "ArgosBamOperator_v1_0_0"
+    }
   }
-
 ]

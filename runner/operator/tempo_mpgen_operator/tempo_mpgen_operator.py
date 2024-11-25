@@ -1,28 +1,20 @@
-import uuid
-import re
 import os
-import json
 import csv
 import pickle
 import logging
 import unicodedata
 from django.db.models import Q
 from django.conf import settings
-from pathlib import Path
 from beagle import __version__
 from datetime import datetime
 from file_system.models import File, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
-from rest_framework import serializers
 from runner.operator.operator import Operator
 from runner.models import Pipeline
-import runner.operator.tempo_mpgen_operator.bin.tempo_sample as sample_obj
 import runner.operator.tempo_mpgen_operator.bin.tempo_patient as patient_obj
 from notifier.events import OperatorRequestEvent
-from notifier.models import JobGroup
 from notifier.tasks import send_notification
-from notifier.events import UploadAttachmentEvent
-from notifier.event_handler.jira_event_handler.jira_event_handler import JiraEventHandler
+
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing.tsv")  # used for historical pairing
@@ -136,7 +128,12 @@ class TempoMPGenOperator(Operator):
             if "C-" in patient_id[:2]:
                 self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
             else:
-                self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
+                patient_file = patient_files[patient_id][0]
+                specimen_type = patient_file.metadata[settings.SAMPLE_CLASS_METADATA_KEY]
+                if "cellline" in specimen_type.lower():
+                    self.patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id], pre_pairing)
+                else:
+                    self.non_cmo_patients[patient_id] = patient_obj.Patient(patient_id, patient_files[patient_id])
 
         input_json = dict()
         # output these strings to file
@@ -199,9 +196,9 @@ class TempoMPGenOperator(Operator):
             fh.write(s)
         os.chmod(output, 0o777)
         self.register_tmp_file(output)
-        if self.job_group_notifier_id:
-            upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
-            send_notification.delay(upload_file_event)
+        # if self.job_group_notifier_id:
+        # upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
+        # send_notification.delay(upload_file_event)
         return {"class": "File", "location": "juno://" + output}
 
     def write_historical_pairing_file(self, pairing_file_str):
@@ -250,6 +247,8 @@ class TempoMPGenOperator(Operator):
 
     def get_recipes(self):
         recipe = [
+            "WES_Human",  # TODO: Fix for bad recipe name in LIMS. Remove when problem in LIMS is resolved
+            "WES_HUMAN",
             "Agilent_v4_51MB_Human",
             "IDT_Exome_v1_FP",
             "WholeExomeSequencing",

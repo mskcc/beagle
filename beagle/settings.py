@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.environ.get("BEAGLE_ALLOWED_HOSTS", "localhost").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", "beagle_prod_session")
 
 # Application definition
 
@@ -306,8 +307,6 @@ LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
-# NATS
-
 # SSL
 NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
 NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
@@ -369,7 +368,7 @@ LOGGING = {
         "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": True,
         },
     },
@@ -382,7 +381,9 @@ NOTIFIER_ACTIVE = os.environ.get("BEAGLE_NOTIFIER_ACTIVE", "True") == "True"
 NOTIFIER_CC = os.environ.get("BEAGLE_NOTIFIER_CC", "")  # Put "CC [~webbera] and [~socci]" for production
 NOTIFIER_STORAGE_DIR = os.environ.get("BEAGLE_NOTIFIER_STORAGE_DIR", "/tmp")
 NOTIFIER_FILE_GROUP = os.environ.get("BEAGLE_NOTIFIER_FILE_GROUP")
+NOTIFIER_LOCAL_ATTACHMENTS_DIR = os.environ.get("BEAGLE_NOTIFIER_LOCAL_ATTACHMENTS_DIR", "/tmp")
 
+JIRA_CLOUD = os.environ.get("JIRA_CLOUD", "True") == "True"
 JIRA_PREFIX = os.environ.get("JIRA_PREFIX", "VADEV-")
 JIRA_URL = os.environ.get("JIRA_URL", "")
 JIRA_USERNAME = os.environ.get("JIRA_USERNAME", "")
@@ -400,6 +401,7 @@ BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get(
 BEAGLE_NATS_UPDATE_SAMPLE_QUEUE = os.environ.get("BEAGLE_NATS_UPDATE_SAMPLE_QUEUE", "beagle_nats_update_sample_queue")
 BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue")
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
+BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 
@@ -444,6 +446,9 @@ PRESERVATION_METADATA_KEY = "preservation"
 SEX_METADATA_KEY = "sex"
 RUN_DATE_METADATA_KEY = "runDate"
 
+VALIDATE_PRIMARY_ID_FOR_GENE_PANELS = os.environ.get("BEAGLE_VALIDATE_PRIMARY_ID_FOR_GENE_PANELS", "").split(",")
+PRIMARY_ID_REGEX = os.environ.get("BEAGLE_PRIMARY_ID_REGEX", "[a-z]*_[0-9]*")
+
 BEAGLE_NOTIFIER_EMAIL_GROUP = os.environ.get("BEAGLE_NOTIFIER_EMAIL_GROUP", "946a922c-8c6b-4cba-8754-16df02f05d2a")
 BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS = os.environ.get("BEAGLE_NOTIFIER_EMAIL_ABOUT_NEW_USERS")
 BEAGLE_NOTIFIER_EMAIL_FROM = os.environ.get("BEAGLE_NOTIFIER_EMAIL_FROM")
@@ -452,6 +457,8 @@ BEAGLE_NOTIFIER_VOYAGER_STATUS_EMAIL_TO = os.environ.get("BEAGLE_NOTIFIER_VOYAGE
 BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST = os.environ.get("BEAGLE_NOTIFIER_VOYAGER_STATUS_BLACKLIST", "").split(",")
 BEAGLE_NOTIFIER_VOYAGER_STATUS_PIPELINES = os.environ.get("BEAGLE_NOTIFIER_VOYAGER_STATUS_PIPELINES", "").split(",")
 BEAGLE_NOTIFIER_VOYAGER_STATUS_NOTIFY_EXTERNAL = os.environ.get("BEAGLE_NOTIFIER_NOTIFY_EXTERNAL", "").split(",")
+
+DELIVERY_FILE_SERVER = os.environ.get("BEAGLE_DELIVERY_FILE_SERVER", "http://test-server.com")
 
 ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
     "BEAGLE_ASSAYS_ADMIN_HOLD_ONLY_NORMALS",
@@ -468,6 +475,8 @@ WES_ASSAYS = os.environ.get("BEAGLE_NOTIFIER_WES_ASSAYS", "WholeExomeSequencing"
 NOTIFIER_WES_CC = os.environ.get("BEAGLE_NOTIFIER_WHOLE_EXOME_SEQUENCING_CC", "")
 
 DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
+
+MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
@@ -481,5 +490,17 @@ CONTACT_EMAIL = os.environ.get("EVENTS_CONTACT_EMAIL", "")
 DATADOG_RUN_ERROR_URL = os.environ.get("DATADOG_RUN_ERROR_URL", "")
 DATADOG_JOB_ERROR_URL = os.environ.get("DATADOG_JOB_ERROR_URL", "")
 
+# Pipeline Default Permissions
+
+DEFAULT_OUTPUTS_PERMISSIONS = os.environ.get("BEAGLE_DEFAULT_PERMISSIONS")
+DEFAULT_OUTPUTS_UID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_UID", 0))
+DEFAULT_OUTPUTS_GID = int(os.environ.get("BEAGLE_DEFAULT_OUTPUTS_GID", 0))
+
 DEFAULT_RESTART_COUNT = os.environ.get("DEFAULT_RESTART_COUNT", 0)
 DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)
+
+MANUAL_RESTART_REPORT_THRESHOLD = os.environ.get("MANUAL_RESTART_REPORT_THRESHOLD", 4)
+MANUAL_RESTART_REPORT_PATH = os.environ.get("MANUAL_RESTART_REPORT_PATH", "/tmp/report.txt")
+
+MISSING_FILES_REPORT_PATH = os.environ.get("BEAGLE_MISSING_FILES_REPORT_PATH")
+MISSING_FILES_REPORT_COUNT = int(os.environ.get("BEAGLE_MISSING_FILES_REPORT_COUNT", 10))

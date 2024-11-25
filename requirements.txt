@@ -12,7 +12,6 @@ GitPython==3.1.37
 jsonschema==3.0.2
 deepdiff==4.0.7
 celery==5.2.2
-flower==1.1.0
 djangorestframework-simplejwt==4.6.0
 docopt==0.6.2
 pygments==2.15.0

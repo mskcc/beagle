@@ -43,7 +43,7 @@ from study.models import JobGroupWatcher, JobGroupWatcherConfig
 from django.http import HttpResponse
 from ddtrace import tracer
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
@@ -238,9 +238,51 @@ def create_jobs_from_request(
 
     _set_link_to_run_ticket(request_id, job_group_notifier_id)
 
-    generate_description(job_group_id, job_group_notifier_id, request_id)
+    generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
+
+
+@shared_task
+def create_jobs_from_pairs(
+    pipeline_id,
+    pairs,
+    name,
+    assay,
+    investigatorName,
+    labHeadName,
+    file_group_id,
+    job_group_id,
+    request_id=None,
+    output_directory_prefix=None,
+):
+    pipeline = Pipeline.objects.get(id=pipeline_id)
+    job_group = JobGroup.objects.get(id=job_group_id)
+
+    try:
+        job_group_notifier = JobGroupNotifier.objects.get(
+            job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
+        )
+        job_group_notifier_id = str(job_group_notifier.id)
+    except JobGroupNotifier.DoesNotExist:
+        metadata = {"assay": assay, "investigatorName": investigatorName, "labHeadName": labHeadName}
+        job_group_notifier_id = notifier_start(job_group, name, operator=pipeline.operator, metadata=metadata)
+
+    operator_model = Operator.objects.get(id=pipeline.operator_id)
+    operator = OperatorFactory.get_by_model(
+        operator_model,
+        pairing={"pairs": pairs},
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        request_id=request_id,
+        file_group=file_group_id,
+        output_directory_prefix=output_directory_prefix,
+    )
+
+    _set_link_to_run_ticket(request_id, job_group_notifier_id)
+    generate_description(operator, job_group_id, job_group_notifier_id, request_id)
+    generate_label(job_group_notifier_id, request_id)
+    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
 
 
 def _set_link_to_run_ticket(request_id, job_group_notifier_id):
@@ -273,7 +315,8 @@ def _generate_summary(req):
     return summary
 
 
-def generate_description(job_group, job_group_notifier, request):
+def generate_description(operator, job_group, job_group_notifier, request):
+    links = operator.links_to_files()
     files = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request, settings.IGO_COMPLETE_METADATA_KEY: True}
     )
@@ -325,6 +368,7 @@ def generate_description(job_group, job_group_notifier, request):
             num_normals,
             data_access_emails,
             other_contact_emails,
+            links,
         ).to_dict()
         send_notification.delay(operator_start_event)
 
@@ -376,11 +420,15 @@ def process_triggers():
                     condition = trigger.aggregate_condition
                     if condition == TriggerAggregateConditionType.ALL_RUNS_SUCCEEDED:
                         if operator_run.percent_runs_succeeded == 100.0:
+                            run_ids = [
+                                str(run_id)
+                                for run_id in list(operator_run.runs.order_by("id").values_list("id", flat=True))
+                            ]
                             created_chained_job = True
                             create_jobs_from_chaining.delay(
                                 trigger.to_operator_id,
                                 trigger.from_operator_id,
-                                list(operator_run.runs.order_by("id").values_list("id", flat=True)),
+                                run_ids,
                                 job_group_id=job_group_id,
                                 job_group_notifier_id=job_group_notifier_id,
                                 parent=str(operator_run.id),
@@ -502,11 +550,15 @@ def submit_job(run_id, output_directory=None, execution_id=None, log_directory=N
         job["tool_walltime"] = run.app.tool_walltime
     if run.app.memlimit:
         job["memlimit"] = run.app.memlimit
-    if run.app.output_permission:
-        job["root_permission"] = run.app.output_permission
 
+    root_permissions = run.app.output_permission if run.app.output_permission else settings.DEFAULT_OUTPUTS_PERMISSIONS
+    output_uid = run.app.output_uid if run.app.output_uid else settings.DEFAULT_OUTPUTS_UID
+    output_gid = run.app.output_gid if run.app.output_gid else settings.DEFAULT_OUTPUTS_GID
+    job["root_permission"] = root_permissions
+    job["output_uid"] = output_uid
+    job["output_gid"] = output_gid
     job["metadata"] = dict()
-    job["metadata"]["run_id"] = run_id
+    job["metadata"]["run_id"] = str(run_id)
     job["metadata"]["pipeline_id"] = str(run.app.id)
     job["metadata"][
         "pipeline_link"
@@ -578,7 +630,10 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
             restart_run = run.run_obj.set_for_restart()
 
             if not restart_run:
-                run.fail(error_message)
+                if isinstance(error_message, dict):
+                    run.fail(error_message)
+                else:
+                    run.fail({"Error": str(error_message)})
                 run.to_db()
 
                 job_group_notifier = run.job_group_notifier
@@ -771,6 +826,101 @@ def send_hanging_job_alert(run_id, message):
 
 
 @shared_task
+@memcache_lock("check_operator_run_alerts")
+def check_operator_run_alerts():
+    def _create_sample_str(single_run):
+        samples_str = "NA"
+        if single_run.samples:
+            samples = []
+            for single_sample in single_run.samples.all():
+                samples.append(single_sample.sample_id)
+            samples_str = ", ".join(samples)
+        return samples_str
+
+    triggered_operator_runs = (
+        OperatorRun.objects.all()
+        .prefetch_related("runs", "job_group_notifier")
+        .filter(num_manual_restarts__gte=settings.MANUAL_RESTART_REPORT_THRESHOLD, triggered_alert=False)
+    )
+    for single_operator_run in triggered_operator_runs:
+        failed_runs = (
+            single_operator_run.runs.filter(status=RunStatus.FAILED)
+            .prefetch_related("app", "samples")
+            .order_by("-started")
+        )
+        completed_dict = {}
+        error_dict = {}
+        completed_runs = single_operator_run.runs.filter(status=RunStatus.COMPLETED).prefetch_related("app", "samples")
+        for single_run in completed_runs:
+            samples_str = _create_sample_str(single_run)
+            pipeline = single_run.app.name
+            finished = single_run.finished_date
+            completed_dict[(samples_str, pipeline)] = finished
+        if single_operator_run.job_group_notifier:
+            requestID = single_operator_run.job_group_notifier.request_id
+        else:
+            requestID = "NA"
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        num_manual_restarts_str = str(single_operator_run.num_manual_restarts)
+        alert_message = "-------------- Manual Restart Alert for {} on {} after {} restarts --------------\n".format(
+            requestID, current_time, num_manual_restarts_str
+        )
+        run_info = []
+        counter = 1
+        for single_run in failed_runs:
+            if not single_run.started:
+                started = single_run.created_date
+            else:
+                started = single_run.started
+            finished = single_run.finished_date
+            delta = finished - started
+            delta_seconds = delta.total_seconds()
+            delta_hours = divmod(delta_seconds, 3600)[0]
+            started_str = started.strftime("%Y-%m-%d %H:%M:%S")
+            finished_str = finished.strftime("%Y-%m-%d %H:%M:%S")
+            run_name = single_run.name
+            pipeline = single_run.app.name
+            message = single_run.message
+            log_file = "NA"
+            failed_jobs = []
+            samples_str = _create_sample_str(single_run)
+            run_key = (samples_str, pipeline)
+            if run_key in completed_dict:
+                if completed_dict[run_key] > started:
+                    continue
+            if run_key in error_dict:
+                continue
+            else:
+                error_dict[run_key] = finished
+            if "details" in message:
+                if "log" in message["details"]:
+                    log_file = message["details"]["log"]
+                if "failed_jobs" in message["details"]:
+                    for single_tool in message["details"]["failed_jobs"].keys():
+                        if single_tool not in failed_jobs:
+                            failed_jobs.append(single_tool)
+            run_message_line = "{}. Name: Run {}\n".format(str(counter), run_name)
+            run_message_line += "Sample: {}\n".format(samples_str)
+            run_message_line += "Pipeline: {}\n".format(pipeline)
+            run_message_line += "Started: {}, Failed: {}, Total time: {} hour(s)\n".format(
+                started_str, finished_str, delta_hours
+            )
+            run_message_line += "Log_file: {}\n".format(log_file)
+            if failed_jobs:
+                run_message_line += "Failed Jobs: " + ", ".join(failed_jobs)
+            run_info.append(run_message_line)
+            counter += 1
+        if len(run_info) == 0:
+            alert_message += " Sorry we could not retrieving the run info"
+        else:
+            alert_message += "\n".join(run_info)
+        with open(settings.MANUAL_RESTART_REPORT_PATH, "a+") as alert_file:
+            alert_file.write(alert_message)
+        single_operator_run.triggered_alert = True
+        single_operator_run.save()
+
+
+@shared_task
 @memcache_lock("check_jobs_status")
 def check_jobs_status():
     runs_queryset = Run.objects.filter(status__in=(RunStatus.RUNNING, RunStatus.READY), execution_id__isnull=False)
@@ -801,7 +951,7 @@ def check_jobs_status():
                 logger.error(format_log("Hanging Job detected", obj=run))
                 run.message = dict(details=status.get("message", {}))
                 run.save(update_fields=("message",))
-                send_hanging_job_alert(str(run.id), new_alert[0]["message"])
+                # send_hanging_job_alert(str(run.id), new_alert[0]["message"])
 
             if status["started"] and not run.started:
                 run.started = status["started"]

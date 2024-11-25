@@ -6,20 +6,26 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from .construct_argos_pair import construct_argos_jobs, get_project_prefix
 from runner.models import Pipeline
-from notifier.models import JobGroup
 from .bin.make_sample import build_sample
-from notifier.events import UploadAttachmentEvent, OperatorRequestEvent, CantDoEvent, SetLabelEvent
+from notifier.models import JobGroup, JobGroupNotifier
+from notifier.events import (
+    UploadAttachmentEvent,
+    OperatorRequestEvent,
+    CantDoEvent,
+    SetLabelEvent,
+    LocalStoreAttachmentsEvent,
+)
 from notifier.tasks import send_notification
 from notifier.helper import generate_sample_data_content
 from runner.run.processors.file_processor import FileProcessor
 from file_system.repository.file_repository import FileRepository
 from .bin.retrieve_samples_by_query import build_dmp_sample, get_pooled_normal_files, build_pooled_normal_sample_by_file
-from .bin.make_sample import format_sample_name, get_run_mode
+from .bin.make_sample import format_sample_name
 
 
 class ArgosOperator(Operator):
     ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.5.0"
+    ARGOS_VERSION = "1.6.1"
 
     def get_jobs(self):
 
@@ -51,16 +57,14 @@ class ArgosOperator(Operator):
         except Pipeline.DoesNotExist:
             pass
 
-        operator_run_summary = UploadAttachmentEvent(
+        operator_run_summary_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_pairing.txt", sample_pairing
         ).to_dict()
-        send_notification.delay(operator_run_summary)
-
-        mapping_file_event = UploadAttachmentEvent(
+        send_notification.delay(operator_run_summary_local)
+        mapping_file_event_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_mapping.txt", sample_mapping
         ).to_dict()
-        send_notification.delay(mapping_file_event)
-
+        send_notification.delay(mapping_file_event_local)
         data_clinical = generate_sample_data_content(
             filepaths,
             pipeline_name=pipeline_obj.name,
@@ -68,11 +72,10 @@ class ArgosOperator(Operator):
             pipeline_version=pipeline_obj.version,
             dmp_samples=dmp_samples,
         )
-        sample_data_clinical_event = UploadAttachmentEvent(
+        sample_data_clinical_local = LocalStoreAttachmentsEvent(
             self.job_group_notifier_id, "sample_data_clinical.txt", data_clinical
         ).to_dict()
-        send_notification.delay(sample_data_clinical_event)
-
+        send_notification.delay(sample_data_clinical_local)
         self.evaluate_sample_errors(error_samples)
         self.summarize_pairing_info(argos_inputs)
 
@@ -457,3 +460,38 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "%s",
         )
         return output_directory
+
+    def get_dmp_samples_from_argos_inputs(self, argos_inputs):
+        dmp_samples = list()
+        for i, job in enumerate(argos_inputs):
+            pi = job["pi"]
+            pi_email = job["pi_email"]
+            patient_id = job["patient_id"]
+            bait_set = job["assay"]
+            tumor_id = job["tumor"]["ID"]
+            normal_id = job["normal"]["ID"]
+            sample_tumor = dict(pi=pi, bait_set=bait_set, pi_email=pi_email, patient_id=patient_id, sample_id=tumor_id)
+            this_sample, is_dmp_sample = self.get_regular_sample(sample_tumor, "Tumor")
+            if is_dmp_sample:
+                dmp_samples.append(this_sample)
+            sample_normal = dict(
+                pi=pi, bait_set=bait_set, pi_email=pi_email, patient_id=patient_id, sample_id=normal_id
+            )
+            this_sample, is_dmp_sample = self.get_regular_sample(sample_normal, "Normal")
+            if is_dmp_sample:
+                dmp_samples.append(this_sample)
+        return dmp_samples
+
+    def links_to_files(self):
+        jira_id = JobGroupNotifier.objects.get(id=self.job_group_notifier_id).jira_id
+        result = dict()
+        result[
+            "Sample Pairing"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_pairing.txt"
+        result[
+            "Sample Mapping"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_mapping.txt"
+        result[
+            "Sample Data Clinical"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_data_clinical.txt"
+        return result

@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
+from celery.schedules import crontab
 from django.conf import settings
 from celery.app.log import TaskFormatter
 from celery.signals import after_setup_task_logger, worker_ready
@@ -42,6 +43,7 @@ app.conf.task_routes = {
     "runner.tasks.submit_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_request": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_chaining": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_jobs_from_pairs": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.add_pipeline_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.running_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.terminate_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
@@ -49,6 +51,7 @@ app.conf.task_routes = {
     "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_system.tasks.check_fastq_files": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
@@ -76,6 +79,11 @@ app.conf.beat_schedule = {
         "schedule": settings.CHECK_JOB_STATUS_PERIOD,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     },
+    "check_operator_run_alerts": {
+        "task": "runner.tasks.check_operator_run_alerts",
+        "schedule": crontab(minute=0, hour=0),
+        "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
     "process_triggers": {
         "task": "runner.tasks.process_triggers",
         "schedule": settings.PROCESS_TRIGGERS_PERIOD,
@@ -90,5 +98,10 @@ app.conf.beat_schedule = {
         "task": "study.tasks.check_job_group_watcher",
         "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    },
+    "check_missing_files": {
+        "task": "file_system.tasks.check_fastq_files",
+        "schedule": crontab(day_of_week=1, hour=0, minute=0),
+        "options": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     },
 }

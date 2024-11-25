@@ -17,14 +17,16 @@ from notifier.tasks import send_notification
 LOGGER = logging.getLogger(__name__)
 
 ARGOS_NAME = "argos"
-ARGOS_VERSION = "1.5.0"
+ARGOS_VERSION = "1.6.1"
 ONCOKB_FG_SLUG = "oncokb-file-group"
 
 
 class ArgosReportOperator(Operator):
     def get_jobs(self):
         LOGGER.info("[%s] Running ArgosReportOperator", self.job_group_notifier_id)
-        self.annotations_path = "juno:///juno/work/ci/resources/genomic_resources/annotations/oncokb"
+        self.annotations_path = (
+            "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/annotations/oncokb"
+        )
 
         hf_run_id = self.run_ids[0]  # only one run in list
         hf_run = Run.objects.get(id=hf_run_id)

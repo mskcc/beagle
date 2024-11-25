@@ -22,7 +22,7 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
     ignore_sample_formatting is applied if we want to return a sample name regardless of
     formatting
     """
-    sample_pattern = re.compile(r"C-\w{6,}-\w{4}-\w")
+    sample_pattern = re.compile(r"^[^0-9].*$")
 
     if not ignore_sample_formatting:
         try:
@@ -33,8 +33,7 @@ def format_sample_name(sample_name, specimen_type, ignore_sample_formatting=Fals
             ):  # cmoSampleName is formatted properly
                 sample_name = "s_" + sample_name.replace("-", "_")
                 return sample_name
-            LOGGER.error("Missing or malformed sampleName: %s", sample_name, exc_info=True)
-            return "sampleNameMalformed"
+            return sample_name
         except TypeError:
             LOGGER.error("sampleNameError: sampleName is Nonetype; returning 'sampleNameMalformed'.")
             return "sampleNameMalformed"

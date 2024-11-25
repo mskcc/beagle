@@ -71,6 +71,8 @@ class JiraClient(object):
                 "description": message,
             }
         }
+        if settings.JIRA_CLOUD:
+            body["fields"].pop("reporter")
         response = self._post(create_url, body)
         return response
 
@@ -126,6 +128,11 @@ class JiraClient(object):
         return response
 
     def add_attachment(self, ticket_id, file_name, content, download=False):
+        if settings.JIRA_CLOUD:
+            """
+            Uploading attachments is not allowed in Cloud Jira
+            """
+            return
         attachment_url = self.JiraEndpoints.ATTACHMENT.value % ticket_id
         if not download:
             files = {"file": (file_name, content, "text/plain")}

@@ -67,12 +67,15 @@ class Pipeline(BaseModel):
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     output_permission = models.IntegerField(blank=True, null=True, editable=True)
+    output_uid = models.IntegerField(blank=True, null=True, editable=True)
+    output_gid = models.IntegerField(blank=True, null=True, editable=True)
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
     default = models.BooleanField(default=False)
     walltime = models.IntegerField(blank=True, null=True)
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
-    config = models.CharField(blank=True, null=True, max_length=1000, default=None)
+    config = models.CharField(blank=True, null=True, max_length=3000, default=None)
+    nfcore_template = models.BooleanField(default=False)
 
     @property
     def pipeline_link(self):
@@ -111,6 +114,8 @@ class OperatorRun(BaseModel):
     )
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True)
     num_total_runs = models.IntegerField(null=False)
+    num_manual_restarts = models.IntegerField(null=False, default=0)
+    triggered_alert = models.BooleanField(default=False)
     num_completed_runs = models.IntegerField(null=False, default=0)
     num_failed_runs = models.IntegerField(null=False, default=0)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
@@ -143,6 +148,11 @@ class OperatorRun(BaseModel):
     def increment_completed_run(self):
         self.refresh_from_db()
         self.num_completed_runs += 1
+        self.save()
+
+    def increment_manual_restart(self):
+        self.refresh_from_db()
+        self.num_manual_restarts += 1
         self.save()
 
     @property
@@ -238,7 +248,7 @@ class Run(BaseModel):
         return self
 
     def set_for_restart(self):
-        run_id = self.pk
+        run_id = str(self.pk)
         output_directory = self.output_directory
         message = self.message
         started = self.started
@@ -249,7 +259,9 @@ class Run(BaseModel):
         if not message:
             message = {}
         execution_id = self.execution_id
+
         job_tuple = (started_strftime, exited_strftime, str(execution_id))
+
         if self.resume_attempts > 0:
             resume_attempts = self.resume_attempts - 1
             if "resume" not in message:
@@ -262,6 +274,7 @@ class Run(BaseModel):
             self.message = message
             self.output_directory = output_directory
             self.save()
+
         elif self.restart_attempts > 0:
             restart_attempts = self.restart_attempts - 1
             if "restart" not in message:

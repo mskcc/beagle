@@ -2,6 +2,8 @@ import os
 import copy
 import json
 import logging
+import re
+
 from deepdiff import DeepDiff
 from datetime import datetime, timedelta
 from dateutil.parser import parse
@@ -48,7 +50,7 @@ from beagle_etl.models import (
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, ImportMetadata, Request, Sample
+from file_system.models import File, FileGroup, FileMetadata, FileType, Request, Sample
 from beagle_etl.exceptions import (
     FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
@@ -60,13 +62,14 @@ from beagle_etl.exceptions import (
     FailedToCopyFileException,
     FailedToRegisterFileException,
     DuplicatedFilesException,
+    IncorrectlyFormattedPrimaryId,
 )
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
 from beagle_etl.copy_service import CopyService
-from beagle_etl.jobs.helper_jobs import check_file_permissions, check_file_exist
+from beagle_etl.jobs.helper_jobs import check_file_permissions, check_file_exist, locate_file
 from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
@@ -121,17 +124,21 @@ def new_request(message_id):
         logger.info(f"Request {request_id} is not CMO Request")
         message.status = SmileMessageStatus.COMPLETED
         message.save()
+        # Add EMAIL notification
         return
 
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
+    gene_panel = data.get(settings.RECIPE_METADATA_KEY)
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
+    valid_samples = set()
 
     samples = data.get("samples")
     try:
         check_files_permissions(samples)
     except FailedToCopyFilePermissionDeniedException as e:
+        logger.error("Error:", e)
         message.status = SmileMessageStatus.FAILED
         message.save()
         return
@@ -139,7 +146,7 @@ def new_request(message_id):
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
-            validate_sample(sample, sample.get("libraries", []), igocomplete)
+            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel)
             sample_status = {
                 "type": "SAMPLE",
                 "igocomplete": igocomplete,
@@ -149,6 +156,7 @@ def new_request(message_id):
                 "code": None,
             }
             sample_jobs.append(sample_status)
+            valid_samples.add(sample["primaryId"])
         except Exception as e:
             if isinstance(e, ETLExceptions):
                 sample_status = {
@@ -183,10 +191,10 @@ def new_request(message_id):
 
     project_manager_name = data.get("projectManagerName")
     pi_email = data.get("piEmail")
-    lab_head_name = data.get("labHeadName")
-    lab_head_email = data.get("labHeadEmail")
-    investigator_name = data.get("investigatorName")
-    investigator_email = data.get("investigatorEmail")
+    lab_head_name = data.get(settings.LAB_HEAD_NAME_METADATA_KEY)
+    lab_head_email = data.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
+    investigator_name = data.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
+    investigator_email = data.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
     data_analyst_name = data.get("dataAnalystName")
     data_analyst_email = data.get("dataAnalystEmail")
     other_contact_emails = data.get("otherContactEmails")
@@ -201,10 +209,10 @@ def new_request(message_id):
         settings.RECIPE_METADATA_KEY: recipe,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
-        "labHeadName": lab_head_name,
-        "labHeadEmail": lab_head_email,
-        "investigatorName": investigator_name,
-        "investigatorEmail": investigator_email,
+        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
+        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
+        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
+        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
         "dataAnalystName": data_analyst_name,
         "dataAnalystEmail": data_analyst_email,
         "otherContactEmails": other_contact_emails,
@@ -230,6 +238,8 @@ def new_request(message_id):
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
+        if sample_id not in valid_samples:
+            continue
         igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
         libraries = sample.pop("libraries")
@@ -240,10 +250,11 @@ def new_request(message_id):
                 logger.info("Processing run %s" % run)
                 fastqs = run.pop("fastqs")
                 for fastq in fastqs:
-                    logger.info("Adding file %s" % fastq)
+                    fastq_location = locate_file(fastq)
+                    logger.info("Adding file %s" % fastq_location)
                     try:
                         create_or_update_file(
-                            fastq,
+                            fastq_location,
                             request_id,
                             settings.IMPORT_FILE_GROUP,
                             "fastq",
@@ -391,7 +402,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             send_notification.delay(ci_review_e)
 
     lab_head_email = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata="labHeadEmail"
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.LAB_HEAD_EMAIL_METADATA_KEY
     ).first()
     try:
         if lab_head_email.split("@")[1] != "mskcc.org":
@@ -401,7 +412,11 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         logger.error("Failed to check labHeadEmail")
 
     if (
-        len(FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"}))
+        len(
+            FileRepository.filter(
+                metadata={settings.REQUEST_ID_METADATA_KEY: request_id, settings.TUMOR_OR_NORMAL_METADATA_KEY: "Tumor"}
+            )
+        )
         == 0
     ):
         samples = list(
@@ -481,10 +496,10 @@ def update_request_job(message_id, job_group, job_group_notifier):
 
     project_manager_name = data.get("projectManagerName")
     pi_email = data.get("piEmail")
-    lab_head_name = data.get("labHeadName")
-    lab_head_email = data.get("labHeadEmail")
-    investigator_name = data.get("investigatorName")
-    investigator_email = data.get("investigatorEmail")
+    lab_head_name = data.get(settings.LAB_HEAD_NAME_METADATA_KEY)
+    lab_head_email = data.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
+    investigator_name = data.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
+    investigator_email = data.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
     data_analyst_name = data.get("dataAnalystName")
     data_analyst_email = data.get("dataAnalystEmail")
     other_contact_emails = data.get("otherContactEmails")
@@ -497,10 +512,10 @@ def update_request_job(message_id, job_group, job_group_notifier):
         settings.RECIPE_METADATA_KEY: recipe,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
-        "labHeadName": lab_head_name,
-        "labHeadEmail": lab_head_email,
-        "investigatorName": investigator_name,
-        "investigatorEmail": investigator_email,
+        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
+        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
+        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
+        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
         "dataAnalystName": data_analyst_name,
         "dataAnalystEmail": data_analyst_email,
         "otherContactEmails": other_contact_emails,
@@ -562,10 +577,10 @@ def fetch_request_metadata(request_id):
         settings.RECIPE_METADATA_KEY: file_example.metadata[settings.RECIPE_METADATA_KEY],
         "projectManagerName": file_example.metadata["projectManagerName"],
         "piEmail": file_example.metadata["piEmail"],
-        "labHeadName": file_example.metadata["labHeadName"],
-        "labHeadEmail": file_example.metadata["labHeadEmail"],
-        "investigatorName": file_example.metadata["investigatorName"],
-        "investigatorEmail": file_example.metadata["investigatorEmail"],
+        settings.LAB_HEAD_NAME_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_NAME_METADATA_KEY],
+        settings.LAB_HEAD_EMAIL_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_EMAIL_METADATA_KEY],
+        settings.INVESTIGATOR_NAME_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_NAME_METADATA_KEY],
+        settings.INVESTIGATOR_EMAIL_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_EMAIL_METADATA_KEY],
         "dataAnalystName": file_example.metadata["dataAnalystName"],
         "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
         "otherContactEmails": file_example.metadata["otherContactEmails"],
@@ -632,18 +647,18 @@ def update_sample_job(message_id, job_group, job_group_notifier):
     file_paths = [f.file.path for f in files]
     new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
-    request_id = latest.get("igoRequestId")
-    igocomplete = latest.get("igoComplete")
+    request_id = latest.get(settings.REQUEST_ID_METADATA_KEY)
+    igocomplete = latest.get(settings.IGO_COMPLETE_METADATA_KEY)
 
     if not files:
         logger.warning("Nothing to update %s. Creating new files." % primary_id)
         project_id = latest.get(settings.PROJECT_ID_METADATA_KEY)
         project_manager_name = latest.get("projectManagerName")
         pi_email = latest.get("piEmail")
-        lab_head_name = latest.get("labHeadName")
-        lab_head_email = latest.get("labHeadEmail")
-        investigator_name = latest.get("investigatorName")
-        investigator_email = latest.get("investigatorEmail")
+        lab_head_name = latest.get(settings.LAB_HEAD_NAME_METADATA_KEY)
+        lab_head_email = latest.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
+        investigator_name = latest.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
+        investigator_email = latest.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
         data_analyst_name = latest.get("dataAnalystName")
         data_analyst_email = latest.get("dataAnalystEmail")
         other_contact_emails = latest.get("otherContactEmails")
@@ -662,10 +677,10 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         oncotree_code = files[0].metadata.get(settings.ONCOTREE_METADATA_KEY)
         project_manager_name = files[0].metadata.get("projectManagerName")
         pi_email = files[0].metadata.get("piEmail")
-        lab_head_name = files[0].metadata.get("labHeadName")
-        lab_head_email = files[0].metadata.get("labHeadEmail")
-        investigator_name = files[0].metadata.get("investigatorName")
-        investigator_email = files[0].metadata.get("investigatorEmail")
+        lab_head_name = files[0].metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY)
+        lab_head_email = files[0].metadata.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
+        investigator_name = files[0].metadata.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
+        investigator_email = files[0].metadata.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
         data_analyst_name = files[0].metadata.get("dataAnalystName")
         data_analyst_email = files[0].metadata.get("dataAnalystEmail")
         other_contact_emails = files[0].metadata.get("otherContactEmails")
@@ -686,10 +701,10 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         settings.ONCOTREE_METADATA_KEY: oncotree_code,
         "projectManagerName": project_manager_name,
         "piEmail": pi_email,
-        "labHeadName": lab_head_name,
-        "labHeadEmail": lab_head_email,
-        "investigatorName": investigator_name,
-        "investigatorEmail": investigator_email,
+        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
+        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
+        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
+        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
         "dataAnalystName": data_analyst_name,
         "dataAnalystEmail": data_analyst_email,
         "otherContactEmails": other_contact_emails,
@@ -737,16 +752,18 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         for run in runs:
             logger.info("Processing run %s" % run)
             fastqs = run.pop("fastqs")
+
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 try:
-                    new_path = CopyService.remap(recipe, fastq)
+                    fastq_location = locate_file(fastq)
+                    new_path = CopyService.remap(recipe, fastq_location)
                     f = FileRepository.filter(path=new_path).first()
                     if f:
                         new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
-                        fastq,
+                        fastq_location,
                         request_id,
                         settings.IMPORT_FILE_GROUP,
                         "fastq",
@@ -901,12 +918,19 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("File already exist %s." % filepath)
 
 
-def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
+def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
     conflict = False
     missing_fastq = False
-    invalid_number_of_fastq = False
     failed_runs = []
     conflict_files = []
+
+    pattern = re.compile(settings.PRIMARY_ID_REGEX)
+    if not pattern.fullmatch(sample_id):
+        logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
+        raise IncorrectlyFormattedPrimaryId(
+            f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
+        )
+
     if not libraries:
         if igocomplete:
             raise ErrorInconsistentDataException(
@@ -936,11 +960,11 @@ def validate_sample(sample_id, libraries, igocomplete, redelivery=False):
                 if not redelivery:
                     for fastq in fastqs:
                         file_search = None
+                        fastq_location = locate_file(fastq)
                         try:
-                            file_search = File.objects.get(path=fastq)
+                            file_search = File.objects.get(path=fastq_location)
                         except File.DoesNotExist:
                             pass
-                        # file_search = FileRepository.filter(path=fastq).first()
                         logger.info("Processing %s" % fastq)
                         if file_search:
                             msg = "File %s already created with id:%s" % (file_search.path, str(file_search.id))
@@ -1016,7 +1040,7 @@ def create_or_update_file(
         lims_metadata = copy.deepcopy(data)
         library_copy = copy.deepcopy(library)
         lims_metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
-        lims_metadata["igoComplete"] = igocomplete
+        lims_metadata[settings.IGO_COMPLETE_METADATA_KEY] = igocomplete
         lims_metadata["R"] = r
         for k, v in library_copy.items():
             lims_metadata[k] = v
@@ -1037,12 +1061,13 @@ def create_or_update_file(
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
         recipe = metadata.get(settings.RECIPE_METADATA_KEY, "")
-        new_path = CopyService.remap(recipe, path)  # Get copied file path
+        fastq_location = locate_file(path)
+        new_path = CopyService.remap(recipe, fastq_location)  # Get copied file path
         f = FileRepository.filter(path=new_path).first()
         if not f:
             try:
                 if path != new_path:
-                    CopyService.copy(path, new_path)
+                    CopyService.copy(fastq_location, new_path)
             except Exception as e:
                 if "Permission denied" in str(e):
                     raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
@@ -1134,8 +1159,9 @@ def check_files_permissions(samples):
                 for run in run_dict.values():
                     fastqs = run.get("fastqs", [])
                     for fastq_path in fastqs:
-                        logger.info("Checking file permissions for %s" % fastq_path)
-                        check_file_permissions(fastq_path)
+                        fastq_location = locate_file(fastq_path)
+                        logger.info("Checking file permissions for %s" % fastq_location)
+                        check_file_permissions(fastq_location)
 
 
 def check_files_registered(recipe, samples):
@@ -1151,7 +1177,8 @@ def check_files_registered(recipe, samples):
                     fastqs = run.get("fastqs", [])
                     for fastq_path in fastqs:
                         logger.info("Checking file permissions for %s" % fastq_path)
-                        new_path = CopyService.remap(recipe, fastq_path)
+                        fastq_location = locate_file(fastq_path)
+                        new_path = CopyService.remap(recipe, fastq_location)
                         try:
                             check_file_exist(new_path)
                         except FailedToRegisterFileException as fe:

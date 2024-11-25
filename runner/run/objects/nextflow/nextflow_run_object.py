@@ -8,10 +8,10 @@ from runner.models import Run, RunStatus, Port, PortType, ProtocolType
 from runner.run.objects.nextflow.nextflow_port_object import NextflowPortObject
 from runner.exceptions import PortProcessorException, RunCreateException, RunObjectConstructException
 
+logger = logging.getLogger(__name__)
+
 
 class NextflowRunObject(RunObject):
-    logger = logging.getLogger(__name__)
-
     def __init__(
         self,
         run_id,
@@ -69,7 +69,7 @@ class NextflowRunObject(RunObject):
         try:
             app = PipelineCache.get_pipeline(run.app)
         except Exception as e:
-            raise RunCreateException("Failed to create run. Failed to resolve CWL %s" % str(e))
+            raise RunCreateException("Failed to create run. Failed to resolve Nextflow %s" % str(e))
         try:
             input_ports = [
                 NextflowPortObject.from_definition(run_id, inp, PortType.INPUT, inputs) for inp in app.get("inputs", [])
@@ -176,6 +176,7 @@ class NextflowRunObject(RunObject):
                 "repository": self.run_obj.app.github,
                 "entrypoint": self.run_obj.app.entrypoint,
                 "version": self.run_obj.app.version,
+                "nfcore_template": self.run_obj.app.nfcore_template,
             }
         }
         inputs = dict()
@@ -189,7 +190,7 @@ class NextflowRunObject(RunObject):
         inputs["inputs"] = input_files
         if not output_directory:
             output_directory = os.path.join(self.run_obj.app.output_directory, str(self.run_id))
-        output_file_path = os.path.join(output_directory, "nextflow_output.txt")
+        output_file_path = os.path.join(output_directory, "pipeline_output.csv")
         trace_file_path = os.path.join(output_directory, "trace.txt")
         config = bytes(self.run_obj.app.config, "utf-8").decode("unicode_escape")
         render_value = dict()

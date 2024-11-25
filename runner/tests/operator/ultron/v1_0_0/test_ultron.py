@@ -2,18 +2,14 @@
 Test for constructing ultron inputs
 """
 import os
-import json
-from pprint import pprint
-from uuid import UUID
 from django.test import TestCase
 from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, SampleData, BamData
 from beagle_etl.models import Operator
 from notifier.models import JobGroup
-from runner.models import Run, Port
-from file_system.models import File, FileMetadata, FileGroup, FileType
+from runner.models import Port
+from file_system.models import FileMetadata, FileGroup
 from file_system.repository.file_repository import FileRepository
 from django.conf import settings
-from django.core.management import call_command
 
 
 class TestUltron(TestCase):
@@ -93,14 +89,17 @@ class TestUltron(TestCase):
                 }
             ],
             "sample_ids": ["s_C_ALLANT_T003_d"],
-            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
         self.maf_runner_ports = ["7f743915-a0d6-466c-b1eb-3f8501089a36", "b946625d-2753-4e5a-89b8-cc08beb1bc40"]
-        self.expected_output_directory = "/juno/work/pi/beagle/output/argos_pair_sv/argos/ALN-REQ-ID/1.1.2/"
+        self.expected_output_directory = f"/juno/work/pi/beagle/output/argos_pair_sv/{UltronOperator.ARGOS_NAME}/ALN-REQ-ID/{UltronOperator.ARGOS_VERSION}/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
     def test_construct_output_directory(self):
@@ -131,11 +130,14 @@ class TestUltron(TestCase):
             "argos_version_string": "1.1.2",
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
             "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
             "is_impact": True,
-            "ref_fasta": {"class": "File", "location": "juno:///juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"},
+            "ref_fasta": {
+                "class": "File",
+                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+            },
             "sample_groups": [
                 [
                     {
