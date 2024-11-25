@@ -122,7 +122,7 @@ class ArgosBamOperator(Operator):
                 "inputs": job,
                 "name": name,
                 "tags": tags,
-                "output_directory": os.path.join(pipeline.output_directory,"argosBam")
+                "output_directory": os.path.join(pipeline.output_directory, "argosBam"),
             }
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
