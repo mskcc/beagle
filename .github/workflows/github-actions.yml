@@ -1,0 +1,50 @@
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.8
+    - name: python ldap
+      run: sudo apt-get install libsasl2-dev python3-dev libldap2-dev libssl-dev #adding package for python ldap error 
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        python -m pip install python-ldap
+        pip install -r requirements-dev.txt
+    - name: Run migrations
+      run: python manage.py migrate
+      env:
+          BEAGLE_DB_NAME: github_actions
+          BEAGLE_DB_PASSWORD: postgres
+          BEAGLE_DB_USERNAME: postgres
+    - name: Run test
+      run: |
+        python manage.py test
+      env:
+          BEAGLE_DB_NAME: github_actions
+          BEAGLE_DB_PASSWORD: postgres
+          BEAGLE_DB_USERNAME: postgres
+          BEAGLE_DB_PORT: 5432
+          BEAGLE_NOTIFIER_ACTIVE: False
+          TMPDIR: /tmp
+          BEAGLE_SHARED_TMPDIR: $TMPDIR
+          ENVIRONMENT: 'dev'
