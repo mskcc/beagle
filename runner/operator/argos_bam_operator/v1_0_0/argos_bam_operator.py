@@ -118,16 +118,14 @@ class ArgosBamOperator(Operator):
             pipeline_id = self.get_pipeline_id()
             pipeline = Pipeline.objects.get(id=pipeline_id)
             argos_bam_job_data = {"app": pipeline_id, "inputs": job, "name": name, "tags": tags}
-            output_dir = os.path.join(pipeline.output_directory,"argosBam", get_project_prefix(self.request_id))
+            output_dir = os.path.join(pipeline.output_directory, "argosBam", get_project_prefix(self.request_id))
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-                output_dir = os.path.join(pipeline.output_directory,"argosBam", output_prefix)            
+                output_dir = os.path.join(pipeline.output_directory, "argosBam", output_prefix)
             if self.job_group_id:
                 jg = JobGroup.objects.get(id=self.job_group_id)
                 jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
-                output_directory = os.path.join(
-                    output_dir, pipeline.version, jg_created_date
-                )
+                output_directory = os.path.join(output_dir, pipeline.version, jg_created_date)
                 argos_bam_job_data["output_directory"] = output_directory
             argos_jobs.append(RunCreator(**argos_bam_job_data))
         return argos_jobs
