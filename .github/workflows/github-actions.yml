@@ -48,7 +48,9 @@ jobs:
           TMPDIR: /tmp
           BEAGLE_SHARED_TMPDIR: $TMPDIR
           ENVIRONMENT: 'dev'
-          BEAGLE_PRIMARY_ID_REGEX: ‘^(0\d{4}|[1-9]\d{4,})(|_[B-Z]|_[A-Z]{2,})_\d+$‘
+          BEAGLE_PRIMARY_ID_REGEX: |
+            ^([a-zA-Z0-9_\-\.]+)@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}$
+
           
 
 
