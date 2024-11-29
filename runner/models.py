@@ -1,8 +1,7 @@
 import os
 import uuid
 from enum import IntEnum
-from django.db import models
-from django.db.models import F
+from django.db import models, transaction
 from file_system.models import File, FileGroup, Sample, Request
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
 from django.contrib.postgres.fields import JSONField
@@ -75,6 +74,7 @@ class Pipeline(BaseModel):
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
     config = models.CharField(blank=True, null=True, max_length=3000, default=None)
+    nfcore_template = models.BooleanField(default=False)
 
     @property
     def pipeline_link(self):
@@ -315,18 +315,21 @@ class Run(BaseModel):
         # TODO do we want to decrement if a job goes from completed/failed to open or failed to complete?
         # We can also a prevent a job from going to open once it's in a closed state
         if self.operator_run and self.original["status"] != self.status:
-            if self.status == RunStatus.COMPLETED:
-                self.operator_run.increment_completed_run()
-                self.original["status"] = RunStatus.COMPLETED
-                self.finished_date = now()
-            elif self.status == RunStatus.FAILED:
-                self.operator_run.increment_failed_run()
-                self.original["status"] = RunStatus.FAILED
-                self.finished_date = now()
-            elif self.status == RunStatus.TERMINATED:
-                self.operator_run.increment_failed_run()
-                self.original["status"] = RunStatus.TERMINATED
-                self.finished_date = now()
+            with transaction.atomic():
+                oparator_run = OperatorRun.objects.select_for_update().get(id=self.operator_run.id)
+                if self.status == RunStatus.COMPLETED:
+                    oparator_run.increment_completed_run()
+                    self.original["status"] = RunStatus.COMPLETED
+                    self.finished_date = now()
+                elif self.status == RunStatus.FAILED:
+                    oparator_run.increment_failed_run()
+                    self.original["status"] = RunStatus.FAILED
+                    self.finished_date = now()
+                elif self.status == RunStatus.TERMINATED:
+                    oparator_run.increment_failed_run()
+                    self.original["status"] = RunStatus.TERMINATED
+                    self.finished_date = now()
+                oparator_run.save()
         super(Run, self).save(*args, **kwargs)
 
 
