@@ -1,7 +1,7 @@
 import os
 
-import unittest
 from django.test import TestCase
+
 from beagle import settings
 from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
@@ -37,7 +37,6 @@ class TestAcessManifestOperator(TestCase):
         '\n\n\n\n\n   "",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,--------------------------------------------...............0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111111111122222222222222222222222222223333333333333333333334444444444455555555555555566666666666777777777777888888888888888888899999999999999999999999999999999;;AAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBCCCCCCCCCCCCCDDDDEEEEEEFFFIIIIIIIIIIIIIKKKLLLLLLLLLLLLLMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNOOPPPPPPPPPPPPPPRSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTVWWWXXXY____________aaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbcccccccccccccccccccddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeefgggggghhhiiiiiiiiiiiiiiiiiikkkllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnoooooooooooooooooooooooooooooooooooooooooppppppppppppppppppppqrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssttttttttttttttttttttttttttttuuuuuuuuuuvvvvvwwwxyyy'
     ]
 
-#    @unittest.skip("Output csv not as expected")
     def test_access_manifest_operator(self):
         """
         Test access manifest operator
