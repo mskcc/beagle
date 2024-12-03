@@ -596,7 +596,7 @@ def update_job(request_id):
         SMILEMessage.objects.filter(
             request_id__startswith=request_id,
             topic=settings.METADB_NATS_SAMPLE_UPDATE,
-            status=SmileMessageStatus.PENDING,
+            status=SmileMessageStatus.IN_PROGRESS,
         )
         .order_by("created_date")
         .all()
@@ -605,7 +605,7 @@ def update_job(request_id):
         SMILEMessage.objects.filter(
             request_id__startswith=request_id,
             topic=settings.METADB_NATS_REQUEST_UPDATE,
-            status=SmileMessageStatus.PENDING,
+            status=SmileMessageStatus.IN_PROGRESS,
         )
         .order_by("created_date")
         .all()
