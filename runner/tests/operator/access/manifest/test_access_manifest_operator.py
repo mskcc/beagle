@@ -63,4 +63,6 @@ class TestAcessManifestOperator(TestCase):
             manifest_path = input_json["manifest_data"]["location"].replace("juno:", "")
             with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
                 content = file.read()
+            print(content)
+            print(self.formatted_string[i])
             self.assertEqual(content, self.formatted_string[i])
