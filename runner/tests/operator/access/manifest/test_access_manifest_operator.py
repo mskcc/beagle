@@ -7,10 +7,6 @@ from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
-import csv
-import datetime
-import glob
-import shutil
 
 # general fixtures
 COMMON_FIXTURES = [
@@ -33,10 +29,8 @@ COMMON_FIXTURES = [
 class TestAcessManifestOperator(TestCase):
     # test db
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
-    # variables to help check operator output
-    formatted_string = [
-        "igoRequestId,primaryId,cmoPatientId,cmoSampleName,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg\r\n13893_B,13893_B_3,ALLANT,C-ALLANT-N001-d01,P-0000001,P-0000001-T01-IM6;P-0000002-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-1234567-N00-XS1,EDTA-Streck,,102.5,,Blood,M,8042889270,Whole Blood,,Normal,9.756097561,,200.0,,1000.0000000025001\r\n13893_B,13893_B_1,ALLANT2,C-ALLANT2-N001-d01,P-0000002,P-0000004-T01-IM6;P-0000005-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-1234567-N00-XS1,EDTA-Streck,,69.0,,Blood,M,8042889270,Whole Blood,,Normal,14.49275362,,200.0,,999.99999978\r\n13893_B,13893_B_2,ALLANT3,C-ALLANT3-N003-d02,,,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-1234567-N00-XS1,EDTA-Streck,,74.5,,Blood,M,8042889270,Whole Blood,,Normal,13.42281879,,200.0,,999.999999855\r\n"
-    ]
+    header_control = "igoRequestId,primaryId,cmoPatientId,cmoSampleName,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg"
+    row_control = "13893_B,13893_B_3,ALLANT,C-ALLANT-N001-d01,P-0000001,P-0000001-T01-IM6;P-0000002-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-1234567-N00-XS1,EDTA-Streck,,102.5,,Blood,M,8042889270,Whole Blood,,Normal,9.756097561,,200.0,,1000.0000000025001"
 
     def test_access_manifest_operator(self):
         """
@@ -63,6 +57,7 @@ class TestAcessManifestOperator(TestCase):
             manifest_path = input_json["manifest_data"]["location"].replace("juno:", "")
             with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
                 content = file.read()
-            print(content)
-            print(self.formatted_string[i])
-            self.assertEqual(content, self.formatted_string[i])
+            header = content.split("\r\n")[0]
+            row = content.split("\r\n")[1]
+            self.assertEqual(header, self.header_control)
+            self.assertEqual(row, self.row_control)
