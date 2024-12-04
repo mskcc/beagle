@@ -88,7 +88,7 @@ class CmoDMPManifest:
         ).all()
         fastqs = files.filter(metadata__igoRequestId__in=self.request_ids)
         fastq_metadata = [fastq.metadata for fastq in fastqs]
-        fastq_metadata = sorted(fastq_metadata, key=lambda d: d['cmoSampleName'])
+        fastq_metadata = sorted(fastq_metadata, key=lambda d: d["cmoSampleName"])
         cmoPatientId = set([fastq["cmoPatientId"] for fastq in fastq_metadata])
         # get DMP BAM file group
         dmp_bams = FileRepository.filter(file_group=settings.DMP_BAM_FILE_GROUP)

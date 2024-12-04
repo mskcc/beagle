@@ -30,7 +30,8 @@ class TestAcessManifestOperator(TestCase):
     # test db
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
     header_control = "igoRequestId,primaryId,cmoPatientId,cmoSampleName,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg"
-    id_control = 'C-ALLANT-N001-d01'
+    id_control = "C-ALLANT-N001-d01"
+
     def test_access_manifest_operator(self):
         """
         Test access manifest operator
@@ -57,6 +58,6 @@ class TestAcessManifestOperator(TestCase):
             with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
                 content = file.read()
             header = content.split("\r\n")[0]
-            id = content.split("\r\n")[1].split(',')[3]
+            id = content.split("\r\n")[1].split(",")[3]
             self.assertEqual(header, self.header_control)
             self.assertEqual(id, self.id_control)
