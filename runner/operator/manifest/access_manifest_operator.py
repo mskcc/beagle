@@ -98,18 +98,13 @@ class AccessManifestOperator(Operator):
         Writes manifest csv to temporary location, registers it as tmp file
         :return: manifest csv path
         """
-        # Split the string into rows using "\r\n" as the delimiter
-        rows = s.split("\r\n")
-        # Split each row into columns using "," as the delimiter
-        data = [row.split(",") for row in rows]
-        # tmp file creation
+        # output path
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
         Path(tmpdir).mkdir(parents=True, exist_ok=True)
         output = os.path.join(tmpdir, fname)
         # write csv to tmp file group
-        with open(output, "w+", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(data)
+        with open(output, mode="w", encoding="utf-8", newline="") as file:
+            file.write(s)
         # register output as tmp file
         self.register_temp_file(output)
         # return with juno formatting
