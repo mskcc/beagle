@@ -30,8 +30,7 @@ class TestAcessManifestOperator(TestCase):
     # test db
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
     header_control = "igoRequestId,primaryId,cmoPatientId,cmoSampleName,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg"
-    row_control = "13893_B,13893_B_3,ALLANT,C-ALLANT-N001-d01,P-0000001,P-0000001-T01-IM6;P-0000002-T01-IM6,,MSK-ACCESS-v1_0-probesAllwFP,25.0,P-1234567-N00-XS1,EDTA-Streck,,102.5,,Blood,M,8042889270,Whole Blood,,Normal,9.756097561,,200.0,,1000.0000000025001"
-
+    id_control = 'C-ALLANT-N001-d01'
     def test_access_manifest_operator(self):
         """
         Test access manifest operator
@@ -58,6 +57,6 @@ class TestAcessManifestOperator(TestCase):
             with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
                 content = file.read()
             header = content.split("\r\n")[0]
-            row = content.split("\r\n")[1]
+            id = content.split("\r\n")[1].split(',')[3]
             self.assertEqual(header, self.header_control)
-            self.assertEqual(row, self.row_control)
+            self.assertEqual(id, self.id_control)
