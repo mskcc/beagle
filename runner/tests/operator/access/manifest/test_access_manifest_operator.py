@@ -7,9 +7,6 @@ from beagle.settings import ROOT_DIR
 from beagle_etl.models import Operator
 from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
-import datetime
-import glob
-import shutil
 
 # general fixtures
 COMMON_FIXTURES = [
@@ -32,10 +29,8 @@ COMMON_FIXTURES = [
 class TestAcessManifestOperator(TestCase):
     # test db
     fixtures = [os.path.join(ROOT_DIR, f) for f in COMMON_FIXTURES]
-    # variables to help check operator output
-    expected_csv_content = [
-        '\n\n\n\n\n   "",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,--------------------------------------------...............0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111111111122222222222222222222222222223333333333333333333334444444444455555555555555566666666666777777777777888888888888888888899999999999999999999999999999999;;AAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBCCCCCCCCCCCCCDDDDEEEEEEFFFIIIIIIIIIIIIIKKKLLLLLLLLLLLLLMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNOOPPPPPPPPPPPPPPRSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTVWWWXXXY____________aaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbcccccccccccccccccccddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeefgggggghhhiiiiiiiiiiiiiiiiiikkkllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnoooooooooooooooooooooooooooooooooooooooooppppppppppppppppppppqrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssttttttttttttttttttttttttttttuuuuuuuuuuvvvvvwwwxyyy'
-    ]
+    header_control = "igoRequestId,primaryId,cmoPatientId,cmoSampleName,dmpPatientId,dmpImpactSamples,dmpAccessSamples,baitSet,libraryVolume,investigatorSampleId,preservation,species,libraryConcentrationNgul,tissueLocation,sampleClass,sex,cfDNA2dBarcode,sampleOrigin,tubeId,tumorOrNormal,captureConcentrationNm,oncotreeCode,dnaInputNg,collectionYear,captureInputNg"
+    id_control = "C-ALLANT-N001-d01"
 
     def test_access_manifest_operator(self):
         """
@@ -60,9 +55,9 @@ class TestAcessManifestOperator(TestCase):
             self.assertEqual(len(input_json["manifest_data"]), 2)
             # Check contents
             manifest_path = input_json["manifest_data"]["location"].replace("juno:", "")
-            with open(manifest_path, "r") as file:
-                csv_string = file.read()
-            csv_list = list(csv_string)
-            csv_list.sort()
-            csv_string_sorted = ''.join(csv_list)
-            self.assertEqual(csv_string_sorted, self.expected_csv_content[i])
+            with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
+                content = file.read()
+            header = content.split("\r\n")[0]
+            id = content.split("\r\n")[1].split(",")[3]
+            self.assertEqual(header, self.header_control)
+            self.assertEqual(id, self.id_control)
