@@ -39,6 +39,8 @@ jobs:
     - name: Run test
       run: |
         python manage.py test
+    - name: Black check
+      uses: psf/black@stable
       env:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
