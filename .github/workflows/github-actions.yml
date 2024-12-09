@@ -51,3 +51,6 @@ jobs:
           BEAGLE_PRIMARY_ID_REGEX: "^(0\\d{4}|[1-9]\\d{4,})(|_[B-Z]|_[A-Z]{2,})_\\d+$"
     - name: Black check
       uses: psf/black@stable
+      with:
+        options: "--check"
+        version: "22.3.0"
