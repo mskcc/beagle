@@ -50,10 +50,10 @@ def pair_samples(fastqs):
     pair sample fastqs based on the delivery directory.
 
     Parameters:
-        fastqs (list): A list of a samples fastq files.
+        fastqs (list): A list of sample fastq files.
 
     Returns:
-        float: A list of tuples containing a samples paired fastqs
+        float: A list of tuples containing paired fastqs for a sample 
     """
     sample_pairs = []
     expected_pair = set(["R1", "R2"])
