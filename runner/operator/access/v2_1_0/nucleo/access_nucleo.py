@@ -53,7 +53,7 @@ def pair_samples(fastqs):
         fastqs (list): A list of sample fastq files.
 
     Returns:
-        float: A list of tuples containing paired fastqs for a sample 
+        list: A list of tuples containing paired fastqs for a sample
     """
     sample_pairs = []
     expected_pair = set(["R1", "R2"])
