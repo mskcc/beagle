@@ -145,7 +145,6 @@ def init_metadata():
     return metadata
 
 
-
 def pair_samples(fastqs):
     """
     pair sample fastqs based on the delivery directory.
