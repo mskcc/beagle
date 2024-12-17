@@ -6,6 +6,7 @@ from jinja2 import Template
 from collections import defaultdict
 
 from runner.operator.operator import Operator
+from runner.operator.helper import pair_samples
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 from django.conf import settings
@@ -57,9 +58,9 @@ def pair_samples(fastqs):
     # match R1 and R2 based on delivery directory
     # sorting on file names is not enough as they are non-unique
     for i, fastq in enumerate(fastqs):
-        dir = "/".join(fastq["path"].split("/")[0:-1])
+        dir = "/".join(fastq["path"].split("_R")[0:-1])
         for compare in fastqs[i + 1 :]:
-            compare_dir = "/".join(compare["path"].split("/")[0:-1])
+            compare_dir = "/".join(compare["path"].split("_R")[0:-1])
             if dir == compare_dir:
                 # check if R1 and R2 are present
                 r_check = set([fastq["metadata"]["R"], compare["metadata"]["R"]])
