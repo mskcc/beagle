@@ -7,6 +7,7 @@ from django.conf import settings
 from collections import defaultdict
 
 from runner.operator.operator import Operator
+from runner.operator.helper import pair_samples
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
@@ -85,7 +86,7 @@ def construct_sample_inputs(samples, request_id):
         sample_group = list(sample_group)
         sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
-        fgbio_fastq_to_bam_input = group_by_run(sample_group)
+        fgbio_fastq_to_bam_input = pair_samples(sample_group)
         fgbio_fastq_to_bam_input = [
             [
                 {"class": "File", "location": "juno://" + s[0]["path"]},
