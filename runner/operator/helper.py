@@ -143,3 +143,36 @@ def init_metadata():
     metadata["runId"] = ""
     metadata["preservation"] = ""
     return metadata
+
+
+def pair_samples(fastqs):
+    """
+    pair sample fastqs based on the delivery directory.
+
+    Parameters:
+        fastqs (list): A list of sample fastq files.
+
+    Returns:
+        list: A list of tuples containing paired fastqs for a sample
+    """
+    sample_pairs = []
+    expected_pair = set(["R1", "R2"])
+    # match R1 and R2 based on delivery directory
+    # sorting on file names is not enough as they are non-unique
+    for i, fastq in enumerate(fastqs):
+        dir = "/".join(fastq["path"].split("_R")[0:-1])
+        for compare in fastqs[i + 1 :]:
+            compare_dir = "/".join(compare["path"].split("_R")[0:-1])
+            if dir == compare_dir:
+                # check if R1 and R2 are present
+                r_check = set([fastq["metadata"]["R"], compare["metadata"]["R"]])
+                if r_check.issubset(expected_pair):
+                    # Keep ordering consistent
+                    if fastq["metadata"]["R"] == "R1":
+                        sample_pairs.append((fastq, compare))
+                    else:
+                        sample_pairs.append((compare, fastq))
+                else:
+                    sample_name = fastq["metadata"]["cmoSampleName"]
+                    raise Exception(f"Improper pairing for: {sample_name}")
+    return sample_pairs
