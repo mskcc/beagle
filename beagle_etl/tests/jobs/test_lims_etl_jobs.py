@@ -603,7 +603,7 @@ class TestImportSample(APITestCase):
             file_group=self.file_group,
         )
         date_now = date.today().strftime("%Y-%m-%d")
-        file_metadata = FileMetadata.objects.create(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             version=1,
             metadata={
@@ -641,9 +641,8 @@ class TestImportSample(APITestCase):
             file_group=self.file_group,
         )
         date_now = date.today().strftime("%Y-%m-%d")
-        file_metadata = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file_conflict,
-            version=1,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "TestAssay",
@@ -680,9 +679,8 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file_conflict,
-            version=1,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "UnknownAssay",
@@ -715,9 +713,8 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        file_metadata = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file_conflict,
-            version=1,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
                 "recipe": "DisabledAssay1",

@@ -911,9 +911,7 @@ def create_pooled_normal(filepath, file_group_id):
         f = File.objects.create(
             file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj, file_type=file_type_obj
         )
-        f.save()
-        fm = FileMetadata(file=f, metadata=metadata)
-        fm.save()
+        FileMetadata.objects.create_or_update(file=f, metadata=metadata)
     except Exception as e:
         logger.info("File already exist %s." % filepath)
 

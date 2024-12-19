@@ -57,7 +57,7 @@ class TestPairRequest(TestCase):
             file_group=file_group_instance, file_type=filetype_instance, file_name="foo"
         )
 
-        file_metadata_instance = FileMetadata.objects.create(file=file_instance, metadata="{}")
+        FileMetadata.objects.create_or_update(file=file_instance, metadata={})
 
         # check that only one file entry exists in the test db
         files = File.objects.all()
@@ -600,7 +600,7 @@ class TestPairRequest(TestCase):
             file_name="C-8VK0V7.R1.fastq",
             path="/C-8VK0V7.R1.fastq",
         )
-        tumor1_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=tumor1_R1_file_instance,
             metadata={
                 "R": "R1",
@@ -639,7 +639,7 @@ class TestPairRequest(TestCase):
             file_name="C-8VK0V7.R2.fastq",
             path="/C-8VK0V7.R2.fastq",
         )
-        tumor1_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=tumor1_R2_file_instance,
             metadata={
                 "R": "R2",
@@ -680,7 +680,7 @@ class TestPairRequest(TestCase):
             file_name="C-ABCDEF.R1.fastq",
             path="/C-ABCDEF.R1.fastq",
         )
-        tumor2_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=tumor2_R1_file_instance,
             metadata={
                 "R": "R1",
@@ -719,7 +719,7 @@ class TestPairRequest(TestCase):
             file_name="C-ABCDEF.R2.fastq",
             path="/C-ABCDEF.R2.fastq",
         )
-        tumor2_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=tumor2_R2_file_instance,
             metadata={
                 "R": "R2",
@@ -777,7 +777,7 @@ class TestPairRequest(TestCase):
             file_name="FROZENPOOLEDNORMAL.R1.fastq",
             path="/FROZENPOOLEDNORMAL.R1.fastq",
         )
-        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
                 "runId": "PITT_0439",
@@ -794,7 +794,7 @@ class TestPairRequest(TestCase):
             file_name="FROZENPOOLEDNORMAL.R2.fastq",
             path="/FROZENPOOLEDNORMAL.R2.fastq",
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
                 "runId": "PITT_0439",
@@ -872,7 +872,7 @@ class TestPairRequest(TestCase):
             file_name="C-8VK0V7.bam",
             path="/C-8VK0V7.bam",
         )
-        dmp_bam_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=dmp_bam_file_instance,
             version=1,
             metadata={
@@ -978,7 +978,7 @@ class TestPairRequest(TestCase):
             file_name="C-8VK0V7-N.R1.fastq",
             path="/C-8VK0V7-N.R1.fastq",
         )
-        normal1_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=normal1_R1_file_instance,
             metadata={
                 "R": "R1",
@@ -1017,7 +1017,7 @@ class TestPairRequest(TestCase):
             file_name="C-8VK0V7-N.R2.fastq",
             path="/C-8VK0V7-N.R2.fastq",
         )
-        normal1_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=normal1_R2_file_instance,
             metadata={
                 "R": "R2",

@@ -144,9 +144,7 @@ class ArgosReportOperator(Operator):
                 f = File.objects.create(
                     file_name=os.path.basename(path), path=path, file_group=file_group, file_type=file_type
                 )
-                f.save()
-                metadata = FileMetadata(file=f, metadata={})
-                metadata.save()
+                FileMetadata.objects.create_or_update(file=f, metadata={})
                 LOGGER.info("Adding OncoKB RDS file to database: %s" % path)
                 return True
             except Exception as e:
