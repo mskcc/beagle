@@ -514,6 +514,10 @@ class FileMetadata(BaseModel):
         unique_together = ("file", "version")
         indexes = [
             models.Index(
+                fields=["latest"],
+                name="latest_idx",
+            ),
+            models.Index(
                 fields=["version"],
                 name="version_idx",
             ),
