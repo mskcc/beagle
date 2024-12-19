@@ -64,6 +64,7 @@ class RunCreator(object):
         try:
             run.job_group = JobGroup.objects.get(id=self.job_group_id)
         except JobGroup.DoesNotExist:
+            run.job_group = JobGroup.objects.create()
             print("[JobGroup] %s" % self.job_group_id)
         try:
             run.job_group_notifier = JobGroupNotifier.objects.get(id=self.job_group_notifier_id)
