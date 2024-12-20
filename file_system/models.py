@@ -384,7 +384,6 @@ class File(BaseModel):
     file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     checksum = models.CharField(max_length=50, blank=True, null=True)
     request_id = models.CharField(max_length=100, null=True, blank=True)
-    # sample = models.ForeignKey(Sample, null=True, on_delete=models.SET_NULL)
     samples = ArrayField(models.CharField(max_length=100), default=list)
     patient_id = models.CharField(max_length=100, null=True, blank=True)
     available = models.BooleanField(default=True, null=True, blank=True)
@@ -439,11 +438,11 @@ class FileMetadataManager(models.Manager):
                 updated_metadata.update(updates["metadata"])
                 diff = DeepDiff(updated_metadata, latest_metadata, ignore_order=True)
                 if diff:
-                    # version = obj.version + 1
+                    version = obj.version + 1
                     obj.latest = False
                     obj.save()
-                    new_file_metadata = FileMetadata.objects.create_or_update(
-                        file=obj.file, metadata=updated_metadata, user=updates["user"]
+                    new_file_metadata = FileMetadata.objects.create(
+                        file=obj.file, metadata=updated_metadata, user=updates["user"], version=version
                     )
                     updated_keys = [
                         key.replace("root['", "").replace("']", "") for key in diff.get("values_changed", {}).keys()
@@ -494,14 +493,11 @@ class FileMetadataManager(models.Manager):
         else:
             return self._update_versioned_instance(current, from_file)
 
-    def create(self, **fields):
-        raise Exception("Use create_or_update function")
-
 
 class FileMetadata(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     version = models.IntegerField(default=0)
-    latest = models.BooleanField()
+    latest = models.BooleanField(default=True)
     metadata = JSONField(default=dict)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
