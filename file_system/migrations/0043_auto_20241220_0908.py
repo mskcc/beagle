@@ -10,8 +10,70 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddIndex(
+        migrations.AlterField(
             model_name="filemetadata",
-            index=models.Index(fields=["latest"], name="latest_idx"),
+            name="latest",
+            field=models.BooleanField(default=True),
         ),
+        migrations.AlterField(
+            model_name="filemetadata",
+            name="version",
+            field=models.IntegerField(default=0),
+        ),
+        migrations.AlterField(
+            model_name="patient",
+            name="latest",
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AlterField(
+            model_name="patient",
+            name="version",
+            field=models.IntegerField(default=0),
+        ),
+        migrations.AlterField(
+            model_name="request",
+            name="latest",
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AlterField(
+            model_name="request",
+            name="request_id",
+            field=models.CharField(default="REQUEST_ID", max_length=100),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name="request",
+            name="version",
+            field=models.IntegerField(default=0),
+        ),
+        migrations.AlterField(
+            model_name="sample",
+            name="latest",
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AlterField(
+            model_name="sample",
+            name="version",
+            field=models.IntegerField(default=0),
+        ),
+        migrations.AlterUniqueTogether(
+            name="filemetadata",
+            unique_together={("file", "version")},
+        ),
+        migrations.AlterUniqueTogether(
+            name="patient",
+            unique_together={("patient_id", "version")},
+        ),
+        migrations.AlterUniqueTogether(
+            name="request",
+            unique_together={("request_id", "version")},
+        ),
+        migrations.AlterUniqueTogether(
+            name="sample",
+            unique_together={("sample_id", "version")},
+        )
+        # migrations.AddIndex(
+        #     model_name="filemetadata",
+        #     index=models.Index(fields=["latest"], name="latest_idx"),
+        # ),
     ]
