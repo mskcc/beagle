@@ -6,6 +6,7 @@ from jinja2 import Template
 from collections import defaultdict
 
 from runner.operator.operator import Operator
+from runner.operator.helper import pair_samples
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 from django.conf import settings
@@ -42,10 +43,37 @@ def group_by_sample_id(samples):
     return sample_pairs
 
 
-def group_by_run(samples):
-    samples.sort(key=lambda s: s["path"].split("/")[-1])
-    fastqs = zip(samples[::2], samples[1::2])
-    return list(fastqs)
+def pair_samples(fastqs):
+    """
+    pair sample fastqs based on the delivery directory.
+
+    Parameters:
+        fastqs (list): A list of sample fastq files.
+
+    Returns:
+        list: A list of tuples containing paired fastqs for a sample
+    """
+    sample_pairs = []
+    expected_pair = set(["R1", "R2"])
+    # match R1 and R2 based on delivery directory
+    # sorting on file names is not enough as they are non-unique
+    for i, fastq in enumerate(fastqs):
+        dir = "/".join(fastq["path"].split("_R")[0:-1])
+        for compare in fastqs[i + 1 :]:
+            compare_dir = "/".join(compare["path"].split("_R")[0:-1])
+            if dir == compare_dir:
+                # check if R1 and R2 are present
+                r_check = set([fastq["metadata"]["R"], compare["metadata"]["R"]])
+                if r_check.issubset(expected_pair):
+                    # Keep ordering consistent
+                    if fastq["metadata"]["R"] == "R1":
+                        sample_pairs.append((fastq, compare))
+                    else:
+                        sample_pairs.append((compare, fastq))
+                else:
+                    sample_name = fastq["metadata"]["cmoSampleName"]
+                    raise Exception(f"Improper pairing for: {sample_name}")
+    return sample_pairs
 
 
 def calc_avg(sample_files, field):
@@ -81,7 +109,7 @@ def construct_sample_inputs(samples, request_id):
         sample_group = list(sample_group)
         sample_id = sample_group[0]["metadata"][settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
-        fgbio_fastq_to_bam_input = group_by_run(sample_group)
+        fgbio_fastq_to_bam_input = pair_samples(sample_group)
         fgbio_fastq_to_bam_input = [
             [
                 {"class": "File", "location": "juno://" + s[0]["path"]},
