@@ -71,9 +71,5 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name="sample",
             unique_together={("sample_id", "version")},
-        )
-        # migrations.AddIndex(
-        #     model_name="filemetadata",
-        #     index=models.Index(fields=["latest"], name="latest_idx"),
-        # ),
+        ),
     ]
