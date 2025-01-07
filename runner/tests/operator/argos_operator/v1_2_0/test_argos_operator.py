@@ -7,8 +7,7 @@ from runner.operator.operator_factory import OperatorFactory
 from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
-from file_system.models import File, FileMetadata, FileGroup, FileType
-from pprint import pprint
+from file_system.models import File, FileMetadata, FileGroup
 
 
 class TestArgosOperator(TestCase):
@@ -70,12 +69,13 @@ class TestArgosOperator(TestCase):
         self.assertEqual(len(FileMetadata.objects.all()), 4)
 
         # create some more fixtures
+
         file_instance = File.objects.create(
             file_name="foo.fastq.gz",
             path="/foo.fastq.gz",
             file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
         )
-        filemetadata_instance = FileMetadata.objects.create(file=file_instance)
+        FileMetadata.objects.create_or_update(file=file_instance, metadata={settings.REQUEST_ID_METADATA_KEY: "bar"})
 
         self.assertEqual(len(File.objects.all()), 5)
         self.assertEqual(len(FileMetadata.objects.all()), 5)
