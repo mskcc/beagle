@@ -40,14 +40,14 @@ def calculate_abra_ram_size(grouping_dict):
     return
 
 
-def normalize_igo_text_field(specimen_type):
+def normalize_igo_text_field(igo_text):
     # Flatten text data from the Genomics Core
     # to allow robust exact text matching.
     #
     # Allow variance in case and ignore non
     # alphanumeric characters (FYI).
     # Convert to lowercase
-    s = specimen_type.lower()
+    s = igo_text.lower()
     # Remove special characters and extra spaces
     s = re.sub(r"[^a-z0-9]+", "", s)
     return s
