@@ -13,6 +13,21 @@ LOGGER = logging.getLogger(__name__)
 
 
 PDX_SPECIMEN_TYPES = ["pdx", "xenograft", "xenograftderivedcellline"]
+NON_PDX_SPECIMEN_TYPES = [
+    "biopsy",
+    "blood",
+    "cellLine",
+    "cfdna",
+    "fingernails",
+    "nonpdx",
+    "normal",
+    "organoid",
+    "other",
+    "rapidautopsy",
+    "resection",
+    "saliva",
+    "tumor",
+]
 
 # TODO: generalize
 def load_references():
@@ -25,7 +40,12 @@ def calculate_abra_ram_size(grouping_dict):
     return
 
 
-def normalize_specimen_type(specimen_type):
+def normalize_igo_text_field(specimen_type):
+    # Flatten text data from the Genomics Core
+    # to allow robust exact text matching.
+    #
+    # Allow variance in case and ignore non
+    # alphanumeric characters (FYI).
     # Convert to lowercase
     s = specimen_type.lower()
     # Remove special characters and extra spaces
@@ -35,7 +55,7 @@ def normalize_specimen_type(specimen_type):
 
 # TODO: This is ARGOS-formatted, note the confusing IDs
 def format_sample(data):
-    specimen_type = normalize_specimen_type(data["specimen_type"])
+    specimen_type = normalize_igo_text_field(data["specimen_type"])
     sample = dict()
     sample["ID"] = data["SM"]  # TODO: change someday
     sample["CN"] = data["CN"]
@@ -52,14 +72,16 @@ def format_sample(data):
     sample["adapter2"] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
     sample["bwa_output"] = sample["ID"] + ".bam"
     sample["request_id"] = data["request_id"]
-    sample["specimen_type"] = data["specimen_type"]
+    sample["specimen_type"] = specimen_type
 
     if specimen_type in PDX_SPECIMEN_TYPES:
         r1 = "zR1"
         r2 = "zR2"
-    else:
+    elif specimen_type in NON_PDX_SPECIMEN_TYPES:
         r1 = "R1"
         r2 = "R2"
+    else:
+        raise Exception(f"Invalid Specimen Type: {specimen_type}")
 
     for i in data["R1"]:
         if i:
