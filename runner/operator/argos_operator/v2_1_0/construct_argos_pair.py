@@ -72,7 +72,7 @@ def format_sample(data):
     sample["adapter2"] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
     sample["bwa_output"] = sample["ID"] + ".bam"
     sample["request_id"] = data["request_id"]
-    sample["specimen_type"] = specimen_type
+    sample["specimen_type"] = data["specimen_type"]
 
     if specimen_type in PDX_SPECIMEN_TYPES:
         r1 = "zR1"
