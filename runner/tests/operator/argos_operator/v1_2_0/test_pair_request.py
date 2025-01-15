@@ -364,7 +364,7 @@ class TestPairRequest(TestCase):
         call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.filemetadata.json"), verbosity=0)
         call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "05257_CB.file.json"), verbosity=0)
         call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "05257_CB.filemetadata.json"), verbosity=0)
-
+        self.maxDiff = None
         # check the total number of db entries now
         self.assertTrue(len(File.objects.all()) == 14)
         self.assertTrue(len(FileMetadata.objects.all()) == 18)
