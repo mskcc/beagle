@@ -430,7 +430,7 @@ class TestPairRequest(TestCase):
             ],
         }
 
-        self.assertTrue(pairs == expected_pairs)
+        self.assertDictEqual(pairs, expected_pairs)
 
     def test_get_pair_from_other_request(self):
         """
