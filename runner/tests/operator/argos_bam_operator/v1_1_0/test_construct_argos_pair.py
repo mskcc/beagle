@@ -20,7 +20,7 @@ class TestConstructPair(TestCase):
     def setUp(self):
         os.environ["TMPDIR"] = ""
 
-    @skip("Skip")
+    # @skip("Skip")
     def test_construct_argos_jobs1(self):
         """
         Test that Argos jobs are correctly created
@@ -65,6 +65,7 @@ class TestConstructPair(TestCase):
             open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.argos_bam.input.json"))
         )
         print("Running test_construct_argos_jobs1")
+        files.delete()
         self.assertTrue(argos_inputs == expected_inputs)
 
     def test_construct_argos_jobs_pdx(self):
