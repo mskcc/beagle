@@ -66,7 +66,6 @@ class TestConstructPair(TestCase):
         print("Running test_construct_argos_jobs1")
         self.assertTrue(argos_inputs == expected_inputs)
 
-    @skip("Don't want to test")
     def test_construct_argos_jobs_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B.fixtures.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
