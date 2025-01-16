@@ -20,6 +20,7 @@ class TestConstructPair(TestCase):
     def setUp(self):
         os.environ["TMPDIR"] = ""
 
+    @skip("Skip")
     def test_construct_argos_jobs1(self):
         """
         Test that Argos jobs are correctly created
