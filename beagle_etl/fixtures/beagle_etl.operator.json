@@ -260,7 +260,7 @@
       "recipes": "[\"None\"]",
       "class_name": "runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator",
       "version": "v2.1.0",
-      "slug": "CopyOutputsOperator"
+      "slug": "CopyOutputsOperator_v2.1.0"
     }
   }
 ]

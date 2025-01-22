@@ -572,11 +572,11 @@
   },
   {
     "model": "runner.pipeline",
-    "pk": "65419097-a2b8-4d57-a8ab-c4c4cddcbea8",
+    "pk": "1e513e56-d500-4d6a-a390-a49f9c5d2379",
     "fields": {
       "created_date": "2019-11-18T17:46:45.118Z",
       "modified_date": "2019-12-05T01:12:39.854Z",
-      "name": "copy_outputs",
+      "name": "copy_outputs_v1.7.0",
       "github": "https://github.com/mskcc/argos-cwl",
       "version": "1.7.0",
       "entrypoint": "workflows/copy_outputs.cwl",
