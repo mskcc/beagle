@@ -10,7 +10,8 @@ import uuid
 from pathlib import Path
 from django.conf import settings
 from notifier.models import JobGroup
-from file_system.models import File, FileGroup, FileType
+from file_system.models import File, FileGroup
+from file_system.serializers import CreateFileSerializer
 from runner.models import Pipeline, Run
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
@@ -43,11 +44,6 @@ class CopyOutputsOperator(Operator):
         mapping_file_content, pairing_file_content, data_clinical_content = generate_sample_pairing_and_mapping_files(
             run_ids
         )
-        mapping_file = self.write_to_file("sample_mapping.txt", mapping_file_content)
-        pairing_file = self.write_to_file("sample_pairing.txt", pairing_file_content)
-        data_clinical_file = self.write_to_file("sample_data_clinical.txt", data_clinical_content)
-
-        input_json["meta"] = [mapping_file, pairing_file, data_clinical_file]
 
         number_of_runs = len(run_ids)
         name = "ARGOS COPY OUTPUTS %s runs [%s,..] " % (number_of_runs, run_ids[0])
@@ -56,6 +52,18 @@ class CopyOutputsOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         project_prefix = input_json["project_prefix"]
         output_directory_prefix = get_output_directory_prefix(self.run_ids)
+
+        mapping_file = self.write_to_file(
+            "sample_mapping.txt", mapping_file_content, project_prefix, pipeline.name, pipeline.version
+        )
+        pairing_file = self.write_to_file(
+            "sample_pairing.txt", pairing_file_content, project_prefix, pipeline.name, pipeline.version
+        )
+        data_clinical_file = self.write_to_file(
+            "sample_data_clinical.txt", data_clinical_content, project_prefix, pipeline.name, pipeline.version
+        )
+
+        input_json["meta"] = [mapping_file, pairing_file, data_clinical_file]
 
         tags = {"run_ids": run_ids}
 
@@ -86,7 +94,7 @@ class CopyOutputsOperator(Operator):
         copy_outputs_job = [RunCreator(**copy_outputs_job_data)]
         return copy_outputs_job
 
-    def write_to_file(self, fname, s):
+    def write_to_file(self, fname, s, project_prefix, pipeline_name, pipeline_version):
         """
         Writes file to temporary location, then registers it to the temp file group
         """
@@ -96,19 +104,24 @@ class CopyOutputsOperator(Operator):
         with open(output, "w+") as fh:
             fh.write(s)
         os.chmod(output, 0o777)
-        self.register_tmp_file(output)
+        self.register_tmp_file(output, project_prefix, pipeline_name, pipeline_version)
         return {"class": "File", "location": "juno://" + output}
 
-    def register_tmp_file(self, path):
+    def register_tmp_file(self, path, project_prefix, pipeline_name, pipeline_version):
         fname = os.path.basename(path)
-        temp_file_group = FileGroup.objects.get(slug="temp")
-        file_type = FileType.objects.get(name="txt")
+        temp_file_group_pk = FileGroup.objects.get(slug="temp").pk
+        file_type = "txt"
+        metadata = {"projectId": project_prefix, "pipelineName": pipeline_name, "pipelineVersion": pipeline_version}
+        data = {"path": path, "file_type": file_type, "metadata": metadata, "file_group": temp_file_group_pk}
         try:
             File.objects.get(path=path)
         except:
             print("Registering temp file %s" % path)
-            f = File(file_name=fname, path=path, file_type=file_type, file_group=temp_file_group)
-            f.save()
+            serializer = CreateFileSerializer(data=data)
+            if serializer.is_valid():
+                file = serializer.save()
+            else:
+                raise Exception("Failed to create temp file %s. Error %s" % (path, str(serializer.errors)))
 
     def get_log_directory(self):
         jg = JobGroup.objects.get(id=self.job_group_id)
