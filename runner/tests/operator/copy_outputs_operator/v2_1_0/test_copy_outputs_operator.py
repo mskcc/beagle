@@ -5,12 +5,13 @@ Test for constructing Argos pair and jobs
 import os
 import json
 from uuid import UUID
-from mock import patch, mock_open
+from mock import patch
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
 from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
+import tempfile
 
 
 class TestCopyOutputs(TestCase):
@@ -60,55 +61,59 @@ class TestCopyOutputs(TestCase):
                     return False
         return True
 
-    @patch("runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator.write_to_file")
-    def test_create_copy_output_jobs(self, write_to_file):
+    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
+    def test_create_copy_output_jobs(self, populate_job_group_notifier_metadata):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
-        write_to_file.return_value = True
         # Load fixtures
+        populate_job_group_notifier_metadata.return_value = None
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.with_disambiguate.json"
         )
         call_command("loaddata", test_files_fixture, verbosity=0)
-        operator_model = Operator.objects.get(id=25)
-        operator = OperatorFactory.get_by_model(
-            operator_model, version="v2.1.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
-        )
-        input_json_valid = False
-        jobs = operator.get_jobs()
-        if jobs[0].is_valid():
-            input_json = jobs[0].inputs
-            self.assertEqual(len(input_json["disambiguate"]), 4)
-            input_json_valid = self.validate_copy_outputs_input(input_json)
-            print(json.dumps(input_json, cls=UUIDEncoder))
-        self.assertEqual(input_json_valid, True)
 
-    @patch("runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator.write_to_file")
-    def test_create_copy_output_jobs_without_disambiguate(self, write_to_file):
+        with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
+            operator_model = Operator.objects.get(id=25)
+            operator = OperatorFactory.get_by_model(
+                operator_model, version="v2.1.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+            )
+            input_json_valid = False
+            jobs = operator.get_jobs()
+            if jobs[0].is_valid():
+                input_json = jobs[0].inputs
+                self.assertEqual(len(input_json["disambiguate"]), 4)
+                input_json_valid = self.validate_copy_outputs_input(input_json)
+                print(json.dumps(input_json, cls=UUIDEncoder))
+            self.assertEqual(input_json_valid, True)
+
+    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
+    def test_create_copy_output_jobs_without_disambiguate(self, populate_job_group_notifier_metadata):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
-        write_to_file.return_value = True
+        populate_job_group_notifier_metadata.return_value = None
         # Load fixtures
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.without_disambiguate.json"
         )
         call_command("loaddata", test_files_fixture, verbosity=0)
-        operator_model = Operator.objects.get(id=25)
-        operator = OperatorFactory.get_by_model(
-            operator_model, version="v2.1.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
-        )
-        input_json_valid = False
-        jobs = operator.get_jobs()
-        if jobs[0].is_valid():
-            input_json = jobs[0].inputs
-            self.assertEqual(len(input_json["disambiguate"]), 0)
-            input_json_valid = self.validate_copy_outputs_input(input_json)
-            print(json.dumps(input_json, cls=UUIDEncoder))
-        self.assertEqual(input_json_valid, True)
+
+        with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
+            operator_model = Operator.objects.get(id=25)
+            operator = OperatorFactory.get_by_model(
+                operator_model, version="v2.1.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+            )
+            input_json_valid = False
+            jobs = operator.get_jobs()
+            if jobs[0].is_valid():
+                input_json = jobs[0].inputs
+                self.assertEqual(len(input_json["disambiguate"]), 0)
+                input_json_valid = self.validate_copy_outputs_input(input_json)
+                print(json.dumps(input_json, cls=UUIDEncoder))
+            self.assertEqual(input_json_valid, True)
 
 
 class UUIDEncoder(json.JSONEncoder):
