@@ -40,20 +40,20 @@
       "PU": [
         "H3MV7BBXY"
       ],
-      "R1": [
+      "R1": [],
+      "R2": [],
+      "zR1": [
         {
           "class": "File",
           "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz"
         }
       ],
-      "R2": [
+      "zR2": [
         {
           "class": "File",
           "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz"
         }
       ],
-      "zR1": [],
-      "zR2": [],
       "bam": [],
       "RG_ID": [
         "s_C_MP76JR_N001_d_H3MV7BBXY"
@@ -409,20 +409,20 @@
       "PU": [
         "H3MV7BBXY"
       ],
-      "R1": [
+      "R1": [],
+      "R2": [],
+      "zR1": [
         {
           "class": "File",
           "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz"
         }
       ],
-      "R2": [
+      "zR2": [
         {
           "class": "File",
           "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz"
         }
       ],
-      "zR1": [],
-      "zR2": [],
       "bam": [],
       "RG_ID": [
         "s_C_4LM16H_N001_d_H3MV7BBXY"
