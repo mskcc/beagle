@@ -24,8 +24,8 @@ from jinja2 import Template
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
-ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessV2_curated_normals"
-ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
+ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals"
+ACCESS_DEFAULT_NORMAL_ID = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R"
 ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
@@ -509,10 +509,7 @@ class AccessV2LegacySNV(Operator):
         :return: list of curated normal bams
         """
         # Cache a set of fillout bams from this request for genotyping (we only need to do this query once)
-        curated_normals_metadata = FileMetadata.objects.filter(
-            file__file_group__slug=ACCESS_CURATED_BAMS_FILE_GROUP_SLUG
-        )
-        curated_normal_bams = [f.file for f in curated_normals_metadata]
+        curated_normal_bams = File.objects.filter(file_group__slug=ACCESS_CURATED_BAMS_FILE_GROUP_SLUG)
         d, s = split_duplex_simplex(curated_normal_bams)
         curated_normal_bams = make_pairs(d, s)
         return curated_normal_bams
