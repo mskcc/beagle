@@ -24,10 +24,10 @@ from jinja2 import Template
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
-ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "access_curated_normals"
+ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessV2_curated_normals"
 ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
-ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -234,18 +234,18 @@ def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, reques
             .order_by("-metadata__imported")
             .first()
         )
-        if not unfiltered_matched_normal_bam:
-            unfiltered_matched_normal_bam = (
-                FileMetadata.objects.filter(
-                    file__file_group=DMP_FILE_GROUP,
-                    metadata__patient__cmo=patient_id.lstrip("C-"),
-                    metadata__type="N",
-                    metadata__assay="XS1",
-                    file__path__endswith=DMP_REGEX,
-                )
-                .order_by("-metadata__imported")
-                .first()
-            )
+        # if not unfiltered_matched_normal_bam:
+        #     unfiltered_matched_normal_bam = (
+        #         FileMetadata.objects.filter(
+        #             file__file_group=DMP_FILE_GROUP,
+        #             metadata__patient__cmo=patient_id.lstrip("C-"),
+        #             metadata__type="N",
+        #             metadata__assay="XS1",
+        #             file__path__endswith=DMP_REGEX,
+        #         )
+        #         .order_by("-metadata__imported")
+        #         .first()
+        #     )
         if unfiltered_matched_normal_bam:
             unfiltered_matched_normal_bam = unfiltered_matched_normal_bam.file
             unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.rstrip(".bam")
@@ -456,14 +456,14 @@ def get_dmp_matched_patient_geno_samples(patient_id):
         metadata__type="T",
         file__path__endswith=DMP_REGEX,
     )
-    if not matched_tumors_dmp:
-        matched_tumors_dmp = FileMetadata.objects.filter(
-            file__file_group=DMP_FILE_GROUP,
-            metadata__patient__cmo=patient_id.lstrip("C-"),
-            metadata__assay="XS1",
-            metadata__type="T",
-            file__path__endswith=DMP_REGEX,
-        )
+    # if not matched_tumors_dmp:
+    #     matched_tumors_dmp = FileMetadata.objects.filter(
+    #         file__file_group=DMP_FILE_GROUP,
+    #         metadata__patient__cmo=patient_id.lstrip("C-"),
+    #         metadata__assay="XS1",
+    #         metadata__type="T",
+    #         file__path__endswith=DMP_REGEX,
+    #     )
     matched_tumors_dmp_simplex = [b.file for b in matched_tumors_dmp]
     matched_tumors_dmp_duplex = copy.deepcopy(matched_tumors_dmp_simplex)
 
