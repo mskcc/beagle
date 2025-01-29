@@ -1,0 +1,290 @@
+[
+  {
+    "tumor": {
+      "ID": "s_C_MP76JR_X001_d",
+      "CN": "MSKCC",
+      "LB": "08944_B_1_1_1_1",
+      "PL": "Illumina",
+      "PU": [
+        "H3MV7BBXY"
+      ],
+      "R1": [],
+      "R2": [],
+      "zR1": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R1_001.fastq.gz"
+        }
+      ],
+      "zR2": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R2_001.fastq.gz"
+        }
+      ],
+      "bam": [],
+      "RG_ID": [
+        "s_C_MP76JR_X001_d_H3MV7BBXY"
+      ],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "s_C_MP76JR_X001_d.bam",
+      "request_id": "08944_B",
+      "specimen_type": "PDX"
+    },
+    "normal": {
+      "ID": "s_C_MP76JR_N001_d",
+      "CN": "MSKCC",
+      "LB": "08944_B_2_1_1_1",
+      "PL": "Illumina",
+      "PU": [
+        "H3MV7BBXY"
+      ],
+      "R1": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz"
+        }
+      ],
+      "R2": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz"
+        }
+      ],
+      "zR1": [],
+      "zR2": [],
+      "bam": [],
+      "RG_ID": [
+        "s_C_MP76JR_N001_d_H3MV7BBXY"
+      ],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "s_C_MP76JR_N001_d.bam",
+      "request_id": "08944_B",
+      "specimen_type": "Blood"
+    },
+    "assay": "IMPACT468_BAITS",
+    "pi": "John Doe",
+    "pi_email": "email@mskcc.org",
+    "patient_id": "C-MP76JR",
+    "genome": "GRCh37",
+    "intervals": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "X",
+      "Y",
+      "MT"
+    ],
+    "opt_dup_pix_dist": "2500",
+    "hapmap": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf"
+    },
+    "dbsnp": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf"
+    },
+    "indels_1000g": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf"
+    },
+    "snps_1000g": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf"
+    },
+    "covariates": [
+      "CycleCovariate",
+      "ContextCovariate",
+      "ReadGroupCovariate",
+      "QualityScoreCovariate"
+    ],
+    "abra_ram_min": 84000,
+    "gatk_jar_path": "/usr/bin/gatk.jar",
+    "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed",
+    "ref_fasta": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"
+    },
+    "mouse_fasta": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta"
+    },
+    "bait_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list"
+    },
+    "target_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+    },
+    "fp_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list"
+    }
+  },
+  {
+    "tumor": {
+      "ID": "s_C_4LM16H_X001_d",
+      "CN": "MSKCC",
+      "LB": "08944_B_3_1_1_1",
+      "PL": "Illumina",
+      "PU": [
+        "H3MV7BBXY"
+      ],
+      "R1": [],
+      "R2": [],
+      "zR1": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R1_001.fastq.gz"
+        }
+      ],
+      "zR2": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R2_001.fastq.gz"
+        }
+      ],
+      "bam": [],
+      "RG_ID": [
+        "s_C_4LM16H_X001_d_H3MV7BBXY"
+      ],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "s_C_4LM16H_X001_d.bam",
+      "request_id": "08944_B",
+      "specimen_type": "PDX"
+    },
+    "normal": {
+      "ID": "s_C_4LM16H_N001_d",
+      "CN": "MSKCC",
+      "LB": "08944_B_4_1_1_1",
+      "PL": "Illumina",
+      "PU": [
+        "H3MV7BBXY"
+      ],
+      "R1": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz"
+        }
+      ],
+      "R2": [
+        {
+          "class": "File",
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/PITT_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz"
+        }
+      ],
+      "zR1": [],
+      "zR2": [],
+      "bam": [],
+      "RG_ID": [
+        "s_C_4LM16H_N001_d_H3MV7BBXY"
+      ],
+      "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+      "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+      "bwa_output": "s_C_4LM16H_N001_d.bam",
+      "request_id": "08944_B",
+      "specimen_type": "Blood"
+    },
+    "assay": "IMPACT468_BAITS",
+    "pi": "John Doe",
+    "pi_email": "email@mskcc.org",
+    "patient_id": "C-4LM16H",
+    "genome": "GRCh37",
+    "intervals": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "X",
+      "Y",
+      "MT"
+    ],
+    "opt_dup_pix_dist": "2500",
+    "hapmap": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf"
+    },
+    "dbsnp": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf"
+    },
+    "indels_1000g": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf"
+    },
+    "snps_1000g": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf"
+    },
+    "covariates": [
+      "CycleCovariate",
+      "ContextCovariate",
+      "ReadGroupCovariate",
+      "QualityScoreCovariate"
+    ],
+    "abra_ram_min": 84000,
+    "gatk_jar_path": "/usr/bin/gatk.jar",
+    "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed",
+    "ref_fasta": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta"
+    },
+    "mouse_fasta": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta"
+    },
+    "bait_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list"
+    },
+    "target_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+    },
+    "fp_intervals": {
+      "class": "File",
+      "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list"
+    }
+  }
+]
