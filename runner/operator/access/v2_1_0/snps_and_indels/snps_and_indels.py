@@ -24,14 +24,10 @@ from jinja2 import Template
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
-ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals"
-ACCESS_DEFAULT_NORMAL_ID = "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R"
-ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = (
-    "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-)
-ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = (
-    "Donor1F33c2206-TP01_ACCESSv2-VAL-20230005R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
-)
+ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals_02"
+ACCESS_DEFAULT_NORMAL_ID = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -718,27 +714,27 @@ class AccessV2LegacySNV(Operator):
                 tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id + matched_normal_id
             )
 
-            for key, v in sample_info.items():
-                v = v[0]
-                if key == "geno_samples":
-                    # TODO jsut do the replace here
-                    sample_id_duplex = v[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "")
-                    sample_id_simplex = v[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-SIMPLEX")
-                    genotyping_bams_ids.append(sample_id_duplex)
-                    genotyping_bams_ids.append(sample_id_simplex)
-                    genotyping_bams.append(_create_cwl_bam_object(v[0].path))
-                    genotyping_bams.append(_create_cwl_bam_object(v[1].path))
-                if key == "geno_samples_normal_unfiltered":
-                    sample_id = v.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
-                    genotyping_bams_ids.append(sample_id)
-                    genotyping_bams.append(_create_cwl_bam_object(v.path))
-                if key == "curated_normal_bams":
-                    sample_id_duplex = v[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "-CURATED-DUPLEX")
-                    sample_id_simplex = v[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-CURATED-SIMPLEX")
-                    genotyping_bams_ids.append(sample_id_duplex)
-                    genotyping_bams_ids.append(sample_id_simplex)
-                    genotyping_bams.append(_create_cwl_bam_object(v[0].path))
-                    genotyping_bams.append(_create_cwl_bam_object(v[1].path))
+            for key, files in sample_info.items():
+                for f in files:
+                    if key == "geno_samples":
+                        # TODO jsut do the replace here
+                        sample_id_duplex = f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "")
+                        sample_id_simplex = f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-SIMPLEX")
+                        genotyping_bams_ids.append(sample_id_duplex)
+                        genotyping_bams_ids.append(sample_id_simplex)
+                        genotyping_bams.append(_create_cwl_bam_object(f[0].path))
+                        genotyping_bams.append(_create_cwl_bam_object(f[1].path))
+                    if key == "geno_samples_normal_unfiltered":
+                        sample_id = f.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
+                        genotyping_bams_ids.append(sample_id)
+                        genotyping_bams.append(_create_cwl_bam_object(f.path))
+                    if key == "curated_normal_bams":
+                        sample_id_duplex = f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "-CURATED-DUPLEX")
+                        sample_id_simplex = f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-CURATED-SIMPLEX")
+                        genotyping_bams_ids.append(sample_id_duplex)
+                        genotyping_bams_ids.append(sample_id_simplex)
+                        genotyping_bams.append(_create_cwl_bam_object(f[0].path))
+                        genotyping_bams.append(_create_cwl_bam_object(f[1].path))
 
             input_file = template.render(
                 tumor_bams=json.dumps(tumor_bam_duplex),
