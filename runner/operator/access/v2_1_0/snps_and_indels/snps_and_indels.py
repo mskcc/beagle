@@ -26,8 +26,6 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals_02"
 ACCESS_DEFAULT_NORMAL_ID = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R"
-ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -45,6 +43,8 @@ DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 UNCOLLAPSED_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
 BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX="Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX="Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 
 
 def register_file(file):
@@ -729,8 +729,12 @@ class AccessV2LegacySNV(Operator):
                         genotyping_bams_ids.append(sample_id)
                         genotyping_bams.append(_create_cwl_bam_object(f.path))
                     if key == "curated_normal_bams":
-                        sample_id_duplex = f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "-CURATED-DUPLEX")
-                        sample_id_simplex = f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-CURATED-SIMPLEX")
+                        sample_id_duplex = (
+                            f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "-CURATED-DUPLEX")
+                        )
+                        sample_id_simplex = (
+                            f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-CURATED-SIMPLEX")
+                        )
                         genotyping_bams_ids.append(sample_id_duplex)
                         genotyping_bams_ids.append(sample_id_simplex)
                         genotyping_bams.append(_create_cwl_bam_object(f[0].path))
