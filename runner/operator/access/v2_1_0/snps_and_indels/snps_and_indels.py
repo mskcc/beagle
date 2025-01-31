@@ -43,8 +43,12 @@ DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 UNCOLLAPSED_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
 BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX"
-ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX="Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX="Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = (
+    "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+)
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = (
+    "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
+)
 
 
 def register_file(file):
