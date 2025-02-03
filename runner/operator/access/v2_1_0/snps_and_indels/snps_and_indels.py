@@ -715,7 +715,7 @@ class AccessV2LegacySNV(Operator):
                     sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")
                 ]
                 genotyping_bams_ids += matched_normal_id
-                matched_normal_id += matched_normal
+                genotyping_bams += matched_normal
 
             for key, files in sample_info.items():
                 for f in files:
