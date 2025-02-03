@@ -703,10 +703,12 @@ class AccessV2LegacySNV(Operator):
                 .replace("-simplex.bam", "-CURATED-SIMPLEX")
             ]
 
-            matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
-            matched_normal_id = [
-                sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")
-            ]
+            if sample_info["matched_normal_unfiltered"][0] == None:
+                matched_normal = []
+                matched_normal_id = ['']
+            else:
+                matched_normal =  [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
+                matched_normal_id =  [sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")]
 
             genotyping_bams = (
                 normal_bam_duplex + normal_bam_simplex + tumor_bam_duplex + tumor_bam_simplex + matched_normal
