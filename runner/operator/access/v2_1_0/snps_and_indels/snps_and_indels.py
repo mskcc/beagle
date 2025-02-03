@@ -665,6 +665,7 @@ class AccessV2LegacySNV(Operator):
             .order_by("-created_date")
             .first()
             .operator_run.runs.all()
+            .filter(status=RunStatus.COMPLETED)
         )
         if not len(most_recent_runs_for_request):
             raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
