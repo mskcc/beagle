@@ -651,10 +651,6 @@ class AccessV2LegacySNV(Operator):
         :param request_id: str - IGO request ID
         :return: List[str] - List of most recent runs from given request ID
         """
-        # if not request_id:
-        #         request_id_runs = Run.objects.filter(pk__in=self.run_ids)
-        #         self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
-        # else:
         most_recent_runs_for_request = (
             Run.objects.filter(
                 tags__igoRequestId=self.request_id,
