@@ -703,14 +703,9 @@ class AccessV2LegacySNV(Operator):
                 .replace("-simplex.bam", "-CURATED-SIMPLEX")
             ]
 
+            genotyping_bams_ids = tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id
 
-            genotyping_bams_ids = (
-                tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id 
-            )
-
-            genotyping_bams = (
-                normal_bam_duplex + normal_bam_simplex + tumor_bam_duplex + tumor_bam_simplex
-            )
+            genotyping_bams = normal_bam_duplex + normal_bam_simplex + tumor_bam_duplex + tumor_bam_simplex
 
             if sample_info["matched_normal_unfiltered"][0] == None:
                 matched_normal_id = [""]
@@ -721,7 +716,6 @@ class AccessV2LegacySNV(Operator):
                 ]
                 genotyping_bams_ids += matched_normal_id
                 matched_normal_id += matched_normal
-                
 
             for key, files in sample_info.items():
                 for f in files:
