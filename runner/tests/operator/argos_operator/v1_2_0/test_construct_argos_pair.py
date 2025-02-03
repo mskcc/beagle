@@ -3,15 +3,12 @@ Test for constructing Argos pair and jobs
 """
 import os
 import json
-from deepdiff import DeepDiff
-from pprint import pprint
-from uuid import UUID
 from django.test import TestCase
-from runner.operator.argos_operator.v1_2_0.construct_argos_pair import construct_argos_jobs
-from runner.operator.argos_operator.v1_2_0.bin.make_sample import build_sample
-from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
+from file_system.models import File
+from runner.operator.argos_operator.v1_2_0.bin.make_sample import build_sample
+from runner.operator.argos_operator.v1_2_0.construct_argos_pair import construct_argos_jobs
 
 
 class TestConstructPair(TestCase):
@@ -64,6 +61,5 @@ class TestConstructPair(TestCase):
         expected_inputs = json.load(
             open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.argos.input.json"))
         )
-
         print("Running test_construct_argos_jobs1")
         self.assertTrue(argos_inputs == expected_inputs)
