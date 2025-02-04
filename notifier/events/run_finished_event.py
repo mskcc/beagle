@@ -20,7 +20,7 @@ class RunFinishedEvent(Event):
         failed,
         total,
         operator_run_id,
-        lsf_log_location,
+        run_log_location,
         input_json_location,
         job_group_id,
     ):
@@ -38,7 +38,7 @@ class RunFinishedEvent(Event):
         self.failed = failed
         self.total = total
         self.operator_run_id = operator_run_id
-        self.lsf_log_location = lsf_log_location
+        self.run_log_location = run_log_location
         self.input_json_location = input_json_location
         self.job_group_id = job_group_id
 
@@ -60,7 +60,7 @@ class RunFinishedEvent(Event):
         {tags}
         Status: {status}
         Link: {link}
-        LSF Log Location: {lsf_log_location}
+        Run Log Location: {run_log_location}
         inputs.json Location: {inputs_json_location}
         Datadog link: {datadog_link}
         
@@ -122,7 +122,7 @@ class RunFinishedEvent(Event):
             tags=tags,
             run_status=status,
             output_directory=self.output_directory,
-            lsf_log_location=self.lsf_log_location,
+            run_log_location=self.run_log_location,
             inputs_json_location=self.input_json_location,
             rerun_info=rerun_str,
         )
