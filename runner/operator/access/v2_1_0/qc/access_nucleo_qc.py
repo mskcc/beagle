@@ -89,6 +89,7 @@ class AccessV2NucleoQcOperator(Operator):
                 .order_by("-created_date")
                 .first()
                 .operator_run.runs.all()
+                .filter(status=RunStatus.COMPLETED)
             )
             if not len(most_recent_runs_for_request):
                 raise Exception("No matching Access V2 Nucleo runs found for request {}".format(self.request_id))
