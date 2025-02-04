@@ -651,10 +651,6 @@ class AccessV2LegacySNV(Operator):
         :param request_id: str - IGO request ID
         :return: List[str] - List of most recent runs from given request ID
         """
-        # if not request_id:
-        #         request_id_runs = Run.objects.filter(pk__in=self.run_ids)
-        #         self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
-        # else:
         most_recent_runs_for_request = (
             Run.objects.filter(
                 tags__igoRequestId=self.request_id,
@@ -665,6 +661,7 @@ class AccessV2LegacySNV(Operator):
             .order_by("-created_date")
             .first()
             .operator_run.runs.all()
+            .filter(status=RunStatus.COMPLETED)
         )
         if not len(most_recent_runs_for_request):
             raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
@@ -706,17 +703,19 @@ class AccessV2LegacySNV(Operator):
                 .replace("-simplex.bam", "-CURATED-SIMPLEX")
             ]
 
-            matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
-            matched_normal_id = [
-                sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")
-            ]
+            genotyping_bams_ids = tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id
 
-            genotyping_bams = (
-                normal_bam_duplex + normal_bam_simplex + tumor_bam_duplex + tumor_bam_simplex + matched_normal
-            )
-            genotyping_bams_ids = (
-                tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id + matched_normal_id
-            )
+            genotyping_bams = normal_bam_duplex + normal_bam_simplex + tumor_bam_duplex + tumor_bam_simplex
+
+            if sample_info["matched_normal_unfiltered"][0] == None:
+                matched_normal_id = [""]
+            else:
+                matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
+                matched_normal_id = [
+                    sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")
+                ]
+                genotyping_bams_ids += matched_normal_id
+                genotyping_bams += matched_normal
 
             for key, files in sample_info.items():
                 for f in files:
