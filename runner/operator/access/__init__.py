@@ -29,29 +29,35 @@ def get_request_id(run_ids, request_id=None):
     raise Exception("Could not get find request id")
 
 
-def get_request_id_runs(request_id):
+def get_request_id_runs(app, run_ids, request_id):
     """
     Get the latest completed bam-generation runs for the given request ID
 
     :param request_id: str - IGO request ID
     :return: List[str] - List of most recent runs from given request ID
     """
-    operator_run_id = (
-        Run.objects.filter(
-            tags__igoRequestId=request_id,
-            app__name__in=["access legacy", "access nucleo"],
-            operator_run__status=RunStatus.COMPLETED,
-        )
-        .exclude(finished_date__isnull=True)
-        .order_by("-finished_date")
-        .first()
-        .operator_run_id
-    )
 
-    request_id_runs = Run.objects.filter(
-        operator_run_id=operator_run_id, app__name__in=["access legacy", "access nucleo"], status=RunStatus.COMPLETED
-    )
-    return request_id_runs
+
+    if not request_id:
+            most_recent_runs_for_request = Run.objects.filter(pk__in=run_ids, status=RunStatus.COMPLETED)
+            request_id = RunStatus[0].tags["igoRequestId"]
+    else:
+        most_recent_runs_for_request = (
+            Run.objects.filter(
+                tags__igoRequestId=request_id,
+                app__name__in=app,
+                status=RunStatus.COMPLETED,
+                operator_run__status=RunStatus.COMPLETED,
+            )
+            .order_by("-created_date")
+            .first()
+            .operator_run.runs.all()
+            .filter(status=RunStatus.COMPLETED)
+        )
+        if not len(most_recent_runs_for_request):
+            raise Exception("No matching Nucleo runs found for request {}".format(request_id))
+
+    return most_recent_runs_for_request, request_id
 
 
 def create_cwl_file_object(file_path):
@@ -180,3 +186,40 @@ def get_unfiltered_matched_normal(patient_id, request_id=None):
         logger.warning(msg)
 
     return unfiltered_matched_normal_bam, unfiltered_matched_normal_sample_id
+
+
+def parse_nucleo_output_ports(run, port_name):
+    bam_bai = Port.objects.get(name=port_name, run=run.pk)
+    if not len(bam_bai.files.all()) in [1, 2]:
+        raise Exception("Port {} for run {} should have just 1 bam or 1 (bam/bai) pair".format(port_name, run.id))
+    bam = [b for b in bam_bai.files.all() if b.file_name.endswith(".bam")][0]
+    return bam
+
+def find_request_bams(run):
+    """
+    Find simplex and duplex bams from a request's nucleo run
+    - run_ids: run_ids from a request's nucleo run
+
+    :return: list of paired simplex and duplex bams and normal bam
+    """
+    nucleo_output_port_names = [
+        "uncollapsed_bam",
+        "fgbio_group_reads_by_umi_bam",
+        "fgbio_collapsed_bam",
+        "fgbio_filter_consensus_reads_duplex_bam",
+        "fgbio_postprocessing_simplex_bam",
+    ]
+    bams = {}
+    for o in nucleo_output_port_names:
+        # We are running a multi-sample workflow on just one sample,
+        # so we create single-element lists here
+        bam = parse_nucleo_output_ports(run, o)
+        bams[o] = bam
+
+    return bams
+
+def is_tumor_bam(file):
+    if not file.endswith(".bam"):
+        return False
+    t_n_timepoint = file.split("-")[2]
+    return not t_n_timepoint[0] == "N"
