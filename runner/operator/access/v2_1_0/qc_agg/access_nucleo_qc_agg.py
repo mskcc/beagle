@@ -96,7 +96,7 @@ class AccessV2NucleoQcAggOperator(Operator):
         input = self.construct_sample_input(most_recent_runs_for_request)
         sample_list = []
         for single_run in most_recent_runs_for_request:
-            sample_list.append(single_run.output_metadata["cmoSampleId"])
+            sample_list.append(single_run.tags['cmoSampleId'][0])
         return input, sample_list
 
     def process_listing(self, listing, name):
