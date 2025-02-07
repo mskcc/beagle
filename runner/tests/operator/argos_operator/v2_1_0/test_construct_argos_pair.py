@@ -139,12 +139,10 @@ class TestConstructPair(TestCase):
             samples.append(build_sample(igo_id_group[igo_id]))
 
         argos_inputs, error_samples = construct_argos_jobs(samples)
-        print(argos_inputs)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "argos_16342_B_pdx.inputs.json")))
         print("Running test_construct_argos_jobs_pdx")
-        self.assertTrue(argos_inputs == expected_inputs)
+        self.assertTrue(argos_inputs[0] == expected_inputs)
 
-    #
     def test_construct_argos_jobs_bam_non_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "16342_B.fixtures_non_pdx.json")
         bam_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "dmp-bam.json")
@@ -181,7 +179,6 @@ class TestConstructPair(TestCase):
             samples.append(build_sample(igo_id_group[igo_id]))
 
         argos_inputs, error_samples = construct_argos_jobs(samples)
-        print(argos_inputs)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "argos_16342_B_non_pdx.inputs.json")))
         print("Running test_construct_argos_jobs_bam_non_pdx")
-        self.assertTrue(argos_inputs == expected_inputs)
+        self.assertTrue(argos_inputs[0] == expected_inputs)
