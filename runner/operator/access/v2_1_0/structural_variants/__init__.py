@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 TUMOR_OR_NORMAL_SEARCH = "-L0"
 SAMPLE_ID_SEP = "_cl_aln"
-ACCESS_DEFAULT_SV_NORMAL_ID = "DONOR22-TP"
+ACCESS_DEFAULT_SV_NORMAL_ID = "Donor19F21c2206-TP01"
 ACCESS_DEFAULT_SV_NORMAL_FILENAME = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR.bam"
 
 
