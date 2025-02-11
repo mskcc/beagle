@@ -1,1 +1,1 @@
-from runner.operator.copy_outputs_operator.v1_0_0 import CopyOutputsOperator
+from runner.operator.copy_outputs_operator.v1_2_0 import CopyOutputsOperator

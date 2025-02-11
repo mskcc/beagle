@@ -1,5 +1,6 @@
 import io
 import os
+import shutil
 import logging
 import subprocess
 from django.conf import settings
@@ -34,6 +35,7 @@ class ChronosCopyOutputOperator(Operator):
                 raise Exception(f"Failed to copy bams for sample {ci_tag}")
             self.append_trace(run, destination_directory)
             self.append_bam_outputs(run, destination_directory)
+            self.clean_up_source_directory(run)
         return []
 
     def construct_metadata(self, run):
@@ -99,6 +101,10 @@ class ChronosCopyOutputOperator(Operator):
     def append_bam_outputs(self, run, destination_directory):
         bam_outputs_path = os.path.join(run.output_directory, "pipeline_output.csv")
         bam_outputs_file_global = os.path.join(destination_directory, "pipeline_output.csv")
+        # Read result bam file
+        with open(bam_outputs_file_global, "r") as f:
+            results = f.readlines()
+            results = [line.rstrip() for line in results]
         with open(bam_outputs_path, "r") as f:
             # Read output bam file content without header
             trace_file_content = f.readlines()[1:]
@@ -111,6 +117,16 @@ class ChronosCopyOutputOperator(Operator):
             file_name = elements[3].split("/")[-1]
             sample = elements[3].split("/")[-2]
             elements[3] = os.path.join(destination_directory, "bams", sample, file_name)
-            trace_file_result.append("\t".join(elements))
+            line = "\t".join(elements)
+            if line not in results:
+                trace_file_result.append(line)
+            else:
+                LOGGER.warning(f"{line} already in {bam_outputs_file_global}")
         with io.open(bam_outputs_file_global, "a") as f:
             f.writelines(trace_file_result)
+
+    def clean_up_source_directory(self, run):
+        try:
+            shutil.rmtree(run.output_directory)
+        except Exception as e:
+            logging.error(f"Failed to remove directory {run.output_directory}. {e}")

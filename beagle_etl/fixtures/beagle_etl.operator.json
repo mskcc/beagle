@@ -251,5 +251,16 @@
       "version": "v1.2.0",
       "slug": "ArgosBamOperator_v1_0_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 25,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator",
+      "version": "v2.1.0",
+      "slug": "CopyOutputsOperator_v2.1.0"
+    }
   }
 ]

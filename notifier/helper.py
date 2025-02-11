@@ -69,28 +69,11 @@ def generate_sample_data_content(files, pipeline_name, pipeline_github, pipeline
 def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, pipeline_version, project_id=None):
     if project_id:
         project_id = get_project_id(metadata[settings.REQUEST_ID_METADATA_KEY])
-    result = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(
-        metadata.get(
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
-            format_sample_name(
-                metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY]
-            ),
+    sample_id = metadata.get(
+        settings.CMO_SAMPLE_TAG_METADATA_KEY,
+        format_sample_name(
+            metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY]
         ),
-        metadata[settings.REQUEST_ID_METADATA_KEY],
-        project_id,
-        metadata[settings.PATIENT_ID_METADATA_KEY],
-        metadata["investigatorSampleId"],
-        MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY]),
-        MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY]),
-        MetadataValidator.clean_value(metadata[settings.ONCOTREE_METADATA_KEY]),
-        MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY]),
-        MetadataValidator.clean_value(metadata["preservation"]),
-        MetadataValidator.clean_value(metadata["sex"]),
-        MetadataValidator.clean_value(metadata["tissueLocation"]),
-        metadata[settings.SAMPLE_ID_METADATA_KEY],
-        MetadataValidator.clean_value(metadata["runMode"]),
-        pipeline_name,
-        pipeline_github,
-        pipeline_version,
     )
+    result = f"{sample_id}\t{metadata[settings.REQUEST_ID_METADATA_KEY]}\t{project_id}\t{metadata[settings.PATIENT_ID_METADATA_KEY]}\t{metadata['investigatorSampleId']}\t{MetadataValidator.clean_value(metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.ONCOTREE_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata['preservation'])}\t{MetadataValidator.clean_value(metadata['sex'])}\t{MetadataValidator.clean_value(metadata['tissueLocation'])}\t{metadata[settings.SAMPLE_ID_METADATA_KEY]}\t{MetadataValidator.clean_value(metadata['runMode'])}\t{pipeline_name}\t{pipeline_github}\t{pipeline_version}\n"
     return result
