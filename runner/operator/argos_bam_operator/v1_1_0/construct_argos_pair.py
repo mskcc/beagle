@@ -27,6 +27,8 @@ NON_PDX_SPECIMEN_TYPES = [
     "resection",
     "saliva",
     "tumor",
+    "poolednormal",
+    "dmp",
 ]
 
 # TODO: generalize
