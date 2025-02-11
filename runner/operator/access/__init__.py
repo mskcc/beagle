@@ -36,10 +36,9 @@ def get_request_id_runs(app, run_ids, request_id):
     :return: List[str] - List of most recent runs from given request ID
     """
 
-
     if not request_id:
-            most_recent_runs_for_request = Run.objects.filter(pk__in=run_ids, status=RunStatus.COMPLETED)
-            request_id = RunStatus[0].tags["igoRequestId"]
+        most_recent_runs_for_request = Run.objects.filter(pk__in=run_ids, status=RunStatus.COMPLETED)
+        request_id = RunStatus[0].tags["igoRequestId"]
     else:
         most_recent_runs_for_request = (
             Run.objects.filter(
@@ -194,6 +193,7 @@ def parse_nucleo_output_ports(run, port_name):
     bam = [b for b in bam_bai.files.all() if b.file_name.endswith(".bam")][0]
     return bam
 
+
 def find_request_bams(run):
     """
     Find simplex and duplex bams from a request's nucleo run
@@ -216,6 +216,7 @@ def find_request_bams(run):
         bams[o] = bam
 
     return bams
+
 
 def is_tumor_bam(file):
     if not file.endswith(".bam"):
