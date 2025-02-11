@@ -8,17 +8,12 @@ from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
-from runner.operator.access import get_request_id, get_request_id_runs
+from runner.operator.access import get_request_id_runs, find_request_bams, is_tumor_bam
 
 
 logger = logging.getLogger(__name__)
 
-SAMPLE_ID_SEP = "_cl_aln"
-TUMOR_SEARCH = "-L0"
-NORMAL_SEARCH = "-N0"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-ACCESS_DEFAULT_CNV_NORMAL_FILENAME = r"DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$"
-UNFILTERED_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
 
 
 class AccessLegacyCNVOperator(Operator):
@@ -43,14 +38,25 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
+        runs, self.request_id = get_request_id_runs(["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id)
+        
+        bams = []
+        for run in runs:
+            bams.append(find_request_bams(run))
+
+        # TUMOR
+        unfiltered_bam_ports = [
+            b[["unfiltered_bams", "fgbio_collapsed_bam"]]
+            for b in bams
+                if is_tumor_bam(b["unfiltered_bams"].file_name)
+        ]
 
         # Get all unfiltered bam ports for these runs
-        unfiltered_bam_ports = Port.objects.filter(
-            name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
-        )
+        # unfiltered_bam_ports = Port.objects.filter(
+        #     name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
+        # )
 
-        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        # unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
 
         sample_ids = []
         tumor_bams = []
@@ -89,7 +95,7 @@ class AccessLegacyCNVOperator(Operator):
             (
                 RunCreator(
                     **{
-                        "name": "ACCESS LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                        "name": "ACCESS V2 LEGACY CNV M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                         "app": self.get_pipeline_id(),
                         "inputs": job,
                         "tags": {
@@ -113,7 +119,6 @@ class AccessLegacyCNVOperator(Operator):
             template = Template(file.read())
 
             tumor_sample_list = tumor_bam.path + "\t" + sample_sex
-            # Todo: need this to work with Nucleo bams:
             tumor_sample_id = tumor_bam.file_name.split("_cl_aln_srt_MD_IR_FX_BR")[0]
 
             input_file = template.render(
