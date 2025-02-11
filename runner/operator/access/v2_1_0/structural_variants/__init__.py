@@ -8,9 +8,16 @@ from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import File
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object, find_request_bams, is_tumor_bam
+from runner.operator.access import (
+    get_request_id,
+    get_request_id_runs,
+    create_cwl_file_object,
+    find_request_bams,
+    is_tumor_bam,
+)
 from runner.models import RunStatus, Port, Run, Pipeline
 from datetime import datetime
+
 # DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
 logger = logging.getLogger(__name__)
@@ -48,11 +55,7 @@ class AccessV2LegacySVOperator(Operator):
             bams.append(find_request_bams(run))
 
         # TUMOR
-        standard_tumor_bams = [
-            b["uncollapsed_bam"]
-            for b in bams
-            if is_tumor_bam(b["uncollapsed_bam"].file_name)
-        ]
+        standard_tumor_bams = [b["uncollapsed_bam"] for b in bams if is_tumor_bam(b["uncollapsed_bam"].file_name)]
 
         # standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
         # sample_ids = [f.file_name.split("_cl_aln")[0] for f in standard_tumor_bams]
@@ -79,7 +82,9 @@ class AccessV2LegacySVOperator(Operator):
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         # If no request_id, get request id from run information
         # else request_id given directly
-        runs, self.request_id = get_request_id_runs(["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id)
+        runs, self.request_id = get_request_id_runs(
+            ["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id
+        )
         sample_inputs = self.get_sample_inputs(runs)
 
         return [
