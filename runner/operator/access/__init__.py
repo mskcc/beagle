@@ -3,8 +3,6 @@ import logging
 from django.conf import settings
 from runner.models import Run, RunStatus, Port
 from file_system.models import File, FileMetadata
-from runner.operator.access import get_request_id_runs
-
 
 logger = logging.getLogger(__name__)
 
