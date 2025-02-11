@@ -224,17 +224,7 @@ def new_request(message_id):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    Request.objects.get_or_create(
-        request_id=request_id,
-        latest=True,
-        defaults={
-            "delivery_date": delivery_date,
-            "lab_head_name": lab_head_name,
-            "lab_head_email": lab_head_email,
-            "investigator_email": investigator_email,
-            "investigator_name": investigator_name,
-        },
-    )
+        data["deliveryDate"] = delivery_date
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -911,9 +901,7 @@ def create_pooled_normal(filepath, file_group_id):
         f = File.objects.create(
             file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj, file_type=file_type_obj
         )
-        f.save()
-        fm = FileMetadata(file=f, metadata=metadata)
-        fm.save()
+        FileMetadata.objects.create_or_update(file=f, metadata=metadata)
     except Exception as e:
         logger.info("File already exist %s." % filepath)
 
