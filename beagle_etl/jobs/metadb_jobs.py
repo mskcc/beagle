@@ -224,17 +224,7 @@ def new_request(message_id):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    Request.objects.get_or_create(
-        request_id=request_id,
-        latest=True,
-        defaults={
-            "delivery_date": delivery_date,
-            "lab_head_name": lab_head_name,
-            "lab_head_email": lab_head_email,
-            "investigator_email": investigator_email,
-            "investigator_name": investigator_name,
-        },
-    )
+        data["deliveryDate"] = delivery_date
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
