@@ -12,7 +12,7 @@ from file_system.models import File
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from runner.models import Port, RunStatus
-from runner.operator.access import get_request_id_runs, find_request_bams, is_tumor_bam, create_cwl_file_object
+from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object, find_request_bams, is_tumor_bam
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ STANDARD_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR.bam"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class AccessLegacyMSIOperator(Operator):
+class AccessLegacyV2MSIOperator(Operator):
     """
     Operator for the ACCESS Legacy Microsatellite Instability workflow:
 
