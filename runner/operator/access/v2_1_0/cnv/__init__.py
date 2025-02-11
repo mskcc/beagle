@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class AccessLegacyCNVOperator(Operator):
+class AccessV2LegacyCNVOperator(Operator):
     """
     Operator for the ACCESS Legacy Copy Number Variants workflow:
 
@@ -38,25 +38,23 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list of json_objects
         """
-        runs, self.request_id = get_request_id_runs(["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id)
-        
+        runs, self.request_id = get_request_id_runs(
+            ["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id
+        )
+
         bams = []
         for run in runs:
             bams.append(find_request_bams(run))
 
         # TUMOR
-        unfiltered_bam_ports = [
-            b[["unfiltered_bams", "fgbio_collapsed_bam"]]
-            for b in bams
-                if is_tumor_bam(b["unfiltered_bams"].file_name)
-        ]
+        unfiltered_bam_ports = [b[["unfiltered_bams", "fgbio_collapsed_bam"]] for b in bams]
 
         # Get all unfiltered bam ports for these runs
         # unfiltered_bam_ports = Port.objects.filter(
         #     name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         # )
 
-        # unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if is_tumor_bam(f)]
 
         sample_ids = []
         tumor_bams = []
@@ -88,7 +86,6 @@ class AccessLegacyCNVOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
-        self.request_id = get_request_id(self.run_ids, self.request_id)
         inputs, sample_ids = self.get_sample_inputs()
 
         return [
