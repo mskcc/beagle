@@ -85,7 +85,7 @@ class AccessV2LegacySVOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "ACCESS LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "ACCESS V2 LEGACY SV M1: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {

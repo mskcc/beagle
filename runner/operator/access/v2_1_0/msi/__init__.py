@@ -11,8 +11,8 @@ from django.conf import settings
 from file_system.models import File
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
 from runner.models import Port, RunStatus
+from runner.operator.access import get_request_id_runs, find_request_bams, is_tumor_bam, create_cwl_file_object
 
 
 logger = logging.getLogger(__name__)
@@ -51,14 +51,26 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
+        runs, self.request_id = get_request_id_runs(["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id)
+        
+        bams = []
+        for run in runs:
+            bams.append(find_request_bams(run))
 
-        # Get all standard bam ports for these runs
-        standard_bam_ports = Port.objects.filter(
-            name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
-        )
+        # TUMOR
+        standard_tumor_bams = [
+            b[["standard_bams", "uncollapsed_bam"]]
+            for b in bams
+                if is_tumor_bam(b["unfiltered_bams"].file_name)
+        ]
+        # run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
-        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        # # Get all standard bam ports for these runs
+        # standard_bam_ports = Port.objects.filter(
+        #     name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
+        # )
+
+        # standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
 
         # Dictionary that associates tumor bam with standard bam with tumor_sample_id
         sample_tumor_normal = {}
