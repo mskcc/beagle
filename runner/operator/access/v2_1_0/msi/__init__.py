@@ -51,18 +51,16 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list of json_objects
         """
-        runs, self.request_id = get_request_id_runs(["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id)
-        
+        runs, self.request_id = get_request_id_runs(
+            ["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id
+        )
+
         bams = []
         for run in runs:
             bams.append(find_request_bams(run))
 
         # TUMOR
-        standard_tumor_bams = [
-            b[["standard_bams", "uncollapsed_bam"]]
-            for b in bams
-                if is_tumor_bam(b["unfiltered_bams"].file_name)
-        ]
+        standard_bam_ports = [b[["standard_bams", "uncollapsed_bam"]] for b in bams]
         # run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
 
         # # Get all standard bam ports for these runs
@@ -70,7 +68,7 @@ class AccessLegacyMSIOperator(Operator):
         #     name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         # )
 
-        # standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
 
         # Dictionary that associates tumor bam with standard bam with tumor_sample_id
         sample_tumor_normal = {}
@@ -105,7 +103,6 @@ class AccessLegacyMSIOperator(Operator):
 
         :return: list[(serialized job info, Job)]
         """
-        self.request_id = get_request_id(self.run_ids, self.request_id)
         inputs = self.get_sample_inputs()
 
         return [
