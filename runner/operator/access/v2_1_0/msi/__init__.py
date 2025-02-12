@@ -18,16 +18,13 @@ from runner.operator.access import get_request_id, get_request_id_runs, create_c
 logger = logging.getLogger(__name__)
 
 # Todo: needs to work for Nucleo bams as well
-SAMPLE_ID_SEP = "_cl_aln"
 TUMOR_SEARCH = "-L0"
-TUMOR_SEARCH_NEW = "_L0"
 NORMAL_SEARCH = "-N0"
-NORMAL_SEARCH_NEW = "_N0"
 STANDARD_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR.bam"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class AccessLegacyV2MSIOperator(Operator):
+class AccessV2LegacyMSIOperator(Operator):
     """
     Operator for the ACCESS Legacy Microsatellite Instability workflow:
 
@@ -59,16 +56,8 @@ class AccessLegacyV2MSIOperator(Operator):
         for run in runs:
             bams.append(find_request_bams(run))
 
-        # TUMOR
-        standard_bam_ports = [b[["standard_bams", "uncollapsed_bam"]] for b in bams]
-        # run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
-
-        # # Get all standard bam ports for these runs
-        # standard_bam_ports = Port.objects.filter(
-        #     name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
-        # )
-
-        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        # TUMOR Uncollapsed 
+        standard_tumor_bams = [b["uncollapsed_bam"] for b in bams if is_tumor_bam(b["fgbio_collapsed_bam"].file_name)]
 
         # Dictionary that associates tumor bam with standard bam with tumor_sample_id
         sample_tumor_normal = {}
