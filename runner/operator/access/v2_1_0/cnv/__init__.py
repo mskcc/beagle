@@ -46,15 +46,8 @@ class AccessV2LegacyCNVOperator(Operator):
         for run in runs:
             bams.append(find_request_bams(run))
 
-        # TUMOR
-        unfiltered_bam_ports = [b[["unfiltered_bams", "fgbio_collapsed_bam"]] for b in bams]
-
-        # Get all unfiltered bam ports for these runs
-        # unfiltered_bam_ports = Port.objects.filter(
-        #     name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
-        # )
-
-        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if is_tumor_bam(f)]
+        # TUMOR Unfiltered 
+        unfiltered_tumor_bams = [b["fgbio_collapsed_bam"] for b in bams if is_tumor_bam(b["fgbio_collapsed_bam"].file_name)]
 
         sample_ids = []
         tumor_bams = []
@@ -122,6 +115,6 @@ class AccessV2LegacyCNVOperator(Operator):
                 tumor_sample_id=tumor_sample_id,
                 tumor_sample_list_content=json.dumps(tumor_sample_list),
             )
-
+            print(input_file)
             sample_input = json.loads(input_file)
             return sample_input

@@ -4,27 +4,21 @@ import logging
 
 from django.conf import settings
 from jinja2 import Template
-from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import File
 from runner.operator.access import (
-    get_request_id,
     get_request_id_runs,
     create_cwl_file_object,
     find_request_bams,
     is_tumor_bam,
 )
-from runner.models import RunStatus, Port, Run, Pipeline
+from runner.models import Pipeline
 from datetime import datetime
 
-# DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
 logger = logging.getLogger(__name__)
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-TUMOR_OR_NORMAL_SEARCH = "-L0"
-SAMPLE_ID_SEP = "_cl_aln"
-ACCESS_DEFAULT_SV_NORMAL_ID = "Donor19F21c2206-TP01"
 ACCESS_DEFAULT_SV_NORMAL_FILENAME = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR.bam"
 
 
@@ -54,11 +48,9 @@ class AccessV2LegacySVOperator(Operator):
         for run in runs:
             bams.append(find_request_bams(run))
 
-        # TUMOR
+        # Standard TUMOR
         standard_tumor_bams = [b["uncollapsed_bam"] for b in bams if is_tumor_bam(b["uncollapsed_bam"].file_name)]
 
-        # standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
-        # sample_ids = [f.file_name.split("_cl_aln")[0] for f in standard_tumor_bams]
         sample_ids = [b.file_name.replace(BAM_STEM, "") for b in standard_tumor_bams]
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_SV_NORMAL_FILENAME)
         normal_bam = normal_bam[0]
@@ -126,6 +118,6 @@ class AccessV2LegacySVOperator(Operator):
                 tumor_bams=json.dumps(tumor_bams),
                 normal_bam=json.dumps(normal_bam),
             )
-
+            print(input_file)
             sample_input = json.loads(input_file)
             return sample_input
