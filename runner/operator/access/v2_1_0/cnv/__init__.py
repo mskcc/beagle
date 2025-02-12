@@ -46,8 +46,10 @@ class AccessV2LegacyCNVOperator(Operator):
         for run in runs:
             bams.append(find_request_bams(run))
 
-        # TUMOR Unfiltered 
-        unfiltered_tumor_bams = [b["fgbio_collapsed_bam"] for b in bams if is_tumor_bam(b["fgbio_collapsed_bam"].file_name)]
+        # TUMOR Unfiltered
+        unfiltered_tumor_bams = [
+            b["fgbio_collapsed_bam"] for b in bams if is_tumor_bam(b["fgbio_collapsed_bam"].file_name)
+        ]
 
         sample_ids = []
         tumor_bams = []
