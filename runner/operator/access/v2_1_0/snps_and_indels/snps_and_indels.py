@@ -674,18 +674,14 @@ class AccessV2LegacySNV(Operator):
             tumor_bam_duplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][0].path)]
             tumor_bam_simplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][1].path)]
             tumor_sample_name = [sample_info["tumor_bam"][0][0].file_name.split("_")[0]]
-            tumor_duplex_id = [
-                sample_info["tumor_bam"][0][0].file_name.split("_")[0]
-            ]
-            tumor_simplex_id = [
-                sample_info["tumor_bam"][0][1].file_name.split("_")[0] + "-SIMPLEX"
-            ]
+            tumor_duplex_id = [sample_info["tumor_bam"][0][0].file_name.split("_")[0]]
+            tumor_simplex_id = [sample_info["tumor_bam"][0][1].file_name.split("_")[0] + "-SIMPLEX"]
 
             normal_bam_duplex = [_create_cwl_bam_object(sample_info["normal_bam"][0][0].path)]
             normal_bam_simplex = [_create_cwl_bam_object(sample_info["normal_bam"][0][1].path)]
             normal_sample_name = [sample_info["normal_bam"][0][0].file_name.split("_")[0]]
             normal_duplex_id = [sample_info["normal_bam"][0][0].file_name.split("_")[0] + "-CURATED-DUPLEX"]
-            normal_simplex_id = [sample_info["normal_bam"][0][1].file_name.split("_")[0]  + "-CURATED-SIMPLEX"]
+            normal_simplex_id = [sample_info["normal_bam"][0][1].file_name.split("_")[0] + "-CURATED-SIMPLEX"]
 
             genotyping_bams_ids = tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id
 
@@ -695,16 +691,13 @@ class AccessV2LegacySNV(Operator):
                 matched_normal_id = [""]
             else:
                 matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
-                matched_normal_id = [
-                    sample_info["matched_normal_unfiltered"][0].file_name.split("_")[0]
-                ]
+                matched_normal_id = [sample_info["matched_normal_unfiltered"][0].file_name.split("_")[0]]
                 genotyping_bams_ids += matched_normal_id
                 genotyping_bams += matched_normal
 
             for key, files in sample_info.items():
                 for f in files:
                     if key == "geno_samples":
-                        # TODO jsut do the replace here
                         sample_id_duplex = f[0].file_name.split("_")[0]
                         sample_id_simplex = f[1].file_name.split("_")[0] + "-SIMPLEX"
                         genotyping_bams_ids.append(sample_id_duplex)
@@ -716,12 +709,8 @@ class AccessV2LegacySNV(Operator):
                         genotyping_bams_ids.append(sample_id)
                         genotyping_bams.append(_create_cwl_bam_object(f.path))
                     if key == "curated_normal_bams":
-                        sample_id_duplex = (
-                            f[0].file_name.split("_")[0] + "-CURATED-DUPLEX"
-                        )
-                        sample_id_simplex = (
-                            f[1].file_name.split("_")[0] + "-CURATED-SIMPLEX"
-                        )
+                        sample_id_duplex = f[0].file_name.split("_")[0] + "-CURATED-DUPLEX"
+                        sample_id_simplex = f[1].file_name.split("_")[0] + "-CURATED-SIMPLEX"
                         genotyping_bams_ids.append(sample_id_duplex)
                         genotyping_bams_ids.append(sample_id_simplex)
                         genotyping_bams.append(_create_cwl_bam_object(f[0].path))
