@@ -26,6 +26,7 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals_02"
 ACCESS_DEFAULT_NORMAL_ID = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R"
+BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -42,7 +43,6 @@ DMP_FILE_GROUP = "d4775633-f53f-412f-afa5-46e9a86b654b"
 DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 UNCOLLAPSED_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
-BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX"
 ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = (
     "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 )
@@ -460,14 +460,6 @@ def get_dmp_matched_patient_geno_samples(patient_id):
         metadata__type="T",
         file__path__endswith=DMP_REGEX,
     )
-    # if not matched_tumors_dmp:
-    #     matched_tumors_dmp = FileMetadata.objects.filter(
-    #         file__file_group=DMP_FILE_GROUP,
-    #         metadata__patient__cmo=patient_id.lstrip("C-"),
-    #         metadata__assay="XS1",
-    #         metadata__type="T",
-    #         file__path__endswith=DMP_REGEX,
-    #     )
     matched_tumors_dmp_simplex = [b.file for b in matched_tumors_dmp]
     matched_tumors_dmp_duplex = copy.deepcopy(matched_tumors_dmp_simplex)
 
@@ -681,27 +673,19 @@ class AccessV2LegacySNV(Operator):
 
             tumor_bam_duplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][0].path)]
             tumor_bam_simplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][1].path)]
-            tumor_sample_name = [sample_info["tumor_bam"][0][0].file_name.replace(DUPLEX_BAM_STEM, "")]
+            tumor_sample_name = [sample_info["tumor_bam"][0][0].file_name.split("_")[0]]
             tumor_duplex_id = [
-                sample_info["tumor_bam"][0][0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "")
+                sample_info["tumor_bam"][0][0].file_name.split("_")[0]
             ]
             tumor_simplex_id = [
-                sample_info["tumor_bam"][0][1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-SIMPLEX")
+                sample_info["tumor_bam"][0][1].file_name.split("_")[0] + "-SIMPLEX"
             ]
 
             normal_bam_duplex = [_create_cwl_bam_object(sample_info["normal_bam"][0][0].path)]
             normal_bam_simplex = [_create_cwl_bam_object(sample_info["normal_bam"][0][1].path)]
-            normal_sample_name = [sample_info["normal_bam"][0][0].file_name.replace(DUPLEX_BAM_STEM, "")]
-            normal_duplex_id = [
-                sample_info["normal_bam"][0][0]
-                .file_name.replace(BAM_STEM, "")
-                .replace("-duplex.bam", "-CURATED-DUPLEX")
-            ]
-            normal_simplex_id = [
-                sample_info["normal_bam"][0][1]
-                .file_name.replace(BAM_STEM, "")
-                .replace("-simplex.bam", "-CURATED-SIMPLEX")
-            ]
+            normal_sample_name = [sample_info["normal_bam"][0][0].file_name.split("_")[0]]
+            normal_duplex_id = [sample_info["normal_bam"][0][0].file_name.split("_")[0] + "-CURATED-DUPLEX"]
+            normal_simplex_id = [sample_info["normal_bam"][0][1].file_name.split("_")[0]  + "-CURATED-SIMPLEX"]
 
             genotyping_bams_ids = tumor_duplex_id + tumor_simplex_id + normal_duplex_id + normal_simplex_id
 
@@ -712,7 +696,7 @@ class AccessV2LegacySNV(Operator):
             else:
                 matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
                 matched_normal_id = [
-                    sample_info["matched_normal_unfiltered"][0].file_name.replace(UNCOLLAPSED_BAM_STEM, "")
+                    sample_info["matched_normal_unfiltered"][0].file_name.split("_")[0]
                 ]
                 genotyping_bams_ids += matched_normal_id
                 genotyping_bams += matched_normal
@@ -721,22 +705,22 @@ class AccessV2LegacySNV(Operator):
                 for f in files:
                     if key == "geno_samples":
                         # TODO jsut do the replace here
-                        sample_id_duplex = f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "")
-                        sample_id_simplex = f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-SIMPLEX")
+                        sample_id_duplex = f[0].file_name.split("_")[0]
+                        sample_id_simplex = f[1].file_name.split("_")[0] + "-SIMPLEX"
                         genotyping_bams_ids.append(sample_id_duplex)
                         genotyping_bams_ids.append(sample_id_simplex)
                         genotyping_bams.append(_create_cwl_bam_object(f[0].path))
                         genotyping_bams.append(_create_cwl_bam_object(f[1].path))
                     if key == "geno_samples_normal_unfiltered":
-                        sample_id = f.file_name.replace(UNCOLLAPSED_BAM_STEM, "")
+                        sample_id = f.file_name.split("_")[0]
                         genotyping_bams_ids.append(sample_id)
                         genotyping_bams.append(_create_cwl_bam_object(f.path))
                     if key == "curated_normal_bams":
                         sample_id_duplex = (
-                            f[0].file_name.replace(BAM_STEM, "").replace("-duplex.bam", "-CURATED-DUPLEX")
+                            f[0].file_name.split("_")[0] + "-CURATED-DUPLEX"
                         )
                         sample_id_simplex = (
-                            f[1].file_name.replace(BAM_STEM, "").replace("-simplex.bam", "-CURATED-SIMPLEX")
+                            f[1].file_name.split("_")[0] + "-CURATED-SIMPLEX"
                         )
                         genotyping_bams_ids.append(sample_id_duplex)
                         genotyping_bams_ids.append(sample_id_simplex)
