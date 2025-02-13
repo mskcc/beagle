@@ -12,7 +12,13 @@ from file_system.models import File
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from runner.models import Port, RunStatus
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object, find_request_bams, is_tumor_bam
+from runner.operator.access import (
+    get_request_id,
+    get_request_id_runs,
+    create_cwl_file_object,
+    find_request_bams,
+    is_tumor_bam,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +62,7 @@ class AccessV2LegacyMSIOperator(Operator):
         for run in runs:
             bams.append(find_request_bams(run))
 
-        # TUMOR Uncollapsed 
+        # TUMOR Uncollapsed
         standard_tumor_bams = [b["uncollapsed_bam"] for b in bams if is_tumor_bam(b["fgbio_collapsed_bam"].file_name)]
 
         # Dictionary that associates tumor bam with standard bam with tumor_sample_id
