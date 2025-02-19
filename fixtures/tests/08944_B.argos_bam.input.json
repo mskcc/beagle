@@ -23,6 +23,7 @@
         }
       ],
       "bam": [],
+      "zBam": [],
       "RG_ID": [
         "s_C_MP76JR_X001_d_H3MV7BBXY"
       ],
@@ -55,6 +56,7 @@
       "zR1": [],
       "zR2": [],
       "bam": [],
+      "zBam": [],
       "RG_ID": [
         "s_C_MP76JR_N001_d_H3MV7BBXY"
       ],
@@ -167,6 +169,7 @@
         }
       ],
       "bam": [],
+      "zBam": [],
       "RG_ID": [
         "s_C_4LM16H_X001_d_H3MV7BBXY"
       ],
@@ -199,6 +202,7 @@
       "zR1": [],
       "zR2": [],
       "bam": [],
+      "zBam": [],
       "RG_ID": [
         "s_C_4LM16H_N001_d_H3MV7BBXY"
       ],
