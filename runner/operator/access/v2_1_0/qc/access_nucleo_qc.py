@@ -67,6 +67,7 @@ class AccessV2NucleoQcOperator(Operator):
                     "name": "Access V2 Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
+                    "output_metadata": output_metadata,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
