@@ -1,23 +1,32 @@
 [
   {
     "tumor": {
-      "ID": "s_C_8VK0V7_R001_d",
+      "ID": "s_C_V5AJEY_P001_d01",
       "CN": "MSKCC",
-      "LB": "10075_D_5_1_1_1",
+      "LB": "16342_B_1",
       "PL": "Illumina",
       "PU": [
-        "HFTCNBBXY_GTATTGGC-TTGTCGGT"
+        "HLYCVDSXC",
+        "HLYCVDSXC"
       ],
       "R1": [
         {
           "class": "File",
-          "location": "juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_1091A_T_IGO_10075_D_5/SK_MEL_1091A_T_IGO_10075_D_5_S80_R1_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L002_R1_001.fastq.gz"
+        },
+        {
+          "class": "File",
+          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L001_R1_001.fastq.gz"
         }
       ],
       "R2": [
         {
           "class": "File",
-          "location": "juno:///ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_10075_D/Sample_SK_MEL_1091A_T_IGO_10075_D_5/SK_MEL_1091A_T_IGO_10075_D_5_S80_R2_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L002_R2_001.fastq.gz"
+        },
+        {
+          "class": "File",
+          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L001_R2_001.fastq.gz"
         }
       ],
       "zR1": [],
@@ -25,51 +34,47 @@
       "bam": [],
       "zBam": [],
       "RG_ID": [
-        "s_C_8VK0V7_R001_d_HFTCNBBXY_GTATTGGC-TTGTCGGT"
+        "s_C_V5AJEY_P001_d01_HLYCVDSXC",
+        "s_C_V5AJEY_P001_d01_HLYCVDSXC"
       ],
       "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
       "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-      "bwa_output": "s_C_8VK0V7_R001_d.bam",
-      "request_id": "10075_D",
-      "specimen_type": "Resection"
+      "bwa_output": "s_C_V5AJEY_P001_d01.bam",
+      "request_id": "16342_B",
+      "specimen_type": "Non-PDX"
     },
     "normal": {
-      "ID": "s_C_8VK0V7_N001_d",
+      "ID": "s_C_V5AJEY_N901_dZ_IM7",
       "CN": "MSKCC",
-      "LB": "10075_D_3",
+      "LB": "C-V5AJEY-N901-dZ-IM7_1",
       "PL": "Illumina",
       "PU": [
-        "HCYYWBBXY"
+        "DMP_FCID_DMP_BARCODEIDX"
       ],
-      "R1": [
-        {
-          "class": "File",
-          "location": "juno:///ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_JW_MEL_007_NORM_IGO_10075_D_3/JW_MEL_007_NORM_IGO_10075_D_3_S15_R1_001.fastq.gz"
-        }
-      ],
-      "R2": [
-        {
-          "class": "File",
-          "location": "juno:///ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_JW_MEL_007_NORM_IGO_10075_D_3/JW_MEL_007_NORM_IGO_10075_D_3_S15_R2_001.fastq.gz"
-        }
-      ],
+      "R1": [],
+      "R2": [],
       "zR1": [],
       "zR2": [],
-      "bam": [],
+      "bam": [
+        {
+          "class": "File",
+          "location": "juno:///juno/dmp/share/irb12_245/J/D/JD536007-N.bam"
+        }
+      ],
       "zBam": [],
       "RG_ID": [
-        "s_C_8VK0V7_N001_d_HCYYWBBXY"
+        "s_C_V5AJEY_N901_dZ_IM7_DMP_FCID_DMP_BARCODEIDX"
       ],
       "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
       "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-      "bwa_output": "s_C_8VK0V7_N001_d.bam",
-      "request_id": "10075_D",
-      "specimen_type": "Normal"
+      "bwa_output": "s_C_V5AJEY_N901_dZ_IM7.bam",
+      "request_id": null,
+      "specimen_type": "DMP"
     },
-    "assay": "IMPACT468_BAITS",
-    "pi": "John Smith",
-    "pi_email": "email@internet.com",
-    "patient_id": "C-8VK0V7",
+    "assay": "IMPACT505_BAITS",
+    "pi": "Adam Schoenfeld",
+    "pi_email": "",
+    "patient_id": "C-V5AJEY",
     "curated_bams": [
       {
         "class": "File",
@@ -290,19 +295,19 @@
       "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed",
       "bait_intervals": {
         "class": "File",
-        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list"
+        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_baits.ilist"
       },
       "target_intervals": {
         "class": "File",
-        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list"
+        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_b37_targets.ilist"
       },
       "fp_intervals": {
         "class": "File",
-        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list"
+        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_FP_tiling_intervals.intervals"
       },
       "fp_genotypes": {
         "class": "File",
-        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt"
+        "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomic_resources/targets/IMPACT505/b37/IMPACT505_FP_tiling_genotypes.txt"
       }
     },
     "runparams": {
@@ -349,9 +354,9 @@
       ],
       "emit_original_quals": true,
       "num_threads": 10,
-      "assay": "IMPACT468_BAITS",
+      "assay": "IMPACT505_BAITS",
       "tmp_dir": "/scratch",
-      "project_prefix": "10075_D",
+      "project_prefix": "16342_B",
       "opt_dup_pix_dist": "2500",
       "delly_type": [
         "DUP",
@@ -366,8 +371,8 @@
       "complex_tn": 0.5,
       "scripts_bin": "/usr/bin",
       "gatk_jar_path": "/usr/bin/gatk.jar",
-      "pi": "John Smith",
-      "pi_email": "email@internet.com"
+      "pi": "Adam Schoenfeld",
+      "pi_email": ""
     }
   }
 ]
