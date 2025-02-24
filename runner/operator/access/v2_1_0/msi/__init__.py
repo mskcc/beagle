@@ -103,7 +103,7 @@ class AccessV2LegacyMSIOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "ACCESS LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
+                    "name": "ACCESS V2 LEGACY MSI M1: %s, %i of %i" % (self.request_id, i + 1, len(inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "tags": {
