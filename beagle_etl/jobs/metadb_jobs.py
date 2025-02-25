@@ -560,7 +560,8 @@ def update_request_job(message_id, job_group, job_group_notifier):
 
 
 def fetch_request_metadata(request_id):
-    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
+    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+                                         file_group=settings.IMPORT_FILE_GROUP).first()
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
         settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
@@ -633,7 +634,8 @@ def update_sample_job(message_id, job_group, job_group_notifier):
     data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
+    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
+                                  file_group=settings.IMPORT_FILE_GROUP).all()
     file_paths = [f.file.path for f in files]
     new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
