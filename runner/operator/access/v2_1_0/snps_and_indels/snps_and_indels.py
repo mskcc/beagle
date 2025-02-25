@@ -26,7 +26,6 @@ WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals"
 ACCESS_DEFAULT_NORMAL_ID = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R"
-BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
