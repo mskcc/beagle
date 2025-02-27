@@ -57,7 +57,7 @@
     },
     "mosdepth_bed": {
         "class": "File",
-        "location": "juno:///juno/work/access/production/resources/tools/resources/access-heme/region_of_interest/versions/v1.0/MSK-Heme-v1_0_canonicaltargets.bed"
+        "location": "juno:///juno/cmo/access/production/resources/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_canonicaltargets.bed"
     },
     "sequence_qc_min_basq": 1,
     "sequence_qc_min_mapq": 1,
@@ -79,5 +79,9 @@
     "fragment_count": 1,
     "filter_duplicate": 0,
     "omaf": true,
-    "generic_counting": true
+    "generic_counting": true,
+    "athena_thresholds": [250,500,1000,1500,2000],
+    "athena_threshold": 500,
+    "athena_summary": true,
+    "athena_cores": 4
 }
