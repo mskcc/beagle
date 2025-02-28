@@ -1,2229 +1,2155 @@
 [
-    {
-        "model": "file_system.filemetadata",
-        "pk": "4b8dbd5c-0e4f-487f-9fdf-8163ca4ad051",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.437Z",
-            "modified_date": "2023-05-11T05:34:25.437Z",
-            "file": "0324978b-8cdd-4d23-b86d-82a73c47d5bb",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0324978b-8cdd-4d23-b86d-82a73c47d5bb",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.431Z",
-            "modified_date": "2023-05-11T05:34:25.431Z",
-            "file_name": "data_CNA.ascna.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.ascna.txt",
-            "file_type": 7,
-            "size": 6819,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$c0b6058c7181c2216c039e0f1042f5890c9c25b3",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "106f4991-e051-44d2-952a-cc6c9a04731b",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.343Z",
-            "modified_date": "2023-05-11T05:34:25.343Z",
-            "file": "0b667b14-b587-4ffa-9306-7f5435abdf9e",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0b667b14-b587-4ffa-9306-7f5435abdf9e",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.339Z",
-            "modified_date": "2023-05-11T05:34:25.339Z",
-            "file_name": "meta_sv.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_sv.txt",
-            "file_type": 7,
-            "size": 252,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$5f7ca81c8d442fe959b588e99d93b046249caee9",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5c25976d-8e1f-4b8d-a1ab-3e641e2bc7f7",
-        "fields": {
-            "created_date": "2023-05-11T05:34:24.992Z",
-            "modified_date": "2023-05-11T05:34:24.992Z",
-            "file": "12d71485-86f2-4e52-a447-df4101b661b3",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "12d71485-86f2-4e52-a447-df4101b661b3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:24.985Z",
-            "modified_date": "2023-05-11T05:34:24.985Z",
-            "file_name": "data_clinical_patient.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_patient.txt",
-            "file_type": 7,
-            "size": 89,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$dbd3c9ddd87b092d5c8d5f4b8fb5d58806d21a70",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "9fe238dd-329b-462d-b817-4d7b3344e21a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.123Z",
-            "modified_date": "2023-05-11T05:34:25.123Z",
-            "file": "14e1cadb-d6f2-4754-9dba-0ff0a5997e75",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "14e1cadb-d6f2-4754-9dba-0ff0a5997e75",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.117Z",
-            "modified_date": "2023-05-11T05:34:25.117Z",
-            "file_name": "meta_clinical_patient.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_patient.txt",
-            "file_type": 7,
-            "size": 137,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$050f7c6f1902425977ae32e42949ecfed69966c3",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "e862f68d-d1fd-487f-a5b9-7477dc1a2a5d",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.406Z",
-            "modified_date": "2023-05-11T05:34:25.406Z",
-            "file": "24283396-7739-42c2-844c-0808e6e50389",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "24283396-7739-42c2-844c-0808e6e50389",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.401Z",
-            "modified_date": "2023-05-11T05:34:25.401Z",
-            "file_name": "data_CNA.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.txt",
-            "file_type": 7,
-            "size": 5089,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$1e734227d76502e26177fb7d7a12b4f561d47ac3",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5d6d7ab4-3b3f-4856-9bea-51988f5a55a2",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.274Z",
-            "modified_date": "2023-05-11T05:34:25.274Z",
-            "file": "2a995cbf-bac9-4fbe-ba7b-67b41b09a011",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "2a995cbf-bac9-4fbe-ba7b-67b41b09a011",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.267Z",
-            "modified_date": "2023-05-11T05:34:25.267Z",
-            "file_name": "meta_mutations_extended.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_mutations_extended.txt",
-            "file_type": 7,
-            "size": 265,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$c8b3a1c2dbce72c75a0ed51094ba4eeb7231d230",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "f13df98c-6d38-4e34-8bca-201494854dff",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.678Z",
-            "modified_date": "2023-05-11T05:34:25.678Z",
-            "file": "35515ac2-9ab8-4aa4-bac9-838a152b827c",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "35515ac2-9ab8-4aa4-bac9-838a152b827c",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.672Z",
-            "modified_date": "2023-05-11T05:34:25.672Z",
-            "file_name": "cases_cnaseq.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cnaseq.txt",
-            "file_type": 7,
-            "size": 294,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$76e041dd92d36e24519ef413cc8f6afbbd255c97",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "21b9452b-ec3a-4f30-ba69-a7385c122806",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.374Z",
-            "modified_date": "2023-05-11T05:34:25.374Z",
-            "file": "455cfce0-2ed8-493d-bb72-40e39f56f0d3",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "455cfce0-2ed8-493d-bb72-40e39f56f0d3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.369Z",
-            "modified_date": "2023-05-11T05:34:25.369Z",
-            "file_name": "data_sv.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_sv.txt",
-            "file_type": 7,
-            "size": 170,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$276634dab72db8e7f6a49537345311183986c5fa",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "7040cc7b-ad78-4da0-ba1e-dbda62e85453",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.588Z",
-            "modified_date": "2023-05-11T05:34:25.588Z",
-            "file": "47f4cb97-1941-496d-bcb2-6cdf019abd1e",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "47f4cb97-1941-496d-bcb2-6cdf019abd1e",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.582Z",
-            "modified_date": "2023-05-11T05:34:25.582Z",
-            "file_name": "data_fusions.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_fusions.txt",
-            "file_type": 7,
-            "size": 99,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$c16f763b248813fcdde76f7486f1ddc4e9856038",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "b954639d-74f3-49bf-9ad2-2e528164977a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.749Z",
-            "modified_date": "2023-05-11T05:34:25.749Z",
-            "file": "553ca8c0-f6da-4074-aaa8-8e3c850830e3",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "553ca8c0-f6da-4074-aaa8-8e3c850830e3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.741Z",
-            "modified_date": "2023-05-11T05:34:25.741Z",
-            "file_name": "cases_sequenced.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_sequenced.txt",
-            "file_type": 7,
-            "size": 239,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$016b7624974761f469dd1096b605011a31c7def9",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "88346fb4-7a12-4baa-a928-08e545337eb0",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.794Z",
-            "modified_date": "2023-05-11T05:34:25.794Z",
-            "file": "5b7d9b45-39ff-4f24-b7a5-498d32882bf2",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "5b7d9b45-39ff-4f24-b7a5-498d32882bf2",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.788Z",
-            "modified_date": "2023-05-11T05:34:25.788Z",
-            "file_name": "report.html",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/report.html",
-            "file_type": 7,
-            "size": 1015628,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$0a6ebb863f5ac29a71fc51e467ff55a76545eac3",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "da36e522-4ebd-4dba-98d8-ca4e47b3ae0c",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.309Z",
-            "modified_date": "2023-05-11T05:34:25.309Z",
-            "file": "5bfe4ae1-5347-44d8-8957-6ea88b6a682a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "5bfe4ae1-5347-44d8-8957-6ea88b6a682a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.305Z",
-            "modified_date": "2023-05-11T05:34:25.305Z",
-            "file_name": "BALTO_REQID_meta_cna_hg19_seg.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_meta_cna_hg19_seg.txt",
-            "file_type": 7,
-            "size": 190,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$365b7973ccbe6fd1a4981498bb4ed579cd3b2216",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "8c015c5d-cfb9-4dfb-b62a-e64bc01b0b1e",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.041Z",
-            "modified_date": "2023-05-11T05:34:25.041Z",
-            "file": "67c37acb-0826-48e5-b347-84c8b7c45a07",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "67c37acb-0826-48e5-b347-84c8b7c45a07",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.035Z",
-            "modified_date": "2023-05-11T05:34:25.035Z",
-            "file_name": "data_clinical_sample.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_sample.txt",
-            "file_type": 7,
-            "size": 1470,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$5a046eb5dace378e4ead32857c33f1d7ee4f3517",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "1a58c813-e7ac-4c99-b741-fe3a64df54dc",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.543Z",
-            "modified_date": "2023-05-11T05:34:25.543Z",
-            "file": "7fd42482-9034-4a59-b2e3-a6291ed3658a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "7fd42482-9034-4a59-b2e3-a6291ed3658a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.535Z",
-            "modified_date": "2023-05-11T05:34:25.535Z",
-            "file_name": "BALTO_REQID_data_cna_hg19.seg",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_data_cna_hg19.seg",
-            "file_type": 7,
-            "size": 10276,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "4688bf27-ad39-42b1-9cca-5eeb5e1b8fb3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:24.945Z",
-            "modified_date": "2023-05-11T05:34:24.945Z",
-            "file": "ae02ab91-42d9-447f-9d2a-0b9dea1e46dc",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ae02ab91-42d9-447f-9d2a-0b9dea1e46dc",
-        "fields": {
-            "created_date": "2023-05-11T05:34:24.927Z",
-            "modified_date": "2023-05-11T05:34:24.927Z",
-            "file_name": "meta_clinical_sample.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_sample.txt",
-            "file_type": 7,
-            "size": 135,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$0610ad0752b25ba70b351968b96e371ed17d133e",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "6e099cba-efab-4ffa-8ca4-73703892cdcc",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.227Z",
-            "modified_date": "2023-05-11T05:34:25.227Z",
-            "file": "aefd50f3-ef56-4c72-8a51-45f175306525",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "aefd50f3-ef56-4c72-8a51-45f175306525",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.219Z",
-            "modified_date": "2023-05-11T05:34:25.219Z",
-            "file_name": "meta_fusions.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_fusions.txt",
-            "file_type": 7,
-            "size": 222,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$519e821d543f05758ce67999cbebe07715a15e1e",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "3e7d6562-8ede-4701-a335-1e8dbc58c1dc",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.081Z",
-            "modified_date": "2023-05-11T05:34:25.081Z",
-            "file": "bfbe4101-d538-4166-ba17-5954f9f4d2c9",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "bfbe4101-d538-4166-ba17-5954f9f4d2c9",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.075Z",
-            "modified_date": "2023-05-11T05:34:25.075Z",
-            "file_name": "meta_study.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_study.txt",
-            "file_type": 7,
-            "size": 138,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$0a4c0963d794e6b3a2bb15bec693769afd89d096",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "6475658e-4cdf-4f76-8712-e3434bfa348b",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.169Z",
-            "modified_date": "2023-05-11T05:34:25.169Z",
-            "file": "ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.160Z",
-            "modified_date": "2023-05-11T05:34:25.160Z",
-            "file_name": "meta_CNA.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_CNA.txt",
-            "file_type": 7,
-            "size": 265,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$7d9822e81cbcf6c423b2fac7037825354a21aef0",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "29c59d5e-f60e-491f-8583-f5794dcd4137",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.711Z",
-            "modified_date": "2023-05-11T05:34:25.711Z",
-            "file": "d676fd04-31c4-4381-a9df-079cdf2ed3db",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "d676fd04-31c4-4381-a9df-079cdf2ed3db",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.707Z",
-            "modified_date": "2023-05-11T05:34:25.707Z",
-            "file_name": "cases_cna.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cna.txt",
-            "file_type": 7,
-            "size": 226,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$af1ad4e33db24a4dea94e3d2639de8d28834834b",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "a9e43a66-4ceb-4936-b0d0-2cfd161e26f4",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.485Z",
-            "modified_date": "2023-05-11T05:34:25.485Z",
-            "file": "ea3990b1-aba2-4d1a-9348-e9c4cf05eef0",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ea3990b1-aba2-4d1a-9348-e9c4cf05eef0",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.479Z",
-            "modified_date": "2023-05-11T05:34:25.479Z",
-            "file_name": "data_mutations_extended.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_mutations_extended.txt",
-            "file_type": 7,
-            "size": 16879,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$cf7b3f57ae3aa91afddb7ca6be1227550dc449cf",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "416977ce-d047-4b98-9e5d-2160054778ab",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.631Z",
-            "modified_date": "2023-05-11T05:34:25.631Z",
-            "file": "eacaec13-cc86-409f-b2c0-fb8b9eb22422",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "eacaec13-cc86-409f-b2c0-fb8b9eb22422",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.625Z",
-            "modified_date": "2023-05-11T05:34:25.625Z",
-            "file_name": "cases_all.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_all.txt",
-            "file_type": 7,
-            "size": 214,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$e6b7f1a7a42f8a1c36638123aecfacff8825f2e4",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "c4564c12-57ea-4f36-8e6a-33e4604d4f0b",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.832Z",
-            "modified_date": "2023-05-11T05:34:25.832Z",
-            "file": "41a9c199-3312-49e5-9bf8-7b9e5c347094",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "41a9c199-3312-49e5-9bf8-7b9e5c347094",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.828Z",
-            "modified_date": "2023-05-11T05:34:25.828Z",
-            "file_name": "BALTO_REQID.gene.cna.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.gene.cna.txt",
-            "file_type": 7,
-            "size": 137879,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$6f48bf7c43539a3cacef98def04d0b33d7058dea",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "d1eef6e5-ccf7-4680-b98b-f1011ef9119a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.939Z",
-            "modified_date": "2023-05-11T05:34:25.939Z",
-            "file": "499b0cbd-42cc-4397-8efa-84c0055f1e27",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "499b0cbd-42cc-4397-8efa-84c0055f1e27",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.935Z",
-            "modified_date": "2023-05-11T05:34:25.935Z",
-            "file_name": "BALTO_REQID.svs.maf",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.svs.maf",
-            "file_type": 7,
-            "size": 4899,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$01b2c8bd77640677b4f8c14778afd45d1cb2ba76",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "4dcf4a55-ecd2-4979-9e97-d5079b6129e1",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.858Z",
-            "modified_date": "2023-05-11T05:34:25.858Z",
-            "file": "564c1663-947c-484d-8440-425ded469261",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "564c1663-947c-484d-8440-425ded469261",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.854Z",
-            "modified_date": "2023-05-11T05:34:25.854Z",
-            "file_name": "BALTO_REQID.muts.maf",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.maf",
-            "file_type": 7,
-            "size": 190606,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$4abc24d4ac169d56eb8ada505862b37ea1a4352f",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5279d0bf-54e5-48a9-9693-2aa674a8c5f6",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.885Z",
-            "modified_date": "2023-05-11T05:34:25.885Z",
-            "file": "d40b2db6-199d-4642-ad67-04e9fe31ce1e",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "d40b2db6-199d-4642-ad67-04e9fe31ce1e",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.881Z",
-            "modified_date": "2023-05-11T05:34:25.881Z",
-            "file_name": "BALTO_REQID.muts.share.maf",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.share.maf",
-            "file_type": 7,
-            "size": 26386,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$5b04bb973843b148377abb17a3e06d7822cb18fd",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "e766600f-e411-4171-93a4-fc4ce3956d66",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.913Z",
-            "modified_date": "2023-05-11T05:34:25.913Z",
-            "file": "db401f55-37c2-4b30-9a2a-62b27004ecfa",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "db401f55-37c2-4b30-9a2a-62b27004ecfa",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.909Z",
-            "modified_date": "2023-05-11T05:34:25.909Z",
-            "file_name": "BALTO_REQID.seg.cna.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.seg.cna.txt",
-            "file_type": 7,
-            "size": 10276,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "22fc45e4-1aba-41c7-ac55-cdb3546d5c6a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.700Z",
-            "modified_date": "2023-05-11T05:34:26.700Z",
-            "file": "8bdfb3b8-574b-41ad-b433-d2740907ebbc",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "8bdfb3b8-574b-41ad-b433-d2740907ebbc",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.696Z",
-            "modified_date": "2023-05-11T05:34:26.696Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
-            "file_type": 7,
-            "size": 61,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$a3d54b007d2e545047752feb1ff7608a51e578b0",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "42b0e382-2a8d-4751-a8a2-e9825614af10",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.676Z",
-            "modified_date": "2023-05-11T05:34:26.676Z",
-            "file": "c203b782-3864-4892-87e3-70f725955524",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "c203b782-3864-4892-87e3-70f725955524",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.672Z",
-            "modified_date": "2023-05-11T05:34:26.672Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
-            "file_type": 7,
-            "size": 64,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$99a6d0e0cc61eb26ff8475c52b9424f3770c0a47",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "138254ea-2a64-4e2a-ad2d-3bc20b208ea6",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.341Z",
-            "modified_date": "2023-05-11T05:34:26.341Z",
-            "file": "0a21a41d-6eab-4d2f-915a-1c47f62667bf",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0a21a41d-6eab-4d2f-915a-1c47f62667bf",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.337Z",
-            "modified_date": "2023-05-11T05:34:26.337Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
-            "file_type": 7,
-            "size": 4259054,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$02a689b80614dbcbdc354e67610dee62daf2a108",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "bfc958d6-dedb-44fa-8e06-4a6b6ab00f13",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.000Z",
-            "modified_date": "2023-05-11T05:34:26.000Z",
-            "file": "0b8d8a95-ea96-41b8-85ae-cf76f70cb50b",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0b8d8a95-ea96-41b8-85ae-cf76f70cb50b",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.996Z",
-            "modified_date": "2023-05-11T05:34:25.996Z",
-            "file_name": "s_C_ABCDEF_X001_d.arm_level.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.arm_level.txt",
-            "file_type": 7,
-            "size": 1588,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$88f874dfff9f2631c70682ecdfabaa71163fee41",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5bd3e31b-7bd1-4793-8c8f-efbf29000b8e",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.282Z",
-            "modified_date": "2023-05-11T05:34:26.282Z",
-            "file": "0cf422a7-9e8d-4468-ba88-29803da337be",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0cf422a7-9e8d-4468-ba88-29803da337be",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.277Z",
-            "modified_date": "2023-05-11T05:34:26.277Z",
-            "file_name": "s_C_ABCDEF_X001_d_purity.png",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.png",
-            "file_type": 7,
-            "size": 145912,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$725b9130df5b5ab5cefbe85df2705942388fa673",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "2a89aac7-38a9-4d02-be45-fea740630763",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.099Z",
-            "modified_date": "2023-05-11T05:34:26.099Z",
-            "file": "18ed0523-19e2-4c60-a89d-c5c0b5e22142",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "18ed0523-19e2-4c60-a89d-c5c0b5e22142",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.094Z",
-            "modified_date": "2023-05-11T05:34:26.094Z",
-            "file_name": "s_C_ABCDEF_X001_d_hisens.cncf.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.cncf.txt",
-            "file_type": 7,
-            "size": 20336,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$8c9b55c3bfd5a8c492a2ad71e12a53d9341c1430",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5bd03df8-cb1e-4241-86d9-35d437714f64",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.560Z",
-            "modified_date": "2023-05-11T05:34:26.560Z",
-            "file": "1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.556Z",
-            "modified_date": "2023-05-11T05:34:26.556Z",
-            "file_name": "s_C_GHIJKL_X001_d_purity.rds",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.rds",
-            "file_type": 7,
-            "size": 559113,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$155d23906746a8bf5f5186d6deeca059b34f3131",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "2e7255d5-5df2-42b2-b427-f67606701a97",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.311Z",
-            "modified_date": "2023-05-11T05:34:26.311Z",
-            "file": "1e12a002-01ba-4731-9ee2-66e04a971d59",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "1e12a002-01ba-4731-9ee2-66e04a971d59",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.306Z",
-            "modified_date": "2023-05-11T05:34:26.306Z",
-            "file_name": "s_C_ABCDEF_X001_d.qc.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.qc.txt",
-            "file_type": 7,
-            "size": 1387,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$3855b1214004099af1143a009893b1416ec8c5e3",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "619c1f3d-ce71-4d6f-bef3-8c6de405d6de",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.451Z",
-            "modified_date": "2023-05-11T05:34:26.451Z",
-            "file": "3198d6bf-2500-4947-bf31-86c270133c8a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "3198d6bf-2500-4947-bf31-86c270133c8a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.446Z",
-            "modified_date": "2023-05-11T05:34:26.446Z",
-            "file_name": "s_C_GHIJKL_X001_d_hisens.cncf.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.cncf.txt",
-            "file_type": 7,
-            "size": 11497,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$866675c69b5e0076395caed00cd73318cd67f360",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "7fb2c653-ce45-471f-9355-110e5f6715ff",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.586Z",
-            "modified_date": "2023-05-11T05:34:26.586Z",
-            "file": "424f7aeb-35fe-456c-a77d-a3dea47d57e5",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "424f7aeb-35fe-456c-a77d-a3dea47d57e5",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.582Z",
-            "modified_date": "2023-05-11T05:34:26.582Z",
-            "file_name": "s_C_GHIJKL_X001_d_purity.seg",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.seg",
-            "file_type": 7,
-            "size": 2844,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$4f4a72ff965bb4a25514380b1f486c255e3894ad",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "33aa4f6b-963d-44e7-8b7d-d45d6a1a1f44",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.134Z",
-            "modified_date": "2023-05-11T05:34:26.134Z",
-            "file": "4dfb7210-d6c0-40dd-a07d-6bd3816b4864",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "4dfb7210-d6c0-40dd-a07d-6bd3816b4864",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.128Z",
-            "modified_date": "2023-05-11T05:34:26.128Z",
-            "file_name": "s_C_ABCDEF_X001_d_hisens.rds",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.rds",
-            "file_type": 7,
-            "size": 524440,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$e23e8dbcd105f041170d24e82cdac6b01eeaf99b",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "7b5f3c93-ee3d-47d4-803c-1ded31e7d41f",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.400Z",
-            "modified_date": "2023-05-11T05:34:26.400Z",
-            "file": "77aba2ab-d1f8-4426-8eac-df58615eabf6",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "77aba2ab-d1f8-4426-8eac-df58615eabf6",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.396Z",
-            "modified_date": "2023-05-11T05:34:26.396Z",
-            "file_name": "s_C_GHIJKL_X001_d.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.txt",
-            "file_type": 7,
-            "size": 644,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$96f2096d3b6edfbe8baa1e721fdd6380e674c6c5",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "1ce00e04-ecf2-4bba-8458-fe0312c135fa",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.036Z",
-            "modified_date": "2023-05-11T05:34:26.036Z",
-            "file": "7f8729a3-06f4-46cb-a652-19f2d93e2cfe",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "7f8729a3-06f4-46cb-a652-19f2d93e2cfe",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.031Z",
-            "modified_date": "2023-05-11T05:34:26.032Z",
-            "file_name": "s_C_ABCDEF_X001_d.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.txt",
-            "file_type": 7,
-            "size": 703,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$237ae3bd806672de5f67c8c26c725cae5c836fce",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "1a7ba775-be81-4250-aaad-ae71727c8ec9",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.973Z",
-            "modified_date": "2023-05-11T05:34:25.973Z",
-            "file": "91d93ce9-cc1d-4dea-8219-44d276c34863",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "91d93ce9-cc1d-4dea-8219-44d276c34863",
-        "fields": {
-            "created_date": "2023-05-11T05:34:25.968Z",
-            "modified_date": "2023-05-11T05:34:25.968Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
-            "file_type": 7,
-            "size": 7377047,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$6100529afe874bb7655d2b2ba02a83520bbdfd68",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5468d135-55b7-4c7f-aabd-cb3807776cbd",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.503Z",
-            "modified_date": "2023-05-11T05:34:26.503Z",
-            "file": "952a1be0-ae12-4862-9aa1-4dcc1b94ddf3",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "952a1be0-ae12-4862-9aa1-4dcc1b94ddf3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.499Z",
-            "modified_date": "2023-05-11T05:34:26.499Z",
-            "file_name": "s_C_GHIJKL_X001_d_hisens.seg",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.seg",
-            "file_type": 7,
-            "size": 4492,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$2baab8bb720f328b426d55e950128d1ad17ea817",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "62d9e9af-5a31-4644-9ba7-ff13ad57e9b4",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.069Z",
-            "modified_date": "2023-05-11T05:34:26.069Z",
-            "file": "9ee079f1-5992-46b9-9bb5-39ca7f407d89",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "9ee079f1-5992-46b9-9bb5-39ca7f407d89",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.065Z",
-            "modified_date": "2023-05-11T05:34:26.065Z",
-            "file_name": "s_C_ABCDEF_X001_d.gene_level.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.gene_level.txt",
-            "file_type": 7,
-            "size": 222194,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$84e740874c9269755af6b0461ba180063f5766d9",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "62df17de-bb14-4285-9680-d0166233d896",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.372Z",
-            "modified_date": "2023-05-11T05:34:26.372Z",
-            "file": "a26c0843-7e72-42fc-96ad-25f8ddc7c2d1",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "a26c0843-7e72-42fc-96ad-25f8ddc7c2d1",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.366Z",
-            "modified_date": "2023-05-11T05:34:26.366Z",
-            "file_name": "s_C_GHIJKL_X001_d.arm_level.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.arm_level.txt",
-            "file_type": 7,
-            "size": 2144,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$d8a215749e477d0de13c0840e2c0fe97688024a6",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "34bf2a7c-9732-4ded-abd0-03dd39bddef4",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.530Z",
-            "modified_date": "2023-05-11T05:34:26.530Z",
-            "file": "a425a949-225a-4ed0-8340-82998233e315",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "a425a949-225a-4ed0-8340-82998233e315",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.525Z",
-            "modified_date": "2023-05-11T05:34:26.525Z",
-            "file_name": "s_C_GHIJKL_X001_d_hisens.png",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.png",
-            "file_type": 7,
-            "size": 145351,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$c3e2a4cbdfd5cb278b3402be88f791f16b354178",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "a902f82a-180c-4cc3-9055-ba0758b14077",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.167Z",
-            "modified_date": "2023-05-11T05:34:26.167Z",
-            "file": "b695164a-4820-4037-9869-d50a5b1efbec",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "b695164a-4820-4037-9869-d50a5b1efbec",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.163Z",
-            "modified_date": "2023-05-11T05:34:26.163Z",
-            "file_name": "s_C_ABCDEF_X001_d_hisens.seg",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.seg",
-            "file_type": 7,
-            "size": 7873,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$7416ac4eba38ca02c848b61fb749cefe4968389d",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "86b6dbfd-aaf3-45f4-8001-acd22c504ec3",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.476Z",
-            "modified_date": "2023-05-11T05:34:26.476Z",
-            "file": "c328b180-8534-442a-99df-d5fecfb62b04",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "c328b180-8534-442a-99df-d5fecfb62b04",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.472Z",
-            "modified_date": "2023-05-11T05:34:26.472Z",
-            "file_name": "s_C_GHIJKL_X001_d_hisens.rds",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.rds",
-            "file_type": 7,
-            "size": 560555,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$491b734b727a0c4e7faa578a45765d68af8a3273",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "646ae9b9-50d0-4c67-9efe-21abb97028d6",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.224Z",
-            "modified_date": "2023-05-11T05:34:26.224Z",
-            "file": "cbdc4651-b0e4-48a7-b885-e0893051543f",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "cbdc4651-b0e4-48a7-b885-e0893051543f",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.220Z",
-            "modified_date": "2023-05-11T05:34:26.220Z",
-            "file_name": "s_C_ABCDEF_X001_d_purity.rds",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.rds",
-            "file_type": 7,
-            "size": 521427,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$f239921bd7f00823791096ffc93c6f6e8d98108c",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5efd92bd-e197-4661-bc23-37d3fb3e8583",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.253Z",
-            "modified_date": "2023-05-11T05:34:26.253Z",
-            "file": "d7c00ce5-a8b5-4d5c-aa03-913972eb6555",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "d7c00ce5-a8b5-4d5c-aa03-913972eb6555",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.249Z",
-            "modified_date": "2023-05-11T05:34:26.249Z",
-            "file_name": "s_C_ABCDEF_X001_d_purity.seg",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.seg",
-            "file_type": 7,
-            "size": 4299,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$8a1b4e73b5ab079c28129e6a6048216feb455fef",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "3d0cdc42-f75f-4d74-aa5b-fa1e536edb0f",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.609Z",
-            "modified_date": "2023-05-11T05:34:26.609Z",
-            "file": "df192110-8c31-4e0d-b746-2dfed278f999",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "df192110-8c31-4e0d-b746-2dfed278f999",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.605Z",
-            "modified_date": "2023-05-11T05:34:26.605Z",
-            "file_name": "s_C_GHIJKL_X001_d_purity.png",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.png",
-            "file_type": 7,
-            "size": 139606,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$8bbd74f13e381a10a6801f55fe3f010a70041dac",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "d2233d4a-8871-40a1-85dd-5a5b703fbd1a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.196Z",
-            "modified_date": "2023-05-11T05:34:26.196Z",
-            "file": "e293b7ca-3666-4339-8c42-39797f57798a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "e293b7ca-3666-4339-8c42-39797f57798a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.192Z",
-            "modified_date": "2023-05-11T05:34:26.192Z",
-            "file_name": "s_C_ABCDEF_X001_d_hisens.png",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.png",
-            "file_type": 7,
-            "size": 153633,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$29848b34f4d08dd2bdf2cff486177f1b6664dc5e",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "ef6863f5-c5cc-413b-8b36-af7cc7ba8bbd",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.426Z",
-            "modified_date": "2023-05-11T05:34:26.426Z",
-            "file": "ec4799a6-0d20-4c4a-b87c-12f30027f221",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ec4799a6-0d20-4c4a-b87c-12f30027f221",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.422Z",
-            "modified_date": "2023-05-11T05:34:26.422Z",
-            "file_name": "s_C_GHIJKL_X001_d.gene_level.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.gene_level.txt",
-            "file_type": 7,
-            "size": 212146,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$aa2643f5b5e8d01df039af68148e9e09673528c2",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5bb4d945-6ca5-4c1b-893c-bf593584fce1",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.645Z",
-            "modified_date": "2023-05-11T05:34:26.645Z",
-            "file": "f8940dd4-2420-452f-b257-972f3fad2f1f",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "f8940dd4-2420-452f-b257-972f3fad2f1f",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.639Z",
-            "modified_date": "2023-05-11T05:34:26.639Z",
-            "file_name": "s_C_GHIJKL_X001_d.qc.txt",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.qc.txt",
-            "file_type": 7,
-            "size": 1364,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$33e06152fcace43af5ef8c9ef1ed173b4d2616ab",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "a7bfc706-5818-4904-8295-1aa23a7db818",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.762Z",
-            "modified_date": "2023-05-11T05:34:26.762Z",
-            "file": "844a2323-1a91-43d2-a12b-38683c7de348",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "844a2323-1a91-43d2-a12b-38683c7de348",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.754Z",
-            "modified_date": "2023-05-11T05:34:26.754Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
-            "file_type": 7,
-            "size": 48,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$08760b1ba7a136e1b82cc1006306f5852f9f92ad",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "968038b6-413d-4f10-a5ae-f83f9e08f187",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.731Z",
-            "modified_date": "2023-05-11T05:34:26.731Z",
-            "file": "d8c21dcd-af7f-4aa5-9c39-c226d911779a",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "d8c21dcd-af7f-4aa5-9c39-c226d911779a",
-        "fields": {
-            "created_date": "2023-05-11T05:34:26.726Z",
-            "modified_date": "2023-05-11T05:34:26.726Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
-            "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
-            "file_type": 7,
-            "size": 49,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$8480cd17c88f330b277f55be3a2779aad895c672",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "a0248ec9-3bd8-4295-8a02-4155b9c48915",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.879Z",
-            "modified_date": "2023-05-09T21:30:14.879Z",
-            "file": "e5ed5737-930a-45a6-bb9f-038f41db68b5",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "e5ed5737-930a-45a6-bb9f-038f41db68b5",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.860Z",
-            "modified_date": "2023-05-09T21:30:14.861Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
-            "file_type": 7,
-            "size": 3105,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$734e3b32d9b28d6eaccd8d070b1e397d4821e863",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "f4ea7700-2c59-4a24-a8ba-72df51a5011f",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.083Z",
-            "modified_date": "2023-05-11T04:08:24.083Z",
-            "file": "ed9555bc-bc1c-4b96-bf0b-87766c208820",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ed9555bc-bc1c-4b96-bf0b-87766c208820",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.079Z",
-            "modified_date": "2023-05-11T04:08:24.079Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
-            "file_type": 7,
-            "size": 3417,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$165d81dbfde968dbf0d6f233281d397dda0b5e33",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "b42c0242-fbc9-4ef6-b3fe-9487f6f65b26",
-        "fields": {
-            "created_date": "2020-05-22T22:20:24.566Z",
-            "modified_date": "2020-10-08T01:56:22.260Z",
-            "file": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
-            "version": 0,
-            "latest": true,
-            "metadata": {
-                "assay": "IMPACT468_b37",
-                "data_type": "targets_list"
-            },
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
-        "fields": {
-            "created_date": "2020-05-22T22:20:24.558Z",
-            "modified_date": "2020-05-22T22:20:24.558Z",
-            "file_name": "picard_targets.interval_list",
-            "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
-            "file_type": 20,
-            "size": 0,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": null,
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "70377c44-bd70-4ef1-a662-7918c5651551",
-        "fields": {
-            "created_date": "2020-07-01T19:21:54.681Z",
-            "modified_date": "2020-10-08T01:44:36.409Z",
-            "file": "6c90454d-fc4c-4cce-84a9-dce5d7da4345",
-            "version": 0,
-            "latest": true,
-            "metadata": {},
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "6c90454d-fc4c-4cce-84a9-dce5d7da4345",
-        "fields": {
-            "created_date": "2020-07-01T19:21:54.415Z",
-            "modified_date": "2020-07-01T19:21:54.415Z",
-            "file_name": "known_fusions_at_mskcc.txt",
-            "path": "/juno/work/ci/resources/known_fusions/known_fusions_at_mskcc.txt",
-            "file_type": 17,
-            "size": 71220,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$c9924aeffb75a3adaafb27a02fd4d38ac6b3bb5c",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "b74d63f4-47a2-4375-868c-e8678d75cc93",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.914Z",
-            "modified_date": "2023-05-09T21:30:14.914Z",
-            "file": "3dac67cf-e820-4b83-b5a9-4ee4f88155b0",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "3dac67cf-e820-4b83-b5a9-4ee4f88155b0",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.909Z",
-            "modified_date": "2023-05-09T21:30:14.909Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
-            "file_type": 7,
-            "size": 279,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$a731f1832e6d7d75642fd656d84d5a5a834fbc91",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "61836c9c-0767-447a-af0a-4385123df6b6",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.107Z",
-            "modified_date": "2023-05-11T04:08:24.107Z",
-            "file": "53737c3b-acf2-4311-863d-c6ad27b60037",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "53737c3b-acf2-4311-863d-c6ad27b60037",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.103Z",
-            "modified_date": "2023-05-11T04:08:24.103Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
-            "file_type": 7,
-            "size": 293,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$a18c205f12a82645c862cbeb3fb6a3b3a1af8190",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "948918f3-0a81-457b-8434-2ffa2e0259c7",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.132Z",
-            "modified_date": "2023-05-11T04:08:24.132Z",
-            "file": "101ebd6a-e5e6-43ff-8038-c269831b3083",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "101ebd6a-e5e6-43ff-8038-c269831b3083",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.128Z",
-            "modified_date": "2023-05-11T04:08:24.128Z",
-            "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
-            "file_type": 7,
-            "size": 3202610,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$fc94b38efc99b2dc29fe10827d35c0e11406ed87",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "dbfdb0cc-e6ab-49ed-8886-aca2d61d267c",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.008Z",
-            "modified_date": "2023-05-11T04:08:24.008Z",
-            "file": "14e3a9d7-7af9-4801-9b4e-107b89fd963b",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "14e3a9d7-7af9-4801-9b4e-107b89fd963b",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.004Z",
-            "modified_date": "2023-05-11T04:08:24.004Z",
-            "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
-            "file_type": 7,
-            "size": 2104538,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$4ef6dfe95f9952886daebe4ad4f9a1212e47ef8c",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "625b10c8-0087-4b07-927a-29af33aa3619",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.660Z",
-            "modified_date": "2023-05-09T21:30:15.660Z",
-            "file": "16be67c5-1e51-4f54-8874-fded5aa3e2ed",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "16be67c5-1e51-4f54-8874-fded5aa3e2ed",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.656Z",
-            "modified_date": "2023-05-09T21:30:15.656Z",
-            "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
-            "file_type": 7,
-            "size": 1972889,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$2b43bc5e7c481816e6f7fd3d378b2e7432daf2f8",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "9884f333-0243-4661-8012-66731a436bd3",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.942Z",
-            "modified_date": "2023-05-09T21:30:14.942Z",
-            "file": "1a7dea31-fe52-45ed-b2f4-34b612750d4d",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "1a7dea31-fe52-45ed-b2f4-34b612750d4d",
-        "fields": {
-            "created_date": "2023-05-09T21:30:14.938Z",
-            "modified_date": "2023-05-09T21:30:14.938Z",
-            "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
-            "file_type": 7,
-            "size": 5621066,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$153f7c8b11c7e33878fb2e8889d45f432b1f1468",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "130fa948-73fa-45e8-ba14-1e2e82853d92",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.741Z",
-            "modified_date": "2023-05-09T21:30:15.741Z",
-            "file": "1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.737Z",
-            "modified_date": "2023-05-09T21:30:15.737Z",
-            "file_name": "s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
-            "file_type": 7,
-            "size": 3407571907,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$f107761d5b54bfbb596baf2423c8fc1b92476dfa",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "08ce3f56-c2a5-4a7c-992e-fa33cfce4d5c",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.232Z",
-            "modified_date": "2023-05-11T04:08:24.232Z",
-            "file": "3a907e66-9180-466f-a410-174b8fa8531e",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "3a907e66-9180-466f-a410-174b8fa8531e",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.228Z",
-            "modified_date": "2023-05-11T04:08:24.228Z",
-            "file_name": "s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
-            "file_type": 7,
-            "size": 5451520,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$d6cbe07b4051b04aff92c77ff1e4b7450ca7ba42",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "e6c90e8c-0359-4e3b-bcdb-ca0e8c27b537",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.209Z",
-            "modified_date": "2023-05-11T04:08:24.209Z",
-            "file": "da87ab23-4127-4e02-882e-67736e525e13",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "da87ab23-4127-4e02-882e-67736e525e13",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.206Z",
-            "modified_date": "2023-05-11T04:08:24.206Z",
-            "file_name": "s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
-            "file_type": 7,
-            "size": 3685446167,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$bb10fb5480fbad15e5c47397916f9040469ed25f",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "e5bace19-814c-4c1d-ade9-349dd7bf3a90",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.768Z",
-            "modified_date": "2023-05-09T21:30:15.768Z",
-            "file": "f21009f3-7d35-424b-9171-2e862bdbe7f2",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "f21009f3-7d35-424b-9171-2e862bdbe7f2",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.764Z",
-            "modified_date": "2023-05-09T21:30:15.764Z",
-            "file_name": "s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
-            "file_type": 7,
-            "size": 5366704,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$4c791763528449b6b13a9b3ea8576eb8342d53d1",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "b94592ea-76d8-4215-a934-945c4f7918c4",
-        "fields": {
-            "created_date": "2020-12-16T00:38:22.427Z",
-            "modified_date": "2020-12-16T00:38:22.427Z",
-            "file": "0db3314e-1a17-4d24-8910-a88f73cb8a7c",
-            "version": 0,
-            "latest": true,
-            "metadata": {},
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "0db3314e-1a17-4d24-8910-a88f73cb8a7c",
-        "fields": {
-            "created_date": "2020-12-16T00:38:22.209Z",
-            "modified_date": "2020-12-16T00:38:22.209Z",
-            "file_name": "all_IMPACT_genes.tsv",
-            "path": "/juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
-            "file_type": 18,
-            "size": 27366,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$ec6e790b9e8954f884fb7bc3722f5c09e128851b",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "5a2833b4-651c-4b89-b1df-09ffdbacd5c6",
-        "fields": {
-            "created_date": "2021-04-07T19:37:10.623Z",
-            "modified_date": "2021-04-07T19:37:10.624Z",
-            "file": "ffb33d50-5bda-4b89-b6cc-b0aeda4c547a",
-            "version": 0,
-            "latest": true,
-            "metadata": {},
-            "user": null
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "ffb33d50-5bda-4b89-b6cc-b0aeda4c547a",
-        "fields": {
-            "created_date": "2021-04-07T19:37:10.602Z",
-            "modified_date": "2021-04-07T19:37:10.602Z",
-            "file_name": "microsatellites.list",
-            "path": "/juno/work/ci/resources/request_files/msisensor/microsatellites.list",
-            "file_type": 17,
-            "size": 1338990404,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$6984a8e6ecca800e9dd74f0b776350ad516b08c7",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "39196510-a20a-460e-b3dc-868cdc6b92f4",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.688Z",
-            "modified_date": "2023-05-09T21:30:15.688Z",
-            "file": "6483333a-4a0e-4b4f-bc91-18cbcb34f098",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "6483333a-4a0e-4b4f-bc91-18cbcb34f098",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.684Z",
-            "modified_date": "2023-05-09T21:30:15.684Z",
-            "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
-            "file_type": 7,
-            "size": 1648060977,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$a0e19ce24175fe186dbfdfff631acd77a4add2b0",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "c07281ca-aa49-4bf6-ad3f-14d6a0cc5593",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.162Z",
-            "modified_date": "2023-05-11T04:08:24.162Z",
-            "file": "67457754-ffa9-49ae-96fb-c29c23dc36f5",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "67457754-ffa9-49ae-96fb-c29c23dc36f5",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.158Z",
-            "modified_date": "2023-05-11T04:08:24.159Z",
-            "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
-            "file_type": 7,
-            "size": 1929853145,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$975285c0b179e169d3c060d30fabe0bd2bcbe760",
-            "request_id": null,
-            "sample": null,
-            "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "0bebcda0-a3f4-47ca-8d58-ebbd94f153f8",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.186Z",
-            "modified_date": "2023-05-11T04:08:24.186Z",
-            "file": "795dfb7d-63be-4e45-bd9e-51d0689e2d18",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "795dfb7d-63be-4e45-bd9e-51d0689e2d18",
-        "fields": {
-            "created_date": "2023-05-11T04:08:24.182Z",
-            "modified_date": "2023-05-11T04:08:24.182Z",
-            "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
-            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
-            "file_type": 7,
-            "size": 4639168,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$3169173e7a040b82fdfd869e2a7dd421cc65aa05",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
-    },
-    {
-        "model": "file_system.filemetadata",
-        "pk": "15d8fd97-076b-436e-a393-67e8d538345d",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.713Z",
-            "modified_date": "2023-05-09T21:30:15.713Z",
-            "file": "eb20a340-3200-4135-8e2d-8c7a29ce1cf6",
-            "version": 0,
-            "latest": true,
-            "metadata": {}
-        }
-    },
-    {
-        "model": "file_system.file",
-        "pk": "eb20a340-3200-4135-8e2d-8c7a29ce1cf6",
-        "fields": {
-            "created_date": "2023-05-09T21:30:15.709Z",
-            "modified_date": "2023-05-09T21:30:15.709Z",
-            "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
-            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
-            "file_type": 7,
-            "size": 4435944,
-            "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
-            "checksum": "sha1$a438cb29202dee8c6d3d9b7a37bfe3fe0712d138",
-            "request_id": null,
-            "sample": null,
-            "samples": "[]",
-            "patient_id": null
-        }
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4b8dbd5c-0e4f-487f-9fdf-8163ca4ad051",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.437Z",
+      "modified_date": "2023-05-11T05:34:25.437Z",
+      "file": "0324978b-8cdd-4d23-b86d-82a73c47d5bb",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
     }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0324978b-8cdd-4d23-b86d-82a73c47d5bb",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.431Z",
+      "modified_date": "2023-05-11T05:34:25.431Z",
+      "file_name": "data_CNA.ascna.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.ascna.txt",
+      "file_type": 7,
+      "size": 6819,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c0b6058c7181c2216c039e0f1042f5890c9c25b3",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "106f4991-e051-44d2-952a-cc6c9a04731b",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.343Z",
+      "modified_date": "2023-05-11T05:34:25.343Z",
+      "file": "0b667b14-b587-4ffa-9306-7f5435abdf9e",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0b667b14-b587-4ffa-9306-7f5435abdf9e",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.339Z",
+      "modified_date": "2023-05-11T05:34:25.339Z",
+      "file_name": "meta_sv.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_sv.txt",
+      "file_type": 7,
+      "size": 252,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$5f7ca81c8d442fe959b588e99d93b046249caee9",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5c25976d-8e1f-4b8d-a1ab-3e641e2bc7f7",
+    "fields": {
+      "created_date": "2023-05-11T05:34:24.992Z",
+      "modified_date": "2023-05-11T05:34:24.992Z",
+      "file": "12d71485-86f2-4e52-a447-df4101b661b3",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "12d71485-86f2-4e52-a447-df4101b661b3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:24.985Z",
+      "modified_date": "2023-05-11T05:34:24.985Z",
+      "file_name": "data_clinical_patient.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_patient.txt",
+      "file_type": 7,
+      "size": 89,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$dbd3c9ddd87b092d5c8d5f4b8fb5d58806d21a70",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9fe238dd-329b-462d-b817-4d7b3344e21a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.123Z",
+      "modified_date": "2023-05-11T05:34:25.123Z",
+      "file": "14e1cadb-d6f2-4754-9dba-0ff0a5997e75",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "14e1cadb-d6f2-4754-9dba-0ff0a5997e75",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.117Z",
+      "modified_date": "2023-05-11T05:34:25.117Z",
+      "file_name": "meta_clinical_patient.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_patient.txt",
+      "file_type": 7,
+      "size": 137,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$050f7c6f1902425977ae32e42949ecfed69966c3",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e862f68d-d1fd-487f-a5b9-7477dc1a2a5d",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.406Z",
+      "modified_date": "2023-05-11T05:34:25.406Z",
+      "file": "24283396-7739-42c2-844c-0808e6e50389",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "24283396-7739-42c2-844c-0808e6e50389",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.401Z",
+      "modified_date": "2023-05-11T05:34:25.401Z",
+      "file_name": "data_CNA.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_CNA.txt",
+      "file_type": 7,
+      "size": 5089,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$1e734227d76502e26177fb7d7a12b4f561d47ac3",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5d6d7ab4-3b3f-4856-9bea-51988f5a55a2",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.274Z",
+      "modified_date": "2023-05-11T05:34:25.274Z",
+      "file": "2a995cbf-bac9-4fbe-ba7b-67b41b09a011",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "2a995cbf-bac9-4fbe-ba7b-67b41b09a011",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.267Z",
+      "modified_date": "2023-05-11T05:34:25.267Z",
+      "file_name": "meta_mutations_extended.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_mutations_extended.txt",
+      "file_type": 7,
+      "size": 265,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c8b3a1c2dbce72c75a0ed51094ba4eeb7231d230",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f13df98c-6d38-4e34-8bca-201494854dff",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.678Z",
+      "modified_date": "2023-05-11T05:34:25.678Z",
+      "file": "35515ac2-9ab8-4aa4-bac9-838a152b827c",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "35515ac2-9ab8-4aa4-bac9-838a152b827c",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.672Z",
+      "modified_date": "2023-05-11T05:34:25.672Z",
+      "file_name": "cases_cnaseq.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cnaseq.txt",
+      "file_type": 7,
+      "size": 294,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$76e041dd92d36e24519ef413cc8f6afbbd255c97",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "21b9452b-ec3a-4f30-ba69-a7385c122806",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.374Z",
+      "modified_date": "2023-05-11T05:34:25.374Z",
+      "file": "455cfce0-2ed8-493d-bb72-40e39f56f0d3",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "455cfce0-2ed8-493d-bb72-40e39f56f0d3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.369Z",
+      "modified_date": "2023-05-11T05:34:25.369Z",
+      "file_name": "data_sv.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_sv.txt",
+      "file_type": 7,
+      "size": 170,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$276634dab72db8e7f6a49537345311183986c5fa",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7040cc7b-ad78-4da0-ba1e-dbda62e85453",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.588Z",
+      "modified_date": "2023-05-11T05:34:25.588Z",
+      "file": "47f4cb97-1941-496d-bcb2-6cdf019abd1e",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "47f4cb97-1941-496d-bcb2-6cdf019abd1e",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.582Z",
+      "modified_date": "2023-05-11T05:34:25.582Z",
+      "file_name": "data_fusions.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_fusions.txt",
+      "file_type": 7,
+      "size": 99,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c16f763b248813fcdde76f7486f1ddc4e9856038",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b954639d-74f3-49bf-9ad2-2e528164977a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.749Z",
+      "modified_date": "2023-05-11T05:34:25.749Z",
+      "file": "553ca8c0-f6da-4074-aaa8-8e3c850830e3",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "553ca8c0-f6da-4074-aaa8-8e3c850830e3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.741Z",
+      "modified_date": "2023-05-11T05:34:25.741Z",
+      "file_name": "cases_sequenced.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_sequenced.txt",
+      "file_type": 7,
+      "size": 239,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$016b7624974761f469dd1096b605011a31c7def9",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "88346fb4-7a12-4baa-a928-08e545337eb0",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.794Z",
+      "modified_date": "2023-05-11T05:34:25.794Z",
+      "file": "5b7d9b45-39ff-4f24-b7a5-498d32882bf2",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5b7d9b45-39ff-4f24-b7a5-498d32882bf2",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.788Z",
+      "modified_date": "2023-05-11T05:34:25.788Z",
+      "file_name": "report.html",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/report.html",
+      "file_type": 7,
+      "size": 1015628,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$0a6ebb863f5ac29a71fc51e467ff55a76545eac3",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "da36e522-4ebd-4dba-98d8-ca4e47b3ae0c",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.309Z",
+      "modified_date": "2023-05-11T05:34:25.309Z",
+      "file": "5bfe4ae1-5347-44d8-8957-6ea88b6a682a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "5bfe4ae1-5347-44d8-8957-6ea88b6a682a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.305Z",
+      "modified_date": "2023-05-11T05:34:25.305Z",
+      "file_name": "BALTO_REQID_meta_cna_hg19_seg.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_meta_cna_hg19_seg.txt",
+      "file_type": 7,
+      "size": 190,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$365b7973ccbe6fd1a4981498bb4ed579cd3b2216",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8c015c5d-cfb9-4dfb-b62a-e64bc01b0b1e",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.041Z",
+      "modified_date": "2023-05-11T05:34:25.041Z",
+      "file": "67c37acb-0826-48e5-b347-84c8b7c45a07",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "67c37acb-0826-48e5-b347-84c8b7c45a07",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.035Z",
+      "modified_date": "2023-05-11T05:34:25.035Z",
+      "file_name": "data_clinical_sample.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_clinical_sample.txt",
+      "file_type": 7,
+      "size": 1470,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$5a046eb5dace378e4ead32857c33f1d7ee4f3517",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1a58c813-e7ac-4c99-b741-fe3a64df54dc",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.543Z",
+      "modified_date": "2023-05-11T05:34:25.543Z",
+      "file": "7fd42482-9034-4a59-b2e3-a6291ed3658a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7fd42482-9034-4a59-b2e3-a6291ed3658a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.535Z",
+      "modified_date": "2023-05-11T05:34:25.535Z",
+      "file_name": "BALTO_REQID_data_cna_hg19.seg",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/BALTO_REQID_data_cna_hg19.seg",
+      "file_type": 7,
+      "size": 10276,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4688bf27-ad39-42b1-9cca-5eeb5e1b8fb3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:24.945Z",
+      "modified_date": "2023-05-11T05:34:24.945Z",
+      "file": "ae02ab91-42d9-447f-9d2a-0b9dea1e46dc",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ae02ab91-42d9-447f-9d2a-0b9dea1e46dc",
+    "fields": {
+      "created_date": "2023-05-11T05:34:24.927Z",
+      "modified_date": "2023-05-11T05:34:24.927Z",
+      "file_name": "meta_clinical_sample.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_clinical_sample.txt",
+      "file_type": 7,
+      "size": 135,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$0610ad0752b25ba70b351968b96e371ed17d133e",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6e099cba-efab-4ffa-8ca4-73703892cdcc",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.227Z",
+      "modified_date": "2023-05-11T05:34:25.227Z",
+      "file": "aefd50f3-ef56-4c72-8a51-45f175306525",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "aefd50f3-ef56-4c72-8a51-45f175306525",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.219Z",
+      "modified_date": "2023-05-11T05:34:25.219Z",
+      "file_name": "meta_fusions.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_fusions.txt",
+      "file_type": 7,
+      "size": 222,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$519e821d543f05758ce67999cbebe07715a15e1e",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3e7d6562-8ede-4701-a335-1e8dbc58c1dc",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.081Z",
+      "modified_date": "2023-05-11T05:34:25.081Z",
+      "file": "bfbe4101-d538-4166-ba17-5954f9f4d2c9",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "bfbe4101-d538-4166-ba17-5954f9f4d2c9",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.075Z",
+      "modified_date": "2023-05-11T05:34:25.075Z",
+      "file_name": "meta_study.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_study.txt",
+      "file_type": 7,
+      "size": 138,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$0a4c0963d794e6b3a2bb15bec693769afd89d096",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6475658e-4cdf-4f76-8712-e3434bfa348b",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.169Z",
+      "modified_date": "2023-05-11T05:34:25.169Z",
+      "file": "ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ce27ab83-fc1c-44c2-a3d1-f3b775d1f98a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.160Z",
+      "modified_date": "2023-05-11T05:34:25.160Z",
+      "file_name": "meta_CNA.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/meta_CNA.txt",
+      "file_type": 7,
+      "size": 265,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$7d9822e81cbcf6c423b2fac7037825354a21aef0",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "29c59d5e-f60e-491f-8583-f5794dcd4137",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.711Z",
+      "modified_date": "2023-05-11T05:34:25.711Z",
+      "file": "d676fd04-31c4-4381-a9df-079cdf2ed3db",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d676fd04-31c4-4381-a9df-079cdf2ed3db",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.707Z",
+      "modified_date": "2023-05-11T05:34:25.707Z",
+      "file_name": "cases_cna.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_cna.txt",
+      "file_type": 7,
+      "size": 226,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$af1ad4e33db24a4dea94e3d2639de8d28834834b",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a9e43a66-4ceb-4936-b0d0-2cfd161e26f4",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.485Z",
+      "modified_date": "2023-05-11T05:34:25.485Z",
+      "file": "ea3990b1-aba2-4d1a-9348-e9c4cf05eef0",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ea3990b1-aba2-4d1a-9348-e9c4cf05eef0",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.479Z",
+      "modified_date": "2023-05-11T05:34:25.479Z",
+      "file_name": "data_mutations_extended.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/data_mutations_extended.txt",
+      "file_type": 7,
+      "size": 16879,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$cf7b3f57ae3aa91afddb7ca6be1227550dc449cf",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "416977ce-d047-4b98-9e5d-2160054778ab",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.631Z",
+      "modified_date": "2023-05-11T05:34:25.631Z",
+      "file": "eacaec13-cc86-409f-b2c0-fb8b9eb22422",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "eacaec13-cc86-409f-b2c0-fb8b9eb22422",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.625Z",
+      "modified_date": "2023-05-11T05:34:25.625Z",
+      "file_name": "cases_all.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/portal/case_lists/cases_all.txt",
+      "file_type": 7,
+      "size": 214,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$e6b7f1a7a42f8a1c36638123aecfacff8825f2e4",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c4564c12-57ea-4f36-8e6a-33e4604d4f0b",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.832Z",
+      "modified_date": "2023-05-11T05:34:25.832Z",
+      "file": "41a9c199-3312-49e5-9bf8-7b9e5c347094",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "41a9c199-3312-49e5-9bf8-7b9e5c347094",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.828Z",
+      "modified_date": "2023-05-11T05:34:25.828Z",
+      "file_name": "BALTO_REQID.gene.cna.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.gene.cna.txt",
+      "file_type": 7,
+      "size": 137879,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6f48bf7c43539a3cacef98def04d0b33d7058dea",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d1eef6e5-ccf7-4680-b98b-f1011ef9119a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.939Z",
+      "modified_date": "2023-05-11T05:34:25.939Z",
+      "file": "499b0cbd-42cc-4397-8efa-84c0055f1e27",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "499b0cbd-42cc-4397-8efa-84c0055f1e27",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.935Z",
+      "modified_date": "2023-05-11T05:34:25.935Z",
+      "file_name": "BALTO_REQID.svs.maf",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.svs.maf",
+      "file_type": 7,
+      "size": 4899,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$01b2c8bd77640677b4f8c14778afd45d1cb2ba76",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "4dcf4a55-ecd2-4979-9e97-d5079b6129e1",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.858Z",
+      "modified_date": "2023-05-11T05:34:25.858Z",
+      "file": "564c1663-947c-484d-8440-425ded469261",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "564c1663-947c-484d-8440-425ded469261",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.854Z",
+      "modified_date": "2023-05-11T05:34:25.854Z",
+      "file_name": "BALTO_REQID.muts.maf",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.maf",
+      "file_type": 7,
+      "size": 190606,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4abc24d4ac169d56eb8ada505862b37ea1a4352f",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5279d0bf-54e5-48a9-9693-2aa674a8c5f6",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.885Z",
+      "modified_date": "2023-05-11T05:34:25.885Z",
+      "file": "d40b2db6-199d-4642-ad67-04e9fe31ce1e",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d40b2db6-199d-4642-ad67-04e9fe31ce1e",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.881Z",
+      "modified_date": "2023-05-11T05:34:25.881Z",
+      "file_name": "BALTO_REQID.muts.share.maf",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.muts.share.maf",
+      "file_type": 7,
+      "size": 26386,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$5b04bb973843b148377abb17a3e06d7822cb18fd",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e766600f-e411-4171-93a4-fc4ce3956d66",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.913Z",
+      "modified_date": "2023-05-11T05:34:25.913Z",
+      "file": "db401f55-37c2-4b30-9a2a-62b27004ecfa",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "db401f55-37c2-4b30-9a2a-62b27004ecfa",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.909Z",
+      "modified_date": "2023-05-11T05:34:25.909Z",
+      "file_name": "BALTO_REQID.seg.cna.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/analysis/BALTO_REQID.seg.cna.txt",
+      "file_type": 7,
+      "size": 10276,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$3dc5b0382544cbbc4d7dbf8b5c4edd351d0e416e",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "22fc45e4-1aba-41c7-ac55-cdb3546d5c6a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.700Z",
+      "modified_date": "2023-05-11T05:34:26.700Z",
+      "file": "8bdfb3b8-574b-41ad-b433-d2740907ebbc",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "8bdfb3b8-574b-41ad-b433-d2740907ebbc",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.696Z",
+      "modified_date": "2023-05-11T05:34:26.696Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.msi.tsv",
+      "file_type": 7,
+      "size": 61,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a3d54b007d2e545047752feb1ff7608a51e578b0",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "42b0e382-2a8d-4751-a8a2-e9825614af10",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.676Z",
+      "modified_date": "2023-05-11T05:34:26.676Z",
+      "file": "c203b782-3864-4892-87e3-70f725955524",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c203b782-3864-4892-87e3-70f725955524",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.672Z",
+      "modified_date": "2023-05-11T05:34:26.672Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/msi/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.msi.tsv",
+      "file_type": 7,
+      "size": 64,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$99a6d0e0cc61eb26ff8475c52b9424f3770c0a47",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "138254ea-2a64-4e2a-ad2d-3bc20b208ea6",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.341Z",
+      "modified_date": "2023-05-11T05:34:26.341Z",
+      "file": "0a21a41d-6eab-4d2f-915a-1c47f62667bf",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0a21a41d-6eab-4d2f-915a-1c47f62667bf",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.337Z",
+      "modified_date": "2023-05-11T05:34:26.337Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d_hisens.ccf.portal.maf",
+      "file_type": 7,
+      "size": 4259054,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$02a689b80614dbcbdc354e67610dee62daf2a108",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "bfc958d6-dedb-44fa-8e06-4a6b6ab00f13",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.000Z",
+      "modified_date": "2023-05-11T05:34:26.000Z",
+      "file": "0b8d8a95-ea96-41b8-85ae-cf76f70cb50b",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0b8d8a95-ea96-41b8-85ae-cf76f70cb50b",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.996Z",
+      "modified_date": "2023-05-11T05:34:25.996Z",
+      "file_name": "s_C_ABCDEF_X001_d.arm_level.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.arm_level.txt",
+      "file_type": 7,
+      "size": 1588,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$88f874dfff9f2631c70682ecdfabaa71163fee41",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5bd3e31b-7bd1-4793-8c8f-efbf29000b8e",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.282Z",
+      "modified_date": "2023-05-11T05:34:26.282Z",
+      "file": "0cf422a7-9e8d-4468-ba88-29803da337be",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0cf422a7-9e8d-4468-ba88-29803da337be",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.277Z",
+      "modified_date": "2023-05-11T05:34:26.277Z",
+      "file_name": "s_C_ABCDEF_X001_d_purity.png",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.png",
+      "file_type": 7,
+      "size": 145912,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$725b9130df5b5ab5cefbe85df2705942388fa673",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2a89aac7-38a9-4d02-be45-fea740630763",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.099Z",
+      "modified_date": "2023-05-11T05:34:26.099Z",
+      "file": "18ed0523-19e2-4c60-a89d-c5c0b5e22142",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "18ed0523-19e2-4c60-a89d-c5c0b5e22142",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.094Z",
+      "modified_date": "2023-05-11T05:34:26.094Z",
+      "file_name": "s_C_ABCDEF_X001_d_hisens.cncf.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.cncf.txt",
+      "file_type": 7,
+      "size": 20336,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$8c9b55c3bfd5a8c492a2ad71e12a53d9341c1430",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5bd03df8-cb1e-4241-86d9-35d437714f64",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.560Z",
+      "modified_date": "2023-05-11T05:34:26.560Z",
+      "file": "1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1df2e0ce-c59f-4cd4-8f8d-9b95896fb2c1",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.556Z",
+      "modified_date": "2023-05-11T05:34:26.556Z",
+      "file_name": "s_C_GHIJKL_X001_d_purity.rds",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.rds",
+      "file_type": 7,
+      "size": 559113,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$155d23906746a8bf5f5186d6deeca059b34f3131",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2e7255d5-5df2-42b2-b427-f67606701a97",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.311Z",
+      "modified_date": "2023-05-11T05:34:26.311Z",
+      "file": "1e12a002-01ba-4731-9ee2-66e04a971d59",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1e12a002-01ba-4731-9ee2-66e04a971d59",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.306Z",
+      "modified_date": "2023-05-11T05:34:26.306Z",
+      "file_name": "s_C_ABCDEF_X001_d.qc.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.qc.txt",
+      "file_type": 7,
+      "size": 1387,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$3855b1214004099af1143a009893b1416ec8c5e3",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "619c1f3d-ce71-4d6f-bef3-8c6de405d6de",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.451Z",
+      "modified_date": "2023-05-11T05:34:26.451Z",
+      "file": "3198d6bf-2500-4947-bf31-86c270133c8a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3198d6bf-2500-4947-bf31-86c270133c8a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.446Z",
+      "modified_date": "2023-05-11T05:34:26.446Z",
+      "file_name": "s_C_GHIJKL_X001_d_hisens.cncf.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.cncf.txt",
+      "file_type": 7,
+      "size": 11497,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$866675c69b5e0076395caed00cd73318cd67f360",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7fb2c653-ce45-471f-9355-110e5f6715ff",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.586Z",
+      "modified_date": "2023-05-11T05:34:26.586Z",
+      "file": "424f7aeb-35fe-456c-a77d-a3dea47d57e5",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "424f7aeb-35fe-456c-a77d-a3dea47d57e5",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.582Z",
+      "modified_date": "2023-05-11T05:34:26.582Z",
+      "file_name": "s_C_GHIJKL_X001_d_purity.seg",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.seg",
+      "file_type": 7,
+      "size": 2844,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4f4a72ff965bb4a25514380b1f486c255e3894ad",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "33aa4f6b-963d-44e7-8b7d-d45d6a1a1f44",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.134Z",
+      "modified_date": "2023-05-11T05:34:26.134Z",
+      "file": "4dfb7210-d6c0-40dd-a07d-6bd3816b4864",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "4dfb7210-d6c0-40dd-a07d-6bd3816b4864",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.128Z",
+      "modified_date": "2023-05-11T05:34:26.128Z",
+      "file_name": "s_C_ABCDEF_X001_d_hisens.rds",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.rds",
+      "file_type": 7,
+      "size": 524440,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$e23e8dbcd105f041170d24e82cdac6b01eeaf99b",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7b5f3c93-ee3d-47d4-803c-1ded31e7d41f",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.400Z",
+      "modified_date": "2023-05-11T05:34:26.400Z",
+      "file": "77aba2ab-d1f8-4426-8eac-df58615eabf6",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "77aba2ab-d1f8-4426-8eac-df58615eabf6",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.396Z",
+      "modified_date": "2023-05-11T05:34:26.396Z",
+      "file_name": "s_C_GHIJKL_X001_d.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.txt",
+      "file_type": 7,
+      "size": 644,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$96f2096d3b6edfbe8baa1e721fdd6380e674c6c5",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1ce00e04-ecf2-4bba-8458-fe0312c135fa",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.036Z",
+      "modified_date": "2023-05-11T05:34:26.036Z",
+      "file": "7f8729a3-06f4-46cb-a652-19f2d93e2cfe",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7f8729a3-06f4-46cb-a652-19f2d93e2cfe",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.031Z",
+      "modified_date": "2023-05-11T05:34:26.032Z",
+      "file_name": "s_C_ABCDEF_X001_d.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.txt",
+      "file_type": 7,
+      "size": 703,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$237ae3bd806672de5f67c8c26c725cae5c836fce",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "1a7ba775-be81-4250-aaad-ae71727c8ec9",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.973Z",
+      "modified_date": "2023-05-11T05:34:25.973Z",
+      "file": "91d93ce9-cc1d-4dea-8219-44d276c34863",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "91d93ce9-cc1d-4dea-8219-44d276c34863",
+    "fields": {
+      "created_date": "2023-05-11T05:34:25.968Z",
+      "modified_date": "2023-05-11T05:34:25.968Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d_hisens.ccf.portal.maf",
+      "file_type": 7,
+      "size": 7377047,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6100529afe874bb7655d2b2ba02a83520bbdfd68",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5468d135-55b7-4c7f-aabd-cb3807776cbd",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.503Z",
+      "modified_date": "2023-05-11T05:34:26.503Z",
+      "file": "952a1be0-ae12-4862-9aa1-4dcc1b94ddf3",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "952a1be0-ae12-4862-9aa1-4dcc1b94ddf3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.499Z",
+      "modified_date": "2023-05-11T05:34:26.499Z",
+      "file_name": "s_C_GHIJKL_X001_d_hisens.seg",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.seg",
+      "file_type": 7,
+      "size": 4492,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$2baab8bb720f328b426d55e950128d1ad17ea817",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "62d9e9af-5a31-4644-9ba7-ff13ad57e9b4",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.069Z",
+      "modified_date": "2023-05-11T05:34:26.069Z",
+      "file": "9ee079f1-5992-46b9-9bb5-39ca7f407d89",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9ee079f1-5992-46b9-9bb5-39ca7f407d89",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.065Z",
+      "modified_date": "2023-05-11T05:34:26.065Z",
+      "file_name": "s_C_ABCDEF_X001_d.gene_level.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d.gene_level.txt",
+      "file_type": 7,
+      "size": 222194,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$84e740874c9269755af6b0461ba180063f5766d9",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "62df17de-bb14-4285-9680-d0166233d896",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.372Z",
+      "modified_date": "2023-05-11T05:34:26.372Z",
+      "file": "a26c0843-7e72-42fc-96ad-25f8ddc7c2d1",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a26c0843-7e72-42fc-96ad-25f8ddc7c2d1",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.366Z",
+      "modified_date": "2023-05-11T05:34:26.366Z",
+      "file_name": "s_C_GHIJKL_X001_d.arm_level.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.arm_level.txt",
+      "file_type": 7,
+      "size": 2144,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d8a215749e477d0de13c0840e2c0fe97688024a6",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "34bf2a7c-9732-4ded-abd0-03dd39bddef4",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.530Z",
+      "modified_date": "2023-05-11T05:34:26.530Z",
+      "file": "a425a949-225a-4ed0-8340-82998233e315",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "a425a949-225a-4ed0-8340-82998233e315",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.525Z",
+      "modified_date": "2023-05-11T05:34:26.525Z",
+      "file_name": "s_C_GHIJKL_X001_d_hisens.png",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.png",
+      "file_type": 7,
+      "size": 145351,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c3e2a4cbdfd5cb278b3402be88f791f16b354178",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a902f82a-180c-4cc3-9055-ba0758b14077",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.167Z",
+      "modified_date": "2023-05-11T05:34:26.167Z",
+      "file": "b695164a-4820-4037-9869-d50a5b1efbec",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "b695164a-4820-4037-9869-d50a5b1efbec",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.163Z",
+      "modified_date": "2023-05-11T05:34:26.163Z",
+      "file_name": "s_C_ABCDEF_X001_d_hisens.seg",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.seg",
+      "file_type": 7,
+      "size": 7873,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$7416ac4eba38ca02c848b61fb749cefe4968389d",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "86b6dbfd-aaf3-45f4-8001-acd22c504ec3",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.476Z",
+      "modified_date": "2023-05-11T05:34:26.476Z",
+      "file": "c328b180-8534-442a-99df-d5fecfb62b04",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "c328b180-8534-442a-99df-d5fecfb62b04",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.472Z",
+      "modified_date": "2023-05-11T05:34:26.472Z",
+      "file_name": "s_C_GHIJKL_X001_d_hisens.rds",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_hisens.rds",
+      "file_type": 7,
+      "size": 560555,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$491b734b727a0c4e7faa578a45765d68af8a3273",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "646ae9b9-50d0-4c67-9efe-21abb97028d6",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.224Z",
+      "modified_date": "2023-05-11T05:34:26.224Z",
+      "file": "cbdc4651-b0e4-48a7-b885-e0893051543f",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "cbdc4651-b0e4-48a7-b885-e0893051543f",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.220Z",
+      "modified_date": "2023-05-11T05:34:26.220Z",
+      "file_name": "s_C_ABCDEF_X001_d_purity.rds",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.rds",
+      "file_type": 7,
+      "size": 521427,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$f239921bd7f00823791096ffc93c6f6e8d98108c",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5efd92bd-e197-4661-bc23-37d3fb3e8583",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.253Z",
+      "modified_date": "2023-05-11T05:34:26.253Z",
+      "file": "d7c00ce5-a8b5-4d5c-aa03-913972eb6555",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d7c00ce5-a8b5-4d5c-aa03-913972eb6555",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.249Z",
+      "modified_date": "2023-05-11T05:34:26.249Z",
+      "file_name": "s_C_ABCDEF_X001_d_purity.seg",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_purity.seg",
+      "file_type": 7,
+      "size": 4299,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$8a1b4e73b5ab079c28129e6a6048216feb455fef",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "3d0cdc42-f75f-4d74-aa5b-fa1e536edb0f",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.609Z",
+      "modified_date": "2023-05-11T05:34:26.609Z",
+      "file": "df192110-8c31-4e0d-b746-2dfed278f999",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "df192110-8c31-4e0d-b746-2dfed278f999",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.605Z",
+      "modified_date": "2023-05-11T05:34:26.605Z",
+      "file_name": "s_C_GHIJKL_X001_d_purity.png",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d_purity.png",
+      "file_type": 7,
+      "size": 139606,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$8bbd74f13e381a10a6801f55fe3f010a70041dac",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "d2233d4a-8871-40a1-85dd-5a5b703fbd1a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.196Z",
+      "modified_date": "2023-05-11T05:34:26.196Z",
+      "file": "e293b7ca-3666-4339-8c42-39797f57798a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e293b7ca-3666-4339-8c42-39797f57798a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.192Z",
+      "modified_date": "2023-05-11T05:34:26.192Z",
+      "file_name": "s_C_ABCDEF_X001_d_hisens.png",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d/s_C_ABCDEF_X001_d_hisens.png",
+      "file_type": 7,
+      "size": 153633,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$29848b34f4d08dd2bdf2cff486177f1b6664dc5e",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "ef6863f5-c5cc-413b-8b36-af7cc7ba8bbd",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.426Z",
+      "modified_date": "2023-05-11T05:34:26.426Z",
+      "file": "ec4799a6-0d20-4c4a-b87c-12f30027f221",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ec4799a6-0d20-4c4a-b87c-12f30027f221",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.422Z",
+      "modified_date": "2023-05-11T05:34:26.422Z",
+      "file_name": "s_C_GHIJKL_X001_d.gene_level.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.gene_level.txt",
+      "file_type": 7,
+      "size": 212146,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$aa2643f5b5e8d01df039af68148e9e09673528c2",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5bb4d945-6ca5-4c1b-893c-bf593584fce1",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.645Z",
+      "modified_date": "2023-05-11T05:34:26.645Z",
+      "file": "f8940dd4-2420-452f-b257-972f3fad2f1f",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f8940dd4-2420-452f-b257-972f3fad2f1f",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.639Z",
+      "modified_date": "2023-05-11T05:34:26.639Z",
+      "file_name": "s_C_GHIJKL_X001_d.qc.txt",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/facets/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d/s_C_GHIJKL_X001_d.qc.txt",
+      "file_type": 7,
+      "size": 1364,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$33e06152fcace43af5ef8c9ef1ed173b4d2616ab",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a7bfc706-5818-4904-8295-1aa23a7db818",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.762Z",
+      "modified_date": "2023-05-11T05:34:26.762Z",
+      "file": "844a2323-1a91-43d2-a12b-38683c7de348",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "844a2323-1a91-43d2-a12b-38683c7de348",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.754Z",
+      "modified_date": "2023-05-11T05:34:26.754Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.tmb.tsv",
+      "file_type": 7,
+      "size": 48,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$08760b1ba7a136e1b82cc1006306f5852f9f92ad",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "968038b6-413d-4f10-a5ae-f83f9e08f187",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.731Z",
+      "modified_date": "2023-05-11T05:34:26.731Z",
+      "file": "d8c21dcd-af7f-4aa5-9c39-c226d911779a",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d8c21dcd-af7f-4aa5-9c39-c226d911779a",
+    "fields": {
+      "created_date": "2023-05-11T05:34:26.726Z",
+      "modified_date": "2023-05-11T05:34:26.726Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
+      "path": "/juno/res/ci/voyager/argos/BALTO_REQID/1.1.2/20230504_16_00_772883/tmb/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.tmb.tsv",
+      "file_type": 7,
+      "size": 49,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$8480cd17c88f330b277f55be3a2779aad895c672",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_3\", \"BALTO_REQID_4\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a0248ec9-3bd8-4295-8a02-4155b9c48915",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.879Z",
+      "modified_date": "2023-05-09T21:30:14.879Z",
+      "file": "e5ed5737-930a-45a6-bb9f-038f41db68b5",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "e5ed5737-930a-45a6-bb9f-038f41db68b5",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.860Z",
+      "modified_date": "2023-05-09T21:30:14.861Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
+      "file_type": 7,
+      "size": 3105,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$734e3b32d9b28d6eaccd8d070b1e397d4821e863",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f4ea7700-2c59-4a24-a8ba-72df51a5011f",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.083Z",
+      "modified_date": "2023-05-11T04:08:24.083Z",
+      "file": "ed9555bc-bc1c-4b96-bf0b-87766c208820",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ed9555bc-bc1c-4b96-bf0b-87766c208820",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.079Z",
+      "modified_date": "2023-05-11T04:08:24.079Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
+      "file_type": 7,
+      "size": 3417,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$165d81dbfde968dbf0d6f233281d397dda0b5e33",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b42c0242-fbc9-4ef6-b3fe-9487f6f65b26",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.566Z",
+      "modified_date": "2020-10-08T01:56:22.260Z",
+      "file": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "assay": "IMPACT468_b37",
+        "data_type": "targets_list"
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0d6d4e53-f7cd-412c-bf14-5c147ab2abae",
+    "fields": {
+      "created_date": "2020-05-22T22:20:24.558Z",
+      "modified_date": "2020-05-22T22:20:24.558Z",
+      "file_name": "picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+      "file_type": 20,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": null,
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "70377c44-bd70-4ef1-a662-7918c5651551",
+    "fields": {
+      "created_date": "2020-07-01T19:21:54.681Z",
+      "modified_date": "2020-10-08T01:44:36.409Z",
+      "file": "6c90454d-fc4c-4cce-84a9-dce5d7da4345",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "6c90454d-fc4c-4cce-84a9-dce5d7da4345",
+    "fields": {
+      "created_date": "2020-07-01T19:21:54.415Z",
+      "modified_date": "2020-07-01T19:21:54.415Z",
+      "file_name": "known_fusions_at_mskcc.txt",
+      "path": "/juno/work/ci/resources/known_fusions/known_fusions_at_mskcc.txt",
+      "file_type": 17,
+      "size": 71220,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$c9924aeffb75a3adaafb27a02fd4d38ac6b3bb5c",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b74d63f4-47a2-4375-868c-e8678d75cc93",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.914Z",
+      "modified_date": "2023-05-09T21:30:14.914Z",
+      "file": "3dac67cf-e820-4b83-b5a9-4ee4f88155b0",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3dac67cf-e820-4b83-b5a9-4ee4f88155b0",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.909Z",
+      "modified_date": "2023-05-09T21:30:14.909Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
+      "file_type": 7,
+      "size": 279,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a731f1832e6d7d75642fd656d84d5a5a834fbc91",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "61836c9c-0767-447a-af0a-4385123df6b6",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.107Z",
+      "modified_date": "2023-05-11T04:08:24.107Z",
+      "file": "53737c3b-acf2-4311-863d-c6ad27b60037",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "53737c3b-acf2-4311-863d-c6ad27b60037",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.103Z",
+      "modified_date": "2023-05-11T04:08:24.103Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
+      "file_type": 7,
+      "size": 293,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a18c205f12a82645c862cbeb3fb6a3b3a1af8190",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "948918f3-0a81-457b-8434-2ffa2e0259c7",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.132Z",
+      "modified_date": "2023-05-11T04:08:24.132Z",
+      "file": "101ebd6a-e5e6-43ff-8038-c269831b3083",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "101ebd6a-e5e6-43ff-8038-c269831b3083",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.128Z",
+      "modified_date": "2023-05-11T04:08:24.128Z",
+      "file_name": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
+      "file_type": 7,
+      "size": 3202610,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$fc94b38efc99b2dc29fe10827d35c0e11406ed87",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "dbfdb0cc-e6ab-49ed-8886-aca2d61d267c",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.008Z",
+      "modified_date": "2023-05-11T04:08:24.008Z",
+      "file": "14e3a9d7-7af9-4801-9b4e-107b89fd963b",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "14e3a9d7-7af9-4801-9b4e-107b89fd963b",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.004Z",
+      "modified_date": "2023-05-11T04:08:24.004Z",
+      "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
+      "file_type": 7,
+      "size": 2104538,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4ef6dfe95f9952886daebe4ad4f9a1212e47ef8c",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "625b10c8-0087-4b07-927a-29af33aa3619",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.660Z",
+      "modified_date": "2023-05-09T21:30:15.660Z",
+      "file": "16be67c5-1e51-4f54-8874-fded5aa3e2ed",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "16be67c5-1e51-4f54-8874-fded5aa3e2ed",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.656Z",
+      "modified_date": "2023-05-09T21:30:15.656Z",
+      "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
+      "file_type": 7,
+      "size": 1972889,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$2b43bc5e7c481816e6f7fd3d378b2e7432daf2f8",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "9884f333-0243-4661-8012-66731a436bd3",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.942Z",
+      "modified_date": "2023-05-09T21:30:14.942Z",
+      "file": "1a7dea31-fe52-45ed-b2f4-34b612750d4d",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1a7dea31-fe52-45ed-b2f4-34b612750d4d",
+    "fields": {
+      "created_date": "2023-05-09T21:30:14.938Z",
+      "modified_date": "2023-05-09T21:30:14.938Z",
+      "file_name": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
+      "file_type": 7,
+      "size": 5621066,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$153f7c8b11c7e33878fb2e8889d45f432b1f1468",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "130fa948-73fa-45e8-ba14-1e2e82853d92",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.741Z",
+      "modified_date": "2023-05-09T21:30:15.741Z",
+      "file": "1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "1c67a851-8a3b-4b1f-9a92-8804d94f0b8e",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.737Z",
+      "modified_date": "2023-05-09T21:30:15.737Z",
+      "file_name": "s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 3407571907,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$f107761d5b54bfbb596baf2423c8fc1b92476dfa",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "08ce3f56-c2a5-4a7c-992e-fa33cfce4d5c",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.232Z",
+      "modified_date": "2023-05-11T04:08:24.232Z",
+      "file": "3a907e66-9180-466f-a410-174b8fa8531e",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "3a907e66-9180-466f-a410-174b8fa8531e",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.228Z",
+      "modified_date": "2023-05-11T04:08:24.228Z",
+      "file_name": "s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 5451520,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$d6cbe07b4051b04aff92c77ff1e4b7450ca7ba42",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e6c90e8c-0359-4e3b-bcdb-ca0e8c27b537",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.209Z",
+      "modified_date": "2023-05-11T04:08:24.209Z",
+      "file": "da87ab23-4127-4e02-882e-67736e525e13",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "da87ab23-4127-4e02-882e-67736e525e13",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.206Z",
+      "modified_date": "2023-05-11T04:08:24.206Z",
+      "file_name": "s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 3685446167,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$bb10fb5480fbad15e5c47397916f9040469ed25f",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e5bace19-814c-4c1d-ade9-349dd7bf3a90",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.768Z",
+      "modified_date": "2023-05-09T21:30:15.768Z",
+      "file": "f21009f3-7d35-424b-9171-2e862bdbe7f2",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f21009f3-7d35-424b-9171-2e862bdbe7f2",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.764Z",
+      "modified_date": "2023-05-09T21:30:15.764Z",
+      "file_name": "s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 5366704,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$4c791763528449b6b13a9b3ea8576eb8342d53d1",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b94592ea-76d8-4215-a934-945c4f7918c4",
+    "fields": {
+      "created_date": "2020-12-16T00:38:22.427Z",
+      "modified_date": "2020-12-16T00:38:22.427Z",
+      "file": "0db3314e-1a17-4d24-8910-a88f73cb8a7c",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "0db3314e-1a17-4d24-8910-a88f73cb8a7c",
+    "fields": {
+      "created_date": "2020-12-16T00:38:22.209Z",
+      "modified_date": "2020-12-16T00:38:22.209Z",
+      "file_name": "all_IMPACT_genes.tsv",
+      "path": "/juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
+      "file_type": 18,
+      "size": 27366,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$ec6e790b9e8954f884fb7bc3722f5c09e128851b",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5a2833b4-651c-4b89-b1df-09ffdbacd5c6",
+    "fields": {
+      "created_date": "2021-04-07T19:37:10.623Z",
+      "modified_date": "2021-04-07T19:37:10.624Z",
+      "file": "ffb33d50-5bda-4b89-b6cc-b0aeda4c547a",
+      "version": 0,
+      "latest": true,
+      "metadata": {},
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ffb33d50-5bda-4b89-b6cc-b0aeda4c547a",
+    "fields": {
+      "created_date": "2021-04-07T19:37:10.602Z",
+      "modified_date": "2021-04-07T19:37:10.602Z",
+      "file_name": "microsatellites.list",
+      "path": "/juno/work/ci/resources/request_files/msisensor/microsatellites.list",
+      "file_type": 17,
+      "size": 1338990404,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$6984a8e6ecca800e9dd74f0b776350ad516b08c7",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "39196510-a20a-460e-b3dc-868cdc6b92f4",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.688Z",
+      "modified_date": "2023-05-09T21:30:15.688Z",
+      "file": "6483333a-4a0e-4b4f-bc91-18cbcb34f098",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "6483333a-4a0e-4b4f-bc91-18cbcb34f098",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.684Z",
+      "modified_date": "2023-05-09T21:30:15.684Z",
+      "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 1648060977,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a0e19ce24175fe186dbfdfff631acd77a4add2b0",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_2\", \"BALTO_REQID_1\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c07281ca-aa49-4bf6-ad3f-14d6a0cc5593",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.162Z",
+      "modified_date": "2023-05-11T04:08:24.162Z",
+      "file": "67457754-ffa9-49ae-96fb-c29c23dc36f5",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "67457754-ffa9-49ae-96fb-c29c23dc36f5",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.158Z",
+      "modified_date": "2023-05-11T04:08:24.159Z",
+      "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
+      "file_type": 7,
+      "size": 1929853145,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$975285c0b179e169d3c060d30fabe0bd2bcbe760",
+      "request_id": null,
+      "samples": "[\"BALTO_REQID_3\", \"BALTO_REQID_4\"]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "0bebcda0-a3f4-47ca-8d58-ebbd94f153f8",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.186Z",
+      "modified_date": "2023-05-11T04:08:24.186Z",
+      "file": "795dfb7d-63be-4e45-bd9e-51d0689e2d18",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "795dfb7d-63be-4e45-bd9e-51d0689e2d18",
+    "fields": {
+      "created_date": "2023-05-11T04:08:24.182Z",
+      "modified_date": "2023-05-11T04:08:24.182Z",
+      "file_name": "s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 4639168,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$3169173e7a040b82fdfd869e2a7dd421cc65aa05",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "15d8fd97-076b-436e-a393-67e8d538345d",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.713Z",
+      "modified_date": "2023-05-09T21:30:15.713Z",
+      "file": "eb20a340-3200-4135-8e2d-8c7a29ce1cf6",
+      "version": 0,
+      "latest": true,
+      "metadata": {}
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "eb20a340-3200-4135-8e2d-8c7a29ce1cf6",
+    "fields": {
+      "created_date": "2023-05-09T21:30:15.709Z",
+      "modified_date": "2023-05-09T21:30:15.709Z",
+      "file_name": "s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
+      "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
+      "file_type": 7,
+      "size": 4435944,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "sha1$a438cb29202dee8c6d3d9b7a37bfe3fe0712d138",
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null
+    }
+  }
 ]

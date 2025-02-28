@@ -224,17 +224,7 @@ def new_request(message_id):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-    Request.objects.get_or_create(
-        request_id=request_id,
-        latest=True,
-        defaults={
-            "delivery_date": delivery_date,
-            "lab_head_name": lab_head_name,
-            "lab_head_email": lab_head_email,
-            "investigator_email": investigator_email,
-            "investigator_name": investigator_name,
-        },
-    )
+        data["deliveryDate"] = delivery_date
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -570,7 +560,8 @@ def update_request_job(message_id, job_group, job_group_notifier):
 
 
 def fetch_request_metadata(request_id):
-    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
+    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+                                         file_group=settings.IMPORT_FILE_GROUP).first()
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
         settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
@@ -643,7 +634,8 @@ def update_sample_job(message_id, job_group, job_group_notifier):
     data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}).all()
+    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
+                                  file_group=settings.IMPORT_FILE_GROUP).all()
     file_paths = [f.file.path for f in files]
     new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
@@ -911,9 +903,7 @@ def create_pooled_normal(filepath, file_group_id):
         f = File.objects.create(
             file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj, file_type=file_type_obj
         )
-        f.save()
-        fm = FileMetadata(file=f, metadata=metadata)
-        fm.save()
+        FileMetadata.objects.create_or_update(file=f, metadata=metadata)
     except Exception as e:
         logger.info("File already exist %s." % filepath)
 
