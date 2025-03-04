@@ -139,7 +139,7 @@ class CMOCHNucleoOperatorQC(Operator):
             bam = [self.parse_nucleo_output_ports(run, o)]
             bams[i] = json.dumps(bam)
 
-        sample_sex = "unknown"
+        sample_sex = run.output_metadata["sex"]
         sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
         sample_group = "-".join(sample_name.split("-")[0:2])
         samples_json_content = self.create_sample_json(run)
