@@ -27,7 +27,7 @@ LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "accessv2_curated_normals"
 ACCESS_DEFAULT_NORMAL_ID = "Donor19F21c2206-TP01_ACCESSv2-VAL-20230004R"
 NORMAL_SAMPLE_SEARCH = "-N0"
-TUMOR_SAMPLE_SEARCH = "-L0"
+TUMOR_SAMPLE_SEARCH = "(-L0|-T0)"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_SEARCH = "__aln_srt_IR_FX-simplex.bam"
 UNFILTERED_BAM_SEARCH = "__aln_srt_IR_FX.bam"
@@ -413,8 +413,8 @@ def get_geno_samples(tumor_sample_id, matched_normal_id, fillout_simplex_tumors,
     # Add patient matched Tumors samples
     patient_id = "-".join(tumor_sample_id.split("-")[0:2])
     matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
-    duplex_matched_q = Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
-    simplex_matched_q = Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
+    duplex_matched_q = Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__regex=matched_tumor_search)
+    simplex_matched_q = Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__regex=matched_tumor_search)
 
     duplex_matched_samples = (
         File.objects.filter(duplex_matched_q)
