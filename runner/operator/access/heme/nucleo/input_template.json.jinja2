@@ -4,7 +4,10 @@
     "library": "{{ library_id }}",
     "platform-model": "novaseq",
     "platform-unit": "{{ barcode_id }}",
-
+    "UBG_abra2_targets": {
+        "class": "File",
+        "location": "juno:///juno/work/access/production/resources/msk-access/v2.0/regions_of_interest/current/MSK-ACCESS-v2_targetsAllwFP_500buffer.bed"
+    },
     "BC_picard_fixmate_information_output_file_name": "{{ sample_id }}_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam",
     "UBG_abra2_output_bams": "{{ sample_id }}_uncollapsed_IR.bam",
     "UBG_bwa_mem_output": "{{ sample_id }}_uncollapsed.sam",
