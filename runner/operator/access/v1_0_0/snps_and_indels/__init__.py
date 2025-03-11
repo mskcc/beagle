@@ -28,7 +28,7 @@ ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "access_curated_normals"
 ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
 ACCESS_DEFAULT_NORMAL_FILENAME = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
-TUMOR_SAMPLE_SEARCH = "-L0"
+TUMOR_SAMPLE_SEARCH = "(-L0|-T0)"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
 SIMPLEX_BAM_SEARCH = "__aln_srt_IR_FX-simplex.bam"
 UNFILTERED_BAM_SEARCH = "__aln_srt_IR_FX.bam"
@@ -110,7 +110,7 @@ class AccessLegacySNVOperator(Operator):
 
             self.fillout_duplex_tumors = (
                 File.objects.filter(
-                    file_name__contains=TUMOR_SAMPLE_SEARCH,
+                    file_name__regex=TUMOR_SAMPLE_SEARCH,
                     file_name__endswith=DUPLEX_BAM_SEARCH,
                     port__run__tags__igoRequestId=self.request_id,
                 )
@@ -120,7 +120,7 @@ class AccessLegacySNVOperator(Operator):
 
             self.fillout_simplex_tumors = (
                 File.objects.filter(
-                    file_name__contains=TUMOR_SAMPLE_SEARCH,
+                    file_name__regex=TUMOR_SAMPLE_SEARCH,
                     file_name__endswith=SIMPLEX_BAM_SEARCH,
                     port__run__tags__igoRequestId=self.request_id,
                 )
@@ -337,8 +337,8 @@ class AccessLegacySNVOperator(Operator):
         # Add patient matched Tumors samples
         patient_id = "-".join(tumor_sample_id.split("-")[0:2])
         matched_tumor_search = patient_id + TUMOR_SAMPLE_SEARCH
-        duplex_matched_q = Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
-        simplex_matched_q = Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__startswith=matched_tumor_search)
+        duplex_matched_q = Q(file_name__endswith=DUPLEX_BAM_SEARCH) & Q(file_name__regex=matched_tumor_search)
+        simplex_matched_q = Q(file_name__endswith=SIMPLEX_BAM_SEARCH) & Q(file_name__regex=matched_tumor_search)
 
         duplex_matched_samples = (
             File.objects.filter(duplex_matched_q)
