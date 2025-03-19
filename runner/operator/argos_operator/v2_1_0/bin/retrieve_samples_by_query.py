@@ -157,12 +157,13 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
     return pooled_normals, descriptor, sample_name
 
-
+# Assumes that the run_id is the machine name
+# and has an underscore delimiter
 def get_sequencer_type(run_ids_list):
-    run_ids_lower = [i.lower() for i in run_ids_list if i]
+    run_ids_lower = [i.lower().split('_')[0] for i in run_ids_list if i]
     machine_modes = MachineRunMode.objects.all()
     for machine in machine_modes:
-        if find_substr(machine.machine_name, run_ids_lower):
+        if any(machine.machine_name == run_id for run_id in run_ids_lower):
             return machine.machine_class
 
 
