@@ -108,6 +108,10 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
+        if machine == "novaseqx":
+            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V3"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V3"
         q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
@@ -142,6 +146,10 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V1"
             if "ffpe" in preservations_lower_case:
                 sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V1"
+        if machine == "novaseqx":
+            sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V2"
+            if "ffpe" in preservations_lower_case:
+                sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V2"
         q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
         pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
         if not pooled_normals:
