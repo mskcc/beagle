@@ -63,6 +63,7 @@ from beagle_etl.exceptions import (
     FailedToRegisterFileException,
     DuplicatedFilesException,
     IncorrectlyFormattedPrimaryId,
+    FailedToLocateTheFileException,
 )
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
@@ -135,14 +136,6 @@ def new_request(message_id):
     valid_samples = set()
 
     samples = data.get("samples")
-    try:
-        check_files_permissions(samples)
-    except FailedToCopyFilePermissionDeniedException as e:
-        logger.error("Error:", e)
-        message.status = SmileMessageStatus.FAILED
-        message.save()
-        return
-
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
@@ -224,11 +217,14 @@ def new_request(message_id):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
         delivery_date = datetime.now()
-        data["deliveryDate"] = delivery_date
+    data["deliveryDate"] = delivery_date
+
+    smile_job_status = SmileMessageStatus.COMPLETED
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
         if sample_id not in valid_samples:
+            smile_job_status = SmileMessageStatus.FAILED
             continue
         igocomplete = sample.get("igoComplete")
         logger.info("Parsing sample: %s" % sample_id)
@@ -280,9 +276,12 @@ def new_request(message_id):
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
-    message.status = SmileMessageStatus.COMPLETED
+
+    message.status = smile_job_status
     message.save()
+
     create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
+
     # Validation step
     failed, msg = check_files_registered(recipe, data.get("samples"))
     if failed:
@@ -560,8 +559,9 @@ def update_request_job(message_id, job_group, job_group_notifier):
 
 
 def fetch_request_metadata(request_id):
-    file_example = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
-                                         file_group=settings.IMPORT_FILE_GROUP).first()
+    file_example = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+    ).first()
     request_metadata = {
         settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
         settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
@@ -634,8 +634,9 @@ def update_sample_job(message_id, job_group, job_group_notifier):
     data = json.loads(message.message)
     latest = data[-1]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
-                                  file_group=settings.IMPORT_FILE_GROUP).all()
+    files = FileRepository.filter(
+        metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, file_group=settings.IMPORT_FILE_GROUP
+    ).all()
     file_paths = [f.file.path for f in files]
     new_files = []
     recipe = latest.get(settings.RECIPE_METADATA_KEY)
@@ -911,6 +912,10 @@ def create_pooled_normal(filepath, file_group_id):
 def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
     conflict = False
     missing_fastq = False
+    files_unavailable = False
+    permission_error = False
+    permission_error_files = []
+    missing_files = []
     failed_runs = []
     conflict_files = []
 
@@ -946,38 +951,54 @@ def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=Fa
                 missing_fastq = True
                 run_id = run["runId"] if run["runId"] else "None"
                 failed_runs.append(run_id)
+                continue
             else:
                 if not redelivery:
                     for fastq in fastqs:
-                        file_search = None
-                        fastq_location = locate_file(fastq)
+                        # Check do files exist
                         try:
-                            file_search = File.objects.get(path=fastq_location)
+                            fastq_location = locate_file(fastq)
+                        except FailedToLocateTheFileException as e:
+                            files_unavailable = True
+                            missing_files.append(fastq)
+                            continue
+                        # Check files permissions
+                        try:
+                            check_file_permissions(fastq_location)
+                        except FailedToCopyFilePermissionDeniedException as e:
+                            permission_error = True
+                            permission_error_files.append(fastq)
+                            continue
+                        # Check is file already registered
+                        try:
+                            file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
                         except File.DoesNotExist:
-                            pass
+                            continue
                         logger.info("Processing %s" % fastq)
                         if file_search:
-                            msg = "File %s already created with id:%s" % (file_search.path, str(file_search.id))
-                            logger.error(msg)
                             conflict = True
                             conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
         if igocomplete:
             raise ErrorInconsistentDataException(
-                "Missing fastq files for igcomplete: %s sample %s : %s"
-                % (igocomplete, sample_id, " ".join(failed_runs))
+                f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
             )
         else:
             raise MissingDataException(
-                "Missing fastq files for igcomplete: %s sample %s : %s"
-                % (igocomplete, sample_id, " ".join(failed_runs))
+                f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
             )
+    if files_unavailable:
+        raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
+    if permission_error:
+        raise FailedToCopyFilePermissionDeniedException(
+            f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
+        )
     if not redelivery:
         if conflict:
             res_str = ""
             for f in conflict_files:
                 res_str += "%s: %s" % (f[0], f[1])
-            raise ErrorInconsistentDataException("Conflict of fastq file(s) %s" % res_str)
+            raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
 
 
 def R1_or_R2(filename):
@@ -1092,13 +1113,7 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
-        Job.objects.create(
-            run=TYPES["CALCULATE_CHECKSUM"],
-            args={"file_id": str(file.id), "path": path},
-            status=JobStatus.CREATED,
-            max_retry=3,
-            children=[],
-        )
+        calculate_checksum.delay(str(file.id), path)
     else:
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
 
@@ -1123,6 +1138,7 @@ def update_file_object(file_object, path, metadata):
         )
 
 
+@shared_task
 def calculate_checksum(file_id, path):
     try:
         checksum = sha1(path)
@@ -1136,22 +1152,6 @@ def calculate_checksum(file_id, path):
     except File.DoesNotExist:
         logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
         raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
-    return []
-
-
-def check_files_permissions(samples):
-    for sample in samples:
-        libraries = sample.get("libraries", [])
-        for library in libraries:
-            runs = library.get("runs")
-            if runs:
-                run_dict = convert_to_dict(runs)
-                for run in run_dict.values():
-                    fastqs = run.get("fastqs", [])
-                    for fastq_path in fastqs:
-                        fastq_location = locate_file(fastq_path)
-                        logger.info("Checking file permissions for %s" % fastq_location)
-                        check_file_permissions(fastq_location)
 
 
 def check_files_registered(recipe, samples):
