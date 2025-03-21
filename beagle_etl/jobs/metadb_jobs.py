@@ -258,7 +258,11 @@ def new_request(message_id):
             study.samples.add(sample)
 
     request = Request.objects.filter(request_id=request_id, latest=True).first()
-    study.requests.add(request)
+    if not request:
+        logger.error(f"No samples imported for request {request_id}")
+        smile_job_status = SmileMessageStatus.FAILED
+    else:
+        study.requests.add(request)
     pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
     pooled_normal_jobs = []
     for pn in pooled_normal:
