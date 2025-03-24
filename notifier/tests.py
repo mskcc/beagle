@@ -41,10 +41,9 @@ class JobGroupAPITest(APITestCase):
     ):
         file_type_obj = FileType.objects.get(name=file_type)
         group_id_obj = FileGroup.objects.get(id=group_id)
-        file = File(
+        file = File.objects.create(
             path=path, file_name=os.path.basename(path), file_type=file_type_obj, file_group=group_id_obj, size=1234
         )
-        file.save()
         file_metadata = {settings.REQUEST_ID_METADATA_KEY: request_id, settings.SAMPLE_ID_METADATA_KEY: sample_id}
         if lab_head_email:
             file_metadata[settings.LAB_HEAD_EMAIL_METADATA_KEY] = lab_head_email
@@ -56,8 +55,7 @@ class JobGroupAPITest(APITestCase):
             file_metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
         if cmo_sample_class:
             file_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = cmo_sample_class
-        file_metadata = FileMetadata(file=file, metadata=file_metadata)
-        file_metadata.save()
+        file_metadata = FileMetadata.objects.create_or_update(file=file, metadata=file_metadata)
         return file
 
     def _create_files(self, file_type, amount):

@@ -93,7 +93,7 @@ class TestNewRequest(TestCase):
         self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
         settings.ETL_USER = self.etl_user.username
 
-    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
+    @patch("os.access")
     @patch("notifier.tasks.notifier_start")
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
@@ -106,14 +106,14 @@ class TestNewRequest(TestCase):
         job_group_notifier_get,
         send_notification,
         notifier_start,
-        check_files_permissions,
+        access,
     ):
         path_exists.return_value = True
         populate_job_group_notifier_metadata.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
         send_notification.return_value = True
-        check_files_permissions.return_value = True
+        access.return_value = os.R_OK
         settings.NOTIFIER_ACTIVE = False
         msg = SMILEMessage.objects.create(topic="new-request", message=self.new_request_str)
         new_request(str(msg.id))
@@ -304,20 +304,20 @@ class TestNewRequest(TestCase):
             for f in sample_files:
                 self.assertEqual(f.metadata["sampleName"], "XXX002_P3_12345_L1")
 
-    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
     @patch("notifier.tasks.notifier_start")
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("os.path.exists")
+    @patch("os.access")
     def test_update_sample(
         self,
+        access,
         path_exists,
         populate_job_group,
         job_group_notifier_get,
         send_notification,
         notifier_start,
-        check_files_permissions,
     ):
         """
         Test that sample metadata is updated properly
@@ -328,7 +328,7 @@ class TestNewRequest(TestCase):
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
         send_notification.return_value = True
-        check_files_permissions.return_value = True
+        access.return_value = os.R_OK
         settings.NOTIFIER_ACTIVE = False
 
         new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
@@ -363,7 +363,7 @@ class TestNewRequest(TestCase):
             self.assertEqual(ddiff["values_changed"]["root['tumorOrNormal']"]["old_value"], "Normal")
             self.assertEqual(list(ddiff.keys()), ["values_changed"])
 
-    @patch("beagle_etl.jobs.metadb_jobs.check_files_permissions")
+    @patch("os.access")
     @patch("notifier.tasks.notifier_start")
     @patch("notifier.tasks.send_notification.delay")
     @patch("notifier.models.JobGroupNotifier.objects.get")
@@ -376,7 +376,7 @@ class TestNewRequest(TestCase):
         job_group_notifier_get,
         send_notification,
         notifier_start,
-        check_files_permissions,
+        access,
     ):
         """
         Test sample updates for new fastqs
@@ -386,7 +386,7 @@ class TestNewRequest(TestCase):
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
         send_notification.return_value = True
-        check_files_permissions.return_value = True
+        access.return_value = os.R_OK
         settings.NOTIFIER_ACTIVE = False
         path_exists.return_value = True
 
