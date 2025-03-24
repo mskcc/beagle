@@ -42,15 +42,24 @@ def construct_inputs(samples, request_id):
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
         metadata = sample_files[0]["metadata"]
-        fastq1s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R1"]]
+        metadata.update(
+            {
+                "dnaInputNg": calc_avg(sample_files, "dnaInputNg"),
+                "captureInputNg": calc_avg(sample_files, "captureInputNg"),
+                "libraryVolume": calc_avg(sample_files, "libraryVolume"),
+                "libraryConcentrationNgul": calc_avg(sample_files, "libraryConcentrationNgul"),
+                "captureConcentrationNm": calc_avg(sample_files, "captureConcentrationNm"),
+                settings.REQUEST_ID_METADATA_KEY: request_id,
+            }
+        )
+        merge_fastq_fastq1 = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R1"]]
 
-        fastq2s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R2"]]
+        merge_fastq_fastq2 = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R2"]]
 
         input_file = template.render(
-            fastq1_files=json.dumps(fastq1s),
-            fastq2_files=json.dumps(fastq2s),
+            merge_fastq_fastq1=json.dumps(merge_fastq_fastq1),
+            merge_fastq_fastq2=json.dumps(merge_fastq_fastq2),
         )
-        print(input_file)
         inputs.append((json.loads(input_file), metadata))
 
     return inputs
