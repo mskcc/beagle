@@ -22,7 +22,7 @@ def construct_sample_inputs(samples):
             merge_fastq_fastq1="juno://" + sample_group[0]["path"],
             merge_fastq_fastq2="juno://" + sample_group[1]["path"],
         )
-
+        print(input_file)
         sample = json.loads(input_file)
 
         sample_inputs.append(sample)
