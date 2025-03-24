@@ -17,7 +17,7 @@ def construct_sample_inputs(samples):
     for sample_id, sample_group in groupby(samples, lambda x: x["metadata"][settings.SAMPLE_ID_METADATA_KEY]):
         sample_group = list(sample_group)
         meta = sample_group[0]["metadata"]
-
+        print(sample_group)
         input_file = template.render(
             cmo_sample_name=meta[settings.CMO_SAMPLE_NAME_METADATA_KEY],
             tumor_type=meta[settings.SAMPLE_CLASS_METADATA_KEY],
