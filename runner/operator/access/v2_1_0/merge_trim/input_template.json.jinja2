@@ -1,0 +1,93 @@
+{
+    "fastq1": [
+        {
+            "class": "File",
+            "path": "{{fastq1_path}}"
+        }
+    ],
+    "fastq2": [
+        {
+            "class": "File",
+            "path": "{{fastq2_path}}"
+        }
+    ],
+    "M": null, 
+    "P": null, 
+    "adapter": null, 
+    "adapter2": null, 
+    "assume_sorted": null, 
+    "bed_file": {
+        "class": "File",
+        "location": "juno:///work/access/production/resources/msk-access/current/regions_of_interest/current/MSK-ACCESS-v1_0-probe-A.sorted.bed"
+    },
+    "bqsr_read_filter": null, 
+    "collapsing_aln_output_file_name": "{{cmo_sample_name}}_unfiltered.sam", 
+    "collapsing_picard_output_file_name": "{{cmo_sample_name}}_unfiltered.bam", 
+    "consensus_sequence": null, 
+    "contig_anchor": null, 
+    "create_bam_index": null, 
+    "ignore_bad_assembly": null, 
+    "igo_id": "{{igo_id}}",
+    "key": null, 
+    "known_sites_1": {
+        "class": "File",
+        "location": "juno:///work/access/production/resources/dbSNP/current/dbsnp_137.b37.vcf",
+        "secondaryFiles": [
+          { "class": "File", "location": "juno:///work/access/production/resources/dbSNP/current/dbsnp_137.b37.vcf.idx" }
+        ]
+    },
+    "known_sites_2": {
+        "class": "File",
+        "location": "juno:///work/access/production/resources/mills-and-1000g/versions/b37/Mills_and_1000G_gold_standard.indels.b37.vcf",
+        "secondaryFiles": [
+                        { "class": "File", "location": "juno:///work/access/production/resources/mills-and-1000g/versions/b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx" }
+        ]
+    },
+    "reference": {
+        "class": "File",
+        "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta",
+        "secondaryFiles": [
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.amb" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.ann" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.bwt" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.pac" },
+                        { "class": "File", "location": "juno:///work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.sa" }
+        ]
+    },
+    "length": null, 
+    "maximum_average_depth": null, 
+    "maximum_mixmatch_rate": null, 
+    "min_base_quality": null, 
+    "min_consensus_percent": null, 
+    "min_map_quality": null, 
+    "mismatches": null, 
+    "number_of_threads": null, 
+    "option_bedgraph": null, 
+    "output_name_collapsed_gzip_R1": "{{cmo_sample_name}}_collapsed_R1_fastq.gz", 
+    "output_name_collapsed_gzip_R2": "{{cmo_sample_name}}_collapsed_R2_fastq.gz", 
+    "patient_id": "{{patient_id}}",
+    "quality": null, 
+    "read_group_identifier": "{{cmo_sample_name}}_",
+    "read_group_library": "{{cmo_sample_id}}",     
+    "read_group_platform_unit": "{{flowcell_id}}_{{barcode_index}}",
+    "read_group_sample_name": "{{cmo_sample_name}}", 
+    "read_group_sequencing_center": "MSKCC", 
+    "read_group_sequencing_platform": "ILLUMINA", 
+    "run_date": "{{run_date}}",
+    "request_id": "{{request_id}}",
+    "tumor_type": "{{tumor_type}}",
+    "scoring_gap_alignments": null, 
+    "soft_clip_contig": null, 
+    "sort_first_pass_output_file_name": "{{cmo_sample_name}}_collapsing_first_pass.txt", 
+    "sort_order": "coordinate", 
+    "standard_aln_output_file_name": "{{cmo_sample_name}}_standard.sam", 
+    "standard_picard_addrg_output_filename": "{{cmo_sample_name}}_standard.bam", 
+    "stringency": null, 
+    "temporary_directory": "/scratch/", 
+    "trim_galore_number_of_threads": null, 
+    "validation_stringency": null, 
+    "window_size": null, 
+    "wobble": null
+}
