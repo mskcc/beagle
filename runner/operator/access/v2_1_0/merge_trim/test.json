@@ -1,0 +1,15 @@
+{ 
+    "merge_fastq_fastq1": juno:///igo/delivery/FASTQ/RUTH_0224_AHG273DSX5/Project_12524_D/Sample_JY-19-359-012-BN_IGO_12524_D_3/JY-19-359-012-BN_IGO_12524_D_3_S65_L001_R1_001.fastq.gz,
+    "merge_fastq_fastq2": juno:///igo/delivery/FASTQ/RUTH_0224_AHG273DSX5/Project_12524_D/Sample_JY-19-359-012-BN_IGO_12524_D_3/JY-19-359-012-BN_IGO_12524_D_3_S65_L001_R2_001.fastq.gz,
+    "fastp_disable_trim_poly_g": null,
+    "fastp_disable_adapter_trimming": null,
+    "fastp_disable_length_filtering": null,
+    "fastp_disable_quality_filtering": null,
+    "fastp_dont_eval_duplication": null,
+    "fastp_max_len_read1": null,
+    "fastp_max_len_read2": null,
+    "fastp_read1_output_file_name": null,
+    "fastp_read2_output_file_name": null,
+    "fastp_unpaired1_output_file_name": null,
+    "fastp_unpaired2_output_file_name": null
+} 

@@ -53,13 +53,13 @@ def construct_inputs(samples, request_id):
             }
         )
 
-        fastq1s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R1"]]
+        merge_fastq_fastq1 = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R1"]]
 
-        fastq2s = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R2"]]
+        merge_fastq_fastq2 = [{"class": "File", "location": "juno://" + fastq["path"]} for fastq in fastqs["R2"]]
 
         input_file = template.render(
-            fastq1_files=json.dumps(fastq1s),
-            fastq2_files=json.dumps(fastq2s),
+            merge_fastq_fastq1=json.dumps(merge_fastq_fastq1),
+            merge_fastq_fastq2=json.dumps(merge_fastq_fastq2),
         )
 
         inputs.append((json.loads(input_file), metadata))
