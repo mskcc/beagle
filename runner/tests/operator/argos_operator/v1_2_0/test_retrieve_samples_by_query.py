@@ -86,7 +86,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         file_instance = File.objects.create(
             file_type=filetype_instance, file_group=file_group_instance, file_name="C-8VK0V7.bam", path="/C-8VK0V7.bam"
         )
-        dmp_bam_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file_instance,
             version=1,
             metadata={
@@ -293,7 +293,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R1.fastq",
             path="/FROZENPOOLEDNORMAL.R1.fastq",
         )
-        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
@@ -305,7 +305,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R2.fastq",
             path="/FROZENPOOLEDNORMAL.R2.fastq",
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
@@ -332,7 +332,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R1.fastq",
             path="/FROZENPOOLEDNORMAL.R1.fastq",
         )
-        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
                 settings.RECIPE_METADATA_KEY: "foo_IMPACT468_bar",
@@ -344,7 +344,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R2.fastq",
             path="/FROZENPOOLEDNORMAL.R2.fastq",
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
                 settings.RECIPE_METADATA_KEY: "foo_IMPACT468_bar",
@@ -382,7 +382,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R1.fastq",
             path="/FROZENPOOLEDNORMAL.R1.fastq",
         )
-        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
                 "runId": "PITT_0439",
@@ -399,7 +399,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R2.fastq",
             path="/FROZENPOOLEDNORMAL.R2.fastq",
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
                 "runId": "PITT_0439",
@@ -466,7 +466,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R1.fastq",
             path="/FROZENPOOLEDNORMAL.R1.fastq",
         )
-        poolednormal_R1_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
                 "runId": "DIANA_0568",
@@ -483,7 +483,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             file_name="FROZENPOOLEDNORMAL.R2.fastq",
             path="/FROZENPOOLEDNORMAL.R2.fastq",
         )
-        poolednormal_R2_filemetadata_instance = FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
                 "runId": "DIANA_0568",

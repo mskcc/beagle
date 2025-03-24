@@ -1,6 +1,7 @@
 import json
 import uuid
 from mock import patch
+from django.db import transaction
 from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
