@@ -67,6 +67,7 @@ class AccessV2NucleoQcOperator(Operator):
                     "name": "Access V2 Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
+                    "output_metadata": output_metadata,
                     "tags": {settings.REQUEST_ID_METADATA_KEY: self.request_id, "cmoSampleId": job["sample_name"]},
                 }
             )
@@ -89,6 +90,7 @@ class AccessV2NucleoQcOperator(Operator):
                 .order_by("-created_date")
                 .first()
                 .operator_run.runs.all()
+                .filter(status=RunStatus.COMPLETED)
             )
             if not len(most_recent_runs_for_request):
                 raise Exception("No matching Access V2 Nucleo runs found for request {}".format(self.request_id))
