@@ -27,6 +27,8 @@ NON_PDX_SPECIMEN_TYPES = [
     "resection",
     "saliva",
     "tumor",
+    "poolednormal",
+    "dmp",
 ]
 
 # TODO: generalize
@@ -66,6 +68,7 @@ def format_sample(data, specimen_type):
     sample["zR1"] = list()  # TODO: Add for Xenografts
     sample["zR2"] = list()  # TODO: Add for Xenografts
     sample["bam"] = list()
+    sample["zBam"] = list()
     sample["RG_ID"] = data["ID"]
     sample["adapter"] = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG"
     sample["adapter2"] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
@@ -76,9 +79,11 @@ def format_sample(data, specimen_type):
     if specimen_type in PDX_SPECIMEN_TYPES:
         r1 = "zR1"
         r2 = "zR2"
+        bam = "zBam"
     elif specimen_type in NON_PDX_SPECIMEN_TYPES:
         r1 = "R1"
         r2 = "R2"
+        bam = "bam"
     else:
         raise Exception(f"Invalid Specimen Type: {specimen_type}")
 
@@ -90,7 +95,7 @@ def format_sample(data, specimen_type):
             sample[r2].append({"class": "File", "location": "juno://" + i})
     for i in data["bam"]:
         if i:
-            sample["bam"].append({"class": "File", "location": "juno://" + i})
+            sample[bam].append({"class": "File", "location": "juno://" + i})
     return sample
 
 
