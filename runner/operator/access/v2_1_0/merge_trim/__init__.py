@@ -19,16 +19,8 @@ def construct_sample_inputs(samples):
         meta = sample_group[0]["metadata"]
         print(sample_group)
         input_file = template.render(
-            cmo_sample_name=meta[settings.CMO_SAMPLE_NAME_METADATA_KEY],
-            tumor_type=meta[settings.SAMPLE_CLASS_METADATA_KEY],
-            igo_id=sample_id,
-            patient_id=meta[settings.PATIENT_ID_METADATA_KEY],
-            barcode_index=meta["barcodeIndex"],
-            flowcell_id=meta["flowCellId"],
-            run_date=meta["runDate"],
-            request_id=meta[settings.REQUEST_ID_METADATA_KEY],
-            fastq1_path="juno://" + sample_group[0]["path"],
-            fastq2_path="juno://" + sample_group[1]["path"],
+            merge_fastq_fastq1="juno://" + sample_group[0]["path"],
+            merge_fastq_fastq2="juno://" + sample_group[1]["path"],
         )
 
         sample = json.loads(input_file)
