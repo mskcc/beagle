@@ -50,7 +50,7 @@ def construct_inputs(samples, request_id):
             fastq1_files=json.dumps(fastq1s),
             fastq2_files=json.dumps(fastq2s),
         )
-
+        print(input_file)
         inputs.append((json.loads(input_file), metadata))
 
     return inputs
