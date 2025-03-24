@@ -75,7 +75,7 @@ class TestArgosBamOperator(TestCase):
             path="/foo.fastq.gz",
             file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
         )
-        filemetadata_instance = FileMetadata.objects.create(file=file_instance)
+        FileMetadata.objects.create_or_update(file=file_instance, metadata={})
 
         self.assertEqual(len(File.objects.all()), 5)
         self.assertEqual(len(FileMetadata.objects.all()), 5)
