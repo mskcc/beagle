@@ -44,7 +44,14 @@ class HelixFiltersOperator(Operator):
         input_json = self.add_output_file_names(input_json, pipeline_version)
         tags = {"project_prefix": project_prefix, "argos_run_ids": argos_run_ids, "labHeadEmail": lab_head_email}
 
-        helix_filters_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
+        log_directory = self.get_log_directory()
+        helix_filters_outputs_job_data = {
+            "app": app,
+            "inputs": input_json,
+            "name": name,
+            "tags": tags,
+            "log_directory": log_directory,
+        }
 
         """
         If project_prefix and job_group_id, write output to a directory
@@ -56,6 +63,8 @@ class HelixFiltersOperator(Operator):
         argos_pipeline = argos_run.app
 
         output_directory = None
+        log_directory = self.get_log_directory()
+        helix_filters_outputs_job_data["log_directory"] = log_directory
         if project_prefix:
             tags["project_prefix"] = project_prefix
             if self.job_group_id:
@@ -98,6 +107,5 @@ class HelixFiltersOperator(Operator):
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
