@@ -40,7 +40,7 @@ class ArgosQcOperator(Operator):
         pipeline_version = pipeline.version
         project_prefix = input_json["project_prefix"]
         output_directory_prefix = get_output_directory_prefix(self.run_ids)
-
+        log_directory = self.get_log_directory()
         tags = {
             "tumor_sample_names": input_json["tumor_sample_names"],
             "normal_sample_names": input_json["normal_sample_names"],
@@ -52,6 +52,7 @@ class ArgosQcOperator(Operator):
             "name": name,
             "notify_for_outputs": ["qc_pdf"],
             "tags": tags,
+            "log_directory": log_directory,
         }
 
         """
@@ -96,6 +97,5 @@ class ArgosQcOperator(Operator):
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory

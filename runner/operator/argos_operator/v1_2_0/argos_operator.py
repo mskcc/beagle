@@ -100,7 +100,8 @@ class ArgosOperator(Operator):
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+            log_directory = self.get_log_directory()
+            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags, log_directory=log_directory))
         return argos_jobs
 
     def get_mapping_from_argos_inputs(self, argos_inputs):
@@ -454,6 +455,5 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory

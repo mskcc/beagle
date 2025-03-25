@@ -101,9 +101,15 @@ class ArgosOperator(Operator):
                 "labHeadEmail": pi_email,
             }
             pipeline = self.get_pipeline_id()
+            log_prefix = f"{tumor_sample_name}_{normal_sample_name}"
+            log_directory = self.get_log_directory()
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+            argos_jobs.append(
+                RunCreator(
+                    app=pipeline, inputs=job, name=name, tags=tags, log_prefix=log_prefix, log_directory=log_directory
+                )
+            )
         return argos_jobs
 
     def get_mapping_from_argos_inputs(self, argos_inputs):
@@ -457,7 +463,6 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
 

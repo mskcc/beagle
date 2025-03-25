@@ -45,13 +45,14 @@ class ArgosQcOperator(Operator):
             "tumor_sample_names": input_json["tumor_sample_names"],
             "normal_sample_names": input_json["normal_sample_names"],
         }
-
+        log_directory = self.get_log_directory()
         argos_qc_outputs_job_data = {
             "app": app,
             "inputs": input_json,
             "name": name,
             "notify_for_outputs": ["qc_pdf"],
             "tags": tags,
+            "log_directory": log_directory,
         }
 
         """
@@ -96,6 +97,5 @@ class ArgosQcOperator(Operator):
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
