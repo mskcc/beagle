@@ -117,7 +117,14 @@ class ArgosBamOperator(Operator):
             }
             pipeline_id = self.get_pipeline_id()
             pipeline = Pipeline.objects.get(id=pipeline_id)
-            argos_bam_job_data = {"app": pipeline_id, "inputs": job, "name": name, "tags": tags}
+            log_directory = self.get_log_directory()
+            argos_bam_job_data = {
+                "app": pipeline_id,
+                "inputs": job,
+                "name": name,
+                "tags": tags,
+                "log_directory": log_directory,
+            }
             output_dir = os.path.join(pipeline.output_directory, "argosBam", get_project_prefix(self.request_id))
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
@@ -481,7 +488,6 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
 

@@ -100,7 +100,9 @@ class AlignmentPairOperator(Operator):
             pipeline = self.get_pipeline_id()
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-            alignment_pair_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+            alignment_pair_jobs.append(
+                RunCreator(app=pipeline, inputs=job, name=name, tags=tags, log_directory=self.get_log_directory())
+            )
         return alignment_pair_jobs
 
     def get_mapping_from_argos_inputs(self, alignment_pair_inputs):
@@ -455,6 +457,5 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory

@@ -425,6 +425,5 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
