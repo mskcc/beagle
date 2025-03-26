@@ -426,6 +426,5 @@ class ChronosOperator(Operator):
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return log_directory
