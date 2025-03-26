@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="run",
             name="log_prefix",
-            field=models.CharField(default="", max_length=30),
+            field=models.CharField(default="", max_length=100),
         ),
     ]
