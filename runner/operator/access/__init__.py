@@ -217,12 +217,13 @@ def find_request_bams(run):
 
     return bams
 
+
 def is_tumor_bam(file):
     if not file.endswith(".bam"):
         return False
     t_n_timepoint = file.split("-")[2]
     return not t_n_timepoint[0] == "N"
 
+
 def create_cwl_file_object(file_path):
     return {"class": "File", "location": "juno://" + file_path}
-
