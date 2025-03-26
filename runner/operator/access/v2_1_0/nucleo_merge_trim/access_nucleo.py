@@ -75,7 +75,7 @@ def construct_sample_inputs(runs, request_id):
         meta = run.output_metadata
         sample_id = meta[settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
-        fastq_pair = [parse_output_ports(run, "fastp_read1_output"), parse_output_ports(run, "fastp_read2_output")]
+        fastq_pair = [[parse_output_ports(run, "fastp_read1_output"), parse_output_ports(run, "fastp_read2_output")]]
 
         input_file = template.render(
             sample_id=sample_id,
