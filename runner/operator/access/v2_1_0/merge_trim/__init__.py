@@ -29,6 +29,7 @@ METADATA_OUTPUT_FIELDS = [
     "captureConcentrationNm",
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY,
+    settings.LIBRARY_ID_METADATA_KEY
 ]
 
 
