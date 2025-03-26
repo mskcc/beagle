@@ -1,1 +1,1 @@
-from .access_nucleo import AccessV2NucleoOperator
+from .access_nucleo import AccessV2NucleoTrimOperator

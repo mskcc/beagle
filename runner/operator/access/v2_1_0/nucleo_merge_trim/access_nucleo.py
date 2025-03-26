@@ -12,10 +12,7 @@ from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 from runner.models import Port
 from notifier.helper import get_gene_panel
-from runner.operator.access import (
-    get_request_id_runs,
-    create_cwl_file_object
-)
+from runner.operator.access import get_request_id_runs, create_cwl_file_object
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +37,7 @@ METADATA_OUTPUT_FIELDS = [
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY,
-    settings.LIBRARY_ID_METADATA_KEY
+    settings.LIBRARY_ID_METADATA_KEY,
 ]
 
 
@@ -60,11 +57,13 @@ def calc_avg(sample_files, field):
     avg = sum([float(s["metadata"][field]) for s in samples_with_field]) / field_count
     return avg
 
+
 def parse_output_ports(run, port_name):
     port = Port.objects.get(name=port_name, run=run.pk)
     file = port.files.all()[0]
     file = create_cwl_file_object(file.path)
     return file
+
 
 def construct_sample_inputs(runs, request_id):
     template_f = "input_template.json.jinja2"
@@ -76,11 +75,8 @@ def construct_sample_inputs(runs, request_id):
         meta = run.output_metadata
         sample_id = meta[settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
-        fastq_pair = [
-            parse_output_ports(run, "fastp_read1_output"), 
-            parse_output_ports(run, "fastp_read2_output")
-            ]
-        
+        fastq_pair = [parse_output_ports(run, "fastp_read1_output"), parse_output_ports(run, "fastp_read2_output")]
+
         input_file = template.render(
             sample_id=sample_id,
             fgbio_fastq_to_bam_input=json.dumps(fastq_pair),
@@ -105,9 +101,7 @@ class AccessV2NucleoTrimOperator(Operator):
     """
 
     def get_jobs(self):
-        runs, self.request_id = get_request_id_runs(
-            ["merge-trim"], self.run_ids, self.request_id
-        )
+        runs, self.request_id = get_request_id_runs(["merge-trim"], self.run_ids, self.request_id)
         sample_inputs = construct_sample_inputs(runs, self.request_id)
         number_of_inputs = len(sample_inputs)
         return [
