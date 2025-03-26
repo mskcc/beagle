@@ -40,6 +40,7 @@ METADATA_OUTPUT_FIELDS = [
     settings.CMO_SAMPLE_TAG_METADATA_KEY,
     settings.SAMPLE_ID_METADATA_KEY,
     settings.REQUEST_ID_METADATA_KEY,
+    settings.LIBRARY_ID_METADATA_KEY
 ]
 
 
@@ -59,7 +60,7 @@ def calc_avg(sample_files, field):
     avg = sum([float(s["metadata"][field]) for s in samples_with_field]) / field_count
     return avg
 
-def parse_output_ports(run, port_name, file_name):
+def parse_output_ports(run, port_name):
     port = Port.objects.get(name=port_name, run=run.pk)
     file = port.files.all()[0]
     file = create_cwl_file_object(file.path)
@@ -76,9 +77,8 @@ def construct_sample_inputs(runs, request_id):
         sample_id = meta[settings.CMO_SAMPLE_NAME_METADATA_KEY]
 
         fastq_pair = [
-            parse_output_ports(run, "fastp_read1_output", "_R1.fastq.gz"), 
-            parse_output_ports(run, "fastp_read2_output", "_R2.fastq.gz"),
-            run.output_metadata
+            parse_output_ports(run, "fastp_read1_output"), 
+            parse_output_ports(run, "fastp_read2_output")
             ]
         
         input_file = template.render(
@@ -95,7 +95,7 @@ def construct_sample_inputs(runs, request_id):
     return sample_inputs
 
 
-class AccessV2NucleoOperator(Operator):
+class AccessV2NucleoTrimOperator(Operator):
     """
     Operator for the ACCESS Nucleo workflow:
 
