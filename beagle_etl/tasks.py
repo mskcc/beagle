@@ -107,6 +107,7 @@ def process_request_callback_jobs():
 
 @shared_task
 def check_missing_requests():
+    # TODO: Deprecated remove this
     """
     Method implemented because some requests on LIMS can show up with the date from the past
     """
@@ -126,6 +127,7 @@ def check_missing_requests():
 
 @shared_task
 def job_processor(job_id):
+    # TODO: Deprecated remove this
     logger.info(format_log("ETL Creating job", obj_id=job_id))
     job = JobObject(job_id)
     logger.info(format_log("ETL Processing job with args %s" % str(job.job.args), obj=job.job))
@@ -134,6 +136,7 @@ def job_processor(job_id):
 
 @shared_task
 def scheduler():
+    # TODO: Deprecated remove this
     jobs = get_pending_jobs()
     logger.info("Pending jobs: %s" % jobs)
     for job in jobs:
@@ -147,6 +150,7 @@ def scheduler():
 
 
 def get_pending_jobs():
+    # TODO: Deprecated remove this
     jobs = Job.objects.filter(
         status__in=(JobStatus.CREATED, JobStatus.IN_PROGRESS, JobStatus.WAITING_FOR_CHILDREN), lock=False
     ).iterator()
@@ -154,6 +158,7 @@ def get_pending_jobs():
 
 
 class JobObject(object):
+    # TODO: Deprecated remove this
     logger = logging.getLogger(__name__)
 
     def __init__(self, job_id):

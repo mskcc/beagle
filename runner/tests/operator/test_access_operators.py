@@ -68,7 +68,7 @@ class TestMatchedNormalSearch(TestCase):
         fg = FileGroup.objects.create(name="test", slug="test")
         file = File.objects.create(path=file_path, file_name=file_name, file_group=fg)
 
-        FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file,
             metadata={"cmo_assay": ACCESS_ASSAY, "type": "N", "patient": {"cmo": TEST_PATIENT_ID.lstrip("C-")}},
         )
@@ -86,7 +86,7 @@ class TestMatchedNormalSearch(TestCase):
         fg = FileGroup.objects.create(name="test", slug="test")
         file = File.objects.create(path=file_path, file_name=file_name, file_group=fg)
 
-        FileMetadata.objects.create(
+        FileMetadata.objects.create_or_update(
             file=file,
             metadata={"cmo_assay": DMP_IMPACT_ASSAYS[0], "type": "N", "patient": {"cmo": TEST_PATIENT_ID.lstrip("C-")}},
         )
