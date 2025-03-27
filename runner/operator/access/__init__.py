@@ -53,7 +53,7 @@ def get_request_id_runs(app, run_ids, request_id):
             .filter(status=RunStatus.COMPLETED)
         )
         if not len(most_recent_runs_for_request):
-            raise Exception("No matching Nucleo runs found for request {}".format(request_id))
+            raise Exception("No matching runs found for request {}".format(request_id))
 
     return most_recent_runs_for_request, request_id
 
