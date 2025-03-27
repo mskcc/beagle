@@ -36,10 +36,10 @@ def get_request_id_runs(app, run_ids, request_id):
     :return: List[str] - List of most recent runs from given request ID
     """
 
-    if not request_id:
+    if run_ids:
         most_recent_runs_for_request = Run.objects.filter(pk__in=run_ids, status=RunStatus.COMPLETED)
-        request_id = RunStatus[0].tags["igoRequestId"]
-    else:
+        request_id = most_recent_runs_for_request[0].tags[settings.REQUEST_ID_METADATA_KEY]
+    elif request_id:
         most_recent_runs_for_request = (
             Run.objects.filter(
                 tags__igoRequestId=request_id,
@@ -54,7 +54,8 @@ def get_request_id_runs(app, run_ids, request_id):
         )
         if not len(most_recent_runs_for_request):
             raise Exception(f"No matching {app} runs found for request {request_id}")
-
+    else:
+        raise Exception(f"No valid run or request id for {app}")
     return most_recent_runs_for_request, request_id
 
 
