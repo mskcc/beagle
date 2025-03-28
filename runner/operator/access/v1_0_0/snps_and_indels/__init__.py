@@ -57,8 +57,7 @@ class AccessLegacySNVOperator(Operator):
 
         :return: list of json_objects
         """
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
-
+        run_ids, self.request_id = get_request_id_runs(["access legacy"], self.run_ids, self.request_id)
         # Get all duplex / simplex bam ports for these runs
         duplex_output_ports = Port.objects.filter(
             name__in=["duplex_bams", "fgbio_filter_consensus_reads_duplex_bam"],
