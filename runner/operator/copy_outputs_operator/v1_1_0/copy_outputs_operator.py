@@ -58,8 +58,15 @@ class CopyOutputsOperator(Operator):
         output_directory_prefix = get_output_directory_prefix(self.run_ids)
 
         tags = {"run_ids": run_ids}
+        log_directory = self.get_log_directory()
 
-        copy_outputs_job_data = {"app": app, "inputs": input_json, "name": name, "tags": tags}
+        copy_outputs_job_data = {
+            "app": app,
+            "inputs": input_json,
+            "name": name,
+            "tags": tags,
+            "log_directory": log_directory,
+        }
 
         """
         If project_prefix and job_group_id, write output to a directory
@@ -117,7 +124,7 @@ class CopyOutputsOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         output_directory_prefix = get_project_prefix(self.run_ids)
         output_directory = os.path.join(
-            pipeline.output_directory,
+            pipeline.log_directory,
             self.ARGOS_NAME,
             output_directory_prefix,
             self.ARGOS_VERSION,
@@ -125,6 +132,5 @@ class CopyOutputsOperator(Operator):
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
         return output_directory
