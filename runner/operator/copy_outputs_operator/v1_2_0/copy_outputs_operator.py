@@ -126,7 +126,7 @@ class CopyOutputsOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         output_directory_prefix = get_project_prefix(self.run_ids)
         output_directory = os.path.join(
-            pipeline.output_directory,
+            pipeline.log_directory,
             self.ARGOS_NAME,
             output_directory_prefix,
             self.ARGOS_VERSION,

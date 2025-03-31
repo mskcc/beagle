@@ -480,7 +480,7 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
         output_directory = os.path.join(
-            pipeline.output_directory,
+            pipeline.log_directory,
             self.ARGOS_NAME,
             get_project_prefix(self.request_id),
             self.ARGOS_VERSION,
