@@ -55,13 +55,15 @@ class TestCopyOutputs(TestCase):
                     return False
         return True
 
+    @patch("runner.operator.copy_outputs_operator.v1_2_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
     @patch("runner.operator.copy_outputs_operator.v1_2_0.copy_outputs_operator.CopyOutputsOperator.write_to_file")
-    def test_create_copy_output_jobs(self, write_to_file):
+    def test_create_copy_output_jobs(self, write_to_file, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
         write_to_file.return_value = True
+        get_log_directory.return_value = "/path/to/log/dir"
         # Load fixtures
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.json"

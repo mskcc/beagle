@@ -1,38 +1,12 @@
 import logging
 import datetime
+from django.conf import settings
 from notifier.models import JobGroup, JobGroupNotifier
 from runner.models import Pipeline, Run, RunStatus, OperatorRun
 
 
 class RunCreator(object):
     logger = logging.getLogger(__name__)
-
-    def __init__(
-        self,
-        # TODO: app should be pipeline github repo and version
-        app,
-        inputs,
-        name,
-        tags,
-        output_directory=None,
-        output_metadata={},
-        operator_run_id=None,
-        job_group_id=None,
-        job_group_notifier_id=None,
-        notify_for_outputs=[],
-        resume=None,
-    ):
-        self.app = app
-        self.inputs = inputs
-        self.name = name
-        self.tags = tags
-        self.output_directory = output_directory
-        self.output_metadata = output_metadata
-        self.operator_run_id = operator_run_id
-        self.job_group_id = job_group_id
-        self.job_group_notifier_id = job_group_notifier_id
-        self.notify_for_outputs = notify_for_outputs
-        self.resume = resume
 
     def create(self):
         # TODO: Creating of Run object should be in different class so RunCreator could be moved to voyager_operator
@@ -54,6 +28,8 @@ class RunCreator(object):
             tags=self.tags,
             notify_for_outputs=self.notify_for_outputs,
             resume=self.resume,
+            log_prefix=self.log_prefix,
+            log_directory=self.log_directory,
         )
         if self.output_directory:
             run.output_directory = self.output_directory
@@ -72,6 +48,37 @@ class RunCreator(object):
             print("[JobGroupNotifier] Not found %s" % self.job_group_notifier_id)
         run.save()
         return run
+
+    def __init__(
+        self,
+        # TODO: app should be pipeline github repo and version
+        app,
+        inputs,
+        name,
+        tags,
+        output_directory=None,
+        output_metadata={},
+        operator_run_id=None,
+        job_group_id=None,
+        job_group_notifier_id=None,
+        notify_for_outputs=[],
+        log_prefix="",
+        log_directory=settings.DEFAULT_LOG_PATH,
+        resume=None,
+    ):
+        self.app = app
+        self.inputs = inputs
+        self.name = name
+        self.tags = tags
+        self.output_directory = output_directory
+        self.output_metadata = output_metadata
+        self.operator_run_id = operator_run_id
+        self.job_group_id = job_group_id
+        self.job_group_notifier_id = job_group_notifier_id
+        self.notify_for_outputs = notify_for_outputs
+        self.log_prefix = log_prefix
+        self.log_directory = log_directory
+        self.resume = resume
 
     def is_valid(self):
         return True
