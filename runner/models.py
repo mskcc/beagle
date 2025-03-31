@@ -65,6 +65,7 @@ class Pipeline(BaseModel):
     entrypoint = models.CharField(max_length=100, editable=True)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
+    log_directory = models.CharField(max_length=300, null=True, editable=True)
     output_permission = models.IntegerField(blank=True, null=True, editable=True)
     output_uid = models.IntegerField(blank=True, null=True, editable=True)
     output_gid = models.IntegerField(blank=True, null=True, editable=True)
