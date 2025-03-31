@@ -103,6 +103,6 @@ class HelixFiltersOperator(Operator):
             jg_created_date,
             "json",
             pipeline.name,
-            pipeline.version
+            pipeline.version,
         )
         return output_directory
