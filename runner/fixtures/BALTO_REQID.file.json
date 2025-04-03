@@ -12,7 +12,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -30,7 +29,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -48,7 +46,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -66,7 +63,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -84,7 +80,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -102,7 +97,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
             "request_id": "BALTO_REQID",
-            "sample": "0420c2fc-92fd-46a2-a50c-5ab19723f553",
             "samples": "[\"BALTO_REQID_2\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -120,7 +114,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -138,7 +131,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -156,7 +148,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -174,7 +165,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -192,7 +182,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -210,7 +199,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
             "request_id": "BALTO_REQID",
-            "sample": "4c008ebe-0556-4d91-958e-907ea15f480d",
             "samples": "[\"BALTO_REQID_4\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -228,7 +216,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -246,7 +233,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -264,7 +250,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -282,7 +267,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -300,7 +284,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -318,7 +301,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
             "request_id": "BALTO_REQID",
-            "sample": "8896334f-e000-40b3-88de-8c5b0f4ea32c",
             "samples": "[\"BALTO_REQID_1\"]",
             "patient_id": "C-ABCDEF"
         }
@@ -336,7 +318,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -354,7 +335,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -372,7 +352,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -390,7 +369,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -408,7 +386,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -426,7 +403,6 @@
             "file_group": "0221fdb7-6cf8-41d7-9432-8cbbccfd08fe",
             "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
             "request_id": "BALTO_REQID",
-            "sample": "2024258c-7588-479c-aa23-8b349e8552c7",
             "samples": "[\"BALTO_REQID_3\"]",
             "patient_id": "C-GHIJKL"
         }
@@ -444,7 +420,6 @@
             "file_group": "2ded7cdb-5f04-4989-b3db-000d262fe22d",
             "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
             "request_id": null,
-            "sample": null,
             "samples": [],
             "patient_id": null
         }
