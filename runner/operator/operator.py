@@ -78,12 +78,6 @@ class Operator(object):
         else:
             self.logger.error("Invalid Operator: %s error" % self.model.slug)
 
-    def ready_job(self, pipeline, tempo_inputs, job):
-        self._jobs.append(RunCreator(app=pipeline, inputs=job))
-        current_span = tracer.current_span()
-        cmo_request_id = self.request_id
-        current_span.set_tag("request.id", cmo_request_id)
-
     def on_job_fail(self, run):
         pass
 
@@ -93,6 +87,3 @@ class Operator(object):
         :return: list[string]
         """
         return {}
-
-    def get_log_directory(self):
-        return settings.DEFAULT_LOG_PATH

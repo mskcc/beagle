@@ -119,7 +119,7 @@ class TestDemoOperator(TestCase):
         self.file1 = File.objects.create(
             file_name=os.path.basename(self.tmp_path), path=self.tmp_path, file_group=self.filegroup
         )
-        self.fileMetadata1 = FileMetadata.objects.create(
+        self.fileMetadata1 = FileMetadata.objects.create_or_update(
             file=self.file1, metadata={settings.REQUEST_ID_METADATA_KEY: "1"}
         )
 
@@ -130,7 +130,7 @@ class TestDemoOperator(TestCase):
         self.file2 = File.objects.create(
             file_name=os.path.basename(self.tmp_path2), path=self.tmp_path2, file_group=self.filegroup
         )
-        self.fileMetadata2 = FileMetadata.objects.create(
+        self.fileMetadata2 = FileMetadata.objects.create_or_update(
             file=self.file2, metadata={settings.REQUEST_ID_METADATA_KEY: "2"}
         )
 
