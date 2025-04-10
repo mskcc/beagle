@@ -16,6 +16,7 @@ from .models import (
     Request,
     FileExtension,
     MachineRunMode,
+    PooledNormal,
 )
 
 
@@ -82,6 +83,28 @@ class MachineRunModeAdmin(admin.ModelAdmin):
     list_display = ("machine_name", "machine_class", "machine_type")
 
 
+class PooledNormalsAdminForm(forms.ModelForm):
+    def clean_machine(self):
+        if not self.cleaned_data["machine"].islower():
+            raise ValidationError("Machine needs to be lowercase")
+        return self.cleaned_data["machine"]
+
+    def clean_gene_panel(self):
+        if not self.cleaned_data["gene_panel"].islower():
+            raise ValidationError("Gene Panel/Recipe needs to be lowercase")
+        return self.cleaned_data["gene_panel"]
+
+    def clean_bait_set(self):
+        if not self.cleaned_data["bait_set"].islower():
+            raise ValidationError("BaitSet needs to be lowercase")
+        return self.cleaned_data["bait_set"]
+
+
+class PooledNormalsAdmin(admin.ModelAdmin):
+    form = PooledNormalsAdminForm
+    list_display = ("machine", "gene_panel", "bait_set", "preservation_type", "run_date", "pooled_normals_paths")
+
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
@@ -95,3 +118,4 @@ admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
 admin.site.register(FileRunMap, FileRunMapAdmin)
 admin.site.register(MachineRunMode, MachineRunModeAdmin)
+admin.site.register(PooledNormal, PooledNormalsAdmin)

@@ -444,3 +444,18 @@ class MachineRunMode(BaseModel):
 
     def __str__(self):
         return "{}".format(self.machine_name)
+
+
+class PooledNormal(BaseModel):
+    machine = LowercaseCharField(max_length=32, null=False, blank=False, unique=True)
+    bait_set = LowercaseCharField(max_length=32, null=False, blank=False)
+    gene_panel = models.CharField(max_length=32, null=False, blank=False)
+    preservation_type = models.CharField(max_length=32, null=False, blank=False)
+    run_date = models.CharField(max_length=32, null=False, blank=False)
+    pooled_normals_paths = models.CharField(max_length=32, null=False, blank=False)
+
+    def __repr__(self):
+        return "MACHINE: %s; GENE_PANEL: %s; BAIT_SET: %s" % (self.machine, self.gene_panel, self.bait_set)
+
+    def __str__(self):
+        return "{}".format(self.machine)
