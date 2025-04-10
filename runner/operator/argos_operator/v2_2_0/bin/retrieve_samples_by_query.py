@@ -80,7 +80,9 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if bset_data.lower() in bait_set.lower():
             descriptor = bset_data
 
-    if descriptor:  # From returned pooled normals, we found the bait set/genePanel we're looking for
+    # From returned pooled normals, we found the bait set/genePanel we're looking for
+    # This is for legacy pooled normals (i.e., IMPACT341, IMPACT410, IMPACT468)
+    if descriptor: 
         pooled_normals = FileRepository.filter(
             queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor}
         )
@@ -93,59 +95,66 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
         if "ffpe" in preservations_lower_case:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
-    elif "impact505" in bait_set.lower():
-        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
-        descriptor = "IMPACT505"
-        preservations_lower_case = set([x.lower() for x in preservation_types])
+    else:
         machine = get_sequencer_type(run_ids)
-        if not machine:
-            LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
-        if machine == "hiseq":
-            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
-            if "ffpe" in preservations_lower_case:
-                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
-        if machine == "novaseq":
-            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
-            if "ffpe" in preservations_lower_case:
-                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
-        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
-        if not pooled_normals:
-            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
-    elif "hemepact_v4" in bait_set.lower():
-        # We didn't find a pooled normal for HemePACT_v4; return "static" FROZEN or FFPE pool normal
-        descriptor = "HemePACT_v4"
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        machine = get_sequencer_type(run_ids)
-        if not machine:
-            LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
-        if machine == "hiseq":
-            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
-            if "ffpe" in preservations_lower_case:
-                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
-        if machine == "novaseq":
-            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
-            if "ffpe" in preservations_lower_case:
-                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
-        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
-        if not pooled_normals:
-            LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)
-    elif "impact-heme_v2" in bait_set.lower():
-        # We didn't find a pooled normal for IMPACT-Heme_v2; return "static" FROZEN or FFPE pool normal
-        descriptor = "IMPACT-Heme_v2"
-        preservations_lower_case = set([x.lower() for x in preservation_types])
-        machine = get_sequencer_type(run_ids)
-        if not machine:
-            LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal for $s; new machine name?", sample_name)
-        if machine == "novaseq":
-            sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V1"
-            if "ffpe" in preservations_lower_case:
-                sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V1"
-        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
-        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
-        if not pooled_normals:
-            LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal to pair %s", sample_name)
+        preservation = "FROZEN"
+        if "ffpe" in preservations_lower_case:
+            preservation = "FFPE"
+
+
+#    elif "impact505" in bait_set.lower():
+#        # We didn't find a pooled normal for IMPACT505; return "static" FROZEN or FFPE pool normal
+#        descriptor = "IMPACT505"
+#        preservations_lower_case = set([x.lower() for x in preservation_types])
+#        machine = get_sequencer_type(run_ids)
+#        if not machine:
+#            LOGGER.error("Could not find IMPACT505 pooled normal for $s; new machine name?", sample_name)
+#        if machine == "hiseq":
+#            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V1"
+#            if "ffpe" in preservations_lower_case:
+#                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V1"
+#        if machine == "novaseq":
+#            sample_name = "FROZENPOOLEDNORMAL_IMPACT505_V2"
+#            if "ffpe" in preservations_lower_case:
+#                sample_name = "FFPEPOOLEDNORMAL_IMPACT505_V2"
+#        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
+#        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+#        if not pooled_normals:
+#            LOGGER.error("Could not find IMPACT505 pooled normal to pair %s", sample_name)
+#    elif "hemepact_v4" in bait_set.lower():
+#        # We didn't find a pooled normal for HemePACT_v4; return "static" FROZEN or FFPE pool normal
+#        descriptor = "HemePACT_v4"
+#        preservations_lower_case = set([x.lower() for x in preservation_types])
+#        machine = get_sequencer_type(run_ids)
+#        if not machine:
+#            LOGGER.error("Could not find HemePACT_v4 pooled normal for $s; new machine name?", sample_name)
+#        if machine == "hiseq":
+#            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V1"
+#            if "ffpe" in preservations_lower_case:
+#                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V1"
+#        if machine == "novaseq":
+#            sample_name = "FROZENPOOLEDNORMAL_HemePACT_v4_V2"
+#            if "ffpe" in preservations_lower_case:
+#                sample_name = "FFPEPOOLEDNORMAL_HemePACT_v4_V2"
+#        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
+#        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+#        if not pooled_normals:
+#            LOGGER.error("Could not find HemePACT_v4 pooled normal to pair %s", sample_name)
+#    elif "impact-heme_v2" in bait_set.lower():
+#        # We didn't find a pooled normal for IMPACT-Heme_v2; return "static" FROZEN or FFPE pool normal
+#        descriptor = "IMPACT-Heme_v2"
+#        preservations_lower_case = set([x.lower() for x in preservation_types])
+#        machine = get_sequencer_type(run_ids)
+#        if not machine:
+#            LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal for $s; new machine name?", sample_name)
+#        if machine == "novaseq":
+#            sample_name = "FROZENPOOLEDNORMAL_IMPACT-Heme_v2_V1"
+#            if "ffpe" in preservations_lower_case:
+#                sample_name = "FFPEPOOLEDNORMAL_IMPACT-Heme_v2_V1"
+#        q = query & Q(("metadata__{}".format(settings.SAMPLE_NAME_METADATA_KEY), sample_name))
+#        pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
+#        if not pooled_normals:
+#            LOGGER.error("Could not find IMPACT-Heme_v2 pooled normal to pair %s", sample_name)
 
     return pooled_normals, descriptor, sample_name
 
