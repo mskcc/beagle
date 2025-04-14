@@ -118,12 +118,11 @@ def group_by_sample_id(samples):
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
-    samples.sort(key=lambda s: s["path"].split("/")[-1])
     for s1 in samples:
-        split_path = re.split(r"_R\d+_", s1["path"])[0]
-        for s2 in samples:
-            if s2["path"] in split_path:
-                fastqs["R1"].append(s1["path"])
-                fastqs["R2"].append(s2["path"])
-
+        if "_R1_" in s1["path"]:
+            fastqs["R1"].append(s1["path"])
+            R2_path = s1["path"].replace("_R1_","_R2_")
+            for s2 in samples:
+                if s2["path"] == R2_path :
+                    fastqs["R2"].append(s2["path"])
     return fastqs
