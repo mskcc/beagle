@@ -7,6 +7,7 @@ from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
+import re
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -118,10 +119,11 @@ def group_by_sample_id(samples):
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
     samples.sort(key=lambda s: s["path"].split("/")[-1])
-    for sample in samples:
-        if "_R2_" in sample["path"]:
-            fastqs["R2"].append(sample)
-        else:
-            fastqs["R1"].append(sample)
+    for s1 in samples:
+        split_path = re.split(r"_R\d+_", s1["path"])[0]
+        for s2 in samples:
+            if s2["path"] in split_path:
+                fastqs["R1"].append(s1["path"])
+                fastqs["R2"].append(s2["path"])
 
     return fastqs
