@@ -40,7 +40,7 @@ def construct_inputs(samples, request_id):
     samples = list(group_by_sample_id(samples).values())
 
     inputs = list()
-    all_fast = [] 
+    all_fast = []
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
         all_fast.append(fastqs)
@@ -115,7 +115,6 @@ def group_by_sample_id(samples):
         sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs
-
 
 
 def group_by_fastq(samples):
