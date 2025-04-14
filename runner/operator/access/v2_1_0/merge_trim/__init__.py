@@ -128,10 +128,3 @@ def group_by_fastq(samples):
                 if s2["path"] == R2_path:
                     fastqs["R2"].append(s2)
     return fastqs
-
-for fastqs in all_fast:
-    for i, f in enumerate(fastqs["R1"]):
-        if fastqs["R1"][i]['path'].split("_R")[0] != fastqs["R2"][i]['path'].split("_R")[0]:
-            breakpoint()
-        else:
-            print(fastqs["R1"][i]['metadata']['cmoSampleName'], fastqs["R2"][i]['metadata']['cmoSampleName'])
