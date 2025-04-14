@@ -120,9 +120,9 @@ def group_by_fastq(samples):
     fastqs = defaultdict(list)
     for s1 in samples:
         if "_R1_" in s1["path"]:
-            fastqs["R1"].append(s1["path"])
-            R2_path = s1["path"].replace("_R1_","_R2_")
+            fastqs["R1"].append(s1)
+            R2_path = s1["path"].replace("_R1_", "_R2_")
             for s2 in samples:
-                if s2["path"] == R2_path :
-                    fastqs["R2"].append(s2["path"])
+                if s2["path"] == R2_path:
+                    fastqs["R2"].append(s2)
     return fastqs
