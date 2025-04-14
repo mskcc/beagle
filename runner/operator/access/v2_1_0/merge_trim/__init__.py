@@ -7,7 +7,6 @@ from django.conf import settings
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
-import re
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,8 +40,10 @@ def construct_inputs(samples, request_id):
     samples = list(group_by_sample_id(samples).values())
 
     inputs = list()
+    all_fast = [] 
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
+        all_fast.append(fastqs)
         metadata = sample_files[0]["metadata"]
         metadata.update(
             {
@@ -116,6 +117,7 @@ def group_by_sample_id(samples):
     return sample_pairs
 
 
+
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
     for s1 in samples:
@@ -126,3 +128,10 @@ def group_by_fastq(samples):
                 if s2["path"] == R2_path:
                     fastqs["R2"].append(s2)
     return fastqs
+
+for fastqs in all_fast:
+    for i, f in enumerate(fastqs["R1"]):
+        if fastqs["R1"][i]['path'].split("_R")[0] != fastqs["R2"][i]['path'].split("_R")[0]:
+            breakpoint()
+        else:
+            print(fastqs["R1"][i]['metadata']['cmoSampleName'], fastqs["R2"][i]['metadata']['cmoSampleName'])
