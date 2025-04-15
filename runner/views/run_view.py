@@ -58,43 +58,6 @@ class RunViewSet(
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StartRunViewSet(GenericAPIView):
-
-    queryset = Run.objects.all()
-    serializer_class = RunSerializerFull
-
-    def get(self, request, pk):
-        try:
-            run = Run.objects.get(id=pk)
-        except Run.DoesNotExist:
-            return Response({"details": "Run %s not found" % str(pk)}, status=status.HTTP_404_NOT_FOUND)
-        try:
-            resolved_dict = PipelineCache.get_pipeline(run.app)
-        except Exception as e:
-            return Response({"details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        app = "data:text/plain;base64,%s" % base64.b64encode(json.dumps(resolved_dict).encode("utf-8")).decode("utf-8")
-        run_serializer = RunSerializerFull(run)
-        inputs = {}
-        for inp in run_serializer.data["inputs"]:
-            if inp["value"]:
-                inputs[inp["name"]] = inp["value"].get("inputs")
-        data = {"app": app, "inputs": inputs, "config": {}}
-        r = requests.post(
-            url=settings.RABIX_URL + "/v0/engine/jobs/",
-            headers={"content-type": "application/json"},
-            data=json.dumps(data),
-        )
-        if r.status_code != 200:
-            return Response(r.json(), status=r.status_code)
-        data = r.json()
-        execution_id = data["rootId"]
-        run.execution_id = uuid.UUID(execution_id)
-        run.status = RunStatus.RUNNING
-        run.save()
-        response = RunSerializerFull(run)
-        return Response(response.data, status=status.HTTP_200_OK)
-
-
 class UpdateJob(GenericAPIView):
 
     queryset = Run.objects.all()
