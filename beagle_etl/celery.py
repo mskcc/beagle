@@ -54,7 +54,7 @@ app.conf.task_routes = {
     "file_system.tasks.check_fastq_files": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_NEW_REQUEST_QUEUE},
+    "beagle_etl.tasks.fetch_request_nats": {"queue": settings.BEAGLE_NATS_UPSERT_REQUEST_QUEUE},
     "beagle_etl.jobs.metadb_jobs.new_request": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.update_request_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.update_sample_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
