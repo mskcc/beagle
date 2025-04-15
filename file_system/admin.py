@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import ArrayField
+from django.forms import Textarea
 from .models import (
     Storage,
     File,
@@ -102,6 +104,9 @@ class PooledNormalsAdminForm(forms.ModelForm):
 
 class PooledNormalsAdmin(admin.ModelAdmin):
     form = PooledNormalsAdminForm
+    formfield_overrides = {
+        ArrayField: {'widget': Textarea(attrs={'rows': 3, 'cols': 40})},
+    }
     list_display = ("machine", "gene_panel", "bait_set", "preservation_type", "run_date", "pooled_normals_paths")
 
 
