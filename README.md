@@ -37,11 +37,13 @@ Beagle is a backend service for managing files, pipelines and runs.
 ## Setup
 
 - Requirements
+
   - PostgreSQL==11
   - RabbitMQ
   - python 3
 
 - Instructions
+
   - virtualenv beagle
   - pip install -r requirements.txt
   - setup your environment using the [environment page](docs/ENVIRONMENT_VARIABLES.md)
@@ -75,12 +77,13 @@ cd beagle
 make install
 ```
 
-- If using a m1 mac, install with: 
+- If using a m1 mac, install with:
+
 ```
 make install-m1
 ```
 
-and activate the conda environment: 
+and activate the conda environment:
 
 ```
 conda activate beagle
