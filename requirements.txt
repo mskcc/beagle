@@ -28,3 +28,4 @@ nats-py==2.0.0
 django-advanced-filters==1.4.0
 sbpack==2022.3.16
 ddtrace==1.7.3
+python-dateutil==2.9.0
