@@ -26,8 +26,6 @@ Beagle environment variables needed to interact with other services
 GIT_SSH_COMMAND | Git ssh command needed to clone private repos| ssh -i /path/to/id_rsa -o UserKnownHostsFile=/path/to/known_hosts -F /dev/null"
 BEAGLE_AUTH_LDAP_SERVER_URI | LDAP server URI | ldaps://example.org/
 BEAGLE_RIDGEBACK_URL | [Ridgeback](https://github.com/mskcc/ridgeback) URL | http://localhost:2000
-BEAGLE_RABIX_URL | Rabix URL | http://localhost:2001
-BEAGLE_RABIX_PATH | Path to Rabix binary | /path/to/rabix
 BEAGLE_RABBITMQ_USERNAME | Rabbitmq username | example_username
 BEAGLE_RABBITMQ_PASSWORD | Rabbitmq password | example_password
 BEAGLE_LIMS_USERNAME | LIMS username | example_username

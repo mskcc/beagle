@@ -269,9 +269,6 @@ LOGOUT_URL = "/admin/logout/"
 
 SWAGGER_SETTINGS = {"VALIDATOR_URL": None}
 
-RABIX_URL = os.environ.get("BEAGLE_RABIX_URL")
-RABIX_PATH = os.environ.get("BEAGLE_RABIX_PATH")
-
 MEMCACHED_PORT = os.environ.get("BEAGLE_MEMCACHED_PORT", 11211)
 
 if ENVIRONMENT == "dev":
