@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from rest_framework import routers
-from runner.views.run_view import RunViewSet, StartRunViewSet, UpdateJob
+from runner.views.run_view import RunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
 from runner.views.operator_run_view import OperatorRunViewSet
 from runner.views.run_api_view import (
@@ -39,7 +39,6 @@ urlpatterns = [
     path("", include(router.urls)),
     path("pipeline/resolve/<uuid:pk>", PipelineResolveViewSet.as_view(), name="resolve-pipeline"),
     path("pipeline/download/<uuid:pk>", PipelineDownloadViewSet.as_view(), name="resolve-download"),
-    path("run/start/<uuid:pk>", StartRunViewSet.as_view()),
     path("run/update/<uuid:pk>", UpdateJob.as_view()),
     path("restart/", RunApiRestartViewSet.as_view()),
     path("operator-runs/", OperatorRunViewSet.as_view({"get": "list"})),
