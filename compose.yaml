@@ -52,6 +52,7 @@ services:
     restart: no
     volumes:
       - ./postgres:/postgres
+      - ./pgbouncer:/pgbouncer
       - ./logs:/logs
       - ./celery:/celery
       - ./rabbitmq:/rabbitmq
@@ -62,6 +63,7 @@ services:
     command:
     - |
         chown -R ${DOCKER_UID}:${DOCKER_GID} /postgres
+        chown -R ${DOCKER_UID}:${DOCKER_GID} /pgbouncer
         chown -R ${DOCKER_UID}:${DOCKER_GID} /logs
         chown -R ${DOCKER_UID}:${DOCKER_GID} /celery
         chown -R ${DOCKER_UID}:${DOCKER_GID} /rabbitmq
@@ -124,19 +126,41 @@ services:
       - beagle_create_volumes
   beagle_pgbouncer:
     image: edoburu/pgbouncer:latest
+    restart: on-failure
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    volumes:
+      - ./logs:/logs
+      - ./pgbouncer:/etc/pgbouncer
+      - type: bind
+        source:  /etc/passwd
+        target:  /etc/passwd
+        read_only: true  
     environment:
-        - DB_HOST=postgres
-        - DB_PORT=5432
-        - DB_USER=${BEAGLE_DB_USERNAME}
-        - DB_PASSWORD=${BEAGLE_DB_PASSWORD}
-        - PGPASSWORD=${BEAGLE_DB_PASSWORD}
-        - ADMIN_USERS=postgres,admin
+      - DB_HOST=beagle_postgres
+      - DB_NAME=${BEAGLE_DB_NAME}
+      - DB_USER=${BEAGLE_DB_USERNAME}
+      - DB_PASSWORD=${BEAGLE_DB_PASSWORD}
+      - DB_PORT=5432
+      - AUTH_TYPE=plain
+    entrypoint: ["/bin/sh","-c"]
+    command:
+      - |
+          INIFILE=/etc/pgbouncer/pgbouncer.ini
+
+          [ -e $$INIFILE ] && rm $$INIFILE
+
+          cp /entrypoint.sh /etc/pgbouncer/entrypoint_mod.sh
+                  
+          sed -i '/user = postgres/d' /etc/pgbouncer/entrypoint_mod.sh
+          /etc/pgbouncer/entrypoint_mod.sh /usr/bin/pgbouncer $$INIFILE > /logs/pgbouncer.log 2>&1
     ports:
         - "5432:5432"
     depends_on:
-      - beagle_postgres
+      beagle_postgres:
+        condition: service_healthy
+        restart: true
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -h 0.0.0.0 -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'"]
       interval: 30s
       timeout: 3s
       retries: 3  
@@ -199,7 +223,7 @@ services:
           python3 ${BEAGLE_PATH}/manage.py migrate --noinput
           echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org','${BEAGLE_DB_PASSWORD}')" | python3 ${BEAGLE_PATH}/manage.py shell_plus
           python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
-          ddtrace-run gunicorn beagle.wsgi --log-file ${BEAGLE_LOG_PATH} --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1            
+          ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1            
     healthcheck:
       test: ["CMD-SHELL", "curl -sSf http://localhost:${BEAGLE_PORT}/ || exit 1"]
       interval: 30s
