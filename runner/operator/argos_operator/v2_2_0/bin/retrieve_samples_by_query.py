@@ -7,7 +7,7 @@ and preservation type
 """
 import logging
 from file_system.models import MachineRunMode
-from file_system.models import FileGroup
+from file_system.models import FileGroup, PooledNormal
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Q
 from django.conf import settings
@@ -97,9 +97,17 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
     else:
         machine = get_sequencer_type(run_ids)
-        preservation = "FROZEN"
+        preservations_lower_case = set([x.lower() for x in preservation_types])
+        preservation = "frozen"
         if "ffpe" in preservations_lower_case:
-            preservation = "FFPE"
+            preservation = "ffpe"
+        pooled_normal_objs = PooledNormal.objects.filter(machine=machine,preservation_type=preservation,bait_set=bait_set)
+        pooled_normals = list()
+        for obj in pooled_normal_objs:
+            pooled_normals.extend(obj.pooled_normals_paths)
+        
+        sample_name = "_".join([preservation + "POOLEDNORMAL",machine,bait_set])
+        sample_name = sample_name.upper()
 
 
 #    elif "impact505" in bait_set.lower():
