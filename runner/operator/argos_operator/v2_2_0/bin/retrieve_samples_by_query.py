@@ -136,8 +136,8 @@ def get_pooled_normal_machine(run_ids_list):
                 earliest_pooled_normal = pooled_normal
             else:
                 # tiebreaker - if there's more than one set of pooled normals fetched, return earliest one
-                old_date = datetime.strptime(earliest_pooled_normal.run_date, "%m-%d-%Y")
-                curr_date = datetime.strptime(pooled_normal.run_date, "%m-%d-%Y")
+                old_date = earliest_pooled_normal.run_date
+                curr_date = pooled_normal.run_date
                 if curr_date < old_date:
                     earliest_pooled_normal = pooled_normal
     machine = earliest_pooled_normal.machine
