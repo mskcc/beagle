@@ -106,12 +106,12 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         all_files = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
         for obj in pooled_normal_objs:
             for pn in obj.pooled_normals_paths:
-#                pn_file = File.objects.filter(path=pn)[0]
                 pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
                 pooled_normals.append(pn_file)
-#            pooled_normals.extend(obj.pooled_normals_paths)
         
-        sample_name = "_".join([preservation + "POOLEDNORMAL",machine,bait_set])
+        #TODO: rename to BAITSET_PRESERVATION_MACHINE_POOLEDNORMAL
+        #TODO: Add runDate tiebreaker
+        sample_name = "_".join([bait_set,preservation,machine,"POOLEDNORMAL"])
         sample_name = sample_name.upper()
 
     return pooled_normals, descriptor, sample_name
