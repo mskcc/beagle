@@ -454,6 +454,11 @@ class PooledNormal(BaseModel):
     run_date = models.CharField(max_length=32, null=False, blank=False)
     pooled_normals_paths = ArrayField(models.CharField(max_length=255), blank=True, default=list)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['machine', 'bait_set', 'preservation_type'], name='unique_three_fields')
+        ]
+
     def __repr__(self):
         return "MACHINE: %s; GENE_PANEL: %s; BAIT_SET: %s" % (self.machine, self.gene_panel, self.bait_set)
 
