@@ -12,7 +12,7 @@ from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from notifier.events import InputCreationFailedEvent
 from notifier.tasks import send_notification
-
+from runner.operator.access import get_request_id_runs
 import json
 from jinja2 import Template
 
@@ -235,7 +235,7 @@ def construct_sample_inputs(samples, request_id, group_id):
 class AccessLegacyOperator(Operator):
     def get_jobs(self):
 
-        run_ids = self.run_ids if self.run_ids else [r.id for r in get_request_id_runs(self.request_id)]
+        run_ids, self.request_id = get_request_id_runs(["fastq-merge"], self.run_ids, self.request_id)
         ports = Port.objects.filter(run_id__in=run_ids, port_type=PortType.OUTPUT)
 
         data = [
@@ -282,28 +282,3 @@ def group_by_sample_id(samples):
         sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
 
     return sample_pairs
-
-
-def get_request_id_runs(request_id):
-    """
-    Get the latest completed bam-generation runs for the given request ID
-
-    :param request_id: str - IGO request ID
-    :return: List[str] - List of most recent runs from given request ID
-    """
-    operator_run_id = (
-        Run.objects.filter(
-            tags__igoRequestId=request_id,
-            app__name__in=["fastq-merge"],
-            operator_run__status=RunStatus.COMPLETED,
-        )
-        .exclude(finished_date__isnull=True)
-        .order_by("-finished_date")
-        .first()
-        .operator_run_id
-    )
-
-    request_id_runs = Run.objects.filter(
-        operator_run_id=operator_run_id, app__name__in=["fastq-merge"], status=RunStatus.COMPLETED
-    )
-    return request_id_runs

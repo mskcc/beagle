@@ -102,8 +102,7 @@ class FileProcessor(object):
             request_id=request_id,
             samples=samples,
         )
-        file_metadata = FileMetadata(file=file_object, metadata=metadata)
-        file_metadata.save()
+        FileMetadata.objects.create_or_update(file=file_object, metadata=metadata)
         return file_object
 
     @staticmethod

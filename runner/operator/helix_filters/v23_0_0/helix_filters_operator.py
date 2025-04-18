@@ -65,6 +65,7 @@ class HelixFiltersOperator(Operator):
                     pipeline.output_directory, self.ARGOS_NAME, project_prefix, self.ARGOS_VERSION, jg_created_date
                 )
             helix_filters_outputs_job_data["output_directory"] = output_directory
+            helix_filters_outputs_job_data["log_directory"] = self.get_log_directory()
         helix_filters_outputs_job = [RunCreator(**helix_filters_outputs_job_data)]
         return helix_filters_outputs_job
 
@@ -88,16 +89,15 @@ class HelixFiltersOperator(Operator):
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        output_directory_prefix = get_project_prefix(self.run_ids)
-        output_directory = os.path.join(
-            pipeline.output_directory,
+        log_directory_prefix = get_project_prefix(self.run_ids)
+        log_directory = os.path.join(
+            pipeline.log_directory,
             self.ARGOS_NAME,
-            output_directory_prefix,
+            log_directory_prefix,
             self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
-        return output_directory
+        return log_directory

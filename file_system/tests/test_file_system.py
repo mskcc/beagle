@@ -47,19 +47,20 @@ class FileTest(APITestCase):
         file = File(
             path=path, file_name=os.path.basename(path), file_type=file_type_obj, file_group=group_id_obj, size=1234
         )
-        file.save()
+        file.request_id = request_id
+        file.samples = [sample_id]
         file_metadata = {settings.REQUEST_ID_METADATA_KEY: request_id, settings.SAMPLE_ID_METADATA_KEY: sample_id}
         if sample_name:
             file_metadata[settings.SAMPLE_NAME_METADATA_KEY] = sample_name
         if cmo_sample_name:
             file_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = cmo_sample_name
         if patient_id:
+            file.patient_id = patient_id
             file_metadata[settings.PATIENT_ID_METADATA_KEY] = patient_id
         if cmo_sample_class:
             file_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = cmo_sample_class
-
-        file_metadata = FileMetadata(file=file, metadata=file_metadata)
-        file_metadata.save()
+        file.save()
+        FileMetadata.objects.create_or_update(file=file, metadata=file_metadata)
         return file
 
     def _create_files(self, file_type, amount):
@@ -817,6 +818,7 @@ class FileTest(APITestCase):
         self.assertEqual(response.json().get("igo_qc_notes"), "QC Failed")
 
     def test_sample_create(self):
+        # TODO: Fix this
         # sample = Sample.objects.create(sample_id="08944_B")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.post("/v0/fs/sample/", {"sample_id": "TEST_001", "redact": False}, format="json")

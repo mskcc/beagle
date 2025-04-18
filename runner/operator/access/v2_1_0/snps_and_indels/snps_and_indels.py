@@ -21,6 +21,7 @@ from runner.models import RunStatus, Port, Run
 import json
 from file_system.models import File, FileGroup, FileType
 from jinja2 import Template
+from runner.operator.access import get_request_id_runs
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -579,30 +580,6 @@ class AccessV2LegacySNV(Operator):
 
         return sample_info
 
-    def get_request_id_runs(self, app):
-        """
-        Get the latest completed bam-generation runs for the given request ID
-
-        :param request_id: str - IGO request ID
-        :return: List[str] - List of most recent runs from given request ID
-        """
-        most_recent_runs_for_request = (
-            Run.objects.filter(
-                tags__igoRequestId=self.request_id,
-                app__name__in=app,
-                status=RunStatus.COMPLETED,
-                operator_run__status=RunStatus.COMPLETED,
-            )
-            .order_by("-created_date")
-            .first()
-            .operator_run.runs.all()
-            .filter(status=RunStatus.COMPLETED)
-        )
-        if not len(most_recent_runs_for_request):
-            raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
-
-        return most_recent_runs_for_request
-
     def construct_sample_inputs(self, sample_info):
         """
         Use sample metadata and json template to create inputs for the CWL run
@@ -689,12 +666,9 @@ class AccessV2LegacySNV(Operator):
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         # If no request_id, get request id from run information
         # else request_id given directly
-        if not self.request_id:
-            runs = Run.objects.filter(pk__in=self.run_ids)
-            self.request_id = RunStatus[0].tags["igoRequestId"]
-        else:
-            runs = self.get_request_id_runs(["access v2 nucleo", "access nucleo"])
-
+        runs, self.request_id = get_request_id_runs(
+            ["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id
+        )
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
         for run in runs:
