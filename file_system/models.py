@@ -451,8 +451,12 @@ class PooledNormal(BaseModel):
     bait_set = LowercaseCharField(max_length=32, null=False, blank=False)
     gene_panel = models.CharField(max_length=32, null=False, blank=False)
     preservation_type = models.CharField(max_length=32, null=False, blank=False)
-    run_date = models.CharField(max_length=32, null=False, blank=False)
+    run_date = models.DateTimeField()
     pooled_normals_paths = ArrayField(models.CharField(max_length=255), blank=True, default=list)
+
+    @property
+    def formatted_run_date(self):
+        return self.run_date.strftime("%m-%d-%Y")
 
     class Meta:
         constraints = [
