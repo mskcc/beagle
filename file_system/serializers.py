@@ -267,16 +267,11 @@ class CreateFileSerializer(serializers.ModelSerializer):
         validated_data["file_name"] = os.path.basename(validated_data.get("path"))
         validated_data["file_type"] = validated_data["file_type"]
         metadata = validated_data.pop("metadata")
+        validated_data["request_id"] = metadata.get(settings.REQUEST_ID_METADATA_KEY)
+        validated_data["samples"] = [metadata.get(settings.SAMPLE_ID_METADATA_KEY)]
+        validated_data["patient_id"] = metadata.get(settings.PATIENT_ID_METADATA_KEY)
         file = File.objects.create(**validated_data)
-        metadata = FileMetadata(file=file, metadata=metadata, user=user)
-        metadata.save()
-        job = Job.objects.create(
-            run=TYPES["CALCULATE_CHECKSUM"],
-            args={"file_id": str(file.id), "path": validated_data.get("path")},
-            status=JobStatus.CREATED,
-            max_retry=3,
-            children=[],
-        )
+        FileMetadata.objects.create_or_update(file=file, metadata=metadata, user=user)
         return file
 
     class Meta:
@@ -341,23 +336,15 @@ class UpdateFileSerializer(serializers.Serializer):
         instance.size = validated_data.get("size", instance.size)
         instance.file_group_id = validated_data.get("file_group_id", instance.file_group_id)
         instance.file_type = validated_data.get("file_type", instance.file_type)
-
-        if self.partial:
-            old_metadata = instance.filemetadata_set.order_by("-version").first().metadata
-            old_metadata.update(validated_data.get("metadata"))
-            metadata = FileMetadata(file=instance, metadata=old_metadata, user=user)
-            metadata.save()
-        else:
-            ddiff = DeepDiff(
-                validated_data.get("metadata"),
-                instance.filemetadata_set.order_by("-created_date").first().metadata,
-                ignore_order=True,
-            )
-            self._validate_which_metadata_fields_changed(ddiff, user)
-            if ddiff:
-                metadata = FileMetadata(file=instance, metadata=validated_data.get("metadata"), user=user)
-                metadata.save()
-        instance.save()
+        ddiff = DeepDiff(
+            instance.filemetadata_set.order_by("-created_date").first().metadata,
+            validated_data.get("metadata"),
+            ignore_order=True,
+        )
+        self._validate_which_metadata_fields_changed(ddiff, user)
+        FileMetadata.objects.create_or_update(
+            file=instance.id, metadata=validated_data.get("metadata"), user=user, from_file=True
+        )
         return instance
 
 
@@ -378,12 +365,18 @@ class SampleSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        validated_data.pop("update_files")
-        instance = Sample.objects.create(**validated_data)
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Sample.objects.create_or_update_instance(
+            validated_data.pop("sample_id"), **validated_data, user=user
+        )
         return instance
 
-    def save(self):
-        super().save(update_files=True)
+    def update(self, instance, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Sample.objects.create_or_update_instance(sample_id=instance.sample_id, **validated_data, user=user)
+        return instance
 
 
 class RequestSerializer(serializers.ModelSerializer):
@@ -392,12 +385,20 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = ("id", "request_id", "lab_head_name", "investigator_email", "investigator_name", "delivery_date")
 
     def create(self, validated_data):
-        validated_data.pop("update_files")
-        instance = Sample.objects.create(**validated_data)
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Request.objects.create_or_update_instance(
+            validated_data.pop("request_id"), **validated_data, user=user
+        )
         return instance
 
-    def save(self):
-        super().save(update_files=True)
+    def update(self, instance, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Request.objects.create_or_update_instance(
+            request_id=instance.request_id, **validated_data, user=user
+        )
+        return instance
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -406,12 +407,16 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = ("id", "patient_id", "sex")
 
     def create(self, validated_data):
-        validated_data.pop("update_files")
-        instance = Sample.objects.create(**validated_data)
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Patient.objects.create_or_update_instance(validated_data["patient_id"], **validated_data, user=user)
         return instance
 
-    def save(self):
-        super().save(update_files=True)
+    def update(self, instance, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        instance = Patient.objects.create_or_update_instance(instance.patient_id, **validated_data, user=user)
+        return instance
 
 
 class SampleQuerySerializer(serializers.Serializer):

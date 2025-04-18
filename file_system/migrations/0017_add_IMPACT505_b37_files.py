@@ -29,8 +29,8 @@ def create_IMPACT505_b37_reference_files(apps, schema_editor):
             file_type=txt,
             size=0,
         )
-        file_metadata_1 = FileMetadata.objects.create(
-            file=file1, version=0, metadata={"assay": "IMPACT505_b37", "data_type": "FP_genotypes"}
+        FileMetadata.objects.create_or_update(
+            file=file1, metadata={"assay": "IMPACT505_b37", "data_type": "FP_genotypes"}
         )
         print("File created")
     except Exception as e:
@@ -59,8 +59,8 @@ def create_IMPACT505_b37_reference_files(apps, schema_editor):
             file_type=ilist,
             size=0,
         )
-        file_metadata_3 = FileMetadata.objects.create(
-            file=file3, version=0, metadata={"assay": "IMPACT505_b37", "data_type": "baits_list"}
+        FileMetadata.objects.create_or_update(
+            file=file3, metadata={"assay": "IMPACT505_b37", "data_type": "baits_list"}
         )
         print("File created")
     except Exception as e:
@@ -74,8 +74,8 @@ def create_IMPACT505_b37_reference_files(apps, schema_editor):
             file_type=interval_list,
             size=0,
         )
-        file_metadata_4 = FileMetadata.objects.create(
-            file=file4, version=0, metadata={"assay": "IMPACT505_b37", "data_type": "FP_intervals"}
+        FileMetadata.objects.create_or_update(
+            file=file4, metadata={"assay": "IMPACT505_b37", "data_type": "FP_intervals"}
         )
         print("File created")
     except Exception as e:
