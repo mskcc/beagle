@@ -11,6 +11,7 @@ from file_system.models import FileGroup, PooledNormal
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Q
 from django.conf import settings
+from datetime import datetime
 from .make_sample import build_sample, remove_with_caveats, format_sample_name
 from runner.operator.helper import get_r_orientation, spoof_barcode, init_metadata
 
@@ -67,9 +68,11 @@ def get_samples_from_patient_id(patient_id):
 
 def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
     """
-    Need descriptor to match pooled normal "genePanel", which might need to be re-labeled as bait_set
+    Need descriptor to match pooled normal bait_set (legacy)
 
-    Adding correction for IMPACT505 pooled normals
+    OR
+
+    Retrieve a static pooled normal from file_system_poolednormal table (novaseq X change)
     """
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
     sample_name = None
@@ -96,21 +99,20 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if "ffpe" in preservations_lower_case:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
     else:
-        machine = get_sequencer_type(run_ids)
+        machine = get_pooled_normal_machine(run_ids)
         preservations_lower_case = set([x.lower() for x in preservation_types])
         preservation = "frozen"
+        baits = bait_set.lower()
         if "ffpe" in preservations_lower_case:
             preservation = "ffpe"
-        pooled_normal_objs = PooledNormal.objects.filter(machine=machine,preservation_type=preservation,bait_set=bait_set)
+        # This will retrieve one entry in the file_system_poolednormal table
+        pooled_normal_objs = PooledNormal.objects.filter(machine=machine,preservation_type=preservation,bait_set=baits)
         pooled_normals = list()
         all_files = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
         for obj in pooled_normal_objs:
             for pn in obj.pooled_normals_paths:
                 pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
                 pooled_normals.append(pn_file)
-        
-        #TODO: rename to BAITSET_PRESERVATION_MACHINE_POOLEDNORMAL
-        #TODO: Add runDate tiebreaker
         sample_name = "_".join([bait_set,preservation,machine,"POOLEDNORMAL"])
         sample_name = sample_name.upper()
 
@@ -123,6 +125,23 @@ def get_sequencer_type(run_ids_list):
     for machine in machine_modes:
         if find_substr(machine.machine_name, run_ids_lower):
             return machine.machine_class
+
+def get_pooled_normal_machine(run_ids_list):
+    run_ids_lower = [i.lower() for i in run_ids_list if i]
+    pooled_normals = PooledNormal.objects.all()
+    earliest_pooled_normal = None
+    for pooled_normal in pooled_normals:
+        if find_substr(pooled_normal.machine, run_ids_lower):
+            if not earliest_pooled_normal:
+                earliest_pooled_normal = pooled_normal
+            else:
+                # tiebreaker - if there's more than one set of pooled normals fetched, return earliest one
+                old_date = datetime.strptime(earliest_pooled_normal.run_date, "%m-%d-%Y")
+                curr_date = datetime.strptime(pooled_normal.run_date, "%m-%d-%Y")
+                if curr_date < old_date:
+                    earliest_pooled_normal = pooled_normal
+    machine = earliest_pooled_normal.machine
+    return machine
 
 
 def find_substr(s, l):
