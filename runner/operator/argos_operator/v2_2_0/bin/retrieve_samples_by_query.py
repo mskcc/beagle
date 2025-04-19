@@ -6,7 +6,7 @@ For example, get all samples by a patient ID or pooled normals based on the bait
 and preservation type
 """
 import logging
-from file_system.models import MachineRunMode,File
+from file_system.models import MachineRunMode, File
 from file_system.models import FileGroup, PooledNormal
 from file_system.repository.file_repository import FileRepository
 from django.db.models import Q
@@ -85,7 +85,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
     # From returned pooled normals, we found the bait set/genePanel we're looking for
     # This is for legacy pooled normals (i.e., IMPACT341, IMPACT410, IMPACT468)
-    if descriptor: 
+    if descriptor:
         pooled_normals = FileRepository.filter(
             queryset=pooled_normals, metadata={settings.RECIPE_METADATA_KEY: descriptor}
         )
@@ -106,14 +106,16 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if "ffpe" in preservations_lower_case:
             preservation = "ffpe"
         # This will retrieve one entry in the file_system_poolednormal table
-        pooled_normal_objs = PooledNormal.objects.filter(machine=machine,preservation_type=preservation,bait_set=baits)
+        pooled_normal_objs = PooledNormal.objects.filter(
+            machine=machine, preservation_type=preservation, bait_set=baits
+        )
         pooled_normals = list()
         all_files = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
         for obj in pooled_normal_objs:
             for pn in obj.pooled_normals_paths:
                 pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
                 pooled_normals.append(pn_file)
-        sample_name = "_".join([bait_set,preservation,machine,"POOLEDNORMAL"])
+        sample_name = "_".join([bait_set, preservation, machine, "POOLEDNORMAL"])
         sample_name = sample_name.upper()
 
     return pooled_normals, descriptor, sample_name
@@ -125,6 +127,7 @@ def get_sequencer_type(run_ids_list):
     for machine in machine_modes:
         if find_substr(machine.machine_name, run_ids_lower):
             return machine.machine_class
+
 
 def get_pooled_normal_machine(run_ids_list):
     run_ids_lower = [i.lower() for i in run_ids_list if i]

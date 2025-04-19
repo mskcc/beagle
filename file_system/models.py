@@ -561,7 +561,7 @@ class PooledNormal(BaseModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['machine', 'bait_set', 'preservation_type'], name='unique_three_fields')
+            models.UniqueConstraint(fields=["machine", "bait_set", "preservation_type"], name="unique_three_fields")
         ]
 
     def __repr__(self):

@@ -106,18 +106,27 @@ class PooledNormalsAdminForm(forms.ModelForm):
 class PooledNormalsAdmin(admin.ModelAdmin):
     form = PooledNormalsAdminForm
     formfield_overrides = {
-        ArrayField: {'widget': Textarea(attrs={'rows': 3, 'cols': 40})},
+        ArrayField: {"widget": Textarea(attrs={"rows": 3, "cols": 40})},
     }
-    list_display = ("machine", "gene_panel", "bait_set", "preservation_type", "formatted_run_date", "formatted_pooled_normals_paths")
+    list_display = (
+        "machine",
+        "gene_panel",
+        "bait_set",
+        "preservation_type",
+        "formatted_run_date",
+        "formatted_pooled_normals_paths",
+    )
+
     def formatted_run_date(self, obj):
         return obj.run_date.strftime("%m-%d-%Y")
+
     formatted_run_date.short_description = "Run Date"
 
     def formatted_pooled_normals_paths(self, obj):
         if obj.pooled_normals_paths:
-            return mark_safe('<br>'.join(obj.pooled_normals_paths))
-    formatted_pooled_normals_paths.short_description = "Pooled Normals Paths"
+            return mark_safe("<br>".join(obj.pooled_normals_paths))
 
+    formatted_pooled_normals_paths.short_description = "Pooled Normals Paths"
 
 
 admin.site.register(File, FileAdmin)
