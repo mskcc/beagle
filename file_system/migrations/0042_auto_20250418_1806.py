@@ -9,26 +9,33 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0041_file_available'),
+        ("file_system", "0041_file_available"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PooledNormal',
+            name="PooledNormal",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified_date', models.DateTimeField(auto_now=True)),
-                ('machine', file_system.models.LowercaseCharField(max_length=32)),
-                ('bait_set', file_system.models.LowercaseCharField(max_length=32)),
-                ('gene_panel', models.CharField(max_length=32)),
-                ('preservation_type', models.CharField(max_length=32)),
-                ('run_date', models.DateTimeField()),
-                ('pooled_normals_paths', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), blank=True, default=list, size=None)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified_date", models.DateTimeField(auto_now=True)),
+                ("machine", file_system.models.LowercaseCharField(max_length=32)),
+                ("bait_set", file_system.models.LowercaseCharField(max_length=32)),
+                ("gene_panel", models.CharField(max_length=32)),
+                ("preservation_type", models.CharField(max_length=32)),
+                ("run_date", models.DateTimeField()),
+                (
+                    "pooled_normals_paths",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=255), blank=True, default=list, size=None
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='poolednormal',
-            constraint=models.UniqueConstraint(fields=('machine', 'bait_set', 'preservation_type'), name='unique_three_fields'),
+            model_name="poolednormal",
+            constraint=models.UniqueConstraint(
+                fields=("machine", "bait_set", "preservation_type"), name="unique_three_fields"
+            ),
         ),
     ]
