@@ -115,8 +115,9 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
             for pn in obj.pooled_normals_paths:
                 pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
                 pooled_normals.append(pn_file)
-        sample_name = "_".join([bait_set, preservation, machine, "POOLEDNORMAL"])
-        sample_name = sample_name.upper()
+        if machine:
+            sample_name = "_".join([bait_set, preservation, machine, "POOLEDNORMAL"])
+            sample_name = sample_name.upper()
 
     return pooled_normals, descriptor, sample_name
 
@@ -143,8 +144,10 @@ def get_pooled_normal_machine(run_ids_list):
                 curr_date = pooled_normal.run_date
                 if curr_date < old_date:
                     earliest_pooled_normal = pooled_normal
-    machine = earliest_pooled_normal.machine
-    return machine
+    if earliest_pooled_normal:
+        machine = earliest_pooled_normal.machine
+        return machine
+    return None
 
 
 def find_substr(s, l):
@@ -196,13 +199,14 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
         )
         sample_files.append(sample_file)
     pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
-
+    if not sample_files:
+        return None
     return pooled_normal
 
 
 def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
-    pooled_normals = FileRepository.all()
+    pooled_normals = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
 
     query = Q(file__file_group=settings.POOLED_NORMAL_FILE_GROUP)
     run_id_query = build_run_id_query(run_ids)
