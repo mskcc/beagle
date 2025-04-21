@@ -89,7 +89,9 @@ def check_and_return_single_values(data):
         library_id.sort()
         data["LB"] = "_and_".join(library_id)
     else:
-        data["LB"] = data["SM"] + "_1"
+        data["LB"] = ""
+        if data["SM"]:
+            data["LB"] = data["SM"] + "_1"
 
     # run_ids need to be one list
     run_ids = data["run_id"]
