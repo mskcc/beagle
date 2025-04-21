@@ -20,7 +20,7 @@ class TestRetrieveSamplesByQuery(TestCase):
 
     def setUp(self):
         super().setUp()
-    
+
         try:
             call_command("loaddata", "file_system.filegroup.json")
             settings.POOLED_NORMAL_FILE_GROUP = str(FileGroup.objects.get(name="Pooled Normal").id)
@@ -158,10 +158,14 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         pooled_normals = FileMetadata.objects.all()
 
-        pooled_normals, descriptor, sample_name = get_descriptor(bait_set="IMPACT468_BAITS", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals)
+        pooled_normals, descriptor, sample_name = get_descriptor(
+            bait_set="IMPACT468_BAITS", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals
+        )
         self.assertEqual(descriptor, "IMPACT468")
 
-        pooeld_normals, descriptor, sample_name = get_descriptor(bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals)
+        pooeld_normals, descriptor, sample_name = get_descriptor(
+            bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals
+        )
         self.assertEqual(descriptor, "IMPACT468")
 
     def test_get_descriptor2(self):
@@ -197,16 +201,24 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         all_pooled_normals = FileMetadata.objects.all()
 
-        pooled_normals, descriptor, sample_name = get_descriptor(bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""],  pooled_normals=all_pooled_normals)
+        pooled_normals, descriptor, sample_name = get_descriptor(
+            bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+        )
         self.assertEqual(descriptor, None)
 
-        pooled_normals, descriptor, sample_name = get_descriptor(bait_set="IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals)
+        pooled_normals, descriptor, sample_name = get_descriptor(
+            bait_set="IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+        )
         self.assertEqual(descriptor, None)
 
-        pooled_normals, descriptor, sample_name = get_descriptor(bait_set="foo_IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals)
+        pooled_normals, descriptor, sample_name = get_descriptor(
+            bait_set="foo_IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+        )
         self.assertEqual(descriptor, None)
 
-        pooled_normals, descriptor, sample_name = get_descriptor(bait_set="foo_IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""],  pooled_normals=all_pooled_normals)
+        pooled_normals, descriptor, sample_name = get_descriptor(
+            bait_set="foo_IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+        )
         self.assertEqual(descriptor, "foo_IMPACT468_bar")
 
     def test_get_pooled_normals1(self):
@@ -291,7 +303,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "pi_email": "",
             "run_id": ["PITT_0439"],
             "preservation_type": [["Frozen"]],
-            "run_mode": ""
+            "run_mode": "",
         }
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
