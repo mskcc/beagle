@@ -1,6 +1,7 @@
 import os
 from uuid import UUID
 import json
+from datetime import datetime
 from django.test import TestCase, override_settings
 from django.db.models import Prefetch, Q
 from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import build_dmp_query
@@ -11,7 +12,7 @@ from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import 
 from runner.tests.operator.argos_operator.v2_2_0.test_pair_request import UUIDEncoder
 from django.conf import settings
 from django.core.management import call_command
-from file_system.models import File, FileMetadata, FileGroup, FileType
+from file_system.models import File, FileMetadata, FileGroup, FileType, PooledNormal
 
 
 class TestRetrieveSamplesByQuery(TestCase):
@@ -19,6 +20,7 @@ class TestRetrieveSamplesByQuery(TestCase):
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
 
     def setUp(self):
+        # Override POOLED_NORMAL_FILE_GROUP setting
         super().setUp()
 
         try:
@@ -224,6 +226,9 @@ class TestRetrieveSamplesByQuery(TestCase):
     def test_get_pooled_normals1(self):
         """
         Test that Pooled Normals can be retrieved correctly
+
+        This is the legacy pooled normal test - i.e., pulls from Pooled Normal FileGroup
+        metadata instead of from the PooledNormal model (introduced when NovaSeq X was added)
         """
         # test that an empty database and irrelevant args returns None
         pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
@@ -308,13 +313,23 @@ class TestRetrieveSamplesByQuery(TestCase):
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
 
-    def test_get_pooled_normals_impact_heme(self):
+    def test_get_pooled_normals_novaseq_x(self):
         """
-        Test that IMPACT-Heme_v2 Pooled Normals can be retrieved correctly
+        Test that NovaSeq X FAUCI2 Pooled Normals can be retrieved correctly
         """
         # test that an empty database and irrelevant args returns None
         pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
         self.assertEqual(pooled_normals, None)
+
+        # Add pooled normals from the PooledNormal table
+        PooledNormal.objects.update_or_create(
+            machine="fauci2",
+            bait_set="impact505_baits",
+            gene_panel="hc_impact",
+            preservation_type="frozen",
+            run_date=datetime.strptime("01-01-2021", "%d-%m-%Y"),
+            pooled_normals_paths=["/FROZENPOOLEDNORMAL.R1.fastq", "/FROZENPOOLEDNORMAL.R2.fastq"],
+        )
 
         # start adding Pooled Normals to the database
         poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
@@ -329,12 +344,6 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
-                "runId": "DIANA_0568",
-                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v2",
-                "sequencingCenter": "MSKCC",
-                "platform": "Illumina",
-                "baitSet": "IMPACT-Heme_v2",
-                "preservation": "Frozen",
             },
         )
         poolednormal_R2_file_instance = File.objects.create(
@@ -346,17 +355,11 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
-                "runId": "DIANA_0568",
-                settings.RECIPE_METADATA_KEY: "IMPACT-Heme_v2",
-                "sequencingCenter": "MSKCC",
-                "platform": "Illumina",
-                "baitSet": "IMPACT-Heme_v2",
-                "preservation": "Frozen",
             },
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["DIANA_0568"], preservation_types=["Frozen"], bait_set="IMPACT-Heme_v2"
+            run_ids=["FAUCI2_0049"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS"
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -367,14 +370,14 @@ class TestRetrieveSamplesByQuery(TestCase):
             "CN": "MSKCC",
             "PL": "Illumina",
             "PU": ["PN_FCID_FROZENPOOLEDNORMAL"],
-            "LB": "FROZENPOOLEDNORMAL_DIANA_0568_1",
+            "LB": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL_1",
             "tumor_type": "Normal",
-            "ID": ["FROZENPOOLEDNORMAL_DIANA_0568_PN_FCID_FROZENPOOLEDNORMAL"],
-            "SM": "FROZENPOOLEDNORMAL_DIANA_0568",
+            "ID": ["IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL_PN_FCID_FROZENPOOLEDNORMAL"],
+            "SM": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
             "species": "",
             "patient_id": "PN_PATIENT_ID",
-            "bait_set": "IMPACT-Heme_v2",
-            "sample_id": "FROZENPOOLEDNORMAL_DIANA_0568",
+            "bait_set": "impact505_baits",
+            "sample_id": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
             "run_date": [""],
             "specimen_type": "Pooled Normal",
             "R1": ["/FROZENPOOLEDNORMAL.R1.fastq"],
@@ -383,10 +386,10 @@ class TestRetrieveSamplesByQuery(TestCase):
             "R2_bid": [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
             "bam": [],
             "bam_bid": [],
-            "request_id": "FROZENPOOLEDNORMAL_DIANA_0568",
+            "request_id": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
             "pi": "",
             "pi_email": "",
-            "run_id": ["DIANA_0568"],
+            "run_id": ["FAUCI2_0049"],
             "preservation_type": [["Frozen"]],
             "run_mode": "",
         }

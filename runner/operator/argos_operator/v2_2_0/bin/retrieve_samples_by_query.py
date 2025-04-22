@@ -118,6 +118,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if machine:
             sample_name = "_".join([bait_set, preservation, machine, "POOLEDNORMAL"])
             sample_name = sample_name.upper()
+            descriptor = baits
 
     return pooled_normals, descriptor, sample_name
 
