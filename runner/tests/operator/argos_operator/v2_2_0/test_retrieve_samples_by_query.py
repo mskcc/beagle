@@ -343,8 +343,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
-            metadata={
-            },
+            metadata={},
         )
         poolednormal_R2_file_instance = File.objects.create(
             file_type=fastq_filetype_instance,
@@ -354,8 +353,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
-            metadata={
-            },
+            metadata={},
         )
 
         pooled_normals = get_pooled_normals(
