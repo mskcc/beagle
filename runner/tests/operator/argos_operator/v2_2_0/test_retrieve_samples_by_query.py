@@ -343,8 +343,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
-            metadata={
-            },
+            metadata={},
         )
         poolednormal_R2_file_instance = File.objects.create(
             file_type=fastq_filetype_instance,
@@ -395,7 +394,6 @@ class TestRetrieveSamplesByQuery(TestCase):
 
         self.assertEqual(pooled_normals, expected_pooled_normals)
 
-            
     def test_get_pooled_normals_novaseq_x_multiple_records(self):
         """
         Test that NovaSeq X FAUCI2 Pooled Normals can be retrieved correctly
@@ -506,7 +504,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "run_mode": "",
         }
 
-        pooled_normals_sorted = {k: sorted(v) for k,v in pooled_normals.items()}
-        expected_pooled_normals_sorted = {k: sorted(v) for k,v in expected_pooled_normals.items()}
+        pooled_normals_sorted = {k: sorted(v) for k, v in pooled_normals.items()}
+        expected_pooled_normals_sorted = {k: sorted(v) for k, v in expected_pooled_normals.items()}
 
         self.assertEqual(pooled_normals_sorted, expected_pooled_normals_sorted)
