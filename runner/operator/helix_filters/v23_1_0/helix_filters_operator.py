@@ -94,15 +94,15 @@ class HelixFiltersOperator(Operator):
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        output_directory_prefix = get_project_prefix(self.run_ids)
-        output_directory = os.path.join(
+        log_directory_prefix = get_project_prefix(self.run_ids)
+        log_directory = os.path.join(
             pipeline.log_directory,
             self.ARGOS_NAME,
-            output_directory_prefix,
+            log_directory_prefix,
             self.ARGOS_VERSION,
             jg_created_date,
             "json",
             pipeline.name,
             pipeline.version,
         )
-        return output_directory
+        return log_directory
