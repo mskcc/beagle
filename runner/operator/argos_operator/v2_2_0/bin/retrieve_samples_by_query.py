@@ -99,26 +99,49 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if "ffpe" in preservations_lower_case:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
     else:
-        machine = get_pooled_normal_machine(run_ids)
         preservations_lower_case = set([x.lower() for x in preservation_types])
         preservation = "frozen"
         baits = bait_set.lower()
         if "ffpe" in preservations_lower_case:
             preservation = "ffpe"
-        # This will retrieve one entry in the file_system_poolednormal table
-        pooled_normal_objs = PooledNormal.objects.filter(
-            machine=machine, preservation_type=preservation, bait_set=baits
-        )
-        pooled_normals = list()
-        all_files = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
-        for obj in pooled_normal_objs:
-            for pn in obj.pooled_normals_paths:
-                pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
-                pooled_normals.append(pn_file)
-        if machine:
-            sample_name = "_".join([bait_set, preservation, machine, "POOLEDNORMAL"])
+        machines = get_machines_by_substr(run_ids)
+        earliest_pooled_normal = None
+
+        for machine in machines:
+            pooled_normal_objs = PooledNormal.objects.filter(
+                machine=machine, preservation_type=preservation, bait_set=baits
+            )
+            if not pooled_normal_objs:
+                continue
+            if not earliest_pooled_normal:
+                earliest_pooled_normal = pooled_normal_objs.first()
+            else:
+                pooled_normal = pooled_normal_objs.first()
+                if not earliest_pooled_normal:
+                    earliest_pooled_normal = pooled_normal
+                else:
+                    # tiebreaker - if there's more than one set of pooled normals fetched, return earliest one
+                    old_date = earliest_pooled_normal.run_date
+                    curr_date = pooled_normal.run_date
+                    if curr_date < old_date:
+                        earliest_pooled_normal = pooled_normal
+
+        if earliest_pooled_normal:
+            sample_name = "_".join(
+                [
+                    earliest_pooled_normal.bait_set,
+                    earliest_pooled_normal.preservation_type,
+                    earliest_pooled_normal.machine,
+                    "POOLEDNORMAL",
+                ]
+            )
             sample_name = sample_name.upper()
             descriptor = baits
+            all_files = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
+            pooled_normals = list()
+            for pn in earliest_pooled_normal.pooled_normals_paths:
+                pn_file = FileRepository.filter(queryset=all_files, path=pn).first()
+                pooled_normals.append(pn_file)
 
     return pooled_normals, descriptor, sample_name
 
@@ -131,24 +154,11 @@ def get_sequencer_type(run_ids_list):
             return machine.machine_class
 
 
-def get_pooled_normal_machine(run_ids_list):
-    run_ids_lower = [i.lower() for i in run_ids_list if i]
-    pooled_normals = PooledNormal.objects.all()
-    earliest_pooled_normal = None
-    for pooled_normal in pooled_normals:
-        if find_substr(pooled_normal.machine, run_ids_lower):
-            if not earliest_pooled_normal:
-                earliest_pooled_normal = pooled_normal
-            else:
-                # tiebreaker - if there's more than one set of pooled normals fetched, return earliest one
-                old_date = earliest_pooled_normal.run_date
-                curr_date = pooled_normal.run_date
-                if curr_date < old_date:
-                    earliest_pooled_normal = pooled_normal
-    if earliest_pooled_normal:
-        machine = earliest_pooled_normal.machine
-        return machine
-    return None
+# Unfortunately, we need to get machine name from runId
+# runIds are expected to be delimited by "_"; machine is the 0th element on split
+def get_machines_by_substr(run_ids):
+    machines = [i.split("_")[0].lower() for i in run_ids]
+    return machines
 
 
 def find_substr(s, l):
