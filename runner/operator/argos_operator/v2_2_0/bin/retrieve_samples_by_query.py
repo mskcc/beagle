@@ -99,13 +99,13 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         if "ffpe" in preservations_lower_case:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
     else:
+        earliest_pooled_normal = None
+        machines = get_machines_by_substr(run_ids)
+        baits = bait_set.lower()
         preservations_lower_case = set([x.lower() for x in preservation_types])
         preservation = "frozen"
-        baits = bait_set.lower()
         if "ffpe" in preservations_lower_case:
             preservation = "ffpe"
-        machines = get_machines_by_substr(run_ids)
-        earliest_pooled_normal = None
 
         for machine in machines:
             pooled_normal_objs = PooledNormal.objects.filter(
