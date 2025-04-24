@@ -1,3 +1,4 @@
+import os
 from django import forms
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
@@ -101,6 +102,13 @@ class PooledNormalsAdminForm(forms.ModelForm):
         if not self.cleaned_data["bait_set"].islower():
             raise ValidationError("BaitSet needs to be lowercase")
         return self.cleaned_data["bait_set"]
+
+    def clean_pooled_normals_paths(self):
+        pooled_normals_paths = self.cleaned_data["pooled_normals_paths"]
+        for pooled_normal_path in pooled_normals_paths:
+            if not os.path.exists(pooled_normal_path):
+                raise ValidationError(f"File {pooled_normal_path} does not exist; will not add.")
+        return self.cleaned_data["pooled_normals_paths"]
 
 
 class PooledNormalsAdmin(admin.ModelAdmin):
