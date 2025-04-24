@@ -2,6 +2,7 @@ import os
 import uuid
 import copy
 import logging
+from datetime import datetime
 from enum import IntEnum
 from deepdiff import DeepDiff
 from django.db import models
@@ -578,13 +579,21 @@ class PooledNormal(BaseModel):
             if File.objects.filter(path=pooled_normal_path).exists():
                 continue
             else:
+                metadata = {
+                    "machine": self.machine,
+                    "genePanel": self.gene_panel,
+                    "baitSet": self.bait_set,
+                    "preservation": self.preservation_type,
+                    "runDate": datetime.strftime(self.run_date, "%m-%d-%Y"),
+                }
                 data = {
                     "path": pooled_normal_path,
-                    "metadata": dict(),
+                    "metadata": metadata,
                     "file_type": "fastq",
                     "file_group": settings.POOLED_NORMAL_FILE_GROUP,
                 }
                 serializer = CreateFileSerializer(data=data)
+
                 if not serializer.is_valid():
                     error_details = "; ".join([f"{field}: {error}" for field, error in serializer.errors.items()])
                     raise ValidationError(f"File creation failed with the following errors: {error_details}")
