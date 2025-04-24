@@ -11,6 +11,7 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
+from django.core.exceptions import ValidationError
 from file_system.tasks import populate_job_group_notifier_metadata
 
 
@@ -569,3 +570,23 @@ class PooledNormal(BaseModel):
 
     def __str__(self):
         return "{}".format(self.machine)
+
+    def save(self, *args, **kwargs):
+        from .serializers import CreateFileSerializer
+
+        for pooled_normal_path in self.pooled_normals_paths:
+            if File.objects.filter(path=pooled_normal_path).exists():
+                continue
+            else:
+                data = {
+                    "path": pooled_normal_path,
+                    "metadata": dict(),
+                    "file_type": "fastq",
+                    "file_group": settings.POOLED_NORMAL_FILE_GROUP,
+                }
+                serializer = CreateFileSerializer(data=data)
+                if not serializer.is_valid():
+                    raise ValidationError(serializer.errors["pooled_normal_paths"])
+                else:
+                    serializer.save()
+        super().save(*args, **kwargs)
