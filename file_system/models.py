@@ -586,7 +586,8 @@ class PooledNormal(BaseModel):
                 }
                 serializer = CreateFileSerializer(data=data)
                 if not serializer.is_valid():
-                    raise ValidationError(serializer.errors["pooled_normal_paths"])
+                    error_details = "; ".join([f"{field}: {error}" for field, error in serializer.errors.items()])
+                    raise ValidationError(f"File creation failed with the following errors: {error_details}")
                 else:
                     serializer.save()
         super().save(*args, **kwargs)
