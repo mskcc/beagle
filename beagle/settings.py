@@ -338,6 +338,12 @@ POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP", "b6
 
 DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP", "9ace63bf-ed55-461c-9ac0-1c5ee710d957")
 
+ACCESS_COLLAPSE_FILE_GROUP = os.environ.get("ACCESS_COLLAPSE_FILE_GROUP", "70b6484e-b45f-4007-b66e-2d47b3504111")
+
+DMP_MUTATIONS = os.environ.get("DMP_MUTATIONS", "/juno/work/access/production/resources/cbioportal/current/msk_solid_heme/data_mutations_extended.txt")
+
+LIMS_FILE_GROUP = os.environ.get("LIMS_FILE_GROUP", "b54d035d-f63c-4ea8-86fb-9dbc976bb7fe")
+
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
