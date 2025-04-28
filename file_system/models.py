@@ -2,6 +2,7 @@ import os
 import uuid
 import copy
 import logging
+from datetime import datetime
 from enum import IntEnum
 from deepdiff import DeepDiff
 from django.db import models
@@ -11,6 +12,7 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
+from django.core.exceptions import ValidationError
 from file_system.tasks import populate_job_group_notifier_metadata
 
 
@@ -545,3 +547,56 @@ class MachineRunMode(BaseModel):
 
     def __str__(self):
         return "{}".format(self.machine_name)
+
+
+class PooledNormal(BaseModel):
+    machine = LowercaseCharField(max_length=32, null=False, blank=False)
+    bait_set = LowercaseCharField(max_length=32, null=False, blank=False)
+    gene_panel = models.CharField(max_length=32, null=False, blank=False)
+    preservation_type = models.CharField(max_length=32, null=False, blank=False)
+    run_date = models.DateTimeField()
+    pooled_normals_paths = ArrayField(models.CharField(max_length=255), blank=True, default=list)
+
+    @property
+    def formatted_run_date(self):
+        return self.run_date.strftime("%m-%d-%Y")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["machine", "bait_set", "preservation_type"], name="unique_three_fields")
+        ]
+
+    def __repr__(self):
+        return "MACHINE: %s; GENE_PANEL: %s; BAIT_SET: %s" % (self.machine, self.gene_panel, self.bait_set)
+
+    def __str__(self):
+        return "{}".format(self.machine)
+
+    def save(self, *args, **kwargs):
+        from .serializers import CreateFileSerializer
+
+        for pooled_normal_path in self.pooled_normals_paths:
+            if File.objects.filter(path=pooled_normal_path).exists():
+                continue
+            else:
+                metadata = {
+                    "machine": self.machine,
+                    "genePanel": self.gene_panel,
+                    "baitSet": self.bait_set,
+                    "preservation": self.preservation_type,
+                    "runDate": datetime.strftime(self.run_date, "%m-%d-%Y"),
+                }
+                data = {
+                    "path": pooled_normal_path,
+                    "metadata": metadata,
+                    "file_type": "fastq",
+                    "file_group": settings.POOLED_NORMAL_FILE_GROUP,
+                }
+                serializer = CreateFileSerializer(data=data)
+
+                if not serializer.is_valid():
+                    error_details = "; ".join([f"{field}: {error}" for field, error in serializer.errors.items()])
+                    raise ValidationError(f"File creation failed with the following errors: {error_details}")
+                else:
+                    serializer.save()
+        super().save(*args, **kwargs)
