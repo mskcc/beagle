@@ -104,7 +104,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
         baits = bait_set.lower()
         preservations_lower_case = set([x.lower() for x in preservation_types])
         preservation = "frozen"
-        if "ffpe" in preservations_lower_case:   # preservation_lower_case is a list
+        if "ffpe" in preservations_lower_case:  # preservation_lower_case is a list
             preservation = "ffpe"
 
         for machine in machines:
