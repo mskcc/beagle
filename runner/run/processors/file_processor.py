@@ -47,6 +47,8 @@ class FileProcessor(object):
             raise FileHelperException("Can't parse path from uri %s." % uri)
         elif uri.startswith("juno://"):
             return uri.replace("juno://", "")
+        elif uri.startswith("iris://"):
+            return uri.replace("iris://", "")
         elif uri.startswith("file://"):
             return uri.replace("file://", "")
         else:
