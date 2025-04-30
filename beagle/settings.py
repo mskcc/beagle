@@ -254,6 +254,7 @@ LOGOUT_URL = "/admin/logout/"
 SWAGGER_SETTINGS = {"VALIDATOR_URL": None}
 
 MEMCACHED_PORT = os.environ.get("BEAGLE_MEMCACHED_PORT", 11211)
+MEMCACHED_HOST = os.environ.get("BEAGLE_MEMCACHED_HOST", "127.0.0.1")
 
 if ENVIRONMENT == "dev":
     CACHES = {
@@ -266,7 +267,7 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "djpymemcache.backend.PyMemcacheCache",
-            "LOCATION": "127.0.0.1:%s" % MEMCACHED_PORT,
+            "LOCATION": "%s:%s" % (MEMCACHED_HOST,MEMCACHED_PORT),
             "OPTIONS": {  # see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
                 "default_noreply": False
             },
