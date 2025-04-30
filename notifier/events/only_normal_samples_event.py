@@ -19,4 +19,4 @@ class OnlyNormalSamplesEvent(Event):
         TEMPLATE = """
         {cc}. Request {request_id} contains only normal samples.
         """
-        return TEMPLATE.format(request_id=self.request_id, cc=settings.NOTIFIER_CC)
+        return TEMPLATE.format(request_id=self.request_id)
