@@ -17,6 +17,6 @@ class NotAllNormalsUsedEvent(Event):
 
     def __str__(self):
         TEMPLATE = """
-        Not all normals are used for request {request_id} {cc}.
+        Not all normals are used for request {request_id}.
         """
-        return TEMPLATE.format(request_id=self.request_id, cc=settings.NOTIFIER_CC)
+        return TEMPLATE.format(request_id=self.request_id)
