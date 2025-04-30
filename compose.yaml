@@ -23,10 +23,11 @@ x-beagle_celery:
     - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
     - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
+  group_add:
+    - ${DOCKER_GID}
+    - ${GID_FILE_1}
+    - ${GID_FILE_2}
   entrypoint: ["/bin/bash","-c"]
-  post_start:
-  - command: groupadd -f -g ${DOCKER_GID} beagle_user
-    user: root  
   healthcheck:
     test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status || exit 1"
     interval: 30s
