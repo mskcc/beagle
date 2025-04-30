@@ -21,6 +21,7 @@ x-beagle_celery:
     - ./logs/:/beagle/celery/logs/
     - ./celery/:/beagle/celery/
     - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
+    - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
   entrypoint: ["/bin/bash","-c"]
   post_start:
@@ -226,7 +227,8 @@ services:
       - BEAGLE_LOG_PATH=/beagle/server/django_server.log
     volumes:
       - ./logs/:/beagle/server/
-      - ./server/:/beagle_staticfiles/
+      - ./server:/usr/bin/beagle/static
+      - ./server:/staticfiles
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
     entrypoint: ["/bin/bash","-c"]
