@@ -73,6 +73,12 @@ class FileProcessor(object):
             if not file_obj:
                 raise FileHelperException("File with uri %s doesn't exist" % uri)
             return file_obj
+        elif uri.startswith("iris://"):
+            juno_path = uri.replace("iris://", "")
+            file_obj = File.objects.filter(path=juno_path).first()
+            if not file_obj:
+                raise FileHelperException("File with uri %s doesn't exist" % uri)
+            return file_obj
         elif uri.startswith("file://"):
             juno_path = uri.replace("file://", "")
             file_obj = File.objects.filter(path=juno_path).first()
