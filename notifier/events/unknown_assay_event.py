@@ -17,6 +17,6 @@ class UnknownAssayEvent(Event):
 
     def __str__(self):
         TEMPLATE = """
-        Unrecognized assay {assay}. {cc}
+        Unrecognized assay {assay}.
         """
-        return TEMPLATE.format(assay=self.assay, cc=settings.NOTIFIER_CC)
+        return TEMPLATE.format(assay=self.assay)

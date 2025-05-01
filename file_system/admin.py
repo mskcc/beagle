@@ -1,7 +1,11 @@
+import os
 from django import forms
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import ArrayField
+from django.utils.safestring import mark_safe
+from django.forms import Textarea
 from .models import (
     Storage,
     File,
@@ -16,6 +20,7 @@ from .models import (
     Request,
     FileExtension,
     MachineRunMode,
+    PooledNormal,
 )
 
 
@@ -82,6 +87,56 @@ class MachineRunModeAdmin(admin.ModelAdmin):
     list_display = ("machine_name", "machine_class", "machine_type")
 
 
+class PooledNormalsAdminForm(forms.ModelForm):
+    def clean_machine(self):
+        if not self.cleaned_data["machine"].islower():
+            raise ValidationError("Machine needs to be lowercase")
+        return self.cleaned_data["machine"]
+
+    def clean_gene_panel(self):
+        if not self.cleaned_data["gene_panel"].islower():
+            raise ValidationError("Gene Panel/Recipe needs to be lowercase")
+        return self.cleaned_data["gene_panel"]
+
+    def clean_bait_set(self):
+        if not self.cleaned_data["bait_set"].islower():
+            raise ValidationError("BaitSet needs to be lowercase")
+        return self.cleaned_data["bait_set"]
+
+    def clean_pooled_normals_paths(self):
+        pooled_normals_paths = self.cleaned_data["pooled_normals_paths"]
+        for pooled_normal_path in pooled_normals_paths:
+            if not os.path.exists(pooled_normal_path):
+                raise ValidationError(f"File {pooled_normal_path} does not exist; will not add.")
+        return self.cleaned_data["pooled_normals_paths"]
+
+
+class PooledNormalsAdmin(admin.ModelAdmin):
+    form = PooledNormalsAdminForm
+    formfield_overrides = {
+        ArrayField: {"widget": Textarea(attrs={"rows": 3, "cols": 40})},
+    }
+    list_display = (
+        "machine",
+        "gene_panel",
+        "bait_set",
+        "preservation_type",
+        "formatted_run_date",
+        "formatted_pooled_normals_paths",
+    )
+
+    def formatted_run_date(self, obj):
+        return obj.run_date.strftime("%m-%d-%Y")
+
+    formatted_run_date.short_description = "Run Date"
+
+    def formatted_pooled_normals_paths(self, obj):
+        if obj.pooled_normals_paths:
+            return mark_safe("<br>".join(obj.pooled_normals_paths))
+
+    formatted_pooled_normals_paths.short_description = "Pooled Normals Paths"
+
+
 admin.site.register(File, FileAdmin)
 admin.site.register(Storage)
 admin.site.register(Sample, SampleAdmin)
@@ -95,3 +150,4 @@ admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
 admin.site.register(FileRunMap, FileRunMapAdmin)
 admin.site.register(MachineRunMode, MachineRunModeAdmin)
+admin.site.register(PooledNormal, PooledNormalsAdmin)
