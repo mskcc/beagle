@@ -2,7 +2,6 @@
 Main module that builds the JSON that needs to be submitted
 to the pipeline executor
 """
-
 import logging
 import os
 import sys
@@ -56,17 +55,17 @@ def get_baits_and_targets(assay, qc_resources):
 
 def create_cwl_file_obj(file_path):
     """
-    Given a filepath, return a dictionary with class File and IRIS-specific URI
+    Given a filepath, return a dictionary with class File and JUNO-specific URI
     """
-    cwl_file_obj = {"class": "File", "location": "iris://%s" % file_path}
+    cwl_file_obj = {"class": "File", "location": "juno://%s" % file_path}
     return cwl_file_obj
 
 
 def get_file_obj(file_obj):
     """
     Given file_obj, construct a dictionary of class File, that file's
-    IRIS-specific URI file path, and a list of secondary files with
-    IRIS-specific URI file paths
+    JUNO-specific URI file path, and a list of secondary files with
+    JUNO-specific URI file paths
     """
     secondary_file_list = []
     file_location = file_obj["location"].replace("file://", "")
