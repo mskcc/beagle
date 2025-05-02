@@ -962,19 +962,21 @@ def check_jobs_status():
             if status["status"] == "FAILED":
                 logger.error(format_log("Job failed ", obj=run))
                 message = dict(details=status.get("message"))
-                lsf_log_location = status.get("message", {}).get("log")
+                log_location = status.get("message", {}).get("log")
                 inputs_location = None
-                if lsf_log_location:
-                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
-                fail_job.delay(str(run.id), message, lsf_log_location, inputs_location)
+                if log_location:
+                    log_dir = os.path.dirname(log_location)
+                    inputs_location = os.path.join(log_dir, "input.json")
+                fail_job.delay(str(run.id), message, log_location, inputs_location)
                 continue
             if status["status"] == "COMPLETED":
                 logger.info(format_log("Job completed", obj=run))
-                lsf_log_location = status.get("message", {}).get("log")
+                log_location = status.get("message", {}).get("log")
                 inputs_location = None
-                if lsf_log_location:
-                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
-                complete_job.delay(str(run.id), status["outputs"], lsf_log_location, inputs_location)
+                if log_location:
+                    log_dir = os.path.dirname(log_location)
+                    inputs_location = os.path.join(log_dir, "input.json")
+                complete_job.delay(str(run.id), status["outputs"], log_location, inputs_location)
                 continue
             if status["status"] == "CREATED":
                 logger.info(format_log("Job created", obj=run))
@@ -988,11 +990,12 @@ def check_jobs_status():
                 continue
             if status["status"] == "TERMINATED":
                 logger.info(format_log("Job terminated", obj=run))
-                lsf_log_location = status.get("message", {}).get("log")
+                log_location = status.get("message", {}).get("log")
                 inputs_location = None
-                if lsf_log_location:
-                    inputs_location = lsf_log_location.replace("lsf.log", "input.json")
-                terminate_job.delay(str(run.id), lsf_log_location, inputs_location)
+                if log_location:
+                    log_dir = os.path.dirname(log_location)
+                    inputs_location = os.path.join(log_dir, "input.json")
+                terminate_job.delay(str(run.id), log_location, inputs_location)
             else:
                 logger.info("Run lock not acquired for run: %s" % str(run.id))
 
