@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "import_export",
     "rangefilter",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     "drf_multiple_model",
     "drf_yasg",
@@ -213,6 +214,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
 }

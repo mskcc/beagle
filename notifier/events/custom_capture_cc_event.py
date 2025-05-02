@@ -17,6 +17,6 @@ class CustomCaptureCCEvent(Event):
 
     def __str__(self):
         TEMPLATE = """
-        Ticket in AdminHold because of the assay: {assay}. {cc}
+        Ticket in AdminHold because of the assay: {assay}.
         """
-        return TEMPLATE.format(assay=self.assay, cc=settings.NOTIFIER_CC)
+        return TEMPLATE.format(assay=self.assay)
