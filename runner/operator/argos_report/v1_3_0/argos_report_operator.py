@@ -108,7 +108,7 @@ class ArgosReportOperator(Operator):
 
         oncokb_entry = {
             "class": "File",
-            "location": "juno://" + oncokb_file_path,
+            "location": "iris://" + oncokb_file_path,
         }
 
         return oncokb_entry
