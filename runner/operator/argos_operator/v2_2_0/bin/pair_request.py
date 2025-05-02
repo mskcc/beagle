@@ -242,6 +242,8 @@ def get_run_mode(run_mode):
         if "hiseq" in run_mode.lower():
             return "hiseq"
         if "novaseq" in run_mode.lower():
+            if "x" in run_mode.lower():
+                return "novaseqx"
             return "novaseq"
     return run_mode
 
