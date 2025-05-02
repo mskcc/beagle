@@ -615,7 +615,7 @@ def check_statuses_on_ridgeback(execution_ids):
 
 
 @shared_task(bind=True)
-def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_location=None):
+def fail_job(self, run_id, error_message, run_log_location=None, input_json_location=None):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -640,7 +640,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
                 send_notification.delay(ci_review)
 
                 _upload_qc_report(run.run_obj)
-                _job_finished_notify(run, lsf_log_location, input_json_location)
+                _job_finished_notify(run, run_log_location, input_json_location)
             else:
                 run_id, output_directory, execution_id = restart_run
                 submit_job.delay(run_id, output_directory, execution_id)
@@ -649,7 +649,7 @@ def fail_job(self, run_id, error_message, lsf_log_location=None, input_json_loca
 
 
 @shared_task(bind=True)
-def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_location=None):
+def complete_job(self, run_id, outputs, run_log_location=None, inputs_json_location=None):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -670,7 +670,7 @@ def complete_job(self, run_id, outputs, lsf_log_location=None, inputs_json_locat
             job_group = run.job_group
             job_group_id = str(job_group.id) if job_group else None
 
-            _job_finished_notify(run, lsf_log_location, inputs_json_location)
+            _job_finished_notify(run, run_log_location, inputs_json_location)
 
             for trigger in run.run_obj.operator_run.operator.from_triggers.filter(run_type=TriggerRunType.INDIVIDUAL):
                 create_jobs_from_chaining.delay(
@@ -694,7 +694,7 @@ def _upload_qc_report(run):
         logger.error("Operator on_job_fail failed", e)
 
 
-def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
+def _job_finished_notify(run, run_log_location=None, input_json_location=None):
     job_group_notifier = run.job_group_notifier
     job_group_notifier_id = str(job_group_notifier.id) if job_group_notifier else None
 
@@ -746,7 +746,7 @@ def _job_finished_notify(run, lsf_log_location=None, input_json_location=None):
         failed_runs,
         total_runs,
         operator_run_id,
-        lsf_log_location,
+        run_log_location,
         input_json_location,
         str(run.run_obj.job_group.id),
     )
@@ -769,7 +769,7 @@ def running_job(self, run_id):
 
 
 @shared_task(bind=True)
-def terminate_job(self, run_id, lsf_log_location, inputs_json_location):
+def terminate_job(self, run_id, run_log_location, inputs_json_location):
     lock_id = "run_lock_%s" % run_id
     with memcache_task_lock(lock_id, self.app.oid) as acquired:
         if acquired:
@@ -779,7 +779,7 @@ def terminate_job(self, run_id, lsf_log_location, inputs_json_location):
                 run.status = RunStatus.TERMINATED
                 run.save()
                 run_obj = RunObjectFactory.from_db(run_id)
-                _job_finished_notify(run_obj, lsf_log_location, inputs_json_location)
+                _job_finished_notify(run_obj, run_log_location, inputs_json_location)
         else:
             logger.warning("Run %s is processing by another worker" % run_id)
 
@@ -962,21 +962,21 @@ def check_jobs_status():
             if status["status"] == "FAILED":
                 logger.error(format_log("Job failed ", obj=run))
                 message = dict(details=status.get("message"))
-                log_location = status.get("message", {}).get("log")
+                run_log_location = status.get("message", {}).get("log")
                 inputs_location = None
-                if log_location:
-                    log_dir = os.path.dirname(log_location)
-                    inputs_location = os.path.join(log_dir, "input.json")
-                fail_job.delay(str(run.id), message, log_location, inputs_location)
+                if run_log_location:
+                    run_log_filename = os.path.basename(run_log_location)
+                    inputs_location = run_log_location.replace(run_log_filename, "input.json")
+                fail_job.delay(str(run.id), message, run_log_location, inputs_location)
                 continue
             if status["status"] == "COMPLETED":
                 logger.info(format_log("Job completed", obj=run))
-                log_location = status.get("message", {}).get("log")
+                run_log_location = status.get("message", {}).get("log")
                 inputs_location = None
-                if log_location:
-                    log_dir = os.path.dirname(log_location)
-                    inputs_location = os.path.join(log_dir, "input.json")
-                complete_job.delay(str(run.id), status["outputs"], log_location, inputs_location)
+                if run_log_location:
+                    run_log_filename = os.path.basename(run_log_location)
+                    inputs_location = run_log_location.replace(run_log_filename, "input.json")
+                complete_job.delay(str(run.id), status["outputs"], run_log_location, inputs_location)
                 continue
             if status["status"] == "CREATED":
                 logger.info(format_log("Job created", obj=run))
@@ -990,12 +990,21 @@ def check_jobs_status():
                 continue
             if status["status"] == "TERMINATED":
                 logger.info(format_log("Job terminated", obj=run))
+<<<<<<< HEAD
                 log_location = status.get("message", {}).get("log")
                 inputs_location = None
                 if log_location:
                     log_dir = os.path.dirname(log_location)
                     inputs_location = os.path.join(log_dir, "input.json")
                 terminate_job.delay(str(run.id), log_location, inputs_location)
+=======
+                run_log_location = status.get("message", {}).get("log")
+                inputs_location = None
+                if run_log_location:
+                    run_log_filename = os.path.basename(run_log_location)
+                    inputs_location = run_log_location.replace(run_log_filename, "input.json")
+                terminate_job.delay(str(run.id), run_log_location, inputs_location)
+>>>>>>> 56b24a59b7c43322a957a7f853ea7d7db6321df2
             else:
                 logger.info("Run lock not acquired for run: %s" % str(run.id))
 
