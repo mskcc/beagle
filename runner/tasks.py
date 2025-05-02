@@ -990,21 +990,12 @@ def check_jobs_status():
                 continue
             if status["status"] == "TERMINATED":
                 logger.info(format_log("Job terminated", obj=run))
-<<<<<<< HEAD
-                log_location = status.get("message", {}).get("log")
-                inputs_location = None
-                if log_location:
-                    log_dir = os.path.dirname(log_location)
-                    inputs_location = os.path.join(log_dir, "input.json")
-                terminate_job.delay(str(run.id), log_location, inputs_location)
-=======
                 run_log_location = status.get("message", {}).get("log")
                 inputs_location = None
                 if run_log_location:
                     run_log_filename = os.path.basename(run_log_location)
                     inputs_location = run_log_location.replace(run_log_filename, "input.json")
                 terminate_job.delay(str(run.id), run_log_location, inputs_location)
->>>>>>> 56b24a59b7c43322a957a7f853ea7d7db6321df2
             else:
                 logger.info("Run lock not acquired for run: %s" % str(run.id))
 
