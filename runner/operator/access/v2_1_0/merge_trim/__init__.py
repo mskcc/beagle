@@ -40,8 +40,10 @@ def construct_inputs(samples, request_id):
     samples = list(group_by_sample_id(samples).values())
 
     inputs = list()
+    all_fast = []
     for sample_files in samples:
         fastqs = group_by_fastq(sample_files)
+        all_fast.append(fastqs)
         metadata = sample_files[0]["metadata"]
         metadata.update(
             {
@@ -117,11 +119,11 @@ def group_by_sample_id(samples):
 
 def group_by_fastq(samples):
     fastqs = defaultdict(list)
-    samples.sort(key=lambda s: s["path"].split("/")[-1])
-    for sample in samples:
-        if "_R2_" in sample["path"]:
-            fastqs["R2"].append(sample)
-        else:
-            fastqs["R1"].append(sample)
-
+    for s1 in samples:
+        if "_R1_" in s1["path"]:
+            fastqs["R1"].append(s1)
+            R2_path = s1["path"].replace("_R1_", "_R2_")
+            for s2 in samples:
+                if s2["path"] == R2_path:
+                    fastqs["R2"].append(s2)
     return fastqs
