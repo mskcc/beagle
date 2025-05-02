@@ -210,7 +210,7 @@ services:
       retries: 3
     depends_on:
       - beagle_create_volumes
-  beagle_webserver:
+  beagle:
     image:  mskcc/beagle:${BEAGLE_VERSION}
     restart: always
     user: "${DOCKER_UID}:${DOCKER_GID}"
