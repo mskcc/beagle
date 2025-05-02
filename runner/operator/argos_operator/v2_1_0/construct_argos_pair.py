@@ -31,7 +31,6 @@ NON_PDX_SPECIMEN_TYPES = [
     "dmp",
 ]
 
-
 # TODO: generalize
 def load_references():
     d = json.load(open(os.path.join(WORKDIR, "reference_jsons/genomic_resources.json"), "rb"))
@@ -90,13 +89,13 @@ def format_sample(data, specimen_type):
 
     for i in data["R1"]:
         if i:
-            sample[r1].append({"class": "File", "location": "iris://" + i})
+            sample[r1].append({"class": "File", "location": "juno://" + i})
     for i in data["R2"]:
         if i:
-            sample[r2].append({"class": "File", "location": "iris://" + i})
+            sample[r2].append({"class": "File", "location": "juno://" + i})
     for i in data["bam"]:
         if i:
-            sample[bam].append({"class": "File", "location": "iris://" + i})
+            sample[bam].append({"class": "File", "location": "juno://" + i})
     return sample
 
 
