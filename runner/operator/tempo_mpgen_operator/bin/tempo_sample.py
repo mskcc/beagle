@@ -175,10 +175,15 @@ class TempoSample(Sample):
         included in new imports; need to return investigatorId value in sampleAliases
         instead
         """
+        if not sample_aliases or not isinstance(sample_aliases, list):
+            return None  # Return None if sample_aliases is None or not a list
+
         for l1 in sample_aliases:
+            if not isinstance(l1, list):
+                continue  # Skip if l1 is not a list
             for l2 in l1:
-                v = l2["value"]
-                ns = l2["namespace"]
+                v = l2.get("value")
+                ns = l2.get("namespace")
                 if ns == "investigatorId":
                     return v
         return None
