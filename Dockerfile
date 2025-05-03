@@ -20,8 +20,8 @@ RUN apt-get update \
         && cd /usr/bin/beagle \
      # Install python packages
         && pip3 install --upgrade pip \
-        && pip3 install python-ldap \
-        && pip3 install -r requirements.txt \
+        && pip3 install --use-pep517 python-ldap \
+        && pip3 install --use-pep517 -r requirements.txt \
     # Clean up image
         && apt-get -y purge --auto-remove build-essential \
         && rm -rf /var/lib/apt/lists/*
