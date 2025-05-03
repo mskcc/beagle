@@ -2,7 +2,7 @@ import os
 import json
 from uuid import UUID
 from django.test import TestCase
-from runner.operator.argos_operator.v2_2_0.bin.pair_request import compile_pairs
+from runner.operator.argos_operator.v2_3_0.bin.pair_request import compile_pairs
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from django.conf import settings
 from django.core.management import call_command
