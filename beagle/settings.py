@@ -269,7 +269,7 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "djpymemcache.backend.PyMemcacheCache",
-            "LOCATION": "%s:%s" % (MEMCACHED_HOST,MEMCACHED_PORT),
+            "LOCATION": "%s:%s" % (MEMCACHED_HOST, MEMCACHED_PORT),
             "OPTIONS": {  # see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
                 "default_noreply": False
             },
