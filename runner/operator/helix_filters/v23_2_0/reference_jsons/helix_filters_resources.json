@@ -56,7 +56,7 @@
             "targets_list": "iris:///data1/core005/assets/argos/resources/genomic_resources/targets/IMPACT-Heme/IMPACT-Heme_v4/b37/IMPACT-Heme_v4_targets.ilist"
         }
     },
-    "IMPACT_gene_list": "iris:///rtsess01/compute/iris/bic/iris/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
+    "IMPACT_gene_list": "iris:///data1/core005/assets/argos/resources/genomic_resources/all_IMPACT_genes.tsv",
     "microsatellites_file": "iris:///data1/core005/assets/argos/resources/request_files/msisensor/microsatellites.list",
     "assay_tmb_coverage_values": {
         "IMPACT341": 896637,
