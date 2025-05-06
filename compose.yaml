@@ -196,6 +196,7 @@ services:
       - ./logs/:/var/log/rabbitmq/
     ports:
       - ${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672
+      - 5672:5672
     expose:
       - "5672"
     environment:
