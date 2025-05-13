@@ -24,6 +24,7 @@ RUN apt-get update \
         && pip3 install --use-pep517 -r requirements.txt \
     # Clean up image
         && apt-get -y purge --auto-remove build-essential \
+        && apt-get -y --no-install-recommends install openssh-client \
         && rm -rf /var/lib/apt/lists/*
 
 
