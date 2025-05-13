@@ -27,6 +27,9 @@ x-beagle_celery:
     - ${DOCKER_GID}
     - ${GID_FILE_1}
     - ${GID_FILE_2}
+  post_start:
+    - command: useradd --uid ${DOCKER_UID} -m beagle_user
+      user: root
   entrypoint: ["/bin/bash","-c"]
   healthcheck:
     test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status || exit 1"
