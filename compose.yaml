@@ -234,6 +234,13 @@ services:
       - ./logs/:/beagle/server/
       - ./server:/usr/bin/beagle/static
       - ./server:/staticfiles
+      - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
+      - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
+      - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
+    group_add:
+      - ${DOCKER_GID}
+      - ${GID_FILE_1}
+      - ${GID_FILE_2}
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
     entrypoint: ["/bin/bash","-c"]
