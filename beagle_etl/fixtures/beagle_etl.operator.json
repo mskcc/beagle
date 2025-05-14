@@ -262,5 +262,16 @@
       "version": "v2.1.0",
       "slug": "CopyOutputsOperator_v2.1.0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 26,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator",
+      "version": "v2.2.0",
+      "slug": "CopyOutputsOperator_v2.2.0"
+    }
   }
 ]
