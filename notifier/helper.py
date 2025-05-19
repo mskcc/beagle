@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Q
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
@@ -80,4 +82,6 @@ def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, p
 
 
 def gene_panel_mapping(gene_panel, bait_set):
-    return settings.GENE_PANEL_TABLE.get(gene_panel, {}).get(bait_set, "ERROR")
+    normalized = settings.GENE_PANEL_TABLE.get(gene_panel, {}).get(bait_set, "ERROR")
+    logging.debug(f"Normalizing {gene_panel}, {bait_set} to {normalized}")
+    return normalized
