@@ -1,0 +1,87 @@
+{
+    "collapsed_bam": {{collapsed_bam}},
+    "duplex_bam": {{duplex_bam}},
+    "group_reads_by_umi_bam": {{group_reads_by_umi_bam}},
+    "simplex_bam": {{simplex_bam}},
+    "uncollapsed_bam_base_recal": {{uncollapsed_bam_base_recal}},
+    "sample_group": {{sample_group}},
+    "sample_name": {{sample_name}},
+    "sample_sex": {{sample_sex}},
+    "samples-json": {{samples_json_content}},
+    "multiqc_config": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/multi_qc/v1.0/config_accessv2.yaml"
+    },
+    "biometrics_bed_file": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_probes_Y_only.bed"
+    },
+    "biometrics_vcf_file": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_0-TilingaAndFpSNPs.vcf"
+    },
+    "biometrics_json": true,
+    "biometrics_plot": true,
+    "hsmetrics_coverage_cap": 30000,
+    "hsmetrics_minimum_base_quality": 1,
+    "hsmetrics_minimum_mapping_quality": 1,
+    "noise_sites_bed": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_targetsAllwFP.bed"
+    },
+    "bait_intervals": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_probesAllwFP.interval_list"
+    },
+    "target_intervals": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_canonicaltargets.interval_list"
+    },
+    "reference": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/cch/hg19_virus_special/hg19_virus.fasta",
+        "secondaryFiles": [
+            {
+                "class": "File",
+                "location": "iris:///data1/core005/assets/cch/hg19_virus_special/hg19_virus.fasta.fai"
+            },
+            {
+                "class": "File",
+                "location": "iris:///data1/core005/assets/cch/hg19_virus_special/hg19_virus.dict"
+            }
+        ]
+    },
+    "hotspots_maf": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/hotspot-list-union-v1-v2_with_TERT_with_aa.maf"
+    },
+    "mosdepth_bed": {
+        "class": "File",
+        "location": "iris:///data1/core005/assets/msk-access/v2.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v2_canonicaltargets.bed"
+    },
+    "sequence_qc_min_basq": 1,
+    "sequence_qc_min_mapq": 1,
+    "sequence_qc_threshold": null,
+    "sequence_qc_truncate": null,
+    "collapsed_biometrics_coverage_threshold": null,
+    "collapsed_biometrics_major_threshold": null,
+    "collapsed_biometrics_min_base_quality": null,
+    "collapsed_biometrics_min_coverage": null,
+    "collapsed_biometrics_min_homozygous_thresh": null,
+    "collapsed_biometrics_min_mapping_quality": null,
+    "collapsed_biometrics_minor_threshold": null,
+    "duplex_biometrics_major_threshold": null,
+    "duplex_biometrics_min_base_quality": null,
+    "duplex_biometrics_min_coverage": null,
+    "duplex_biometrics_min_homozygous_thresh": null,
+    "duplex_biometrics_min_mapping_quality": null,
+    "duplex_biometrics_minor_threshold": null,
+    "fragment_count": 1,
+    "filter_duplicate": 0,
+    "omaf": true,
+    "generic_counting": true,
+    "athena_thresholds": [250,500,1000,1500,2000],
+    "athena_threshold": 500,
+    "athena_summary": true,
+    "athena_cores": 4
+}
