@@ -317,5 +317,16 @@
       "version": "v2.2.0",
       "slug": "AccessQCOperator_v2_2_0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 31,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_2_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+      "version": "v2.2.0",
+      "slug": "CMOCHNucleoOperatorQcAgg_2_2_0"
+    }
   }
 ]
