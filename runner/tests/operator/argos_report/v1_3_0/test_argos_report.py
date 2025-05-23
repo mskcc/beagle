@@ -41,7 +41,7 @@ class TestArgosReportOperator(TestCase):
     def setUp(self):
         os.environ["TMPDIR"] = ""
         self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"]
-        self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.7.0/"
+        self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.8.0/"
         self.expected_project_prefix = "BALTO_REQID"
 
     def test_get_output_dir(self):

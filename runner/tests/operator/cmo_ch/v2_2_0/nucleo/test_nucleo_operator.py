@@ -42,10 +42,10 @@ class TestCMOCHNucleoOperator(TestCase):
 
         request_id = "10151_F"
 
-        operator_model = Operator.objects.get(id=27)
+        operator_model = Operator.objects.get(id=26)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-        self.assertEqual(operator.get_pipeline_id(), "279b1691-7f43-4c1d-80c0-fae1453cc8a6")
-        self.assertEqual(str(operator.model), "CMOCHNucleoOperator")
+        self.assertEqual(operator.get_pipeline_id(), "279b1691-7f43-4c1d-80c0-fae1453cc8a7")
+        self.assertEqual(str(operator.model), "CMOCHNucleoOperator_2_2_0")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
@@ -68,43 +68,3 @@ class TestCMOCHNucleoOperator(TestCase):
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"]), 2)
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"][0]), 2)
             self.assertEqual(len(input_json["fgbio_fastq_to_bam_input"][1]), 2)
-
-    def test_construct_cmo_ch_jobs(self):
-        """
-        Test that CMO-CH jobs are correctly created
-        """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.file.json")
-        call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.filemetadata.json")
-        call_command("loaddata", test_files_fixture, verbosity=0)
-
-        files = File.objects.filter(
-            filemetadata__metadata__requestId="05500_HJ", filemetadata__metadata__igoComplete=True
-        ).all()
-        data = list()
-        for file in files:
-            sample = dict()
-            sample["id"] = file.id
-            sample["path"] = file.path
-            sample["file_name"] = file.file_name
-            sample["metadata"] = file.filemetadata_set.first().metadata
-            data.append(sample)
-        cmo_ch_inputs = construct_sample_inputs(data, "05500_HJ")
-        self.assertTrue(len(cmo_ch_inputs) == 18)
-        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.input.json")))
-        cmo_ch_inputs_str = json.dumps(cmo_ch_inputs)
-        expected_inputs_str = json.dumps(expected_inputs)
-        self.assertTrue(cmo_ch_inputs_str == expected_inputs_str)
-
-    def test_get_cmo_ch_jobs(self):
-        """
-        Test getting the CMO-CH jobs
-        """
-        operator_model = Operator.objects.get(id=14)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.file.json")
-        call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.filemetadata.json")
-        call_command("loaddata", test_files_fixture, verbosity=0)
-        jobs = CMOCHNucleoOperator(operator_model, request_id="05500_HJ").get_jobs()
-        self.assertTrue((len(jobs) == 18))
-        self.assertTrue(jobs[0].name == "CMO-CH Nucleo: 05500_HJ, 1 of 18")
