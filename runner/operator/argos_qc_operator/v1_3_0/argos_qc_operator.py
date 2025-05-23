@@ -4,6 +4,7 @@ ArgosQcOperator
 Constructs input JSON for the argos QC pipeline and then
 submits them as runs
 """
+
 import os
 import logging
 from notifier.models import JobGroup
@@ -22,7 +23,7 @@ class ArgosQcOperator(Operator):
     """
 
     ARGOS_NAME = "argos"
-    ARGOS_VERSION = "1.7.0"
+    ARGOS_VERSION = "1.8.0"
 
     def get_jobs(self):
         """
