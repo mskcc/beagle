@@ -1,0 +1,50 @@
+[
+  {
+    "model": "runner.run",
+    "pk": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+    "fields": {
+      "created_date": "2022-04-25T15:55:44.364Z",
+      "modified_date": "2022-04-26T01:18:28.431Z",
+      "run_type": 0,
+      "name": "CMO-CH Nucleo: A-000000, 62 of 111 (04/21/2022, 17:40:17)",
+      "app": "279b1691-7f43-4c1d-80c0-fae1453cc8a6",
+      "status": 4,
+      "execution_id": "e6c8b874-7145-47fb-aceb-bb97e73cf7d2",
+      "job_statuses": {},
+      "message": null,
+      "operator_run": 8,
+      "output_metadata": {
+        "sex": "F",
+        "ciTag": "A-000000",
+        "baitSet": "null",
+        "barcodeId": null,
+        "primaryID": "12405_C_25",
+        "dnaInputNg": 0,
+        "captureName": null,
+        "barcodeIndex": null,
+        "cmoPatientId": "A-000000",
+        "igoRequestId": "12405_C",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "A-000000-N001-d",
+        "libraryVolume": 0,
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": 0,
+        "investigatorSampleId": "A-000000",
+        "captureConcentrationNm": 0,
+        "libraryConcentrationNgul": 0
+      },
+      "output_directory": "/work/cch/production/runs/voyager/production/bam/0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+      "tags": {
+        "cmoSampleId": "A-000000-N001-d",
+        "igoRequestId": "12405_C"
+      },
+      "notify_for_outputs": "[]",
+      "started": null,
+      "submitted": null,
+      "finished_date": "2022-04-26T01:18:28.430Z",
+      "resume": "edf9ccbc-2944-4425-9b08-c37e1adb14d1",
+      "resume_attempts": 0,
+      "samples": ["2d8a8e1d-f2ac-48ba-85be-135123315b67"]
+    }
+  }
+]
