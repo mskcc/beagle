@@ -46,9 +46,9 @@ class TestNucleoQCOperator(TestCase):
         # This operator needs to write a temp file, so need to override this env var
         settings.BEAGLE_SHARED_TMPDIR = "/tmp"
         request_id = "13843_C"
-        operator_model = Operator.objects.get(id=29)
+        operator_model = Operator.objects.get(id=31)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-        self.assertEqual(operator.get_pipeline_id(), "8c256be3-21b7-4640-9d54-bb5bba42db50")
+        self.assertEqual(operator.get_pipeline_id(), "8c256be3-21b7-4640-9d54-bb5bba42db58")
         self.assertEqual(str(operator.model), "CMOCHNucleoOperatorQcAgg_2_2_0")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])

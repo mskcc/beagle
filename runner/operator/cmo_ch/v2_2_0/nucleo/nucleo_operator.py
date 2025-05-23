@@ -39,6 +39,7 @@ METADATA_OUTPUT_FIELDS = [
 def group_by_sample_id(samples):
     sample_pairs = defaultdict(list)
     for sample in samples:
+        print(sample["metadata"])
         sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
     return sample_pairs
 

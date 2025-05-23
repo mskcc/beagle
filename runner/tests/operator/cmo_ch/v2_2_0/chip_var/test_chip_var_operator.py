@@ -44,8 +44,8 @@ class TestNucleoQCOperator(TestCase):
 
         operator_model = Operator.objects.get(id=28)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
-        self.assertEqual(operator.get_pipeline_id(), "c6218a7f-b1ba-4a67-bdb7-0062b5013ea4")
-        self.assertEqual(str(operator.model), "CMOCHChipVarOperator_v1_2_0")
+        self.assertEqual(operator.get_pipeline_id(), "c6218a7f-b1ba-4a67-bdb7-0062b5013ea5")
+        self.assertEqual(str(operator.model), "CMOCHChipVarOperator_v2_2_0")
         self.assertEqual(operator.request_id, request_id)
         self.assertEqual(operator._jobs, [])
 
