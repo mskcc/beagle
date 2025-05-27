@@ -8,7 +8,7 @@ from uuid import UUID
 from mock import patch
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
-from beagle_etl.models import Operator, JobGroup
+from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
 import tempfile
@@ -77,9 +77,9 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=32)
+            operator_model = Operator.objects.get(id=33)
             operator = OperatorFactory.get_by_model(
-                operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+                operator_model, version="v2.3.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
             input_json_valid = False
             jobs = operator.get_jobs()
@@ -108,9 +108,9 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=32)
+            operator_model = Operator.objects.get(id=33)
             operator = OperatorFactory.get_by_model(
-                operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+                operator_model, version="v2.3.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
             input_json_valid = False
             jobs = operator.get_jobs()
@@ -137,9 +137,9 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=32)
+            operator_model = Operator.objects.get(id=33)
             operator = OperatorFactory.get_by_model(
-                operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
+                operator_model, version="v2.3.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
             input_json_valid = False
             jobs = operator.get_jobs()
