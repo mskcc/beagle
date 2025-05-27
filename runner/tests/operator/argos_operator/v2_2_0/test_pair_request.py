@@ -7,8 +7,7 @@ from django.core.management import call_command
 from django.test import TestCase
 
 from file_system.models import File, FileGroup, FileMetadata, FileType
-from runner.operator.argos_operator.v2_2_0.bin.pair_request import \
-    compile_pairs
+from runner.operator.argos_operator.v2_2_0.bin.pair_request import compile_pairs
 
 """
 Order of smart pairing
