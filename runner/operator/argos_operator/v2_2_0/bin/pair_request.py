@@ -14,8 +14,7 @@ Normals will have to have the same patient and bait set in order to be considere
 import logging
 from datetime import datetime as dt
 
-from .retrieve_samples_by_query import (get_dmp_bam, get_pooled_normals,
-                                        get_samples_from_patient_id)
+from .retrieve_samples_by_query import get_dmp_bam, get_pooled_normals, get_samples_from_patient_id
 
 LOGGER = logging.getLogger(__name__)
 
