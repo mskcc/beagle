@@ -486,3 +486,57 @@ MANUAL_RESTART_REPORT_PATH = os.environ.get("MANUAL_RESTART_REPORT_PATH", "/tmp/
 
 MISSING_FILES_REPORT_PATH = os.environ.get("BEAGLE_MISSING_FILES_REPORT_PATH")
 MISSING_FILES_REPORT_COUNT = int(os.environ.get("BEAGLE_MISSING_FILES_REPORT_COUNT", 10))
+
+GENE_PANEL_TABLE = {
+    "IMPACT341": {
+        None: "UNKNOWN",
+        "IMPACT341": "IMPACT341",
+        "IMPACT_341_CV2_BAITS": "IMPACT341",
+        "OID42050_HG19_11nov2014_BAITS": "UNKNOWN",
+    },
+    "IMPACT+ (341 genes plus custom content)": {"OID42050_HG19_11nov2014_BAITS": "UNKNOWN"},
+    "IMPACT468": {
+        None: "UNKNOWN",
+        "": "UNKNOWN",
+        "Agilent_v4_51MB_Human_hg19_BAITS": "UNKNOWN",
+        "HemePACT_v4_BAITS": "UNKNOWN",
+        "IDT_Exome_V1_IMPACT468_BAITS": "UNKNOWN",
+        "IMPACT468_BAITS": "IMPACT468",
+        "OID42050_HG19_11nov2014_BAITS": "UNKNOWN",
+        "SureSelect-All-Exon-V4-hg19": "UNKNOWN",
+    },
+    "HemePACT_v4": {
+        "HemePACT_v4_b38": "HemePACT_v4",
+        "HemePACT_v4_BAITS": "HemePACT_v4",
+        "IMPACT-Heme_v2_BAITS": "UNKNOWN",
+        "OCCC_316_primary_targets": "UNKNOWN",
+    },
+    "HemePACT_v3": {None: "", "HemePACT_v3_BAIT": "", "HemePACT_v4_BAITS": ""},
+    "IMPACT505": {
+        None: "UNKNOWN",
+        "null": "UNKNOWN",
+        "08390-IMPACT505-MC1R": "IMPACT505+",
+        "08390-IMPACT505-MC1R-BAITS": "IMPACT505+",
+        "HemePACT_v4_BAITS": "UNKNOWN",
+        "IMPACT-505-BAITS": "IMPACT505",
+        "IMPACT505_BAITS": "IMPACT505",
+        "IMPACT505_GRCh38_BAITS": "IMPACT505",
+    },
+    "IMPACT410": {
+        "None": "UNKNOWN",
+        "CYSLTR2": "UNKNOWN",
+        "IMPACT410": "IMPACT410",
+        "IMPACT410_BAITS": "IMPACT410",
+        "IMPACT410_custom": "IMPACT410",
+        "IMPACT468_BAITS": "IMPACT410",
+        "Impact_modified_bed_BAIT_40bp": "UNKNOWN",
+        "OID42050_HG19_11nov2014_BAITS": "UNKNOWN",
+        "OID42050_HG19_11nov2014_capture_targets": "UNKNOWN",
+        "papaemme_IWG_OID43089_hg19_MHC_RNA_max10_20oct2015_BAITS": "UNKNOWN",
+        "SureSelect-All-Exon-V4-hg19": "UNKNOWN",
+        "VENTURA_V1_designed-probe-coords-SORTED": "UNKNOWN",
+    },
+    "08390_Hg19": {"08390-IMPACT505-MC1R-BAITS": "IMPACT505+"},
+    "IMPACT-Heme": {"IMPACT-Heme_v2_BAITS": "IMPACT-Heme_v2"},
+    "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
+}
