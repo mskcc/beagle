@@ -342,7 +342,7 @@
   },
   {
     "model": "beagle_etl.operator",
-    "pk": 32,
+    "pk": 33,
     "fields": {
       "active": true,
       "recipes": "[\"None\"]",
