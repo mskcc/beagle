@@ -6,14 +6,17 @@ For example, get all samples by a patient ID or pooled normals based on the bait
 and preservation type
 """
 import logging
-from file_system.models import MachineRunMode, File
-from file_system.models import FileGroup, PooledNormal
-from file_system.repository.file_repository import FileRepository
-from django.db.models import Q
-from django.conf import settings
 from datetime import datetime
-from .make_sample import build_sample, remove_with_caveats, format_sample_name
-from runner.operator.helper import get_r_orientation, spoof_barcode, init_metadata
+
+from django.conf import settings
+from django.db.models import Q
+
+from file_system.models import File, FileGroup, MachineRunMode, PooledNormal
+from file_system.repository.file_repository import FileRepository
+from runner.operator.helper import (get_r_orientation, init_metadata,
+                                    spoof_barcode)
+
+from .make_sample import build_sample, format_sample_name, remove_with_caveats
 
 LOGGER = logging.getLogger(__name__)
 
@@ -66,7 +69,7 @@ def get_samples_from_patient_id(patient_id):
     return samples
 
 
-def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
+def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample_origin):
     """
     Need descriptor to match pooled normal bait_set (legacy)
 
@@ -92,20 +95,25 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids):
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types
-        preservations_lower_case = set([x.lower() for x in preservation_types])
+        plc = set([x.lower() for x in preservation_types])
         run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
-        if "ffpe" in preservations_lower_case:
+        if "ffpe" in plc:
             sample_name = "FFPEPOOLEDNORMAL_" + run_ids_suffix
     else:
         earliest_pooled_normal = None
         machines = get_machines_by_substr(run_ids)
         baits = bait_set.lower()
-        preservations_lower_case = set([x.lower() for x in preservation_types])
+        # plc = preservation lower case; slc = sample origin lower case
+        plc = set([x.lower() for x in preservation_types])
+        solc = set([x.lower() for x in sample_origin])
         preservation = "frozen"
-        if "ffpe" in preservations_lower_case:  # preservation_lower_case is a list
-            preservation = "ffpe"
+        if not is_list_empty(plc): # plc is a list
+            if "ffpe" in plc:  
+                preservation = "ffpe"
+        else:
+
 
         for machine in machines:
             pooled_normal_objs = PooledNormal.objects.filter(
@@ -189,24 +197,24 @@ def build_preservation_query(data):
 
     Main logic: if FFPE in data, return FFPE query; else, return FROZEN query
     """
-    preservations_lower_case = set([x.lower() for x in data])
+    plc = set([x.lower() for x in data])
     value = "FROZEN"
-    if "ffpe" in preservations_lower_case:
+    if "ffpe" in plc:
         value = "FFPE"
     # case-insensitive matching
     query = Q(metadata__preservation__iexact=value)
     return query
 
 
-def get_pooled_normals(run_ids, preservation_types, bait_set):
+def get_pooled_normals(run_ids, preservation_types, bait_set, sample_origin):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set, sample_origin)
     sample_files = list()
     for pooled_normal_file in pooled_normals:
         sample_file = build_pooled_normal_sample_by_file(
-            pooled_normal_file, run_ids, preservation_types, descriptor, sample_name
+            pooled_normal_file, run_ids, preservation_types, descriptor, sample_origin, sample_name
         )
         sample_files.append(sample_file)
     pooled_normal = build_sample(sample_files, ignore_sample_formatting=True)
@@ -215,7 +223,7 @@ def get_pooled_normals(run_ids, preservation_types, bait_set):
     return pooled_normal
 
 
-def get_pooled_normal_files(run_ids, preservation_types, bait_set):
+def get_pooled_normal_files(run_ids, preservation_types, bait_set, sample_origin):
 
     pooled_normals = FileRepository.filter(file_group=settings.POOLED_NORMAL_FILE_GROUP)
 
@@ -227,12 +235,12 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set):
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids)
+    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample_origin)
 
     return pooled_normals, descriptor, sample_name
 
 
-def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_name):
+def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_origin, sample_name):
     specimen_type = "Pooled Normal"
     sample = dict()
     sample["id"] = pooled_normal.file.id
@@ -247,6 +255,7 @@ def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_type
     metadata["platform"] = "Illumina"
     metadata["baitSet"] = bait_set
     metadata[settings.RECIPE_METADATA_KEY] = bait_set
+    metadata["sampleOrigin"] = sample_origin
     metadata["runId"] = run_ids
     metadata["preservation"] = preservation_types
     metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
@@ -359,3 +368,6 @@ def build_dmp_query(patient_id, bait_set):
     normal = Q(metadata__type="N")
     query = assay & patient & normal
     return query
+
+def is_list_empty(lst):
+    return all(not bool(item) for item in lst)
