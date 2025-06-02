@@ -1,18 +1,22 @@
-import os
-from uuid import UUID
 import json
+import os
 from datetime import datetime
-from django.test import TestCase, override_settings
-from django.db.models import Prefetch, Q
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import build_dmp_query
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import get_pooled_normals
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import build_run_id_query
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import build_preservation_query
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import get_descriptor
-from runner.tests.operator.argos_operator.v2_2_0.test_pair_request import UUIDEncoder
+from uuid import UUID
+
 from django.conf import settings
 from django.core.management import call_command
-from file_system.models import File, FileMetadata, FileGroup, FileType, PooledNormal
+from django.db.models import Prefetch, Q
+from django.test import TestCase, override_settings
+
+from file_system.models import File, FileGroup, FileMetadata, FileType, PooledNormal
+from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import (
+    build_dmp_query,
+    build_preservation_query,
+    build_run_id_query,
+    get_descriptor,
+    get_pooled_normals,
+)
+from runner.tests.operator.argos_operator.v2_2_0.test_pair_request import UUIDEncoder
 
 
 class TestRetrieveSamplesByQuery(TestCase):
@@ -204,22 +208,38 @@ class TestRetrieveSamplesByQuery(TestCase):
         all_pooled_normals = FileMetadata.objects.all()
 
         pooled_normals, descriptor, sample_name = get_descriptor(
-            bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+            bait_set="IMPACT468",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=all_pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, None)
 
         pooled_normals, descriptor, sample_name = get_descriptor(
-            bait_set="IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+            bait_set="IMPACT468_bar",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=all_pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, None)
 
         pooled_normals, descriptor, sample_name = get_descriptor(
-            bait_set="foo_IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+            bait_set="foo_IMPACT468",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=all_pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, None)
 
         pooled_normals, descriptor, sample_name = get_descriptor(
-            bait_set="foo_IMPACT468_bar", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=all_pooled_normals
+            bait_set="foo_IMPACT468_bar",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=all_pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, "foo_IMPACT468_bar")
 
@@ -231,7 +251,9 @@ class TestRetrieveSamplesByQuery(TestCase):
         metadata instead of from the PooledNormal model (introduced when NovaSeq X was added)
         """
         # test that an empty database and irrelevant args returns None
-        pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
+        pooled_normals = (
+            get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]),
+        )
         self.assertEqual(pooled_normals, None)
 
         # start adding Pooled Normals to the database
@@ -276,7 +298,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["PITT_0439"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS"
+            run_ids=["PITT_0439"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS", sample_origin=[""]
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -318,7 +340,9 @@ class TestRetrieveSamplesByQuery(TestCase):
         Test that NovaSeq X FAUCI2 Pooled Normals can be retrieved correctly
         """
         # test that an empty database and irrelevant args returns None
-        pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
+        pooled_normals = get_pooled_normals(
+            run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]
+        )
         self.assertEqual(pooled_normals, None)
 
         # Add pooled normals from the PooledNormal table
@@ -401,7 +425,9 @@ class TestRetrieveSamplesByQuery(TestCase):
         This one pulls the record with the earliest run date
         """
         # test that an empty database and irrelevant args returns None
-        pooled_normals = get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz")
+        pooled_normals = get_pooled_normals(
+            run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]
+        )
         self.assertEqual(pooled_normals, None)
 
         # Add pooled normals from the PooledNormal table
@@ -469,8 +495,12 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["FAUCI2_0049", "BONO_12314"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS"
+            run_ids=["FAUCI2_0049", "BONO_12314"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS", sample_origin=[""]
         )
+
+        from pprint import pprint
+        pprint(pooled_normals)
+
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
         pooled_normals["R1_bid"].pop()
@@ -501,6 +531,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "pi_email": "",
             "run_id": ["FAUCI2_0049", "BONO_12314"],
             "preservation_type": [["Frozen"]],
+            "sample_origin": [['']],
             "run_mode": "",
         }
 
