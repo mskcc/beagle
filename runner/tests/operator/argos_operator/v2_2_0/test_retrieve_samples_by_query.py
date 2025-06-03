@@ -164,13 +164,25 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         pooled_normals = FileMetadata.objects.all()
 
-        pooled_normals, descriptor, sample_name = get_descriptor(
-            bait_set="IMPACT468_BAITS", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals
+        (
+            pooled_normals,
+            descriptor,
+            sample_name,
+        ) = get_descriptor(
+            bait_set="IMPACT468_BAITS",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, "IMPACT468")
 
         pooeld_normals, descriptor, sample_name = get_descriptor(
-            bait_set="IMPACT468", preservation_types=["FROZEN"], run_ids=[""], pooled_normals=pooled_normals
+            bait_set="IMPACT468",
+            preservation_types=["FROZEN"],
+            run_ids=[""],
+            pooled_normals=pooled_normals,
+            sample_origin=[""],
         )
         self.assertEqual(descriptor, "IMPACT468")
 
@@ -251,9 +263,10 @@ class TestRetrieveSamplesByQuery(TestCase):
         metadata instead of from the PooledNormal model (introduced when NovaSeq X was added)
         """
         # test that an empty database and irrelevant args returns None
-        pooled_normals = (
-            get_pooled_normals(run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]),
+        pooled_normals = get_pooled_normals(
+            run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]
         )
+
         self.assertEqual(pooled_normals, None)
 
         # start adding Pooled Normals to the database
@@ -328,6 +341,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "request_id": "FROZENPOOLEDNORMAL_PITT_0439",
             "pi": "",
             "pi_email": "",
+            "sample_origin": [[""]],
             "run_id": ["PITT_0439"],
             "preservation_type": [["Frozen"]],
             "run_mode": "",
