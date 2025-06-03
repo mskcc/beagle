@@ -15,7 +15,7 @@ def convert_recipes_to_json(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("beagle_etl", "0040_auto_20250603_1535.py"), 
+        ("beagle_etl", "0040_auto_20250603_1535"), 
     ]
 
     operations = [
