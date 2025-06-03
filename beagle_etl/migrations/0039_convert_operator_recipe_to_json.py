@@ -1,28 +1,20 @@
 from django.db import migrations
-from django.contrib.postgres.fields import JSONField
 
+METADATA_KEY = "metadata_key"
 
-METADATA_KEY = "genePanel"
-
-def convert_recipes_to_json(apps, schema_editor):
-    Operator = apps.get_model("beagle_etl", "Operator")
-    for obj in Operator.objects.all():
-        current_val = obj.recipes  # this was a string
-        obj.recipes = {METADATA_KEY: [current_val] if current_val else []}
-        obj.save(update_fields=["recipes"])
-
+def migrate_recipe_data(apps, schema_editor):
+    Operator = apps.get_model("runner", "Operator")
+    for op in Operator.objects.all():
+        val = op.recipes
+        op.recipes_json = {METADATA_KEY: [val] if val else []}
+        op.save(update_fields=["recipes_json"])
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("beagle_etl", "0040_auto_20250603_1535"), 
+        ("runner", "0040_add_recipes_json_field"),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name="operator",
-            name="recipes",
-            field=JSONField(default=dict),
-        ),
-        migrations.RunPython(convert_recipes_to_json, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(migrate_recipe_data, reverse_code=migrations.RunPython.noop),
     ]
