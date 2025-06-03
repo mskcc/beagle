@@ -63,7 +63,7 @@ class Operator(models.Model):
     version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
     #ERIC_TODO works as dictionary?
-    recipes = models.JSONField(default=dict)
+    recipes = JSONField(default=dict)
     notifier = models.ForeignKey(Notifier, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -108,7 +108,7 @@ class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
     #ERIC_TODO  as dictionary? 
     recipe = models.CharField(max_length=100)
-    start_meta = models.JSONField(default=dict)
+    start_meta = JSONField(default=dict)
     samples = JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
