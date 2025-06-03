@@ -381,7 +381,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["FAUCI2_0049"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS"
+            run_ids=["FAUCI2_0049"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS", sample_origin=[""]
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -409,6 +409,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "bam": [],
             "bam_bid": [],
             "request_id": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
+            "sample_origin": [[""]],
             "pi": "",
             "pi_email": "",
             "run_id": ["FAUCI2_0049"],
@@ -495,10 +496,14 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["FAUCI2_0049", "BONO_12314"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS", sample_origin=[""]
+            run_ids=["FAUCI2_0049", "BONO_12314"],
+            preservation_types=["Frozen"],
+            bait_set="IMPACT505_BAITS",
+            sample_origin=[""],
         )
 
         from pprint import pprint
+
         pprint(pooled_normals)
 
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
@@ -531,7 +536,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "pi_email": "",
             "run_id": ["FAUCI2_0049", "BONO_12314"],
             "preservation_type": [["Frozen"]],
-            "sample_origin": [['']],
+            "sample_origin": [[""]],
             "run_mode": "",
         }
 
