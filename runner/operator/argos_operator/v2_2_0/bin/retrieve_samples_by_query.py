@@ -5,6 +5,7 @@ that wasn't in the operator
 For example, get all samples by a patient ID or pooled normals based on the bait set
 and preservation type
 """
+
 import logging
 from datetime import datetime
 
@@ -13,8 +14,7 @@ from django.db.models import Q
 
 from file_system.models import File, FileGroup, MachineRunMode, PooledNormal
 from file_system.repository.file_repository import FileRepository
-from runner.operator.helper import (get_r_orientation, init_metadata,
-                                    spoof_barcode)
+from runner.operator.helper import get_r_orientation, init_metadata, spoof_barcode
 
 from .make_sample import build_sample, format_sample_name, remove_with_caveats
 
@@ -94,7 +94,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
         )
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
-        # in preservation_types
+        # in preservation_types; plc = preservation lower case
         plc = set([x.lower() for x in preservation_types])
         run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
@@ -109,11 +109,12 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
         plc = set([x.lower() for x in preservation_types])
         solc = set([x.lower() for x in sample_origin])
         preservation = "frozen"
-        if not is_list_empty(plc): # plc is a list
-            if "ffpe" in plc:  
+        if not is_list_empty(plc):  # plc is a list
+            if "ffpe" in plc:
                 preservation = "ffpe"
-        else:
-
+        elif not is_list_empty(solc):
+            if "ffpe" in solc:
+                preservation = "ffpe"
 
         for machine in machines:
             pooled_normal_objs = PooledNormal.objects.filter(
@@ -210,7 +211,9 @@ def get_pooled_normals(run_ids, preservation_types, bait_set, sample_origin):
     """
     From a list of run_ids, preservation types, and bait sets, get all potential pooled normals
     """
-    pooled_normals, descriptor, sample_name = get_pooled_normal_files(run_ids, preservation_types, bait_set, sample_origin)
+    pooled_normals, descriptor, sample_name = get_pooled_normal_files(
+        run_ids, preservation_types, bait_set, sample_origin
+    )
     sample_files = list()
     for pooled_normal_file in pooled_normals:
         sample_file = build_pooled_normal_sample_by_file(
@@ -235,12 +238,16 @@ def get_pooled_normal_files(run_ids, preservation_types, bait_set, sample_origin
 
     pooled_normals = FileRepository.filter(queryset=pooled_normals, q=q)
 
-    pooled_normals, descriptor, sample_name = get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample_origin)
+    pooled_normals, descriptor, sample_name = get_descriptor(
+        bait_set, pooled_normals, preservation_types, run_ids, sample_origin
+    )
 
     return pooled_normals, descriptor, sample_name
 
 
-def build_pooled_normal_sample_by_file(pooled_normal, run_ids, preservation_types, bait_set, sample_origin, sample_name):
+def build_pooled_normal_sample_by_file(
+    pooled_normal, run_ids, preservation_types, bait_set, sample_origin, sample_name
+):
     specimen_type = "Pooled Normal"
     sample = dict()
     sample["id"] = pooled_normal.file.id
@@ -368,6 +375,7 @@ def build_dmp_query(patient_id, bait_set):
     normal = Q(metadata__type="N")
     query = assay & patient & normal
     return query
+
 
 def is_list_empty(lst):
     return all(not bool(item) for item in lst)
