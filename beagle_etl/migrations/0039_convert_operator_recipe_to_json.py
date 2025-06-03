@@ -12,7 +12,7 @@ def migrate_recipe_data(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("runner", "0040_auto_20250603_1607"),
+        ("beagle_etl", "0040_auto_20250603_1607"),
     ]
 
     operations = [
