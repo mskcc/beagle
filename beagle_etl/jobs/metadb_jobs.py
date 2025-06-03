@@ -75,13 +75,14 @@ from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
 from study.objects import StudyObject
-
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
 
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
+    #ERIC_TODO works with dictionary? 
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
@@ -177,6 +178,7 @@ def new_request(message_id):
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    #ERIC_TODO make this a configurable dictionary
     recipe = data.get(settings.RECIPE_METADATA_KEY)
 
     set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
@@ -288,7 +290,7 @@ def new_request(message_id):
 
 
 @shared_task
-def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_group_notifier_id=None):
+def request_callback(request_id, recipe, start_meta, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
     :param request_id: 08944_B
     :param recipe: IMPACT438
@@ -421,7 +423,10 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-
+    #ERIC_TODO  does this query work as a dictionary?
+    print(start_meta)
+    # query = Q(**{f"recipes__{start_meta.key}__contains": [start_meta.value]})
+    # operators = Operator.objects.filter(query)
     operators = Operator.objects.filter(recipes__overlap=[recipe])
 
     if not operators:
@@ -468,6 +473,7 @@ def update_request_job(message_id, job_group, job_group_notifier):
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
 
     project_id = data.get("projectId")
+    #ERIC_TODO  make this a configurable dictionary
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
@@ -606,7 +612,7 @@ def update_job(request_id):
 
     if not request_metadata:
         request_metadata = fetch_request_metadata(request_id)
-
+    #ERIC_TODO make this a configurable dictionary
     recipe = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
     ).first()
