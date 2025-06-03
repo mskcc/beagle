@@ -94,7 +94,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
         )
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
-        # in preservation_types; plc = preservation lower case
+        # in preservation_types; plc = preservations lower case
         plc = set([x.lower() for x in preservation_types])
         run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
