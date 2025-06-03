@@ -62,8 +62,8 @@ class Operator(models.Model):
     class_name = models.CharField(max_length=150)
     version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
-    #ERIC_TODO works as dictionary?
-    recipes = JSONField(default=dict)
+    recipes = models.CharField(max_length=100, default=False)
+    recipes_json = JSONField(default=dict, null=True)
     notifier = models.ForeignKey(Notifier, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
