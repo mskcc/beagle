@@ -428,7 +428,8 @@ def request_callback(request_id, recipe, start_meta, sample_jobs, job_group_id=N
     # query = Q(**{f"recipes__{start_meta.key}__contains": [start_meta.value]})
     # operators = Operator.objects.filter(query)
     operators = Operator.objects.filter(recipes__overlap=[recipe])
-
+    for op in operators:
+        print(op.recipes_json)
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
