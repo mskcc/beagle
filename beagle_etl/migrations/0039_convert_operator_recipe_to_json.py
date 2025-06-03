@@ -1,5 +1,5 @@
 from django.db import migrations
-from django.db.models import JSONField
+from django.contrib.postgres.fields import JSONField
 
 
 METADATA_KEY = "metadata_key"
