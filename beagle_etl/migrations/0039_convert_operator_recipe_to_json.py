@@ -3,7 +3,7 @@ from django.db import migrations
 METADATA_KEY = "genePanel"
 
 def migrate_recipe_data(apps, schema_editor):
-    Operator = apps.get_model("runner", "Operator")
+    Operator = apps.get_model("beagle_etl", "Operator")
     for op in Operator.objects.all():
         val = op.recipes
         op.recipes_json = {METADATA_KEY: [val] if val else []}
