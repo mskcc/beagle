@@ -1,5 +1,5 @@
 from django.db import migrations
-import json
+from django.db.models import JSONField
 
 
 METADATA_KEY = "metadata_key"
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="operator",
             name="recipes",
-            field=migrations.fields.JSONField(default=dict),
+            field=JSONField(default=dict),
         ),
         migrations.RunPython(convert_recipes_to_json, reverse_code=migrations.RunPython.noop),
     ]
