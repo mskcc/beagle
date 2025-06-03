@@ -1,20 +1,20 @@
-from django.db import migrations
+# from django.db import migrations
 
-METADATA_KEY = "metadata_key"
+# METADATA_KEY = "genePanel"
 
-def migrate_recipe_data(apps, schema_editor):
-    Operator = apps.get_model("runner", "Operator")
-    for op in Operator.objects.all():
-        val = op.recipes
-        op.recipes_json = {METADATA_KEY: [val] if val else []}
-        op.save(update_fields=["recipes_json"])
+# def migrate_recipe_data(apps, schema_editor):
+#     Operator = apps.get_model("runner", "Operator")
+#     for op in Operator.objects.all():
+#         val = op.recipes
+#         op.recipes_json = {METADATA_KEY: [val] if val else []}
+#         op.save(update_fields=["recipes_json"])
 
-class Migration(migrations.Migration):
+# class Migration(migrations.Migration):
 
-    dependencies = [
-        ("runner", "0040_add_recipes_json_field"),
-    ]
+#     dependencies = [
+#         ("runner", "0040_add_recipes_json_field"),
+#     ]
 
-    operations = [
-        migrations.RunPython(migrate_recipe_data, reverse_code=migrations.RunPython.noop),
-    ]
+#     operations = [
+#         migrations.RunPython(migrate_recipe_data, reverse_code=migrations.RunPython.noop),
+#     ]
