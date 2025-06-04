@@ -108,7 +108,6 @@ class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
     #ERIC_TODO  as dictionary? 
     recipe = models.CharField(max_length=100)
-    start_meta = JSONField(default=dict)
     samples = JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)

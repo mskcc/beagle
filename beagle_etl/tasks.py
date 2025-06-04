@@ -97,7 +97,6 @@ def process_request_callback_jobs():
             request_callback.delay(
                 request.request_id,
                 request.recipe,
-                request.start_meta,
                 request.samples,
                 str(request.job_group.id),
                 str(request.job_group_notifier.id),
