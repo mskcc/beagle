@@ -106,15 +106,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
         machines = get_machines_by_substr(run_ids)
         baits = bait_set.lower()
         # plc = preservation lower case; slc = sample origin lower case
-        plc = set([x.lower() for x in preservation_types])
-        solc = set([x.lower() for x in sample_origin])
-        preservation = "frozen"
-        if not is_list_empty(plc):  # plc is a list
-            if "ffpe" in plc:
-                preservation = "ffpe"
-        elif not is_list_empty(solc):
-            if "ffpe" in solc:
-                preservation = "ffpe"
+        preservation = get_preservation_type(preservation_types, sample_origin)
 
         for machine in machines:
             pooled_normal_objs = PooledNormal.objects.filter(
@@ -153,6 +145,52 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
                 pooled_normals.append(pn_file)
 
     return pooled_normals, descriptor, sample_name
+
+
+def get_preservation_type(preservation_types, sample_origin):
+    """
+    From preservation type and sample origin list:
+        - convert them to lower case lists plc and solc
+        - if both have values, check that they are the same, ie
+            - if sample origin is "fresh or frozen", make sure preservation is NOT ffpe
+            - if preservation is FFPE, make sure sample origin is also FFPE
+        - if preservation_type is empty, check sample origin, where:
+            - sample origin is either 'ffpe' is 'fresh or frozen' (which equals 'frozen')
+        - if preservation_type is not empty:
+            - return 'ffpe' if is_ffpe(); otherwise 'frozen'
+    """
+    plc = set([x.lower() for x in preservation_types])  # preservation lower case
+    solc = set([x.lower() for x in sample_origin])  # sample origin lower case
+    preservation = ""
+
+    if not is_list_empty(plc) and not is_list_empty(solc):
+        if is_ffpe(plc) and is_ffpe(solc):
+            preservation = "ffpe"
+        else:
+            if "fresh or frozen" in solc:
+                if not is_ffpe(plc):
+                    preservation = "frozen"
+    elif not is_list_empty(plc):
+        print(f"Assigning preservation type by plc: {plc}")
+        if is_ffpe(plc):
+            preservation = "ffpe"
+        else:
+            preservation = "frozen"
+    elif not is_list_empty(solc):
+        print(f"Doing sample origin resolution for solc: {solc}")
+        if is_ffpe(solc):
+            preservation = "ffpe"
+        if "fresh or frozen" in solc:
+            preservation = "frozen"
+    return preservation
+
+
+def is_ffpe(l):
+    """
+    In list l, if any item is 'ffpe', consider sample as FFPE and return True
+    """
+    if "ffpe" in l:
+        return True
 
 
 def get_sequencer_type(run_ids_list):

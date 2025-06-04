@@ -15,6 +15,7 @@ from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import 
     build_run_id_query,
     get_descriptor,
     get_pooled_normals,
+    get_preservation_type,
 )
 from runner.tests.operator.argos_operator.v2_2_0.test_pair_request import UUIDEncoder
 
@@ -164,11 +165,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
         pooled_normals = FileMetadata.objects.all()
 
-        (
-            pooled_normals,
-            descriptor,
-            sample_name,
-        ) = get_descriptor(
+        (pooled_normals, descriptor, sample_name,) = get_descriptor(
             bait_set="IMPACT468_BAITS",
             preservation_types=["FROZEN"],
             run_ids=[""],
@@ -558,3 +555,174 @@ class TestRetrieveSamplesByQuery(TestCase):
         expected_pooled_normals_sorted = {k: sorted(v) for k, v in expected_pooled_normals.items()}
 
         self.assertEqual(pooled_normals_sorted, expected_pooled_normals_sorted)
+
+    def test_pooled_normal_retrieval_by_sample_origin(self):
+        """
+        Test that pooled normal retrieved is ffpe or frozen based on preservation type
+        or sample origin if preservation is empty
+        """
+        # test that an empty database and irrelevant args returns None
+        pooled_normals = get_pooled_normals(
+            run_ids=["foo"], preservation_types=["bar"], bait_set="baz", sample_origin=[""]
+        )
+        self.assertEqual(pooled_normals, None)
+
+        # Add pooled normals from the PooledNormal table
+        PooledNormal.objects.update_or_create(
+            machine="fauci2",
+            bait_set="impact505_baits",
+            gene_panel="hc_impact",
+            preservation_type="frozen",
+            run_date=datetime.strptime("01-01-2021", "%d-%m-%Y"),
+            pooled_normals_paths=["/FROZENPOOLEDNORMAL.R1.fastq", "/FROZENPOOLEDNORMAL.R2.fastq"],
+        )
+
+        # start adding Pooled Normals to the database
+        poolednormal_filegroup_instance = FileGroup.objects.get(name="Pooled Normal")
+        fastq_filetype_instance = FileType.objects.get(name="fastq")
+        # add Pooled Normal from another run
+        poolednormal_R1_file_instance = File.objects.create(
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R1.fastq",
+            path="/FROZENPOOLEDNORMAL.R1.fastq",
+        )
+        FileMetadata.objects.create_or_update(
+            file=poolednormal_R1_file_instance,
+            metadata={},
+        )
+        poolednormal_R2_file_instance = File.objects.create(
+            file_type=fastq_filetype_instance,
+            file_group=poolednormal_filegroup_instance,
+            file_name="FROZENPOOLEDNORMAL.R2.fastq",
+            path="/FROZENPOOLEDNORMAL.R2.fastq",
+        )
+        FileMetadata.objects.create_or_update(
+            file=poolednormal_R2_file_instance,
+            metadata={},
+        )
+
+        pooled_normals = get_pooled_normals(
+            run_ids=["FAUCI2_0049"], preservation_types=["Frozen"], bait_set="IMPACT505_BAITS", sample_origin=[""]
+        )
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pooled_normals["R1_bid"].pop()
+        pooled_normals["R2_bid"].pop()
+
+        expected_pooled_normals = {
+            "CN": "MSKCC",
+            "PL": "Illumina",
+            "PU": ["PN_FCID_FROZENPOOLEDNORMAL"],
+            "LB": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL_1",
+            "tumor_type": "Normal",
+            "ID": ["IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL_PN_FCID_FROZENPOOLEDNORMAL"],
+            "SM": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
+            "species": "",
+            "patient_id": "PN_PATIENT_ID",
+            "bait_set": "impact505_baits",
+            "sample_id": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
+            "run_date": [""],
+            "specimen_type": "Pooled Normal",
+            "R1": ["/FROZENPOOLEDNORMAL.R1.fastq"],
+            "R2": ["/FROZENPOOLEDNORMAL.R2.fastq"],
+            "R1_bid": [],
+            "R2_bid": [],
+            "bam": [],
+            "bam_bid": [],
+            "request_id": "IMPACT505_BAITS_FROZEN_FAUCI2_POOLEDNORMAL",
+            "sample_origin": [[""]],
+            "pi": "",
+            "pi_email": "",
+            "run_id": ["FAUCI2_0049"],
+            "preservation_type": [["Frozen"]],
+            "run_mode": "",
+        }
+
+        print("Testing when preservation is set to Frozen")
+        self.assertEqual(pooled_normals, expected_pooled_normals)
+
+        PooledNormal.objects.update_or_create(
+            machine="fauci2",
+            bait_set="impact505_baits",
+            gene_panel="hc_impact",
+            preservation_type="ffpe",
+            run_date=datetime.strptime("01-01-2021", "%d-%m-%Y"),
+            pooled_normals_paths=["/FFPEPOOLEDNORMAL.R1.fastq", "/FFPEPOOLEDNORMAL.R2.fastq"],
+        )
+
+        pooled_normals = get_pooled_normals(
+            run_ids=["FAUCI2_0049"], preservation_types=[""], bait_set="IMPACT505_BAITS", sample_origin=["FFPE"]
+        )
+        # remove the R1_bid and R2_bid for testing because they are non-deterministic
+        # TODO: mock this ^^
+        pooled_normals["R1_bid"].pop()
+        pooled_normals["R2_bid"].pop()
+
+        expected_pooled_normals = {
+            "CN": "MSKCC",
+            "PL": "Illumina",
+            "PU": ["PN_FCID_FFPEPOOLEDNORMAL"],
+            "LB": "IMPACT505_BAITS_FFPE_FAUCI2_POOLEDNORMAL_1",
+            "tumor_type": "Normal",
+            "ID": ["IMPACT505_BAITS_FFPE_FAUCI2_POOLEDNORMAL_PN_FCID_FFPEPOOLEDNORMAL"],
+            "SM": "IMPACT505_BAITS_FFPE_FAUCI2_POOLEDNORMAL",
+            "species": "",
+            "patient_id": "PN_PATIENT_ID",
+            "bait_set": "impact505_baits",
+            "sample_id": "IMPACT505_BAITS_FFPE_FAUCI2_POOLEDNORMAL",
+            "run_date": [""],
+            "specimen_type": "Pooled Normal",
+            "R1": ["/FFPEPOOLEDNORMAL.R1.fastq"],
+            "R2": ["/FFPEPOOLEDNORMAL.R2.fastq"],
+            "R1_bid": [],
+            "R2_bid": [],
+            "bam": [],
+            "bam_bid": [],
+            "request_id": "IMPACT505_BAITS_FFPE_FAUCI2_POOLEDNORMAL",
+            "sample_origin": [["FFPE"]],
+            "pi": "",
+            "pi_email": "",
+            "run_id": ["FAUCI2_0049"],
+            "preservation_type": [[""]],
+            "run_mode": "",
+        }
+
+        print("Testing when preservation is empty and sample origin is set to FFPE")
+        self.assertEqual(pooled_normals, expected_pooled_normals)
+
+    def test_get_preservation_type(self):
+        preservation_type1 = ["FFPE", "FFPE", "FFPE"]
+        sample_origin1 = ["FFPE", "FFPE", "FFPE"]
+        result = get_preservation_type(preservation_type1, sample_origin1)
+        self.assertEqual(result, "ffpe")
+
+        preservation_type2 = ["Frozen"]
+        sample_origin2 = ["Fresh or Frozen"]
+        result = get_preservation_type(preservation_type2, sample_origin2)
+        self.assertEqual(result, "frozen")
+
+        preservation_type3 = [""]
+        sample_origin3 = ["Fresh or Frozen"]
+        result = get_preservation_type(preservation_type3, sample_origin3)
+        self.assertEqual(result, "frozen")
+
+        preservation_type4 = ["Frozen"]
+        sample_origin4 = [""]
+        result = get_preservation_type(preservation_type4, sample_origin4)
+        self.assertEqual(result, "frozen")
+
+        preservation_type5 = [""]
+        sample_origin5 = ["ffpe", "ffpe"]
+        result = get_preservation_type(preservation_type5, sample_origin5)
+        self.assertEqual(result, "ffpe")
+
+        preservation_type6 = ["ffpe", "ffpe"]
+        sample_origin6 = [""]
+        result = get_preservation_type(preservation_type6, sample_origin6)
+        self.assertEqual(result, "ffpe")
+
+        preservation_type6 = ["ffpe", "ffpe"]
+        sample_origin6 = ["fresh or frozen"]
+        result = get_preservation_type(preservation_type6, sample_origin6)
+        print(f"result is {result}")
