@@ -180,7 +180,6 @@ def new_request(message_id):
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
     #ERIC_TODO make this a configurable dictionary
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-
     set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
 
@@ -214,7 +213,9 @@ def new_request(message_id):
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
     }
-
+    #ERIC TODO most of the metadata for the request
+    # meta_data = extract_metadata()
+    # assign recipe from extract_metadata()
     if data.get("deliveryDate"):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
@@ -423,9 +424,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-    #ERIC_TODO  does this query work as a dictionary?
+    #ERIC TODO for each diction in list OR
     operators = Operator.objects.filter(recipes__overlap=[recipe])
-    recipe_filters = {'field1': 'value1', 'field2__contains': 'value2'}
+    # recipe_filters = {'field1': 'value1', 'field2__contains': 'value2'}
     operators.objects.filter(**recipe_filters)
     filter_string = ''
     for key, value in enumerate(operators.recipes_json):
