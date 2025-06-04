@@ -290,7 +290,7 @@ def new_request(message_id):
 
 
 @shared_task
-def request_callback(request_id, recipe, start_meta, sample_jobs, job_group_id=None, job_group_notifier_id=None):
+def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
     :param request_id: 08944_B
     :param recipe: IMPACT438
@@ -424,12 +424,14 @@ def request_callback(request_id, recipe, start_meta, sample_jobs, job_group_id=N
             send_notification.delay(admin_hold_event)
             return []
     #ERIC_TODO  does this query work as a dictionary?
-    print(start_meta)
-    # query = Q(**{f"recipes__{start_meta.key}__contains": [start_meta.value]})
-    # operators = Operator.objects.filter(query)
     operators = Operator.objects.filter(recipes__overlap=[recipe])
-    for op in operators:
-        print(op.recipes_json)
+    recipe_filters = {'field1': 'value1', 'field2__contains': 'value2'}
+    operators.objects.filter(**recipe_filters)
+    filter_string = ''
+    for key, value in enumerate(operators.recipes_json):
+        filter_string +=  f"recipes__{key}__contains: {value}"
+    recipe_filter = Q(**{filter_string})
+    operators = Operator.objects.filter(recipes__overlap=[recipe_filter])
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
