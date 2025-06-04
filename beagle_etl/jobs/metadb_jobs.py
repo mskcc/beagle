@@ -430,6 +430,7 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
     filter_string = ''
     for key, value in enumerate(operators.recipes_json):
         filter_string +=  f"recipes__{key}__contains: {value}"
+    print(filter_string)
     recipe_filter = Q(**{filter_string})
     operators = Operator.objects.filter(recipes__overlap=[recipe_filter])
     if not operators:
