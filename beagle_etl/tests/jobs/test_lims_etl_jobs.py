@@ -608,13 +608,13 @@ class TestImportSample(APITestCase):
             version=1,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
-                "recipe": "TestAssay",
+                "genePanel": "TestAssay",
                 "labHeadEmail": "test@email.com",
                 "runDate": date_now,
             },
         )
-        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1", "TestAssay", [], str(job_group.id), str(job_group_notifier.id))
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], recipes_json=[{"genePanel": "TestAssay"}], active=True)
+        request_callback("test1", "TestAssay", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id))
 
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id), notify=False)
 
@@ -641,19 +641,19 @@ class TestImportSample(APITestCase):
             file_group=self.file_group,
         )
         date_now = date.today().strftime("%Y-%m-%d")
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
-                "recipe": "TestAssay",
+                "genePanel": "TestAssay",
                 "labHeadEmail": "test@email.com",
                 "runDate": date_now,
             },
         )
-        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
+        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], recipes_json=[{"genePanel": "TestAssay"}], active=True)
+        operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], recipes_json=[{"genePanel": "TestAssay"}], active=True)
         request_callback(
-            "test1", "TestAssay", [], job_group_id=str(job_group.id), job_group_notifier_id=str(job_group_notifier.id)
+            "test1", "TestAssay", file_metadata.metadata, [], job_group_id=str(job_group.id), job_group_notifier_id=str(job_group_notifier.id)
         )
 
         calls = [
@@ -679,7 +679,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
@@ -687,7 +687,7 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "UnknownAssay", [], str(job_group.id), str(job_group_notifier.id))
+        request_callback("test1", "UnknownAssay", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
@@ -713,7 +713,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
@@ -721,7 +721,7 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "DisabledAssay1", [], str(job_group.id), str(job_group_notifier.id))
+        request_callback("test1", "DisabledAssay1", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id))
 
         calls = [
             call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
