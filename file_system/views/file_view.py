@@ -69,9 +69,7 @@ class FileView(
         fixed_query_params = fix_query_list(request.query_params, query_list_types)
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
-            queryset = time_filter(
-                FileMetadata, request.query_params
-            )
+            queryset = time_filter(FileMetadata, request.query_params)
             file_group = fixed_query_params.get("file_group")
             path = fixed_query_params.get("path")
             metadata = fixed_query_params.get("metadata")

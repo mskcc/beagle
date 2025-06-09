@@ -43,7 +43,7 @@ class CountFastPaginator(Paginator):
         return self.object_list.values("id").count()
 
 
-def time_filter(model, query_params, time_fields=('created_date', 'modified_date'), previous_queryset=None):
+def time_filter(model, query_params, time_fields=("created_date", "modified_date"), previous_queryset=None):
     queryset = previous_queryset if previous_queryset is not None else model.objects.all()
 
     for time_field in time_fields:
