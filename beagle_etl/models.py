@@ -107,6 +107,7 @@ class RequestCallbackJobStatus(IntEnum):
 class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
     recipe = models.CharField(max_length=100)
+    meta_data = JSONField(default=dict)
     fastq_metadata = JSONField(default=dict)
     samples = JSONField(null=True, blank=True)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
