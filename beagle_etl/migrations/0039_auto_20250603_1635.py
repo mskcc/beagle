@@ -12,13 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='requestcallbackjob',
-            name='meta_data',
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=list),
-        ),
-        migrations.AddField(
             model_name='operator',
             name='recipes_json',
             field=django.contrib.postgres.fields.jsonb.JSONField(default=dict, null=True),
-        )
+        ),
+        migrations.AddField(
+            model_name='requestcallbackjob',
+            name='start_meta',
+            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+        ),
     ]
