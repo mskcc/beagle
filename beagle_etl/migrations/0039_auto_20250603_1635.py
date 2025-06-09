@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='requestcallbackjob',
-            name='fastq_metadata',
+            name='meta_data',
             field=django.contrib.postgres.fields.jsonb.JSONField(default=list),
         ),
         migrations.AddField(
