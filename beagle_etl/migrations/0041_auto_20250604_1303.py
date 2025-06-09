@@ -11,6 +11,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='requestcallbackjob',
+            name='start_meta',
+        ),
+        migrations.AddField(
+            model_name='requestcallbackjob',
+            name='meta_data',
+            field=django.contrib.postgres.fields.jsonb.JSONField(default=list),
+        ),
         migrations.AlterField(
             model_name='operator',
             name='recipes_json',
