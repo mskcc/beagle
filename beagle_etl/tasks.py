@@ -93,6 +93,8 @@ def process_request_callback_jobs():
             # TODO: Remove this when problem with redeliveries of old projects is gone
             pass
         elif datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+            print("RequestCallbackJob function call recipe", request.recipe)
+            print("RequestCallbackJob function call recipe", request.fastq_metadata)
             logger.info("Submitting request callback %s" % request.request_id)
             request_callback.delay(
                 request.request_id,
