@@ -21,7 +21,7 @@ def persist_message(topic, message):
         elif topic == settings.METADB_NATS_REQUEST_UPDATE:
             msg.request_id = request_message[0].get(settings.REQUEST_ID_METADATA_KEY)
         elif topic == settings.METADB_NATS_SAMPLE_UPDATE:
-            msg.request_id = request_message[0].get(settings.SAMPLE_ID_METADATA_KEY)
+            msg.request_id = request_message["latestSampleMetadata"][settings.SAMPLE_ID_METADATA_KEY]
         msg.save()
     except Exception as e:
         logger.error(e)

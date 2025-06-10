@@ -31,7 +31,6 @@ from notifier.events import (
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
-    ErrorImportingFilesEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
@@ -60,8 +59,6 @@ from beagle_etl.exceptions import (
     FailedToCalculateChecksum,
     FailedToCopyFilePermissionDeniedException,
     FailedToCopyFileException,
-    FailedToRegisterFileException,
-    DuplicatedFilesException,
     IncorrectlyFormattedPrimaryId,
     FailedToLocateTheFileException,
 )
@@ -621,7 +618,12 @@ def update_sample_job(message_id, job_group, job_group_notifier):
     message = SMILEMessage.objects.get(id=message_id)
     job_group_notifier_id = str(job_group_notifier.id)
     data = json.loads(message.message)
-    latest = data[-1]
+    latest = data["latestSampleMetadata"]
+    latest["datasource"] = data["datasource"]
+    latest["sampleAliases"] = data["sampleAliases"]
+    latest["smileSampleId"] = data["smileSampleId"]
+    latest["smilePatientId"] = data["patient"]["smilePatientId"]
+    latest["patientAliases"] = data["patient"]["patientAliases"]
     primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
     files = FileRepository.filter(
         metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, file_group=settings.IMPORT_FILE_GROUP
