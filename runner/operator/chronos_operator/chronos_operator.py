@@ -16,7 +16,7 @@ from notifier.tasks import send_notification
 from runner.run.objects.run_creator_object import RunCreator
 
 LOGGER = logging.getLogger(__name__)
-DESTINATION_DIRECTORY = "/juno/work/tempo/wes_repo/Results/v2.0.x/bams"
+DESTINATION_DIRECTORY = "/data1/core006/tempo/wes_repo/Results/v2.0.x/bams"
 
 
 class ChronosOperator(Operator):
