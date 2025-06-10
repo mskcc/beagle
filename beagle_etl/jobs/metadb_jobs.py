@@ -215,8 +215,6 @@ def new_request(message_id):
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
     }
-    #ERIC TODO most of the metadata for the request
-    # assign recipe from extract_metadata()
     if data.get("deliveryDate"):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
@@ -431,10 +429,7 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-    #ERIC TODO for each dictionary in list OR
-    # recipes_json: [{"genePanel": ["val1","valn"], "baitSet": "baiSet1"}, {"genePanel": "val2", "baitSet": "baiSet2"}]
-    # fastq_metadata: {"genePanel": "val2", "baitSet": "baiSet2"}"
-    # we are looking to see if the fastq_metdata exists in the recipes_json
+
     operators = []
     for obj in  Operator.objects.all():
         for recipe_dict in obj.recipes_json:
@@ -444,7 +439,6 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             ):
                 operators.append(obj)
 
-    # operators = Operator.objects.filter(recipes__overlap=[recipe])
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
@@ -595,6 +589,7 @@ def fetch_request_metadata(request_id):
 
 def fetch_fastq_metadata(request_id):
     fastq_file = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata', flat=True).first()
+    print('here is the fastq file before being fetched', fastq_file)
     if fastq_file:
         fastq_metadata = {
             settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
