@@ -81,11 +81,11 @@ logger = logging.getLogger(__name__)
 
 
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
-    fastq_metadata = kwargs.get('fastq_metadata', None)
+    fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
+    print("RequestCallbackJob function call recipe", recipe)
+    print("RequestCallbackJob function call recipe", fastq_metadata)
     if not request:
-        print('fastq_metadata before call back assignment', fastq_metadata)
-        print('recipe before call back assignment', recipe)
         RequestCallbackJob.objects.create(
             request_id=request_id,
             recipe=recipe,
@@ -284,7 +284,9 @@ def new_request(message_id):
 
     message.status = smile_job_status
     message.save()
-    create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata)
+    create_request_callback_instance(
+        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
 
 
 def normalize_fastq_value(val):
@@ -294,7 +296,8 @@ def normalize_fastq_value(val):
         return {val}
     else:
         return set()
-    
+
+
 @shared_task
 def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
@@ -326,6 +329,8 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
                 send_notification.delay(wes_job_failed.to_dict())
 
     if not recipe:
+        print("request_callback function call recipe", recipe)
+        print("request_callback function call recipe", fastq_metadata)
         raise FailedToSubmitToOperatorException(
             "Not enough metadata to choose the operator for requestId:%s" % request_id
         )
@@ -431,14 +436,13 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             return []
 
     operators = []
-    for obj in  Operator.objects.all():
+    for obj in Operator.objects.all():
         for recipe_dict in obj.recipes_json:
             if all(
-                fastq_metadata.get(key, '') in normalize_fastq_value(recipe_dict.get(key, []))
-                for key in recipe_dict
+                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
             ):
                 operators.append(obj)
-
+    print("Here are the matched operators in the request_callback:", operators)
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
@@ -539,7 +543,6 @@ def update_request_job(message_id, job_group, job_group_notifier):
         send_notification.delay(update)
         send_notification.delay(diff_details_event)
         update_file_object(f.file, f.file.path, new_metadata)
-        
 
     pooled_normal = data.get("pooledNormals", [])
     if pooled_normal is None:
@@ -561,7 +564,9 @@ def update_request_job(message_id, job_group, job_group_notifier):
 
     fastq_metadata, recipe = fetch_fastq_metadata(request_id)
 
-    create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata = fastq_metadata)
+    create_request_callback_instance(
+        request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
     return request_metadata, pooled_normal
 
 
@@ -587,9 +592,19 @@ def fetch_request_metadata(request_id):
     }
     return request_metadata
 
+
 def fetch_fastq_metadata(request_id):
-    fastq_file = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).values_list('metadata', flat=True).first()
-    print('here is the fastq file before being fetched', fastq_file)
+    """
+    input: request_id <string>: request_id received in a smile message.
+    output:
+        - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
+        - recipe <string>: request recipe that is taken from the fastq_metadata
+    """
+    fastq_file = (
+        FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
+        .values_list("metadata", flat=True)
+        .first()
+    )
     if fastq_file:
         fastq_metadata = {
             settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
@@ -601,16 +616,17 @@ def fetch_fastq_metadata(request_id):
             settings.PROJECT_ID_METADATA_KEY: fastq_file.get(settings.PROJECT_ID_METADATA_KEY),
             settings.ONCOTREE_METADATA_KEY: fastq_file.get(settings.ONCOTREE_METADATA_KEY),
             settings.PRESERVATION_METADATA_KEY: fastq_file.get(settings.PRESERVATION_METADATA_KEY),
-            "sampleOrigin": fastq_file.get("sampleOrigin")
+            "sampleOrigin": fastq_file.get("sampleOrigin"),
         }
-        recipe = fastq_metadata.get('genePanel')
+        recipe = fastq_metadata.get("genePanel")
     else:
         fastq_metadata = {}
-        recipe = ''
-    print("creating fastq metadata", fastq_metadata)
-    print("assigning recipe", recipe)
+        recipe = ""
+    print("fetch_fastq_metadata function call recipe", recipe)
+    print("fetch_fastq_metadata function call recipe", fastq_metadata)
     return fastq_metadata, recipe
-    
+
+
 @shared_task
 def update_job(request_id):
     sample_update_messages = (
@@ -650,7 +666,9 @@ def update_job(request_id):
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
     )
-    create_request_callback_instance(request_id, recipe, sample_status, job_group, job_group_notifier, fastq_metadata=fastq_metadata)
+    create_request_callback_instance(
+        request_id, recipe, sample_status, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
 
 
 @shared_task
