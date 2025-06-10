@@ -563,7 +563,7 @@ def update_request_job(message_id, job_group, job_group_notifier):
             )
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    
+
     fastq_metadata = fetch_fastq_metadata(request_id)
 
     create_request_callback_instance(
@@ -606,6 +606,7 @@ def fetch_fastq_metadata(request_id):
         .values_list("metadata", flat=True)
         .first()
     )
+    print("here is the fastq file", fastq_file)
     if fastq_file:
         fastq_metadata = {
             settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
