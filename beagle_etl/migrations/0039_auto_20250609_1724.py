@@ -7,18 +7,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0038_skipproject'),
+        ("beagle_etl", "0038_skipproject"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='operator',
-            name='recipes_json',
+            model_name="operator",
+            name="recipes_json",
             field=django.contrib.postgres.fields.jsonb.JSONField(default=list, null=True),
         ),
         migrations.AddField(
-            model_name='requestcallbackjob',
-            name='fastq_metadata',
+            model_name="requestcallbackjob",
+            name="fastq_metadata",
             field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
         ),
     ]

@@ -421,8 +421,6 @@ class TestNewRequest(TestCase):
             self.new_request = json.load(new_request_08944_B)
         self.new_request_str = json.dumps(self.new_request)
 
-
-
     @patch("os.access")
     @patch("notifier.tasks.notifier_start")
     @patch("notifier.tasks.send_notification.delay")
@@ -437,7 +435,7 @@ class TestNewRequest(TestCase):
         send_notification,
         notifier_start,
         access,
-        ):
+    ):
         """
         Test that samples metadata is properly updated
         """
@@ -456,11 +454,14 @@ class TestNewRequest(TestCase):
         with open(test_14269_C_1_update_sample) as update_sample_14269_C_1:
             self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
         self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
-        msg = SMILEMessage.objects.create(topic="MDB_STREAM.server.cpt-gateway.cmo-sample-update", 
-                                          request_id="14269_C",
-                                          message=self.update_sample_14269_C_1_str, 
-                                          status=SmileMessageStatus.PENDING)
-        update_job('14269_C')
+        msg = SMILEMessage.objects.create(
+            topic="MDB_STREAM.server.cpt-gateway.cmo-sample-update",
+            request_id="14269_C",
+            message=self.update_sample_14269_C_1_str,
+            status=SmileMessageStatus.PENDING,
+        )
+        update_job("14269_C")
+
     #     populate_job_group.return_value = None
     #     jobGroupNotifierObjectGet.return_value = None
     #     send_notification.return_value = None

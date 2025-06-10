@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def forwards(apps, schema_editor):
     Operator = apps.get_model("beagle_etl", "Operator")
     for op in Operator.objects.all():
@@ -15,7 +16,7 @@ def forwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0039_auto_20250609_1724'),
+        ("beagle_etl", "0039_auto_20250609_1724"),
     ]
 
     operations = [

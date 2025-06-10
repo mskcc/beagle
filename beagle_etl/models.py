@@ -63,7 +63,7 @@ class Operator(models.Model):
     version = models.CharField(max_length=50)
     active = models.BooleanField(default=False)
     recipes = ArrayField(models.CharField(max_length=50, default=False))
-    recipes_json = JSONField(default=list, null=True) 
+    recipes_json = JSONField(default=list, null=True)
     notifier = models.ForeignKey(Notifier, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
