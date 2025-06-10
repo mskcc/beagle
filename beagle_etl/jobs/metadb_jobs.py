@@ -133,8 +133,7 @@ def new_request(message_id):
         return
 
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
-    fastq_metadata, recipe = fetch_fastq_metadata(request_id)
-    gene_panel = recipe
+    gene_panel = data.get(settings.RECIPE_METADATA_KEY)
     logger.info("Importing new request: %s" % request_id)
 
     sample_jobs = []
@@ -182,6 +181,7 @@ def new_request(message_id):
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
+    recipe = data.get(settings.RECIPE_METADATA_KEY)
     set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
 
@@ -284,6 +284,8 @@ def new_request(message_id):
 
     message.status = smile_job_status
     message.save()
+    
+    fastq_metadata = fetch_fastq_metadata(request_id)
     create_request_callback_instance(
         request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
@@ -561,8 +563,8 @@ def update_request_job(message_id, job_group, job_group_notifier):
             )
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-
-    fastq_metadata, recipe = fetch_fastq_metadata(request_id)
+    
+    fastq_metadata = fetch_fastq_metadata(request_id)
 
     create_request_callback_instance(
         request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
@@ -598,7 +600,6 @@ def fetch_fastq_metadata(request_id):
     input: request_id <string>: request_id received in a smile message.
     output:
         - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
-        - recipe <string>: request recipe that is taken from the fastq_metadata
     """
     fastq_file = (
         FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
@@ -618,13 +619,9 @@ def fetch_fastq_metadata(request_id):
             settings.PRESERVATION_METADATA_KEY: fastq_file.get(settings.PRESERVATION_METADATA_KEY),
             "sampleOrigin": fastq_file.get("sampleOrigin"),
         }
-        recipe = fastq_metadata.get("genePanel")
     else:
         fastq_metadata = {}
-        recipe = ""
-    print("fetch_fastq_metadata function call recipe", recipe)
-    print("fetch_fastq_metadata function call recipe", fastq_metadata)
-    return fastq_metadata, recipe
+    return fastq_metadata
 
 
 @shared_task
@@ -662,7 +659,8 @@ def update_job(request_id):
 
     if not request_metadata:
         request_metadata = fetch_request_metadata(request_id)
-    fastq_metadata, recipe = fetch_fastq_metadata(request_id)
+    fastq_metadata = fetch_fastq_metadata(request_id)
+    recipe = fastq_metadata.get('genePanel', '')
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
     )
