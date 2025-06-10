@@ -84,6 +84,8 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
     fastq_metadata = kwargs.get('fastq_metadata', None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
+        print('fastq_metadata before call back assignment', fastq_metadata)
+        print('recipe before call back assignment', recipe)
         RequestCallbackJob.objects.create(
             request_id=request_id,
             recipe=recipe,
@@ -610,6 +612,8 @@ def fetch_fastq_metadata(request_id):
     else:
         fastq_metadata = {}
         recipe = ''
+    print("creating fastq metadata", fastq_metadata)
+    print("assigning recipe", recipe)
     return fastq_metadata, recipe
     
 @shared_task
