@@ -84,7 +84,7 @@ def create_request_callback_instance(request_id, recipe, sample_jobs, job_group,
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     print("RequestCallbackJob function call recipe", recipe)
-    print("RequestCallbackJob function call recipe", fastq_metadata)
+    print("RequestCallbackJob function call fastqmetadata", fastq_metadata)
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
@@ -286,6 +286,8 @@ def new_request(message_id):
     message.save()
     
     fastq_metadata = fetch_fastq_metadata(request_id)
+    print("new request recipe:", recipe)
+    print("new request fastqmetadata:", fastq_metadata)
     create_request_callback_instance(
         request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
@@ -329,10 +331,9 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             if job["igocomplete"] and job["status"] != "COMPLETED":
                 wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
                 send_notification.delay(wes_job_failed.to_dict())
-
+    print("request_callback function call recipe:", recipe)
+    print("request_callback function call fastqmetadata:", fastq_metadata)
     if not recipe:
-        print("request_callback function call recipe", recipe)
-        print("request_callback function call recipe", fastq_metadata)
         raise FailedToSubmitToOperatorException(
             "Not enough metadata to choose the operator for requestId:%s" % request_id
         )
@@ -487,8 +488,9 @@ def update_request_job(message_id, job_group, job_group_notifier):
     data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
-    recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
+    
     project_id = data.get("projectId")
+    recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
     send_notification.delay(redelivery_event)
 
@@ -565,7 +567,8 @@ def update_request_job(message_id, job_group, job_group_notifier):
     message.save()
 
     fastq_metadata = fetch_fastq_metadata(request_id)
-
+    print("update request recipe:", recipe)
+    print("update request fastqmetadata:", fastq_metadata)
     create_request_callback_instance(
         request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
@@ -606,7 +609,6 @@ def fetch_fastq_metadata(request_id):
         .values_list("metadata", flat=True)
         .first()
     )
-    print("here is the fastq file", fastq_file)
     if fastq_file:
         fastq_metadata = {
             settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
@@ -661,7 +663,9 @@ def update_job(request_id):
     if not request_metadata:
         request_metadata = fetch_request_metadata(request_id)
     fastq_metadata = fetch_fastq_metadata(request_id)
-    recipe = fastq_metadata.get('genePanel', '')
+    recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
+    print("update job fastq_metadata", fastq_metadata)
+    print("update job recipe", recipe)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
     )
