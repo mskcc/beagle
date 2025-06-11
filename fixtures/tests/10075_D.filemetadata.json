@@ -402,7 +402,7 @@
                 "species": "Human",
                 "primaryId": "10075_D_2",
                 "barcodeId": null,
-                "libraryIgoId": null,
+                "libraryIgoId": "10075_D_2",
                 "cmoPatientId": "C-DRKHP7",
                 "igoRequestId": "10075_D",
                 "sequencingCenter": "MSKCC",
