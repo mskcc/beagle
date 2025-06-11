@@ -50,11 +50,11 @@ meta_fields = [
 
 class AccessV2NucleoQcAggOperator(Operator):
     """
-    Operator for the CMO CH QC AGGREGATE workflow:
+    Operator for the ACCESS QC AGGREGATE workflow:
 
     https://github.com/msk-access/nucleo_qc/blob/develop/nucleo_aggregate_visualize.cwl
 
-    This Operator will search for CMO-CH QC files based on an IGO Request ID
+    This Operator will search for ACCESS QC files based on an IGO Request ID
     """
 
     def get_jobs(self):
