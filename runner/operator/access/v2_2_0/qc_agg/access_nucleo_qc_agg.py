@@ -102,7 +102,9 @@ class AccessV2NucleoQcAggOperator(Operator):
     def process_listing(self, listing, name):
         for directory in listing:
             if directory["basename"] == name:
-                return directory
+                # Ignore matplotlib hidden config files
+                if not directory["location"].endswith(".config/matplotlib"):
+                    return directory
             if "listing" in directory:
                 item = self.process_listing(directory["listing"], name)
                 if item:
