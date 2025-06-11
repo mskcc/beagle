@@ -389,7 +389,7 @@ class TestPairRequest(TestCase):
                 {
                     "CN": "MSKCC",
                     "ID": ["s_C_DRKHP7_N001_d_HCYYWBBXY"],
-                    "LB": "10075_D_2",
+                    "LB": "s_C_DRKHP7_N001_d_1",
                     "PL": "Illumina",
                     "PU": ["HCYYWBBXY"],
                     "R1": [
