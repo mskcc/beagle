@@ -91,10 +91,14 @@ logger = logging.getLogger(__name__)
 #     return operators
 
 def fetch_operators_wfastq(fastq_metadata):  
+    # Limit Potential Operators with OR query
     query = Q()
     for key, value in fastq_metadata.items():
         query |= Q(recipes_json__contains=[{key: value}])
+        query |= Q(recipes_json__contains=[{key: [value]}]) # could be a list
     candidates = Operator.objects.filter(query)
+
+    # Make sure operator all json_recipes key/values exist in fastq metadata
     operators = []
     for obj in candidates:
         for recipe_dict in obj.recipes_json:
@@ -103,8 +107,8 @@ def fetch_operators_wfastq(fastq_metadata):
                 for key in recipe_dict
             ):
                 operators.append(obj)
-
     return operators
+
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
