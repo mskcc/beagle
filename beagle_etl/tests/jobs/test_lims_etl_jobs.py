@@ -12,7 +12,7 @@ from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback
+from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback, fetch_operators_wfastq
 
 
 class TestFetchSamples(TestCase):
@@ -617,14 +617,18 @@ class TestImportSample(APITestCase):
             slug="Operator1",
             class_name="Operator",
             recipes=["TestAssay"],
-            recipes_json=[{"genePanel": "TestAssay"}],
+            recipes_json=[{"genePanel": "TestAssay"},{"genePanel": "OtherAssay", "baitSet": "TestBait"}],
             active=True,
         )
         request_callback(
             "test1", "TestAssay", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id)
         )
-
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id), notify=False)
+
+        # Test finding operator in request_callback via fastq_metadata 
+        operators = fetch_operators_wfastq(file_metadata.metadata)
+        self.assertEqual(operators[0].id, 11)
+        self.assertEquals(operators[0].slug, 'Operator1')
 
     @patch("runner.tasks.create_jobs_from_request.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
