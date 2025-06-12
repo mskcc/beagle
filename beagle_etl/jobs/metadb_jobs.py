@@ -76,10 +76,35 @@ from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
 from study.objects import StudyObject
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
+# def fetch_operators_wfastq(fastq_metadata):  
+#     operators = []
+#     for obj in Operator.objects.all():
+#         for recipe_dict in obj.recipes_json:
+#             if all(
+#                 fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
+#             ):
+#                 operators.append(obj)
+#     return operators
 
+def fetch_operators_wfastq(fastq_metadata):  
+    query = Q()
+    for key, value in fastq_metadata.items():
+        query |= Q(recipes_json__contains=[{key: value}])
+    candidates = Operator.objects.filter(query)
+    operators = []
+    for obj in candidates:
+        for recipe_dict in obj.recipes_json:
+            if all(
+                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, []))
+                for key in recipe_dict
+            ):
+                operators.append(obj)
+
+    return operators
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
@@ -284,7 +309,7 @@ def new_request(message_id):
 
     message.status = smile_job_status
     message.save()
-    
+
     fastq_metadata = fetch_fastq_metadata(request_id)
     print("new request recipe:", recipe)
     print("new request fastqmetadata:", fastq_metadata)
@@ -437,14 +462,8 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-
-    operators = []
-    for obj in Operator.objects.all():
-        for recipe_dict in obj.recipes_json:
-            if all(
-                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
-            ):
-                operators.append(obj)
+    #Find operators that match fastq_metadata
+    operators = fetch_operators_wfastq(fastq_metadata)
     print("Here are the matched operators in the request_callback:", operators)
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
@@ -488,7 +507,7 @@ def update_request_job(message_id, job_group, job_group_notifier):
     data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
     files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
-    
+
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
     redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
