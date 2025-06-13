@@ -627,7 +627,7 @@ def fetch_fastq_metadata(request_id):
         - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
     """
     fastq_file = (
-        FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
+        FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP)
         .values_list("metadata", flat=True)
         .first()
     )
