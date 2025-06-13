@@ -407,12 +407,14 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
     run_dates = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group= settings.IMPORT_FILE_GROUP, values_metadata=settings.RUN_DATE_METADATA_KEY
     ).all()
-    run_dates = sorted([parse(d) for d in run_dates])
 
     if not run_dates:
         logger.info(f"Request doesn't have run_date specified. Skip running.")
         return []
-    elif datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
+
+    run_dates = sorted([parse(d) for d in run_dates])
+
+    if datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
         logger.info(f"Request older than {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
         return []
 
@@ -507,7 +509,7 @@ def update_request_job(message_id, job_group, job_group_notifier):
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
+    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group= settings.IMPORT_FILE_GROUP)
 
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
