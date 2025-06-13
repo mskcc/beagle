@@ -12,7 +12,12 @@ from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback
+from beagle_etl.jobs.metadb_jobs import (
+    create_pooled_normal,
+    get_run_id_from_string,
+    request_callback,
+    fetch_operators_wfastq,
+)
 
 
 class TestFetchSamples(TestCase):
@@ -608,15 +613,43 @@ class TestImportSample(APITestCase):
             version=1,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
-                "recipe": "TestAssay",
+                "genePanel": "TestAssay",
                 "labHeadEmail": "test@email.com",
                 "runDate": date_now,
+                "baitSet": "TestBait",
             },
         )
-        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        request_callback("test1", "TestAssay", [], str(job_group.id), str(job_group_notifier.id))
-
+        operator1 = Operator.objects.create(
+            slug="Operator1",
+            class_name="Operator",
+            recipes=["TestAssay"],
+            recipes_json=[
+                {"genePanel": ["TestAssay", "TestAssay2"], "baitSet": "TestBait"},
+                {"genePanel": "TestAssay3", "baitSet": "TestBait2"},
+            ],
+            active=True,
+        )
+        request_callback(
+            "test1", "TestAssay", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id)
+        )
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id), notify=False)
+
+        # Test finding single operator in request_callback via fastq_metadata
+        operators = fetch_operators_wfastq(file_metadata.metadata)
+        self.assertEqual(operators[0].id, 11)
+        self.assertEquals(operators[0].slug, "Operator1")
+
+        #  Test finding multiple operator in request_callback via fastq_metadata
+        operator2 = Operator.objects.create(
+            slug="Operator2",
+            class_name="Operator",
+            recipes=["TestAssay"],
+            recipes_json=[{"genePanel": "TestAssay", "baitSet": "TestBait"}],
+            active=True,
+        )
+        operators = fetch_operators_wfastq(file_metadata.metadata)
+        self.assertEqual([op.id for op in operators], [11, 12])
+        self.assertEqual([op.slug for op in operators], ["Operator1", "Operator2"])
 
     @patch("runner.tasks.create_jobs_from_request.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
@@ -641,19 +674,36 @@ class TestImportSample(APITestCase):
             file_group=self.file_group,
         )
         date_now = date.today().strftime("%Y-%m-%d")
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
-                "recipe": "TestAssay",
+                "genePanel": "TestAssay",
                 "labHeadEmail": "test@email.com",
                 "runDate": date_now,
             },
         )
-        operator1 = Operator.objects.create(slug="Operator1", class_name="Operator", recipes=["TestAssay"], active=True)
-        operator2 = Operator.objects.create(slug="Operator2", class_name="Operator", recipes=["TestAssay"], active=True)
+        operator1 = Operator.objects.create(
+            slug="Operator1",
+            class_name="Operator",
+            recipes=["TestAssay"],
+            recipes_json=[{"genePanel": "TestAssay"}],
+            active=True,
+        )
+        operator2 = Operator.objects.create(
+            slug="Operator2",
+            class_name="Operator",
+            recipes=["TestAssay"],
+            recipes_json=[{"genePanel": "TestAssay"}],
+            active=True,
+        )
         request_callback(
-            "test1", "TestAssay", [], job_group_id=str(job_group.id), job_group_notifier_id=str(job_group_notifier.id)
+            "test1",
+            "TestAssay",
+            file_metadata.metadata,
+            [],
+            job_group_id=str(job_group.id),
+            job_group_notifier_id=str(job_group_notifier.id),
         )
 
         calls = [
@@ -679,7 +729,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
@@ -687,7 +737,9 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "UnknownAssay", [], str(job_group.id), str(job_group_notifier.id))
+        request_callback(
+            "test1", "UnknownAssay", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id)
+        )
 
         calls = [
             call({"class": "SetCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
@@ -713,7 +765,7 @@ class TestImportSample(APITestCase):
             file_type=self.fastq,
             file_group=self.file_group,
         )
-        FileMetadata.objects.create_or_update(
+        file_metadata = FileMetadata.objects.create_or_update(
             file=file_conflict,
             metadata={
                 settings.REQUEST_ID_METADATA_KEY: "test1",
@@ -721,7 +773,9 @@ class TestImportSample(APITestCase):
                 "labHeadEmail": "test@email.com",
             },
         )
-        request_callback("test1", "DisabledAssay1", [], str(job_group.id), str(job_group_notifier.id))
+        request_callback(
+            "test1", "DisabledAssay1", file_metadata.metadata, [], str(job_group.id), str(job_group_notifier.id)
+        )
 
         calls = [
             call({"class": "NotForCIReviewEvent", "job_notifier": str(job_group_notifier.id)}),
