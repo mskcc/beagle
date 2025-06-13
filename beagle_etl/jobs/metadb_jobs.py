@@ -77,22 +77,13 @@ from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
-# def fetch_operators_wfastq(fastq_metadata):  
-#     operators = []
-#     for obj in Operator.objects.all():
-#         for recipe_dict in obj.recipes_json:
-#             if all(
-#                 fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
-#             ):
-#                 operators.append(obj)
-#     return operators
 
-def fetch_operators_wfastq(fastq_metadata):  
+def fetch_operators_wfastq(fastq_metadata):
     # Limit Potential Operators with OR query
     query = Q()
     for key, value in fastq_metadata.items():
         query |= Q(recipes_json__contains=[{key: value}])
-        query |= Q(recipes_json__contains=[{key: [value]}]) # could be a list
+        query |= Q(recipes_json__contains=[{key: [value]}])  # could be a list
     candidates = Operator.objects.filter(query)
 
     # Make sure operator all json_recipes key/values exist in fastq metadata
@@ -100,17 +91,15 @@ def fetch_operators_wfastq(fastq_metadata):
     for obj in candidates:
         for recipe_dict in obj.recipes_json:
             if all(
-                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, []))
-                for key in recipe_dict
+                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
             ):
                 operators.append(obj)
     return operators
 
+
 def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
-    print("RequestCallbackJob function call recipe", recipe)
-    print("RequestCallbackJob function call fastqmetadata", fastq_metadata)
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
@@ -312,8 +301,6 @@ def new_request(message_id):
     message.save()
 
     fastq_metadata = fetch_fastq_metadata(request_id)
-    print("new request recipe:", recipe)
-    print("new request fastqmetadata:", fastq_metadata)
     create_request_callback_instance(
         request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
@@ -357,8 +344,6 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             if job["igocomplete"] and job["status"] != "COMPLETED":
                 wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
                 send_notification.delay(wes_job_failed.to_dict())
-    print("request_callback function call recipe:", recipe)
-    print("request_callback function call fastqmetadata:", fastq_metadata)
     if not recipe:
         raise FailedToSubmitToOperatorException(
             "Not enough metadata to choose the operator for requestId:%s" % request_id
@@ -405,7 +390,9 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
         return []
 
     run_dates = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group= settings.IMPORT_FILE_GROUP, values_metadata=settings.RUN_DATE_METADATA_KEY
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+        file_group=settings.IMPORT_FILE_GROUP,
+        values_metadata=settings.RUN_DATE_METADATA_KEY,
     ).all()
 
     if not run_dates:
@@ -465,9 +452,9 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-    #Find operators that match fastq_metadata
+    # Find operators that match fastq_metadata
     operators = fetch_operators_wfastq(fastq_metadata)
-    print("Here are the matched operators in the request_callback:", operators)
+    print(f"Operators matched with {request_id} during request_callback: {operators}")
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
@@ -509,7 +496,9 @@ def update_request_job(message_id, job_group, job_group_notifier):
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group= settings.IMPORT_FILE_GROUP)
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+    )
 
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
@@ -589,8 +578,6 @@ def update_request_job(message_id, job_group, job_group_notifier):
     message.save()
 
     fastq_metadata = fetch_fastq_metadata(request_id)
-    print("update request recipe:", recipe)
-    print("update request fastqmetadata:", fastq_metadata)
     create_request_callback_instance(
         request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
@@ -627,7 +614,9 @@ def fetch_fastq_metadata(request_id):
         - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
     """
     fastq_file = (
-        FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP)
+        FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+        )
         .values_list("metadata", flat=True)
         .first()
     )
@@ -686,8 +675,6 @@ def update_job(request_id):
         request_metadata = fetch_request_metadata(request_id)
     fastq_metadata = fetch_fastq_metadata(request_id)
     recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
-    print("update job fastq_metadata", fastq_metadata)
-    print("update job recipe", recipe)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
     )
