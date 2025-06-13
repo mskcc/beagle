@@ -10,9 +10,11 @@ It performs the following:
 
 Normals will have to have the same patient and bait set in order to be considered "viable"
 """
+
 import logging
 from datetime import datetime as dt
-from .retrieve_samples_by_query import get_samples_from_patient_id, get_pooled_normals, get_dmp_bam
+
+from .retrieve_samples_by_query import get_dmp_bam, get_pooled_normals, get_samples_from_patient_id
 
 LOGGER = logging.getLogger(__name__)
 
@@ -144,9 +146,13 @@ def compile_pairs(samples, pairing_info=None, logger=None):
                         normal["sample_id"],
                         normal["SM"],
                     )
-                    logger.log(
-                        f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {normal['sample_id']} ({normal['SM']})"
-                    ) if logger else None
+                    (
+                        logger.log(
+                            f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {normal['sample_id']} ({normal['SM']})"
+                        )
+                        if logger
+                        else None
+                    )
                     pairs["tumor"].append(tumor)
                     pairs["normal"].append(normal)
                 else:
@@ -156,9 +162,13 @@ def compile_pairs(samples, pairing_info=None, logger=None):
                         tumor["SM"],
                         patient_id,
                     )
-                    logger.log(
-                        f"Missing normal for sample {tumor['sample_id']} ({tumor['SM']}); querying patient {patient_id}"
-                    ) if logger else None
+                    (
+                        logger.log(
+                            f"Missing normal for sample {tumor['sample_id']} ({tumor['SM']}); querying patient {patient_id}"
+                        )
+                        if logger
+                        else None
+                    )
                     patient_samples = get_samples_from_patient_id(patient_id)
                     new_normals = get_by_tumor_type(patient_samples, "Normal")
                     new_normal = get_viable_normal(new_normals, patient_id, run_mode, bait_set)
@@ -170,66 +180,65 @@ def compile_pairs(samples, pairing_info=None, logger=None):
                             new_normal["sample_id"],
                             new_normal["SM"],
                         )
-                        logger.log(
-                            f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {new_normal['sample_id']} ({new_normal['SM']})"
-                        ) if logger else None
+                        (
+                            logger.log(
+                                f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {new_normal['sample_id']} ({new_normal['SM']})"
+                            )
+                            if logger
+                            else None
+                        )
                         pairs["tumor"].append(tumor)
                         pairs["normal"].append(new_normal)
                     else:
-                        LOGGER.info("No normal found for patient %s; checking for DMP Normal", patient_id)
-                        logger.log(
-                            f"No normal found for patient {patient_id}; checking for DMP Normal"
-                        ) if logger else None
-                        dmp_normal = get_dmp_bam(patient_id, bait_set, "Normal")
-                        if dmp_normal:
+                        pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
+                        LOGGER.info("No DMP Normal found for patient %s; checking for Pooled Normal", patient_id)
+                        (
+                            logger.log(f"No DMP Normal found for patient %s; checking for Pooled Normal {patient_id}")
+                            if logger
+                            else None
+                        )
+                        if pooled_normal:
                             LOGGER.info(
                                 "Pairing %s (%s) with %s (%s)",
                                 tumor["sample_id"],
                                 tumor["SM"],
-                                dmp_normal["sample_id"],
-                                dmp_normal["SM"],
+                                pooled_normal["sample_id"],
+                                pooled_normal["SM"],
                             )
-                            logger.log(
-                                f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {dmp_normal['sample_id']} ({dmp_normal['SM']})"
-                            ) if logger else None
-                            pairs["tumor"].append(tumor)
-                            pairs["normal"].append(dmp_normal)
-                        else:
-                            pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
-                            LOGGER.info("No DMP Normal found for patient %s; checking for Pooled Normal", patient_id)
-                            logger.log(
-                                f"No DMP Normal found for patient %s; checking for Pooled Normal {patient_id}"
-                            ) if logger else None
-                            if pooled_normal:
-                                LOGGER.info(
-                                    "Pairing %s (%s) with %s (%s)",
-                                    tumor["sample_id"],
-                                    tumor["SM"],
-                                    pooled_normal["sample_id"],
-                                    pooled_normal["SM"],
-                                )
+                            (
                                 logger.log(
                                     f"Pairing {tumor['sample_id']} ({tumor['SM']}) with {pooled_normal['sample_id']} ({pooled_normal['SM']})"
-                                ) if logger else None
-                                pairs["tumor"].append(tumor)
-                                pairs["normal"].append(pooled_normal)
-                            else:
-                                LOGGER.error(
-                                    "No normal found for %s (%s), patient %s",
-                                    tumor["sample_id"],
-                                    tumor["SM"],
-                                    patient_id,
                                 )
+                                if logger
+                                else None
+                            )
+                            pairs["tumor"].append(tumor)
+                            pairs["normal"].append(pooled_normal)
+                        else:
+                            LOGGER.error(
+                                "No normal found for %s (%s), patient %s",
+                                tumor["sample_id"],
+                                tumor["SM"],
+                                patient_id,
+                            )
+                            (
                                 logger.log(
                                     f"No normal found for {tumor['sample_id']} ({tumor['SM']}), patient {patient_id}"
-                                ) if logger else None
+                                )
+                                if logger
+                                else None
+                            )
             else:
                 LOGGER.error(
                     "NoPatientIdError: No patient_id found for %s (%s); skipping.", tumor["sample_id"], tumor["SM"]
                 )
-                logger.log(
-                    f"NoPatientIdError: No patient_id found for {tumor['sample_id']} ({tumor['SM']}); skipping."
-                ) if logger else None
+                (
+                    logger.log(
+                        f"NoPatientIdError: No patient_id found for {tumor['sample_id']} ({tumor['SM']}); skipping."
+                    )
+                    if logger
+                    else None
+                )
 
     return pairs
 

@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Q
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
@@ -75,5 +77,11 @@ def generate_sample_data_content_str(metadata, pipeline_name, pipeline_github, p
             metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY], metadata[settings.SAMPLE_CLASS_METADATA_KEY]
         ),
     )
-    result = f"{sample_id}\t{metadata[settings.REQUEST_ID_METADATA_KEY]}\t{project_id}\t{metadata[settings.PATIENT_ID_METADATA_KEY]}\t{metadata['investigatorSampleId']}\t{MetadataValidator.clean_value(metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.ONCOTREE_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata['preservation'])}\t{MetadataValidator.clean_value(metadata['sex'])}\t{MetadataValidator.clean_value(metadata['tissueLocation'])}\t{metadata[settings.SAMPLE_ID_METADATA_KEY]}\t{MetadataValidator.clean_value(metadata['runMode'])}\t{pipeline_name}\t{pipeline_github}\t{pipeline_version}\n"
+    result = f"{sample_id}\t{metadata[settings.REQUEST_ID_METADATA_KEY]}\t{project_id}\t{metadata[settings.PATIENT_ID_METADATA_KEY]}\t{metadata['investigatorSampleId']}\t{MetadataValidator.clean_value(metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY])}\t{gene_panel_mapping(MetadataValidator.clean_value(metadata[settings.RECIPE_METADATA_KEY]), metadata[settings.BAITSET_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.ONCOTREE_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata[settings.SAMPLE_CLASS_METADATA_KEY])}\t{MetadataValidator.clean_value(metadata['preservation'])}\t{MetadataValidator.clean_value(metadata['sex'])}\t{MetadataValidator.clean_value(metadata['tissueLocation'])}\t{metadata[settings.SAMPLE_ID_METADATA_KEY]}\t{MetadataValidator.clean_value(metadata['runMode'])}\t{pipeline_name}\t{pipeline_github}\t{pipeline_version}\n"
     return result
+
+
+def gene_panel_mapping(gene_panel, bait_set):
+    normalized = settings.GENE_PANEL_TABLE.get(gene_panel, {}).get(bait_set, "ERROR")
+    logging.debug(f"Normalizing {gene_panel}, {bait_set} to {normalized}")
+    return normalized
