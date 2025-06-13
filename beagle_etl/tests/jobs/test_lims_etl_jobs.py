@@ -12,7 +12,12 @@ from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
-from beagle_etl.jobs.metadb_jobs import create_pooled_normal, get_run_id_from_string, request_callback, fetch_operators_wfastq
+from beagle_etl.jobs.metadb_jobs import (
+    create_pooled_normal,
+    get_run_id_from_string,
+    request_callback,
+    fetch_operators_wfastq,
+)
 
 
 class TestFetchSamples(TestCase):
@@ -611,14 +616,17 @@ class TestImportSample(APITestCase):
                 "genePanel": "TestAssay",
                 "labHeadEmail": "test@email.com",
                 "runDate": date_now,
-                "baitSet": "TestBait"
+                "baitSet": "TestBait",
             },
         )
         operator1 = Operator.objects.create(
             slug="Operator1",
             class_name="Operator",
             recipes=["TestAssay"],
-            recipes_json=[{"genePanel": ["TestAssay","TestAssay2"], "baitSet": "TestBait"},{"genePanel": "TestAssay3", "baitSet": "TestBait2"}],
+            recipes_json=[
+                {"genePanel": ["TestAssay", "TestAssay2"], "baitSet": "TestBait"},
+                {"genePanel": "TestAssay3", "baitSet": "TestBait2"},
+            ],
             active=True,
         )
         request_callback(
@@ -626,12 +634,12 @@ class TestImportSample(APITestCase):
         )
         mock_create_jobs_from_request.assert_called_once_with("test1", operator1.id, str(job_group.id), notify=False)
 
-        # Test finding single operator in request_callback via fastq_metadata 
+        # Test finding single operator in request_callback via fastq_metadata
         operators = fetch_operators_wfastq(file_metadata.metadata)
         self.assertEqual(operators[0].id, 11)
-        self.assertEquals(operators[0].slug, 'Operator1')
+        self.assertEquals(operators[0].slug, "Operator1")
 
-        #  Test finding multiple operator in request_callback via fastq_metadata 
+        #  Test finding multiple operator in request_callback via fastq_metadata
         operator2 = Operator.objects.create(
             slug="Operator2",
             class_name="Operator",
@@ -640,8 +648,8 @@ class TestImportSample(APITestCase):
             active=True,
         )
         operators = fetch_operators_wfastq(file_metadata.metadata)
-        self.assertEqual([op.id for op in operators], [11,12])
-        self.assertEqual([op.slug for op in operators], ['Operator1','Operator2'])
+        self.assertEqual([op.id for op in operators], [11, 12])
+        self.assertEqual([op.slug for op in operators], ["Operator1", "Operator2"])
 
     @patch("runner.tasks.create_jobs_from_request.delay")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
