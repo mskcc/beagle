@@ -101,9 +101,15 @@ class ArgosOperator(Operator):
                 "labHeadEmail": pi_email,
             }
             pipeline = self.get_pipeline_id()
+            log_prefix = f"{tumor_sample_name}_{normal_sample_name}"
+            log_directory = self.get_log_directory()
             if self.output_directory_prefix:
                 tags["output_directory_prefix"] = self.output_directory_prefix
-            argos_jobs.append(RunCreator(app=pipeline, inputs=job, name=name, tags=tags))
+            argos_jobs.append(
+                RunCreator(
+                    app=pipeline, inputs=job, name=name, tags=tags, log_prefix=log_prefix, log_directory=log_directory
+                )
+            )
         return argos_jobs
 
     def get_mapping_from_argos_inputs(self, argos_inputs):
@@ -448,8 +454,8 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
         jg_created_date = jg.created_date.strftime("%Y%m%d_%H_%M_%f")
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)
-        output_directory = os.path.join(
-            pipeline.output_directory,
+        log_directory = os.path.join(
+            pipeline.log_directory,
             self.ARGOS_NAME,
             get_project_prefix(self.request_id),
             self.ARGOS_VERSION,
@@ -457,9 +463,8 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
             "json",
             pipeline.name,
             pipeline.version,
-            "%s",
         )
-        return output_directory
+        return log_directory
 
     def get_dmp_samples_from_argos_inputs(self, argos_inputs):
         dmp_samples = list()
@@ -487,11 +492,11 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
         result = dict()
         result[
             "Sample Pairing"
-        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_pairing.txt"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_pairing.txt"
         result[
             "Sample Mapping"
-        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_mapping.txt"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_mapping.txt"
         result[
             "Sample Data Clinical"
-        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/sample_data_clinical.txt"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_data_clinical.txt"
         return result
