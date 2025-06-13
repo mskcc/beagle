@@ -1,3 +1,4 @@
+import datetime
 import os
 import uuid
 from mock import patch
@@ -41,6 +42,8 @@ class FileTest(APITestCase):
         cmo_sample_name=None,
         patient_id=None,
         cmo_sample_class=None,
+        created_date=None,
+        modified_date=None,
     ):
         file_type_obj = FileType.objects.get(name=file_type)
         group_id_obj = FileGroup.objects.get(id=group_id)
@@ -60,7 +63,20 @@ class FileTest(APITestCase):
         if cmo_sample_class:
             file_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = cmo_sample_class
         file.save()
-        FileMetadata.objects.create_or_update(file=file, metadata=file_metadata)
+        if created_date:
+            FileMetadata._meta.get_field("created_date").auto_now_add = False
+            file_metadata = FileMetadata.objects.create_or_update(
+                file=file, metadata=file_metadata, created_date=created_date
+            )
+            FileMetadata._meta.get_field("created_date").auto_now_add = True
+        else:
+            file_metadata = FileMetadata.objects.create_or_update(file=file, metadata=file_metadata)
+        if modified_date:
+            FileMetadata._meta.get_field("modified_date").auto_now = False
+            file_metadata.modified_date = modified_date
+            file_metadata.save()
+            FileMetadata._meta.get_field("modified_date").auto_now = True
+        file_metadata.refresh_from_db()
         return file
 
     def _create_files(self, file_type, amount):
@@ -783,6 +799,150 @@ class FileTest(APITestCase):
             format="json",
         )
         self.assertEqual(len(response.json()["results"]), 5)
+
+    def test_get_files_created_date(self):
+        request_id = "08944_B"
+        sample_id_1 = "08944_B_1"
+        file_path_R1_1 = f"/path/to/{sample_id_1}_R1.fastq"
+        file_path_R2_1 = f"/path/to/{sample_id_1}_R2.fastq"
+        created_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        modified_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        self._create_single_file(
+            file_path_R1_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        created_date = datetime.datetime(2025, 1, 1, 0, 0, 2)
+        modified_date = datetime.datetime(2025, 1, 1, 0, 0, 2)
+        self._create_single_file(
+            file_path_R2_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        query_date = datetime.datetime(2025, 1, 1, 0, 0, 1)
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.get(
+            f"/v0/fs/files/?metadata={settings.REQUEST_ID_METADATA_KEY}:{request_id}&created_date_gt={query_date.isoformat()}",
+            format="json",
+        )
+        self.assertEqual(response.json()["count"], 1)
+
+    def test_get_files_modified_date(self):
+        request_id = "08944_B"
+        sample_id_1 = "08944_B_1"
+        file_path_R1_1 = f"/path/to/{sample_id_1}_R1.fastq"
+        file_path_R2_1 = f"/path/to/{sample_id_1}_R2.fastq"
+        created_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        modified_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        self._create_single_file(
+            file_path_R1_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        created_date = datetime.datetime(2025, 1, 1, 0, 0, 2)
+        modified_date = datetime.datetime(2025, 1, 1, 0, 0, 2)
+        self._create_single_file(
+            file_path_R2_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        query_date = datetime.datetime(2025, 1, 1, 0, 0, 1)
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        response = self.client.get(
+            f"/v0/fs/files/?metadata={settings.REQUEST_ID_METADATA_KEY}:{request_id}&modified_date_lt={query_date.isoformat()}",
+            format="json",
+        )
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["path"], file_path_R1_1)
+
+    def test_get_files_return_value_with_datetime(self):
+        request_id = "08944_B"
+        sample_id_1 = "08944_B_1"
+        file_path_R1_1 = f"/path/to/{sample_id_1}_R1.fastq"
+        file_path_R2_1 = f"/path/to/{sample_id_1}_R2.fastq"
+        created_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        modified_date = datetime.datetime(2025, 1, 1, 0, 0, 0)
+        self._create_single_file(
+            file_path_R1_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        self._create_single_file(
+            file_path_R2_1,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_1,
+            created_date=created_date,
+            modified_date=modified_date,
+        )
+        sample_id_2 = "08944_B_2"
+        file_path_R1_2 = f"/path/to/{sample_id_2}_R1.fastq"
+        file_path_R2_2 = f"/path/to/{sample_id_2}_R2.fastq"
+        created_date_2 = datetime.datetime(2025, 2, 1, 0, 0, 0)
+        modified_date_2 = datetime.datetime(2025, 2, 2, 0, 0, 0)
+        self._create_single_file(
+            file_path_R1_2,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_2,
+            created_date=created_date_2,
+            modified_date=modified_date_2,
+        )
+        self._create_single_file(
+            file_path_R2_2,
+            "fastq",
+            str(self.file_group.id),
+            request_id,
+            sample_id_2,
+            created_date=created_date_2,
+            modified_date=modified_date_2,
+        )
+
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
+        # Test samples created after 2025/1/1
+        query_date = datetime.datetime(2024, 12, 31, 23, 23, 59)
+        response = self.client.get(
+            f"/v0/fs/files/?metadata={settings.REQUEST_ID_METADATA_KEY}:{request_id}&values_metadata=primaryId&created_date_gt={query_date.isoformat()}",
+            format="json",
+        )
+        self.assertEqual(response.json()["count"], 2)
+        # Test samples modified after 2025/2/15
+        query_date = datetime.datetime(2025, 1, 15, 0, 0, 0)
+        response = self.client.get(
+            f"/v0/fs/files/?metadata={settings.REQUEST_ID_METADATA_KEY}:{request_id}&values_metadata=primaryId&modified_date_gt={query_date.isoformat()}",
+            format="json",
+        )
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["metadata__primaryId"], "08944_B_2")
+        # Test samples modified before 2025/2/15
+        response = self.client.get(
+            f"/v0/fs/files/?metadata={settings.REQUEST_ID_METADATA_KEY}:{request_id}&values_metadata=primaryId&modified_date_lt={query_date.isoformat()}",
+            format="json",
+        )
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["metadata__primaryId"], "08944_B_1")
 
     def test_sample_list(self):
         sample = Sample.objects.create(sample_id="08944_B")
