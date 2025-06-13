@@ -405,7 +405,7 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
         return []
 
     run_dates = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RUN_DATE_METADATA_KEY
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group= settings.IMPORT_FILE_GROUP, values_metadata=settings.RUN_DATE_METADATA_KEY
     ).all()
     run_dates = sorted([parse(d) for d in run_dates])
 
