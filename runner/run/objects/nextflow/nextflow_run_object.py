@@ -205,7 +205,7 @@ class NextflowRunObject(RunObject):
             inputs["config"] = pystache.render(config, render_value)
         else:
             inputs["config"] = config
-        inputs["profile"] = "juno"
+        inputs["profile"] = "iris"
         inputs["params"] = params
         inputs["outputs"] = output_file_path
         job = {
