@@ -24,21 +24,25 @@ class NextflowResolver(PipelineResolver):
         return pipeline
 
     def schemas2template(self, nextflow_schema, location):
-        # TODO Not sure if this is an exhaustive search of possible definitions
-        # TODO parse everything in definitions
-        reference = nextflow_schema["definitions"]["reference_genome_options"]["properties"]
-        input = nextflow_schema["definitions"]["input_output_options"]["properties"]
-        properties = {**reference, **input}
+        schemes = {}
+        properties = {}
+        defs = nextflow_schema["definitions"]
+        for key, val in defs.items():
+            props = defs[key]["properties"]
+            properties.update(props)
+            for key, items in props.items():
+                schema_path = os.path.join(location, f"assets/schema_{key}.json")
+                if os.path.exists(schema_path):
+                    schemes[key] = schema_path
         # Check for sample-sheet CLI inputs
-        samplesheets = [key for key, val in properties.items() if val.get("format") == "sample-sheet"]
         inputs = [
             {"id": key, "schema": {"type": val.get("format")}}
             for key, val in properties.items()
-            if val.get("format") != "sample-sheet"
+            if key not in schemes.keys()
         ]
         # Check Assets for sample sheet schemas
-        for schema in samplesheets:
-            with open(os.path.join(location, f"assets/schema_{schema}.json"), "r") as f:
+        for schema, file in schemes.items():
+            with open(file, "r") as f:
                 nextflow_schema = json.load(f)
                 samplesheet_props = nextflow_schema["items"]["properties"]
                 fields = [{"id": key, "type": val.get("format")} for key, val in samplesheet_props.items()]
