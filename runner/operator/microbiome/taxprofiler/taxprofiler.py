@@ -102,7 +102,7 @@ class TaxProfilerOperator(Operator):
             "app": app,
             "inputs": input_json,
             "tags": job_tags,
-            "output_metadata": ""
+            "output_metadata": {}
         }
         print(job_json)
         return [RunCreator(**job_json)]
