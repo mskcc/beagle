@@ -26,7 +26,9 @@ class NextflowResolver(PipelineResolver):
     def schemas2template(self, nextflow_schema, location):
         schemes = {}
         properties = {}
-        defs = nextflow_schema["definitions"]
+        defs = nextflow_schema.get("$defs")
+        if not defs:
+            defs = nextflow_schema.get("definitions")
         for key, val in defs.items():
             props = defs[key]["properties"]
             properties.update(props)
