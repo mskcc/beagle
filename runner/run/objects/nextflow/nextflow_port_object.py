@@ -54,7 +54,10 @@ class NextflowPortObject(PortObject):
             self.value = PortProcessor.process_files(copy.deepcopy(self.value), PortAction.NEXTFLOW_TEMPLATE)
             if self.template:
                 render_value = {self.name: self.value}
+                print(f'nf template:{self.template}')
+                print(f'nf value:{render_value}')
                 self.value = pystache.render(self.template, render_value)
+                print(f'nf result:{self.value}')
             self.files = files
 
     def complete(self, value, group, job_group_notifier, output_metadata={}, request_id=None, samples=[]):
