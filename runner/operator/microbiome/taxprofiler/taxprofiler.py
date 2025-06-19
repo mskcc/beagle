@@ -46,7 +46,7 @@ class TaxProfilerOperator(Operator):
                 "instrument_platform": "ILLUMINA", 
                 "fastq_1": "null",
                 "fastq_2": "null",
-                "fastq": _create_file_object(f.path)})
+                "fasta": _create_file_object(f.path)})
                 
             if f.file_name.endswith('fastq.gz'):
                 if f.file_name.endswith('_1.fastq.gz'):
@@ -55,7 +55,7 @@ class TaxProfilerOperator(Operator):
                         "instrument_platform": "ILLUMINA", 
                         "fastq_1": _create_file_object(f.path),
                         "fastq_2": "null",
-                        "fastq": "null"}
+                        "fasta": "null"}
                     for f2 in files:
                         if f.file_name.strip('_1.fastq.gz') == f2.file_name.strip('_2.fastq.gz'):
                             fastqs['fastq_2'] = _create_file_object(f2.path)
