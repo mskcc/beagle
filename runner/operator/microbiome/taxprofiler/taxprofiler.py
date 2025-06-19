@@ -60,7 +60,7 @@ class TaxProfilerOperator(Operator):
                         if f.file_name.strip('_1.fastq.gz') == f2.file_name.strip('_2.fastq.gz'):
                             fastqs['fastq_2'] = _create_file_object(f2.path)
                     inputs.append(fastqs)
-        return fastqs
+        return inputs
     
     def get_database(self):
         databases = [] 
