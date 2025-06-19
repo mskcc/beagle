@@ -69,6 +69,7 @@ class TaxProfilerOperator(Operator):
         databases.append({"tool": "malt", 
         "db_name": "malt85", 
         "db_params": "-id 85", 
+        "db_type": "short",
         "db_path":  _create_file_object(files[0].path)})
         return databases
 
