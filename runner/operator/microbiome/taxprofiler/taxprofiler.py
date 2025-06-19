@@ -103,4 +103,4 @@ class TaxProfilerOperator(Operator):
             "inputs": input_json,
             "tags": job_tags,
         }
-        return [RunCreator(job_json)]
+        return [RunCreator(**job_json)]
