@@ -29,20 +29,24 @@ class NextflowResolver(PipelineResolver):
         defs = nextflow_schema.get("$defs")
         if not defs:
             defs = nextflow_schema.get("definitions")
+        # loop over definition properties
         for key, val in defs.items():
             props = defs[key]["properties"]
             properties.update(props)
             for key, items in props.items():
-                schema_path = os.path.join(location, f"assets/schema_{key}.json")
-                if os.path.exists(schema_path):
-                    schemes[key] = schema_path
-        # Check for sample-sheet CLI inputs
+                # see if property has a schema
+                schema = props[key].get("schema")
+                if schema:
+                    schema_path = os.path.join(location, schema)
+                    if os.path.exists(schema_path):
+                        schemes[key] = schema_path
+        # properties without schemas are regular inputs
         inputs = [
             {"id": key, "schema": {"type": val.get("format")}}
             for key, val in properties.items()
             if key not in schemes.keys()
         ]
-        # Check Assets for sample sheet schemas
+        # add schema template to inputs
         for schema, file in schemes.items():
             with open(file, "r") as f:
                 nextflow_schema = json.load(f)
