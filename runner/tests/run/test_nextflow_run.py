@@ -23,7 +23,7 @@ class NextflowRunObjectTest(APITestCase):
         self.pipeline_nf = Pipeline.objects.create(
             name="nextflow_pipeline",
             github="https://github.com/nf-core/taxprofiler.git",
-            version="1.1.5",
+            version="master",
             entrypoint="pipeline.nf",
             output_file_group=self.nxf_file_group,
             output_directory="/output/directory/",
@@ -105,8 +105,8 @@ class NextflowRunObjectTest(APITestCase):
         run_object.ready()
         run_object.to_db()
         job_json = run_object.dump_job()
-        self.assertEqual(len(job_json["inputs"]["inputs"]), 1)
-        self.assertEqual(job_json["inputs"]["inputs"][0]["content"], "sample\tfastq_1\tfastq_2\n")
+        self.assertEqual(len(job_json["inputs"]["inputs"]), 2)
+        self.assertEqual(job_json["inputs"]["inputs"][0]["content"], "sample\trun_accession\tinstrument_platform\tfastq_1\tfastq_2\tfasta\n")
         self.assertEqual(job_json["inputs"]["profile"], "juno")
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
