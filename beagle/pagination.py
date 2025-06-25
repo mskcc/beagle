@@ -73,4 +73,4 @@ def time_filter(model, query_params, time_fields=("created_date", "modified_date
             except (ValueError, TypeError) as e:
                 logger.error(f"Error in time filter {e}")
 
-    return queryset.order_by("created_date")
+    return queryset
