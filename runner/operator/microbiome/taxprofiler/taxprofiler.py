@@ -103,8 +103,8 @@ class TaxProfilerOperator(Operator):
         databases = self.get_database()
         # Build Ridgeback Jobs from Sample Info
         input_json = {
-            "input.csv": inputs,
-            "databases.csv": databases
+            "input": inputs,
+            "databases": databases
         }
         job_tags = {
             "pipeline": pipeline.name,
