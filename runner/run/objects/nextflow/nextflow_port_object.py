@@ -101,6 +101,7 @@ class NextflowPortObject(PortObject):
             port_id=port_id,
             notify=port.notify,
             template=port.template,
+            extension=port.extension,
         )
 
     def to_db(self):
@@ -115,6 +116,7 @@ class NextflowPortObject(PortObject):
             self.port_object.files.set([FileProcessor.get_file_obj(v) for v in self.files])
             self.port_object.notify = self.notify
             self.port_object.template = self.template
+            self.port_object.extension = self.extension
             self.port_object.save()
         else:
             try:
@@ -131,6 +133,7 @@ class NextflowPortObject(PortObject):
                 value=self.value,
                 notify=self.name in run_object.notify_for_outputs,
                 template=self.template,
+                extension=self.extension
             )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])
