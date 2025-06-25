@@ -39,14 +39,15 @@ class NextflowResolver(PipelineResolver):
                 if schema and mimetype:
                     if mimetype == "text/csv":
                         delimiter = ","
-                        extension = "csv"
+                        extension = ".csv"
                     elif mimetype == "text/tsv":
                         delimiter = "\t"
-                        extension = "tsv"
+                        extension = ".tsv"
                     else:
                         print(f"Warning: Unsupported mimetype '{mimetype}', defaulting to tab delimiter.")
                         delimiter = "\t"
-                        extension = "tsv"
+                        extension = ".tsv"
+                    print("INITIAL EXTENSION CHOICE:", extension)
                     schema_path = os.path.join(location, schema)
                     if os.path.exists(schema_path):
                         with open(schema_path, "r") as f:
@@ -58,10 +59,12 @@ class NextflowResolver(PipelineResolver):
                             body_end = f"\n{{{{/{key}}}}}"
                             body = delimiter.join([f'{{{{{f["id"]}}}}}' for f in fields])
                             template = header + body_start + body + body_end
-                            samplesheet_input = {"id": key, "schema": {"items": {"fields": fields}}, "template": template, "extension": extension}
+                            samplesheet_input = {"id": key, "schema": {"items": {"fields": fields}}, "template": template,"extension": extension}
+                            print("HERE IS THE INITIAL SAMPLESHEET_INPUT:", samplesheet_input)
                             inputs.append(samplesheet_input)
                 else:
                     inputs.append({"id": key, "schema": {"type": items.get("format")}})
 
         # add schema template to inputs
+
         return inputs
