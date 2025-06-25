@@ -342,6 +342,7 @@ class Port(BaseModel):
     port_type = models.IntegerField(choices=[(port_type.value, port_type.name) for port_type in PortType])
     schema = JSONField(null=True, blank=True)
     template = JSONField(null=True, blank=True)
+    extension =  models.CharField(max_length=100, editable=True, default=None)
     secondary_files = JSONField(null=True, blank=True)
     db_value = JSONField(null=True)
     value = JSONField(null=True)
