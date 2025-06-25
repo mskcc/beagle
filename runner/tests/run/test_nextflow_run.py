@@ -122,7 +122,6 @@ class NextflowRunObjectTest(APITestCase):
         run_object.to_db()
         job_json = run_object.dump_job()
         self.assertEqual(len(job_json["inputs"]["inputs"]), 2)
-        breakpoint()
         self.assertEqual(job_json["inputs"]["inputs"][0]["content"], "sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta\n2612,ERR5766176,ILLUMINA,/path/to/file_a_1.fastq,/path/to/file_a_2.fastq,\n")
         self.assertEqual(job_json["inputs"]["inputs"][1]["content"], "tool,db_name,db_params,db_type,db_path\nmalt,malt85,-id 85,short,/path/to/db.tar.gz\n")
 
