@@ -39,14 +39,14 @@ class NextflowResolver(PipelineResolver):
                 if schema and mimetype:
                     if mimetype == "text/csv":
                         delimiter = ","
-                        extension = ".csv"
+                        extension = "csv"
                     elif mimetype == "text/tsv":
                         delimiter = "\t"
-                        extension = ".tsv"
+                        extension = "tsv"
                     else:
                         print(f"Warning: Unsupported mimetype '{mimetype}', defaulting to tab delimiter.")
                         delimiter = "\t"
-                        extension = ".tsv"
+                        extension = "tsv"
                     schema_path = os.path.join(location, schema)
                     if os.path.exists(schema_path):
                         with open(schema_path, "r") as f:
