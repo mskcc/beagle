@@ -184,7 +184,7 @@ class NextflowRunObject(RunObject):
         params = dict()
         for port in self.inputs:
             if port.template:
-                input_files.append({"name": port.name, "content": port.value, 'delimiter': port.delimiter})
+                input_files.append({"name": port.name, "content": port.value, 'extension': port.extension})
             else:
                 params[port.name] = port.value
         inputs["inputs"] = input_files
