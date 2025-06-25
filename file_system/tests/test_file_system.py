@@ -1001,6 +1001,7 @@ class FileTest(APITestCase):
         import pytz
         from random import randrange
         from datetime import timedelta
+
         """
         This function will return a random datetime between two datetime
         objects.
@@ -1008,7 +1009,7 @@ class FileTest(APITestCase):
         delta = end - start
         int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
         random_second = randrange(int_delta)
-        timezone = pytz.timezone('America/New_York')
+        timezone = pytz.timezone("America/New_York")
         random_time = start + timedelta(seconds=random_second)
         try:
             localized_time = timezone.localize(random_time)
@@ -1025,8 +1026,9 @@ class FileTest(APITestCase):
         gene_panel = "IMPACT505"
         import random
         import string
+
         for i in range(100):
-            request_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            request_id = "".join(random.choices(string.ascii_uppercase + string.digits, k=8))
             sample_id = f"{request_id}_{i}"
             file_path_R1 = f"/path/to/{sample_id}_R1.fastq"
             file_path_R2 = f"/path/to/{sample_id}_R2.fastq"
@@ -1040,7 +1042,7 @@ class FileTest(APITestCase):
                 run_date=run_date_1.strftime("%Y-%m-%d"),
                 gene_panel=gene_panel,
                 created_date=self.random_date(start_date, end_date),
-                modified_date=self.random_date(start_date, end_date)
+                modified_date=self.random_date(start_date, end_date),
             )
             run_date_2 = self.random_date(start_date, end_date)
             self._create_single_file(
@@ -1052,12 +1054,12 @@ class FileTest(APITestCase):
                 run_date=run_date_2.strftime("%Y-%m-%d"),
                 gene_panel=gene_panel,
                 created_date=self.random_date(start_date, end_date),
-                modified_date=self.random_date(start_date, end_date)
+                modified_date=self.random_date(start_date, end_date),
             )
         self.client.credentials(HTTP_AUTHORIZATION="Bearer %s" % self._generate_jwt())
         response = self.client.get(
-                f"/v0/fs/files/?distinct_metadata=primaryId&metadata=genePanel:{gene_panel}&values_metadata=primaryId,runDate",
-                format="json",
+            f"/v0/fs/files/?distinct_metadata=primaryId&metadata=genePanel:{gene_panel}&values_metadata=primaryId,runDate",
+            format="json",
         )
         self.assertEqual(response.json()["count"], 100)
 
