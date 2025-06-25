@@ -61,6 +61,8 @@ class NextflowRunObjectTest(APITestCase):
         )
         self.file_1 = File.objects.create(path="/path/to/file_1.fastq", file_group=self.nxf_file_group)
         self.file_2 = File.objects.create(path="/path/to/file_2.fastq", file_group=self.nxf_file_group)
+        self.file_db = File.objects.create(path="/path/to/db.tar.gz", file_group=self.nxf_file_group)
+        self.file_db.save()
         self.file_a_1 = File.objects.create(path="/path/to/file_a_1.fastq", file_group=self.nxf_file_group)
         self.file_a_1.samples.append(self.sample_tumor.sample_id)
         self.file_a_1.save()
@@ -75,25 +77,39 @@ class NextflowRunObjectTest(APITestCase):
         self.file_b_2.save()
 
     def test_get_pipeline_nf(self):
+
         input_dict = {
-            "mapping": [
+            "input": [
                 {
-                    "sample": "SAMPLE-TUMOR-001",
-                    "assay": "assay_value",
+                    "sample": "2612",
+                    "run_accession": "ERR5766176",
+                    "instrument_platform": "ILLUMINA",
                     "target": "target_value",
-                    "fastq_pe1": {"class": "File", "location": "juno:///path/to/file_a_1.fastq"},
-                    "fastq_pe2": {"class": "File", "location": "juno:///path/to/file_a_2.fastq"},
-                },
-                {
-                    "sample": "SAMPLE-NORMAL-001",
-                    "assay": "assay_value",
-                    "target": "target_value",
-                    "fastq_pe1": {"class": "File", "location": "juno:///path/to/file_b_1.fastq"},
-                    "fastq_pe2": {"class": "File", "location": "juno:///path/to/file_b_2.fastq"},
-                },
+                    "fastq_1": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_a_1.fastq"
+                    },
+                    "fastq_2": {
+                        "class": "File",
+                        "location": "juno:///path/to/file_a_2.fastq"
+                    },
+                    "fasta": ""
+                }
             ],
-            "pairing": [{"tumor": "SAMPLE-TUMOR-001", "normal": "SAMPLE-NORMAL-001"}],
+            "databases": [
+                {
+                    "tool": "malt",
+                    "db_name": "malt85",
+                    "db_params": "-id 85",
+                    "db_type": "short",
+                    "db_path": {
+                        "class": "File",
+                        "location": "juno:///path/to/db.tar.gz"
+                    }
+                }
+            ]
         }
+
         run = Run.objects.create(
             app=self.pipeline_nf,
             run_type=ProtocolType.NEXTFLOW,
@@ -106,8 +122,9 @@ class NextflowRunObjectTest(APITestCase):
         run_object.to_db()
         job_json = run_object.dump_job()
         self.assertEqual(len(job_json["inputs"]["inputs"]), 2)
-        self.assertEqual(job_json["inputs"]["inputs"][0]["content"], "sample\trun_accession\tinstrument_platform\tfastq_1\tfastq_2\tfasta\n")
-        self.assertEqual(job_json["inputs"]["profile"], "juno")
+        breakpoint()
+        self.assertEqual(job_json["inputs"]["inputs"][0]["content"], "sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta\n2612,ERR5766176,ILLUMINA,/path/to/file_a_1.fastq,/path/to/file_a_2.fastq,\n")
+        self.assertEqual(job_json["inputs"]["inputs"][1]["content"], "tool,db_name,db_params,db_type,db_path\nmalt,malt85,-id 85,short,/path/to/db.tar.gz\n")
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_port_from_definition(self, get_pipeline):

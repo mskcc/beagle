@@ -36,6 +36,15 @@ class NextflowResolver(PipelineResolver):
             for key, items in props.items():
                 # see if property has a schema
                 schema = props[key].get("schema")
+                mimetype = props[key].get("mimetype")
+                if mimetype:
+                    if mimetype == "text/csv":
+                        delimiter = ","
+                    elif mimetype == "text/tsv":
+                        delimiter = "\t"
+                    else:
+                        print(f"Warning: Unsupported mimetype '{mimetype}', defaulting to tab delimiter.")
+                        delimiter = "\t"
                 if schema:
                     schema_path = os.path.join(location, schema)
                     if os.path.exists(schema_path):
@@ -52,11 +61,11 @@ class NextflowResolver(PipelineResolver):
                 nextflow_schema = json.load(f)
                 samplesheet_props = nextflow_schema["items"]["properties"]
                 fields = [{"id": key, "type": val.get("format")} for key, val in samplesheet_props.items()]
-                header = "\t".join([f["id"] for f in fields]) + "\n"
+                header = delimiter.join([f["id"] for f in fields]) + "\n"
                 body_start = f"{{{{#{schema}}}}}\n"
                 body_end = f"\n{{{{/{schema}}}}}"
-                body = "\t".join([f'{{{{{f["id"]}}}}}' for f in fields])
+                body = delimiter.join([f'{{{{{f["id"]}}}}}' for f in fields])
                 template = header + body_start + body + body_end
-                samplesheet_input = {"id": schema, "schema": {"items": {"fields": fields}}, "template": template}
+                samplesheet_input = {"id": schema, "schema": {"items": {"fields": fields}}, "template": template, "delimiter": delimiter}
                 inputs.append(samplesheet_input)
         return inputs

@@ -48,8 +48,8 @@ class TaxProfilerOperator(Operator):
                         "sample": "2611",
                         "run_accession": "ERR5766174",
                         "instrument_platform": "ILLUMINA",
-                        "fastq_1": "null",
-                        "fastq_2": "null",
+                        "fastq_1": "",
+                        "fastq_2": "",
                         "fasta": _create_file_object(f.path),
                     }
                 )
@@ -57,12 +57,12 @@ class TaxProfilerOperator(Operator):
             if f.file_name.endswith("fastq.gz"):
                 if f.file_name.endswith("_1.fastq.gz"):
                     fastqs = {
-                        "sample": "2611",
-                        "run_accession": "ERR5766174",
+                        "sample": "2612",
+                        "run_accession": "ERR5766176",
                         "instrument_platform": "ILLUMINA",
                         "fastq_1": _create_file_object(f.path),
-                        "fastq_2": "null",
-                        "fasta": "null",
+                        "fastq_2": "",
+                        "fasta": "",
                     }
                     for f2 in files:
                         if f.file_name.strip("_1.fastq.gz") == f2.file_name.strip("_2.fastq.gz"):
@@ -102,13 +102,9 @@ class TaxProfilerOperator(Operator):
         inputs = self.get_input()
         databases = self.get_database()
         # Build Ridgeback Jobs from Sample Info
-        # TODO PROBLEM:
-        # ['bsub', '-g', '/dda1176d-92cc-4480-aa49-7516cec71934', '-oo', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934/lsf.log', '-W', '7200', '-M', '20', '/juno/cmo/ccs/voyager/dev/dev_tempo/nextflow', '-log', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934/nextflow.log', 'run', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934/taxprofiler/.', '-profile', 'juno', '-w', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934', '--outdir', '/juno/work/ci/staging-output/runs/voyager/5dba0e38-4d3f-11f0-ad31-ac1f6b453620', '--input', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934/input', '-c', '/juno/cmo/ccs/voyager/dev/work/dda1176d-92cc-4480-aa49-7516cec71934/nf.config',
-        # '--databases', [{'tool': 'malt', 'db_name': 'malt85', 'db_path': '/home/voyager/test_tax_profiler/db/testdb-malt.tar.gz', 'db_type': 'short', 'db_params': '-id 85'}]]
-
         input_json = {
-            "input": inputs,
-            "databases": databases,
+            "input.csv": inputs,
+            "databases.csv": databases
         }
         job_tags = {
             "pipeline": pipeline.name,
@@ -119,7 +115,7 @@ class TaxProfilerOperator(Operator):
             "app": app,
             "inputs": input_json,
             "tags": job_tags,
-            "output_metadata": {},
+            "output_metadata": {}
         }
         print(job_json)
         return [RunCreator(**job_json)]
