@@ -184,7 +184,7 @@ class NextflowRunObject(RunObject):
         params = dict()
         for port in self.inputs:
             if port.template:
-                input_files.append({"name": port.name, "content": port.value})
+                input_files.append({"name": port.name, "content": port.value, 'delimiter': port.delimiter})
             else:
                 params[port.name] = port.value
         inputs["inputs"] = input_files
@@ -205,6 +205,7 @@ class NextflowRunObject(RunObject):
             inputs["config"] = pystache.render(config, render_value)
         else:
             inputs["config"] = config
+        #TODO Add profile argument
         inputs["profile"] = "singularity"
         inputs["params"] = params
         inputs["outputs"] = output_file_path

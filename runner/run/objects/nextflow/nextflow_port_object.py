@@ -25,23 +25,26 @@ class NextflowPortObject(PortObject):
         port_id=None,
         notify=False,
         template=None,
+        delimiter=None
     ):
         super().__init__(run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id, notify)
         self.template = template
+        self.delimiter = delimiter
 
     @classmethod
     def from_definition(cls, run_id, value, port_type, port_values, notify=False):
         name = value.get("id")
         schema = value.get("schema")
         template = value.get("template")
+        delimiter = value.get("delimiter")
         logger = logging.getLogger(__name__)
         cls.logger.debug(template)
         port_type = port_type
         value = copy.deepcopy(port_values.get(name))
         files = []
         db_value = copy.deepcopy(port_values.get(name))
-        notify = notify
-        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template=template)
+        notify = notify      
+        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template=template, delimiter=delimiter)
 
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
