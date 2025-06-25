@@ -37,6 +37,8 @@ class NextflowPortObject(PortObject):
         schema = value.get("schema")
         template = value.get("template")
         extension = value.get("extension")
+        print("EXTENSION IN PORT OBJECT:", extension)
+        print("FULL VALUE OBJECT in PORT OBJECT:", value)
         logger = logging.getLogger(__name__)
         cls.logger.debug(template)
         port_type = port_type
