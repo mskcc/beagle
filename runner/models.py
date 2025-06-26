@@ -8,7 +8,7 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
-
+from rest_framework import serializers
 
 class ProtocolType(IntEnum):
     CWL = 0
@@ -76,6 +76,7 @@ class Pipeline(BaseModel):
     memlimit = models.CharField(blank=True, null=True, max_length=20)
     config = models.CharField(blank=True, null=True, max_length=3000, default=None)
     nfcore_template = models.BooleanField(default=False)
+    profiles = JSONField(default=list, blank=True, null=True)
 
     @property
     def pipeline_link(self):

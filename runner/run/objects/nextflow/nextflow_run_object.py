@@ -205,8 +205,7 @@ class NextflowRunObject(RunObject):
             inputs["config"] = pystache.render(config, render_value)
         else:
             inputs["config"] = config
-        #TODO Add profile argument
-        inputs["profile"] = "singularity"
+        inputs["profile"] = ",".join(self.run_obj.app.profiles)
         inputs["params"] = params
         inputs["outputs"] = output_file_path
         job = {
