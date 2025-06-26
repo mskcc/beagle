@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0064_pipeline_log_directory'),
+        ("runner", "0064_pipeline_log_directory"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='port',
-            name='extension',
+            model_name="port",
+            name="extension",
             field=models.CharField(blank=True, default=None, max_length=100, null=True),
         ),
     ]

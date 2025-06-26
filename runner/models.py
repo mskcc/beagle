@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from django.conf import settings
 from rest_framework import serializers
 
+
 class ProtocolType(IntEnum):
     CWL = 0
     NEXTFLOW = 1

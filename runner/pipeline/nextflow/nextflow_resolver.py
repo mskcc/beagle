@@ -24,7 +24,7 @@ class NextflowResolver(PipelineResolver):
         return pipeline
 
     def schemas2template(self, nextflow_schema, location):
-        inputs = [] 
+        inputs = []
         defs = nextflow_schema.get("$defs")
         if not defs:
             defs = nextflow_schema.get("definitions")
@@ -35,7 +35,7 @@ class NextflowResolver(PipelineResolver):
                 # see if property has a schema
                 schema = props[key].get("schema")
                 mimetype = props[key].get("mimetype")
-                #TODO this should probably be it's own function with a mapping of mimetype to delimiter
+                # TODO this should probably be it's own function with a mapping of mimetype to delimiter
                 if schema and mimetype:
                     if mimetype == "text/csv":
                         delimiter = ","
@@ -58,7 +58,12 @@ class NextflowResolver(PipelineResolver):
                             body_end = f"\n{{{{/{key}}}}}"
                             body = delimiter.join([f'{{{{{f["id"]}}}}}' for f in fields])
                             template = header + body_start + body + body_end
-                            samplesheet_input = {"id": key, "schema": {"items": {"fields": fields}}, "template": template,"extension": extension}
+                            samplesheet_input = {
+                                "id": key,
+                                "schema": {"items": {"fields": fields}},
+                                "template": template,
+                                "extension": extension,
+                            }
                             inputs.append(samplesheet_input)
                 else:
                     inputs.append({"id": key, "schema": {"type": items.get("format")}})
