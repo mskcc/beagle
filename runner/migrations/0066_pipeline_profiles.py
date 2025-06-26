@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('runner', '0065_port_extension'),
+        ("runner", "0065_port_extension"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pipeline',
-            name='profiles',
+            model_name="pipeline",
+            name="profiles",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=list, null=True),
         ),
     ]

@@ -25,7 +25,7 @@ class NextflowPortObject(PortObject):
         port_id=None,
         notify=False,
         template=None,
-        extension=None
+        extension=None,
     ):
         super().__init__(run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id, notify)
         self.template = template
@@ -43,8 +43,21 @@ class NextflowPortObject(PortObject):
         value = copy.deepcopy(port_values.get(name))
         files = []
         db_value = copy.deepcopy(port_values.get(name))
-        notify = notify      
-        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template=template, extension=extension)
+        notify = notify
+        return cls(
+            run_id,
+            name,
+            port_type,
+            schema,
+            [],
+            db_value,
+            value,
+            files,
+            None,
+            notify,
+            template=template,
+            extension=extension,
+        )
 
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
@@ -128,7 +141,7 @@ class NextflowPortObject(PortObject):
                 value=self.value,
                 notify=self.name in run_object.notify_for_outputs,
                 template=self.template,
-                extension=self.extension
+                extension=self.extension,
             )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])
