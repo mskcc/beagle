@@ -184,7 +184,6 @@ class NextflowRunObject(RunObject):
         params = dict()
         for port in self.inputs:
             if port.template:
-                print('HERE IS THE PORT EXTENSION:', port.extension)
                 input_files.append({"name": port.name, "content": port.value, 'extension': port.extension})
             else:
                 params[port.name] = port.value
@@ -224,7 +223,6 @@ class NextflowRunObject(RunObject):
                 if self.run_obj.log_prefix
                 else os.path.join(self.run_obj.log_directory, str(self.run_id))
             )
-        print("HERE IS THE JOB", job)
         return job
 
     def __repr__(self):
