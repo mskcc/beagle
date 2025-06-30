@@ -9,9 +9,9 @@ from deepdiff import DeepDiff
 from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import User
-from beagle_etl.models import SMILEMessage
+from beagle_etl.models import SMILEMessage, SmileMessageStatus
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
-from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job, new_request
+from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job, new_request, update_job
 from django.core.management import call_command
 from file_system.models import Request, Sample, Patient, FileMetadata
 from file_system.repository import FileRepository
@@ -416,13 +416,52 @@ class TestNewRequest(TestCase):
         for file in files:
             self.assertTrue(file.file.path.endswith("new.fastq.gz"))
 
-    # @patch("notifier.models.JobGroupNotifier.objects.get")
-    # @patch("notifier.tasks.send_notification.delay")
-    # @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    # def test_update_sample_update(self, populate_job_group, send_notification, jobGroupNotifierObjectGet):
-    #     """
-    #     Test that samples metadata is properly updated
-    #     """
+        test_new_request_08944_B = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B_new_request.json")
+        with open(test_new_request_08944_B) as new_request_08944_B:
+            self.new_request = json.load(new_request_08944_B)
+        self.new_request_str = json.dumps(self.new_request)
+
+    @patch("os.access")
+    @patch("notifier.tasks.notifier_start")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("notifier.models.JobGroupNotifier.objects.get")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
+    def test_update_sample_update(
+        self,
+        path_exists,
+        populate_job_group,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        access,
+    ):
+        """
+        Test that samples metadata is properly updated
+        """
+        populate_job_group.return_value = None
+        send_notification.return_value = None
+        job_group_notifier_get.return_value = self.job_group_notifier
+        notifier_start.return_value = True
+        send_notification.return_value = True
+        access.return_value = os.R_OK
+        settings.NOTIFIER_ACTIVE = False
+        path_exists.return_value = True
+
+        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        new_request(new_request_msg.id)
+        test_14269_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample.json")
+        with open(test_14269_C_1_update_sample) as update_sample_14269_C_1:
+            self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
+        self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
+        msg = SMILEMessage.objects.create(
+            topic="MDB_STREAM.server.cpt-gateway.cmo-sample-update",
+            request_id="14269_C",
+            message=self.update_sample_14269_C_1_str,
+            status=SmileMessageStatus.PENDING,
+        )
+        update_job("14269_C")
+
     #     populate_job_group.return_value = None
     #     jobGroupNotifierObjectGet.return_value = None
     #     send_notification.return_value = None
