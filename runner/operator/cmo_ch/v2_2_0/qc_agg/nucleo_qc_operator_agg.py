@@ -104,6 +104,13 @@ class CMOCHNucleoOperatorQcAgg(Operator):
             if directory["basename"] == name:
                 # Ignore matplotlib hidden config files
                 if not directory["location"].endswith(".config/matplotlib"):
+                    if "listing" in directory:
+                        files_list = []
+                        for single_file in directory["listing"]:
+                            processed_file = self.process_listing([single_file], single_file["basename"])
+                            if processed_file:
+                                files_list.append(processed_file)
+                        directory["listing"] = files_list
                     return directory
             if "listing" in directory:
                 item = self.process_listing(directory["listing"], name)
