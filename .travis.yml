@@ -10,9 +10,6 @@ addons:
     packages:
     - postgresql-13
     - postgresql-client-13
-env:
-  global:
-    - PGPORT=5433
 python:
   - "3.8"
 before_install:
@@ -25,7 +22,7 @@ before_install:
     /etc/postgresql/13/main/pg_hba.conf
   - sudo service postgresql@13-main restart
 install:
-  - psql -p 5433 -c 'create database travis_ci_test;' -U postgres
+  - psql -p 5432 -c 'create database travis_ci_test;' -U postgres
   - pip install --upgrade setuptools==70.0.0
   - pip install --upgrade pip
   - pip install -r requirements-dev.txt
