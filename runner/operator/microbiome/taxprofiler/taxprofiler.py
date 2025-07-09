@@ -19,7 +19,6 @@ from file_system.models import File, FileGroup, FileType
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
-MICRO_BIOME_FASTQS = "40ec9703-0a57-4081-9ede-3adc32964301"
 
 
 def _create_file_object(file):
