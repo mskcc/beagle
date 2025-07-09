@@ -106,7 +106,7 @@ class AccessV2NucleoQcAggOperator(Operator):
                     files_list = []
                     # Only include files part of the directory, cwl globs may add matplotlib hidden config files here
                     for single_file in directory["listing"]:
-                        if directory["path"] in single_file["path"]
+                        if directory["path"] in single_file["path"]:
                             files_list.append(single_file)
                     directory["listing"] = files_list
                 return directory
