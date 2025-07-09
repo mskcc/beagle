@@ -102,16 +102,14 @@ class AccessV2NucleoQcAggOperator(Operator):
     def process_listing(self, listing, name):
         for directory in listing:
             if directory["basename"] == name:
-                # Ignore matplotlib hidden config files
-                if not directory["location"].endswith(".config/matplotlib"):
-                    if "listing" in directory:
-                        files_list = []
-                        for single_file in directory["listing"]:
-                            processed_file = self.process_listing([single_file], single_file["basename"])
-                            if processed_file:
-                                files_list.append(processed_file)
-                        directory["listing"] = files_list
-                    return directory
+                if "listing" in directory:
+                    files_list = []
+                    # Only include files part of the directory, cwl globs may add matplotlib hidden config files here
+                    for single_file in directory["listing"]:
+                        if directory["path"] in single_file["path"]
+                            files_list.append(single_file)
+                    directory["listing"] = files_list
+                return directory
             if "listing" in directory:
                 item = self.process_listing(directory["listing"], name)
                 if item:
@@ -123,13 +121,11 @@ class AccessV2NucleoQcAggOperator(Operator):
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
             directory_port = self.process_listing(port.value["listing"], directory_name)
-            if not directory_port["listing"]:
-                directory_folder = directory_port
-            else:
-                directory_folder = directory_port["listing"][0]
-            if not directory_folder:
+            if not directory_port:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
-            directory_list.append(directory_folder)
+            if directory_port["listing"]:
+                directory_folder = directory_port["listing"][0]
+                directory_list.append(directory_folder)
         return directory_list
 
     def get_file_ports(self, run_list, port_input, file_regex):
