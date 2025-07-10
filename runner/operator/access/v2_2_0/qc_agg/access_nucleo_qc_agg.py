@@ -125,6 +125,8 @@ class AccessV2NucleoQcAggOperator(Operator):
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
             if directory_port["listing"]:
                 directory_folder = directory_port["listing"][0]
+                if "listing" in directory_folder and not directory_folder["listing"]:
+                    continue
                 directory_list.append(directory_folder)
         return directory_list
 
