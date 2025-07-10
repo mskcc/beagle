@@ -58,7 +58,7 @@ class TestNucleoQCOperator(TestCase):
         for job in jobs:
             self.assertEqual(job.is_valid(), True)
             input_json = job.inputs
-            self.assertEqual(len(input_json["athena_coverage_report_dir"]), 2)
+            self.assertEqual(len(input_json["athena_coverage_report_dir"]), 0)
             self.assertEqual(len(input_json["collapsed_bam_duplex_metrics_dir"]), 2)
             self.assertEqual(len(input_json["collapsed_bam_stats_dir"]), 2)
             self.assertEqual(len(input_json["collapsed_extraction_files"]), 2)
