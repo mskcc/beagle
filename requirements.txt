@@ -24,7 +24,7 @@ django-pymemcache==1.0.0
 django-admin-rangefilter==0.6.4
 pystache==0.6.0
 asyncio-nats-client==0.11.5
-nats-py==2.0.0
+nats-py==2.10.0
 django-advanced-filters==1.4.0
 sbpack==2022.3.16
 ddtrace==1.7.3
