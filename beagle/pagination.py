@@ -1,9 +1,13 @@
 import math
+import logging
 from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator
 from django.utils.functional import cached_property
+
+
+logger = logging.getLogger()
 
 
 class BeaglePagination(PageNumberPagination):
@@ -39,27 +43,34 @@ class CountFastPaginator(Paginator):
         return self.object_list.values("id").count()
 
 
-def time_filter(model, query_params, time_modal="created_date", previous_queryset=None):
-    timedelta_query = "%s_timedelta" % time_modal
-    gt_query = "%s_gt" % time_modal
-    gt_query_filter = "%s__gt" % time_modal
-    lt_query = "%s_lt" % time_modal
-    lt_query_filter = "%s__lt" % time_modal
-    order_by = "-%s" % time_modal
-    if query_params.get(timedelta_query):
-        time_threshold = datetime.now() - timedelta(hours=int(query_params[timedelta_query]))
-        queryset = model.objects.filter(**{gt_query_filter: time_threshold}).order_by(order_by)
-    elif query_params.get(gt_query) or query_params.get(lt_query):
-        if query_params.get(gt_query):
-            time_gt = query_params[gt_query]
-            queryset = model.objects.filter(**{gt_query_filter: time_gt}).order_by(order_by)
-        if query_params.get(lt_query):
-            time_lt = query_params[lt_query]
-            queryset = model.objects.filter(**{lt_query_filter: time_lt}).order_by(order_by)
+def time_filter(model, query_params, time_fields=("created_date", "modified_date"), previous_queryset=None):
+    queryset = previous_queryset if previous_queryset is not None else model.objects.all()
 
-    else:
-        if previous_queryset != None:
-            queryset = previous_queryset
-        else:
-            queryset = model.objects.order_by(order_by).all()
+    for time_field in time_fields:
+        timedelta_param = f"{time_field}_timedelta"
+        gt_param = f"{time_field}_gt"
+        lt_param = f"{time_field}_lt"
+
+        if timedelta_param in dict(query_params).keys():
+            try:
+                hours = int(query_params[timedelta_param])
+                time_threshold = datetime.now() - timedelta(hours=hours)
+                queryset = queryset.filter(**{f"{time_field}__gt": time_threshold})
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error in time filter {e}")
+
+        if gt_param in query_params:
+            gt_value = query_params[gt_param]
+            try:
+                queryset = queryset.filter(**{f"{time_field}__gt": gt_value})
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error in time filter {e}")
+
+        if lt_param in query_params:
+            lt_value = query_params[lt_param]
+            try:
+                queryset = queryset.filter(**{f"{time_field}__lt": lt_value})
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error in time filter {e}")
+
     return queryset

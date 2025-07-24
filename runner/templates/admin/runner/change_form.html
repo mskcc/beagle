@@ -6,12 +6,14 @@
         document.addEventListener("DOMContentLoaded", function() {
             const pipelineTypeField = document.getElementById("id_pipeline_type");
             const nfcoreTemplateField = document.getElementById("id_nfcore_template").closest(".form-row");
-
+            const nfcoreProfilesField = document.getElementById("id_profiles").closest(".form-row");
             function toggleNfcoreTemplate() {
                 if (pipelineTypeField.value == "1") {  // Assuming 1 is for NEXTFLOW
                     nfcoreTemplateField.classList.remove("hidden");
+                    nfcoreProfilesField.classList.remove("hidden");
                 } else {
                     nfcoreTemplateField.classList.add("hidden");
+                    nfcoreProfilesField.classList.add("hidden");
                 }
             }
 
