@@ -261,7 +261,7 @@ SAMPLE-NORMAL-001\tSAMPLE-TUMOR-001
         self.assertEqual(job_json["inputs"]["config"], "TEST CONFIG")
         self.assertEqual(len(job_json["inputs"]["inputs"]), 2)
         self.assertEqual(len(job_json["inputs"]["params"]), 1)
-        self.assertEqual(job_json["inputs"]["profile"], "iris")
+        self.assertEqual(job_json["inputs"]["profile"], "juno")
 
     @patch("runner.pipeline.pipeline_cache.PipelineCache.get_pipeline")
     def test_config(self, get_pipeline):
