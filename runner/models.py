@@ -75,7 +75,7 @@ class Pipeline(BaseModel):
     walltime = models.IntegerField(blank=True, null=True)
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
-    config = models.CharField(blank=True, null=True, max_length=3000, default=None)
+    config = models.TextField(blank=True, null=True, max_length=3000, default=None)
     nfcore_template = models.BooleanField(default=False)
     profiles = JSONField(default=list, blank=True, null=True)
 
