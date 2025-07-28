@@ -105,7 +105,7 @@ class TestConstructPair(TestCase):
 
     def test_construct_argos_jobs_bam_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "16342_B.fixtures_pdx.json")
-        bam_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "dmp-bam.json")
+        bam_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "16342_pdx.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
         call_command("loaddata", bam_fixture, verbosity=0)
 
@@ -145,7 +145,7 @@ class TestConstructPair(TestCase):
 
     def test_construct_argos_jobs_bam_non_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "16342_B.fixtures_non_pdx.json")
-        bam_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "dmp-bam.json")
+        bam_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "16342_pdx.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
         call_command("loaddata", bam_fixture, verbosity=0)
 
