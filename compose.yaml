@@ -132,6 +132,16 @@ services:
       - max_parallel_workers=20
       - -c
       - max_parallel_maintenance_workers=4
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - track_activity_query_size=1MB
+      - -c
+      - pg_stat_statements.max=10000
+      - -c
+      - pg_stat_statements.track_utility=off
+      - -c
+      - track_io_timing=on
     secrets:
       - DB_PASSWORD
     healthcheck:
