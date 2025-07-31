@@ -275,7 +275,7 @@ services:
     command: 
       - |
           python3 ${BEAGLE_PATH}/manage.py migrate --noinput
-          echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org','${BEAGLE_DB_PASSWORD}')" | python3 ${BEAGLE_PATH}/manage.py shell_plus
+          echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org',settings.DB_PASSWORD)" | python3 ${BEAGLE_PATH}/manage.py shell_plus
           python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
           #ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
           gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
@@ -455,7 +455,7 @@ services:
     secrets:
       - DB_PASSWORD
     environment:
-      - PGPASSWORD=${BEAGLE_DB_USERNAME}
+      - PGPASSWORD=${BEAGLE_DB_PASSWORD}
     entrypoint: ["/bin/sh", "-c"]
     command:
     - |
