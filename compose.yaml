@@ -258,6 +258,9 @@ services:
       - ${GID_FILE_3}
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
+    secrets:
+      - DB_PASSWORD
+      - RABBITMQ_PASSWORD
     entrypoint: ["/bin/bash","-c"]
     command: 
       - |
