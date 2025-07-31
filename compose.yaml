@@ -33,9 +33,6 @@ x-beagle_celery: &beagle_celery
     - command: useradd --uid ${DOCKER_UID} -m beagle_user
       user: root
   entrypoint: ["/bin/bash", "-c"]
-  secrets:
-    - DB_PASSWORD
-    - RABBITMQ_PASSWORD
   healthcheck:
     test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status || exit 1"
     interval: 30s
@@ -141,8 +138,6 @@ services:
       - pg_stat_statements.track_utility=off
       - -c
       - track_io_timing=on
-    secrets:
-      - DB_PASSWORD
     healthcheck:
       test:
         [
@@ -186,8 +181,6 @@ services:
         /etc/pgbouncer/entrypoint_mod.sh /usr/bin/pgbouncer $$INIFILE > /logs/pgbouncer.log 2>&1
     ports:
       - "5432:5432"
-    secrets:
-      - DB_PASSWORD
     depends_on:
       beagle_postgres:
         condition: service_healthy
@@ -228,8 +221,6 @@ services:
       - 5672:5672
     expose:
       - "5672"
-    secrets:
-      - RABBITMQ_PASSWORD
     environment:
       - RABBITMQ_NODENAME=rabbitmq_beagle
       - RABBITMQ_DEFAULT_USER=${BEAGLE_RABBITMQ_USERNAME}
@@ -274,9 +265,6 @@ services:
       - ${GID_FILE_3}
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
-    secrets:
-      - DB_PASSWORD
-      - RABBITMQ_PASSWORD
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
@@ -463,8 +451,6 @@ services:
     volumes:
       - ./logs:/logs
       - ${DB_BACKUP_PATH}:/db_backup
-    secrets:
-      - DB_PASSWORD
     environment:
       - PGPASSWORD=${BEAGLE_DB_PASSWORD}
     entrypoint: ["/bin/sh", "-c"]
@@ -486,8 +472,3 @@ networks:
   voyager_net:
     name: voyager_network
     external: true
-secrets:
-  DB_PASSWORD:
-    environment: BEAGLE_DB_PASSWORD
-  RABBITMQ_PASSWORD:
-    environment: BEAGLE_RABBITMQ_PASSWORD
