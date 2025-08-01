@@ -62,6 +62,7 @@ from beagle_etl.exceptions import (
     IncorrectlyFormattedPrimaryId,
     FailedToLocateTheFileException,
 )
+
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
@@ -72,17 +73,38 @@ from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
 from study.objects import StudyObject
-
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
 
-def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0):
+def fetch_operators_wfastq(fastq_metadata):
+    # Limit Potential Operators with OR query
+    query = Q()
+    for key, value in fastq_metadata.items():
+        query |= Q(recipes_json__contains=[{key: value}])
+        query |= Q(recipes_json__contains=[{key: [value]}])  # could be a list
+    candidates = Operator.objects.filter(query)
+
+    # Make sure operator all json_recipes key/values exist in fastq metadata
+    operators = []
+    for obj in candidates:
+        for recipe_dict in obj.recipes_json:
+            if all(
+                fastq_metadata.get(key, "") in normalize_fastq_value(recipe_dict.get(key, [])) for key in recipe_dict
+            ):
+                operators.append(obj)
+    return operators
+
+
+def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
+    fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
             recipe=recipe,
+            fastq_metadata=fastq_metadata,
             samples=sample_jobs,
             job_group=job_group,
             job_group_notifier=job_group_notifier,
@@ -175,7 +197,6 @@ def new_request(message_id):
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-
     set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
 
@@ -209,7 +230,6 @@ def new_request(message_id):
         "dataAccessEmails": data_access_email,
         "qcAccessEmails": qc_access_email,
     }
-
     if data.get("deliveryDate"):
         delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
     else:
@@ -217,7 +237,6 @@ def new_request(message_id):
     data["deliveryDate"] = delivery_date
 
     smile_job_status = SmileMessageStatus.COMPLETED
-
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
         if sample_id not in valid_samples:
@@ -281,11 +300,23 @@ def new_request(message_id):
     message.status = smile_job_status
     message.save()
 
-    create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier)
+    fastq_metadata = fetch_fastq_metadata(request_id)
+    create_request_callback_instance(
+        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
+
+
+def normalize_fastq_value(val):
+    if isinstance(val, list):
+        return set(val)
+    elif isinstance(val, str):
+        return {val}
+    else:
+        return set()
 
 
 @shared_task
-def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_group_notifier_id=None):
+def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_id=None, job_group_notifier_id=None):
     """
     :param request_id: 08944_B
     :param recipe: IMPACT438
@@ -313,7 +344,6 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             if job["igocomplete"] and job["status"] != "COMPLETED":
                 wes_job_failed = WESJobFailedEvent(job_group_notifier_id, recipe)
                 send_notification.delay(wes_job_failed.to_dict())
-
     if not recipe:
         raise FailedToSubmitToOperatorException(
             "Not enough metadata to choose the operator for requestId:%s" % request_id
@@ -360,14 +390,18 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
         return []
 
     run_dates = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RUN_DATE_METADATA_KEY
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id},
+        file_group=settings.IMPORT_FILE_GROUP,
+        values_metadata=settings.RUN_DATE_METADATA_KEY,
     ).all()
-    run_dates = sorted([parse(d) for d in run_dates])
 
     if not run_dates:
         logger.info(f"Request doesn't have run_date specified. Skip running.")
         return []
-    elif datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
+
+    run_dates = sorted([parse(d) for d in run_dates])
+
+    if datetime.now().date() - run_dates[-1].date() > timedelta(days=settings.OLD_REQUEST_TIMEDELTA):
         logger.info(f"Request older than {settings.OLD_REQUEST_TIMEDELTA} days imported. Skip running.")
         return []
 
@@ -418,9 +452,9 @@ def request_callback(request_id, recipe, sample_jobs, job_group_id=None, job_gro
             admin_hold_event = AdminHoldEvent(str(job_group_notifier.id)).to_dict()
             send_notification.delay(admin_hold_event)
             return []
-
-    operators = Operator.objects.filter(recipes__overlap=[recipe])
-
+    # Find operators that match fastq_metadata
+    operators = fetch_operators_wfastq(fastq_metadata)
+    print(f"Operators matched with {request_id} during request_callback: {operators}")
     if not operators:
         # TODO: Import ticket will have CIReviewNeeded
         msg = "No operator defined for requestId %s with recipe %s" % (request_id, recipe)
@@ -462,7 +496,9 @@ def update_request_job(message_id, job_group, job_group_notifier):
     metadata = json.loads(message.message)[-1]
     data = json.loads(metadata["requestMetadataJson"])
     request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
-    files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id})
+    files = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+    )
 
     project_id = data.get("projectId")
     recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
@@ -540,7 +576,11 @@ def update_request_job(message_id, job_group, job_group_notifier):
             )
     message.status = SmileMessageStatus.COMPLETED
     message.save()
-    create_request_callback_instance(request_id, recipe, sample_status_list, job_group, job_group_notifier)
+
+    fastq_metadata = fetch_fastq_metadata(request_id)
+    create_request_callback_instance(
+        request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
     return request_metadata, pooled_normal
 
 
@@ -565,6 +605,37 @@ def fetch_request_metadata(request_id):
         "qcAccessEmails": file_example.metadata["qcAccessEmails"],
     }
     return request_metadata
+
+
+def fetch_fastq_metadata(request_id):
+    """
+    input: request_id <string>: request_id received in a smile message.
+    output:
+        - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
+    """
+    fastq_file = (
+        FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+        )
+        .values_list("metadata", flat=True)
+        .first()
+    )
+    if fastq_file:
+        fastq_metadata = {
+            settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
+            "runMode": fastq_file.get("runMode"),
+            "species": fastq_file.get("species"),
+            "platform": fastq_file.get("platform"),
+            "genePanel": fastq_file.get("genePanel"),
+            settings.REQUEST_ID_METADATA_KEY: fastq_file.get(settings.REQUEST_ID_METADATA_KEY),
+            settings.PROJECT_ID_METADATA_KEY: fastq_file.get(settings.PROJECT_ID_METADATA_KEY),
+            settings.ONCOTREE_METADATA_KEY: fastq_file.get(settings.ONCOTREE_METADATA_KEY),
+            settings.PRESERVATION_METADATA_KEY: fastq_file.get(settings.PRESERVATION_METADATA_KEY),
+            "sampleOrigin": fastq_file.get("sampleOrigin"),
+        }
+    else:
+        fastq_metadata = {}
+    return fastq_metadata
 
 
 @shared_task
@@ -592,7 +663,6 @@ def update_job(request_id):
     job_group.save()
     job_group_notifier_id = notifier_start(job_group, request_id)
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-
     sample_status = []
     for msg in sample_update_messages:
         sample_status.extend(update_sample_job(str(msg.id), job_group, job_group_notifier))
@@ -603,14 +673,14 @@ def update_job(request_id):
 
     if not request_metadata:
         request_metadata = fetch_request_metadata(request_id)
-
-    recipe = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, values_metadata=settings.RECIPE_METADATA_KEY
-    ).first()
+    fastq_metadata = fetch_fastq_metadata(request_id)
+    recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
     )
-    create_request_callback_instance(request_id, recipe, sample_status, job_group, job_group_notifier)
+    create_request_callback_instance(
+        request_id, recipe, sample_status, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
 
 
 @shared_task

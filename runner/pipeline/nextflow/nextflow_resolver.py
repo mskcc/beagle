@@ -24,29 +24,47 @@ class NextflowResolver(PipelineResolver):
         return pipeline
 
     def schemas2template(self, nextflow_schema, location):
-        # TODO Not sure if this is an exhaustive search of possible definitions
-        # TODO parse everything in definitions
-        reference = nextflow_schema["definitions"]["reference_genome_options"]["properties"]
-        input = nextflow_schema["definitions"]["input_output_options"]["properties"]
-        properties = {**reference, **input}
-        # Check for sample-sheet CLI inputs
-        samplesheets = [key for key, val in properties.items() if val.get("format") == "sample-sheet"]
-        inputs = [
-            {"id": key, "schema": {"type": val.get("format")}}
-            for key, val in properties.items()
-            if val.get("format") != "sample-sheet"
-        ]
-        # Check Assets for sample sheet schemas
-        for schema in samplesheets:
-            with open(os.path.join(location, f"assets/schema_{schema}.json"), "r") as f:
-                nextflow_schema = json.load(f)
-                samplesheet_props = nextflow_schema["items"]["properties"]
-                fields = [{"id": key, "type": val.get("format")} for key, val in samplesheet_props.items()]
-                header = "\t".join([f["id"] for f in fields]) + "\n"
-                body_start = f"{{{{#{schema}}}}}\n"
-                body_end = f"\n{{{{/{schema}}}}}"
-                body = "\t".join([f'{{{{{f["id"]}}}}}' for f in fields])
-                template = header + body_start + body + body_end
-                samplesheet_input = {"id": schema, "schema": {"items": {"fields": fields}}, "template": template}
-                inputs.append(samplesheet_input)
+        inputs = []
+        defs = nextflow_schema.get("$defs")
+        if not defs:
+            defs = nextflow_schema.get("definitions")
+        # loop over definition properties
+        for key, val in defs.items():
+            props = defs[key]["properties"]
+            for key, items in props.items():
+                # see if property has a schema
+                schema = props[key].get("schema")
+                mimetype = props[key].get("mimetype")
+                # TODO this should probably be it's own function with a mapping of mimetype to delimiter
+                if schema and mimetype:
+                    if mimetype == "text/csv":
+                        delimiter = ","
+                        extension = ".csv"
+                    elif mimetype == "text/tsv":
+                        delimiter = "\t"
+                        extension = ".tsv"
+                    else:
+                        print(f"Warning: Unsupported mimetype '{mimetype}', defaulting to tab delimiter.")
+                        delimiter = "\t"
+                        extension = ".tsv"
+                    schema_path = os.path.join(location, schema)
+                    if os.path.exists(schema_path):
+                        with open(schema_path, "r") as f:
+                            nextflow_schema = json.load(f)
+                            samplesheet_props = nextflow_schema["items"]["properties"]
+                            fields = [{"id": k, "type": v.get("format")} for k, v in samplesheet_props.items()]
+                            header = delimiter.join([f["id"] for f in fields]) + "\n"
+                            body_start = f"{{{{#{key}}}}}\n"
+                            body_end = f"\n{{{{/{key}}}}}"
+                            body = delimiter.join([f'{{{{{f["id"]}}}}}' for f in fields])
+                            template = header + body_start + body + body_end
+                            samplesheet_input = {
+                                "id": key,
+                                "schema": {"items": {"fields": fields}},
+                                "template": template,
+                                "extension": extension,
+                            }
+                            inputs.append(samplesheet_input)
+                else:
+                    inputs.append({"id": key, "schema": {"type": items.get("format")}})
         return inputs

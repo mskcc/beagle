@@ -522,16 +522,6 @@
         "captureInputNg": "320.000000034",
         "cfDNA2dBarcode": null,
         "collectionYear": "2024",
-        "patientAliases": [
-          {
-            "value": "C-V5AJEY",
-            "namespace": "cmoId"
-          },
-          {
-            "value": "P-0112838",
-            "namespace": "dmpId"
-          }
-        ],
         "qcAccessEmails": "",
         "smilePatientId": "cbe522ba-05c1-4731-a369-076b707afa1d",
         "tissueLocation": "",

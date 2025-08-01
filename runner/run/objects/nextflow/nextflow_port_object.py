@@ -25,15 +25,18 @@ class NextflowPortObject(PortObject):
         port_id=None,
         notify=False,
         template=None,
+        extension=None,
     ):
         super().__init__(run_id, name, port_type, schema, secondary_files, db_value, value, files, port_id, notify)
         self.template = template
+        self.extension = extension
 
     @classmethod
     def from_definition(cls, run_id, value, port_type, port_values, notify=False):
         name = value.get("id")
         schema = value.get("schema")
         template = value.get("template")
+        extension = value.get("extension")
         logger = logging.getLogger(__name__)
         cls.logger.debug(template)
         port_type = port_type
@@ -41,7 +44,20 @@ class NextflowPortObject(PortObject):
         files = []
         db_value = copy.deepcopy(port_values.get(name))
         notify = notify
-        return cls(run_id, name, port_type, schema, [], db_value, value, files, None, notify, template=template)
+        return cls(
+            run_id,
+            name,
+            port_type,
+            schema,
+            [],
+            db_value,
+            value,
+            files,
+            None,
+            notify,
+            template=template,
+            extension=extension,
+        )
 
     def ready(self):
         self.schema = SchemaProcessor.resolve_cwl_type(self.schema)
@@ -93,6 +109,7 @@ class NextflowPortObject(PortObject):
             port_id=port_id,
             notify=port.notify,
             template=port.template,
+            extension=port.extension,
         )
 
     def to_db(self):
@@ -107,6 +124,7 @@ class NextflowPortObject(PortObject):
             self.port_object.files.set([FileProcessor.get_file_obj(v) for v in self.files])
             self.port_object.notify = self.notify
             self.port_object.template = self.template
+            self.port_object.extension = self.extension
             self.port_object.save()
         else:
             try:
@@ -123,6 +141,7 @@ class NextflowPortObject(PortObject):
                 value=self.value,
                 notify=self.name in run_object.notify_for_outputs,
                 template=self.template,
+                extension=self.extension,
             )
             new_port.save()
             new_port.files.set([FileProcessor.get_file_obj(v) for v in self.files])

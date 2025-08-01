@@ -101,7 +101,6 @@ class RunApiViewSet(
         serializer = RunApiListSerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = time_filter(Run, fixed_query_params)
-            queryset = time_filter(Run, request.query_params, time_modal="modified_date", previous_queryset=queryset)
             job_groups = fixed_query_params.get("job_groups")
             jira_ids = fixed_query_params.get("jira_ids")
             run_ids = fixed_query_params.get("run_ids")

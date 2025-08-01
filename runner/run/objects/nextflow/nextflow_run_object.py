@@ -184,7 +184,7 @@ class NextflowRunObject(RunObject):
         params = dict()
         for port in self.inputs:
             if port.template:
-                input_files.append({"name": port.name, "content": port.value})
+                input_files.append({"name": port.name, "content": port.value, "extension": port.extension})
             else:
                 params[port.name] = port.value
         inputs["inputs"] = input_files
@@ -205,7 +205,7 @@ class NextflowRunObject(RunObject):
             inputs["config"] = pystache.render(config, render_value)
         else:
             inputs["config"] = config
-        inputs["profile"] = "juno"
+        inputs["profile"] = ",".join(self.run_obj.app.profiles)
         inputs["params"] = params
         inputs["outputs"] = output_file_path
         job = {

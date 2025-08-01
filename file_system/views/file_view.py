@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from file_system.repository import FileRepository
 from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
-from django.core.exceptions import ValidationError
 from file_system.serializers import (
     CreateFileSerializer,
     UpdateFileSerializer,
@@ -22,7 +21,6 @@ from drf_yasg.utils import swagger_auto_schema
 from beagle.pagination import time_filter
 from beagle.common import fix_query_list
 from rest_framework.generics import GenericAPIView
-from django.http import HttpResponse
 
 
 class FileView(
@@ -72,9 +70,7 @@ class FileView(
         serializer = FileQuerySerializer(data=fixed_query_params)
         if serializer.is_valid():
             queryset = FileRepository.all()
-            queryset = time_filter(
-                FileMetadata, request.query_params, time_modal="modified_date", previous_queryset=queryset
-            )
+            queryset = time_filter(FileMetadata, request.query_params, previous_queryset=queryset)
             file_group = fixed_query_params.get("file_group")
             path = fixed_query_params.get("path")
             metadata = fixed_query_params.get("metadata")
