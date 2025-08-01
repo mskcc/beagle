@@ -1,0 +1,57 @@
+[{
+    "model": "file_system.file",
+    "pk": "55876426-94e8-445a-adfa-c6fa7d53485d",
+    "fields": {
+      "created_date": "2024-09-26T05:07:50.189Z",
+      "modified_date": "2024-09-28T05:08:12.446Z",
+      "file_name": "bam-N.bam",
+      "path": "/path/to/bam/bam-N.bam",
+      "file_type": 24,
+      "size": 4352061688,
+      "file_group": "9ace63bf-ed55-461c-9ac0-1c5ee710d957",
+      "checksum": null,
+      "request_id": null,
+      "samples": "[]",
+      "patient_id": null,
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "8ef98df8-cb2a-4faa-86a7-20e6d71365d1",
+    "fields": {
+      "created_date": "2024-09-28T05:08:12.438Z",
+      "modified_date": "2024-09-28T05:08:12.438Z",
+      "file": "55876426-94e8-445a-adfa-c6fa7d53485d",
+      "version": 1,
+      "latest": true,
+      "metadata": {
+        "type": "N",
+        "assay": "IM7",
+        "sample": "P-0112838-N01-IM7",
+        "anon_id": "REDACTED",
+        "patient": {
+          "cmo": "V5AJEY",
+          "dmp": "P-0000001"
+        },
+        "updated": "2024-09-26 05:04:16.056479+00:00",
+        "version": 1,
+        "coverage": 458,
+        "imported": "2024-09-26 05:04:16.056467+00:00",
+        "cmo_assay": "IMPACT505",
+        "tumor_type": null,
+        "external_id": "C-V5AJEY-N901-dZ-IM7",
+        "sample_type": null,
+        "tissue_type": null,
+        "primary_site": null,
+        "project_name": "CJ5915550132KJ",
+        "part_c_consent": 1,
+        "metastasis_site": null,
+        "somatic_calling_status": null,
+        "major_allele_contamination": 0.432,
+        "minor_allele_contamination": 0.00022
+      },
+      "user": null
+    }
+  }
+]
