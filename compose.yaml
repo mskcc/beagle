@@ -7,6 +7,8 @@ x-beagle_celery: &beagle_celery
   networks:
     - voyager_net
   env_file: .env
+  group_add:
+    - ${DOCKER_GROUPS}
   environment:
     - BEAGLE_DB_URL=beagle_pgbouncer
     - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -24,13 +26,20 @@ x-beagle_celery: &beagle_celery
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
     - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
     - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
-  group_add:
-    - ${DOCKER_GID}
-    - ${GID_FILE_1}
-    - ${GID_FILE_2}
-    - ${GID_FILE_3}
   post_start:
-    - command: useradd --uid ${DOCKER_UID} -m beagle_user
+    - command:
+        - /bin/bash
+        - -c
+        - |
+          sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
+          sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
+          for single_group in ${all_groups}; do
+            single_group_items=($${!single_group[0]})
+            getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
+          done
+          id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
       user: root
   entrypoint: ["/bin/bash", "-c"]
   healthcheck:
@@ -240,6 +249,8 @@ services:
     networks:
       - voyager_net
     env_file: .env
+    group_add:
+      - ${DOCKER_GROUPS}
     environment:
       - BEAGLE_DB_URL=beagle_pgbouncer
       - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -258,11 +269,21 @@ services:
       - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
       - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
       - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
-    group_add:
-      - ${DOCKER_GID}
-      - ${GID_FILE_1}
-      - ${GID_FILE_2}
-      - ${GID_FILE_3}
+    post_start:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
+          sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
+          for single_group in ${all_groups}; do
+            single_group_items=($${!single_group[0]})
+            getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
+          done
+          id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
+        user: root
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
     entrypoint: ["/bin/bash", "-c"]
@@ -297,7 +318,6 @@ services:
     command:
       - |
         PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid
-
         [ -e $$PIDFILE ] && rm $$PIDFILE
         echo 'Running beagle_etl beat...'
 
