@@ -541,3 +541,4 @@ GENE_PANEL_TABLE = {
     "IMPACT-Heme": {"IMPACT-Heme_v2_BAITS": "IMPACT-Heme_v2"},
     "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
 }
+SHELL_PLUS = "ipython"
