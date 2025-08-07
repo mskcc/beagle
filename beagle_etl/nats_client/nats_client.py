@@ -6,8 +6,6 @@ import logging
 import asyncio
 from time import sleep
 from django.conf import settings
-from datetime import datetime, timezone
-from nats.js.api import DeliverPolicy
 from beagle_etl.models import SMILEMessage
 
 
