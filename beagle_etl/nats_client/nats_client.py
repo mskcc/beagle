@@ -6,6 +6,8 @@ import logging
 import asyncio
 from time import sleep
 from django.conf import settings
+from datetime import datetime, timezone
+from nats.js.api import DeliverPolicy
 from beagle_etl.models import SMILEMessage
 
 
@@ -27,7 +29,7 @@ def persist_message(topic, message):
         logger.error(e)
 
 
-async def run(loop, queue):
+async def run(loop, queue, start_time=None):
     async def error_cb(e):
         logger.error("Error:", e)
 
@@ -74,10 +76,14 @@ async def run(loop, queue):
     nc = await nats.connect(**options)
 
     try:
+        config = {"filter_subject": settings.METADB_NATS_FILTER_SUBJECT}
+        if start_time:
+            config["deliver_policy"] = "by_start_time"
+            config["opt_start_time"] = start_time
+        else:
+            config["deliver_policy"] = "new"
         js = nc.jetstream()
-        sub = await js.subscribe(
-            queue, durable=settings.METADB_NATS_DURABLE, config={"filter_subject": settings.METADB_NATS_FILTER_SUBJECT}
-        )
+        sub = await js.subscribe(queue, durable=settings.METADB_NATS_DURABLE, config=config)
         logger.info(f"Connected to NATS at {nc.connected_url}...")
     except Exception as e:
         logger.error(e)
