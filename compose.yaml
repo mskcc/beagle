@@ -8,7 +8,9 @@ x-beagle_celery: &beagle_celery
     - voyager_net
   env_file: .env
   group_add:
-    - ${DOCKER_GROUPS}
+    - ${DOCKER_GROUP_1}
+    - ${DOCKER_GROUP_2}
+    - ${DOCKER_GROUP_3}
   environment:
     - BEAGLE_DB_URL=beagle_pgbouncer
     - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -250,7 +252,9 @@ services:
       - voyager_net
     env_file: .env
     group_add:
-      - ${DOCKER_GROUPS}
+      - ${DOCKER_GROUP_1}
+      - ${DOCKER_GROUP_2}
+      - ${DOCKER_GROUP_3}
     environment:
       - BEAGLE_DB_URL=beagle_pgbouncer
       - BEAGLE_MEMCACHED_HOST=beagle_memcached
