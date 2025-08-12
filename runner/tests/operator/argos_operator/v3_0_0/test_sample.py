@@ -14,6 +14,7 @@ from file_system.repository.file_repository import FileRepository
 from runner.operator.argos_operator.v3_0_0.bin.files_object import FilesObj
 from runner.operator.argos_operator.v3_0_0.bin.sample_igo import SampleIGO
 from runner.operator.argos_operator.v3_0_0.bin.sample_metadata import SampleMetadata
+from runner.run.processors.file_processor import FileProcessor
 
 
 class TestSampleIGO(TestCase):
@@ -54,16 +55,15 @@ class TestSampleIGO(TestCase):
 
         for sample_name in file_list:
             sample_igo = SampleIGO(sample_name, file_list[sample_name], "fastq")
-            pprint(sample_igo.metadata)
-            pprint(sample_igo.file_type)
-            pprint(sample_igo.sample_type)
-            pprint(sample_igo.files)
+
+        for sample_file in sample_igo.sample_files:
+            pprint(sample_file)
 
         # TODO check samples are built properly
         self.assertEqual(len(file_list), 4)
 
     def test_create_sample_clinical_bams(self):
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B.fixtures.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B.fixtures.json")  # TODO: use a bam fixture
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
@@ -75,9 +75,9 @@ class TestSampleIGO(TestCase):
                 file_list[sample_name] = list()
             file_list[sample_name].append(f)
 
-        for sample_name in file_list:
-            sample_igo = SampleIGO(sample_name, file_list[sample_name], "bam")
-            pprint(sample_igo.data)
+            # for sample_name in file_list:
+            # sample_igo = SampleIGO(sample_name, file_list[sample_name], "bam")
+            # pprint(sample_igo.data)
 
         # TODO check samples are built properly
 

@@ -5,7 +5,8 @@ from collections.abc import Iterable
 from django.conf import settings
 
 from .files_object import FilesObj
-from .sample_metadata import SampleMetadata
+from .helpers import spoof_barcode
+from .sample_file_object import SampleFile
 
 
 class SampleIGO:
@@ -40,45 +41,35 @@ class SampleIGO:
             self.patient_id = self.data[settings.PATIENT_ID_METADATA_KEY]
             self.run_mode = self.remapped_run_mode.pop()
             self.flowcell_id = self.data["flowCellId"]
-            self.barcode_index = self._set_barcode_index()
 
-        self.metadata = SampleMetadata(self.data).get_metadata()
+        #        self.metadata = SampleMetadata(self.data).get_metadata()
+        self.sample_files = list()
         self.files_obj = FilesObj(file_list, file_type)
         self.file_type = self.files_obj.file_type
         self.files = self.files_obj.get_files()
-
-    def _set_barcode_index(self):
-        #        if self.data.get("barcodeIndex") is not None:
-        #           return self.data["barcodeIndex"]
-        barcode_index = self._spoof_barcode()
-        return barcode_index
-
-    def _spoof_barcode(self):
-        """
-        Spoof barcode by removing R1/R2 or .bam from end of filename, reverse the string.
-        Works even with compound extensions like .fastq.gz.
-
-        Barcode is used only for submitting to the cluster; makes sure paired fastqs get
-        sent together during job distribution
-        """
-        # Get just the base name
-        filename = os.path.basename(self.file_list[0].file.path)
-
-        # Reverse full filename
-        reversed_name = filename[::-1]
-
-        # Remove reversed extensions
-        for ext in ["bam", "gz", "fastq", "bz2", "tar"]:
-            rev_ext = ext[::-1] + "."  # e.g., 'gz.' to match '.gz'
-            if reversed_name.startswith(rev_ext):
-                reversed_name = reversed_name[len(rev_ext) :]
-
-        # Remove R1/R2 in reversed form
-        reversed_name = reversed_name.replace("1R_", "").replace("2R_", "")
-
-        # Reverse back to get spoofed barcode
-        spoofed_barcode = reversed_name[::-1]
-        return spoofed_barcode
+        if self.file_type == "fastq":
+            for r1_fastq in self.files["R1"]:
+                metadata = self.data
+                if not metadata.get("barcodeIndex"):
+                    barcode_index = spoof_barcode(r1_fastq)
+                    metadata["barcodeIndex"] = barcode_index
+                sample_file = SampleFile(r1_fastq, metadata)
+                self.sample_files.append(sample_file)
+            for r2_fastq in self.files["R2"]:
+                metadata = self.data
+                if not metadata.get("barcodeIndex"):
+                    barcode_index = spoof_barcode(r2_fastq)
+                    metadata["barcodeIndex"] = barcode_index
+                sample_file = SampleFile(r2_fastq, metadata)
+                self.sample_files.append(sample_file)
+        if self.file_type == "bam":
+            metadata = self.data
+            for f in self.files["bam"]:
+                if not metadata.get("barcodeIndex"):
+                    barcode_index = spoof_barcode(f)
+                    metadata["barcodeIndex"] = barcode_index
+                sample_file = SampleFile(f, metadata)
+                self.sample_files.append(sample_file)
 
     def _set_status(self):
         """
@@ -96,6 +87,7 @@ class SampleIGO:
         run_modes = self.data["runMode"]
         self.remapped_run_mode = set()
 
+        # TODO Remap with Machine Class table
         for i in run_modes:
             if "novaseq" in i.lower():
                 if "x" in i.lower():

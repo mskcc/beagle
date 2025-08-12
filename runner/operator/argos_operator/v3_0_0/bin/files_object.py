@@ -1,6 +1,3 @@
-from dataclasses import dataclass
-
-
 class Bam:
     """
     Bam class to hold list of bam files
@@ -74,7 +71,6 @@ class Fastqs:
         return None
 
 
-@dataclass
 class FilesObj:
     """
     FilesObj class
@@ -87,15 +83,13 @@ class FilesObj:
     Sample class contains paired fastqs
     """
 
-    bams: Bam
-    fastqs: Fastqs
-
     def __init__(self, file_list, file_type):
         if file_type == "bam":
+            self.file_type = "bam"
             self.bams = Bam(file_list)
         else:
+            self.file_type = "fastq"
             self.fastqs = Fastqs(file_list)
-        self.file_type = file_type
 
     def get_files(self):
         if self.file_type == "bam":
