@@ -59,14 +59,14 @@ def get_request_id_runs(app, run_ids, request_id):
     return most_recent_runs_for_request, request_id
 
 
-def create_cwl_file_object(file_path):
+def create_cwl_file_object(file_path, url="juno://"):
     """
     Util function to create a simple CWL File object from a file_path
 
     :param file_path: str
     :return:
     """
-    return {"class": "File", "location": "juno://" + file_path}
+    return {"class": "File", "location": url + file_path}
 
 
 def is_tumor(file):
@@ -226,5 +226,4 @@ def is_tumor_bam(file):
     return not t_n_timepoint[0] == "N"
 
 
-def create_cwl_file_object(file_path):
-    return {"class": "File", "location": "juno://" + file_path}
+
