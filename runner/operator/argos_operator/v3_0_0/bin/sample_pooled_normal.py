@@ -92,3 +92,7 @@ class SamplePooledNormal:
     def __get_machine__(self, run_id):
         machine = run_id.split("_")[0]
         return machine
+
+    def __repr__(self):
+        sample_files_repr = "; ".join(repr(sample_file) for sample_file in self.sample_files)
+        return f"SamplePooledNormal(Samples=[{sample_files_repr}])"

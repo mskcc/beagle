@@ -106,7 +106,4 @@ class TestSamplePooledNormal(TestCase):
         metadata["runId"] = "FAUCI2_BLAHBLAH"
         test_sample_pooled_normal = SamplePooledNormal(metadata)
 
-        from pprint import pprint
-
-        for sample_file in test_sample_pooled_normal.sample_files:
-            pprint(sample_file)
+        pprint(test_sample_pooled_normal)

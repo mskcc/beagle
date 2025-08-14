@@ -60,4 +60,3 @@ class TestSampleDMP(TestCase):
 
         dmp_sample = SampleDMP(metadata)
         pprint(dmp_sample)
-        pprint(dmp_sample.metadata)

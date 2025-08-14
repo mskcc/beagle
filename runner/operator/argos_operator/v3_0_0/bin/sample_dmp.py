@@ -77,3 +77,6 @@ class SampleDMP:
         if v and "normal" in v:
             return "N"
         return "T"
+
+    def __repr__(self):
+        return f"SampleDMP(Sample=repr({self.sample_file}))"
