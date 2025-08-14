@@ -105,7 +105,7 @@ class AccessLegacySVOperator(Operator):
                 tumor_path = "iris://" + tumor_path
             tumor_bams = [{"class": "File", "location": tumor_path}]
 
-            normal_bam = create_cwl_file_object(normal_bam.path)
+            normal_bam = create_cwl_file_object(normal_bam.path, "iris://")
 
             input_file = template.render(
                 tumor_sample_id=tumor_sample_id,
