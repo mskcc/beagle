@@ -40,13 +40,6 @@ class AccessV2LegacyMSIOperator(Operator):
     also find the matched normals based on the patient ID.
     """
 
-    @staticmethod
-    def is_tumor_bam(file):
-        # Todo: extract to common fn across 4 downstream operators
-        if not file.file_name.endswith(".bam"):
-            return False
-        t_n_timepoint = file.file_name.split("-")[2]
-        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
         """
@@ -126,8 +119,8 @@ class AccessV2LegacyMSIOperator(Operator):
             template = Template(file.read())
 
         sample_names = [sample_name]
-        matched_normal_bams = [create_cwl_file_object(matched_normal_bam.path)]
-        tumor_bams = [create_cwl_file_object(tumor_bam.path)]
+        matched_normal_bams = [create_cwl_file_object(matched_normal_bam.path, "iris://")]
+        tumor_bams = [create_cwl_file_object(tumor_bam.path, "iris://")]
 
         input_file = template.render(
             tumor_bams=json.dumps(tumor_bams),

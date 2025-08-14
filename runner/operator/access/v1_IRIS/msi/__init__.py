@@ -11,7 +11,7 @@ from django.conf import settings
 from file_system.models import File
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
+from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object, is_tumor_bam
 from runner.models import Port, RunStatus
 
 
@@ -37,13 +37,6 @@ class AccessLegacyMSIOperator(Operator):
     also find the matched normals based on the patient ID.
     """
 
-    @staticmethod
-    def is_tumor_bam(file):
-        # Todo: extract to common fn across 4 downstream operators
-        if not file.file_name.endswith(".bam"):
-            return False
-        t_n_timepoint = file.file_name.split("-")[2]
-        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
         """
@@ -57,7 +50,7 @@ class AccessLegacyMSIOperator(Operator):
             name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
-        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if is_tumor_bam(f.file_name)]
 
         # Dictionary that associates tumor bam with standard bam with tumor_sample_id
         sample_tumor_normal = {}
@@ -121,8 +114,8 @@ class AccessLegacyMSIOperator(Operator):
             template = Template(file.read())
 
         sample_names = [sample_name]
-        matched_normal_bams = [create_cwl_file_object(matched_normal_bam.path)]
-        tumor_bams = [create_cwl_file_object(tumor_bam.path)]
+        matched_normal_bams = [create_cwl_file_object(matched_normal_bam.path, "iris://")]
+        tumor_bams = [create_cwl_file_object(tumor_bam.path, "iris://")]
 
         input_file = template.render(
             tumor_bams=json.dumps(tumor_bams),
