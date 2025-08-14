@@ -224,6 +224,3 @@ def is_tumor_bam(file):
         return False
     t_n_timepoint = file.split("-")[2]
     return not t_n_timepoint[0] == "N"
-
-
-

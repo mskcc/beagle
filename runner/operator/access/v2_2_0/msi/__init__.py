@@ -40,7 +40,6 @@ class AccessV2LegacyMSIOperator(Operator):
     also find the matched normals based on the patient ID.
     """
 
-
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator.
