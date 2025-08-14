@@ -10,7 +10,6 @@ from runner.run.processors.file_processor import FileProcessor
 from .files_object import FilesObj
 from .helpers import spoof_barcode
 from .sample_file_object import SampleFile
-from .sample_metadata import SampleMetadata
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -68,8 +67,8 @@ class SamplePooledNormal:
                 f.metadata["R"] = "R2"
             self.file_list.append(f)
 
-        # some overrides
-        self.metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name
+        # some overrides made because Pooled Normals don't contain these
+        self.metadata[settings.REQUEST_ID_METADATA_KEY] = sample_name + "_REQID"
         self.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY] = sample_name
         self.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = sample_name
         self.metadata[settings.SAMPLE_ID_METADATA_KEY] = sample_name
