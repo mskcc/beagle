@@ -79,4 +79,4 @@ class SampleDMP:
         return "T"
 
     def __repr__(self):
-        return f"SampleDMP(Sample=repr({self.sample_file}))"
+        return f"SampleDMP(Sample=({self.sample_file}))"
