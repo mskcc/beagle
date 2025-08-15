@@ -44,12 +44,6 @@ class AccessLegacySNVOperator(Operator):
     curated_normal_bams = None
     curated_normal_ids = None
 
-    @staticmethod
-    def is_tumor_bam(file):
-        if not file.file_name.endswith(".bam"):
-            return False
-        t_n_timepoint = file.file_name.split("-")[2]
-        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self):
         """
@@ -70,8 +64,8 @@ class AccessLegacySNVOperator(Operator):
             run__status=RunStatus.COMPLETED,
         )
 
-        duplex_tumor_bams = [f for p in duplex_output_ports for f in p.files.all() if self.is_tumor_bam(f)]
-        simplex_tumor_bams = [f for p in simplex_output_ports for f in p.files.all() if self.is_tumor_bam(f)]
+        duplex_tumor_bams = [f for p in duplex_output_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
+        simplex_tumor_bams = [f for p in simplex_output_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
 
         def make_pairs(d, s):
             paired = []

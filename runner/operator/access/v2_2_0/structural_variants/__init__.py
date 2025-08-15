@@ -31,12 +31,6 @@ class AccessV2LegacySVOperator(Operator):
     This Operator will search for Standard Bam files based on an IGO Request ID
     """
 
-    @staticmethod
-    def is_tumor_bam(file):
-        if not file.file_name.endswith(".bam"):
-            return False
-        t_n_timepoint = file.file_name.split("-")[2]
-        return not t_n_timepoint[0] == "N"
 
     def get_sample_inputs(self, runs):
         """
