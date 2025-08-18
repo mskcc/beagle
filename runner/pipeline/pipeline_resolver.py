@@ -30,7 +30,6 @@ class PipelineResolver(object):
         os.mkdir(dirname)
         return dirname
 
-
     def _extract_dirname_from_github_link(self):
         dirname = self.github.rsplit("/", 2)[1] if self.github.endswith("/") else self.github.rsplit("/", 1)[1]
         if dirname.endswith(".git"):
