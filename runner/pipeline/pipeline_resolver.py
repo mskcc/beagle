@@ -25,7 +25,8 @@ class PipelineResolver(object):
         return dirname
 
     def _dir_name(self):
-        dirname = "/tmp/" + str(uuid.uuid4())
+        base = os.environ.get("TMPDIR", "/tmp")
+        dirname = os.path.join(base, str(uuid.uuid4()))
         os.mkdir(dirname)
         return dirname
 

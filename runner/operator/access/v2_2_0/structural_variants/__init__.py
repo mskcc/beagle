@@ -31,13 +31,6 @@ class AccessV2LegacySVOperator(Operator):
     This Operator will search for Standard Bam files based on an IGO Request ID
     """
 
-    @staticmethod
-    def is_tumor_bam(file):
-        if not file.file_name.endswith(".bam"):
-            return False
-        t_n_timepoint = file.file_name.split("-")[2]
-        return not t_n_timepoint[0] == "N"
-
     def get_sample_inputs(self, runs):
         """
         Create all sample inputs for all runs triggered in this instance of the operator
@@ -110,7 +103,7 @@ class AccessV2LegacySVOperator(Operator):
                 tumor_path = "iris://" + tumor_path
             tumor_bams = [{"class": "File", "location": tumor_path}]
 
-            normal_bam = create_cwl_file_object(normal_bam.path)
+            normal_bam = create_cwl_file_object(normal_bam.path, "iris://")
 
             input_file = template.render(
                 tumor_sample_id=tumor_sample_id,
