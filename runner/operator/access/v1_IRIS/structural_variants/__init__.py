@@ -28,7 +28,6 @@ class AccessLegacySVOperator(Operator):
     This Operator will search for Standard Bam files based on an IGO Request ID
     """
 
-
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator

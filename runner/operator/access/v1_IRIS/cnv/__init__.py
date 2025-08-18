@@ -30,7 +30,6 @@ class AccessLegacyCNVOperator(Operator):
     This Operator will search for ACCESS Unfiltered Bam files based on an IGO Request ID.
     """
 
-
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator.
@@ -43,7 +42,9 @@ class AccessLegacyCNVOperator(Operator):
             name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
-        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
+        unfiltered_tumor_bams = [
+            f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)
+        ]
 
         sample_ids = []
         tumor_bams = []

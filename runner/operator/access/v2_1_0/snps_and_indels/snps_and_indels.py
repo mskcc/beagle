@@ -168,8 +168,6 @@ def parse_nucleo_output_ports(run, port_name):
     return bam
 
 
-
-
 def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, request_id=None):
     """
     Find a matched normal sample for the given patient ID with the following precedence:

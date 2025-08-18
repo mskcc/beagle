@@ -44,7 +44,6 @@ class AccessLegacySNVOperator(Operator):
     curated_normal_bams = None
     curated_normal_ids = None
 
-
     def get_sample_inputs(self):
         """
         Create all sample inputs for all runs triggered in this instance of the operator
