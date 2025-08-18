@@ -1,13 +1,16 @@
-name: 'Beagle Services'
+name: "Beagle Services"
 
-x-beagle_celery:
-  &beagle_celery
-  image:  mskcc/beagle:${BEAGLE_VERSION}
+x-beagle_celery: &beagle_celery
+  image: mskcc/beagle:${BEAGLE_VERSION}
   restart: always
   user: "${DOCKER_UID}:${DOCKER_GID}"
   networks:
     - voyager_net
   env_file: .env
+  group_add:
+    - ${DOCKER_GROUP_1}
+    - ${DOCKER_GROUP_2}
+    - ${DOCKER_GROUP_3}
   environment:
     - BEAGLE_DB_URL=beagle_pgbouncer
     - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -23,14 +26,24 @@ x-beagle_celery:
     - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
     - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
-  group_add:
-    - ${DOCKER_GID}
-    - ${GID_FILE_1}
-    - ${GID_FILE_2}
+    - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
+    - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
   post_start:
-    - command: useradd --uid ${DOCKER_UID} -m beagle_user
+    - command:
+        - /bin/bash
+        - -c
+        - |
+          sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
+          sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
+          for single_group in ${all_groups}; do
+            single_group_items=($${!single_group[0]})
+            getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
+          done
+          id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
       user: root
-  entrypoint: ["/bin/bash","-c"]
+  entrypoint: ["/bin/bash", "-c"]
   healthcheck:
     test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status || exit 1"
     interval: 30s
@@ -68,7 +81,7 @@ services:
       - ${DB_BACKUP_PATH}:/db_backup
     entrypoint: ["/bin/sh", "-c"]
     command:
-    - |
+      - |
         chown -R ${DOCKER_UID}:${DOCKER_GID} /postgres
         chown -R ${DOCKER_UID}:${DOCKER_GID} /pgbouncer
         chown -R ${DOCKER_UID}:${DOCKER_GID} /logs
@@ -78,7 +91,7 @@ services:
         chown -R ${DOCKER_UID}:${DOCKER_GID} /logrotate
         chown -R ${DOCKER_UID}:${DOCKER_GID} /db_backup
   beagle_postgres:
-    image: postgres:17
+    image: postgres:17-trixie
     restart: on-failure
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
@@ -126,8 +139,22 @@ services:
       - max_parallel_workers=20
       - -c
       - max_parallel_maintenance_workers=4
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - track_activity_query_size=1MB
+      - -c
+      - pg_stat_statements.max=10000
+      - -c
+      - pg_stat_statements.track_utility=off
+      - -c
+      - track_io_timing=on
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'"]
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'",
+        ]
       interval: 30s
       timeout: 3s
       retries: 3
@@ -143,9 +170,9 @@ services:
       - ./logs:/logs
       - ./pgbouncer:/etc/pgbouncer
       - type: bind
-        source:  /etc/passwd
-        target:  /etc/passwd
-        read_only: true  
+        source: /etc/passwd
+        target: /etc/passwd
+        read_only: true
     environment:
       - DB_HOST=beagle_postgres
       - DB_NAME=${BEAGLE_DB_NAME}
@@ -153,28 +180,31 @@ services:
       - DB_PASSWORD=${BEAGLE_DB_PASSWORD}
       - DB_PORT=5432
       - AUTH_TYPE=plain
-    entrypoint: ["/bin/sh","-c"]
+    entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-          INIFILE=/etc/pgbouncer/pgbouncer.ini
+        INIFILE=/etc/pgbouncer/pgbouncer.ini
 
-          [ -e $$INIFILE ] && rm $$INIFILE
+        [ -e $$INIFILE ] && rm $$INIFILE
 
-          cp /entrypoint.sh /etc/pgbouncer/entrypoint_mod.sh
-                  
-          sed -i '/user = postgres/d' /etc/pgbouncer/entrypoint_mod.sh
-          /etc/pgbouncer/entrypoint_mod.sh /usr/bin/pgbouncer $$INIFILE > /logs/pgbouncer.log 2>&1
+        cp /entrypoint.sh /etc/pgbouncer/entrypoint_mod.sh
+        sed -i '/user = postgres/d' /etc/pgbouncer/entrypoint_mod.sh
+        /etc/pgbouncer/entrypoint_mod.sh /usr/bin/pgbouncer $$INIFILE > /logs/pgbouncer.log 2>&1
     ports:
-        - "5432:5432"
+      - "5432:5432"
     depends_on:
       beagle_postgres:
         condition: service_healthy
         restart: true
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -h 0.0.0.0 -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'"]
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -h 0.0.0.0 -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'",
+        ]
       interval: 30s
       timeout: 3s
-      retries: 3  
+      retries: 3
   beagle_memcached:
     image: bitnami/memcached:1.6.37
     restart: on-failure
@@ -187,7 +217,7 @@ services:
       test: ["CMD", "nc", "-z", "localhost", "11211"]
       interval: 30s
       timeout: 5s
-      retries: 3 
+      retries: 3
   beagle_rabbitmq:
     image: rabbitmq:4.0.6-management-alpine
     restart: always
@@ -215,12 +245,16 @@ services:
     depends_on:
       - beagle_create_volumes
   beagle:
-    image:  mskcc/beagle:${BEAGLE_VERSION}
+    image: mskcc/beagle:${BEAGLE_VERSION}
     restart: always
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
     env_file: .env
+    group_add:
+      - ${DOCKER_GROUP_1}
+      - ${DOCKER_GROUP_2}
+      - ${DOCKER_GROUP_3}
     environment:
       - BEAGLE_DB_URL=beagle_pgbouncer
       - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -237,22 +271,36 @@ services:
       - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
       - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
       - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
-    group_add:
-      - ${DOCKER_GID}
-      - ${GID_FILE_1}
-      - ${GID_FILE_2}
+      - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
+      - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
+    post_start:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
+          sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
+          sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
+          for single_group in ${all_groups}; do
+            single_group_items=($${!single_group[0]})
+            getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
+          done
+          id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
+        user: root
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
-    entrypoint: ["/bin/bash","-c"]
-    command: 
+    entrypoint: ["/bin/bash", "-c"]
+    command:
       - |
-          python3 ${BEAGLE_PATH}/manage.py migrate --noinput
-          echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org','${BEAGLE_DB_PASSWORD}')" | python3 ${BEAGLE_PATH}/manage.py shell_plus
-          python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
-          #ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
-          gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
+        python3 ${BEAGLE_PATH}/manage.py migrate --noinput
+        echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org',settings.DB_PASSWORD)" | python3 ${BEAGLE_PATH}/manage.py shell_plus
+        python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
+        #ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
+        gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
     healthcheck:
-      test: ["CMD-SHELL", "curl -sSf http://localhost:${BEAGLE_PORT}/ || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -sSf http://localhost:${BEAGLE_PORT}/ || exit 1"]
       interval: 30s
       timeout: 3s
       retries: 3
@@ -272,20 +320,23 @@ services:
   beagle_celery_beat:
     <<: *beagle_celery
     command:
-      - |           
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running beagle_etl beat...'
 
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running beagle_etl beat...'
-
-          celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl beat \
-            -l info \
-            -f /beagle/celery/logs/beagle_beat.log \
-            --pidfile $$PIDFILE \
-            -s /beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.celerybeat-schedule
+        celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl beat \
+          -l info \
+          -f /beagle/celery/logs/beagle_beat.log \
+          --pidfile $$PIDFILE \
+          -s /beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.celerybeat-schedule
     healthcheck:
-      test: ["CMD-SHELL", "ps -p $(pgrep -F /beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid)"]
+      test:
+        [
+          "CMD-SHELL",
+          "ps -p $(pgrep -F /beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid)",
+        ]
       interval: 30s
       timeout: 3s
       retries: 3
@@ -305,80 +356,80 @@ services:
   beagle_celery_default_queue:
     <<: *beagle_celery
     command:
-      - | 
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}.pid
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running default queue worker...'
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running default queue worker...'
 
-          celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl worker \
-            -l info \
-            -Q ${BEAGLE_DEFAULT_QUEUE} \
-            -f /beagle/celery/logs/${BEAGLE_DEFAULT_QUEUE}.log \
-            --pidfile $$PIDFILE \
-            --concurrency=100 \
-            -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
+        celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l info \
+          -Q ${BEAGLE_DEFAULT_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_DEFAULT_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=100 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
   beagle_celery_check_files_queue:
     <<: *beagle_celery
     command:
-      - | 
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}.pid
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running check files queue worker...'
-          
-          celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl worker \
-            -l info \
-            -Q ${BEAGLE_CHECK_FILES_QUEUE} \
-            -f /beagle/celery/logs/${BEAGLE_CHECK_FILES_QUEUE}.log \
-            --pidfile $$PIDFILE \
-            --concurrency=1 \
-            -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running check files queue worker...'
+
+        celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l info \
+          -Q ${BEAGLE_CHECK_FILES_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_CHECK_FILES_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=1 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}
   beagle_celery_job_scheduler_queue:
     <<: *beagle_celery
     command:
-      - | 
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE}.pid 
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running job scheduler queue worker...'
-          
-          celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl worker \
-            -l info \
-            -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} \
-            -f /beagle/celery/logs/${BEAGLE_JOB_SCHEDULER_QUEUE}.log \
-            --pidfile $$PIDFILE \
-            --concurrency=1
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE}.pid 
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running job scheduler queue worker...'
+
+        celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l info \
+          -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_JOB_SCHEDULER_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=1
   beagle_celery_nats_new_request_queue:
     <<: *beagle_celery
     command:
-      - | 
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE}.pid
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running nats new request queue worker...'
-          
-          celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl worker \
-            -l debug \
-            -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} \
-            -f /beagle/celery/logs/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.log \
-            --pidfile $$PIDFILE \
-            --concurrency=1
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running nats new request queue worker...'
+
+        celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l debug \
+          -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=1
   beagle_celery_runner_queue:
     <<: *beagle_celery
     command:
-      - | 
-          PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE}.pid
-          [ -e $$PIDFILE ] && rm $$PIDFILE
-          echo 'Running runner queue worker...'
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running runner queue worker...'
 
-           celery --workdir ${BEAGLE_PATH} \
-            -A beagle_etl worker \
-            -l debug \
-            -Q ${BEAGLE_RUNNER_QUEUE} \
-            -f /beagle/celery/logs/${BEAGLE_RUNNER_QUEUE}.log \
-            --pidfile $$PIDFILE \
-            --concurrency=30
+         celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l debug \
+          -Q ${BEAGLE_RUNNER_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_RUNNER_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=30
   beagle_logrotate:
     image: mskcc/voyager-compose-utils:1.0.0
     restart: always
@@ -390,7 +441,7 @@ services:
       - ./logrotate/:/logrotate
     entrypoint: ["/bin/sh", "-c"]
     command:
-    - |
+      - |
         mkdir -p /logs/archive
         cat > /logrotate/logrotate.conf <<EOF
         /logs/*.log
@@ -425,15 +476,15 @@ services:
       - ./logs:/logs
       - ${DB_BACKUP_PATH}:/db_backup
     environment:
-      - PGPASSWORD=${BEAGLE_DB_USERNAME}
+      - PGPASSWORD=${BEAGLE_DB_PASSWORD}
     entrypoint: ["/bin/sh", "-c"]
     command:
-    - |
+      - |
         mkdir -p /db_backup/archive
         cat > /db_backup/db_backup.cron <<EOF
         ${DB_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME}
         EOF
-        supercronic /db_backup/db_backup.cron >> /logs/db_backup_cron.log 2>&1        
+        supercronic /db_backup/db_backup.cron >> /logs/db_backup_cron.log 2>&1
     depends_on:
       beagle_celery_beat:
         condition: service_healthy

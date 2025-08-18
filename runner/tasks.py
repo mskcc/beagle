@@ -554,6 +554,7 @@ def submit_job(run_id, output_directory=None, execution_id=None):
     job["root_permission"] = root_permissions
     job["output_uid"] = output_uid
     job["output_gid"] = output_gid
+    job["user"] = run.app.user
     job["metadata"] = dict()
     job["metadata"]["run_id"] = str(run_id)
     job["metadata"]["pipeline_id"] = str(run.app.id)

@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
 from rest_framework import serializers
+from getpass import getuser
 
 
 class ProtocolType(IntEnum):
@@ -64,6 +65,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
+    user = models.CharField(default=getuser(), max_length=100)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     log_directory = models.CharField(max_length=300, null=True, editable=True)

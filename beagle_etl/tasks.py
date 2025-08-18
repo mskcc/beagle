@@ -34,8 +34,9 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def fetch_request_nats():
+    start_time = datetime.datetime.now(datetime.timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop, settings.METADB_NATS_NEW_REQUEST))
+    loop.run_until_complete(run(loop, settings.METADB_NATS_NEW_REQUEST, start_time))
     loop.run_forever()
 
 
