@@ -21,7 +21,7 @@ from runner.models import RunStatus, Port, Run
 import json
 from file_system.models import File, FileGroup, FileType
 from jinja2 import Template
-from runner.operator.access import get_request_id_runs, is_tumor_bam
+from runner.operator.access import get_request_id_runs
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -166,6 +166,13 @@ def parse_nucleo_output_ports(run, port_name):
         raise Exception("Port {} for run {} should have just 1 bam or 1 (bam/bai) pair".format(port_name, run.id))
     bam = [b for b in bam_bai.files.all() if b.file_name.endswith(".bam")][0]
     return bam
+
+
+def is_tumor_bam(file):
+    if not file.endswith(".bam"):
+        return False
+    t_n_timepoint = file.split("-")[2]
+    return not t_n_timepoint[0] == "N"
 
 
 def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, request_id=None):
