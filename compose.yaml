@@ -239,6 +239,15 @@ services:
       - RABBITMQ_DEFAULT_USER=${BEAGLE_RABBITMQ_USERNAME}
       - RABBITMQ_DEFAULT_PASS=${BEAGLE_RABBITMQ_PASSWORD}
       - RABBITMQ_LOGS=/var/log/rabbitmq/rabbitmq.log
+    post_start:
+      - command:
+          - /bin/bash
+          - -c
+          - |
+            sleep 10
+            rabbitmqctl add_user ${ECHO_RABBITMQ_USERNAME} ${ECHO_RABBITMQ_PASSWORD}
+            rabbitmqctl set_permissions -p / ${ECHO_RABBITMQ_USERNAME} ".*" ".*" ".*"
+        user: root
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_running"]
       interval: 30s
