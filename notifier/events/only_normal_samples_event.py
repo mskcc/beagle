@@ -17,6 +17,6 @@ class OnlyNormalSamplesEvent(Event):
 
     def __str__(self):
         TEMPLATE = """
-        {cc}. Request {request_id} contains only normal samples.
+        Request {request_id} contains only normal samples.
         """
         return TEMPLATE.format(request_id=self.request_id)
