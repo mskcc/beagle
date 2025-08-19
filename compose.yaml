@@ -1,4 +1,4 @@
-name: "Beagle Services"
+name: "Beagle Services ${BEAGLE_DEPLOYMENT}"
 
 x-beagle_celery: &beagle_celery
   image: mskcc/beagle:${BEAGLE_VERSION}
@@ -28,6 +28,7 @@ x-beagle_celery: &beagle_celery
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
     - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
     - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
+    - ${CLUSTER_CODE_PATH:-/dev/null}:${CLUSTER_CODE_PATH:-/dev/null}
   post_start:
     - command:
         - /bin/bash
@@ -273,6 +274,7 @@ services:
       - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
       - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
       - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
+      - ${CLUSTER_CODE_PATH:-/dev/null}:${CLUSTER_CODE_PATH:-/dev/null}
     post_start:
       - command:
         - /bin/bash
@@ -494,5 +496,5 @@ services:
         restart: false
 networks:
   voyager_net:
-    name: voyager_network
+    name: voyager_network_${BEAGLE_DEPLOYMENT}
     external: true
