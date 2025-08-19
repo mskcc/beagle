@@ -154,8 +154,8 @@ class Command(BaseCommand):
             f.write(json_output)
 
 
-python manage.py facet_export \
-  --operator AccessLegacyOperator \
-  --out /home/voyager/export.json \
-  --old-prefixes /work/ /juno/work/ \
-  --new-prefix /data1/core006/
+# python manage.py facet_export \
+#   --operator AccessLegacyOperator \
+#   --out /home/voyager/export.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
