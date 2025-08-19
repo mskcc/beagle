@@ -8,7 +8,7 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
-from rest_framework import serializers
+from django.contrib.auth.models import User
 
 
 class ProtocolType(IntEnum):
@@ -375,3 +375,30 @@ class OperatorErrors(BaseModel):
     operator_name = models.CharField(max_length=100)
     request_id = models.CharField(max_length=100)
     error = JSONField(null=True, blank=True)
+
+
+# Voyager-SDK
+
+
+class OperatorState(IntEnum):
+    REGISTER = 0
+    INSTALL = 1
+    READY = 2
+    FAILED = 3
+
+
+class OperatorSDK(models.Model):
+    name = models.CharField(max_length=100, default=False)
+    github = models.CharField(max_length=500)
+    version = models.CharField(max_length=50, default="main")
+    class_name = models.CharField(max_length=150)
+    package_name = models.CharField(max_length=1000)
+    active = models.BooleanField(default=False)
+    recipes_json = JSONField(default=list, null=True)
+    state = models.IntegerField(
+        choices=[(pt.value, pt.name) for pt in OperatorState], db_index=True, default=ProtocolType.CWL
+    )
+    owner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} {self.version}"

@@ -1,4 +1,6 @@
+import os
 import uuid
+from pathlib import Path
 from django.db import models
 import django_auth_ldap.backend
 from django.conf import settings
@@ -7,6 +9,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from notifier.events import SendEmailEvent
 from notifier.tasks import send_notification
+from file_system.models import FileGroup, Storage
 
 
 class BaseModel(models.Model):
@@ -52,6 +55,11 @@ class UserRegistrationRequest(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         MskUser.objects.create(user=instance)
+        FileGroup.objects.create(name=instance.username, storage_id=settings.SDK_DEFAULT_STORAGE)
+        Path(os.path.join(settings.SDK_TEST_OUTPUT_LOCATION, instance.username)).mkdir(parents=True, exist_ok=True)
+        Path(os.path.join(settings.SDK_VENV_LOCATION, instance.username)).mkdir(parents=True, exist_ok=True)
+
+
 
 
 @receiver(post_save, sender=User)

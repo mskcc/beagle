@@ -62,6 +62,7 @@ app.conf.task_routes = {
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.calculate_checksum": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.tasks.install_operator": {"queue": settings.BEAGLE_DEFAULT_QUEUE}
 }
 
 app.conf.beat_schedule = {

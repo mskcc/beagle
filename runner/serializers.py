@@ -2,9 +2,10 @@ import datetime
 from django.conf import settings
 from rest_framework import serializers
 from notifier.models import JobGroup, JobGroupNotifier
+from runner.sdk.tasks import install_operator
 from runner.exceptions import PortProcessorException
 from runner.run.processors.port_processor import PortProcessor, PortAction
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun, OperatorSDK, OperatorState
 
 
 def ValidateDict(value):
@@ -389,3 +390,36 @@ class TerminateRunSerializer(serializers.Serializer):
         if not attrs.get("job_group_id") and not attrs.get("runs"):
             raise serializers.ValidationError("Either job_group_id or runs needs to be specified.")
         return attrs
+
+
+# Voyager SDK
+
+
+class CreateOperatorSDKSerializer(serializers.ModelSerializer):
+    pipeline_id = serializers.UUIDField(required=True, allow_null=False)
+
+    def validate(self, attrs):
+        # name + version needs to be unique
+        return attrs
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        user = request.user if request and hasattr(request, "user") else None
+        validated_data["state"] = OperatorState.REGISTER
+        validated_data["owner"] = user
+        print("Register Operator")
+        pipeline_id = validated_data.pop("pipeline_id")
+        operator = OperatorSDK.objects.create(**validated_data)
+        print(f"Sending registration task for pipeline {pipeline_id} and operator {operator.name})")
+        install_operator(str(operator.id), operator.github, operator.version)
+        return operator
+
+    class Meta:
+        model = OperatorSDK
+        fields = "__all__"
+
+
+class OperatorSDKSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OperatorSDK
+        fields = "__all__"

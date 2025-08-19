@@ -21,6 +21,7 @@ from runner.views.run_api_view import (
     OperatorSamplesLatestViewSet,
     OperatorSamplesAllViewSet,
 )
+from runner.views.sdk_view import SDKOperatorViewSet
 from runner.views.pipeline_view import PipelineViewSet, PipelineResolveViewSet, PipelineDownloadViewSet
 
 
@@ -33,6 +34,7 @@ router.register("api", RunApiViewSet)
 router.register("operator/latest", OperatorSamplesLatestViewSet)
 router.register("operator/all", OperatorSamplesAllViewSet)
 router.register("operator-errors", OperatorErrorViewSet)
+router.register("sdk-operator", SDKOperatorViewSet)
 
 
 urlpatterns = [
