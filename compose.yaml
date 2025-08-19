@@ -23,6 +23,7 @@ x-beagle_celery: &beagle_celery
   volumes:
     - ./logs/:/beagle/celery/logs/
     - ./celery/:/beagle/celery/
+    - ${BEAGLE_SHARED_TMPDIR}:/tmp
     - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
     - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
