@@ -10,14 +10,12 @@ from file_system.repository.file_repository import FileRepository
 from collections import defaultdict, deque
 from django.core.management.base import BaseCommand
 
+
 def check_if_operator(related_obj, seen, allowed_operator_pks):
     if related_obj is None:
         return None
     if isinstance(related_obj, OperatorRun):
-        if (
-            related_obj.operator_id in allowed_operator_pks
-            and related_obj.pk not in seen[type(related_obj)]
-        ):
+        if related_obj.operator_id in allowed_operator_pks and related_obj.pk not in seen[type(related_obj)]:
             return related_obj
     else:
         if related_obj.pk not in seen[type(related_obj)]:
@@ -60,7 +58,7 @@ def collect_related_objects(starting_objects, allowed_operators_pks):
 def strip_prefixes(s, prefixes):
     for p in prefixes:
         if s.startswith(p):
-            return s[len(p):]  # remove prefix once and stop
+            return s[len(p) :]
     return s
 
 
@@ -92,6 +90,14 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
             if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
                 fields["slug"] = f"JUNO OPERATOR: {slug}"
 
+        if model_name.endswith("file"):
+            path = fields.get("path")
+            fields["path"] = new_prefix + strip_prefixes(path, old_prefixes)
+
+        if model_name.endswith("storage"):
+            slug = fields.get("name")
+            if slug == "juno":
+                fields["name"] = "iris"
     return data
 
 
@@ -104,27 +110,84 @@ def serialize_related_objects(seen_dict, old_prefixes, new_prefix):
     return json.dumps(edited_data, indent=2)
 
 
+def collect_related_objects_fg(starting_objects):
+    seen = defaultdict(set)
+    queue = deque(starting_objects)
+    while queue:
+        obj = queue.popleft()
+        print(obj)
+        model = type(obj)
+
+        if obj.pk in seen[model]:
+            continue
+
+        seen[model].add(obj.pk)
+
+        for field in model._meta.get_fields():
+            if isinstance(field, (ForeignKey, OneToOneField)):
+                related_obj = getattr(obj, field.name, None)
+                if related_obj is None:
+                    continue
+                else:
+                    if related_obj.pk not in seen[type(related_obj)]:
+                        queue.append(related_obj)
+            elif isinstance(field, ManyToManyField):
+                try:
+                    related_manager = getattr(obj, field.name)
+                    for related_obj in related_manager.all():
+                        if related_obj is None:
+                            continue
+                        else:
+                            if related_obj.pk not in seen[type(related_obj)]:
+                                queue.append(related_obj)
+                except Exception:
+                    continue
+
+    return seen
+
+
 class Command(BaseCommand):
 
-    help = "Facet export for OperatorRuns"
+    help = "Facet exports from JUNO"
 
     def add_arguments(self, parser):
-        parser.add_argument("--operator", type=str, nargs="+", help="Operator slugs")
-        parser.add_argument("--out", type=str, required=True, help="Output JSON file path")
-        parser.add_argument("--old-prefixes", type=str, nargs="+", required=True,
-                            help="Old path prefixes to strip")
-        parser.add_argument("--new-prefix", type=str, required=True,
-                            help="New path prefix to add")
+
+        # OperatorRuns
+        subparsers = parser.add_subparsers(dest="subcommand")
+
+        parser_operator = subparsers.add_parser("operator-run", help="Export an operator and related objects")
+        parser_operator.add_argument("--operator", type=str, nargs="+", help="Operator slugs")
+        parser_operator.add_argument("--out", type=str, required=True, help="Output JSON file path")
+        parser_operator.add_argument(
+            "--old-prefixes", type=str, nargs="+", required=True, help="Old path prefixes to strip"
+        )
+        parser_operator.add_argument("--new-prefix", type=str, required=True, help="New path prefix to add")
+        parser_operator.set_defaults(func=self._export_operator)
+
+        # File Groups
+        parser_filegroup = subparsers.add_parser("file-group", help="Export an operator and related objects")
+        parser_filegroup.add_argument("--filegroups", type=str, nargs="+", help="Filegroup slugs")
+        parser_filegroup.add_argument("--out", type=str, required=True, help="Output JSON file path")
+        parser_filegroup.add_argument(
+            "--old-prefixes", type=str, nargs="+", required=True, help="Old path prefixes to strip"
+        )
+        parser_filegroup.add_argument("--new-prefix", type=str, required=True, help="New path prefix to add")
+        parser_filegroup.set_defaults(func=self._export_filegroup)
 
     def handle(self, *args, **options):
+        func = options.pop("func", None)
+        if func:
+            return func(options)
+        else:
+            self.stderr.write("Missing subcommand")
+
+    def _export_operator(self, options):
         operator_args = options["operator"]
         out_file = options["out"]
         old_prefixes = options["old_prefixes"]
         new_prefix = options["new_prefix"]
 
-        allowed_operators = [
-            Operator.objects.get(slug=op) for op in operator_args
-        ]
+        allowed_operators = [Operator.objects.get(slug=op) for op in operator_args]
         allowed_operator_pks = {op.pk for op in allowed_operators}
 
         operator_runs = OperatorRun.objects.filter(
@@ -137,9 +200,7 @@ class Command(BaseCommand):
             operator_run__in=operator_run_ids,
             status=RunStatus.COMPLETED.value,
         )
-        latest_by_request = runs.values("tags__igoRequestId").annotate(
-            latest_date=Max("finished_date")
-        )
+        latest_by_request = runs.values("tags__igoRequestId").annotate(latest_date=Max("finished_date"))
 
         query = Q()
         for row in latest_by_request:
@@ -153,9 +214,29 @@ class Command(BaseCommand):
         with open(out_file, "w") as f:
             f.write(json_output)
 
+    def _export_filegroup(self, options):
+        filegroup_args = options["filegroups"]
+        out_file = options["out"]
+        old_prefixes = options["old_prefixes"]
+        new_prefix = options["new_prefix"]
+        file_groups = [gr for gr in filegroup_args]
+        files = File.objects.filter(file_group__slug__in=file_groups)
+        related = collect_related_objects_fg(files)
+        json_output = serialize_related_objects(related, old_prefixes, new_prefix)
 
-# python manage.py facet_export \
+        with open(out_file, "w") as f:
+            f.write(json_output)
+
+
+# python3 manage.py export_facet operator-run \
 #   --operator AccessLegacyOperator \
-#   --out /home/voyager/export.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
+
+
+# python3 manage.py export_facet file-group \
+#   --out /juno/work/access/production/runs/voyager/facets/export_filegroup.json \
+#   --filegroups accessv2_curated_normals access_curated_normals \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
