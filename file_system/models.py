@@ -462,11 +462,11 @@ class FileMetadataManager(models.Manager):
                     if file_obj_changed:
                         new_file_metadata.file.save()
                     if from_file:
-                        if settings.REQUEST_ID_METADATA_KEY in updated_keys:
+                        if settings.REQUEST_ID_METADATA_KEY in updated_metadata.keys():
                             self._update_request(updated_metadata)
-                        if settings.SAMPLE_ID_METADATA_KEY in updated_keys:
+                        if settings.SAMPLE_ID_METADATA_KEY in updated_metadata.keys():
                             self._update_sample(updated_metadata)
-                        if settings.PATIENT_ID_METADATA_KEY in updated_keys:
+                        if settings.PATIENT_ID_METADATA_KEY in updated_metadata.keys():
                             self._update_patient(updated_metadata)
                     logger.debug(f"File {file_id} updated {str(new_file_metadata)}")
                     return new_file_metadata
