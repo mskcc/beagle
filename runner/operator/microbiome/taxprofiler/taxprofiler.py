@@ -39,8 +39,12 @@ class TaxProfilerOperator(Operator):
     def get_input(self):
         inputs = []
         sample_map = {}
-        resource_filegroup = FileGroup.objects.get(name=INPUT_FILEGROUP)
-        sample_files = File.objects.filter(file_group=resource_filegroup, metadata__project=self.request_id)
+        input_filegroup = FileGroup.objects.get(name=INPUT_FILEGROUP)
+        sample_files = FileRepository.filter(
+            file_group=input_filegroup.id,
+            metadata={"project": self.request_id},
+            filter_redact=True,
+        )
         for sample_input in sample_files:
             sample = sample_input.metadata["sample"]
             if sample not in sample_map:
@@ -53,12 +57,12 @@ class TaxProfilerOperator(Operator):
                     "fasta": "",
                 }
             sample_type = sample_input.metadata["type"]
-            if sample_input == "R1":
-                sample_map[sample]["fastq_1"] = _create_file_object(sample_input.path)
-            elif sample_input == "R2":
-                sample_map[sample]["fastq_2"] = _create_file_object(sample_input.path)
-            elif sample_input == "fasta":
-                sample_map[sample]["fasta"] = _create_file_object(sample_input.path)
+            if sample_type == "R1":
+                sample_map[sample]["fastq_1"] = _create_file_object(sample_input.file.path)
+            elif sample_type == "R2":
+                sample_map[sample]["fastq_2"] = _create_file_object(sample_input.file.path)
+            elif sample_type == "fasta":
+                sample_map[sample]["fasta"] = _create_file_object(sample_input.file.path)
         for single_sample in sample_map.values():
             inputs.append(single_sample)
         return inputs
@@ -66,14 +70,14 @@ class TaxProfilerOperator(Operator):
     def get_database(self):
         databases = []
         resource_filegroup = FileGroup.objects.get(name=REFERENCE_FILEGROUP)
-        database_files = File.objects.filter(file_group=resource_filegroup, metadata__type="database_sheet")
+        database_files = FileRepository.filter(file_group=resource_filegroup.id, metadata={"type": "database_sheet"})
         for single_database in database_files:
             databases.append(
                 {
                     "tool": single_database.metadata["tool"],
                     "db_name": single_database.metadata["db_name"],
                     "db_params": single_database.metadata["db_params"],
-                    "db_path": _create_file_object(single_database.path),
+                    "db_path": _create_file_object(single_database.file.path),
                 }
             )
             if single_database.metadata["tool"] == "kraken2":
@@ -82,15 +86,17 @@ class TaxProfilerOperator(Operator):
                         "tool": "bracken",
                         "db_name": "db1",
                         "db_params": ";-r 150",
-                        "db_path": _create_file_object(single_database.path),
+                        "db_path": _create_file_object(single_database.file.path),
                     }
                 )
         return databases
 
     def get_human_reference(self):
         resource_filegroup = FileGroup.objects.get(name=REFERENCE_FILEGROUP)
-        human_reference_file = File.object.get(file_group=resource_filegroup, metadata__type="human_reference")
-        return _create_file_object(human_reference_file.path)
+        human_reference_file = FileRepository.filter(
+            file_group=resource_filegroup.id, metadata={"type": "human_reference"}
+        ).first()
+        return _create_file_object(human_reference_file.file.path)
 
     def get_jobs(self):
         """
