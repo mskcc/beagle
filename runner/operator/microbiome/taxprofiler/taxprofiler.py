@@ -94,10 +94,10 @@ class TaxProfilerOperator(Operator):
 
     def get_jobs(self):
         """
-        get_job information tor run NucleoVar Pipeline
-        - self: NucleoVarOperator(Operator)
+        get_job information tor run taxprofiler Pipeline
+        - self: taxprofiler (Operator)
 
-        :return: return RunCreator Objects with NucleoVar information
+        :return: return RunCreator Objects with taxprofiler information
         """
         # Run Information
         LOGGER.info("Operator JobGroupNotifer ID %s", self.job_group_notifier_id)
@@ -129,5 +129,4 @@ class TaxProfilerOperator(Operator):
             "tags": job_tags,
             "output_metadata": {},
         }
-        print(job_json)
         return [RunCreator(**job_json)]
