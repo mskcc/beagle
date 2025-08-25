@@ -1,4 +1,6 @@
 # PairsObj contains a list of PairObj
+#
+# Will generate data clinical, mapping, pairing strings
 
 
 class PairsObj:
