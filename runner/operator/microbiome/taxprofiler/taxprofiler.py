@@ -70,7 +70,7 @@ class TaxProfilerOperator(Operator):
     def get_database(self):
         databases = []
         resource_filegroup = FileGroup.objects.get(name=REFERENCE_FILEGROUP)
-        database_files = FileRepository.filter(file_group=resource_filegroup.id, metadata={"type": "database_sheet"})
+        database_files = FileRepository.filter(file_group=resource_filegroup.id, metadata={"type": "database"})
         for single_database in database_files:
             databases.append(
                 {
