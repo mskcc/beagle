@@ -3,6 +3,9 @@ import grp
 import logging
 from shutil import copyfile, chown
 from django.conf import settings
+from echo_client.messages import CopyTask
+from echo_client.echo_client import EchoClient
+from beagle_etl.models import CopyFileTask
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +36,14 @@ class CopyService(object):
             for dirpath in newly_created:
                 chown(dirpath, group=gid)
             os.chown(path_to, uid=uid, gid=gid)
+
+    @staticmethod
+    def create_copy_task(smile_message, source, destination):
+        task = CopyFileTask.objects.create(smile_message=smile_message, source=source, destination=destination)
+        copy_task = CopyTask(str(task.id), source, destination)
+        client = EchoClient()
+        client.publish(copy_task)
+
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):

@@ -1,5 +1,7 @@
 import uuid
+import logging
 from enum import IntEnum
+from django.db import transaction, IntegrityError
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -7,6 +9,8 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from django.utils.timezone import now
 from beagle_etl.metadata.normalizer import Normalizer
 
+
+logger = logging.getLogger()
 
 class JobStatus(IntEnum):
     CREATED = 0
@@ -83,20 +87,71 @@ class SkipProject(models.Model):
 
 class SmileMessageStatus(IntEnum):
     PENDING = 0
-    COMPLETED = 1
-    NOT_SUPPORTED = 2
-    FAILED = 3
+    IN_PROGRESS = 1
+    COPY_FILES = 2
+    COMPLETED = 3
+    NOT_SUPPORTED = 4
+    FAILED = 5
 
 
 class SMILEMessage(BaseModel):
     topic = models.CharField(max_length=1000)
     request_id = models.CharField(max_length=100)
     message = models.TextField()
+    log = models.TextField(default="")
+    sample_status = JSONField(default=dict)
     status = models.IntegerField(
         choices=[(status.value, status.name) for status in SmileMessageStatus],
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+
+class CopyFileStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+    FAILED = 2
+
+
+class CopyFileTask(BaseModel):
+    smile_message = models.ForeignKey(SMILEMessage, null=True, blank=True, on_delete=models.SET_NULL)
+    source = models.CharField(max_length=2000, null=False, blank=False)
+    destination = models.CharField(max_length=2000, null=False, blank=False)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in CopyFileStatus],
+        default=CopyFileStatus.PENDING,
+        db_index=True,
+    )
+
+    def set_completed(self, message):
+        try:
+            with transaction.atomic():
+                copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
+                self.status = CopyFileStatus.COMPLETED
+                self.smile_message.log += f"{message}\n"
+                self.save()
+                if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
+                    if copy_file_tasks.filter(status=CopyFileStatus.COMPLETED).count() == copy_file_tasks.count():
+                        self.smile_message.status = SmileMessageStatus.COMPLETED
+                    else:
+                        self.smile_message.status = SmileMessageStatus.FAILED
+                self.smile_message.save()
+        except IntegrityError as e:
+            logger.error(f"Integrity error {e}")
+
+
+    def set_failed(self, message=""):
+        try:
+            with transaction.atomic():
+                copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
+                self.status = CopyFileStatus.FAILED
+                self.smile_message.log += f"{message}\n"
+                self.save()
+                if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
+                    self.smile_message.status = SmileMessageStatus.FAILED
+                self.smile_message.save()
+        except IntegrityError as e:
+            logger.error(f"Integrity error {e}")
 
 
 class RequestCallbackJobStatus(IntEnum):

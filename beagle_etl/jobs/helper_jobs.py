@@ -88,3 +88,6 @@ def locate_file(path):
                 if os.path.exists(check_path):
                     return check_path
     raise FailedToLocateTheFileException(f"Unable to locate file: {path} on file system")
+
+def fix_path_iris(path):
+    return path.replace(settings.FASTQ_DEFAULT_LOCATION_PREFIX, settings.FASTQ_IRIS_LOCATION_PREFIX)
