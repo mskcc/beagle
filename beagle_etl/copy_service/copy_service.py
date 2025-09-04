@@ -40,10 +40,12 @@ class CopyService(object):
     @staticmethod
     def create_copy_task(smile_message, source, destination):
         task = CopyFileTask.objects.create(smile_message=smile_message, source=source, destination=destination)
-        copy_task = CopyTask(str(task.id), source, destination)
+        copy_task = CopyTask(source, destination, id=str(task.id))
         client = EchoClient()
-        client.publish(copy_task)
-
+        try:
+            client.publish(copy_task)
+        except Exception as e:
+            smile_message.log += str(e)
 
     @staticmethod
     def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):

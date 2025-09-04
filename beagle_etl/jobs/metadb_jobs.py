@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from dateutil.parser import parse
 from celery import shared_task
 from django.conf import settings
-from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     ETLSetRecipeEvent,
@@ -36,8 +35,6 @@ from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.models import (
-    JobStatus,
-    Job,
     Operator,
     ETLConfiguration,
     SMILEMessage,
@@ -196,11 +193,11 @@ def new_request(message_id):
 
     job_group = JobGroup.objects.create()
     job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-    set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
+    set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier_id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
 
     project_manager_name = data.get("projectManagerName")
@@ -482,14 +479,15 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-            if Job.objects.filter(
-                job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
-            ).all():
-                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
-                send_notification.delay(partialy_complete_event)
-            else:
-                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
-                send_notification.delay(complete_event)
+            # Rewrite this to use SMILEMessage
+            # if Job.objects.filter(
+            #     job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
+            # ).all():
+            #     partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+            #     send_notification.delay(partialy_complete_event)
+            # else:
+            #     complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+            #     send_notification.delay(complete_event)
             notify = SMILEMessage.objects.filter(request_id__startswith=request_id).count() == 1
             create_jobs_from_request.delay(request_id, operator.id, str(job_group.id), notify=notify)
     return []
@@ -1041,7 +1039,7 @@ def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=Fa
     #                         conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
         raise ErrorInconsistentDataException(
-                f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
+            f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
         )
     # if files_unavailable:
     #     raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
@@ -1133,7 +1131,7 @@ def create_or_update_file(
         f = FileRepository.filter(path=new_path).first()
         if not f:
             if path != new_path:
-                    CopyService.create_copy_task(message, fastq_location, new_path)
+                CopyService.create_copy_task(message, fastq_location, new_path)
             create_file_object(new_path, file_group_id, metadata, file_type)
         else:
             update_file_object(f.file, f.file.path, metadata)

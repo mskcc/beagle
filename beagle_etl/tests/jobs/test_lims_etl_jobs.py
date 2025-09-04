@@ -7,7 +7,7 @@ from mock import patch, call
 from datetime import date
 from django.test import TestCase
 from django.conf import settings
-from beagle_etl.models import ETLConfiguration
+from beagle_etl.models import ETLConfiguration, SMILEMessage, SmileMessageStatus
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
@@ -105,6 +105,9 @@ class TestCreatePooledNormal(TestCase):
         """
         # sanity check that starting db is empty
         populate_job_group_notifier_metadata.return_value = True
+        msg = SMILEMessage.objects.create(
+            topic="new-request", request_id="new-request", status=SmileMessageStatus.IN_PROGRESS
+        )
         files = File.objects.all()
         files_metadata = FileMetadata.objects.all()
         self.assertTrue(len(files) == 0)
@@ -112,7 +115,7 @@ class TestCreatePooledNormal(TestCase):
 
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
 
-        create_pooled_normal(filepath, self.file_group.id)
+        create_pooled_normal(msg, filepath, self.file_group.id)
 
         # check that files are now in the database
         files = File.objects.all()
@@ -133,8 +136,11 @@ class TestCreatePooledNormal(TestCase):
         Test the creation of a pooled normal entry in the database
         """
         populate_job_group_notifier_metadata.return_value = True
+        msg = SMILEMessage.objects.create(
+            topic="new-request", request_id="new-request", status=SmileMessageStatus.IN_PROGRESS
+        )
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
-        create_pooled_normal(filepath, self.file_group.id)
+        create_pooled_normal(msg, filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata["preservation"] == "FROZEN")
@@ -147,8 +153,11 @@ class TestCreatePooledNormal(TestCase):
         Test the creation of a pooled normal entry in the database with the right recipe
         """
         populate_job_group_notifier_metadata.return_value = True
+        msg = SMILEMessage.objects.create(
+            topic="new-request", request_id="new-request", status=SmileMessageStatus.IN_PROGRESS
+        )
         filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG_S7_R2_001.fastq.gz"
-        create_pooled_normal(filepath, self.file_group.id)
+        create_pooled_normal(msg, filepath, self.file_group.id)
         imported_file = File.objects.get(path=filepath)
         imported_file_metadata = FileMetadata.objects.get(file=imported_file)
         self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "HemePACT_v4")
