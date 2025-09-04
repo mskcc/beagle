@@ -7,3 +7,5 @@ export ENVIRONMENT='dev'
 export TMPDIR=/tmp
 export BEAGLE_SHARED_TMPDIR=$TMPDIR
 export BEAGLE_PRIMARY_ID_REGEX="^(0\d{4}|[1-9]\d{4,})(|_[B-Z]|_[A-Z]{2,})_\d+$"
+export BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX=/igo/delivery
+export BEAGLE_FASTQ_IRIS_LOCATION_PREFIX=/igo/delivery
