@@ -38,8 +38,10 @@ class CopyService(object):
             os.chown(path_to, uid=uid, gid=gid)
 
     @staticmethod
-    def create_copy_task(smile_message, source, destination):
-        task = CopyFileTask.objects.create(smile_message=smile_message, source=source, destination=destination)
+    def create_copy_task(smile_message, file_object, source, destination):
+        task = CopyFileTask.objects.create(
+            smile_message=smile_message, file_object=file_object, source=source, destination=destination
+        )
         copy_task = CopyTask(source, destination, id=str(task.id))
         client = EchoClient()
         try:

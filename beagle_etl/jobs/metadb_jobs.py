@@ -95,12 +95,15 @@ def fetch_operators_wfastq(fastq_metadata):
     return operators
 
 
-def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
+def create_request_callback_instance(
+    request_id, smile_message, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs
+):
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
+            smile_message=smile_message,
             recipe=recipe,
             fastq_metadata=fastq_metadata,
             samples=sample_jobs,
@@ -147,8 +150,10 @@ def new_request(message_id):
         return
 
     gene_panel = data.get(settings.RECIPE_METADATA_KEY)
-    log += f"Importing new request: {request_id}\n"
-    logger.info(f"Importing new request: {request_id}")
+    message.gene_panel = gene_panel
+    message.save(update_fields=["gene_panel"])
+    log += f"Importing new request: {request_id} with genePanel: {gene_panel}\n"
+    logger.info(f"Importing new request: {request_id} with genePanel: {gene_panel}\n")
 
     sample_jobs = []
     valid_samples = set()
@@ -192,8 +197,16 @@ def new_request(message_id):
     message.save(update_fields=("sample_status",))
 
     job_group = JobGroup.objects.create()
+    message.job_group = job_group
     job_group_notifier_id = notifier_start(job_group, request_id)
     job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+    message.job_group_notifier = job_group_notifier
+    message.save(
+        update_fields=(
+            "job_group",
+            "job_group_notifier",
+        )
+    )
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
     recipe = data.get(settings.RECIPE_METADATA_KEY)
@@ -236,7 +249,6 @@ def new_request(message_id):
         delivery_date = datetime.now()
     data["deliveryDate"] = delivery_date
 
-    smile_job_status = SmileMessageStatus.COMPLETED
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
         if sample_id not in valid_samples:
@@ -276,8 +288,9 @@ def new_request(message_id):
 
     request = Request.objects.filter(request_id=request_id, latest=True).first()
     if not request:
+        log += f"No samples imported for request {request_id}"
         logger.error(f"No samples imported for request {request_id}")
-        smile_job_status = SmileMessageStatus.FAILED
+        message.status = SmileMessageStatus.FAILED
     else:
         study.requests.add(request)
     pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
@@ -298,14 +311,22 @@ def new_request(message_id):
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
 
-    message.status = smile_job_status
     message.log = log
     message.save()
 
-    # Run Operator
-    fastq_metadata = fetch_fastq_metadata(request_id)
+
+# Run Operator
+def run_operator(message_id):
+    msg = SMILEMessage.objects.get(message_id=message_id)
+    fastq_metadata = fetch_fastq_metadata(msg.request_id)
     create_request_callback_instance(
-        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+        msg.request_id,
+        msg,
+        msg.gene_panel,
+        msg.sample_status,
+        msg.job_group,
+        msg.job_group_notifier,
+        fastq_metadata=fastq_metadata,
     )
 
 
@@ -1130,11 +1151,13 @@ def create_or_update_file(
         new_path = CopyService.remap(recipe, fastq_location)  # Get copied file path
         f = FileRepository.filter(path=new_path).first()
         if not f:
-            if path != new_path:
-                CopyService.create_copy_task(message, fastq_location, new_path)
-            create_file_object(new_path, file_group_id, metadata, file_type)
+            file_object = create_file_object(new_path, file_group_id, metadata, file_type)
         else:
-            update_file_object(f.file, f.file.path, metadata)
+            file_object = f.file
+            update_file_object(file_object, f.file.path, metadata)
+
+        if path != new_path:
+            CopyService.create_copy_task(message, file_object, fastq_location, new_path)
 
 
 def format_metadata(original_metadata):
@@ -1161,7 +1184,7 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
-        calculate_checksum.delay(str(file.id), path)
+        return file
     else:
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
 
@@ -1178,25 +1201,10 @@ def update_file_object(file_object, path, metadata):
         user = None
     serializer = UpdateFileSerializer(file_object, data=data)
     if serializer.is_valid():
-        serializer.save()
+        file = serializer.save()
     else:
         logger.error("Failed to update file %s: Error %s" % (path, serializer.errors))
         raise FailedToFetchSampleException(
             "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors)
         )
-
-
-@shared_task
-def calculate_checksum(file_id, path):
-    try:
-        checksum = sha1(path)
-    except FailedToCalculateChecksum as e:
-        logger.info("Failed to calculate checksum for file: %s: %s", file_id, path)
-        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
-    try:
-        f = File.objects.get(id=file_id)
-        f.checksum = checksum
-        f.save(update_fields=["checksum"])
-    except File.DoesNotExist:
-        logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
-        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    return file

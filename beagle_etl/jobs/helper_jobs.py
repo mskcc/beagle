@@ -1,6 +1,7 @@
 import os
 import logging
 from time import sleep
+from celery import shared_task
 from django.conf import settings
 from file_system.models import File
 from file_system.repository import FileRepository
@@ -92,3 +93,19 @@ def locate_file(path):
 
 def fix_path_iris(path):
     return path.replace(settings.FASTQ_DEFAULT_LOCATION_PREFIX, settings.FASTQ_IRIS_LOCATION_PREFIX)
+
+
+@shared_task
+def calculate_checksum(file_id):
+    try:
+        f = File.objects.get(id=file_id)
+    except File.DoesNotExist:
+        logger.error("Failed to calculate checksum. Error: File %s not found", file_id)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    try:
+        checksum = sha1(f.path)
+    except FailedToCalculateChecksum as e:
+        logger.error(f"Failed to calculate checksum for file: {file_id}: {f.path}")
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    f.checksum = checksum
+    f.save(update_fields=["checksum"])

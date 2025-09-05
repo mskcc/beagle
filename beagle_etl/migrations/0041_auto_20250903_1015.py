@@ -69,6 +69,10 @@ class Migration(migrations.Migration):
                         to="beagle_etl.BaseModel",
                     ),
                 ),
+                (
+                    "file_object",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="file_system.File"),
+                ),
                 ("source", models.CharField(max_length=2000)),
                 ("destination", models.CharField(max_length=2000)),
                 (

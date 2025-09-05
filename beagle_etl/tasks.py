@@ -1,22 +1,16 @@
 import pytz
 import logging
-import importlib
 import datetime
 import asyncio
 from celery import shared_task
-from lib.logger import format_log
 from django.conf import settings
 from beagle_etl.models import (
-    JobStatus,
-    Job,
     SMILEMessage,
     SmileMessageStatus,
     RequestCallbackJobStatus,
     RequestCallbackJob,
     SkipProject,
 )
-from beagle_etl.jobs.metadb_jobs import TYPES
-from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.nats_client.nats_client import run
 from beagle_etl.jobs.metadb_jobs import (
     new_request,
@@ -64,14 +58,12 @@ def process_smile_events():
             request_id = message.request_id
             current_span.set_tag("request.id", request_id)
         logger.info(f"New request: {message.request_id}")
-        message.status = SmileMessageStatus.IN_PROGRESS
-        message.save(update_fields=["status"])
+        message.in_progress()
         new_request.delay(str(message.id))
 
     for req in list(update_requests):
         logger.info(f"Update request/samples: {req}")
-        req.status = SmileMessageStatus.IN_PROGRESS
-        req.save(update_fields=["status"])
+        req.in_progress()
         update_job.delay(req)
 
     unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(
@@ -83,8 +75,7 @@ def process_smile_events():
     )
 
     for msg in unknown_topics:
-        msg.status = SmileMessageStatus.IN_PROGRESS
-        msg.save(update_fields=["status"])
+        msg.in_progress()
         not_supported.delay(str(msg.id))
         logger.error(f"Unknown subject: {msg.topic}")
 

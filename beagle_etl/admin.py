@@ -38,7 +38,8 @@ class SMILEMessagesAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
 
 
 class RequestCallbackJobAdmin(ModelAdmin):
-    list_display = ("created_date", "request_id", "recipe", "status")
+    list_display = ("id", link_relation("smile_message"), "request_id", "recipe", "created_date", "status")
+    ordering = ("-created_date",)
 
 
 class NormalizerAdmin(ModelAdmin):

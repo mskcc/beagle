@@ -12,7 +12,7 @@ def echo_callback(message):
         if message.status == "success":
             task.set_completed(message.message)
         if message.status == "fail":
-            task.set_failed()
+            task.set_failed(message.message)
     except Exception as e:
         logger.error(f"Error processing notification: {e}")
         raise
