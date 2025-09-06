@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("beagle_etl", "0040_convert_operator_recipes_to_json"),
+        ("file_system", "0045_merge_20250418_1834"),
     ]
 
     operations = [

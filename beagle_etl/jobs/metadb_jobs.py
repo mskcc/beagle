@@ -602,10 +602,6 @@ def update_request_job(message_id, job_group, job_group_notifier):
     message.status = SmileMessageStatus.COMPLETED
     message.save()
 
-    fastq_metadata = fetch_fastq_metadata(request_id)
-    create_request_callback_instance(
-        request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
-    )
     return request_metadata, pooled_normal
 
 
@@ -702,9 +698,6 @@ def update_job(request_id):
     recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
-    )
-    create_request_callback_instance(
-        request_id, recipe, sample_status, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
 
 
