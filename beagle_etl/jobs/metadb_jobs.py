@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from dateutil.parser import parse
 from celery import shared_task
 from django.conf import settings
-from beagle_etl.jobs import TYPES
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     ETLSetRecipeEvent,
@@ -36,8 +35,6 @@ from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
 from beagle_etl.exceptions import ETLExceptions
 from beagle_etl.models import (
-    JobStatus,
-    Job,
     Operator,
     ETLConfiguration,
     SMILEMessage,
@@ -68,12 +65,13 @@ from file_system.serializers import CreateFileSerializer
 from file_system.helper.checksum import sha1, FailedToCalculateChecksum
 from runner.operator.helper import format_sample_name
 from beagle_etl.copy_service import CopyService
-from beagle_etl.jobs.helper_jobs import check_file_permissions, locate_file
+from beagle_etl.jobs.helper_jobs import check_file_permissions, fix_path_iris
 from beagle_etl.jobs.notification_helper import _generate_ticket_description
 from django.contrib.auth.models import User
 from study.models import Study
 from study.objects import StudyObject
 from django.db.models import Q
+
 
 logger = logging.getLogger(__name__)
 
@@ -97,12 +95,15 @@ def fetch_operators_wfastq(fastq_metadata):
     return operators
 
 
-def create_request_callback_instance(request_id, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs):
+def create_request_callback_instance(
+    request_id, smile_message, recipe, sample_jobs, job_group, job_group_notifier, delay=0, **kwargs
+):
     fastq_metadata = kwargs.get("fastq_metadata", None)
     request = RequestCallbackJob.objects.filter(request_id=request_id, status=RequestCallbackJobStatus.PENDING).first()
     if not request:
         RequestCallbackJob.objects.create(
             request_id=request_id,
+            smile_message=smile_message,
             recipe=recipe,
             fastq_metadata=fastq_metadata,
             samples=sample_jobs,
@@ -136,20 +137,23 @@ def request_update_notification(request_id):
 @shared_task
 def new_request(message_id):
     message = SMILEMessage.objects.get(id=message_id)
+    log = ""
     data = json.loads(message.message)
-
     request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
 
     if not data.get(settings.IS_CMO_REQUEST):
         logger.info(f"Request {request_id} is not CMO Request")
+        log += f"Request {request_id} is not CMO Request\n"
         message.status = SmileMessageStatus.COMPLETED
+        message.log = log
         message.save()
-        # Add EMAIL notification
         return
 
-    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
     gene_panel = data.get(settings.RECIPE_METADATA_KEY)
-    logger.info("Importing new request: %s" % request_id)
+    message.gene_panel = gene_panel
+    message.save(update_fields=["gene_panel"])
+    log += f"Importing new request: {request_id} with genePanel: {gene_panel}\n"
+    logger.info(f"Importing new request: {request_id} with genePanel: {gene_panel}\n")
 
     sample_jobs = []
     valid_samples = set()
@@ -189,15 +193,24 @@ def new_request(message_id):
                     "code": None,
                 }
             sample_jobs.append(sample_status)
+    message.sample_status = sample_jobs
+    message.save(update_fields=("sample_status",))
 
-    job_group = JobGroup()
-    job_group.save()
+    job_group = JobGroup.objects.create()
+    message.job_group = job_group
     job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
+    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+    message.job_group_notifier = job_group_notifier
+    message.save(
+        update_fields=(
+            "job_group",
+            "job_group_notifier",
+        )
+    )
 
     project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
     recipe = data.get(settings.RECIPE_METADATA_KEY)
-    set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier.id), recipe).to_dict()
+    set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier_id), recipe).to_dict()
     send_notification.delay(set_recipe_event)
 
     project_manager_name = data.get("projectManagerName")
@@ -236,7 +249,6 @@ def new_request(message_id):
         delivery_date = datetime.now()
     data["deliveryDate"] = delivery_date
 
-    smile_job_status = SmileMessageStatus.COMPLETED
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
         if sample_id not in valid_samples:
@@ -252,10 +264,11 @@ def new_request(message_id):
                 logger.info("Processing run %s" % run)
                 fastqs = run.pop("fastqs")
                 for fastq in fastqs:
-                    fastq_location = locate_file(fastq)
+                    fastq_location = fix_path_iris(fastq)
                     logger.info("Adding file %s" % fastq_location)
                     try:
                         create_or_update_file(
+                            message,
                             fastq_location,
                             request_id,
                             settings.IMPORT_FILE_GROUP,
@@ -275,15 +288,16 @@ def new_request(message_id):
 
     request = Request.objects.filter(request_id=request_id, latest=True).first()
     if not request:
+        log += f"No samples imported for request {request_id}"
         logger.error(f"No samples imported for request {request_id}")
-        smile_job_status = SmileMessageStatus.FAILED
+        message.status = SmileMessageStatus.FAILED
     else:
         study.requests.add(request)
     pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
     pooled_normal_jobs = []
     for pn in pooled_normal:
         try:
-            create_pooled_normal(pn, str(settings.POOLED_NORMAL_FILE_GROUP))
+            create_pooled_normal(message, pn, str(settings.POOLED_NORMAL_FILE_GROUP))
         except Exception as e:
             pooled_normal_jobs.append(
                 {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
@@ -297,12 +311,22 @@ def new_request(message_id):
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
 
-    message.status = smile_job_status
+    message.log = log
     message.save()
 
-    fastq_metadata = fetch_fastq_metadata(request_id)
+
+# Run Operator
+def run_operator(message_id):
+    msg = SMILEMessage.objects.get(message_id=message_id)
+    fastq_metadata = fetch_fastq_metadata(msg.request_id)
     create_request_callback_instance(
-        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+        msg.request_id,
+        msg,
+        msg.gene_panel,
+        msg.sample_status,
+        msg.job_group,
+        msg.job_group_notifier,
+        fastq_metadata=fastq_metadata,
     )
 
 
@@ -476,14 +500,15 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
             send_notification.delay(ci_review_e)
         else:
             logger.info("Submitting request_id %s to %s operator" % (request_id, operator.class_name))
-            if Job.objects.filter(
-                job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
-            ).all():
-                partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
-                send_notification.delay(partialy_complete_event)
-            else:
-                complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
-                send_notification.delay(complete_event)
+            # Rewrite this to use SMILEMessage
+            # if Job.objects.filter(
+            #     job_group=job_group, args__request_id=request_id, run=TYPES["SAMPLE"], status=JobStatus.FAILED
+            # ).all():
+            #     partialy_complete_event = ETLImportPartiallyCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+            #     send_notification.delay(partialy_complete_event)
+            # else:
+            #     complete_event = ETLImportCompleteEvent(job_notifier=job_group_notifier_id).to_dict()
+            #     send_notification.delay(complete_event)
             notify = SMILEMessage.objects.filter(request_id__startswith=request_id).count() == 1
             create_jobs_from_request.delay(request_id, operator.id, str(job_group.id), notify=notify)
     return []
@@ -577,10 +602,6 @@ def update_request_job(message_id, job_group, job_group_notifier):
     message.status = SmileMessageStatus.COMPLETED
     message.save()
 
-    fastq_metadata = fetch_fastq_metadata(request_id)
-    create_request_callback_instance(
-        request_id, recipe, sample_status_list, job_group, job_group_notifier, fastq_metadata=fastq_metadata
-    )
     return request_metadata, pooled_normal
 
 
@@ -677,9 +698,6 @@ def update_job(request_id):
     recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
-    )
-    create_request_callback_instance(
-        request_id, recipe, sample_status, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
 
 
@@ -810,13 +828,14 @@ def update_sample_job(message_id, job_group, job_group_notifier):
             for fastq in fastqs:
                 logger.info("Adding file %s" % fastq)
                 try:
-                    fastq_location = locate_file(fastq)
+                    fastq_location = fix_path_iris(fastq)
                     new_path = CopyService.remap(recipe, fastq_location)
                     f = FileRepository.filter(path=new_path).first()
                     if f:
                         new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
+                        message,
                         fastq_location,
                         request_id,
                         settings.IMPORT_FILE_GROUP,
@@ -847,7 +866,7 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         logger.info(f"Removing file {fi}.")
         File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
 
-    message.status = SmileMessageStatus.COMPLETED
+    message.status = SmileMessageStatus.COPY_FILES
     message.save()
     sample_status = {
         "type": "SAMPLE",
@@ -886,7 +905,7 @@ def get_run_id_from_string(string):
         return string
 
 
-def create_pooled_normal(filepath, file_group_id):
+def create_pooled_normal(message, filepath, file_group_id):
     """
     Parse the file path provided for a Pooled Normal sample into the metadata fields needed to
     create the File and FileMetadata entries in the database
@@ -923,8 +942,6 @@ def create_pooled_normal(filepath, file_group_id):
     file_type_obj = FileType.objects.filter(name="fastq").first()
     assays = ETLConfiguration.objects.first()
     assay_list = assays.all_recipes
-    run_id = None
-    preservation_type = None
     recipe = None
     try:
         parts = filepath.split("/")
@@ -953,14 +970,9 @@ def create_pooled_normal(filepath, file_group_id):
         logger.info("Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
         return
     metadata = {"runId": run_id, "preservation": preservation_type, settings.RECIPE_METADATA_KEY: recipe}
-    try:
-        new_path = CopyService.remap(recipe, filepath)
-        if new_path != filepath:
-            CopyService.copy(filepath, new_path)
-    except Exception as e:
-        logger.error("Failed to copy file %s." % (filepath,))
-        raise FailedToFetchPoolNormalException("Failed to copy file %s. Error %s" % (filepath, str(e)))
-
+    new_path = CopyService.remap(recipe, filepath)
+    if new_path != filepath:
+        CopyService.create_copy_task(message, filepath, new_path)
     try:
         f = File.objects.create(
             file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj, file_type=file_type_obj
@@ -990,76 +1002,71 @@ def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=Fa
     if not libraries:
         if igocomplete:
             raise ErrorInconsistentDataException(
-                "Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id
+                f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty."
             )
         else:
-            raise MissingDataException("Failed to fetch SampleManifest for sampleId:%s. Libraries empty" % sample_id)
+            raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty.")
     for library in libraries:
         runs = library.get("runs")
         if not runs:
-            logger.error("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+            logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
             if igocomplete:
                 raise ErrorInconsistentDataException(
-                    "Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id
+                    f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty."
                 )
             else:
-                raise MissingDataException("Failed to fetch SampleManifest for sampleId:%s. Runs empty" % sample_id)
+                raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
         run_dict = convert_to_dict(runs)
         for run in run_dict.values():
             fastqs = run.get("fastqs")
             if not fastqs:
-                logger.error("Failed to fetch SampleManifest for sampleId:%s. Fastqs empty" % sample_id)
+                logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Fastqs empty.")
                 missing_fastq = True
                 run_id = run["runId"] if run["runId"] else "None"
                 failed_runs.append(run_id)
                 continue
-            else:
-                if not redelivery:
-                    for fastq in fastqs:
-                        # Check do files exist
-                        try:
-                            fastq_location = locate_file(fastq)
-                        except FailedToLocateTheFileException as e:
-                            files_unavailable = True
-                            missing_files.append(fastq)
-                            continue
-                        # Check files permissions
-                        try:
-                            check_file_permissions(fastq_location)
-                        except FailedToCopyFilePermissionDeniedException as e:
-                            permission_error = True
-                            permission_error_files.append(fastq)
-                            continue
-                        # Check is file already registered
-                        try:
-                            file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
-                        except File.DoesNotExist:
-                            continue
-                        logger.info("Processing %s" % fastq)
-                        if file_search:
-                            conflict = True
-                            conflict_files.append((file_search.path, str(file_search.id)))
+    #         else:
+    #             if not redelivery:
+    #                 for fastq in fastqs:
+    #                     # Check do files exist
+    #                     try:
+    #                         fastq_location = locate_file(fastq)
+    #                     except FailedToLocateTheFileException as e:
+    #                         files_unavailable = True
+    #                         missing_files.append(fastq)
+    #                         continue
+    #                     # Check files permissions
+    #                     try:
+    #                         check_file_permissions(fastq_location)
+    #                     except FailedToCopyFilePermissionDeniedException as e:
+    #                         permission_error = True
+    #                         permission_error_files.append(fastq)
+    #                         continue
+    #                     # Check is file already registered
+    #                     try:
+    #                         file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
+    #                     except File.DoesNotExist:
+    #                         continue
+    #                     logger.info("Processing %s" % fastq)
+    #                     if file_search:
+    #                         conflict = True
+    #                         conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
-        if igocomplete:
-            raise ErrorInconsistentDataException(
-                f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
-            )
-        else:
-            raise MissingDataException(
-                f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
-            )
-    if files_unavailable:
-        raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
-    if permission_error:
-        raise FailedToCopyFilePermissionDeniedException(
-            f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
+        raise ErrorInconsistentDataException(
+            f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
         )
-    if not redelivery:
-        if conflict:
-            res_str = ""
-            for f in conflict_files:
-                res_str += "%s: %s" % (f[0], f[1])
-            raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
+    # if files_unavailable:
+    #     raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
+    # if permission_error:
+    #     raise FailedToCopyFilePermissionDeniedException(
+    #         f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
+    #     )
+    # if not redelivery:
+    #     if conflict:
+    #         res_str = ""
+    #         for f in conflict_files:
+    #             res_str += "%s: %s" % (f[0], f[1])
+    #         raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
 
 
 def R1_or_R2(filename):
@@ -1106,7 +1113,7 @@ def convert_to_dict(runs):
 
 
 def create_or_update_file(
-    path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
+    message, path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
 ):
     try:
         lims_metadata = copy.deepcopy(data)
@@ -1133,21 +1140,17 @@ def create_or_update_file(
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
         recipe = metadata.get(settings.RECIPE_METADATA_KEY, "")
-        fastq_location = locate_file(path)
+        fastq_location = fix_path_iris(path)
         new_path = CopyService.remap(recipe, fastq_location)  # Get copied file path
         f = FileRepository.filter(path=new_path).first()
         if not f:
-            try:
-                if path != new_path:
-                    CopyService.copy(fastq_location, new_path)
-            except Exception as e:
-                if "Permission denied" in str(e):
-                    raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
-                else:
-                    raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
-            create_file_object(new_path, file_group_id, metadata, file_type)
+            file_object = create_file_object(new_path, file_group_id, metadata, file_type)
         else:
-            update_file_object(f.file, f.file.path, metadata)
+            file_object = f.file
+            update_file_object(file_object, f.file.path, metadata)
+
+        if path != new_path:
+            CopyService.create_copy_task(message, file_object, fastq_location, new_path)
 
 
 def format_metadata(original_metadata):
@@ -1174,7 +1177,7 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
-        calculate_checksum.delay(str(file.id), path)
+        return file
     else:
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
 
@@ -1191,25 +1194,10 @@ def update_file_object(file_object, path, metadata):
         user = None
     serializer = UpdateFileSerializer(file_object, data=data)
     if serializer.is_valid():
-        serializer.save()
+        file = serializer.save()
     else:
         logger.error("Failed to update file %s: Error %s" % (path, serializer.errors))
         raise FailedToFetchSampleException(
             "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors)
         )
-
-
-@shared_task
-def calculate_checksum(file_id, path):
-    try:
-        checksum = sha1(path)
-    except FailedToCalculateChecksum as e:
-        logger.info("Failed to calculate checksum for file: %s: %s", file_id, path)
-        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
-    try:
-        f = File.objects.get(id=file_id)
-        f.checksum = checksum
-        f.save(update_fields=["checksum"])
-    except File.DoesNotExist:
-        logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
-        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    return file

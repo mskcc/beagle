@@ -20,7 +20,6 @@ from notifier.events import (
     SetPipelineFieldEvent,
     OperatorStartEvent,
     SetLabelEvent,
-    SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
     VoyagerActionRequiredForRunningEvent,
     SendEmailEvent,
@@ -28,19 +27,17 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
-from beagle_etl.jobs import TYPES
-from beagle_etl.models import Operator, Job
+from beagle_etl.models import Operator
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
-from file_system.models import Request, FileMetadata, File
+from file_system.models import Request
 from file_system.repository import FileRepository
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
-from django.http import HttpResponse
 from ddtrace import tracer
 
 logger = logging.getLogger("django")
@@ -232,9 +229,6 @@ def create_jobs_from_request(
         pipeline=pipeline,
         file_group=file_group,
     )
-
-    _set_link_to_run_ticket(request_id, job_group_notifier_id)
-
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
@@ -276,34 +270,9 @@ def create_jobs_from_pairs(
         output_directory_prefix=output_directory_prefix,
     )
 
-    _set_link_to_run_ticket(request_id, job_group_notifier_id)
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
     create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
-
-
-def _set_link_to_run_ticket(request_id, job_group_notifier_id):
-    jira_id = None
-    import_job = Job.objects.filter(run=TYPES["REQUEST"], args__request_id=request_id).order_by("-created_date").first()
-    if not import_job:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    try:
-        job_group_notifier_job = JobGroupNotifier.objects.get(
-            job_group=import_job.job_group.id, notifier_type__default=True
-        )
-    except JobGroupNotifier.DoesNotExist:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    try:
-        new_jira = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-    except JobGroupNotifier.DoesNotExist:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    event = SetRunTicketInImportEvent(
-        job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id
-    ).to_dict()
-    send_notification.delay(event)
 
 
 def _generate_summary(req):

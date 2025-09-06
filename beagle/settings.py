@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "advanced_filters",
     "ddtrace.contrib.django",
+    "echo_client",
 ]
 
 
@@ -114,11 +115,6 @@ AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
 AUTH_LDAP_NO_NEW_USERS = True
 
-# AUTH_LDAP_GROUP_TYPE = MemberDNGroupType()
-# AUTH_LDAP_GROUP_SEARCH = LDAPSearchUnion(
-#     LDAPSearch('DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"),
-# )
-
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
     "DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG",
     ldap.SCOPE_SUBTREE,
@@ -126,39 +122,12 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
     ["sAMAccountName", "displayName", "memberOf", "title"],
 )
 
-# AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-#     'DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG',
-#     ldap.SCOPE_SUBTREE,
-#     '(sAMAccountName=%(user)s)',
-#     '(objectClass=posixGroup)',)
-
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
 AUTHENTICATION_BACKENDS = [
     "django_auth_ldap.backend.LDAPBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
-
-# AUTH_LDAP_USER_ATTR_MAP = {
-#     "first_name": "givenName",
-#     "last_name": "sn",
-#     "email": "mail",
-# }
-
-# AUTH_LDAP_FIND_GROUP_PERMS = True
-
-# AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
-
-# AUTH_LDAP_MIRROR_GROUPS = True
-
-# AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-#     "is_active": "DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG",
-#     "is_staff": (
-#         LDAPGroupQuery("cn=active,ou=groups,dc=ROOT,dc=com")
-#         | LDAPGroupQuery("cn=active,ou=groups,dc=ROOT,dc=com")
-#     ),
-#     "is_superuser": "cn=active,ou=groups,dc=ROOT,dc=com",
-# }
 
 ROOT_URLCONF = "beagle.urls"
 
@@ -356,6 +325,7 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
+        "echo_client": {"level": "DEBUG", "handlers": ["console"]},
     },
 }
 
@@ -463,6 +433,9 @@ COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
 COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
 
+FASTQ_DEFAULT_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX")
+FASTQ_IRIS_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_IRIS_LOCATION_PREFIX")
+
 DEFAULT_LOG_PREFIX = os.environ.get("BEAGLE_DEFAULT_LOG_PREFIX", "")
 DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp")
 
@@ -542,3 +515,15 @@ GENE_PANEL_TABLE = {
     "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
 }
 SHELL_PLUS = "ipython"
+
+
+ECHO_SETTINGS = {
+    "USERNAME": os.getenv("ECHO_USERNAME"),
+    "PASSWORD": os.getenv("ECHO_PASSWORD"),
+    "HOST": os.getenv("ECHO_RABBITMQ_HOST"),
+    "PORT": os.getenv("ECHO_RABBITMQ_PORT"),
+    "VHOST": os.getenv("ECHO_VHOST", "/"),
+    "ECHO_TASK_QUEUE": os.getenv("ECHO_TASK_QUEUE"),
+    "ECHO_CONFIRMATION_QUEUE": os.getenv("ECHO_CONFIRMATION_QUEUE"),
+    "CALLBACK": os.getenv("ECHO_CALLBACK"),
+}
