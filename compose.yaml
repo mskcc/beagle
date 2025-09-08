@@ -246,7 +246,9 @@ services:
           - |
             sleep 10
             rabbitmqctl add_user ${ECHO_RABBITMQ_USERNAME} ${ECHO_RABBITMQ_PASSWORD}
+            rabbitmqctl add_user ${DATADOG_RABBITMQ_USERNAME} ${DATADOG_RABBITMQ_PASSWORD}
             rabbitmqctl set_permissions -p / ${ECHO_RABBITMQ_USERNAME} ".*" ".*" ".*"
+            rabbitmqctl set_permissions -p / ${DATADOG_RABBITMQ_USERNAME} ".*" ".*" ".*"
         user: root
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_running"]
