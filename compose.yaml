@@ -383,6 +383,11 @@ services:
           --pidfile $$PIDFILE \
           --concurrency=100 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
   beagle_celery_check_files_queue:
     <<: *beagle_celery
     command:
@@ -399,6 +404,11 @@ services:
           --pidfile $$PIDFILE \
           --concurrency=1 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
   beagle_celery_job_scheduler_queue:
     <<: *beagle_celery
     command:
@@ -413,7 +423,13 @@ services:
           -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_JOB_SCHEDULER_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=1
+          --concurrency=1 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
   beagle_celery_nats_new_request_queue:
     <<: *beagle_celery
     command:
@@ -428,7 +444,13 @@ services:
           -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=1
+          --concurrency=1 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
   beagle_celery_runner_queue:
     <<: *beagle_celery
     command:
@@ -443,7 +465,13 @@ services:
           -Q ${BEAGLE_RUNNER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_RUNNER_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=30
+          --concurrency=30 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
   beagle_logrotate:
     image: mskcc/voyager-compose-utils:1.0.0
     restart: always
@@ -470,9 +498,14 @@ services:
         }
         EOF
         cat > /logrotate/logrotate.cron <<EOF
-        ${LOGROTATE_CRON} logrotate --state /logrotate/logrotate.status /logrotate/logrotate.conf
+        ${LOGROTATE_CRON} logrotate --state /logrotate/logrotate.status /logrotate/logrotate.conf && touch /logs/last_completed_logrotate_cron
         EOF
         supercronic /logrotate/logrotate.cron >> /logs/logrotate_cron.log 2>&1
+    healthcheck:
+      test: "find /logs/last_completed_logrotate_cron -type f -mtime -2 | read"
+      interval: 12h
+      timeout: 5h
+      retries: 3
     depends_on:
       beagle_celery_beat:
         condition: service_healthy
@@ -496,9 +529,14 @@ services:
       - |
         mkdir -p /db_backup/archive
         cat > /db_backup/db_backup.cron <<EOF
-        ${DB_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME}
+        ${DB_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
         EOF
         supercronic /db_backup/db_backup.cron >> /logs/db_backup_cron.log 2>&1
+    healthcheck:
+      test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
+      interval: 12h
+      timeout: 5h
+      retries: 3
     depends_on:
       beagle_celery_beat:
         condition: service_healthy
