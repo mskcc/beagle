@@ -192,8 +192,8 @@ services:
         cp /entrypoint.sh /etc/pgbouncer/entrypoint_mod.sh
         sed -i '/user = postgres/d' /etc/pgbouncer/entrypoint_mod.sh
         /etc/pgbouncer/entrypoint_mod.sh /usr/bin/pgbouncer $$INIFILE > /logs/pgbouncer.log 2>&1
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     depends_on:
       beagle_postgres:
         condition: service_healthy
@@ -231,7 +231,7 @@ services:
       - ./logs/:/var/log/rabbitmq/
     ports:
       - ${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672
-      - 5672:5672
+      - ${BEAGLE_RABBITMQ_PORT}:5672
     expose:
       - "5672"
     environment:
