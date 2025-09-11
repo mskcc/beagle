@@ -18,3 +18,4 @@ runner/tests/operator/demo_operator/tmp*
 .DS_Store
 Miniconda3*
 *.db
+static/
