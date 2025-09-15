@@ -79,7 +79,6 @@ class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
     queryset = UserRegistrationRequest.objects.order_by("created_date").all()
     permission_classes = (AllowAny,)
 
-
 class UserFormView(CreateView):
     model = UserRegistrationRequest
     template_name = "admin/register.html"

@@ -275,6 +275,11 @@ class CreateFileSerializer(serializers.ModelSerializer):
         model = File
         fields = ("path", "file_type", "size", "file_group", "metadata", "checksum")
 
+class CreateFileFormSerializer(CreateFileSerializer):
+    class Meta:
+        model = File
+        fields = ("path", "file_type", "file_group", "metadata")
+
 
 class CreateFileFormSerializer(CreateFileSerializer):
     class Meta:
