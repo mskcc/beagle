@@ -1,8 +1,13 @@
 FROM python:3.10-slim
 
-LABEL maintainer="Nikhil Kumar (kumarn1@mskcc.org)" \
-      version.image="1.0.0" \
-      source.ridgeback="https://github.com/mskcc/beagle"
+LABEL org.opencontainers.image.vendor="MSKCC" \
+      org.opencontainers.image.authors="Nikhil Kumar (kumarn1@mskcc.org)" \
+      org.opencontainers.image.created="2025-09-15T16:04:00Z" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.source="https://github.com/mskcc/beagle" \
+      org.opencontainers.image.title="Beagle" \
+      org.opencontainers.image.description="API for managing files, pipelines and runs."
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PIP_ROOT_USER_ACTION ignore
@@ -15,13 +20,11 @@ RUN apt-get update \
             wget curl libldap2-dev libsasl2-dev procps libssl-dev libxml2-dev libxslt-dev \
             libpq-dev gawk nodejs git nginx build-essential \
      # Install Beagle
-        && cd /usr/bin \
-        && git clone https://github.com/mskcc/beagle --branch $BEAGLE_BRANCH \
-        && cd /usr/bin/beagle \
+        && git clone https://github.com/mskcc/beagle --branch $BEAGLE_BRANCH /usr/bin/beagle \
      # Install python packages
         && pip3 install --upgrade pip \
         && pip3 install --use-pep517 python-ldap \
-        && pip3 install --use-pep517 -r requirements.txt \
+        && pip3 install --use-pep517 -r /usr/bin/beagle/requirements.txt \
     # Clean up image
         && apt-get -y purge --auto-remove build-essential \
         && apt-get -y --no-install-recommends install openssh-client \
