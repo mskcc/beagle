@@ -42,9 +42,7 @@ class AccessLegacyCNVOperator(Operator):
             name__in=["unfiltered_bams", "fgbio_collapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
-        unfiltered_tumor_bams = [
-            f for p in unfiltered_bam_ports for f in p.files.all() if is_tumor_bam(f.file_name)
-        ]
+        unfiltered_tumor_bams = [f for p in unfiltered_bam_ports for f in p.files.all() if is_tumor_bam(f.file_name)]
 
         sample_ids = []
         tumor_bams = []
