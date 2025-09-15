@@ -49,6 +49,8 @@ jobs:
           BEAGLE_SHARED_TMPDIR: $TMPDIR
           ENVIRONMENT: 'dev'
           BEAGLE_PRIMARY_ID_REGEX: "^(0\\d{4}|[1-9]\\d{4,})(|_[B-Z]|_[A-Z]{2,})_\\d+$"
+          BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX: /igo/delivery
+          BEAGLE_FASTQ_IRIS_LOCATION_PREFIX: /igo/delivery
     - name: Black check
       uses: psf/black@stable
       with:

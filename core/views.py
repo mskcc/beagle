@@ -79,12 +79,14 @@ class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
     queryset = UserRegistrationRequest.objects.order_by("created_date").all()
     permission_classes = (AllowAny,)
 
+
 class UserFormView(CreateView):
     model = UserRegistrationRequest
     template_name = "admin/register.html"
-    fields = ['username', 'first_name', 'last_name']
+    fields = ["username", "first_name", "last_name"]
     success_url = "/"
+
     def form_valid(self, form):
         form.save()
         messages.success(self.request, "User registered sucessfully")
-        return render(self.request, 'admin/register_success.html', self.get_context_data())
+        return render(self.request, "admin/register_success.html", self.get_context_data())

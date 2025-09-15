@@ -1,60 +1,23 @@
 import uuid
+import logging
 from enum import IntEnum
-from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
+from django.db import transaction, IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
-from django.utils.timezone import now
 from beagle_etl.metadata.normalizer import Normalizer
+from file_system.models import File
+from beagle_etl.jobs.helper_jobs import calculate_checksum
+from notifier.models import Notifier, JobGroup, JobGroupNotifier
 
 
-class JobStatus(IntEnum):
-    CREATED = 0
-    IN_PROGRESS = 1
-    WAITING_FOR_CHILDREN = 2
-    COMPLETED = 3
-    FAILED = 4
+logger = logging.getLogger()
 
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
-
-
-class Job(BaseModel):
-    run = models.CharField(max_length=100, db_index=True)
-    args = JSONField(null=True, blank=True)
-    status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus], db_index=True)
-    children = JSONField(null=True, blank=True)
-    retry_count = models.IntegerField(default=0)
-    message = JSONField(null=True, blank=True)
-    max_retry = models.IntegerField(default=3)
-    callback = models.CharField(max_length=100, default=None, blank=True, null=True)
-    callback_args = JSONField(null=True, blank=True)
-    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
-    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
-    lock = models.BooleanField(default=False)
-    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
-
-    def save(self, *args, **kwargs):
-        if self.status == JobStatus.COMPLETED or self.status == JobStatus.FAILED:
-            if not self.finished_date:
-                self.finished_date = now()
-        super().save(*args, **kwargs)
-
-    @property
-    def is_locked(self):
-        self.refresh_from_db()
-        return self.lock
-
-    def lock_job(self):
-        self.lock = True
-        self.save()
-
-    def unlock_job(self):
-        self.lock = False
-        self.save()
 
 
 class Operator(models.Model):
@@ -83,20 +46,108 @@ class SkipProject(models.Model):
 
 class SmileMessageStatus(IntEnum):
     PENDING = 0
-    COMPLETED = 1
-    NOT_SUPPORTED = 2
-    FAILED = 3
+    IN_PROGRESS = 1
+    COPY_FILES = 2
+    COMPLETED = 3
+    NOT_SUPPORTED = 4
+    FAILED = 5
 
 
 class SMILEMessage(BaseModel):
     topic = models.CharField(max_length=1000)
     request_id = models.CharField(max_length=100)
+    gene_panel = models.CharField(max_length=100, null=True, blank=True)
     message = models.TextField()
+    log = models.TextField(blank=True, default="")
+    sample_status = JSONField(blank=True, default=dict)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.IntegerField(
         choices=[(status.value, status.name) for status in SmileMessageStatus],
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+    def in_progress(self):
+        self.status = SmileMessageStatus.IN_PROGRESS
+        self.save(update_fields=["status"])
+
+    def copy_files(self):
+        self.status = SmileMessageStatus.COPY_FILES
+        self.save(update_fields=["status"])
+
+    def completed(self):
+        self.status = SmileMessageStatus.COMPLETED
+        self.save(update_fields=["status"])
+
+    def not_supported(self):
+        self.status = SmileMessageStatus.NOT_SUPPORTED
+        self.save(update_fields=["status"])
+
+    def failed(self):
+        self.status = SmileMessageStatus.FAILED
+        self.save(update_fields=["status"])
+
+
+class CopyFileStatus(IntEnum):
+    PENDING = 0
+    COMPLETED = 1
+    FAILED = 2
+
+
+class CopyFileTask(BaseModel):
+    smile_message = models.ForeignKey(SMILEMessage, null=True, blank=True, on_delete=models.SET_NULL)
+    source = models.CharField(max_length=2000, null=False, blank=False)
+    destination = models.CharField(max_length=2000, null=False, blank=False)
+    file_object = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in CopyFileStatus],
+        default=CopyFileStatus.PENDING,
+        db_index=True,
+    )
+
+    def set_completed(self, message):
+        if self.smile_message:
+            try:
+                with transaction.atomic():
+                    copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
+                    self.status = CopyFileStatus.COMPLETED
+                    self.smile_message.log += f"{message}\n"
+                    self.save()
+                    calculate_checksum.delay(str(self.file_object.id))
+                    if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
+                        if copy_file_tasks.filter(status=CopyFileStatus.COMPLETED).count() == copy_file_tasks.count():
+                            self.smile_message.status = SmileMessageStatus.COMPLETED
+
+                        else:
+                            self.smile_message.status = SmileMessageStatus.FAILED
+                    self.smile_message.save()
+            except IntegrityError as e:
+                logger.error(f"Integrity error {e}")
+        else:
+            self.status = CopyFileStatus.COMPLETED
+            logger.info(f"{message}")
+            self.save()
+
+    def set_failed(self, message=""):
+        if self.smile_message:
+            try:
+                with transaction.atomic():
+                    copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
+                    self.status = CopyFileStatus.FAILED
+                    self.smile_message.log += f"{message}\n"
+                    self.save()
+                    copy_file_tasks.file_object.available = False
+                    copy_file_tasks.file_object.save(update_fields=["available"])
+                    if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
+                        self.smile_message.status = SmileMessageStatus.FAILED
+                    self.smile_message.save()
+            except IntegrityError as e:
+                logger.error(f"Integrity error {e}")
+        else:
+            self.status = CopyFileStatus.FAILED
+            logger.error(f"{message}")
+            self.save()
 
 
 class RequestCallbackJobStatus(IntEnum):
@@ -106,6 +157,7 @@ class RequestCallbackJobStatus(IntEnum):
 
 class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
+    smile_message = models.ForeignKey(SMILEMessage, null=True, blank=True, on_delete=models.SET_NULL)
     recipe = models.CharField(max_length=100)
     fastq_metadata = JSONField(default=dict)
     samples = JSONField(null=True, blank=True)

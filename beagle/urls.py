@@ -18,7 +18,13 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path, include
 from beagle import __version__
-from core.views import BeagleTokenObtainPairView, BeagleTokenRefreshView, BeagleTokenVerifyView, UserRequestViewSet, UserFormView
+from core.views import (
+    BeagleTokenObtainPairView,
+    BeagleTokenRefreshView,
+    BeagleTokenVerifyView,
+    UserRequestViewSet,
+    UserFormView,
+)
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -49,5 +55,5 @@ urlpatterns = [
     path("api-token-auth/", BeagleTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api-token-refresh/", BeagleTokenRefreshView.as_view(), name="token_refresh"),
     path("api-token-verify/", BeagleTokenVerifyView.as_view(), name="token_verify"),
-    path("signup",UserFormView.as_view(), name="signup")
+    path("signup", UserFormView.as_view(), name="signup"),
 ]
