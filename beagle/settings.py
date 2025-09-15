@@ -326,7 +326,7 @@ LOGGING = {
             "maxBytes": 209715200,
             "backupCount": 10,
             "formatter": "simple",
-        }
+        },
     },
     "loggers": {
         "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
