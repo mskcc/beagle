@@ -2,7 +2,7 @@ import logging
 from beagle_etl.models import SMILEMessage, CopyFileTask, CopyFileStatus
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("echo_client")
 
 
 def echo_callback(message):
