@@ -8,7 +8,7 @@ from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
-from runner.operator.access import get_request_id, get_request_id_runs
+from runner.operator.access import get_request_id, get_request_id_runs, is_tumor_bam
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class AccessLegacyCNVOperator(Operator):
         )
 
         unfiltered_tumor_bams = [
-            f for p in unfiltered_bam_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)
+            f for p in unfiltered_bam_ports for f in p.files.all() if is_tumor_bam(f.file_name)
         ]
 
         sample_ids = []

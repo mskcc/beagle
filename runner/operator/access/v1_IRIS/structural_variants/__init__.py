@@ -8,7 +8,7 @@ from runner.models import Port, RunStatus
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import File
-from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object
+from runner.operator.access import get_request_id, get_request_id_runs, create_cwl_file_object, is_tumor_bam
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class AccessLegacySVOperator(Operator):
             name__in=["standard_bams", "uncollapsed_bam"], run__id__in=run_ids, run__status=RunStatus.COMPLETED
         )
 
-        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
+        standard_tumor_bams = [f for p in standard_bam_ports for f in p.files.all() if is_tumor_bam(f.file_name)]
         sample_ids = [f.file_name.split("_cl_aln")[0] for f in standard_tumor_bams]
 
         normal_bam = File.objects.filter(file_name=ACCESS_DEFAULT_SV_NORMAL_FILENAME)
