@@ -275,6 +275,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
         model = File
         fields = ("path", "file_type", "size", "file_group", "metadata", "checksum")
 
+
 class CreateFileFormSerializer(CreateFileSerializer):
     class Meta:
         model = File
