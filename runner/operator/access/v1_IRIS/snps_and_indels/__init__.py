@@ -17,7 +17,7 @@ from file_system.models import FileMetadata
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
-from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal, get_request_id
+from runner.operator.access import get_request_id_runs, get_unfiltered_matched_normal, get_request_id, is_tumor_bam
 
 
 logger = logging.getLogger(__name__)
@@ -63,8 +63,8 @@ class AccessLegacySNVOperator(Operator):
             run__status=RunStatus.COMPLETED,
         )
 
-        duplex_tumor_bams = [f for p in duplex_output_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
-        simplex_tumor_bams = [f for p in simplex_output_ports for f in p.files.all() if self.is_tumor_bam(f.file_name)]
+        duplex_tumor_bams = [f for p in duplex_output_ports for f in p.files.all() if is_tumor_bam(f.file_name)]
+        simplex_tumor_bams = [f for p in simplex_output_ports for f in p.files.all() if is_tumor_bam(f.file_name)]
 
         def make_pairs(d, s):
             paired = []
