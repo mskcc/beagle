@@ -57,7 +57,7 @@ from notifier.helper import generate_sample_data_content
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
-
+from file_system.models import FileGroup
 
 def query_from_dict(query_filter, queryset, input_list):
     for single_input in input_list:
@@ -364,6 +364,10 @@ class RequestOperatorViewSet(GenericAPIView):
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
 
         errors = []
+        if file_group_id and not FileGroup.objects.filter(id=file_group_id).exists():
+            errors.append("file group id does not exist, this field is optional")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
         if not request_ids:
             errors.append("request_ids needs to be specified")
         if not pipeline:
