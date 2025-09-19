@@ -309,6 +309,7 @@ services:
       - |
         python3 ${BEAGLE_PATH}/manage.py migrate --noinput
         echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org',settings.DB_PASSWORD)" | python3 ${BEAGLE_PATH}/manage.py shell_plus
+        mkdir -p ${BEAGLE_PATH}/static
         python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
         #ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
         gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
