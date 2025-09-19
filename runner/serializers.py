@@ -7,6 +7,7 @@ from runner.run.processors.port_processor import PortProcessor, PortAction
 from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
 from file_system.models import FileGroup
 
+
 def ValidateDict(value):
     if len(value.split(":")) != 2:
         raise serializers.ValidationError("Query for inputs needs to be in format input:value")
@@ -22,6 +23,7 @@ def format_port_data(port_data):
             raise serializers.ValidationError(e)
         port_dict[port_name] = port_value
     return port_dict
+
 
 def optionalUUIDDefault():
     return ""
@@ -287,8 +289,8 @@ class RequestIdsOperatorSerializer(serializers.Serializer):
     request_ids = serializers.ListField(child=serializers.CharField(max_length=30), allow_empty=True)
     pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
     pipeline_version = serializers.CharField(max_length=30, allow_null=True, allow_blank=True)
-    job_group_id = serializers.UUIDField(required=False,help_text="Optional job group id")
-    file_group_id = serializers.UUIDField(required=False,help_text="Optional file group id")
+    job_group_id = serializers.UUIDField(required=False, help_text="Optional job group id")
+    file_group_id = serializers.UUIDField(required=False, help_text="Optional file group id")
     for_each = serializers.BooleanField(required=False, default=True)
 
 

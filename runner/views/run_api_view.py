@@ -59,6 +59,7 @@ from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 from file_system.models import FileGroup
 
+
 def query_from_dict(query_filter, queryset, input_list):
     for single_input in input_list:
         key, val = single_input.split(":")
