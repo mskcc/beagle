@@ -89,6 +89,14 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
             slug = fields.get("slug")
             if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
                 fields["slug"] = f"JUNO OPERATOR: {slug}"
+                obj["pk"] = "JUNO: " + str(obj["pk"])
+        
+        
+        if model_name.endswith("operatorrun"):
+            slug = fields.get("slug")
+            if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
+                fields["operator"] = "JUNO: " + fields["operator"]
+
 
         if model_name.endswith("file"):
             path = fields.get("path")
