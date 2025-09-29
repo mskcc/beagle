@@ -258,7 +258,7 @@ class ArgosOperator(Operator):
                 )
                 for f in pooled_normal_files:
                     metadata = build_pooled_normal_sample_by_file(
-                        f, run_ids, preservation_types, bait_set_reformatted, sample_name, sample_origin
+                        f, run_ids, preservation_types, bait_set_reformatted, sample_origin, sample_name
                     )["metadata"]
                     sample = f
                     sample.metadata = metadata
