@@ -1,12 +1,16 @@
-import os, sys
-import re
 import json
 import logging
+import os
+import re
+import sys
 from pprint import pprint
+
 from django.conf import settings
+
+from file_system.repository.file_repository import FileRepository
+
 from .bin.make_sample import remove_with_caveats
 from .bin.pair_request import compile_pairs
-from file_system.repository.file_repository import FileRepository
 
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
@@ -16,7 +20,7 @@ PDX_SPECIMEN_TYPES = ["pdx", "xenograft", "xenograftderivedcellline"]
 NON_PDX_SPECIMEN_TYPES = [
     "biopsy",
     "blood",
-    "cellLine",
+    "cellline",
     "cfdna",
     "fingernails",
     "nonpdx",
@@ -30,6 +34,7 @@ NON_PDX_SPECIMEN_TYPES = [
     "poolednormal",
     "dmp",
 ]
+
 
 # TODO: generalize
 def load_references():
