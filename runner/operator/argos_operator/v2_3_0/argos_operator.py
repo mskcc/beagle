@@ -497,13 +497,13 @@ Comments\tQC Report Type\tIGORecommendation\tInvestigator Decision\n
     def links_to_files(self):
         jira_id = JobGroupNotifier.objects.get(id=self.job_group_notifier_id).jira_id
         result = dict()
-        result["Sample Pairing"] = (
-            f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_pairing.txt"
-        )
-        result["Sample Mapping"] = (
-            f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_mapping.txt"
-        )
-        result["Sample Data Clinical"] = (
-            f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_data_clinical.txt"
-        )
+        result[
+            "Sample Pairing"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_pairing.txt"
+        result[
+            "Sample Mapping"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_mapping.txt"
+        result[
+            "Sample Data Clinical"
+        ] = f"{settings.DELIVERY_FILE_SERVER}/project/{self.request_id}/jira/{jira_id}/preview/sample_data_clinical.txt"
         return result
