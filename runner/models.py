@@ -161,6 +161,8 @@ class OperatorRun(BaseModel):
 
     @property
     def percent_runs_succeeded(self):
+        if self.num_completed_runs >= self.num_total_runs:
+            return float(100)
         if self.num_total_runs > 0:
             return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
         else:
