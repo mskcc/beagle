@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     "advanced_filters",
     "ddtrace.contrib.django",
     "echo_client",
-    "smile_client"
+    "smile_client",
 ]
 
 
@@ -294,7 +294,7 @@ SMILE_SETTINGS = {
     "NATS_FILTER_SUBJECT": os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT"),
     "NATS_DURABLE": os.environ.get("BEAGLE_METADB_NATS_DURABLE", ""),
     "CLIENT_TIMEOUT": 3600.0,
-    "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message"
+    "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message",
 }
 
 IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
