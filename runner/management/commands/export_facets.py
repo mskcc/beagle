@@ -78,6 +78,7 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
 
         if model_name.endswith("pipeline"):
             out = fields.get("output_directory")
+            fields["operator"] = fields["operator"] + 100
             if isinstance(out, str):
                 fields["output_directory"] = new_prefix + strip_prefixes(out, old_prefixes)
 
@@ -89,14 +90,12 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
             slug = fields.get("slug")
             if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
                 fields["slug"] = f"JUNO OPERATOR: {slug}"
-                obj["pk"] = "JUNO: " + str(obj["pk"])
-        
-        
+                obj["pk"] = obj["pk"] + 100
+
         if model_name.endswith("operatorrun"):
             slug = fields.get("slug")
-            if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
-                fields["operator"] = "JUNO: " + fields["operator"]
-
+            fields["operator"] = fields["operator"] + 100
+            fields["parent"] = None
 
         if model_name.endswith("file"):
             path = fields.get("path")
@@ -208,14 +207,14 @@ class Command(BaseCommand):
             operator_run__in=operator_run_ids,
             status=RunStatus.COMPLETED.value,
         )
-        latest_by_request = runs.values("tags__igoRequestId").annotate(latest_date=Max("finished_date"))
+        # latest_by_request = runs.values("tags__igoRequestId").annotate(latest_date=Max("finished_date"))
 
-        query = Q()
-        for row in latest_by_request:
-            query |= Q(tags__igoRequestId=row["tags__igoRequestId"], finished_date=row["latest_date"])
+        # query = Q()
+        # for row in latest_by_request:
+        #     query |= Q(tags__igoRequestId=row["tags__igoRequestId"], finished_date=row["latest_date"])
 
-        recent_requests = runs.filter(query)
-
+        # recent_requests = runs.filter(query)
+        recent_requests = runs
         related = collect_related_objects(recent_requests, allowed_operator_pks)
         json_output = serialize_related_objects(related, old_prefixes, new_prefix)
 
@@ -236,14 +235,14 @@ class Command(BaseCommand):
             f.write(json_output)
 
 
-# python3 manage.py export_facet operator-run \
+# python3 manage.py export_facets operator-run \
 #   --operator AccessLegacyOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_11_30_25.json \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
 
-# python3 manage.py export_facet file-group \
+# python3 manage.py export_facets file-group \
 #   --out /juno/work/access/production/runs/voyager/facets/export_filegroup.json \
 #   --filegroups accessv2_curated_normals access_curated_normals \
 #   --old-prefixes /work/ /juno/work/ \
