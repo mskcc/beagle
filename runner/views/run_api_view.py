@@ -633,7 +633,7 @@ class ArgosPairingViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_3_0.construct_argos_pair import construct_argos_jobs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
@@ -659,7 +659,7 @@ class ArgosMappingViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_3_0.construct_argos_pair import construct_argos_jobs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
@@ -685,8 +685,8 @@ class ArgosDataClinicalViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() and compile_pairs() are sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_3_0.bin.pair_request import compile_pairs
-        from runner.operator.argos_operator.v2_3_0.construct_argos_pair import construct_argos_jobs
+        from runner.operator.argos_operator.v2_2_1.bin.pair_request import compile_pairs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
