@@ -286,7 +286,7 @@ METADB_NATS_SAMPLE_UPDATE = os.environ.get(
 
 SMILE_SETTINGS = {
     "NATS_URL": os.environ.get("BEAGLE_METADB_NATS_URL"),
-    "NATS_USERNAME": os.environ.get("BEAGLE_METADB_NATS_URL"),
+    "NATS_USERNAME": os.environ.get("BEAGLE_METADB_USERNAME"),
     "NATS_PASSWORD": os.environ.get("BEAGLE_METADB_PASSWORD"),
     "NATS_SSL_CERTFILE": os.environ.get("BEAGLE_NATS_SSL_CERTFILE"),
     "NATS_SSL_KEYFILE": os.environ.get("BEAGLE_NATS_SSL_KEYFILE"),
