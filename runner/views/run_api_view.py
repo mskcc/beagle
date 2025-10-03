@@ -70,6 +70,7 @@ from runner.tasks import (
     terminate_job_task,
 )
 
+
 def query_from_dict(query_filter, queryset, input_list):
     for single_input in input_list:
         key, val = single_input.split(":")
