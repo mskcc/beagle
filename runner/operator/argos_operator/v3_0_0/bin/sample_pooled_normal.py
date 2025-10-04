@@ -7,8 +7,8 @@ from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.run.processors.file_processor import FileProcessor
 
+from ..utils.barcode_utils import spoof_barcode
 from .files_object import FilesObj
-from .helpers import spoof_barcode
 from .sample_file_object import SampleFile
 
 SCRIPT_DIR = Path(__file__).resolve().parent

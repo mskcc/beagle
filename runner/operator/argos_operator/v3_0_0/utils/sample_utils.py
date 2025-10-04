@@ -1,15 +1,15 @@
 import os
 
 from django.conf import settings
-from django.models import Q
+from django.db.models import Q
 
 from file_system.repository.file_repository import FileRepository
 
-from .pair_object import PairObj
-from .patient_object import PatientObj
-from .sample_dmp import SampleDMP
-from .sample_igo import SampleIGO
-from .sample_pooled_normal import SamplePooledNormal
+from ..bin.pair_object import PairObj
+from ..bin.patient_object import PatientObj
+from ..bin.sample_dmp import SampleDMP
+from ..bin.sample_igo import SampleIGO
+from ..bin.sample_pooled_normal import SamplePooledNormal
 
 
 def get_samples_igo(patient_id, request_id, files_set):
@@ -93,31 +93,3 @@ def get_samples_pooled_normals(metadata):
 
 def pair_patient_samples(patient):
     pass
-
-
-def spoof_barcode(file_path):
-    """
-    Spoof barcode by removing R1/R2 or .bam from end of filename, reverse the string.
-    Works even with compound extensions like .fastq.gz.
-
-    Barcode is used only for submitting to the cluster; makes sure paired fastqs get
-    sent together during job distribution
-    """
-    # Get just the base name
-    filename = os.path.basename(file_path)
-
-    # Reverse full filename
-    reversed_name = filename[::-1]
-
-    # Remove reversed extensions
-    for ext in ["bam", "gz", "fastq", "bz2", "tar"]:
-        rev_ext = ext[::-1] + "."  # e.g., 'gz.' to match '.gz'
-        if reversed_name.startswith(rev_ext):
-            reversed_name = reversed_name[len(rev_ext) :]
-
-    # Remove R1/R2 in reversed form
-    reversed_name = reversed_name.replace("1R_", "").replace("2R_", "")
-
-    # Reverse back to get spoofed barcode
-    spoofed_barcode = reversed_name[::-1]
-    return spoofed_barcode

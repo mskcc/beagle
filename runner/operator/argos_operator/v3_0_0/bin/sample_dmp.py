@@ -3,8 +3,8 @@ from django.db.models import Q
 
 from file_system.repository.file_repository import FileRepository
 
+from ..utils.barcode_utils import spoof_barcode
 from .files_object import FilesObj
-from .helpers import spoof_barcode
 from .sample_file_object import SampleFile
 
 REQUIRED_KEYS = [

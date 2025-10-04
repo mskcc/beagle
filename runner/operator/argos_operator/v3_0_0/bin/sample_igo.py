@@ -4,8 +4,8 @@ from collections.abc import Iterable
 
 from django.conf import settings
 
+from ..utils.barcode_utils import spoof_barcode
 from .files_object import FilesObj
-from .helpers import spoof_barcode
 from .sample_file_object import SampleFile
 
 
