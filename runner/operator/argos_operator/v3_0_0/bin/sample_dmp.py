@@ -29,9 +29,15 @@ class SampleDMP:
         patient_id = self.metadata[settings.PATIENT_ID_METADATA_KEY]
         bait_set = self.metadata[settings.BAITSET_METADATA_KEY]
         self.tumor_type = self.__get_tumor_type__()
-        dmp_bam = self.__get_dmp_bam__(patient_id, bait_set)
-        self.metadata["barcodeIndex"] = spoof_barcode(dmp_bam.file.path)
-        self.sample_file = SampleFile(dmp_bam.file.path, self.metadata)
+        self.all_dmp_bams = []
+        self.sample_file = None
+        dmp_bam, dmp_bams_all = self.__get_dmp_bam__(patient_id, bait_set)
+        if dmp_bam:
+            self.metadata["barcodeIndex"] = spoof_barcode(dmp_bam.file.path)
+            self.sample_file = SampleFile(dmp_bam.file.path, self.metadata)  # this is the one true dmp bam
+            self.all_dmp_bams = [
+                SampleFile(f.file.path, self.metadata) for f in dmp_bams_all
+            ]  # likely only one, but here to grab and refer to all if it's around
 
     def __get_dmp_bam__(self, patient_id, bait_set):
         """
@@ -39,9 +45,10 @@ class SampleDMP:
         """
         file_objs = FileRepository.all()
         dmp_query = self.__build_dmp_query__(patient_id, bait_set)
-        dmp_bam = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by("file__file_name").first()
+        dmp_bams_all = FileRepository.filter(queryset=file_objs, q=dmp_query).order_by("file__file_name")
+        dmp_bam = dmp_bams_all.first()
 
-        return dmp_bam
+        return dmp_bam, dmp_bams_all
 
     def __build_dmp_query__(self, patient_id, bait_set):
         """

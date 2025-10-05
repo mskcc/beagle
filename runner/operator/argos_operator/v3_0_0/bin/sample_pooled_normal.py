@@ -50,9 +50,9 @@ class SamplePooledNormal:
     def __init__(self, metadata):
         load_csv_to_global_dict(CSV_PATH)
         self.metadata = {k: metadata[k] for k in REQUIRED_KEYS if k in metadata}
-        bait_set = metadata[settings.BAITSET_METADATA_KEY]
-        preservation_type = metadata[settings.PRESERVATION_METADATA_KEY]
-        machine = self.__get_machine__(metadata["runId"])
+        bait_set = metadata[settings.BAITSET_METADATA_KEY].upper()
+        preservation_type = metadata[settings.PRESERVATION_METADATA_KEY].upper()
+        machine = self.__get_machine__(metadata["runId"]).upper()
         sample_name = "_".join([bait_set, preservation_type, machine, "POOLED_NORMAL"])
 
         self.sample_name = sample_name

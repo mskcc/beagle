@@ -11,6 +11,9 @@ REQUIRED_KEYS = [
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,  # sampleType::SMILE
     settings.CMO_SAMPLE_TAG_METADATA_KEY,  # ciTag
     settings.LIBRARY_ID_METADATA_KEY,
+    settings.BAITSET_METADATA_KEY,
+    "runId",
+    "preservation",
     "sequencingCenter",
     "platform",
     "barcodeIndex",

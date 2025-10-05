@@ -10,8 +10,8 @@ from django.db.models import Prefetch, Q
 from django.test import TestCase, override_settings
 
 from file_system.repository.file_repository import FileRepository
-from runner.operator.argos_operator.v3_0_0.bin.helpers import spoof_barcode
 from runner.operator.argos_operator.v3_0_0.bin.sample_dmp import SampleDMP
+from runner.operator.argos_operator.v3_0_0.utils.barcode_utils import spoof_barcode
 
 
 class TestSampleDMP(TestCase):

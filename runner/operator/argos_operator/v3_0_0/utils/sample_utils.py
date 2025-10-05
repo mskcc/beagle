@@ -6,23 +6,24 @@ from django.db.models import Q
 from file_system.repository.file_repository import FileRepository
 
 from ..bin.pair_object import PairObj
+from ..bin.pairs_object import PairsObj
 from ..bin.patient_object import PatientObj
 from ..bin.sample_dmp import SampleDMP
 from ..bin.sample_igo import SampleIGO
 from ..bin.sample_pooled_normal import SamplePooledNormal
 
 
-def get_samples_igo(patient_id, request_id, files_set):
+def get_samples_igo(patient_id, files_set):
     files = FileRepository.filter(
         queryset=files_set,
-        metadata={settings.PATIENT_ID_METADATA_KEY: patient_id, settings.REQUEST_ID_METADATA_KEY: request_id},
+        metadata={settings.PATIENT_ID_METADATA_KEY: patient_id},
     )
 
     file_list = dict()
     samples = dict()
 
     for f in files:
-        sample_name = f.metadata["ciTag"]
+        sample_name = f.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]
         if sample_name not in file_list:
             file_list[sample_name] = list()
         file_list[sample_name].append(f)
@@ -34,41 +35,12 @@ def get_samples_igo(patient_id, request_id, files_set):
     return samples
 
 
-def get_samples_dmp(patient_id, bait_set, files_set):
+def get_samples_dmp(metadata):
     """
-    Build simple Q queries for patient id, bait set, and type 'N' to signify "normal"
-
-    The bait set from file groups/LIMS is different from what's in DMP, so this
-    translates it.
-
-    Patient ID in DMP also doesn't contain C-, so this removes that prefix
+    From metadata, find SampleDMPs
     """
-    value = ""
-    if "impact341" in bait_set.lower():
-        value = "IMPACT341"
-    if "impact410" in bait_set.lower():
-        value = "IMPACT410"
-    if "impact468" in bait_set.lower():
-        value = "IMPACT468"
-    if "hemepact_v4" in bait_set.lower():
-        value = "HEMEPACT"
-    if "impact505" in bait_set.lower():
-        value = "IMPACT505"
-    assay = Q(metadata__cmo_assay=value)
-    # formatting to look like CMO patient IDs in dmp2cmo
-    if "C-" in patient_id[:2]:
-        patient_id = patient_id[2:]
-    patient = Q(metadata__patient__cmo=patient_id)
-    normal = Q(metadata__type="N")
-    query = assay & patient & normal
-    dmp_bams = FileRepository.filter(queryset=files_set, q=query).order_by("file__file_name")
-    samples = list()
-
-    for dmp_bam in dmp_bams:
-        bam_meta = dmp_bam.metadata
-        samples.append(SampleDMP(bam_meta))
-
-    return samples
+    sample_dmp = SampleDMP(metadata)
+    return sample_dmp
 
 
 def get_samples_pooled_normals(metadata):
@@ -89,6 +61,52 @@ def get_samples_pooled_normals(metadata):
             runId
     """
     return SamplePooledNormal(metadata)
+
+
+def pair_samples_igo(samples_tumor, request_id=None):
+    """
+    Get all viable normal pairings for these samples
+
+    Return two things: the "best" pairing and the "verbose" pairings per sample
+    """
+
+    from pprint import pprint
+
+    pairs_best = PairsObj()
+    pairs_full = PairsObj()
+    for sample in samples_tumor:
+        metadata = sample.metadata
+        patient_id = metadata[settings.PATIENT_ID_METADATA_KEY]
+        request_id_in_sample = metadata[settings.REQUEST_ID_METADATA_KEY]
+        sample_type = sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY]
+        files = FileRepository.all()
+        samples = get_samples_igo(patient_id, files)
+        print(metadata["ciTag"], sample_type)
+        pprint(samples)
+        samples_normals_igo = [
+            samples[s]
+            for s in samples
+            if "normal" in (samples[s].metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower() or "")
+        ]
+        pooled_normals = [get_samples_pooled_normals(metadata)]
+        dmp_normal = get_samples_dmp(metadata)
+
+        # Creating a full list of all normals that can be connected to every tumor
+        for normal in dmp_normal.all_dmp_bams:
+            pair = PairObj(sample, normal)
+            pairs_full.add_pair(pair)
+
+        for normal in samples_normals_igo:
+            pprint(normal)
+            pair = PairObj(sample, normal)
+            pairs_full.add_pair(pair)
+
+        for normal in pooled_normals:
+            pair = PairObj(sample, normal)
+            pairs_full.add_pair(pair)
+
+        # retrieve "best" pair, based on WITHIN Request; OUTSIDE request; or POOLED NORMAL
+    return pairs_best, pairs_full
 
 
 def pair_patient_samples(patient):

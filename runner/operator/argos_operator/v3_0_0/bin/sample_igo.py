@@ -10,6 +10,8 @@ from .sample_file_object import SampleFile
 
 
 class SampleIGO:
+    sample_files: list["SampleFile"]
+
     def __init__(self, sample_name, file_list, file_type):
         self.sample_name = sample_name
         self.data = dict()  # every field in this dict will be a list
@@ -31,7 +33,7 @@ class SampleIGO:
         self.run_mode = ""
         self.patient_id = ""
         self.flowcell_id = ""
-        # _find_conflict_fields() did not discrepancies in fields it checked
+        # _find_conflict_fields() did not find discrepancies in fields it checked
         if not self.conflict:
             self.data = self.dedupe_metadata_values()
             self.bait_set = self.data[settings.BAITSET_METADATA_KEY]
@@ -41,12 +43,10 @@ class SampleIGO:
             self.patient_id = self.data[settings.PATIENT_ID_METADATA_KEY]
             self.run_mode = self.remapped_run_mode.pop()
             self.flowcell_id = self.data["flowCellId"]
-
-        #        self.metadata = SampleMetadata(self.data).get_metadata()
-        self.sample_files = list()
         self.files_obj = FilesObj(file_list, file_type)
         self.file_type = self.files_obj.file_type
         self.files = self.files_obj.get_files()
+        self.sample_files = list()
         if self.file_type == "fastq":
             for r1_fastq in self.files["R1"]:
                 metadata = self.data
@@ -197,6 +197,18 @@ class SampleIGO:
                 if ns == "investigatorId":
                     return v
         return None
+
+    @property
+    def metadata(self):
+        """
+        Get metadata for all samples from the SampleFile objects assigned to this SampleIGO object
+
+        Note that they are MERGED here. Metadata are assumed to be the same across all SampleFiles
+        """
+        merged = dict()
+        for f in self.sample_files:
+            merged.update(f.metadata.metadata)
+        return merged
 
     def __repr__(self):
         return json.dumps(self.data, indent=2, sort_keys=True)
