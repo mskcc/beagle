@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.conf import settings
 from django.db.models import Q
 
@@ -7,13 +9,14 @@ from ..utils.barcode_utils import spoof_barcode
 from .files_object import FilesObj
 from .sample_file_object import SampleFile
 
+#    settings.CMO_SAMPLE_NAME_METADATA_KEY,  # cmoSampleName
+#    settings.CMO_SAMPLE_TAG_METADATA_KEY,  # ciTag
+
 REQUIRED_KEYS = [
-    settings.CMO_SAMPLE_NAME_METADATA_KEY,  # cmoSampleName
     settings.REQUEST_ID_METADATA_KEY,
     settings.SAMPLE_CLASS_METADATA_KEY,  # sampleClass
     settings.PATIENT_ID_METADATA_KEY,
     settings.CMO_SAMPLE_CLASS_METADATA_KEY,  # sampleType::SMILE
-    settings.CMO_SAMPLE_TAG_METADATA_KEY,  # ciTag
     settings.LIBRARY_ID_METADATA_KEY,
     settings.BAITSET_METADATA_KEY,
     "sequencingCenter",
@@ -31,6 +34,7 @@ class SampleDMP:
         self.tumor_type = self.__get_tumor_type__()
         self.all_dmp_bams = []
         self.sample_file = None
+
         dmp_bam, dmp_bams_all = self.__get_dmp_bam__(patient_id, bait_set)
         if dmp_bam:
             self.metadata["barcodeIndex"] = spoof_barcode(dmp_bam.file.path)
@@ -38,6 +42,7 @@ class SampleDMP:
             self.all_dmp_bams = [
                 SampleFile(f.file.path, self.metadata) for f in dmp_bams_all
             ]  # likely only one, but here to grab and refer to all if it's around
+        pprint(dmp_bams_all)
 
     def __get_dmp_bam__(self, patient_id, bait_set):
         """
@@ -75,8 +80,7 @@ class SampleDMP:
         if "C-" in patient_id[:2]:
             patient_id = patient_id[2:]
         patient = Q(metadata__patient__cmo=patient_id)
-        normal = Q(metadata__type=self.tumor_type)
-        query = assay & patient & normal
+        query = assay & patient
         return query
 
     def __get_tumor_type__(self):

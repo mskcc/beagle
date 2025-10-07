@@ -39,7 +39,12 @@ def get_samples_dmp(metadata):
     """
     From metadata, find SampleDMPs
     """
+    print("printing from get_samples_dmp")
+    from pprint import pprint
+
     sample_dmp = SampleDMP(metadata)
+    pprint(sample_dmp)
+
     return sample_dmp
 
 
@@ -81,8 +86,6 @@ def pair_samples_igo(samples_tumor, request_id=None):
         sample_type = sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY]
         files = FileRepository.all()
         samples = get_samples_igo(patient_id, files)
-        print(metadata["ciTag"], sample_type)
-        pprint(samples)
         samples_normals_igo = [
             samples[s]
             for s in samples
@@ -93,11 +96,11 @@ def pair_samples_igo(samples_tumor, request_id=None):
 
         # Creating a full list of all normals that can be connected to every tumor
         for normal in dmp_normal.all_dmp_bams:
+            pprint(normal)
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
 
         for normal in samples_normals_igo:
-            pprint(normal)
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
 
