@@ -105,6 +105,11 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
             slug = fields.get("name")
             if slug == "juno":
                 fields["name"] = "iris"
+
+        if model_name.endswith("filegroup"):
+            fields["slug"] = f"JUNO: {fields['slug']}"
+            fields["name"] = f"JUNO: {fields['name']}"
+
     return data
 
 
@@ -235,12 +240,26 @@ class Command(BaseCommand):
             f.write(json_output)
 
 
+# XSV1
 # python3 manage.py export_facets operator-run \
-#   --operator AccessLegacyOperator \
+#   --operator AccessLegacyOperator AccessLegacySNVOperator AccessLegacySVOperator AccessLegacyCNVOperator AccessLegacyMSIOperator \
 #   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_11_30_25.json \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
+# XSV2
+# python3 manage.py export_facets operator-run \
+#   --operator AccessV2NucleoOperator AccessV2NucleoQcOperator AccessV2NucleoAggQcOperator AccessV2LegacySNVOperator AccessV2LegacyCNVOperator AccessV2LegacySVOperator AccessV2LegacyMSIOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_01_25.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
+
+# CMO-CH
+# python3 manage.py export_facets operator-run \
+#   --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_03_25_cmoch.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 
 # python3 manage.py export_facets file-group \
 #   --out /juno/work/access/production/runs/voyager/facets/export_filegroup.json \
