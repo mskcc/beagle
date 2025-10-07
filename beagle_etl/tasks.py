@@ -30,11 +30,13 @@ def process_smile_events():
         SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)
     )
     for msg in messages:
+        msg.in_progress()
         update_requests.add(msg.request_id)
     messages = list(
         SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
     )
     for msg in messages:
+        msg.in_progress()
         update_requests.add("_".join(msg.request_id.split("_")[:-1]))
 
     messages = list(
@@ -52,7 +54,6 @@ def process_smile_events():
 
     for req in list(update_requests):
         logger.info(f"Update request/samples: {req}")
-        req.in_progress()
         update_job.delay(req)
 
     unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(
