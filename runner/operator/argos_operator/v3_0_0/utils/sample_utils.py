@@ -99,8 +99,6 @@ def pair_samples_igo(samples_tumor, request_id=None):
             if "normal" in (samples[s].metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower() or "")
             and samples[s].metadata[settings.BAITSET_METADATA_KEY].lower() in bait_set.lower()
         ]
-        for s in samples:
-            print(samples[s].metadata["baitSet"], bait_set)
         pooled_normals = [get_samples_pooled_normals(metadata)]
         dmp_bams = get_samples_dmp(metadata)
 
