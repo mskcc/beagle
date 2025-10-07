@@ -8,7 +8,7 @@ from file_system.repository.file_repository import FileRepository
 from ..bin.pair_object import PairObj
 from ..bin.pairs_object import PairsObj
 from ..bin.patient_object import PatientObj
-from ..bin.sample_dmp import SampleDMP
+from ..bin.sample_dmp import SampleDMP, SampleDMPManager
 from ..bin.sample_igo import SampleIGO
 from ..bin.sample_pooled_normal import SamplePooledNormal
 
@@ -42,7 +42,7 @@ def get_samples_dmp(metadata):
     print("printing from get_samples_dmp")
     from pprint import pprint
 
-    sample_dmp = SampleDMP(metadata)
+    sample_dmp = SampleDMPManager(metadata)
     pprint(sample_dmp)
 
     return sample_dmp
@@ -96,6 +96,7 @@ def pair_samples_igo(samples_tumor, request_id=None):
 
         # Creating a full list of all normals that can be connected to every tumor
         for normal in dmp_normal.all_dmp_bams:
+            print("Printing in all_dmp_bams")
             pprint(normal)
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
