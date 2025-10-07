@@ -40,7 +40,7 @@ from beagle_etl.models import (
     RequestCallbackJob,
     RequestCallbackJobStatus,
     initialize_normalizer,
-    CopyFileTask
+    CopyFileTask,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -312,7 +312,10 @@ def new_request(message_id):
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
 
-    if CopyFileTask.objects.filter(smile_message=message).count() == 0 and smile_job_status != SmileMessageStatus.FAILED:
+    if (
+        CopyFileTask.objects.filter(smile_message=message).count() == 0
+        and smile_job_status != SmileMessageStatus.FAILED
+    ):
         smile_job_status = SmileMessageStatus.COMPLETED
 
     message.status = smile_job_status
