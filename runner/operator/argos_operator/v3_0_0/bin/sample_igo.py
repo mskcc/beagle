@@ -43,6 +43,7 @@ class SampleIGO:
             self.patient_id = self.data[settings.PATIENT_ID_METADATA_KEY]
             self.run_mode = self.remapped_run_mode.pop()
             self.flowcell_id = self.data["flowCellId"]
+            self.run_date = self.data["runDate"]
         self.files_obj = FilesObj(file_list, file_type)
         self.file_type = self.files_obj.file_type
         self.files = self.files_obj.get_files()

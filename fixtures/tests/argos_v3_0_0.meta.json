@@ -1,0 +1,946 @@
+[
+  {
+    "model": "file_system.filemetadata",
+    "pk": "f8ad0d7e-65ce-4d5c-8e79-94be84041651",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.600Z",
+      "modified_date": "2022-12-07T15:05:43.600Z",
+      "file": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "F",
+        "ciTag": "s_C_MP76JR_N001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_2",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "17-0001535a",
+        "sampleType": "Normal",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-MP76JR",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_2_1_1_1",
+        "oncotreeCode": null,
+        "preservation": "Frozen",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-MP76JR-N001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "17-0001535a",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_2",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "34e815cf-468f-49f3-953a-bccd11c4461b",
+        "tumorOrNormal": "Normal",
+        "captureInputNg": "170.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-MP76JR",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC002"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "17-0001535a",
+        "captureConcentrationNm": "5.074626865671642",
+        "libraryConcentrationNgul": 33.5
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "7335531b-72b9-4890-a65f-fee4d0959e12",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.474Z",
+      "modified_date": "2022-12-07T15:05:43.474Z",
+      "file": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "F",
+        "ciTag": "s_C_MP76JR_X001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_1",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "LTG002_P3_17096_L1",
+        "sampleType": "Primary",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "PDX",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-MP76JR",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_1_1_1_1",
+        "oncotreeCode": "SCLC",
+        "preservation": "Frozen",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-MP76JR-X001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "LTG002_P3_17096_L1",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_1",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "9020df2c-76b0-4e79-8fe8-a1da0dfec629",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": "400.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-MP76JR",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC002"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "LTG002_P3_17096_L1",
+        "captureConcentrationNm": "11.49425287356322",
+        "libraryConcentrationNgul": 34.8
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "2396036c-7ea8-4643-b112-fff7ac698a9b",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.500Z",
+      "modified_date": "2022-12-07T15:05:43.500Z",
+      "file": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "F",
+        "ciTag": "s_C_MP76JR_X001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_1",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "LTG002_P3_17096_L1",
+        "sampleType": "Primary",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "PDX",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-MP76JR",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_1_1_1_1",
+        "oncotreeCode": "SCLC",
+        "preservation": "Frozen",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-MP76JR-X001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "LTG002_P3_17096_L1",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_1",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "9020df2c-76b0-4e79-8fe8-a1da0dfec629",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": "400.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-MP76JR",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC002"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "LTG002_P3_17096_L1",
+        "captureConcentrationNm": "11.49425287356322",
+        "libraryConcentrationNgul": 34.8
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "28b85f7f-7a90-40b5-9638-54a513cbc609",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.525Z",
+      "modified_date": "2022-12-07T15:05:43.525Z",
+      "file": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "M",
+        "ciTag": "s_C_4LM16H_N001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_4",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "17-0010557a",
+        "sampleType": "Normal",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-4LM16H",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_4_1_1_1",
+        "oncotreeCode": null,
+        "preservation": "Frozen",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-4LM16H-N001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "17-0010557a",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_4",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "91584827-03bc-49ac-bf20-e28db41ea64e",
+        "tumorOrNormal": "Normal",
+        "captureInputNg": "170.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-4LM16H",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC017"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "17-0010557a",
+        "captureConcentrationNm": "4.9853372434017595",
+        "libraryConcentrationNgul": 34.1
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "5862b0f0-bf72-47e1-889a-a1cae904cdd1",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.550Z",
+      "modified_date": "2022-12-07T15:05:43.550Z",
+      "file": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "M",
+        "ciTag": "s_C_4LM16H_N001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_4",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "17-0010557a",
+        "sampleType": "Normal",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-4LM16H",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_4_1_1_1",
+        "oncotreeCode": null,
+        "preservation": "Frozen",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-4LM16H-N001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "17-0010557a",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_4",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "91584827-03bc-49ac-bf20-e28db41ea64e",
+        "tumorOrNormal": "Normal",
+        "captureInputNg": "170.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-4LM16H",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC017"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "17-0010557a",
+        "captureConcentrationNm": "4.9853372434017595",
+        "libraryConcentrationNgul": 34.1
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "c6b2d3bf-7bfe-46da-be3b-10f5fee48d8f",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.574Z",
+      "modified_date": "2022-12-07T15:05:43.574Z",
+      "file": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "F",
+        "ciTag": "s_C_MP76JR_N001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_2",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "17-0001535a",
+        "sampleType": "Normal",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-MP76JR",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_2_1_1_1",
+        "oncotreeCode": null,
+        "preservation": "Frozen",
+        "sampleOrigin": "Whole Blood",
+        "cmoSampleName": "C-MP76JR-N001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "17-0001535a",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_2",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "34e815cf-468f-49f3-953a-bccd11c4461b",
+        "tumorOrNormal": "Normal",
+        "captureInputNg": "170.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-MP76JR",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "2455a56f-f198-47db-a592-ab12137ebc17",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC002"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "17-0001535a",
+        "captureConcentrationNm": "5.074626865671642",
+        "libraryConcentrationNgul": 33.5
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "a66a656d-ff43-4cf9-9ac4-177e26020502",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.625Z",
+      "modified_date": "2022-12-07T15:05:43.626Z",
+      "file": "76658104-3f7e-41e3-9408-0d9075d9036f",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "M",
+        "ciTag": "s_C_4LM16H_X001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_3",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "LTG017_P1_17095a_R_43",
+        "sampleType": "Primary",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "PDX",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-4LM16H",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_3_1_1_1",
+        "oncotreeCode": "SCLC",
+        "preservation": "Frozen",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-4LM16H-X001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "LTG017_P1_17095a_R_43",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_3",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "2068fb42-777b-416f-b703-2017ec875ae8",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": "400.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-4LM16H",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC017"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "LTG017_P1_17095a_R_43",
+        "captureConcentrationNm": "11.363636363636363",
+        "libraryConcentrationNgul": 35.2
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "e2492398-0cb0-4b29-8d5a-b7082289f264",
+    "fields": {
+      "created_date": "2022-12-07T15:05:43.650Z",
+      "modified_date": "2022-12-07T15:05:43.650Z",
+      "file": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "M",
+        "ciTag": "s_C_4LM16H_X001_d",
+        "runId": "FAUCI2_0319",
+        "tubeId": "",
+        "baitSet": "IMPACT505_BAITS",
+        "piEmail": "email@mskcc.org",
+        "runDate": "2019-02-11",
+        "runMode": "HiSeq High Output",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "IMPACT505",
+        "primaryId": "08944_B_3",
+        "qcReports": [],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "H3MV7BBXY",
+        "importDate": "2022-11-28",
+        "readLength": "",
+        "sampleName": "LTG017_P1_17095a_R_43",
+        "sampleType": "Primary",
+        "captureName": "Pool-08944_B-Tube7_1",
+        "igoComplete": true,
+        "labHeadName": "John Doe",
+        "sampleClass": "PDX",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": null,
+        "cmoPatientId": "C-4LM16H",
+        "igoProjectId": "08944",
+        "igoRequestId": "08944_B",
+        "labHeadEmail": "email@mskcc.org",
+        "libraryIgoId": "08944_B_3_1_1_1",
+        "oncotreeCode": "SCLC",
+        "preservation": "Frozen",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-4LM16H-X001-d",
+        "flowCellLanes": [
+          5
+        ],
+        "libraryVolume": 35.0,
+        "sampleAliases": [
+          {
+            "value": "LTG017_P1_17095a_R_43",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "08944_B_3",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "2068fb42-777b-416f-b703-2017ec875ae8",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": "400.0",
+        "cfDNA2dBarcode": null,
+        "collectionYear": "",
+        "patientAliases": [
+          {
+            "value": "C-4LM16H",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": ",email@mskcc.org",
+        "smilePatientId": "9697e1bf-2978-44e0-aa0e-92defcc9df34",
+        "tissueLocation": "",
+        "dataAnalystName": "John Doe",
+        "dataAccessEmails": "",
+        "dataAnalystEmail": "email@mskcc.org",
+        "investigatorName": "John Doe",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "IMPACT505",
+          "sampleType": "DNA",
+          "naToExtract": "",
+          "normalizedPatientId": "ALLAJV_HCISCLC017"
+        },
+        "investigatorEmail": "email@mskcc.org",
+        "otherContactEmails": "email@mskcc.org",
+        "projectManagerName": "John Doe",
+        "additionalProperties": {
+          "isCmoSample": "true",
+          "igoRequestId": "08944_B"
+        },
+        "investigatorSampleId": "LTG017_P1_17095a_R_43",
+        "captureConcentrationNm": "11.363636363636363",
+        "libraryConcentrationNgul": 35.2
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ecee9f31-4abe-455d-adaa-907f9643c27c",
+    "fields": {
+      "created_date": "2021-03-15T16:42:54.092Z",
+      "modified_date": "2024-06-12T17:04:28.167Z",
+      "file_name": "17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 390343219,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$25ce76ddbdc98420e9db765b91febc87e727617c",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_2\"]",
+      "patient_id": "C-MP76JR",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f6f653e8-dcfc-481b-b660-f0f393f6d9de",
+    "fields": {
+      "created_date": "2021-03-15T16:42:54.048Z",
+      "modified_date": "2024-06-12T17:04:28.131Z",
+      "file_name": "LTG002_P3_17096_L1_IGO_08944_B_1_S82_R1_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 933098209,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$828da3499a01e62c844a2d9d916e2990baca8d81",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_1\"]",
+      "patient_id": "C-MP76JR",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "13d96750-2102-4097-b9ae-e7bb5c6776c4",
+    "fields": {
+      "created_date": "2021-03-15T16:42:55.529Z",
+      "modified_date": "2024-06-12T17:04:28.217Z",
+      "file_name": "LTG002_P3_17096_L1_IGO_08944_B_1_S82_R2_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG002_P3_17096_L1_IGO_08944_B_1/LTG002_P3_17096_L1_IGO_08944_B_1_S82_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 1063798887,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$29780618e4107c54aea4a05361ded4dd35f3a34f",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_1\"]",
+      "patient_id": "C-MP76JR",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9ced56e0-3e9a-4199-af6a-746a1137f000",
+    "fields": {
+      "created_date": "2021-03-15T16:42:53.209Z",
+      "modified_date": "2024-06-12T17:04:28.231Z",
+      "file_name": "17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 447094784,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$70dd62c2e3439bace690a965dce18bb99e0b82ff",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_4\"]",
+      "patient_id": "C-4LM16H",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ca6f2966-97fe-4592-ad26-902e4c5af2ef",
+    "fields": {
+      "created_date": "2021-03-15T16:42:54.252Z",
+      "modified_date": "2024-06-12T17:04:28.248Z",
+      "file_name": "17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0010557a_IGO_08944_B_4/17-0010557a_IGO_08944_B_4_S85_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 508780796,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$3c6c251afae505cecaffe29205a5d75cae45fd04",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_4\"]",
+      "patient_id": "C-4LM16H",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "ad8450cf-b95b-453d-a9d9-0fb854f2c1c4",
+    "fields": {
+      "created_date": "2021-03-15T16:42:53.224Z",
+      "modified_date": "2024-06-12T17:04:28.264Z",
+      "file_name": "17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_17-0001535a_IGO_08944_B_2/17-0001535a_IGO_08944_B_2_S83_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 434118132,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$cea4a479dbbe8cb5bf7c304b7871fb8a25057019",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_2\"]",
+      "patient_id": "C-MP76JR",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "76658104-3f7e-41e3-9408-0d9075d9036f",
+    "fields": {
+      "created_date": "2021-03-15T16:42:54.065Z",
+      "modified_date": "2024-06-12T17:04:28.187Z",
+      "file_name": "LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R1_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 952360556,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$e3b7d1ef35084d4f6e8e9e096d15ccfa33956f0e",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_3\"]",
+      "patient_id": "C-4LM16H",
+      "available": true
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "d3512fa1-847a-41b3-81d2-04ff57eec734",
+    "fields": {
+      "created_date": "2021-03-15T16:42:55.535Z",
+      "modified_date": "2024-06-12T17:04:28.204Z",
+      "file_name": "LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R2_001.fastq.gz",
+      "path": "/juno/archive/msk/cmo/FASTQ/FAUCI2_0319_BH3MV7BBXY/Project_08944_B/Sample_LTG017_P1_17095a_R_43_IGO_08944_B_3/LTG017_P1_17095a_R_43_IGO_08944_B_3_S84_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 1082701694,
+      "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
+      "checksum": "sha1$3aba8adb1b77fd1b76533584588a67dcff63d6dd",
+      "request_id": "08944_B",
+      "samples": "[\"08944_B_3\"]",
+      "patient_id": "C-4LM16H",
+      "available": true
+    }
+  }
+]

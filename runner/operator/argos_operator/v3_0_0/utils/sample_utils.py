@@ -1,4 +1,5 @@
 import os
+from datetime import datetime as dt
 
 from django.conf import settings
 from django.db.models import Q
@@ -86,15 +87,20 @@ def pair_samples_igo(samples_tumor, request_id=None):
     for sample in samples_tumor:
         metadata = sample.metadata
         patient_id = metadata[settings.PATIENT_ID_METADATA_KEY]
-        request_id_in_sample = metadata[settings.REQUEST_ID_METADATA_KEY]
+        request_id_sample = metadata[settings.REQUEST_ID_METADATA_KEY]
         sample_type = sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY]
+        run_mode = get_run_mode(sample.run_mode)
+        bait_set = sample.metadata[settings.BAITSET_METADATA_KEY]
         files = FileRepository.all()
         samples = get_samples_igo(patient_id, files)
         samples_normals_igo = [
             samples[s]
             for s in samples
             if "normal" in (samples[s].metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower() or "")
+            and samples[s].metadata[settings.BAITSET_METADATA_KEY].lower() in bait_set.lower()
         ]
+        for s in samples:
+            print(samples[s].metadata["baitSet"], bait_set)
         pooled_normals = [get_samples_pooled_normals(metadata)]
         dmp_bams = get_samples_dmp(metadata)
 
@@ -107,15 +113,75 @@ def pair_samples_igo(samples_tumor, request_id=None):
 
         for normal in pooled_normals:
             pair = PairObj(sample, normal)
+            best_normal = normal  # assigning default "best" normal, which is the pooled normal; overwritten if better match exists
             pairs_full.add_pair(pair)
 
         for normal in samples_normals_igo:
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
 
-        # retrieve "best" pair, based on WITHIN Request; OUTSIDE request; or POOLED NORMAL
+        # retrieve "best" pair, based on WITHIN Request; OUTSIDE request; or POOLED pooled_normals
+        # filter for normals in request
+        samples_normals_igo_same_request = [
+            s for s in samples_normals_igo if s.metadata[settings.REQUEST_ID_METADATA_KEY] == request_id_sample
+        ]
+        best_normal_igo = get_viable_normal(samples_normals_igo_same_request, run_mode, request_id_sample)
+        if best_normal_igo:
+            best_normal = best_normal_igo
+        elif dmp_bams.dmp_bam_normal:
+            best_normal = dmp_bams.dmp_bam_normal
+
+        if best_normal:
+            pairs_best.add_pair(PairObj(best_normal, sample))
+        else:
+            print("No normal found")
+
     return pairs_best, pairs_full
 
 
 def pair_patient_samples(patient):
     pass
+
+
+def compare_dates(normal, viable_normal, date_string):
+    """
+    Compares dates between two normals; returns the most recent
+    """
+    for run_date in normal["run_date"]:
+        normal_date = dt.strptime(run_date, date_string)
+        for vrun_date in viable_normal["run_date"]:
+            vnormal_date = dt.strptime(vrun_date, date_string)
+            if vnormal_date < normal_date:
+                viable_normal = normal
+
+
+def get_viable_normal(normals, run_mode, request_id_sample=None):
+    """
+    From a set of normals, return the ones that have run_mode and the most recent
+
+    Does not check for Pooled Normals; that's done separately
+    """
+    viable_normal = dict()
+    for normal in normals:
+        normal_run_mode = get_run_mode(normal.run_mode)
+        if normal_run_mode == run_mode:
+            if viable_normal:
+                try:
+                    viable_normal = compare_dates(normal, viable_normal, "%y-%m-%d")
+                except ValueError:
+                    viable_normal = compare_dates(normal, viable_normal, "%Y-%m-%d")
+            else:
+                viable_normal = normal
+    return viable_normal
+
+
+def get_run_mode(run_mode):
+    """
+    Normalizing hiseq and novaseq strings
+    """
+    if run_mode:
+        if "hiseq" in run_mode.lower():
+            return "hiseq"
+        if "novaseq" in run_mode.lower():
+            return "novaseq"
+    return run_mode

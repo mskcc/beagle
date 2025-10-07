@@ -16,8 +16,10 @@ from file_system.repository.file_repository import FileRepository
 from runner.operator.argos_operator.v3_0_0.bin.pair_object import PairObj
 from runner.operator.argos_operator.v3_0_0.bin.pairs_object import PairsObj
 from runner.operator.argos_operator.v3_0_0.bin.sample_igo import SampleIGO
-from runner.operator.argos_operator.v3_0_0.utils.barcode_utils import spoof_barcode
-from runner.operator.argos_operator.v3_0_0.utils.sample_utils import pair_samples_igo
+from runner.operator.argos_operator.v3_0_0.utils.barcode_utils import \
+    spoof_barcode
+from runner.operator.argos_operator.v3_0_0.utils.sample_utils import \
+    pair_samples_igo
 from runner.run.processors.file_processor import FileProcessor
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
@@ -61,7 +63,12 @@ def load_csv_to_global_dict(filepath):
 
 class TestPairSamplesIGO(TestCase):
     # load fixtures for the test case temp db
-    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json", "DMP_data.json"]
+    fixtures = [
+        "file_system.filegroup.json",
+        "file_system.filetype.json",
+        "file_system.storage.json",
+        "DMP_data.json",
+    ]
 
     def setUp(self):
         super().setUp()
@@ -69,6 +76,8 @@ class TestPairSamplesIGO(TestCase):
         try:
             call_command("loaddata", "file_system.filegroup.json")
             call_command("loaddata", "DMP_data.json")
+            test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "argos_v3_0_0.meta.json")
+            call_command("loaddata", test_files_fixture, verbosity=0)
         except Exception as e:
             print(f"Error in setUp: {e}")
 
@@ -136,38 +145,27 @@ class TestPairSamplesIGO(TestCase):
             FileMetadata.objects.create_or_update(file=file_instance, version=1, metadata=metadata)
 
     def test_create_pairs(self):
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B.fixtures.json")
-        call_command("loaddata", test_files_fixture, verbosity=0)
-
         files = FileRepository.filter(queryset=self.files, metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
 
         samples = dict()
         file_list = dict()
         for f in files:
             sample_name = f.metadata["ciTag"]
-            # overriding for now; hack because we don't have IMPACT468_BAITS
-            f.metadata["baitSet"] = "IMPACT505_BAITS"
-            f.metadata["genePanel"] = "IMPACT505"
-            f.metadata["runId"] = "FAUCI2_BLAHBLAH"
             file_list.setdefault(sample_name, []).append(f)
 
         for sample_name in file_list:
             sample_igo = SampleIGO(sample_name, file_list[sample_name], "fastq")
             samples[sample_name] = sample_igo
 
-        # print("---- Printing SampleFile")
-        # for sample_file in sample_igo.sample_files:
-        #    pprint(sample_file)
-
         # TODO check samples are built properly
         self.assertEqual(len(file_list), 4)
-
-        # print("---- Printing ciTag and sampleType")
-        # for sample_name in samples:
-        #    pprint(sample_name + " " + samples[sample_name].sample_type)
 
         samples_tumor = [samples["s_C_MP76JR_X001_d"], samples["s_C_4LM16H_X001_d"]]
 
         best, full = pair_samples_igo(samples_tumor, "08944_B")
 
+        print("Print all pairs for each tumor")
         print(full.generate_pairing())
+        print()
+        print("Print just the best pair per tumor")
+        print(best.generate_pairing())
