@@ -37,15 +37,19 @@ def get_samples_igo(patient_id, files_set):
 
 def get_samples_dmp(metadata):
     """
-    From metadata, find SampleDMPs
+    From metadata, find SampleDMPs through SampleDMPManager
+
+    Returns dmp_samples, which can get dmp normal through
+
+        dmp_samples.dmp_normal
+
+    and all samples through
+
+        dmp_samples.all_dmp_bams
     """
-    print("printing from get_samples_dmp")
-    from pprint import pprint
+    dmp_samples = SampleDMPManager(metadata)
 
-    sample_dmp = SampleDMPManager(metadata)
-    pprint(sample_dmp)
-
-    return sample_dmp
+    return dmp_samples
 
 
 def get_samples_pooled_normals(metadata):
@@ -92,20 +96,20 @@ def pair_samples_igo(samples_tumor, request_id=None):
             if "normal" in (samples[s].metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower() or "")
         ]
         pooled_normals = [get_samples_pooled_normals(metadata)]
-        dmp_normal = get_samples_dmp(metadata)
+        dmp_bams = get_samples_dmp(metadata)
 
         # Creating a full list of all normals that can be connected to every tumor
-        for normal in dmp_normal.all_dmp_bams:
-            print("Printing in all_dmp_bams")
-            pprint(normal)
+        for dmp_sample in dmp_bams.all_dmp_bams:
+            if "normal" in dmp_sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower():
+                normal = dmp_sample
+                pair = PairObj(sample, normal)
+                pairs_full.add_pair(pair)
+
+        for normal in pooled_normals:
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
 
         for normal in samples_normals_igo:
-            pair = PairObj(sample, normal)
-            pairs_full.add_pair(pair)
-
-        for normal in pooled_normals:
             pair = PairObj(sample, normal)
             pairs_full.add_pair(pair)
 

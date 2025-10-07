@@ -66,6 +66,7 @@ class SampleDMPManager:
                 )  # likely only one, but here to grab and refer to all if it's around
                 sample_name = dmp_bam_metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]
                 dmp_bam_this = SampleDMP(sample_name, dmp_bam_metadata)
+                dmp_bam_this.add_sample_file(sample_file)
                 self.all_dmp_bams.append(dmp_bam_this)
 
     def __map_metadata__(self, dmp_bam):
