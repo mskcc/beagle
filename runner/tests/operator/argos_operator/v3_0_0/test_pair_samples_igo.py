@@ -1,23 +1,14 @@
 import csv
-import json
 import os
-from datetime import datetime
 from pathlib import Path
-from pprint import pprint
-from uuid import UUID
 
 from django.conf import settings
 from django.core.management import call_command
-from django.db.models import Prefetch, Q
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from file_system.models import File, FileGroup, FileMetadata, FileType
 from file_system.repository.file_repository import FileRepository
-from runner.operator.argos_operator.v3_0_0.bin.pair_object import PairObj
-from runner.operator.argos_operator.v3_0_0.bin.pairs_object import PairsObj
 from runner.operator.argos_operator.v3_0_0.bin.sample_igo import SampleIGO
-from runner.operator.argos_operator.v3_0_0.utils.barcode_utils import \
-    spoof_barcode
 from runner.operator.argos_operator.v3_0_0.utils.sample_utils import \
     pair_samples_igo
 from runner.run.processors.file_processor import FileProcessor
