@@ -73,19 +73,17 @@ def get_samples_pooled_normals(metadata):
     return SamplePooledNormal(metadata)
 
 
-def pair_samples_igo(samples_tumor, request_id=None):
+def pair_samples_igo(samples_tumor):
     """
     Get all viable normal pairings for these samples
 
-    Return two things: the "best" pairing and the "verbose" pairings per sample
+    Return two things: the "best" pairing per sample and the "verbose" pairings per sample
     """
-
-    from pprint import pprint
-
-    pairs_best = PairsObj()
-    pairs_full = PairsObj()
+    pairs_best = {}
+    pairs_full = {}
     for sample in samples_tumor:
         metadata = sample.metadata
+        sample_name = sample.sample_name
         patient_id = metadata[settings.PATIENT_ID_METADATA_KEY]
         request_id_sample = metadata[settings.REQUEST_ID_METADATA_KEY]
         sample_type = sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY]
@@ -102,21 +100,24 @@ def pair_samples_igo(samples_tumor, request_id=None):
         pooled_normals = [get_samples_pooled_normals(metadata)]
         dmp_bams = get_samples_dmp(metadata)
 
+        pairs_best.setdefault(sample_name, PairsObj())
+        pairs_full.setdefault(sample_name, PairsObj())
+
         # Creating a full list of all normals that can be connected to every tumor
         for dmp_sample in dmp_bams.all_dmp_bams:
             if "normal" in dmp_sample.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY].lower():
                 normal = dmp_sample
                 pair = PairObj(sample, normal)
-                pairs_full.add_pair(pair)
+                pairs_full[sample_name].add_pair(pair)
 
         for normal in pooled_normals:
             pair = PairObj(sample, normal)
             best_normal = normal  # assigning default "best" normal, which is the pooled normal; overwritten if better match exists
-            pairs_full.add_pair(pair)
+            pairs_full[sample_name].add_pair(pair)
 
         for normal in samples_normals_igo:
             pair = PairObj(sample, normal)
-            pairs_full.add_pair(pair)
+            pairs_full[sample_name].add_pair(pair)
 
         # retrieve "best" pair, based on WITHIN Request; OUTSIDE request; or POOLED pooled_normals
         # filter for normals in request
@@ -130,7 +131,7 @@ def pair_samples_igo(samples_tumor, request_id=None):
             best_normal = dmp_bams.dmp_bam_normal
 
         if best_normal:
-            pairs_best.add_pair(PairObj(best_normal, sample))
+            pairs_best[sample_name].add_pair(PairObj(best_normal, sample))
         else:
             print("No normal found")
 

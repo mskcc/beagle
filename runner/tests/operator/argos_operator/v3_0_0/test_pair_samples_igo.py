@@ -162,10 +162,12 @@ class TestPairSamplesIGO(TestCase):
 
         samples_tumor = [samples["s_C_MP76JR_X001_d"], samples["s_C_4LM16H_X001_d"]]
 
-        best, full = pair_samples_igo(samples_tumor, "08944_B")
+        best, full = pair_samples_igo(samples_tumor)
 
-        print("Print all pairs for each tumor")
-        print(full.generate_pairing())
-        print()
-        print("Print just the best pair per tumor")
-        print(best.generate_pairing())
+        for sample in samples_tumor:
+            print(sample.sample_name + " ---")
+            print("Print all pairs for each tumor")
+            print(full[sample_name].generate_pairing())
+            print()
+            print("Print just the best pair per tumor")
+            print(best[sample_name].generate_pairing())
