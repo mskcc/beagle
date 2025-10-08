@@ -167,7 +167,7 @@ class TestPairSamplesIGO(TestCase):
         for sample in samples_tumor:
             print(sample.sample_name + " ---")
             print("Print all pairs for each tumor")
-            print(full[sample_name].generate_pairing())
+            print(full[sample.sample_name].generate_pairing())
             print()
             print("Print just the best pair per tumor")
-            print(best[sample_name].generate_pairing())
+            print(best[sample.sample_name].generate_pairing())
