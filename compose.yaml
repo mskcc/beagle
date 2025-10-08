@@ -431,27 +431,29 @@ services:
       interval: 30s
       timeout: 3s
       retries: 3
-  beagle_celery_nats_new_request_queue:
+  beagle_echo_consumer:
     <<: *beagle_celery
     command:
       - |
-        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE}.pid
-        [ -e $$PIDFILE ] && rm $$PIDFILE
-        echo 'Running nats new request queue worker...'
-
-        celery --workdir ${BEAGLE_PATH} \
-          -A beagle_etl worker \
-          -l debug \
-          -Q ${BEAGLE_NATS_NEW_REQUEST_QUEUE} \
-          -f /beagle/celery/logs/${BEAGLE_NATS_NEW_REQUEST_QUEUE}.log \
-          --pidfile $$PIDFILE \
-          --concurrency=1 \
-          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE}
+        echo 'Running echo consumer...'
+        python ${BEAGLE_PATH}/manage.py run_echo_consumer
     healthcheck:
-      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_NATS_NEW_REQUEST_QUEUE} || exit 1"
+      test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_echo_consumer' || exit 1"
       interval: 30s
       timeout: 3s
       retries: 3
+  beagle_smile_consumer:
+    <<: *beagle_celery
+    command:
+      - |
+        echo 'Running SMILE consumer...'
+        python ${BEAGLE_PATH}/manage.py run_smile_consumer --subject=MDB_STREAM.consumers.cmo-new-request
+    healthcheck:
+      test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_smile_consumer' || exit 1"
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
   beagle_celery_runner_queue:
     <<: *beagle_celery
     command:
