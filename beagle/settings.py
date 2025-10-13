@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "advanced_filters",
     "ddtrace.contrib.django",
     "echo_client",
+    "smile_client",
 ]
 
 
@@ -261,12 +262,12 @@ LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
 # SSL
-NATS_ROOT_CA = os.environ.get("BEAGLE_NATS_SSL_ROOT_CA")
-NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
-NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
+# NATS_ROOT_CA = os.environ.get("BEAGLE_NATS_SSL_ROOT_CA")
+# NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
+# NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
 
-METADB_NATS_URL = os.environ.get("BEAGLE_METADB_NATS_URL")
-METADB_NATS_FILTER_SUBJECT = os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT")
+# METADB_NATS_URL = os.environ.get("BEAGLE_METADB_NATS_URL")
+# METADB_NATS_FILTER_SUBJECT = os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT")
 METADB_NATS_NEW_REQUEST = os.environ.get(
     "BEAGLE_METADB_NATS_NEW_REQUEST", "MDB_STREAM.server.cpt-gateway.cmo-new-request"
 )
@@ -276,13 +277,25 @@ METADB_NATS_REQUEST_UPDATE = os.environ.get(
 METADB_NATS_SAMPLE_UPDATE = os.environ.get(
     "BEAGLE_METADB_NATS_SAMPLE_UPDATE", "MDB_STREAM.server.cpt-gateway.cmo-sample-update"
 )
-METADB_CLIENT_TIMEOUT = 3600.0
-METADB_NATS_DURABLE = os.environ.get("BEAGLE_METADB_NATS_DURABLE", "")
+# METADB_CLIENT_TIMEOUT = 3600.0
+# METADB_NATS_DURABLE = os.environ.get("BEAGLE_METADB_NATS_DURABLE", "")
 
-METADB_USERNAME = os.environ.get("BEAGLE_METADB_USERNAME")
-METADB_PASSWORD = os.environ.get("BEAGLE_METADB_PASSWORD")
+# METADB_USERNAME = os.environ.get("BEAGLE_METADB_USERNAME")
+# METADB_PASSWORD = os.environ.get("BEAGLE_METADB_PASSWORD")
 
-LIMS_URL = os.environ.get("BEAGLE_LIMS_URL", "https://igolims.mskcc.org:8443")
+
+SMILE_SETTINGS = {
+    "NATS_URL": os.environ.get("BEAGLE_METADB_NATS_URL"),
+    "NATS_USERNAME": os.environ.get("BEAGLE_METADB_USERNAME"),
+    "NATS_PASSWORD": os.environ.get("BEAGLE_METADB_PASSWORD"),
+    "NATS_SSL_CERTFILE": os.environ.get("BEAGLE_NATS_SSL_CERTFILE"),
+    "NATS_SSL_KEYFILE": os.environ.get("BEAGLE_NATS_SSL_KEYFILE"),
+    "NATS_ROOT_CA": os.environ.get("BEAGLE_NATS_SSL_ROOT_CA"),
+    "NATS_FILTER_SUBJECT": os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT"),
+    "NATS_DURABLE": os.environ.get("BEAGLE_METADB_NATS_DURABLE", ""),
+    "CLIENT_TIMEOUT": 3600.0,
+    "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message",
+}
 
 IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
 
@@ -295,6 +308,7 @@ RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
 
 ECHO_LOG_PATH = os.environ.get("BEAGLE_ECHO_LOG_PATH", "echo_client.log")
+SMILE_LOG_PATH = os.environ.get("BEAGLE_SMILE_LOG_PATH", "smile_client.log")
 
 LOGGING = {
     "version": 1,
@@ -327,6 +341,14 @@ LOGGING = {
             "backupCount": 10,
             "formatter": "simple",
         },
+        "smile_client_log": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": SMILE_LOG_PATH,
+            "maxBytes": 209715200,
+            "backupCount": 10,
+            "formatter": "simple",
+        },
     },
     "loggers": {
         "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
@@ -336,6 +358,7 @@ LOGGING = {
             "propagate": True,
         },
         "echo_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
+        "smile_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
     },
 }
 

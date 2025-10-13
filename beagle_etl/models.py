@@ -137,8 +137,8 @@ class CopyFileTask(BaseModel):
                     self.status = CopyFileStatus.FAILED
                     self.smile_message.log += f"{message}\n"
                     self.save()
-                    copy_file_tasks.file_object.available = False
-                    copy_file_tasks.file_object.save(update_fields=["available"])
+                    self.file_object.available = False
+                    self.file_object.save(update_fields=["available"])
                     if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
                         self.smile_message.status = SmileMessageStatus.FAILED
                     self.smile_message.save()

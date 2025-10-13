@@ -22,8 +22,6 @@ from notifier.events import (
     CustomCaptureCCEvent,
     RedeliveryEvent,
     RedeliveryUpdateEvent,
-    ETLImportCompleteEvent,
-    ETLImportPartiallyCompleteEvent,
     LocalStoreFileEvent,
     ExternalEmailEvent,
     OnlyNormalSamplesEvent,
@@ -42,6 +40,7 @@ from beagle_etl.models import (
     RequestCallbackJob,
     RequestCallbackJobStatus,
     initialize_normalizer,
+    CopyFileTask,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -249,6 +248,8 @@ def new_request(message_id):
         delivery_date = datetime.now()
     data["deliveryDate"] = delivery_date
 
+    smile_job_status = message.status
+
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
         if sample_id not in valid_samples:
@@ -290,7 +291,7 @@ def new_request(message_id):
     if not request:
         log += f"No samples imported for request {request_id}"
         logger.error(f"No samples imported for request {request_id}")
-        message.status = SmileMessageStatus.FAILED
+        smile_job_status = SmileMessageStatus.FAILED
     else:
         study.requests.add(request)
     pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
@@ -311,6 +312,13 @@ def new_request(message_id):
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
 
+    if (
+        CopyFileTask.objects.filter(smile_message=message).count() == 0
+        and smile_job_status != SmileMessageStatus.FAILED
+    ):
+        smile_job_status = SmileMessageStatus.COMPLETED
+
+    message.status = smile_job_status
     message.log = log
     message.save()
 
