@@ -21,14 +21,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         fixtures = options["fixtures"]
 
-        # Load all objects from fixtures
+        fixture_pks_by_model = {}
         all_objects = []
+
         for fixture_path in fixtures:
             self.stdout.write(f"Reading fixture: {fixture_path}")
             with open(fixture_path, "r") as f:
-                objs = list(deserialize("json", f.read()))
-                self.stdout.write(f"  Found {len(objs)} objects")
-                all_objects.extend(objs)
+                for line in f:
+                    if line.strip():
+                        for obj in deserialize("json", line):
+                            all_objects.append(obj)
+                            model = obj.object.__class__
+                            fixture_pks_by_model.setdefault(model, set()).add(obj.object.pk)
 
         self.stdout.write(f"Total objects to process: {len(all_objects)}\n")
 
@@ -103,6 +107,35 @@ class Command(BaseCommand):
                     remaining.append(obj)
                     continue
 
+                for field in model._meta.fields:
+                    if field.is_relation and not field.many_to_one and not field.one_to_many:
+                        continue
+                    if field.is_relation:
+                        rel_pk = getattr(obj.object, field.attname, None)
+                        if rel_pk and rel_pk in existing_pks.get(field.related_model, set()):
+                            try:
+                                real_obj = field.related_model.objects.get(pk=rel_pk)
+                                setattr(obj.object, field.name, real_obj)
+                            except field.related_model.DoesNotExist:
+                                pass
+                
+                m2m_data = {}
+                for m2m_field in model._meta.many_to_many:
+                    m2m_data[m2m_field.name] = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                    getattr(obj.object, m2m_field.name).clear() 
+                if model.__name__ == "Port":
+                    try:
+                        from file_system.models import File  # adjust import path if needed
+                        file_id = getattr(obj.object, "file_id", None)
+                        if file_id and not File.objects.filter(id=file_id).exists():
+                            self.stdout.write(
+                                self.style.WARNING(f"[FIX] Creating placeholder File {file_id} for Port {pk}")
+                            )
+                            File.objects.create(id=file_id, path=f"MISSING_FILE_{file_id}", size=0)
+                    except Exception as e:
+                        self.stdout.write(
+                            self.style.ERROR(f"[WARN] Could not auto-create missing File: {e}")
+                        )
                 # Save object
                 try:
                     with transaction.atomic():

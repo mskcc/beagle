@@ -9,7 +9,7 @@ from runner.models import OperatorRun, RunStatus, TriggerRunType, Run, Pipeline
 from file_system.repository.file_repository import FileRepository
 from collections import defaultdict, deque
 from django.core.management.base import BaseCommand
-
+from runner.models import Port
 
 def check_if_operator(related_obj, seen, allowed_operator_pks):
     if related_obj is None:
@@ -23,36 +23,49 @@ def check_if_operator(related_obj, seen, allowed_operator_pks):
     return None
 
 
-def collect_related_objects(starting_objects, allowed_operators_pks):
+def collect_related_objects_streaming(starting_objects, allowed_operator_pks, old_prefixes, new_prefix, out_file):
     seen = defaultdict(set)
     queue = deque(starting_objects)
-    while queue:
-        obj = queue.popleft()
-        model = type(obj)
+    count = 0
+    with open(out_file, "w") as f:
+        while queue:
+            obj = queue.popleft()
+            model = type(obj)
 
-        if obj.pk in seen[model]:
-            continue
+            if obj.pk in seen[model]:
+                continue
+            seen[model].add(obj.pk)
 
-        seen[model].add(obj.pk)
+            # Serialize and immediately write this object
+            serialized_obj = json.loads(serialize("json", [obj]))[0]
+            edited_obj = edit_serialized_data([serialized_obj], old_prefixes, new_prefix)[0]
+            f.write(json.dumps(edited_obj) + "\n")
+            f.flush()
+            count += 1
+            if count % 1000 == 0:
+                print(f"Processed {count} objects", flush=True)
+            if isinstance(obj, Run):
+                for port in obj.port_set.iterator():
+                    if port.pk not in seen[Port]:
+                        queue.append(port)
+            # Handle related objects
+            for field in model._meta.get_fields():
 
-        for field in model._meta.get_fields():
-            if isinstance(field, (ForeignKey, OneToOneField)):
-                related_obj = getattr(obj, field.name, None)
-                to_enqueue = check_if_operator(related_obj, seen, allowed_operators_pks)
-                if to_enqueue:
-                    queue.append(to_enqueue)
+                if isinstance(field, (ForeignKey, OneToOneField)):
+                    related_obj = getattr(obj, field.name, None)
+                    to_enqueue = check_if_operator(related_obj, seen, allowed_operator_pks)
+                    if to_enqueue:
+                        queue.append(to_enqueue)
 
-            elif isinstance(field, ManyToManyField):
-                try:
-                    related_manager = getattr(obj, field.name)
-                    for related_obj in related_manager.all():
-                        to_enqueue = check_if_operator(related_obj, seen, allowed_operators_pks)
-                        if to_enqueue:
-                            queue.append(to_enqueue)
-                except Exception:
-                    continue
-
-    return seen
+                elif isinstance(field, ManyToManyField):
+                    try:
+                        related_manager = getattr(obj, field.name)
+                        for related_obj in related_manager.iterator():
+                            to_enqueue = check_if_operator(related_obj, seen, allowed_operator_pks)
+                            if to_enqueue:
+                                queue.append(to_enqueue)
+                    except Exception:
+                        continue
 
 
 def strip_prefixes(s, prefixes):
@@ -206,26 +219,12 @@ class Command(BaseCommand):
             operator_id__in=allowed_operator_pks,
             status=RunStatus.COMPLETED.value,
         )
-        operator_run_ids = operator_runs.values_list("id", flat=True)
-
         runs = Run.objects.filter(
-            operator_run__in=operator_run_ids,
+            operator_run__in=operator_runs,
             status=RunStatus.COMPLETED.value,
-        )
-        # latest_by_request = runs.values("tags__igoRequestId").annotate(latest_date=Max("finished_date"))
+        ).iterator()
 
-        # query = Q()
-        # for row in latest_by_request:
-        #     query |= Q(tags__igoRequestId=row["tags__igoRequestId"], finished_date=row["latest_date"])
-
-        # recent_requests = runs.filter(query)
-        recent_requests = runs
-        related = collect_related_objects(recent_requests, allowed_operator_pks)
-        json_output = serialize_related_objects(related, old_prefixes, new_prefix)
-
-        with open(out_file, "w") as f:
-            f.write(json_output)
-
+        collect_related_objects_streaming(runs, allowed_operator_pks, old_prefixes, new_prefix, out_file)
     def _export_filegroup(self, options):
         filegroup_args = options["filegroups"]
         out_file = options["out"]
@@ -234,30 +233,39 @@ class Command(BaseCommand):
         file_groups = [gr for gr in filegroup_args]
         files = File.objects.filter(file_group__slug__in=file_groups)
         related = collect_related_objects_fg(files)
-        json_output = serialize_related_objects(related, old_prefixes, new_prefix)
-
         with open(out_file, "w") as f:
-            f.write(json_output)
+            for model, pks in related.items():
+                queryset = model.objects.filter(pk__in=pks).iterator()
+                for obj in queryset:
+                    serialized_obj = json.loads(serialize("json", [obj]))[0]
+                    edited_obj = edit_serialized_data([serialized_obj], old_prefixes, new_prefix)[0]
+                    f.write(json.dumps(edited_obj) + "\n")
+                    f.flush()
 
 
 # XSV1
 # python3 manage.py export_facets operator-run \
 #   --operator AccessLegacyOperator AccessLegacySNVOperator AccessLegacySVOperator AccessLegacyCNVOperator AccessLegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_11_30_25.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1.json \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
+# python3 manage.py export_facets operator-run \
+#   --operator AccessLegacyOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_test_ports.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 # XSV2
 # python3 manage.py export_facets operator-run \
 #   --operator AccessV2NucleoOperator AccessV2NucleoQcOperator AccessV2NucleoAggQcOperator AccessV2LegacySNVOperator AccessV2LegacyCNVOperator AccessV2LegacySVOperator AccessV2LegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_01_25.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv2.json \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
 # CMO-CH
 # python3 manage.py export_facets operator-run \
 #   --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_03_25_cmoch.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch.json \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
