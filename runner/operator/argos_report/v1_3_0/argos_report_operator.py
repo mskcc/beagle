@@ -24,7 +24,7 @@ ONCOKB_FG_SLUG = "oncokb-file-group"
 class ArgosReportOperator(Operator):
     def get_jobs(self):
         LOGGER.info("[%s] Running ArgosReportOperator", self.job_group_notifier_id)
-        self.annotations_path = "iris:///data1/core005/assets/argos/resources/genomic_resources/annotations/oncokb/"
+        self.annotations_path = "iris:///data1/core001/work/ci/resources/genomic_resources/annotations/oncokb/"
 
         hf_run_id = self.run_ids[0]  # only one run in list
         hf_run = Run.objects.get(id=hf_run_id)
