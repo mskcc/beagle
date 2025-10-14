@@ -48,6 +48,8 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
                 for port in obj.port_set.iterator():
                     if port.pk not in seen[Port]:
                         queue.append(port)
+            if isinstance(obj, FileGroup):
+                continue
             # Handle related objects
             for field in model._meta.get_fields():
 
@@ -66,7 +68,8 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
                                 queue.append(to_enqueue)
                     except Exception:
                         continue
-
+    # Finish message
+    print(f"Finished exporting {count} objects to {out_file}", flush=True)
 
 def strip_prefixes(s, prefixes):
     for p in prefixes:
@@ -208,23 +211,35 @@ class Command(BaseCommand):
 
     def _export_operator(self, options):
         operator_args = options["operator"]
-        out_file = options["out"]
+        out_prefix = options["out"]  # use as prefix; we'll append operator slug
         old_prefixes = options["old_prefixes"]
         new_prefix = options["new_prefix"]
-
+        total_runs = {} 
         allowed_operators = [Operator.objects.get(slug=op) for op in operator_args]
-        allowed_operator_pks = {op.pk for op in allowed_operators}
+        for op in allowed_operators:
+            allowed_operator_pks = {op.pk}
 
-        operator_runs = OperatorRun.objects.filter(
-            operator_id__in=allowed_operator_pks,
-            status=RunStatus.COMPLETED.value,
-        )
-        runs = Run.objects.filter(
-            operator_run__in=operator_runs,
-            status=RunStatus.COMPLETED.value,
-        ).iterator()
+            operator_runs = OperatorRun.objects.filter(
+                operator_id=op.pk,
+                status=RunStatus.COMPLETED.value,
+            )
+            runs = Run.objects.filter(
+                operator_run__in=operator_runs,
+                status=RunStatus.COMPLETED.value,
+            ).iterator()
+            out_file = f"{out_prefix}_{op.slug}.json"
+            print(f"Starting export for operator {op.slug} → {out_file}", flush=True)
 
-        collect_related_objects_streaming(runs, allowed_operator_pks, old_prefixes, new_prefix, out_file)
+            collect_related_objects_streaming(
+                starting_objects=runs,
+                allowed_operator_pks=allowed_operator_pks,
+                old_prefixes=old_prefixes,
+                new_prefix=new_prefix,
+                out_file=out_file
+            )
+
+            print(f"Finished export for operator {op.slug}", flush=True)
+
     def _export_filegroup(self, options):
         filegroup_args = options["filegroups"]
         out_file = options["out"]
@@ -244,9 +259,23 @@ class Command(BaseCommand):
 
 
 # XSV1
+# nohup python3 manage.py export_facets operator-run \
+#   --operator AccessLegacySNVOperator AccessLegacySVOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_v1_test \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/ \
+#   > export_facets.log 2>&1 &
+# disown
+
+# SV is 13230 runs vs 14552
+# python3 manage.py export_facets operator-run \
+#   --operator AccessLegacySVOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_v1_test \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 # python3 manage.py export_facets operator-run \
 #   --operator AccessLegacyOperator AccessLegacySNVOperator AccessLegacySVOperator AccessLegacyCNVOperator AccessLegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1 \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 

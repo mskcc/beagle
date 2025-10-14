@@ -8,7 +8,8 @@ from django.db import transaction, IntegrityError
 class Command(BaseCommand):
     help = (
         "Load fixtures but skip objects that already exist. "
-        "Handles PK and unique constraints, FK and M2M dependencies."
+        "Handles PK and unique constraints, FK and M2M dependencies. "
+        "Also pre-creates placeholder File objects for Ports referencing missing Files."
     )
 
     def add_arguments(self, parser):
@@ -24,15 +25,22 @@ class Command(BaseCommand):
         fixture_pks_by_model = {}
         all_objects = []
 
+        # --- Step 0: load all objects from fixtures ---
         for fixture_path in fixtures:
             self.stdout.write(f"Reading fixture: {fixture_path}")
             with open(fixture_path, "r") as f:
                 for line in f:
-                    if line.strip():
-                        for obj in deserialize("json", line):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        # Wrap single-line JSON objects for deserialize
+                        for obj in deserialize("json", f"[{line}]"):
                             all_objects.append(obj)
                             model = obj.object.__class__
                             fixture_pks_by_model.setdefault(model, set()).add(obj.object.pk)
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Error parsing line: {e}"))
 
         self.stdout.write(f"Total objects to process: {len(all_objects)}\n")
 
@@ -43,15 +51,51 @@ class Command(BaseCommand):
             fixture_pks_by_model.setdefault(model, set()).add(obj.object.pk)
 
         # Prefetch existing PKs from DB
-        existing_pks = {model: set(model.objects.values_list("pk", flat=True)) for model in fixture_pks_by_model}
-
+        existing_pks = {
+            model: set(model.objects.values_list("pk", flat=True))
+            for model in fixture_pks_by_model
+        }
         inserted_pks = {model: set() for model in fixture_pks_by_model}
         deferred_m2m = []
+
+        # --- Step 1: pre-create missing File objects for Ports ---
+        try:
+            from file_system.models import File
+
+            # Collect any file_id fields referenced by Ports
+            port_file_ids = set()
+            for obj in all_objects:
+                if obj.object.__class__.__name__ == "Port":
+                    file_id = getattr(obj.object, "file_id", None)
+                    if file_id:
+                        port_file_ids.add(file_id)
+
+            if port_file_ids:
+                existing_file_ids = set(
+                    File.objects.filter(id__in=port_file_ids).values_list("id", flat=True)
+                )
+                missing_file_ids = port_file_ids - existing_file_ids
+                for fid in missing_file_ids:
+                    self.stdout.write(
+                        self.style.WARNING(f"[FIX] Creating placeholder File {fid} for Port references")
+                    )
+                    File.objects.create(
+                        id=fid,
+                        path=f"MISSING_FILE_{fid}",
+                        file_type="placeholder",
+                        size=0,
+                    )
+        except Exception as e:
+            self.stdout.write(
+                self.style.ERROR(f"[WARN] Could not pre-create missing Files: {e}")
+            )
 
         pending = all_objects[:]
         inserted, skipped = 0, 0
 
+        # --- Helper functions ---
         def exists_by_unique_fields(obj):
+            """Check whether object with unique field values already exists."""
             model = obj.object.__class__
             qs = model.objects.all()
             filters = {}
@@ -65,8 +109,12 @@ class Command(BaseCommand):
             return False
 
         def is_available(related_model, rel_pk):
-            return rel_pk in inserted_pks.get(related_model, set()) or rel_pk in existing_pks.get(related_model, set())
+            """Check if related PK is already in DB or inserted."""
+            return rel_pk in inserted_pks.get(related_model, set()) or rel_pk in existing_pks.get(
+                related_model, set()
+            )
 
+        # --- Step 2: main insert loop ---
         while pending:
             remaining = []
             for obj in pending:
@@ -84,16 +132,17 @@ class Command(BaseCommand):
                 # Check FK dependencies
                 missing = []
                 for field in model._meta.fields:
-                    if field.is_relation and not field.many_to_one and not field.one_to_many:
-                        continue
-                    if field.is_relation:
+                    if field.is_relation and field.related_model:
                         rel_pk = getattr(obj.object, field.attname, None)
                         if rel_pk and not is_available(field.related_model, rel_pk):
                             missing.append(f"{field.related_model.__name__}({rel_pk})")
 
-                # Check M2M dependencies (deferred, but must exist before assignment)
+                # Check M2M dependencies
                 for m2m_field in model._meta.many_to_many:
-                    rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                    try:
+                        rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                    except Exception:
+                        rel_pks = []
                     for rel_pk in rel_pks:
                         if not is_available(m2m_field.related_model, rel_pk):
                             missing.append(f"{m2m_field.related_model.__name__}({rel_pk}) [M2M:{m2m_field.name}]")
@@ -107,10 +156,9 @@ class Command(BaseCommand):
                     remaining.append(obj)
                     continue
 
+                # Resolve FK objects
                 for field in model._meta.fields:
-                    if field.is_relation and not field.many_to_one and not field.one_to_many:
-                        continue
-                    if field.is_relation:
+                    if field.is_relation and field.related_model:
                         rel_pk = getattr(obj.object, field.attname, None)
                         if rel_pk and rel_pk in existing_pks.get(field.related_model, set()):
                             try:
@@ -118,24 +166,17 @@ class Command(BaseCommand):
                                 setattr(obj.object, field.name, real_obj)
                             except field.related_model.DoesNotExist:
                                 pass
-                
+
+                # Collect M2M data and clear temporarily
                 m2m_data = {}
                 for m2m_field in model._meta.many_to_many:
-                    m2m_data[m2m_field.name] = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
-                    getattr(obj.object, m2m_field.name).clear() 
-                if model.__name__ == "Port":
                     try:
-                        from file_system.models import File  # adjust import path if needed
-                        file_id = getattr(obj.object, "file_id", None)
-                        if file_id and not File.objects.filter(id=file_id).exists():
-                            self.stdout.write(
-                                self.style.WARNING(f"[FIX] Creating placeholder File {file_id} for Port {pk}")
-                            )
-                            File.objects.create(id=file_id, path=f"MISSING_FILE_{file_id}", size=0)
-                    except Exception as e:
-                        self.stdout.write(
-                            self.style.ERROR(f"[WARN] Could not auto-create missing File: {e}")
-                        )
+                        rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                        m2m_data[m2m_field.name] = rel_pks
+                        getattr(obj.object, m2m_field.name).clear()
+                    except Exception:
+                        continue
+
                 # Save object
                 try:
                     with transaction.atomic():
@@ -143,10 +184,9 @@ class Command(BaseCommand):
                         inserted_pks[model].add(pk)
 
                     # Defer M2M until all inserts are complete
-                    for m2m_field in model._meta.many_to_many:
-                        rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                    for field_name, rel_pks in m2m_data.items():
                         if rel_pks:
-                            deferred_m2m.append((obj.object, m2m_field.name, rel_pks))
+                            deferred_m2m.append((obj.object, field_name, rel_pks))
 
                     inserted += 1
                     self.stdout.write(self.style.SUCCESS(f"Inserted {model.__name__}({pk})"))
@@ -154,7 +194,6 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.ERROR(f"Failed to insert {model.__name__}({pk}): {e}"))
 
             if len(remaining) == len(pending):
-                # Cannot resolve dependencies further
                 unresolved = [f"{obj.object.__class__.__name__}({obj.object.pk})" for obj in remaining]
                 raise IntegrityError(
                     f"Could not resolve dependencies for the following objects: {', '.join(unresolved)}"
@@ -162,7 +201,7 @@ class Command(BaseCommand):
 
             pending = remaining
 
-        # Assign deferred M2M relationships now that everything exists
+        # --- Step 3: assign deferred M2M ---
         for instance, field_name, rel_pks in deferred_m2m:
             getattr(instance, field_name).set(rel_pks)
 
