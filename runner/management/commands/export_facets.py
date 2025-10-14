@@ -38,6 +38,7 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
 
             # Serialize and immediately write this object
             serialized_obj = json.loads(serialize("json", [obj]))[0]
+
             edited_obj = edit_serialized_data([serialized_obj], old_prefixes, new_prefix)[0]
             f.write(json.dumps(edited_obj) + "\n")
             f.flush()
@@ -47,18 +48,26 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
             if isinstance(obj, Run):
                 for port in obj.port_set.iterator():
                     if port.pk not in seen[Port]:
-                        queue.append(port)
+                        if port.name != "sv_directory":
+                            queue.append(port)
+                    if hasattr(port, "file") and port.file and port.file.pk not in seen[File]:
+                        queue.append(port.file)
             if isinstance(obj, FileGroup):
-                continue
+                pass
             # Handle related objects
             for field in model._meta.get_fields():
-
+                if isinstance(obj, File) and field.name == "file_group":
+                        fg = getattr(obj, "file_group", None)
+                        if fg and fg.name in (
+                            "ACCESS SV",
+                            "access_curated_normals",
+                            "accessv2_curated_normals",
+                        ):
+                            continue
                 if isinstance(field, (ForeignKey, OneToOneField)):
                     related_obj = getattr(obj, field.name, None)
-                    to_enqueue = check_if_operator(related_obj, seen, allowed_operator_pks)
-                    if to_enqueue:
-                        queue.append(to_enqueue)
-
+                    if should_enqueue(related_obj, seen, allowed_operator_pks):
+                        queue.append(related_obj)
                 elif isinstance(field, ManyToManyField):
                     try:
                         related_manager = getattr(obj, field.name)
@@ -137,6 +146,15 @@ def serialize_related_objects(seen_dict, old_prefixes, new_prefix):
     edited_data = edit_serialized_data(data, old_prefixes, new_prefix)
     return json.dumps(edited_data, indent=2)
 
+def should_enqueue(related_obj, seen, allowed_operator_pks):
+    if related_obj is None:
+        return False
+    # skip traversing FileGroup → files
+    if isinstance(related_obj, FileGroup):
+        return False
+    if isinstance(related_obj, OperatorRun):
+        return related_obj.operator_id in allowed_operator_pks and related_obj.pk not in seen[type(related_obj)]
+    return related_obj.pk not in seen[type(related_obj)]
 
 def collect_related_objects_fg(starting_objects):
     seen = defaultdict(set)
@@ -152,17 +170,29 @@ def collect_related_objects_fg(starting_objects):
         seen[model].add(obj.pk)
 
         for field in model._meta.get_fields():
+            if isinstance(obj, FileGroup) and field.name == "file_set":
+                    continue
             if isinstance(field, (ForeignKey, OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
+                if isinstance(obj, FileGroup) and field.name == "file_set":
+                    continue
                 if related_obj is None:
                     continue
                 else:
                     if related_obj.pk not in seen[type(related_obj)]:
                         queue.append(related_obj)
+
+            if isinstance(obj, File):
+                fg = getattr(obj, "file_group", None)
+                if fg and fg.name in ("ACCESS SV", "access_curated_normals", "accessv2_curated_normals"):
+                    # Only enqueue files if they are already added via a Run/Port
+                    pass
             elif isinstance(field, ManyToManyField):
                 try:
                     related_manager = getattr(obj, field.name)
                     for related_obj in related_manager.all():
+                        if isinstance(obj, FileGroup) and field.name == "file_set":
+                            continue
                         if related_obj is None:
                             continue
                         else:
@@ -223,6 +253,7 @@ class Command(BaseCommand):
                 operator_id=op.pk,
                 status=RunStatus.COMPLETED.value,
             )
+            # operator_runs = [operator_runs[0]]
             runs = Run.objects.filter(
                 operator_run__in=operator_runs,
                 status=RunStatus.COMPLETED.value,
