@@ -102,9 +102,23 @@ class Command(BaseCommand):
             return rel_pk in inserted_pks.get(rel_model, set()) or rel_pk in existing_pks.get(rel_model, set())
 
         # --- Step 1: multi-pass insert loop for all remaining objects ---
-        pending = [obj for obj in all_objects if obj.object.__class__.__name__ != "File"]
-        inserted, skipped = 0, 0
+        priority_order = [
+            "JobGroup",
+            "FileGroup",
+            "File",
+            "Sample",
+            "Run",
+            "Port",
+        ]
 
+        def model_priority(obj):
+            name = obj.object.__class__.__name__
+            return priority_order.index(name) if name in priority_order else len(priority_order)
+        pending = sorted(
+                [obj for obj in all_objects if obj.object.__class__.__name__ != "File"],
+                key=model_priority
+            )
+        inserted, skipped = 0, 0
         while pending:
             remaining = []
             for obj in pending:
