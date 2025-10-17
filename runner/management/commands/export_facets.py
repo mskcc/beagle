@@ -11,6 +11,7 @@ from collections import defaultdict, deque
 from django.core.management.base import BaseCommand
 from runner.models import Port
 
+
 def check_if_operator(related_obj, seen, allowed_operator_pks):
     if related_obj is None:
         return None
@@ -52,18 +53,12 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
                             queue.append(port)
                     if hasattr(port, "file") and port.file and port.file.pk not in seen[File]:
                         queue.append(port.file)
-            if isinstance(obj, FileGroup):
-                pass
+            if isinstance(obj, File):
+                fg = getattr(obj, "file_group", None)
+                if fg and fg.pk not in seen[FileGroup]:
+                    queue.append(fg)
             # Handle related objects
             for field in model._meta.get_fields():
-                if isinstance(obj, File) and field.name == "file_group":
-                        fg = getattr(obj, "file_group", None)
-                        if fg and fg.name in (
-                            "ACCESS SV",
-                            "access_curated_normals",
-                            "accessv2_curated_normals",
-                        ):
-                            continue
                 if isinstance(field, (ForeignKey, OneToOneField)):
                     related_obj = getattr(obj, field.name, None)
                     if should_enqueue(related_obj, seen, allowed_operator_pks):
@@ -77,8 +72,9 @@ def collect_related_objects_streaming(starting_objects, allowed_operator_pks, ol
                                 queue.append(to_enqueue)
                     except Exception:
                         continue
-    # Finish message
+
     print(f"Finished exporting {count} objects to {out_file}", flush=True)
+
 
 def strip_prefixes(s, prefixes):
     for p in prefixes:
@@ -146,6 +142,7 @@ def serialize_related_objects(seen_dict, old_prefixes, new_prefix):
     edited_data = edit_serialized_data(data, old_prefixes, new_prefix)
     return json.dumps(edited_data, indent=2)
 
+
 def should_enqueue(related_obj, seen, allowed_operator_pks):
     if related_obj is None:
         return False
@@ -155,6 +152,7 @@ def should_enqueue(related_obj, seen, allowed_operator_pks):
     if isinstance(related_obj, OperatorRun):
         return related_obj.operator_id in allowed_operator_pks and related_obj.pk not in seen[type(related_obj)]
     return related_obj.pk not in seen[type(related_obj)]
+
 
 def collect_related_objects_fg(starting_objects):
     seen = defaultdict(set)
@@ -171,7 +169,7 @@ def collect_related_objects_fg(starting_objects):
 
         for field in model._meta.get_fields():
             if isinstance(obj, FileGroup) and field.name == "file_set":
-                    continue
+                continue
             if isinstance(field, (ForeignKey, OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
                 if isinstance(obj, FileGroup) and field.name == "file_set":
@@ -244,7 +242,7 @@ class Command(BaseCommand):
         out_prefix = options["out"]  # use as prefix; we'll append operator slug
         old_prefixes = options["old_prefixes"]
         new_prefix = options["new_prefix"]
-        total_runs = {} 
+        total_runs = {}
         allowed_operators = [Operator.objects.get(slug=op) for op in operator_args]
         for op in allowed_operators:
             allowed_operator_pks = {op.pk}
@@ -266,7 +264,7 @@ class Command(BaseCommand):
                 allowed_operator_pks=allowed_operator_pks,
                 old_prefixes=old_prefixes,
                 new_prefix=new_prefix,
-                out_file=out_file
+                out_file=out_file,
             )
 
             print(f"Finished export for operator {op.slug}", flush=True)
@@ -306,7 +304,7 @@ class Command(BaseCommand):
 #   --new-prefix /data1/core006/
 # python3 manage.py export_facets operator-run \
 #   --operator AccessLegacyOperator AccessLegacySNVOperator AccessLegacySVOperator AccessLegacyCNVOperator AccessLegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1 \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1_groups \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
@@ -318,16 +316,16 @@ class Command(BaseCommand):
 # XSV2
 # python3 manage.py export_facets operator-run \
 #   --operator AccessV2NucleoOperator AccessV2NucleoQcOperator AccessV2NucleoAggQcOperator AccessV2LegacySNVOperator AccessV2LegacyCNVOperator AccessV2LegacySVOperator AccessV2LegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv2.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv2 \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
 # CMO-CH
-# python3 manage.py export_facets operator-run \
-#   --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch.json \
-#   --old-prefixes /work/ /juno/work/ \
-#   --new-prefix /data1/core006/
+python3 manage.py export_facets operator-run \
+  --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
+  --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch_groups \
+  --old-prefixes /work/ /juno/work/ \
+  --new-prefix /data1/core006/
 
 # python3 manage.py export_facets file-group \
 #   --out /juno/work/access/production/runs/voyager/facets/export_filegroup.json \
