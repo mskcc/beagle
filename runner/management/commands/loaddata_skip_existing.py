@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.core.serializers import deserialize
 from django.db import transaction, IntegrityError, models
 from collections import defaultdict
+from django.utils import timezone
 import json
 import os
 
@@ -51,7 +52,6 @@ class Command(BaseCommand):
 
         deferred = []
 
-        # Insert loop with FK resolution
         inserted_count = 0
         skipped_count = 0
         while all_objects:
@@ -113,18 +113,33 @@ class Command(BaseCommand):
                     )
                     continue
 
-                for field in model._meta.fields:
-                    if isinstance(field, (models.DateTimeField, models.DateField)):
-                        val = getattr(obj.object, field.attname, None)
-                        if val is None:
-                            if getattr(field, "auto_now_add", False) or getattr(field, "auto_now", False):
-                                import datetime
-                                setattr(obj.object, field.attname, datetime.datetime.now(datetime.timezone.utc))
+                # Only auto-fill dates for JobGroup objects
+                if model.__name__ == "JobGroup":
+                    if not getattr(obj.object, "created_date", None):
+                        obj.object.created_date = timezone.now()
+                    if not getattr(obj.object, "modified_date", None):
+                        obj.object.modified_date = timezone.now()
 
-                # Save object
+                # Save **only new objects** — do NOT save if PK already exists
                 try:
                     with transaction.atomic():
+                        for field_name in ["created_date", "modified_date"]:
+                            field = model._meta.get_field(field_name)
+                            if getattr(field, "auto_now", False) or getattr(field, "auto_now_add", False):
+                                auto_now_backup = getattr(field, "auto_now", False)
+                                auto_now_add_backup = getattr(field, "auto_now_add", False)
+                                field.auto_now = False
+                                field.auto_now_add = False
+
                         obj.object.save()
+
+                        # restore
+                        for field_name in ["created_date", "modified_date"]:
+                            field = model._meta.get_field(field_name)
+                            if field_name == "created_date":
+                                field.auto_now_add = auto_now_add_backup
+                            else:
+                                field.auto_now = auto_now_backup
                         inserted_pks[model].add(pk)
                         created_or_existing[(model._meta.label_lower, pk)] = obj.object
                         inserted_count += 1
@@ -149,7 +164,6 @@ class Command(BaseCommand):
                 raise IntegrityError(f"Could not resolve dependencies: {', '.join(unresolved)}")
 
             all_objects = remaining
-
         self.stdout.write(self.style.SUCCESS(f"\nDone: {inserted_count} inserted, {skipped_count} skipped"))
 
     def build_dependency_order(self, all_objs):
