@@ -321,11 +321,11 @@ class Command(BaseCommand):
 #   --new-prefix /data1/core006/
 
 # CMO-CH
-python3 manage.py export_facets operator-run \
-  --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
-  --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch_groups \
-  --old-prefixes /work/ /juno/work/ \
-  --new-prefix /data1/core006/
+# python3 manage.py export_facets operator-run \
+#   --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch_groups \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 
 # python3 manage.py export_facets file-group \
 #   --out /juno/work/access/production/runs/voyager/facets/export_filegroup.json \

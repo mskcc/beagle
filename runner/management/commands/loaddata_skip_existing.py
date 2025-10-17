@@ -7,15 +7,12 @@ from collections import defaultdict
 import json
 import os
 
+
 class Command(BaseCommand):
     help = "Load NDJSON fixtures but skip existing objects, respecting FK dependencies and logging every action."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "fixtures",
-            nargs="+",
-            help="Paths to NDJSON fixture files"
-        )
+        parser.add_argument("fixtures", nargs="+", help="Paths to NDJSON fixture files")
 
     def handle(self, *args, **options):
         fixtures = options["fixtures"]
@@ -39,9 +36,7 @@ class Command(BaseCommand):
                             all_objects.append(obj)
                             fixture_pks_by_model[obj.object.__class__].add(obj.object.pk)
                     except Exception as e:
-                        self.stderr.write(self.style.ERROR(
-                            f"Error parsing line {line_num} of {fixture_path}: {e}"
-                        ))
+                        self.stderr.write(self.style.ERROR(f"Error parsing line {line_num} of {fixture_path}: {e}"))
 
         self.stdout.write(f"Total objects loaded: {len(all_objects)}\n")
 
@@ -49,14 +44,14 @@ class Command(BaseCommand):
         dependency_order = self.build_dependency_order(all_objects)
         all_objects.sort(key=lambda o: dependency_order.get(o.object._meta.label_lower, 99))
 
-        # prefetch existing PKs 
+        # prefetch existing PKs
         existing_pks = {model: set(model.objects.values_list("pk", flat=True)) for model in fixture_pks_by_model}
         inserted_pks = {model: set() for model in fixture_pks_by_model}
         created_or_existing = {}
 
         deferred = []
 
-       # Insert loop with FK resolution
+        # Insert loop with FK resolution
         inserted_count = 0
         skipped_count = 0
 
@@ -77,7 +72,9 @@ class Command(BaseCommand):
                 # Skip if unique constraint exists
                 if self.exists_by_unique_fields(obj):
                     skipped_count += 1
-                    self.stdout.write(self.style.WARNING(f"Skipped {model.__name__}({pk}) — unique constraint conflict"))
+                    self.stdout.write(
+                        self.style.WARNING(f"Skipped {model.__name__}({pk}) — unique constraint conflict")
+                    )
                     unique_filters = self.get_unique_filters(obj)
                     if unique_filters:
                         existing_obj = model.objects.get(**unique_filters)
@@ -92,7 +89,9 @@ class Command(BaseCommand):
                         if not fk_id:
                             continue
                         related_model = field.related_model
-                        if fk_id in inserted_pks.get(related_model, set()) or fk_id in existing_pks.get(related_model, set()):
+                        if fk_id in inserted_pks.get(related_model, set()) or fk_id in existing_pks.get(
+                            related_model, set()
+                        ):
                             rel_instance = related_model.objects.get(pk=fk_id)
                             setattr(obj.object, field.name, rel_instance)
                         else:
@@ -110,9 +109,9 @@ class Command(BaseCommand):
 
                 if missing_fk:
                     remaining.append(obj)
-                    self.stdout.write(self.style.WARNING(
-                        f"Deferring {model.__name__}({pk}) — missing FKs: {', '.join(missing_fk)}"
-                    ))
+                    self.stdout.write(
+                        self.style.WARNING(f"Deferring {model.__name__}({pk}) — missing FKs: {', '.join(missing_fk)}")
+                    )
                     continue
 
                 # Save object
@@ -128,9 +127,11 @@ class Command(BaseCommand):
                     for field_name, rel_pks in m2m_data.items():
                         if rel_pks:
                             getattr(obj.object, field_name).set(rel_pks)
-                            self.stdout.write(self.style.SUCCESS(
-                                f"Assigned M2M for {model.__name__}({pk}) field '{field_name}' -> {rel_pks}"
-                            ))
+                            self.stdout.write(
+                                self.style.SUCCESS(
+                                    f"Assigned M2M for {model.__name__}({pk}) field '{field_name}' -> {rel_pks}"
+                                )
+                            )
 
                 except IntegrityError as e:
                     remaining.append(obj)
@@ -142,9 +143,7 @@ class Command(BaseCommand):
 
             all_objects = remaining
 
-        self.stdout.write(self.style.SUCCESS(
-            f"\nDone: {inserted_count} inserted, {skipped_count} skipped"
-        ))
+        self.stdout.write(self.style.SUCCESS(f"\nDone: {inserted_count} inserted, {skipped_count} skipped"))
 
     def build_dependency_order(self, all_objs):
         """
@@ -178,9 +177,11 @@ class Command(BaseCommand):
         qs = model.objects.all()
 
         # Single-field unique constraints
-        filters = {f.name: getattr(obj.object, f.attname)
-                   for f in model._meta.fields
-                   if f.unique and getattr(obj.object, f.attname) is not None}
+        filters = {
+            f.name: getattr(obj.object, f.attname)
+            for f in model._meta.fields
+            if f.unique and getattr(obj.object, f.attname) is not None
+        }
         if filters and qs.filter(**filters).exists():
             return True
 
@@ -196,9 +197,11 @@ class Command(BaseCommand):
         """Return the dict of fields for unique lookup (single or multi-field)."""
         model = obj.object.__class__
         # single-field unique
-        filters = {f.name: getattr(obj.object, f.attname)
-                   for f in model._meta.fields
-                   if f.unique and getattr(obj.object, f.attname) is not None}
+        filters = {
+            f.name: getattr(obj.object, f.attname)
+            for f in model._meta.fields
+            if f.unique and getattr(obj.object, f.attname) is not None
+        }
         if filters and model.objects.filter(**filters).exists():
             return filters
 
