@@ -54,7 +54,6 @@ class Command(BaseCommand):
         # Insert loop with FK resolution
         inserted_count = 0
         skipped_count = 0
-
         while all_objects:
             remaining = []
 
@@ -113,6 +112,14 @@ class Command(BaseCommand):
                         self.style.WARNING(f"Deferring {model.__name__}({pk}) — missing FKs: {', '.join(missing_fk)}")
                     )
                     continue
+
+                for field in model._meta.fields:
+                    if isinstance(field, (models.DateTimeField, models.DateField)):
+                        val = getattr(obj.object, field.attname, None)
+                        if val is None:
+                            if getattr(field, "auto_now_add", False) or getattr(field, "auto_now", False):
+                                import datetime
+                                setattr(obj.object, field.attname, datetime.datetime.now(datetime.timezone.utc))
 
                 # Save object
                 try:
