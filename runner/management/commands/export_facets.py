@@ -9,6 +9,7 @@ from runner.models import OperatorRun, RunStatus, TriggerRunType, Run, Pipeline
 from file_system.repository.file_repository import FileRepository
 from collections import defaultdict, deque
 from django.core.management.base import BaseCommand
+from runner.models import Port
 
 
 def check_if_operator(related_obj, seen, allowed_operator_pks):
@@ -23,36 +24,56 @@ def check_if_operator(related_obj, seen, allowed_operator_pks):
     return None
 
 
-def collect_related_objects(starting_objects, allowed_operators_pks):
+def collect_related_objects_streaming(starting_objects, allowed_operator_pks, old_prefixes, new_prefix, out_file):
     seen = defaultdict(set)
     queue = deque(starting_objects)
-    while queue:
-        obj = queue.popleft()
-        model = type(obj)
+    count = 0
+    with open(out_file, "w") as f:
+        while queue:
+            obj = queue.popleft()
+            model = type(obj)
 
-        if obj.pk in seen[model]:
-            continue
+            if obj.pk in seen[model]:
+                continue
+            seen[model].add(obj.pk)
 
-        seen[model].add(obj.pk)
+            # Serialize and immediately write this object
+            serialized_obj = json.loads(serialize("json", [obj]))[0]
 
-        for field in model._meta.get_fields():
-            if isinstance(field, (ForeignKey, OneToOneField)):
-                related_obj = getattr(obj, field.name, None)
-                to_enqueue = check_if_operator(related_obj, seen, allowed_operators_pks)
-                if to_enqueue:
-                    queue.append(to_enqueue)
+            edited_obj = edit_serialized_data([serialized_obj], old_prefixes, new_prefix)[0]
+            f.write(json.dumps(edited_obj) + "\n")
+            f.flush()
+            count += 1
+            if count % 1000 == 0:
+                print(f"Processed {count} objects", flush=True)
+            if isinstance(obj, Run):
+                for port in obj.port_set.iterator():
+                    if port.pk not in seen[Port]:
+                        if port.name != "sv_directory":
+                            queue.append(port)
+                    if hasattr(port, "file") and port.file and port.file.pk not in seen[File]:
+                        queue.append(port.file)
+            if isinstance(obj, File):
+                fg = getattr(obj, "file_group", None)
+                if fg and fg.pk not in seen[FileGroup]:
+                    queue.append(fg)
+            # Handle related objects
+            for field in model._meta.get_fields():
+                if isinstance(field, (ForeignKey, OneToOneField)):
+                    related_obj = getattr(obj, field.name, None)
+                    if should_enqueue(related_obj, seen, allowed_operator_pks):
+                        queue.append(related_obj)
+                elif isinstance(field, ManyToManyField):
+                    try:
+                        related_manager = getattr(obj, field.name)
+                        for related_obj in related_manager.iterator():
+                            to_enqueue = check_if_operator(related_obj, seen, allowed_operator_pks)
+                            if to_enqueue:
+                                queue.append(to_enqueue)
+                    except Exception:
+                        continue
 
-            elif isinstance(field, ManyToManyField):
-                try:
-                    related_manager = getattr(obj, field.name)
-                    for related_obj in related_manager.all():
-                        to_enqueue = check_if_operator(related_obj, seen, allowed_operators_pks)
-                        if to_enqueue:
-                            queue.append(to_enqueue)
-                except Exception:
-                    continue
-
-    return seen
+    print(f"Finished exporting {count} objects to {out_file}", flush=True)
 
 
 def strip_prefixes(s, prefixes):
@@ -122,6 +143,17 @@ def serialize_related_objects(seen_dict, old_prefixes, new_prefix):
     return json.dumps(edited_data, indent=2)
 
 
+def should_enqueue(related_obj, seen, allowed_operator_pks):
+    if related_obj is None:
+        return False
+    # skip traversing FileGroup → files
+    if isinstance(related_obj, FileGroup):
+        return False
+    if isinstance(related_obj, OperatorRun):
+        return related_obj.operator_id in allowed_operator_pks and related_obj.pk not in seen[type(related_obj)]
+    return related_obj.pk not in seen[type(related_obj)]
+
+
 def collect_related_objects_fg(starting_objects):
     seen = defaultdict(set)
     queue = deque(starting_objects)
@@ -136,17 +168,29 @@ def collect_related_objects_fg(starting_objects):
         seen[model].add(obj.pk)
 
         for field in model._meta.get_fields():
+            if isinstance(obj, FileGroup) and field.name == "file_set":
+                continue
             if isinstance(field, (ForeignKey, OneToOneField)):
                 related_obj = getattr(obj, field.name, None)
+                if isinstance(obj, FileGroup) and field.name == "file_set":
+                    continue
                 if related_obj is None:
                     continue
                 else:
                     if related_obj.pk not in seen[type(related_obj)]:
                         queue.append(related_obj)
+
+            if isinstance(obj, File):
+                fg = getattr(obj, "file_group", None)
+                if fg and fg.name in ("ACCESS SV", "access_curated_normals", "accessv2_curated_normals"):
+                    # Only enqueue files if they are already added via a Run/Port
+                    pass
             elif isinstance(field, ManyToManyField):
                 try:
                     related_manager = getattr(obj, field.name)
                     for related_obj in related_manager.all():
+                        if isinstance(obj, FileGroup) and field.name == "file_set":
+                            continue
                         if related_obj is None:
                             continue
                         else:
@@ -195,36 +239,35 @@ class Command(BaseCommand):
 
     def _export_operator(self, options):
         operator_args = options["operator"]
-        out_file = options["out"]
+        out_prefix = options["out"]  # use as prefix; we'll append operator slug
         old_prefixes = options["old_prefixes"]
         new_prefix = options["new_prefix"]
-
+        total_runs = {}
         allowed_operators = [Operator.objects.get(slug=op) for op in operator_args]
-        allowed_operator_pks = {op.pk for op in allowed_operators}
+        for op in allowed_operators:
+            allowed_operator_pks = {op.pk}
 
-        operator_runs = OperatorRun.objects.filter(
-            operator_id__in=allowed_operator_pks,
-            status=RunStatus.COMPLETED.value,
-        )
-        operator_run_ids = operator_runs.values_list("id", flat=True)
+            operator_runs = OperatorRun.objects.filter(
+                operator_id=op.pk,
+                status=RunStatus.COMPLETED.value,
+            )
+            # operator_runs = [operator_runs[0]]
+            runs = Run.objects.filter(
+                operator_run__in=operator_runs,
+                status=RunStatus.COMPLETED.value,
+            ).iterator()
+            out_file = f"{out_prefix}_{op.slug}.json"
+            print(f"Starting export for operator {op.slug} → {out_file}", flush=True)
 
-        runs = Run.objects.filter(
-            operator_run__in=operator_run_ids,
-            status=RunStatus.COMPLETED.value,
-        )
-        # latest_by_request = runs.values("tags__igoRequestId").annotate(latest_date=Max("finished_date"))
+            collect_related_objects_streaming(
+                starting_objects=runs,
+                allowed_operator_pks=allowed_operator_pks,
+                old_prefixes=old_prefixes,
+                new_prefix=new_prefix,
+                out_file=out_file,
+            )
 
-        # query = Q()
-        # for row in latest_by_request:
-        #     query |= Q(tags__igoRequestId=row["tags__igoRequestId"], finished_date=row["latest_date"])
-
-        # recent_requests = runs.filter(query)
-        recent_requests = runs
-        related = collect_related_objects(recent_requests, allowed_operator_pks)
-        json_output = serialize_related_objects(related, old_prefixes, new_prefix)
-
-        with open(out_file, "w") as f:
-            f.write(json_output)
+            print(f"Finished export for operator {op.slug}", flush=True)
 
     def _export_filegroup(self, options):
         filegroup_args = options["filegroups"]
@@ -234,30 +277,53 @@ class Command(BaseCommand):
         file_groups = [gr for gr in filegroup_args]
         files = File.objects.filter(file_group__slug__in=file_groups)
         related = collect_related_objects_fg(files)
-        json_output = serialize_related_objects(related, old_prefixes, new_prefix)
-
         with open(out_file, "w") as f:
-            f.write(json_output)
+            for model, pks in related.items():
+                queryset = model.objects.filter(pk__in=pks).iterator()
+                for obj in queryset:
+                    serialized_obj = json.loads(serialize("json", [obj]))[0]
+                    edited_obj = edit_serialized_data([serialized_obj], old_prefixes, new_prefix)[0]
+                    f.write(json.dumps(edited_obj) + "\n")
+                    f.flush()
 
 
 # XSV1
+# nohup python3 manage.py export_facets operator-run \
+#   --operator AccessLegacySNVOperator AccessLegacySVOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_v1_test \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/ \
+#   > export_facets.log 2>&1 &
+# disown
+
+# SV is 13230 runs vs 14552
+# python3 manage.py export_facets operator-run \
+#   --operator AccessLegacySVOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_v1_test \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 # python3 manage.py export_facets operator-run \
 #   --operator AccessLegacyOperator AccessLegacySNVOperator AccessLegacySVOperator AccessLegacyCNVOperator AccessLegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_11_30_25.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv1_groups \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
+# python3 manage.py export_facets operator-run \
+#   --operator AccessLegacyOperator \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_test_ports.json \
+#   --old-prefixes /work/ /juno/work/ \
+#   --new-prefix /data1/core006/
 # XSV2
 # python3 manage.py export_facets operator-run \
 #   --operator AccessV2NucleoOperator AccessV2NucleoQcOperator AccessV2NucleoAggQcOperator AccessV2LegacySNVOperator AccessV2LegacyCNVOperator AccessV2LegacySVOperator AccessV2LegacyMSIOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_01_25.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_xsv2 \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 
 # CMO-CH
 # python3 manage.py export_facets operator-run \
 #   --operator AccessCMOCHOperator CMOCHQCOperator CMOCHQcAggOperator CMOCHChipVarOperator \
-#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_10_03_25_cmoch.json \
+#   --out /juno/work/access/production/runs/voyager/facets/export_operatorrun_ports_cmoch_groups \
 #   --old-prefixes /work/ /juno/work/ \
 #   --new-prefix /data1/core006/
 

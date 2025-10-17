@@ -2,135 +2,213 @@
 
 from django.core.management.base import BaseCommand
 from django.core.serializers import deserialize
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, models
+from collections import defaultdict
+import json
+import os
 
 
 class Command(BaseCommand):
-    help = (
-        "Load fixtures but skip objects that already exist. "
-        "Handles PK and unique constraints, FK and M2M dependencies."
-    )
+    help = "Load NDJSON fixtures but skip existing objects, respecting FK dependencies and logging every action."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "fixtures",
-            nargs="+",
-            help="Paths to fixture files (JSON)",
-        )
+        parser.add_argument("fixtures", nargs="+", help="Paths to NDJSON fixture files")
 
     def handle(self, *args, **options):
         fixtures = options["fixtures"]
-
-        # Load all objects from fixtures
         all_objects = []
+        fixture_pks_by_model = defaultdict(set)
+
+        # load all objects from NDJSON fixture
         for fixture_path in fixtures:
+            if not os.path.exists(fixture_path):
+                self.stderr.write(self.style.ERROR(f"Fixture not found: {fixture_path}"))
+                continue
+
             self.stdout.write(f"Reading fixture: {fixture_path}")
             with open(fixture_path, "r") as f:
-                objs = list(deserialize("json", f.read()))
-                self.stdout.write(f"  Found {len(objs)} objects")
-                all_objects.extend(objs)
+                for line_num, line in enumerate(f, 1):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        for obj in deserialize("json", f"[{line}]"):
+                            all_objects.append(obj)
+                            fixture_pks_by_model[obj.object.__class__].add(obj.object.pk)
+                    except Exception as e:
+                        self.stderr.write(self.style.ERROR(f"Error parsing line {line_num} of {fixture_path}: {e}"))
 
-        self.stdout.write(f"Total objects to process: {len(all_objects)}\n")
+        self.stdout.write(f"Total objects loaded: {len(all_objects)}\n")
 
-        # Collect all PKs from fixture
-        fixture_pks_by_model = {}
-        for obj in all_objects:
-            model = obj.object.__class__
-            fixture_pks_by_model.setdefault(model, set()).add(obj.object.pk)
+        # Build dependency order
+        dependency_order = self.build_dependency_order(all_objects)
+        all_objects.sort(key=lambda o: dependency_order.get(o.object._meta.label_lower, 99))
 
-        # Prefetch existing PKs from DB
+        # prefetch existing PKs
         existing_pks = {model: set(model.objects.values_list("pk", flat=True)) for model in fixture_pks_by_model}
-
         inserted_pks = {model: set() for model in fixture_pks_by_model}
-        deferred_m2m = []
+        created_or_existing = {}
 
-        pending = all_objects[:]
-        inserted, skipped = 0, 0
+        deferred = []
 
-        def exists_by_unique_fields(obj):
-            model = obj.object.__class__
-            qs = model.objects.all()
-            filters = {}
-            for field in model._meta.fields:
-                if field.unique:
-                    value = getattr(obj.object, field.attname)
-                    if value is not None:
-                        filters[field.name] = value
-            if filters:
-                return qs.filter(**filters).exists()
-            return False
+        # Insert loop with FK resolution
+        inserted_count = 0
+        skipped_count = 0
 
-        def is_available(related_model, rel_pk):
-            return rel_pk in inserted_pks.get(related_model, set()) or rel_pk in existing_pks.get(related_model, set())
-
-        while pending:
+        while all_objects:
             remaining = []
-            for obj in pending:
+
+            for obj in all_objects:
                 model = obj.object.__class__
                 pk = obj.object.pk
 
-                # Skip if PK or unique fields already exist
-                if pk in existing_pks.get(model, set()) or exists_by_unique_fields(obj):
-                    skipped += 1
-                    self.stdout.write(
-                        self.style.WARNING(f"Skipped {model.__name__}({pk}) (already exists or unique conflict)")
-                    )
+                # Skip if PK exists
+                if pk in existing_pks.get(model, set()):
+                    skipped_count += 1
+                    self.stdout.write(self.style.WARNING(f"Skipped {model.__name__}({pk}) — already exists (PK)"))
+                    created_or_existing[(model._meta.label_lower, pk)] = model.objects.get(pk=pk)
                     continue
 
-                # Check FK dependencies
-                missing = []
-                for field in model._meta.fields:
-                    if field.is_relation and not field.many_to_one and not field.one_to_many:
-                        continue
-                    if field.is_relation:
-                        rel_pk = getattr(obj.object, field.attname, None)
-                        if rel_pk and not is_available(field.related_model, rel_pk):
-                            missing.append(f"{field.related_model.__name__}({rel_pk})")
-
-                # Check M2M dependencies (deferred, but must exist before assignment)
-                for m2m_field in model._meta.many_to_many:
-                    rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
-                    for rel_pk in rel_pks:
-                        if not is_available(m2m_field.related_model, rel_pk):
-                            missing.append(f"{m2m_field.related_model.__name__}({rel_pk}) [M2M:{m2m_field.name}]")
-
-                if missing:
+                # Skip if unique constraint exists
+                if self.exists_by_unique_fields(obj):
+                    skipped_count += 1
                     self.stdout.write(
-                        self.style.WARNING(
-                            f"Deferring {model.__name__}({pk}), missing dependencies: {', '.join(missing)}"
-                        )
+                        self.style.WARNING(f"Skipped {model.__name__}({pk}) — unique constraint conflict")
                     )
+                    unique_filters = self.get_unique_filters(obj)
+                    if unique_filters:
+                        existing_obj = model.objects.get(**unique_filters)
+                        created_or_existing[(model._meta.label_lower, pk)] = existing_obj
+                    continue
+
+                # Resolve FKs
+                missing_fk = []
+                for field in model._meta.fields:
+                    if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+                        fk_id = getattr(obj.object, field.attname)
+                        if not fk_id:
+                            continue
+                        related_model = field.related_model
+                        if fk_id in inserted_pks.get(related_model, set()) or fk_id in existing_pks.get(
+                            related_model, set()
+                        ):
+                            rel_instance = related_model.objects.get(pk=fk_id)
+                            setattr(obj.object, field.name, rel_instance)
+                        else:
+                            missing_fk.append(f"{related_model.__name__}({fk_id})")
+
+                # Resolve M2M fields
+                m2m_data = {}
+                for m2m_field in model._meta.many_to_many:
+                    try:
+                        rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                        m2m_data[m2m_field.name] = rel_pks
+                        getattr(obj.object, m2m_field.name).clear()
+                    except Exception:
+                        continue
+
+                if missing_fk:
                     remaining.append(obj)
+                    self.stdout.write(
+                        self.style.WARNING(f"Deferring {model.__name__}({pk}) — missing FKs: {', '.join(missing_fk)}")
+                    )
                     continue
 
                 # Save object
                 try:
                     with transaction.atomic():
-                        obj.save()
+                        obj.object.save()
                         inserted_pks[model].add(pk)
+                        created_or_existing[(model._meta.label_lower, pk)] = obj.object
+                        inserted_count += 1
+                        self.stdout.write(self.style.SUCCESS(f"Inserted {model.__name__}({pk})"))
 
-                    # Defer M2M until all inserts are complete
-                    for m2m_field in model._meta.many_to_many:
-                        rel_pks = [rel.pk for rel in getattr(obj.object, m2m_field.name).all()]
+                    # Assign deferred M2M
+                    for field_name, rel_pks in m2m_data.items():
                         if rel_pks:
-                            deferred_m2m.append((obj.object, m2m_field.name, rel_pks))
+                            getattr(obj.object, field_name).set(rel_pks)
+                            self.stdout.write(
+                                self.style.SUCCESS(
+                                    f"Assigned M2M for {model.__name__}({pk}) field '{field_name}' -> {rel_pks}"
+                                )
+                            )
 
-                    inserted += 1
-                    self.stdout.write(self.style.SUCCESS(f"Inserted {model.__name__}({pk})"))
                 except IntegrityError as e:
-                    self.stdout.write(self.style.ERROR(f"Failed to insert {model.__name__}({pk}): {e}"))
+                    remaining.append(obj)
+                    self.stderr.write(self.style.ERROR(f"Failed to insert {model.__name__}({pk}): {e}"))
 
-            if len(remaining) == len(pending):
-                # Cannot resolve dependencies further
-                unresolved = [f"{obj.object.__class__.__name__}({obj.object.pk})" for obj in remaining]
-                raise IntegrityError(
-                    f"Could not resolve dependencies for the following objects: {', '.join(unresolved)}"
-                )
+            if len(remaining) == len(all_objects):
+                unresolved = [f"{o.object.__class__.__name__}({o.object.pk})" for o in remaining]
+                raise IntegrityError(f"Could not resolve dependencies: {', '.join(unresolved)}")
 
-            pending = remaining
+            all_objects = remaining
 
-        # Assign deferred M2M relationships now that everything exists
-        for instance, field_name, rel_pks in deferred_m2m:
-            getattr(instance, field_name).set(rel_pks)
+        self.stdout.write(self.style.SUCCESS(f"\nDone: {inserted_count} inserted, {skipped_count} skipped"))
 
-        self.stdout.write(self.style.SUCCESS(f"\nDone: {inserted} inserted, {skipped} skipped"))
+    def build_dependency_order(self, all_objs):
+        """
+        Compute a dependency ordering by examining ForeignKey fields.
+        Parents come before children.
+        """
+        graph = {}
+        for obj in all_objs:
+            model_label = obj.object._meta.label_lower
+            deps = set()
+            for field in obj.object._meta.fields:
+                if isinstance(field, (models.ForeignKey, models.OneToOneField)):
+                    deps.add(field.related_model._meta.label_lower)
+            graph[model_label] = deps
+
+        # Simple topological sort
+        resolved = set()
+        order = {}
+        for _ in range(20):
+            for model_label, deps in graph.items():
+                if model_label in order:
+                    continue
+                if deps.issubset(resolved):
+                    order[model_label] = len(resolved)
+                    resolved.add(model_label)
+        return order
+
+    def exists_by_unique_fields(self, obj):
+        """Return True if an object with the same unique fields already exists."""
+        model = obj.object.__class__
+        qs = model.objects.all()
+
+        # Single-field unique constraints
+        filters = {
+            f.name: getattr(obj.object, f.attname)
+            for f in model._meta.fields
+            if f.unique and getattr(obj.object, f.attname) is not None
+        }
+        if filters and qs.filter(**filters).exists():
+            return True
+
+        # Multi-field unique_together constraints
+        for unique_fields in model._meta.unique_together:
+            ufilters = {f: getattr(obj.object, f) for f in unique_fields if getattr(obj.object, f) is not None}
+            if len(ufilters) == len(unique_fields) and qs.filter(**ufilters).exists():
+                return True
+
+        return False
+
+    def get_unique_filters(self, obj):
+        """Return the dict of fields for unique lookup (single or multi-field)."""
+        model = obj.object.__class__
+        # single-field unique
+        filters = {
+            f.name: getattr(obj.object, f.attname)
+            for f in model._meta.fields
+            if f.unique and getattr(obj.object, f.attname) is not None
+        }
+        if filters and model.objects.filter(**filters).exists():
+            return filters
+
+        # unique_together
+        for unique_fields in model._meta.unique_together:
+            ufilters = {f: getattr(obj.object, f) for f in unique_fields if getattr(obj.object, f) is not None}
+            if len(ufilters) == len(unique_fields) and model.objects.filter(**ufilters).exists():
+                return ufilters
+
+        return None
