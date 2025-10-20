@@ -119,6 +119,7 @@ class Command(BaseCommand):
                         if val is None:
                             if getattr(field, "auto_now_add", False) or getattr(field, "auto_now", False):
                                 import datetime
+
                                 setattr(obj.object, field.attname, datetime.datetime.now(datetime.timezone.utc))
 
                 # Save object
