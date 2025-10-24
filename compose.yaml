@@ -542,17 +542,17 @@ services:
         - voyager_net
       volumes:
         - ./logs:/logs
-        - ${DB_MONTHLY_BACKUP_PATH}:/db_monthly_backup
+        - ${DB_BACKUP_PATH}:/db_backup
       environment:
         - PGPASSWORD=${BEAGLE_DB_PASSWORD}
       entrypoint: ["/bin/sh", "-c"]
       command:
         - |
-          mkdir -p /db_monthly_backup/archive
-          cat > /db_monthly_backup/db_monthly_backup.cron <<EOF
-          ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_monthly_backup/archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
+          mkdir -p /db_backup/monthly_archive
+          cat > /db_backup/db_monthly_backup.cron <<EOF
+          ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
           EOF
-          supercronic /db_monthly_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
+          supercronic /db_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
     healthcheck:
       test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
       interval: 12h
