@@ -18,7 +18,7 @@ make install
 make install-m1 
 
 Then activate the virtual environment with: 
-conda activate beagle 
+source conda/bin/activate beagle
 
 2a. initialize the database with:
 make db-init
@@ -95,7 +95,7 @@ unexport PYTHONHOME
 
 ifeq ($(UNAME), Darwin)
 	ifeq ($(UNAME_P), Darwin_arm)
-	CONDASH:=Miniconda3-latest-MacOSX-arm64.sh
+	CONDASH:=Miniconda3-py38_4.12.0-MacOSX-arm64.sh
 	endif
 endif
 
@@ -137,7 +137,7 @@ install: conda
 # install the Beagle requirements, m1 friendly 
 install-m1: conda
 	CONDA_SUBDIR=osx-64 conda create -y -n beagle python=3.8
-	$(shell conda/bin/activate beagle && \
+	source conda/bin/activate beagle && \
 	conda config --system --set subdir osx-64 && \
 	conda install -y \
 		conda-forge::ncurses=6.1 \
@@ -147,7 +147,7 @@ install-m1: conda
 		bioconda::rabix-bunny=1.0.4 \
 		conda-forge::jq && \
 		pip install -r requirements.txt && \
-		pip install -r requirements-dev.txt)
+		pip install -r requirements-dev.txt
 
 export ENVIRONMENT=dev
 # ~~~~~ Set Up Demo Postgres Database for Dev ~~~~~ #
