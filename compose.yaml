@@ -208,13 +208,14 @@ services:
       timeout: 3s
       retries: 3
   beagle_memcached:
-    image: bitnami/memcached:1.6.37
+    image: mskcc/memcached-nc:1.6.39
     restart: on-failure
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
     expose:
       - "11211"
+    command: ["memcached"]
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "11211"]
       interval: 30s
