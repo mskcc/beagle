@@ -284,18 +284,18 @@ services:
       - ${CLUSTER_CODE_PATH:-/dev/null}:${CLUSTER_CODE_PATH:-/dev/null}
     post_start:
       - command:
-        - /bin/bash
-        - -c
-        - |
-          sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
-          sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
-          sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
-          sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
-          for single_group in ${all_groups}; do
-            single_group_items=($${!single_group[0]})
-            getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
-          done
-          id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
+          - /bin/bash
+          - -c
+          - |
+            sed -i 's/UID_MAX			60000/UID_MAX			6000000000/g' /etc/login.defs
+            sed -i 's/GID_MAX			60000/GID_MAX			6000000000/g' /etc/login.defs
+            sed -i 's/UID_MIN			 1000/UID_MIN			 100/g' /etc/login.defs
+            sed -i 's/GID_MIN			 1000/GID_MIN			 100/g' /etc/login.defs
+            for single_group in ${all_groups}; do
+              single_group_items=($${!single_group[0]})
+              getent group $${single_group_items[1]} &>/dev/null || groupadd -g $${single_group_items[0]} $${single_group_items[1]}
+            done
+            id -u ${DOCKER_USERNAME} &>/dev/null || useradd -s /bin/bash -d ${HOME} --uid ${DOCKER_UID} -m ${DOCKER_USERNAME} -G ${DOCKER_GROUPS}
         user: root
     ports:
       - ${BEAGLE_PORT}:${BEAGLE_PORT}
@@ -529,25 +529,25 @@ services:
         ${DB_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
         EOF
         supercronic /db_backup/db_backup.cron >> /logs/db_backup_cron.log 2>&1
-    beagle_db_monthly_backup:
-      image: mskcc/voyager-compose-utils:1.0.1
-      restart: always
-      user: "${DOCKER_UID}:${DOCKER_GID}"
-      networks:
-        - voyager_net
-      volumes:
-        - ./logs:/logs
-        - ${DB_BACKUP_PATH}:/db_backup
-      environment:
-        - PGPASSWORD=${BEAGLE_DB_PASSWORD}
-      entrypoint: ["/bin/sh", "-c"]
-      command:
-        - |
-          mkdir -p /db_backup/monthly_archive
-          cat > /db_backup/db_monthly_backup.cron <<EOF
-          ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
-          EOF
-          supercronic /db_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
+  beagle_db_monthly_backup:
+    image: mskcc/voyager-compose-utils:1.0.1
+    restart: always
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    networks:
+      - voyager_net
+    volumes:
+      - logs_path:/logs
+      - ${DB_BACKUP_PATH}:/db_backup
+    environment:
+      - PGPASSWORD=${BEAGLE_DB_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mkdir -p /db_backup/monthly_archive
+        cat > /db_backup/db_monthly_backup.cron <<EOF
+        ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
+        EOF
+        supercronic /db_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
     healthcheck:
       test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
       interval: 12h
