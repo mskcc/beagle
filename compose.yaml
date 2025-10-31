@@ -21,14 +21,11 @@ x-beagle_celery: &beagle_celery
     - BEAGLE_LOG_PATH=/beagle/celery/logs/django_server.log
     - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
   volumes:
-    - ./logs/:/beagle/celery/logs/
-    - ./celery/:/beagle/celery/
+    - logs_path:/beagle/celery/logs/
+    - celery_path:/beagle/celery/
     - ${BEAGLE_SHARED_TMPDIR}:/tmp
     - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
-    - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
     - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
-    - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
-    - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
     - ${CLUSTER_CODE_PATH:-/dev/null}:${CLUSTER_CODE_PATH:-/dev/null}
   post_start:
     - command:
@@ -73,14 +70,14 @@ services:
     image: alpine:3.8
     restart: no
     volumes:
-      - ./postgres:/postgres
-      - ./pgbouncer:/pgbouncer
-      - ./logs:/logs
-      - ./celery:/celery
-      - ./rabbitmq:/rabbitmq
-      - ./server/:/server
-      - ./logrotate/:/logrotate
-      - ${DB_BACKUP_PATH}:/db_backup
+      - postgres_path:/postgres
+      - pgbouncer_path:/pgbouncer
+      - logs_path:/logs
+      - celery_path:/celery
+      - rabbitmq_path:/rabbitmq
+      - server_path:/server
+      - logrotate_path:/logrotate
+      - db_backup_path:/db_backup
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -99,7 +96,7 @@ services:
     networks:
       - voyager_net
     volumes:
-      - ./postgres/:/var/lib/postgresql/data/
+      - postgres_path:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=${BEAGLE_DB_USERNAME}
       - POSTGRES_PASSWORD=${BEAGLE_DB_PASSWORD}
@@ -169,8 +166,8 @@ services:
     networks:
       - voyager_net
     volumes:
-      - ./logs:/logs
-      - ./pgbouncer:/etc/pgbouncer
+      - logs_path:/logs
+      - pgbouncer_path:/etc/pgbouncer
       - type: bind
         source: /etc/passwd
         target: /etc/passwd
@@ -228,8 +225,8 @@ services:
     networks:
       - voyager_net
     volumes:
-      - ./rabbitmq/:/var/lib/rabbitmq/
-      - ./logs/:/var/log/rabbitmq/
+      - rabbitmq_path:/var/lib/rabbitmq/
+      - logs_path:/var/log/rabbitmq/
     ports:
       - ${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672
       - ${BEAGLE_RABBITMQ_PORT}:5672
@@ -279,14 +276,11 @@ services:
       - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
       - BEAGLE_LOG_PATH=/beagle/server/django_server.log
     volumes:
-      - ./logs/:/beagle/server/
-      - ./server:/usr/bin/beagle/static
-      - ./server:/staticfiles
+      - logs_path:/beagle/server/
+      - server_path:${BEAGLE_PATH}/static
+      - server_path:/staticfiles
       - ${CLUSTER_FILESYSTEM_MOUNT}:${CLUSTER_FILESYSTEM_MOUNT}
-      - ${CLUSTER_FILESYSTEM_SHARE_MOUNT}:${CLUSTER_FILESYSTEM_SHARE_MOUNT}
       - ${CLUSTER_SCRATCH_MOUNT}:${CLUSTER_SCRATCH_MOUNT}
-      - ${CLUSTER_FILESYSTEM_COLLAB}:${CLUSTER_FILESYSTEM_COLLAB}
-      - ${CLUSTER_FILESYSTEM_TEST}:${CLUSTER_FILESYSTEM_TEST}
       - ${CLUSTER_CODE_PATH:-/dev/null}:${CLUSTER_CODE_PATH:-/dev/null}
     post_start:
       - command:
@@ -482,8 +476,8 @@ services:
     networks:
       - voyager_net
     volumes:
-      - ./logs:/logs
-      - ./logrotate/:/logrotate
+      - logs_path:/logs
+      - logrotate_path:/logrotate
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -523,7 +517,7 @@ services:
     networks:
       - voyager_net
     volumes:
-      - ./logs:/logs
+      - logs_path:/logs
       - ${DB_BACKUP_PATH}:/db_backup
     environment:
       - PGPASSWORD=${BEAGLE_DB_PASSWORD}
@@ -566,6 +560,55 @@ services:
       beagle_celery_default_queue:
         condition: service_healthy
         restart: false
+volumes:
+  postgres_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_POSTGRES_PATH}"
+  pgbouncer_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_PGBOUNCER_PATH}"
+  logs_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_LOGS_PATH}"
+  celery_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_CELERY_PATH}"
+  rabbitmq_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_RABITMQ_PATH}"
+  server_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_SERVER_PATH}"
+  logrotate_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_LOGROTATE_PATH}"
+  db_backup_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${BEAGLE_DB_BACKUP_PATH}"
 networks:
   voyager_net:
     name: voyager_network_${BEAGLE_DEPLOYMENT}
