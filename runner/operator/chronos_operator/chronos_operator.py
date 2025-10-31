@@ -15,10 +15,8 @@ from notifier.events import OperatorRequestEvent, ChronosMissingSamplesEvent
 from notifier.tasks import send_notification
 from runner.run.objects.run_creator_object import RunCreator
 
-WORKDIR = os.path.dirname(os.path.abspath(__file__))
-PAIRING_FILE_LOCATION = os.path.join(WORKDIR, "reference_jsons/pairing_json.tsv")  # used for historical pairing
 LOGGER = logging.getLogger(__name__)
-DESTINATION_DIRECTORY = "/juno/work/tempo/wes_repo/Results/v2.0.x/bams"
+DESTINATION_DIRECTORY = "/data1/core006/tempo/wes_repo/Results/v2.0.x/bams"
 
 
 class ChronosOperator(Operator):
@@ -95,7 +93,7 @@ class ChronosOperator(Operator):
         if exclude_query:
             tempo_files = tempo_files.exclude(exclude_query)
         # replace with run operator logic, most recent pairing
-        pre_pairing = self.load_pairing_file(PAIRING_FILE_LOCATION)  # pairing.tsv is not in repo
+        pre_pairing = dict()
         if pairing_override:
             normal_samples = pairing_override["normal_samples"]
             tumor_samples = pairing_override["tumor_samples"]
@@ -327,23 +325,6 @@ class ChronosOperator(Operator):
             if m["sample"] == tumor:
                 map[tumor].append(m)
         return map
-
-    def load_pairing_file(self, tsv_file):
-        pairing = dict()
-        with open(tsv_file, "r") as pairing_file:
-            reader = csv.reader(pairing_file, delimiter="\t")
-            next(reader, None)  # consume header
-            for row in reader:
-                try:
-                    tumor_id = row[1]
-                    normal_id = row[0]
-                    if tumor_id not in pairing:
-                        pairing[tumor_id] = normal_id
-                    else:
-                        LOGGER.error("Duplicate pairing found for %s", tumor_id)
-                except:
-                    LOGGER.error("Pairing could not be found from file for row.")
-        return pairing
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)
