@@ -529,6 +529,18 @@ services:
         ${DB_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
         EOF
         supercronic /db_backup/db_backup.cron >> /logs/db_backup_cron.log 2>&1
+    healthcheck:
+      test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
+      interval: 12h
+      timeout: 5h
+      retries: 3
+    depends_on:
+      beagle_celery_beat:
+        condition: service_healthy
+        restart: false
+      beagle_celery_default_queue:
+        condition: service_healthy
+        restart: false
   beagle_db_monthly_backup:
     image: mskcc/voyager-compose-utils:1.0.1
     restart: always
@@ -545,12 +557,12 @@ services:
       - |
         mkdir -p /db_backup/monthly_archive
         cat > /db_backup/db_monthly_backup.cron <<EOF
-        ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_backup_cron
+        ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_monthly_backup_cron
         EOF
         supercronic /db_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
     healthcheck:
-      test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
-      interval: 12h
+      test: "find /logs/last_completed_db_monthly_backup_cron -type f -mtime -15 | read"
+      interval: 840h
       timeout: 5h
       retries: 3
     depends_on:
