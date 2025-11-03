@@ -518,7 +518,7 @@ services:
       - voyager_net
     volumes:
       - logs_path:/logs
-      - ${DB_BACKUP_PATH}:/db_backup
+      - db_backup_path:/db_backup
     environment:
       - PGPASSWORD=${BEAGLE_DB_PASSWORD}
     entrypoint: ["/bin/sh", "-c"]
@@ -549,7 +549,7 @@ services:
       - voyager_net
     volumes:
       - logs_path:/logs
-      - ${DB_BACKUP_PATH}:/db_backup
+      - db_backup_path:/db_backup
     environment:
       - PGPASSWORD=${BEAGLE_DB_PASSWORD}
     entrypoint: ["/bin/sh", "-c"]
