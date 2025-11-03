@@ -19,3 +19,4 @@ runner/tests/operator/demo_operator/tmp*
 Miniconda3*
 *.db
 static/
+.env
