@@ -535,10 +535,7 @@ services:
       timeout: 5h
       retries: 3
     depends_on:
-      beagle_celery_beat:
-        condition: service_healthy
-        restart: false
-      beagle_celery_default_queue:
+      beagle_pgbouncer:
         condition: service_healthy
         restart: false
   beagle_db_monthly_backup:
@@ -566,10 +563,7 @@ services:
       timeout: 5h
       retries: 3
     depends_on:
-      beagle_celery_beat:
-        condition: service_healthy
-        restart: false
-      beagle_celery_default_queue:
+      beagle_pgbouncer:
         condition: service_healthy
         restart: false
 volumes:
