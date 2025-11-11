@@ -1,0 +1,812 @@
+[
+  {
+    "model": "file_system.file",
+    "pk": "2a7576a4-ff38-41ce-a9db-b7e26d54008b",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L003_R1_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L003_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "53645a64-9431-4970-aba4-dea99e3e3433",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "2a7576a4-ff38-41ce-a9db-b7e26d54008b",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f5cf3e8c-51e5-4738-ab25-7f1bac12c52b",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L003_R2_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L003_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6ab2d359-1f92-4db4-bccd-a25b9ab14dba",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "f5cf3e8c-51e5-4738-ab25-7f1bac12c52b",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7931c91c-a139-41f7-9358-1fde937a34b2",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L002_R1_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L002_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "84a0aa56-27fe-4701-b617-e25b07746601",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "7931c91c-a139-41f7-9358-1fde937a34b2",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "fd1ad1c3-7747-4c1b-98b2-7e490f3855bd",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L002_R2_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L002_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "331d7e8b-4713-4684-ad1b-7470e888a2b5",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "fd1ad1c3-7747-4c1b-98b2-7e490f3855bd",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9eb5d506-3e2e-4e7b-9aec-b42e7c84063f",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L001_R1_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L001_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b4e41a80-417c-488f-87a9-e587ff1b3161",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "9eb5d506-3e2e-4e7b-9aec-b42e7c84063f",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "09400aae-5c6d-4c19-92c1-fbfd6c2ff91c",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.712Z",
+      "modified_date": "2021-08-05T16:52:52.712Z",
+      "file_name": "P-0082380-T04-WES_IGO_16083_B_31_S10_L001_R2_001.fastq.gz",
+      "path": "/data1/core006/DATA_CSS/FASTQ/FAUCI2_0083_A232H3KLT3_A1/Project_16083_B/Sample_P-0082380-T04-WES_IGO_16083_B_31/P-0082380-T04-WES_IGO_16083_B_31_S10_L001_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "37a8016f-673b-4b03-b6e7-58637b23a650",
+    "fields": {
+      "created_date": "2021-08-05T16:52:52.733Z",
+      "modified_date": "2021-08-05T16:52:52.733Z",
+      "file": "09400aae-5c6d-4c19-92c1-fbfd6c2ff91c",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Male",
+        "ciTag": "s_C_200EAL_T002_d01",
+        "runId": "FAUCI2_0083",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2025-08-28",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "16083_B_31",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Suboptimal quantity",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Try",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "232H3KLT3",
+        "importDate": "2025-09-15",
+        "readLength": "101/8/8/101",
+        "sampleName": "P-0082380-T04-WES",
+        "sampleType": "Metastasis",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Paul  Romesser",
+        "sampleClass": "Biopsy",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "16083_B_31",
+        "cmoPatientId": "C-200EAL",
+        "igoProjectId": "16083",
+        "igoRequestId": "16083_B",
+        "labHeadEmail": "romessep@mskcc.org",
+        "libraryIgoId": "16083_B_31_1",
+        "oncotreeCode": "LUSC",
+        "preservation": "FFPE",
+        "sampleOrigin": "Tissue",
+        "cmoSampleName": "C-200EAL-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "P-0082380-T04-WES",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "16083_B_31",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "8311cb23-38ab-42f8-921d-0be6d23f7fc6",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2024",
+        "patientAliases": [
+          {
+            "value": "P-0082380",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "C-200EAL",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "chenc22@mskcc.org,skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "smilePatientId": "8375b8c6-0000-4079-8e11-1e0a7ad5de53",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "skicmopm@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "dataAnalystEmail": "",
+        "investigatorName": "Michael Del Latto",
+        "sequencingCenter": "MSKCC",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "DNA/cDNA Library",
+          "naToExtract": "",
+          "normalizedPatientId": "MRN_REDACTED"
+        },
+        "investigatorEmail": "dellattm@mskcc.org",
+        "otherContactEmails": "skicmopm@mskcc.org,chenc22@mskcc.org,dellattm@mskcc.org,romessep@mskcc.org",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ABY-VUR",
+          "isCmoSample": "true",
+          "igoRequestId": "16083_B"
+        },
+        "investigatorSampleId": "P-0082380-T04-WES",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 71.54924184572305
+      },
+      "user": null
+    }
+  }
+]
