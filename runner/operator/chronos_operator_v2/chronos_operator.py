@@ -83,8 +83,12 @@ class ChronosOperatorV2(Operator):
         """
         name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
         ci_tag = self.get_ci_tag(sample)
-        bait_set = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: sample}, file_group=self.file_group,
-                                         file_type="fastq", values_metadata=settings.BAITSET_METADATA_KEY).first()
+        bait_set = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
+            file_group=self.file_group,
+            file_type="fastq",
+            values_metadata=settings.BAITSET_METADATA_KEY,
+        ).first()
         target = self._resolve_target(bait_set)
         output_directory = os.path.join(
             self.OUTPUT_DIR,
@@ -98,19 +102,15 @@ class ChronosOperatorV2(Operator):
         mapping = []
         num_of_fastq_pairs = len(fastq_pairs)
         for fq_pair in fastq_pairs:
-            mapping.append({
-                "sample": ci_tag,
-                "target": target,
-                "fastq_pe1": {
-                    "class": "File",
-                    "location": f"iris://{fq_pair[0].file.path}"
-                },
-                "fastq_pe2": {
-                    "class": "File",
-                    "location": f"iris://{fq_pair[1].file.path}"
-                },
-                "num_fq_pairs": num_of_fastq_pairs
-            })
+            mapping.append(
+                {
+                    "sample": ci_tag,
+                    "target": target,
+                    "fastq_pe1": {"class": "File", "location": f"iris://{fq_pair[0].file.path}"},
+                    "fastq_pe2": {"class": "File", "location": f"iris://{fq_pair[1].file.path}"},
+                    "num_fq_pairs": num_of_fastq_pairs,
+                }
+            )
         input_json = {
             "mapping": mapping,
             "somatic": False,
@@ -119,28 +119,28 @@ class ChronosOperatorV2(Operator):
             "assayType": "exome",
         }
         patient_id = FileRepository.filter(
-                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
-                file_group=self.file_group,
-                values_metadata=settings.PATIENT_ID_METADATA_KEY,
-            ).first()
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            file_group=self.file_group,
+            values_metadata=settings.PATIENT_ID_METADATA_KEY,
+        ).first()
         request_id = FileRepository.filter(
-                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
-                file_group=self.file_group,
-                values_metadata=settings.REQUEST_ID_METADATA_KEY,
-            ).first()
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            file_group=self.file_group,
+            values_metadata=settings.REQUEST_ID_METADATA_KEY,
+        ).first()
         gene_panel = FileRepository.filter(
-                metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
-                file_group=self.file_group,
-                values_metadata=settings.RECIPE_METADATA_KEY,
-            ).first()
+            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            file_group=self.file_group,
+            values_metadata=settings.RECIPE_METADATA_KEY,
+        ).first()
         job_tags = copy.deepcopy(tags)
         job_tags.update(
             {
-                    settings.PATIENT_ID_METADATA_KEY: patient_id,
-                    settings.SAMPLE_ID_METADATA_KEY: sample,
-                    settings.REQUEST_ID_METADATA_KEY: request_id,
-                    settings.RECIPE_METADATA_KEY: gene_panel,
-                    settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag,
+                settings.PATIENT_ID_METADATA_KEY: patient_id,
+                settings.SAMPLE_ID_METADATA_KEY: sample,
+                settings.REQUEST_ID_METADATA_KEY: request_id,
+                settings.RECIPE_METADATA_KEY: gene_panel,
+                settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag,
             }
         )
         job_json = {
@@ -177,7 +177,7 @@ class ChronosOperatorV2(Operator):
         # sorting on file names is not enough as they are non-unique
         for i, fastq in enumerate(fastqs):
             dir = "/".join(fastq.file.path.split("_R")[0:-1])
-            for compare in fastqs[i + 1:]:
+            for compare in fastqs[i + 1 :]:
                 compare_dir = "/".join(compare.file.path.split("_R")[0:-1])
                 if dir == compare_dir:
                     # check if R1 and R2 are present
@@ -216,9 +216,9 @@ class ChronosOperatorV2(Operator):
     def get_jobs_for_samples(self, samples, pipeline, tags, run_date, jg_created_date):
         jobs = []
         for sample in samples:
-            fastqs = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
-                                           file_group=self.file_group,
-                                           file_type="fastq")
+            fastqs = FileRepository.filter(
+                metadata={settings.SAMPLE_ID_METADATA_KEY: sample}, file_group=self.file_group, file_type="fastq"
+            )
             valid, message = self.validate_sample(sample, fastqs)
             if valid:
                 jobs.append(self.construct_job(sample, fastqs, pipeline, tags, run_date, jg_created_date))
@@ -275,7 +275,6 @@ class ChronosOperatorV2(Operator):
 
         jobs = self.get_jobs_for_samples(samples_to_process, pipeline, tags, run_date, jg_created_date)
         return [RunCreator(**job) for job in jobs]
-
 
     def send_message(self, msg):
         event = OperatorRequestEvent(self.job_group_notifier_id, msg)

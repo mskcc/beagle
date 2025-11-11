@@ -11,6 +11,7 @@ from notifier.models import JobGroup
 from runner.models import Run, Port, Pipeline
 from file_system.models import File, FileMetadata, FileGroup, FileType
 
+
 class TestChronosOperatorV2(TestCase):
     # load fixtures for the test case temp db
     fixtures = [
@@ -49,7 +50,7 @@ class TestChronosOperatorV2(TestCase):
             pipeline="ec65d7ec-4638-11f0-aafb-f68a3351235e",
             job_group_id=job_group.id,
             request_id=self.request_id,
-            file_group="40ad84eb-0694-446b-beac-59e35e154f3c"
+            file_group="40ad84eb-0694-446b-beac-59e35e154f3c",
         )
         return chronos_operator
 
@@ -61,7 +62,7 @@ class TestChronosOperatorV2(TestCase):
             operator_model,
             pipeline="ec65d7ec-4638-11f0-aafb-f68a3351235e",
             job_group_id=job_group.id,
-            pairing={"pairs":[{"tumor": self.primary_id, "normal": None}]},
-            file_group="40ad84eb-0694-446b-beac-59e35e154f3c"
+            pairing={"pairs": [{"tumor": self.primary_id, "normal": None}]},
+            file_group="40ad84eb-0694-446b-beac-59e35e154f3c",
         )
         return chronos_operator
