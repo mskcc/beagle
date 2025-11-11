@@ -24,10 +24,12 @@ class ChronosCopyOutputOperatorV2(Operator):
             metadata = self.construct_metadata(run)
             name = f"Tempo Copy Output ({run.tags['ciTag']})"
             input_json = {
-                "cmo_sample_name": run.tags["ciTag"],
-                "src": run.output_directory,
-                "dst": destination_directory,
-                "result_dir": destination_directory,
+                "input": {
+                    "cmo_sample_name": run.tags["ciTag"],
+                    "src": run.output_directory,
+                    "dst": destination_directory,
+                    "result_dir": destination_directory,
+                }
             }
             job_json = {
                 "name": name,

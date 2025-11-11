@@ -24,22 +24,20 @@ class TestChronosOperatorV2(TestCase):
     ]
 
     def setUp(self):
-        os.environ["TMPDIR"] = ""
-        self.request_id = "16083_B"
-        self.primary_id = "16083_B_31"
-        self.run_ids = ["9fc2d168-efb1-11ed-b8bf-ac1f6bb4ad16"]
-        self.expected_output_directory = "/work/ci/temp/voyager-output/argos/BALTO_REQID/1.1.2/"
-        self.expected_project_prefix = "BALTO_REQID"
+        self.request_id = "53333_B"
+        self.primary_id = "53333_B_1"
 
     def test_gen_inputs(self):
         chronos_operator = self.load_operator_request()
         jobs = chronos_operator.get_jobs()
         self.assertEqual(len(jobs), 1)
+        self.assertEqual(len(jobs[0].inputs["mapping"]), 3)
 
     def test_gen_inputs_pairs(self):
         chronos_operator = self.load_operator_pairs()
         jobs = chronos_operator.get_jobs()
         self.assertEqual(len(jobs), 1)
+        self.assertEqual(len(jobs[0].inputs["mapping"]), 3)
 
     def load_operator_request(self):
         job_group = JobGroup()
