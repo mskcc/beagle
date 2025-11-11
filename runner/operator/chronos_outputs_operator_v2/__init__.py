@@ -4,6 +4,7 @@ from django.conf import settings
 from runner.models import Pipeline
 from runner.models import Run
 from runner.operator.operator import Operator
+from runner.run.objects.run_creator_object import RunCreator
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class ChronosCopyOutputOperatorV2(Operator):
                 "output_metadata": metadata,
             }
             jobs.append(job_json)
-        return jobs
+        return [RunCreator(**job) for job in jobs]
 
     def construct_metadata(self, run):
         metadata = run.tags
