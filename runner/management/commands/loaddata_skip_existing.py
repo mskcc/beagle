@@ -113,17 +113,21 @@ class Command(BaseCommand):
                     )
                     continue
 
-                # Only auto-fill dates for JobGroup objects
-                if model.__name__ == "JobGroup":
-                    if not getattr(obj.object, "created_date", None):
-                        obj.object.created_date = timezone.now()
-                    if not getattr(obj.object, "modified_date", None):
-                        obj.object.modified_date = timezone.now()
+                # Ensure created_date and modified_date exist for required models
+                # Ensure created_date and modified_date are set if the model has them
+                now = timezone.now()
+                for field_name in ("created_date", "modified_date"):
+                    if hasattr(obj.object, field_name):
+                        if getattr(obj.object, field_name) in (None, ""):
+                            setattr(obj.object, field_name, now)
 
                 # Save **only new objects** — do NOT save if PK already exists
                 try:
                     with transaction.atomic():
                         for field_name in ["created_date", "modified_date"]:
+                            # Skip if the model doesn’t have this field
+                            if not any(f.name == field_name for f in model._meta.fields):
+                                continue
                             field = model._meta.get_field(field_name)
                             if getattr(field, "auto_now", False) or getattr(field, "auto_now_add", False):
                                 auto_now_backup = getattr(field, "auto_now", False)
@@ -135,6 +139,9 @@ class Command(BaseCommand):
 
                         # restore
                         for field_name in ["created_date", "modified_date"]:
+                            # Skip if the model doesn’t have this field
+                            if not any(f.name == field_name for f in model._meta.fields):
+                                continue
                             field = model._meta.get_field(field_name)
                             if field_name == "created_date":
                                 field.auto_now_add = auto_now_add_backup
