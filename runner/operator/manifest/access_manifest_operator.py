@@ -6,13 +6,10 @@ from pathlib import Path
 from jinja2 import Template
 from beagle import settings
 from runner.operator.operator import Operator
-from runner.models import RunStatus, Port, Run
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
-from file_system.repository import FileRepository
 from file_system.helper.access_helper import CmoDMPManifest
 from runner.operator.access import get_request_id
-import csv
 
 logger = logging.getLogger(__name__)
 
@@ -107,8 +104,8 @@ class AccessManifestOperator(Operator):
             file.write(s)
         # register output as tmp file
         self.register_temp_file(output)
-        # return with juno formatting
-        return {"class": "File", "location": "juno://" + output}
+        # return with iris formatting
+        return {"class": "File", "location": "iris://" + output}
 
     def construct_sample_input(self, manifest_dir):
         with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:

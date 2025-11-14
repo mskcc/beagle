@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
 from rest_framework import serializers
+from getpass import getuser
 
 
 class ProtocolType(IntEnum):
@@ -64,6 +65,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
+    user = models.CharField(default=getuser(), max_length=100)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     log_directory = models.CharField(max_length=300, null=True, editable=True)
@@ -75,7 +77,7 @@ class Pipeline(BaseModel):
     walltime = models.IntegerField(blank=True, null=True)
     tool_walltime = models.IntegerField(blank=True, null=True)
     memlimit = models.CharField(blank=True, null=True, max_length=20)
-    config = models.CharField(blank=True, null=True, max_length=3000, default=None)
+    config = models.TextField(blank=True, null=True, max_length=3000, default=None)
     nfcore_template = models.BooleanField(default=False)
     profiles = JSONField(default=list, blank=True, null=True)
 
@@ -159,6 +161,8 @@ class OperatorRun(BaseModel):
 
     @property
     def percent_runs_succeeded(self):
+        if self.num_completed_runs >= self.num_total_runs:
+            return float(100)
         if self.num_total_runs > 0:
             return float("{0:.2f}".format(self.num_completed_runs / self.num_total_runs * 100.0))
         else:
