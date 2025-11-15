@@ -14,7 +14,12 @@ Normals will have to have the same patient and bait set in order to be considere
 import logging
 from datetime import datetime as dt
 
-from .retrieve_samples_by_query import get_dmp_bam, get_pooled_normals, get_samples_from_patient_id
+from .retrieve_samples_by_query import (
+    get_dmp_bam,
+    get_pooled_normals,
+    get_preservation_type,
+    get_samples_from_patient_id,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -137,6 +142,7 @@ def compile_pairs(samples, pairing_info=None, logger=None):
                 bait_set = tumor["bait_set"]
                 run_ids = tumor["run_id"]
                 preservation_types = tumor["preservation_type"]
+                sample_origin = tumor["sample_origin"]
                 normal = get_viable_normal(normals, patient_id, run_mode, bait_set)
                 if normal:
                     LOGGER.info(
@@ -190,10 +196,12 @@ def compile_pairs(samples, pairing_info=None, logger=None):
                         pairs["tumor"].append(tumor)
                         pairs["normal"].append(new_normal)
                     else:
-                        pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set)
-                        LOGGER.info("No DMP Normal found for patient %s; checking for Pooled Normal", patient_id)
+                        pooled_normal = get_pooled_normals(run_ids, preservation_types, bait_set, sample_origin)
+                        LOGGER.info("No matched Normal found for patient %s; checking for Pooled Normal", patient_id)
                         (
-                            logger.log(f"No DMP Normal found for patient %s; checking for Pooled Normal {patient_id}")
+                            logger.log(
+                                f"No matched Normal found for patient %s; checking for Pooled Normal {patient_id}"
+                            )
                             if logger
                             else None
                         )
