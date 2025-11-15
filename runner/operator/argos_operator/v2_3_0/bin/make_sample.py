@@ -1,13 +1,14 @@
 """
 This constructs a sample dictionary from the metadata in the Voyager/Beagle database
 """
+
 import logging
 import os
-import re
+
 from django.conf import settings
-from runner.operator.helper import format_sample_name, get_r_orientation, spoof_barcode
+
 from file_system.repository.file_repository import FileRepository
-from pprint import pprint
+from runner.operator.helper import format_sample_name, get_r_orientation, spoof_barcode
 
 LOGGER = logging.getLogger(__name__)
 
@@ -71,8 +72,8 @@ def check_and_return_single_values(data):
         if len(value) == 1:
             data[key] = value.pop()
         else:
-            LOGGER.error("Expected only one value for %s!", key)
-            LOGGER.error("Check import, something went wrong.")
+            sample_id = data["sample_id"]
+            LOGGER.error(f"Expected only one value for {sample_id}: {key}!")
 
     # concatenating pi and pi_email
     if data["pi"] == [None]:
@@ -143,6 +144,7 @@ def build_sample(data, ignore_sample_formatting=False):
         bait_set = meta["baitSet"]
         tumor_type = meta["tumorOrNormal"]
         specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
+        sample_origin = meta["sampleOrigin"]
         species = meta["species"]
         cmo_sample_name = format_sample_name(
             meta[settings.CMO_SAMPLE_NAME_METADATA_KEY], specimen_type, ignore_sample_formatting
@@ -184,6 +186,7 @@ def build_sample(data, ignore_sample_formatting=False):
             sample["sample_id"] = sample_id
             sample["run_date"] = run_date
             sample["specimen_type"] = specimen_type
+            sample["sample_origin"] = sample_origin
             sample["request_id"] = request_id
             sample["pi"] = pi_name
             sample["pi_email"] = pi_email
@@ -238,6 +241,7 @@ def build_sample(data, ignore_sample_formatting=False):
     result["run_id"] = list()
     result["preservation_type"] = list()
     result["run_mode"] = list()
+    result["sample_origin"] = list()
 
     for sample_id in samples:
         sample = samples[sample_id]
