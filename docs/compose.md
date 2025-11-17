@@ -25,7 +25,7 @@ The Docker compose file defines the entire runtime environment for **Beagle**, i
 | **`beagle_db_backup`**                  | Daily database backup via `db_backup.cron`.                                                                                   |
 | **`beagle_db_monthly_backup`**          | Monthly backup via `db_monthly_backup.cron`.                                                                                  |
 
-## 3. Networking
+## 2. Networking
 
 All services join the external network:
 
@@ -44,7 +44,7 @@ docker network create voyager_network_${BEAGLE_DEPLOYMENT}
 
 ## If you are deploying [Ridgeback](https://github.com/mskcc/ridgeback) as well, the network should already by created.
 
-## 4. Key Environment Variables
+## 3. Key Environment Variables
 
 | Variable                                                                                                | Default / Example                            | Purpose                                           |
 | ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------- |
@@ -59,7 +59,7 @@ docker network create voyager_network_${BEAGLE_DEPLOYMENT}
 | `CLUSTER_CODE_PATH`                                                                                     | `/data1/core006/beagle`                      | Path for the beagle code base on the cluster      |
 | `LOGROTATE_*`, `DB_BACKUP_*`                                                                            | `*_NUM_ROTATIONS=20` `*_CRON="0 1,20 * * *"` | Log rotation and backup schedules.                |
 
-## 5. Running the Stack
+## 4. Running the Stack
 
 ```bash
 # 1. Create external network if not present
@@ -73,7 +73,7 @@ docker compose up -d
 
 Each service has a `healthcheck` that Docker will use to determine readiness. If any dependent service is unhealthy, Docker Compose will wait until it becomes healthy before starting dependent containers. Any service that turns unhealthy will be automatically restarted.
 
-## 6. Common Operations
+## 5. Common Operations
 
 | Operation                     | Command                                                                              |
 | ----------------------------- | ------------------------------------------------------------------------------------ |
@@ -83,19 +83,19 @@ Each service has a `healthcheck` that Docker will use to determine readiness. If
 | **Run migrations manually**   | `docker compose run --rm beagle python $CLUSTER_CODE_PATH/manage.py migrate`         |
 | **Create a superuser**        | `docker compose run --rm beagle python $CLUSTER_CODE_PATH/manage.py createsuperuser` |
 
-## 7. Customizing the Stack
+## 6. Customizing the Stack
 
 - **Add a new Celery queue** – Duplicate an existing worker service, change `command` and `healthcheck`, and add a new environment variable for the queue name.
 - **Change database tuning** – Modify `command` arguments under `beagle_postgres`.
 - **Adjust backup frequency** – Edit `DB_BACKUP_CRON` or `DB_MONTHLY_BACKUP_CRON` in `.env`. |
 
-## 8. Security Notes
+## 7. Security Notes
 
 - **User permissions** – All services run under the service user with `${DOCKER_UID}:${DOCKER_GID}` to match host ownership.
 - **Secrets** – Do not commit the `.env` file. The file is version controlled on the internal mskcc github repo
 - **Port exposure** – Only expose necessary ports (`BEAGLE_PORT`, RabbitMQ management).
 
-## 9. Troubleshooting
+## 8. Troubleshooting
 
 | Symptom                          | Likely Cause                                | Fix                                                                 |
 | -------------------------------- | ------------------------------------------- | ------------------------------------------------------------------- |
