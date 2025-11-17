@@ -388,6 +388,7 @@ BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_qu
 BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
+BEAGLE_TMPDIR = os.environ.get("BEAGLE_TMPDIR", "/tmp")
 
 PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
