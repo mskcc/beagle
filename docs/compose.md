@@ -46,17 +46,18 @@ docker network create voyager_network_${BEAGLE_DEPLOYMENT}
 
 ## 4. Key Environment Variables
 
-| Variable                                                                                                | Default / Example         | Purpose                                           |
-| ------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------- |
-| `BEAGLE_DEPLOYMENT`                                                                                     | `dev`                     | Deployment environment (affects container names). |
-| `BEAGLE_VERSION`                                                                                        | `latest`                  | Docker image tag for Beagle.                      |
-| `DOCKER_UID`, `DOCKER_GID`                                                                              | Current user IDs          | Ensures file permissions match host.              |
-| `BEAGLE_DB_USERNAME`, `BEAGLE_DB_PASSWORD`, `BEAGLE_DB_NAME`                                            | `beagle_user`, etc.       | Credentials for Postgres.                         |
-| `BEAGLE_RABBITMQ_USERNAME`, `DATADOG_RABBITMQ_USERNAME`                                                 | `guest`, etc.             | RabbitMQ users.                                   |
-| `BEAGLE_PORT`, `BEAGLE_HOST`                                                                            | `8000`, `localhost`       | Web server binding.                               |
-| `BEAGLE_DEFAULT_QUEUE`, `BEAGLE_CHECK_FILES_QUEUE`, `BEAGLE_JOB_SCHEDULER_QUEUE`, `BEAGLE_RUNNER_QUEUE` | `default`, etc.           | Celery queue names.                               |
-| `CLUSTER_FILESYSTEM_MOUNT`, `CLUSTER_SCRATCH_MOUNT`                                                     | Paths on the host         | Mount points for shared storage.                  |
-| `LOGROTATE_*`, `DB_BACKUP_*`                                                                            | Cron expressions & limits | Rotation and backup schedules.                    |
+| Variable                                                                                                | Default / Example                            | Purpose                                           |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------- |
+| `BEAGLE_DEPLOYMENT`                                                                                     | `dev`                                        | Deployment environment (affects container names). |
+| `BEAGLE_VERSION`                                                                                        | `latest`                                     | Docker image tag for Beagle.                      |
+| `DOCKER_UID`, `DOCKER_GID`                                                                              | `000000000`                                  | Ensures file permissions match host.              |
+| `BEAGLE_DB_USERNAME`, `BEAGLE_DB_PASSWORD`, `BEAGLE_DB_NAME`                                            | `beagle_user`                                | Credentials for Postgres.                         |
+| `BEAGLE_RABBITMQ_USERNAME`, `DATADOG_RABBITMQ_USERNAME`                                                 | `guest`                                      | RabbitMQ users.                                   |
+| `BEAGLE_PORT`, `BEAGLE_HOST`                                                                            | `8000`, `localhost`                          | Web server binding.                               |
+| `BEAGLE_DEFAULT_QUEUE`, `BEAGLE_CHECK_FILES_QUEUE`, `BEAGLE_JOB_SCHEDULER_QUEUE`, `BEAGLE_RUNNER_QUEUE` | `default`                                    | Celery queue names.                               |
+| `CLUSTER_FILESYSTEM_MOUNT`, `CLUSTER_SCRATCH_MOUNT`                                                     | `/data1/core006`                             | Mount points for shared storage.                  |
+| `CLUSTER_CODE_PATH`                                                                                     | `/data1/core006/beagle`                      | Path for the beagle code base on the cluster      |
+| `LOGROTATE_*`, `DB_BACKUP_*`                                                                            | `*_NUM_ROTATIONS=20` `*_CRON="0 1,20 * * *"` | Log rotation and backup schedules.                |
 
 ## 5. Running the Stack
 
