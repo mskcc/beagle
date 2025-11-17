@@ -79,7 +79,7 @@ class ChronosCopyOutputOperator(Operator):
     def _copy(self, src, dst, output_file_group, metadata):
         ret = subprocess.call(f"cp {src} {dst}", shell=True)
         if ret == 0:
-            path = f"juno://{dst}"
+            path = f"iris://{dst}"
             size = os.path.getsize(dst)
             checksum = sha1(dst)
             request_id = metadata[settings.REQUEST_ID_METADATA_KEY]

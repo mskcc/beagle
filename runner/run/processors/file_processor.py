@@ -47,6 +47,8 @@ class FileProcessor(object):
             raise FileHelperException("Can't parse path from uri %s." % uri)
         elif uri.startswith("juno://"):
             return uri.replace("juno://", "")
+        elif uri.startswith("iris://"):
+            return uri.replace("iris://", "")
         elif uri.startswith("file://"):
             return uri.replace("file://", "")
         else:
@@ -67,6 +69,12 @@ class FileProcessor(object):
             return file_obj
         elif uri.startswith("juno://"):
             juno_path = uri.replace("juno://", "")
+            file_obj = File.objects.filter(path=juno_path).first()
+            if not file_obj:
+                raise FileHelperException("File with uri %s doesn't exist" % uri)
+            return file_obj
+        elif uri.startswith("iris://"):
+            juno_path = uri.replace("iris://", "")
             file_obj = File.objects.filter(path=juno_path).first()
             if not file_obj:
                 raise FileHelperException("File with uri %s doesn't exist" % uri)

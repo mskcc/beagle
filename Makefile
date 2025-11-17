@@ -127,7 +127,6 @@ install: conda
 	rabbitmq-server=3.7.16 \
 	anaconda::postgresql=11.2 \
 	conda-forge::python-ldap=3.2.0 \
-	bioconda::rabix-bunny=1.0.4 \
 	conda-forge::jq
 	pip install -r requirements.txt
 	pip install -r requirements-dev.txt
@@ -144,7 +143,6 @@ install-m1: conda
 		rabbitmq-server=3.7.16 \
 		anaconda::postgresql=11.2 \
 		conda-forge::python-ldap=3.2.0 \
-		bioconda::rabix-bunny=1.0.4 \
 		conda-forge::jq && \
 		pip install -r requirements.txt && \
 		pip install -r requirements-dev.txt)
@@ -339,7 +337,6 @@ export DJANGO_BEAGLE_IP:=localhost
 export DJANGO_BEAGLE_PORT:=6991
 export BEAGLE_URL:=http://$(DJANGO_BEAGLE_IP):$(DJANGO_BEAGLE_PORT)
 export BEAGLE_ENDPOINT:=$(BEAGLE_URL)
-export BEAGLE_RABIX_PATH=$(CURDIR)/conda/bin/rabix
 export BEAGLE_IMPORT_FILE_GROUP=1a1b29cf-3bc2-4f6c-b376-d4c5d701166a
 
 # address to dev Ridgeback instance;

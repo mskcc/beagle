@@ -1,0 +1,2205 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "0254b140-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.307Z",
+            "modified_date": "2023-05-17T20:48:58.768Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "multiqc_zip",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "02555438-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.311Z",
+            "modified_date": "2023-05-17T20:48:58.773Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "multiqc_html",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "size": 5093137,
+                "class": "File",
+                "location": "bid://5a9afe72-ca85-4b6b-928f-fcdf1a81b410"
+            },
+            "value": {
+                "size": 5093137,
+                "class": "File",
+                "nameext": ".html",
+                "basename": "multiqc_1.10.1.7.html",
+                "checksum": "sha1$9d45a4d8e22af2755e7cf85b65db1f84fd89c6b4",
+                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7.html",
+                "nameroot": "multiqc_1.10.1.7"
+            },
+            "notify": false,
+            "files": [
+                "5a9afe72-ca85-4b6b-928f-fcdf1a81b410"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "025602e8-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.315Z",
+            "modified_date": "2023-05-17T20:48:58.779Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "duplex_bam_biometrics_dir",
+            "port_type": 1,
+            "schema": null,
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "Directory",
+                    "listing": [
+                        {
+                            "size": 168,
+                            "class": "File",
+                            "location": "bid://9178d409-afed-468c-9de2-f2fa206e6b4c"
+                        },
+                        {
+                            "size": 227,
+                            "class": "File",
+                            "location": "bid://0a8bcace-b75b-4ace-9d66-704a5177f316"
+                        }
+                    ],
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
+                }
+            ],
+            "value": [
+                {
+                    "class": "Directory",
+                    "listing": [
+                        {
+                            "size": 168,
+                            "class": "File",
+                            "nameext": ".csv",
+                            "basename": "duplex_minor_contamination.csv",
+                            "checksum": "sha1$e67b3a44f436dd9fda19c56c56b73d8e6212689e",
+                            "location": "file:///path/to/C-100000-F001-d01/duplex_minor_contamination.csv",
+                            "nameroot": "duplex_minor_contamination"
+                        },
+                        {
+                            "size": 227,
+                            "class": "File",
+                            "nameext": ".json",
+                            "basename": "duplex_minor_contamination.json",
+                            "checksum": "sha1$77d6ac275dbf5a62c56308eddeba3ab9d92570b1",
+                            "location": "file:///path/to/C-100000-F001-d01/duplex_minor_contamination.json",
+                            "nameroot": "duplex_minor_contamination"
+                        }
+                    ],
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "0a8bcace-b75b-4ace-9d66-704a5177f316",
+                "9178d409-afed-468c-9de2-f2fa206e6b4c"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0256a75c-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.319Z",
+            "modified_date": "2023-05-17T20:48:58.790Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "collapsed_bam_biometrics_dir",
+            "port_type": 1,
+            "schema": null,
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                {
+                    "class": "Directory",
+                    "listing": [
+                        {
+                            "size": 115,
+                            "class": "File",
+                            "location": "bid://a1769d94-271d-4206-9551-f16276b4f090"
+                        },
+                        {
+                            "size": 68,
+                            "class": "File",
+                            "location": "bid://4293a55f-26f1-4395-b67c-1aa14a0642f1"
+                        },
+                        {
+                            "size": 229,
+                            "class": "File",
+                            "location": "bid://ca710a4f-163a-4b43-b610-8314d5866ef7"
+                        },
+                        {
+                            "size": 168,
+                            "class": "File",
+                            "location": "bid://4c3dadfe-e412-4231-b562-22224c8c60ce"
+                        },
+                        {
+                            "size": 222,
+                            "class": "File",
+                            "location": "bid://26f2d625-7c18-4880-9a3c-5fbcf1732b4d"
+                        },
+                        {
+                            "size": 159,
+                            "class": "File",
+                            "location": "bid://b3cd97f4-6557-4c99-b6eb-ab866f34c4ea"
+                        },
+                        {
+                            "size": 68,
+                            "class": "File",
+                            "location": "bid://4293a55f-26f1-4395-b67c-1aa14a0642f1"
+                        },
+                        {
+                            "size": 115,
+                            "class": "File",
+                            "location": "bid://a1769d94-271d-4206-9551-f16276b4f090"
+                        }
+                    ],
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
+                }
+            ],
+            "value": [
+                {
+                    "class": "Directory",
+                    "listing": [
+                        {
+                            "size": 115,
+                            "class": "File",
+                            "nameext": ".json",
+                            "basename": "collapsed_sex_mismatch.json",
+                            "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.json",
+                            "nameroot": "collapsed_sex_mismatch"
+                        },
+                        {
+                            "size": 68,
+                            "class": "File",
+                            "nameext": ".csv",
+                            "basename": "collapsed_sex_mismatch.csv",
+                            "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.csv",
+                            "nameroot": "collapsed_sex_mismatch"
+                        },
+                        {
+                            "size": 229,
+                            "class": "File",
+                            "nameext": ".json",
+                            "basename": "collapsed_minor_contamination.json",
+                            "checksum": "sha1$740e8f8732f4046325e71a0e2f903c53482e8429",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_minor_contamination.json",
+                            "nameroot": "collapsed_minor_contamination"
+                        },
+                        {
+                            "size": 168,
+                            "class": "File",
+                            "nameext": ".csv",
+                            "basename": "collapsed_minor_contamination.csv",
+                            "checksum": "sha1$927e09e66b03a32b4b6647b4668d45469200220d",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_minor_contamination.csv",
+                            "nameroot": "collapsed_minor_contamination"
+                        },
+                        {
+                            "size": 222,
+                            "class": "File",
+                            "nameext": ".json",
+                            "basename": "collapsed_major_contamination.json",
+                            "checksum": "sha1$8c6c2b0815be2ac965a02382ef94601d3e2b85e1",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_major_contamination.json",
+                            "nameroot": "collapsed_major_contamination"
+                        },
+                        {
+                            "size": 159,
+                            "class": "File",
+                            "nameext": ".csv",
+                            "basename": "collapsed_major_contamination.csv",
+                            "checksum": "sha1$0492937b683609294a15db436315f91c793d4e94",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_major_contamination.csv",
+                            "nameroot": "collapsed_major_contamination"
+                        },
+                        {
+                            "size": 68,
+                            "class": "File",
+                            "nameext": ".csv",
+                            "basename": "collapsed_sex_mismatch.csv",
+                            "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.csv",
+                            "nameroot": "collapsed_sex_mismatch"
+                        },
+                        {
+                            "size": 115,
+                            "class": "File",
+                            "nameext": ".json",
+                            "basename": "collapsed_sex_mismatch.json",
+                            "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
+                            "location": "file:///path/to/C-100000-F001-d01/collapsed_sex_mismatch.json",
+                            "nameroot": "collapsed_sex_mismatch"
+                        }
+                    ],
+                    "basename": "C-100000-F001-d01",
+                    "location": "file:///path/to/C-100000-F001-d01"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "26f2d625-7c18-4880-9a3c-5fbcf1732b4d",
+                "4293a55f-26f1-4395-b67c-1aa14a0642f1",
+                "4c3dadfe-e412-4231-b562-22224c8c60ce",
+                "a1769d94-271d-4206-9551-f16276b4f090",
+                "b3cd97f4-6557-4c99-b6eb-ab866f34c4ea",
+                "ca710a4f-163a-4b43-b610-8314d5866ef7"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "025764a8-f4c9-11ed-8677-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:28.324Z",
+            "modified_date": "2023-05-17T20:48:58.884Z",
+            "run": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "name": "multiqc_output_dir",
+            "port_type": 1,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "Directory"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "class": "Directory",
+                                "listing": [],
+                                "basename": "matplotlib",
+                                "location": "file:///path/to/multiqc_1.10.1.7/.config/matplotlib"
+                            }
+                        ],
+                        "basename": ".config",
+                        "location": "file:///path/to/multiqc_1.10.1.7/.config"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://70f160e1-3524-4482-9464-f9466cba6d5c"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://0ef1f934-7fc9-46db-a7f2-587dbb565cc1"
+                            },
+                            {
+                                "size": 182580,
+                                "class": "File",
+                                "location": "bid://1fd44e01-39b2-4684-9dae-425b50bdd399"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://546cb090-849d-4666-8a64-c42312de2ced"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://ff546779-12bc-476c-bd11-6036186287b8"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://e2fc61be-2ce8-486a-a4ad-48fa77ba6270"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://9a25e11e-6d5e-489c-a5a8-66993bea46e1"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "location": "bid://ce1bbf63-eee4-4da9-a046-4d079edc81c2"
+                            },
+                            {
+                                "size": 2628,
+                                "class": "File",
+                                "location": "bid://bfd0c018-dbd7-4059-8dc5-5ef93092b13a"
+                            },
+                            {
+                                "size": 167,
+                                "class": "File",
+                                "location": "bid://2de5f242-722a-46ee-8f0d-32465cfd05f9"
+                            },
+                            {
+                                "size": 1504,
+                                "class": "File",
+                                "location": "bid://f696c948-7868-416e-ae11-3244a47d7642"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://fdf2e664-4753-4593-ab85-31577486a5f9"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://64c44e08-ac57-4c3a-b29e-6eb87ecbb35e"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "location": "bid://63ec69e8-2b7a-4a22-bbe3-5166452c99a3"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://6caa918e-54b8-410b-b3c5-1f34e92c382c"
+                            },
+                            {
+                                "size": 674,
+                                "class": "File",
+                                "location": "bid://5f4e52b9-1565-43d9-a6ce-ee6e8b25c368"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://aa4c007a-acf8-4364-8f3d-b7767f1efb67"
+                            },
+                            {
+                                "size": 2143723,
+                                "class": "File",
+                                "location": "bid://8371c4e4-bd7c-4c99-859b-a2d05b48b745"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://1d12a82d-b0df-4aca-a18f-2774003c9565"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://5c7269b6-35e9-4c7d-96d5-56450fb29b2c"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://0192dbe4-9211-4689-9fc2-54e8b5fec376"
+                            },
+                            {
+                                "size": 1520,
+                                "class": "File",
+                                "location": "bid://1f816efc-8b2c-4207-bf84-9d59567e1a61"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "location": "bid://540b57a9-ecd5-4cb1-ba8a-f5c0d3deb844"
+                            },
+                            {
+                                "size": 1520,
+                                "class": "File",
+                                "location": "bid://35d98d86-9940-4516-b3c9-26e38f2c4356"
+                            },
+                            {
+                                "size": 1094,
+                                "class": "File",
+                                "location": "bid://01d6eb62-bf18-4969-ad08-1149f56efa55"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://216797a4-ef00-4f80-86db-21ffc5f93d22"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://94864c2b-ee0d-41ee-b297-382a8194ffee"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "location": "bid://9cd3e6e7-cf1d-4f66-991e-47f78b3d7bb2"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "location": "bid://06a4ef18-1583-4a58-8ec2-1e26afef9300"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "location": "bid://cc7741d7-0759-43fd-9b50-2a32642a4247"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "location": "bid://95f651f4-5946-457d-9665-d378654c5bbc"
+                            },
+                            {
+                                "size": 260,
+                                "class": "File",
+                                "location": "bid://96c5b06c-6ec5-413c-82ef-58df883f7805"
+                            },
+                            {
+                                "size": 167,
+                                "class": "File",
+                                "location": "bid://e726910c-a7ad-4a5d-87ec-eb48139485c2"
+                            },
+                            {
+                                "size": 680,
+                                "class": "File",
+                                "location": "bid://2d86d17c-2673-422c-9533-43dea9f29d16"
+                            },
+                            {
+                                "size": 1022,
+                                "class": "File",
+                                "location": "bid://eb6e3d88-098b-42af-91ab-bb470b86273a"
+                            },
+                            {
+                                "size": 1501,
+                                "class": "File",
+                                "location": "bid://43fda4d9-9690-41f4-8d01-0072f82b01ba"
+                            },
+                            {
+                                "size": 356,
+                                "class": "File",
+                                "location": "bid://2e5a2100-1c26-4160-8883-132f58594de2"
+                            },
+                            {
+                                "size": 158,
+                                "class": "File",
+                                "location": "bid://5c73d2f1-4cb6-447b-ac06-d4a6277cc700"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://2a0d9e23-e963-4504-b83f-347d573abc44"
+                            },
+                            {
+                                "size": 680,
+                                "class": "File",
+                                "location": "bid://1dfe16be-e182-4d9d-a702-663d386a0ec6"
+                            },
+                            {
+                                "size": 877,
+                                "class": "File",
+                                "location": "bid://d1b18aa4-3a19-4d72-8dbd-d9bdef019491"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "location": "bid://f67a0493-b361-4ab1-9a0b-1281001912f0"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "location": "bid://d215c45c-5052-4d7f-9db2-68c3eedbe152"
+                            },
+                            {
+                                "size": 5250,
+                                "class": "File",
+                                "location": "bid://6ad7bfa2-8510-4c12-ace9-ee9c4b66b976"
+                            },
+                            {
+                                "size": 672,
+                                "class": "File",
+                                "location": "bid://44b622da-38c1-49c0-91d6-e0db7533d8a3"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "location": "bid://fce05d8f-7647-472f-acfe-59d602b73777"
+                            }
+                        ],
+                        "basename": "multiqc_1.10.1.7_data",
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
+                    },
+                    {
+                        "size": 5093137,
+                        "class": "File",
+                        "location": "bid://5a9afe72-ca85-4b6b-928f-fcdf1a81b410"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "class": "Directory",
+                                "listing": [
+                                    {
+                                        "size": 24399,
+                                        "class": "File",
+                                        "location": "bid://83e77a7d-0b19-475f-a87e-557842b5d034"
+                                    }
+                                ],
+                                "basename": "matplotlib",
+                                "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib"
+                            }
+                        ],
+                        "basename": ".cache",
+                        "location": "file:///path/to/multiqc_1.10.1.7/.cache"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 1097,
+                                "class": "File",
+                                "location": "bid://3fd33504-5044-4599-85f2-30bbf8331031"
+                            },
+                            {
+                                "class": "Directory",
+                                "listing": [
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 7229,
+                                                        "class": "File",
+                                                        "location": "bid://a04ebbcf-d89b-4976-8a88-ca06ee102bbd"
+                                                    },
+                                                    {
+                                                        "size": 12860,
+                                                        "class": "File",
+                                                        "location": "bid://92ea7feb-b11b-4881-a149-ac58e2b7f639"
+                                                    },
+                                                    {
+                                                        "size": 37458,
+                                                        "class": "File",
+                                                        "location": "bid://070aee15-b49b-4a62-9189-fb3fe2d2cb8b"
+                                                    },
+                                                    {
+                                                        "size": 3809917,
+                                                        "class": "File",
+                                                        "location": "bid://af6731f3-9666-448b-b6cc-6f621d39a8da"
+                                                    },
+                                                    {
+                                                        "size": 9039,
+                                                        "class": "File",
+                                                        "location": "bid://bc6b7408-4a01-4def-8bf0-310a9774dcc6"
+                                                    },
+                                                    {
+                                                        "size": 349016,
+                                                        "class": "File",
+                                                        "location": "bid://3129dcbe-81f8-4c31-86e4-f5793eff7a2a"
+                                                    },
+                                                    {
+                                                        "size": 27615070,
+                                                        "class": "File",
+                                                        "location": "bid://2f2fef0a-50e8-4ee1-9d78-37e54f3c9281"
+                                                    },
+                                                    {
+                                                        "size": 6454,
+                                                        "class": "File",
+                                                        "location": "bid://e9124724-f16a-454c-a516-a5919e6a8989"
+                                                    },
+                                                    {
+                                                        "size": 2447,
+                                                        "class": "File",
+                                                        "location": "bid://3f1e37b8-9594-414e-95f9-a96a82f4d5de"
+                                                    },
+                                                    {
+                                                        "size": 5063,
+                                                        "class": "File",
+                                                        "location": "bid://00320482-1189-4703-af59-7c498579d25b"
+                                                    },
+                                                    {
+                                                        "size": 92010,
+                                                        "class": "File",
+                                                        "location": "bid://35f0a75e-54e7-4d33-912f-6d6c3aecde8f"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "duplex_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4948,
+                                                        "class": "File",
+                                                        "location": "bid://22b73516-fa67-4c7c-8c25-5bf6f1c64ce4"
+                                                    },
+                                                    {
+                                                        "size": 27709248,
+                                                        "class": "File",
+                                                        "location": "bid://ad8cb652-7802-416f-b572-b75ce7729d65"
+                                                    },
+                                                    {
+                                                        "size": 14652,
+                                                        "class": "File",
+                                                        "location": "bid://dd76b718-50b0-4545-906e-5d2dc5b8d270"
+                                                    },
+                                                    {
+                                                        "size": 2467,
+                                                        "class": "File",
+                                                        "location": "bid://e59d2bd9-0d1f-44d7-9461-db6c54494605"
+                                                    },
+                                                    {
+                                                        "size": 9457,
+                                                        "class": "File",
+                                                        "location": "bid://c0a8ef51-0ef9-423e-870b-6e31bd6187e5"
+                                                    },
+                                                    {
+                                                        "size": 7390,
+                                                        "class": "File",
+                                                        "location": "bid://72e11ab4-e64c-471a-9ac0-bedff458d1e3"
+                                                    },
+                                                    {
+                                                        "size": 93778,
+                                                        "class": "File",
+                                                        "location": "bid://7f9d27be-9e6b-42d8-ab31-bc78889d5d4b"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "collapsed_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4336,
+                                                        "class": "File",
+                                                        "location": "bid://1abc1222-c5a4-423d-bd98-98db5215491a"
+                                                    },
+                                                    {
+                                                        "size": 3108,
+                                                        "class": "File",
+                                                        "location": "bid://e07c03cf-6467-4cbd-a7a7-7a2947026dc0"
+                                                    },
+                                                    {
+                                                        "size": 2952,
+                                                        "class": "File",
+                                                        "location": "bid://e69a8dfb-e681-4780-98e9-715b294c0eeb"
+                                                    },
+                                                    {
+                                                        "size": 1323,
+                                                        "class": "File",
+                                                        "location": "bid://88c11136-5bc1-47d1-b96d-e60ed0f7a61f"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "collapsed_bam_duplex_metrics_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 5414,
+                                                        "class": "File",
+                                                        "location": "bid://af6c95f7-d184-4c08-8237-e252858dc573"
+                                                    },
+                                                    {
+                                                        "size": 7976,
+                                                        "class": "File",
+                                                        "location": "bid://e9f81e38-90a0-4edf-9301-6337760138f9"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "gatk_mean_quality_by_cycle_recal_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 7495,
+                                                        "class": "File",
+                                                        "location": "bid://571f4537-32b3-4405-84d2-4d1a6e2e1d75"
+                                                    },
+                                                    {
+                                                        "size": 6998,
+                                                        "class": "File",
+                                                        "location": "bid://d58ef08c-0708-439b-9bc8-91798e9284b3"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "biometrics_extract_files_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 6449,
+                                                        "class": "File",
+                                                        "location": "bid://4266b420-aefc-4e9d-976b-4f3298fa7030"
+                                                    },
+                                                    {
+                                                        "size": 4963,
+                                                        "class": "File",
+                                                        "location": "bid://8a2ae876-9370-4c41-907e-2f1314281ac2"
+                                                    },
+                                                    {
+                                                        "size": 2448,
+                                                        "class": "File",
+                                                        "location": "bid://328d153b-500a-4f1b-a5c1-8c07af338c9f"
+                                                    },
+                                                    {
+                                                        "size": 13243,
+                                                        "class": "File",
+                                                        "location": "bid://05b357a0-097b-4d11-83aa-1c591e005d89"
+                                                    },
+                                                    {
+                                                        "size": 92096,
+                                                        "class": "File",
+                                                        "location": "bid://271d9d34-82bf-4ba3-8cdb-879aa5576348"
+                                                    },
+                                                    {
+                                                        "size": 27615595,
+                                                        "class": "File",
+                                                        "location": "bid://bf790770-6486-4818-917a-ddc3049bd45d"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "simplex_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "size": 3719872,
+                                                "class": "File",
+                                                "location": "bid://92824aa2-60cc-47bb-899a-328b62091f52"
+                                            },
+                                            {
+                                                "size": 222,
+                                                "class": "File",
+                                                "location": "bid://352f0673-eb91-448a-9267-648a6024b264"
+                                            },
+                                            {
+                                                "size": 367,
+                                                "class": "File",
+                                                "location": "bid://872c7a2c-9a0e-439a-b5cb-a3c2e5024b65"
+                                            },
+                                            {
+                                                "size": 3719859,
+                                                "class": "File",
+                                                "location": "bid://a7eaa642-0842-4e81-9751-cea38baadcda"
+                                            },
+                                            {
+                                                "size": 3721920,
+                                                "class": "File",
+                                                "location": "bid://7a60f2eb-e089-4b43-8abe-050fa10d9698"
+                                            },
+                                            {
+                                                "size": 253,
+                                                "class": "File",
+                                                "location": "bid://db6eca37-fb96-4a2c-8889-82cc39ab0832"
+                                            },
+                                            {
+                                                "size": 68,
+                                                "class": "File",
+                                                "location": "bid://16e92cf9-4447-47b6-bca1-e28840e91886"
+                                            },
+                                            {
+                                                "size": 229,
+                                                "class": "File",
+                                                "location": "bid://2bb61510-13f9-4e54-be04-af593e86b7e8"
+                                            },
+                                            {
+                                                "size": 115,
+                                                "class": "File",
+                                                "location": "bid://977a5e70-bb53-4317-a2f8-15ca3f332bd2"
+                                            },
+                                            {
+                                                "size": 159,
+                                                "class": "File",
+                                                "location": "bid://f9236d2a-a037-40c9-b62a-5181365717da"
+                                            },
+                                            {
+                                                "size": 168,
+                                                "class": "File",
+                                                "location": "bid://953664f4-ed7a-4927-a73d-3efd513537af"
+                                            }
+                                        ],
+                                        "basename": "collapsed_biometrics_output",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 913961,
+                                                        "class": "File",
+                                                        "location": "bid://0b435865-c25d-4f84-8a1b-952c3bb12bf8"
+                                                    },
+                                                    {
+                                                        "size": 130,
+                                                        "class": "File",
+                                                        "location": "bid://b46ac409-3149-45da-aeb4-79ad9c932c61"
+                                                    },
+                                                    {
+                                                        "size": 17137513,
+                                                        "class": "File",
+                                                        "location": "bid://4d328247-33b1-4b1c-a8c4-ab64f745e5b1"
+                                                    },
+                                                    {
+                                                        "size": 834,
+                                                        "class": "File",
+                                                        "location": "bid://8cbfa99e-39c7-4f5b-8f64-91c983078ebd"
+                                                    },
+                                                    {
+                                                        "size": 143,
+                                                        "class": "File",
+                                                        "location": "bid://cf875ba9-d605-4d83-bb6a-a9ddbf799c12"
+                                                    },
+                                                    {
+                                                        "size": 4041554,
+                                                        "class": "File",
+                                                        "location": "bid://9e83542d-2b96-4af3-9f1a-da99e44e770a"
+                                                    },
+                                                    {
+                                                        "size": 130,
+                                                        "class": "File",
+                                                        "location": "bid://21c00595-0b9e-49da-8813-63706ea984e0"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "duplex_bam_sequence_qc_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4768,
+                                                        "class": "File",
+                                                        "location": "bid://098ae134-da9f-456a-b1b0-baa5e3a6adac"
+                                                    },
+                                                    {
+                                                        "size": 7841,
+                                                        "class": "File",
+                                                        "location": "bid://5353b781-b2fd-4b79-b4a1-8e352a8da07d"
+                                                    },
+                                                    {
+                                                        "size": 14390,
+                                                        "class": "File",
+                                                        "location": "bid://d32550dc-da8e-4edc-bb45-453d7bcc6446"
+                                                    },
+                                                    {
+                                                        "size": 2494,
+                                                        "class": "File",
+                                                        "location": "bid://537ceba2-efba-4fc3-8458-0fb37fb038f1"
+                                                    },
+                                                    {
+                                                        "size": 95160,
+                                                        "class": "File",
+                                                        "location": "bid://dc396ae6-f2c0-45b2-970d-f1a9528046de"
+                                                    },
+                                                    {
+                                                        "size": 27794015,
+                                                        "class": "File",
+                                                        "location": "bid://77b35489-f2be-4b67-8cb5-0d2fffcbcc89"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "uncollapsed_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "athena_coverage_report_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "size": 253,
+                                                "class": "File",
+                                                "location": "bid://fcdadcfa-3ea2-4886-a637-ed3cc986eb00"
+                                            },
+                                            {
+                                                "size": 3719872,
+                                                "class": "File",
+                                                "location": "bid://705ffd22-7c46-4326-99f0-9e93403d0ccd"
+                                            },
+                                            {
+                                                "size": 227,
+                                                "class": "File",
+                                                "location": "bid://a5b05aa6-66fb-405a-bba0-5c27fdda65c7"
+                                            },
+                                            {
+                                                "size": 3720553,
+                                                "class": "File",
+                                                "location": "bid://ebd56f4f-e683-41c0-a170-6c093a5e206e"
+                                            },
+                                            {
+                                                "size": 364,
+                                                "class": "File",
+                                                "location": "bid://c66aa4ff-538b-487f-b1e8-f4c61cb8d2c0"
+                                            },
+                                            {
+                                                "size": 168,
+                                                "class": "File",
+                                                "location": "bid://0dd2890e-cf1e-4724-a3e3-beb6818281d4"
+                                            }
+                                        ],
+                                        "basename": "duplex_biometrics_output",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
+                                    }
+                                ],
+                                "basename": "all_qc_files",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
+                            },
+                            {
+                                "size": 17137699,
+                                "class": "File",
+                                "location": "bid://edc7e2b5-79d5-4f98-8461-2065bf5c395f"
+                            },
+                            {
+                                "size": 2631,
+                                "class": "File",
+                                "location": "bid://542111b9-84cc-4dd6-bcfe-2c05bcf3e820"
+                            },
+                            {
+                                "size": 3722092,
+                                "class": "File",
+                                "location": "bid://bdca8c5a-ad2c-4545-90ee-a64b0d6879bf"
+                            },
+                            {
+                                "size": 1011,
+                                "class": "File",
+                                "location": "bid://30c23522-a400-4062-aa02-dfe7ae9fe350"
+                            },
+                            {
+                                "size": 1159,
+                                "class": "File",
+                                "location": "bid://d3f46eeb-83a5-4ac5-b569-bce725666563"
+                            }
+                        ],
+                        "basename": "aggregate_parsed_stats",
+                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats"
+                    }
+                ],
+                "nameext": "",
+                "basename": "multiqc_1.10.1.7",
+                "location": "file:///path/to/multiqc_1.10.1.7",
+                "nameroot": "tmp-outrbgldaa7"
+            },
+            "value": {
+                "class": "Directory",
+                "listing": [
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "class": "Directory",
+                                "listing": [],
+                                "basename": "matplotlib",
+                                "location": "file:///path/to/multiqc_1.10.1.7/.config/matplotlib"
+                            }
+                        ],
+                        "basename": ".config",
+                        "location": "file:///path/to/multiqc_1.10.1.7/.config"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_family_sizes_collapsed_duplex_metrics.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_uncollapsed_gcbias.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 182580,
+                                "class": "File",
+                                "basename": "multiqc.log",
+                                "checksum": "sha1$4bb0d237a71bea119a8832b715436f3c1861d7b7",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc.log"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_collapsed_bam.txt",
+                                "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_bam.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_fgbio_CollectDuplexSeqMetrics_duplex_yield_metrics_collapsed_duplex_metrics.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_uncollapsed_gcbias.txt",
+                                "checksum": "sha1$287eb90e87b0594bf29c0d6a0b4253a4f55272a0",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_collapsed_insertsize.txt",
+                                "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_insertsize.txt"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt",
+                                "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_targetcov.txt"
+                            },
+                            {
+                                "size": 2628,
+                                "class": "File",
+                                "basename": "multiqc_qc_criteria.txt",
+                                "checksum": "sha1$2cd376064f2a80671e3d8f3f411d965889a57bbf",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_qc_criteria.txt"
+                            },
+                            {
+                                "size": 167,
+                                "class": "File",
+                                "basename": "multiqc_minor_contamination_duplex.txt",
+                                "checksum": "sha1$f1d4e2583ba3c63f4e46c399c3b462fc4e7f5603",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination_duplex.txt"
+                            },
+                            {
+                                "size": 1504,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_duplex_bam.txt",
+                                "checksum": "sha1$c072f16859e4c1f094ceab597ae15353f24192c1",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_duplex_bam.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_collapsed_targetcov.txt",
+                                "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_targetcov.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_collapsed_bam.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_bam.txt"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_collapsed_insertsize.txt",
+                                "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_insertsize.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_collapsed_targetcov.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_targetcov.txt"
+                            },
+                            {
+                                "size": 674,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt",
+                                "checksum": "sha1$f44012a05068f6e65d5aa1176df7144e0b49f7fb",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_duplex_bam.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_uncollapsed_bam.txt",
+                                "checksum": "sha1$287eb90e87b0594bf29c0d6a0b4253a4f55272a0",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_uncollapsed_bam.txt"
+                            },
+                            {
+                                "size": 2143723,
+                                "class": "File",
+                                "basename": "multiqc_data.json",
+                                "checksum": "sha1$e64ee57c3ed520bd65def0af7b297dc422da3e5e",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_data.json"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_simplex_bam.txt",
+                                "checksum": "sha1$360bab3ad5b17a2e275c0b5017b80f5e346385eb",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_simplex_bam.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_collapsed_gcbias.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_simplex_bam.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_simplex_bam.txt"
+                            },
+                            {
+                                "size": 1520,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_uncollapsed_bam.txt",
+                                "checksum": "sha1$925cebf4ade5af7bf3aa7d516da2124976214c41",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_bam.txt"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt",
+                                "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_bam.txt"
+                            },
+                            {
+                                "size": 1520,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_uncollapsed_gcbias.txt",
+                                "checksum": "sha1$925cebf4ade5af7bf3aa7d516da2124976214c41",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_uncollapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 1094,
+                                "class": "File",
+                                "basename": "multiqc_summary_qc_metrics.txt",
+                                "checksum": "sha1$b6d37296a7249df76cd2eac508634309d570bc9e",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_summary_qc_metrics.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_collapsed_insertsize.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_collapsed_insertsize.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_uncollapsed_bam.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_uncollapsed_bam.txt"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_collapsed_gcbias.txt",
+                                "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt",
+                                "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_collapsed_bam.txt",
+                                "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_bam.txt"
+                            },
+                            {
+                                "size": 25,
+                                "class": "File",
+                                "basename": "multiqc_picard_target_coverage_duplex_bam.txt",
+                                "checksum": "sha1$6ac10a8bc58c89a930cc4d467815eeb392295fe8",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_target_coverage_duplex_bam.txt"
+                            },
+                            {
+                                "size": 260,
+                                "class": "File",
+                                "basename": "multiqc_sample_clusters.txt",
+                                "checksum": "sha1$97b2866774d221d99a2beab2f86e40e0a381ccce",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sample_clusters.txt"
+                            },
+                            {
+                                "size": 167,
+                                "class": "File",
+                                "basename": "multiqc_minor_contamination.txt",
+                                "checksum": "sha1$a2bd5503ed6fdf09cc108bc3c73d143e2f239a0f",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_minor_contamination.txt"
+                            },
+                            {
+                                "size": 680,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt",
+                                "checksum": "sha1$3f1f96e10399655c551771397fed82beecf2b70e",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_bam.txt"
+                            },
+                            {
+                                "size": 1022,
+                                "class": "File",
+                                "basename": "multiqc_hotspots_in_normals.txt",
+                                "checksum": "sha1$1c4ad6f173f91f33f6031c65af6c7d599f5e3ccf",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_hotspots_in_normals.txt"
+                            },
+                            {
+                                "size": 1501,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_simplex_bam.txt",
+                                "checksum": "sha1$e6f10c8dbbd566226ccd38ae3d33a6d24b375b14",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_simplex_bam.txt"
+                            },
+                            {
+                                "size": 356,
+                                "class": "File",
+                                "basename": "multiqc_noise_metrics.txt",
+                                "checksum": "sha1$19c88470129b5577df718e8d70a0674bacda35f2",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_noise_metrics.txt"
+                            },
+                            {
+                                "size": 158,
+                                "class": "File",
+                                "basename": "multiqc_major_contamination.txt",
+                                "checksum": "sha1$41c7fb23df3bb44601526b9a6cbea85d99aabb57",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_major_contamination.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_duplex_bam.txt",
+                                "checksum": "sha1$f804a20a3b5118583299dcf26a434f5be78a0524",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_duplex_bam.txt"
+                            },
+                            {
+                                "size": 680,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt",
+                                "checksum": "sha1$3f1f96e10399655c551771397fed82beecf2b70e",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_uncollapsed_gcbias.txt"
+                            },
+                            {
+                                "size": 877,
+                                "class": "File",
+                                "basename": "multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt",
+                                "checksum": "sha1$14b0faa407f4f40df141746919c698fa1a15c222",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_quality_by_cycle_uncollapsed_basequality.txt"
+                            },
+                            {
+                                "size": 1514,
+                                "class": "File",
+                                "basename": "multiqc_picard_HsMetrics_collapsed_targetcov.txt",
+                                "checksum": "sha1$586c3c8bc84b267d199763822b5799d0fe7991de",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_HsMetrics_collapsed_targetcov.txt"
+                            },
+                            {
+                                "size": 683,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt",
+                                "checksum": "sha1$2e34c04b8223615c2da26d475b47f66f7101c1c9",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_collapsed_insertsize.txt"
+                            },
+                            {
+                                "size": 5250,
+                                "class": "File",
+                                "basename": "multiqc_sources.txt",
+                                "checksum": "sha1$9d98b870545470039b3b93fdd2685d8019f517aa",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_sources.txt"
+                            },
+                            {
+                                "size": 672,
+                                "class": "File",
+                                "basename": "multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt",
+                                "checksum": "sha1$af7aeada6a96a93075104fca80e08e748a0e42f2",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_AlignmentSummaryMetrics_simplex_bam.txt"
+                            },
+                            {
+                                "size": 595,
+                                "class": "File",
+                                "basename": "multiqc_picard_insertSize_collapsed_gcbias.txt",
+                                "checksum": "sha1$d4bb94b89bd3d100015e0270b0230c2caaf9b8a3",
+                                "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data/multiqc_picard_insertSize_collapsed_gcbias.txt"
+                            }
+                        ],
+                        "basename": "multiqc_1.10.1.7_data",
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7_data"
+                    },
+                    {
+                        "size": 5093137,
+                        "class": "File",
+                        "basename": "multiqc_1.10.1.7.html",
+                        "checksum": "sha1$9d45a4d8e22af2755e7cf85b65db1f84fd89c6b4",
+                        "location": "file:///path/to/multiqc_1.10.1.7/multiqc_1.10.1.7.html"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "class": "Directory",
+                                "listing": [
+                                    {
+                                        "size": 24399,
+                                        "class": "File",
+                                        "basename": "fontlist-v330.json",
+                                        "checksum": "sha1$5a8aa6705713aa150bcc26c839a4b37f0de10035",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib/fontlist-v330.json"
+                                    }
+                                ],
+                                "basename": "matplotlib",
+                                "location": "file:///path/to/multiqc_1.10.1.7/.cache/matplotlib"
+                            }
+                        ],
+                        "basename": ".cache",
+                        "location": "file:///path/to/multiqc_1.10.1.7/.cache"
+                    },
+                    {
+                        "class": "Directory",
+                        "listing": [
+                            {
+                                "size": 1097,
+                                "class": "File",
+                                "basename": "genstats_qc_status.csv",
+                                "checksum": "sha1$6229b224a490a7a6353f696f87a4a91a180d96c3",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/genstats_qc_status.csv"
+                            },
+                            {
+                                "class": "Directory",
+                                "listing": [
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 7229,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01.regions.bed.gz",
+                                                        "checksum": "sha1$4a7fe43c84d733acebb2e2b57400633185b334e4",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.regions.bed.gz"
+                                                    },
+                                                    {
+                                                        "size": 12860,
+                                                        "class": "File",
+                                                        "basename": "histogram.pdf",
+                                                        "checksum": "sha1$97e1812141ae76bc8ca83536354fed62b44a6c43",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
+                                                    },
+                                                    {
+                                                        "size": 37458,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01.mosdepth.global.dist.txt",
+                                                        "checksum": "sha1$39853b1b8b634381676c37a7713651827a5af449",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.mosdepth.global.dist.txt"
+                                                    },
+                                                    {
+                                                        "size": 3809917,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01.per-base.bed.gz",
+                                                        "checksum": "sha1$2ade956bef7bcebd6a7c25484fc81ee41e1c489c",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.per-base.bed.gz"
+                                                    },
+                                                    {
+                                                        "size": 9039,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_duplex_hotspots_fillout.maf",
+                                                        "checksum": "sha1$70215bbf73966aa2d62480be18aa46df4b55a54c",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_duplex_hotspots_fillout.maf"
+                                                    },
+                                                    {
+                                                        "size": 349016,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01.mosdepth.region.dist.txt",
+                                                        "checksum": "sha1$59cd4697ab0ecd582052d9ae54d64147657918f7",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01.mosdepth.region.dist.txt"
+                                                    },
+                                                    {
+                                                        "size": 27615070,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_per_base_coverage.txt",
+                                                        "checksum": "sha1$46f6f1ca86f0d51cd999d89d6d39c5a46227cd7b",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_per_base_coverage.txt"
+                                                    },
+                                                    {
+                                                        "size": 6454,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_insert_size_metrics.txt",
+                                                        "checksum": "sha1$7bec9ba8bc9f8ffa38ffc0c11ef1b144ac62ba8c",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_insert_size_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 2447,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_alignment_summary_metrics.txt",
+                                                        "checksum": "sha1$defc835bcf82e9c43268f2a14df9240f5e48b0a0",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_alignment_summary_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 5063,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_hs_metrics.txt",
+                                                        "checksum": "sha1$e7d020ad6b7133b03869416a8b13557da69e39a2",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_hs_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 92010,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_duplex_per_target_coverage.txt",
+                                                        "checksum": "sha1$543aab505b345ef4477eb97269202d65dec528cf",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_duplex_per_target_coverage.txt"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "duplex_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4948,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_hs_metrics.txt",
+                                                        "checksum": "sha1$19df9fc513183e3860fcfd85e9cc39d36067dcb9",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_hs_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 27709248,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_per_base_coverage.txt",
+                                                        "checksum": "sha1$4d9b7a9b40e5f9d3f28ca1d09420ca2736661e8d",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_per_base_coverage.txt"
+                                                    },
+                                                    {
+                                                        "size": 14652,
+                                                        "class": "File",
+                                                        "basename": "histogram.pdf",
+                                                        "checksum": "sha1$4c3bf2d5e6be314dec8883204394ec926a7558f2",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
+                                                    },
+                                                    {
+                                                        "size": 2467,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_alignment_summary_metrics.txt",
+                                                        "checksum": "sha1$329d215759787b1f65a35815826d9390c35c0667",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_alignment_summary_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 9457,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_hotspots_fillout.maf",
+                                                        "checksum": "sha1$af35183d89d3c5bb7c82fd34a7096fa205f6f6cf",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_hotspots_fillout.maf"
+                                                    },
+                                                    {
+                                                        "size": 7390,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_insert_size_metrics.txt",
+                                                        "checksum": "sha1$6d63c418e119a16360bd91e894faf4d8b1fc4a1c",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_insert_size_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 93778,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_FM_per_target_coverage.txt",
+                                                        "checksum": "sha1$30da78bf8f78e1ed9923b232c30893bfd7b63c13",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_FM_per_target_coverage.txt"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "collapsed_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4336,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.umi_counts.txt",
+                                                        "checksum": "sha1$334faa7e4d11484a531638c271a761156d110481",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.umi_counts.txt"
+                                                    },
+                                                    {
+                                                        "size": 3108,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.duplex_family_sizes.txt",
+                                                        "checksum": "sha1$2a9460530fba836fb112010c03a28d70c8e1d7ee",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.duplex_family_sizes.txt"
+                                                    },
+                                                    {
+                                                        "size": 2952,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.family_sizes.txt",
+                                                        "checksum": "sha1$fa46697dbc85dfd2ece7a585ee37c10fb17f7707",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.family_sizes.txt"
+                                                    },
+                                                    {
+                                                        "size": 1323,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_grouped.duplex_yield_metrics.txt",
+                                                        "checksum": "sha1$599df187e3b0958e0e43dc6a3ddc6b928e4f2a1f",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_grouped.duplex_yield_metrics.txt"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "collapsed_bam_duplex_metrics_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_bam_duplex_metrics_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 5414,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt",
+                                                        "checksum": "sha1$da302e20ddf07d62f1f33600a86ad2b7d3fe980a",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.txt"
+                                                    },
+                                                    {
+                                                        "size": 7976,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf",
+                                                        "checksum": "sha1$6d9d439d774abf7d117d6f23e7c79befce27fd3d",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_mean_quality_by_cycle.pdf"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "gatk_mean_quality_by_cycle_recal_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/gatk_mean_quality_by_cycle_recal_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 7495,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_duplex.pickle",
+                                                        "checksum": "sha1$7f1ba6b7923bac89edacbd0fb49c530028615a38",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01/C-100000-F001-d01_duplex.pickle"
+                                                    },
+                                                    {
+                                                        "size": 6998,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed.pickle",
+                                                        "checksum": "sha1$a7bc57832274e266048ece9126f24084ddca72c6",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed.pickle"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "biometrics_extract_files_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/biometrics_extract_files_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 6449,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_insert_size_metrics.txt",
+                                                        "checksum": "sha1$a02f4c20414e042f032e2a927a3859cb543f7489",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_insert_size_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 4963,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_hs_metrics.txt",
+                                                        "checksum": "sha1$0f802a2b2b33490c2b3f25ebdfe1a3222ec38c4e",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_hs_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 2448,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_alignment_summary_metrics.txt",
+                                                        "checksum": "sha1$7383cc6ad86cd6b386998d991f8edf176efe71bc",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_alignment_summary_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 13243,
+                                                        "class": "File",
+                                                        "basename": "histogram.pdf",
+                                                        "checksum": "sha1$1781c1621c38cbdd8f81253a04288dd1084c6f0f",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
+                                                    },
+                                                    {
+                                                        "size": 92096,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_per_target_coverage.txt",
+                                                        "checksum": "sha1$ee15142ec3ab7b6e9843691e985830e49c8263c4",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_per_target_coverage.txt"
+                                                    },
+                                                    {
+                                                        "size": 27615595,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_collapsed_simplex_per_base_coverage.txt",
+                                                        "checksum": "sha1$6e39a2f07ef2d2bad9d0b967c074cc2360054d1c",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_collapsed_simplex_per_base_coverage.txt"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "simplex_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/simplex_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "size": 3719872,
+                                                "class": "File",
+                                                "basename": "minor_contamination.html",
+                                                "checksum": "sha1$f54bfbdf5af9ef4c9bdb7eb4ca5da0939b11191c",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination.html"
+                                            },
+                                            {
+                                                "size": 222,
+                                                "class": "File",
+                                                "basename": "collapsed_major_contamination.json",
+                                                "checksum": "sha1$8c6c2b0815be2ac965a02382ef94601d3e2b85e1",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.json"
+                                            },
+                                            {
+                                                "size": 367,
+                                                "class": "File",
+                                                "basename": "collapsed_genotype_comparison.csv",
+                                                "checksum": "sha1$82cf49f79baa8494576640438835789e613f4928",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_comparison.csv"
+                                            },
+                                            {
+                                                "size": 3719859,
+                                                "class": "File",
+                                                "basename": "major_contamination.html",
+                                                "checksum": "sha1$5eb2042e094d77603cbb21082f173317f4897133",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/major_contamination.html"
+                                            },
+                                            {
+                                                "size": 3721920,
+                                                "class": "File",
+                                                "basename": "minor_contamination_sites.html",
+                                                "checksum": "sha1$e79a5ce02b3e06423c7e642f6b35be99c718d7d6",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/minor_contamination_sites.html"
+                                            },
+                                            {
+                                                "size": 253,
+                                                "class": "File",
+                                                "basename": "collapsed_genotype_clusters_input.csv",
+                                                "checksum": "sha1$0784c7e3088454eb0251c220aa0332defe319f02",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_genotype_clusters_input.csv"
+                                            },
+                                            {
+                                                "size": 68,
+                                                "class": "File",
+                                                "basename": "collapsed_sex_mismatch.csv",
+                                                "checksum": "sha1$8b0172cb17f91f792bae726f7f156006a65c8bba",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.csv"
+                                            },
+                                            {
+                                                "size": 229,
+                                                "class": "File",
+                                                "basename": "collapsed_minor_contamination.json",
+                                                "checksum": "sha1$740e8f8732f4046325e71a0e2f903c53482e8429",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.json"
+                                            },
+                                            {
+                                                "size": 115,
+                                                "class": "File",
+                                                "basename": "collapsed_sex_mismatch.json",
+                                                "checksum": "sha1$8c3b776b350e813ac9acc98c8cf44006301999c3",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_sex_mismatch.json"
+                                            },
+                                            {
+                                                "size": 159,
+                                                "class": "File",
+                                                "basename": "collapsed_major_contamination.csv",
+                                                "checksum": "sha1$0492937b683609294a15db436315f91c793d4e94",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_major_contamination.csv"
+                                            },
+                                            {
+                                                "size": 168,
+                                                "class": "File",
+                                                "basename": "collapsed_minor_contamination.csv",
+                                                "checksum": "sha1$927e09e66b03a32b4b6647b4668d45469200220d",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output/collapsed_minor_contamination.csv"
+                                            }
+                                        ],
+                                        "basename": "collapsed_biometrics_output",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/collapsed_biometrics_output"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 913961,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise_positions.tsv",
+                                                        "checksum": "sha1$b1c4a281f7fe36af81c8ca3f97291c624f4da04e",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_positions.tsv"
+                                                    },
+                                                    {
+                                                        "size": 130,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise_del.tsv",
+                                                        "checksum": "sha1$2b1aefe0a8ea03d3024f9e9f0d57ef5ca58b8f02",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_del.tsv"
+                                                    },
+                                                    {
+                                                        "size": 17137513,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise.html",
+                                                        "checksum": "sha1$a73329f4d84f3dd2240a61576bee6ce757746c13",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise.html"
+                                                    },
+                                                    {
+                                                        "size": 834,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise_by_substitution.tsv",
+                                                        "checksum": "sha1$dc162ffa7f8139e25f2bdf1f5bc7bac6eb1d832a",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_by_substitution.tsv"
+                                                    },
+                                                    {
+                                                        "size": 143,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise_acgt.tsv",
+                                                        "checksum": "sha1$a1a21d2c41ba89f2cbbc339897be235c8272f1a2",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_acgt.tsv"
+                                                    },
+                                                    {
+                                                        "size": 4041554,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_pileup.tsv",
+                                                        "checksum": "sha1$dcd201fda77efd778432057b84642475bde9f185",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_pileup.tsv"
+                                                    },
+                                                    {
+                                                        "size": 130,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_noise_n.tsv",
+                                                        "checksum": "sha1$2a8f6334e03ccccea130c853562bd40a8ac0c698",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01/C-100000-F001-d01_noise_n.tsv"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "duplex_bam_sequence_qc_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_bam_sequence_qc_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [
+                                                    {
+                                                        "size": 4768,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt",
+                                                        "checksum": "sha1$d6b43ff7ae6aeb398f17114ec0658fc0a379ce64",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_hs_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 7841,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt",
+                                                        "checksum": "sha1$9fabedb8ac01be145dcc516c7aed76bcc8fd66c4",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_insert_size_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 14390,
+                                                        "class": "File",
+                                                        "basename": "histogram.pdf",
+                                                        "checksum": "sha1$349549dc1e9d83d060f7b4e091661f3e9c28da42",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/histogram.pdf"
+                                                    },
+                                                    {
+                                                        "size": 2494,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt",
+                                                        "checksum": "sha1$2cae9c4e55cda48c83aefe03db72bfe0eb2430e6",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_alignment_summary_metrics.txt"
+                                                    },
+                                                    {
+                                                        "size": 95160,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt",
+                                                        "checksum": "sha1$2376f1bd73dc4600039bdaf12e7ae0eaf21a93dc",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_per_target_coverage.txt"
+                                                    },
+                                                    {
+                                                        "size": 27794015,
+                                                        "class": "File",
+                                                        "basename": "C-100000-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt",
+                                                        "checksum": "sha1$567c1918cec4efdfba0b7062188ae8044d40d47e",
+                                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01/C-100000-F001-d01_uncollapsed_BR_revertsam_per_base_coverage.txt"
+                                                    }
+                                                ],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "uncollapsed_bam_stats_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/uncollapsed_bam_stats_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "class": "Directory",
+                                                "listing": [],
+                                                "basename": "C-100000-F001-d01",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir/C-100000-F001-d01"
+                                            }
+                                        ],
+                                        "basename": "athena_coverage_report_dir",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/athena_coverage_report_dir"
+                                    },
+                                    {
+                                        "class": "Directory",
+                                        "listing": [
+                                            {
+                                                "size": 253,
+                                                "class": "File",
+                                                "basename": "duplex_genotype_clusters_input.csv",
+                                                "checksum": "sha1$0784c7e3088454eb0251c220aa0332defe319f02",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_clusters_input.csv"
+                                            },
+                                            {
+                                                "size": 3719872,
+                                                "class": "File",
+                                                "basename": "minor_contamination.html",
+                                                "checksum": "sha1$b4fe2e14cb05f9a5977f68dbec8ea6fc995da88c",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination.html"
+                                            },
+                                            {
+                                                "size": 227,
+                                                "class": "File",
+                                                "basename": "duplex_minor_contamination.json",
+                                                "checksum": "sha1$77d6ac275dbf5a62c56308eddeba3ab9d92570b1",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.json"
+                                            },
+                                            {
+                                                "size": 3720553,
+                                                "class": "File",
+                                                "basename": "minor_contamination_sites.html",
+                                                "checksum": "sha1$2a27641dd1ebb75bf782c86058e84ebe26da727a",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/minor_contamination_sites.html"
+                                            },
+                                            {
+                                                "size": 364,
+                                                "class": "File",
+                                                "basename": "duplex_genotype_comparison.csv",
+                                                "checksum": "sha1$8b5916cb0108046ddce35c42d85ffd05bfab32f2",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_genotype_comparison.csv"
+                                            },
+                                            {
+                                                "size": 168,
+                                                "class": "File",
+                                                "basename": "duplex_minor_contamination.csv",
+                                                "checksum": "sha1$e67b3a44f436dd9fda19c56c56b73d8e6212689e",
+                                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output/duplex_minor_contamination.csv"
+                                            }
+                                        ],
+                                        "basename": "duplex_biometrics_output",
+                                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files/duplex_biometrics_output"
+                                    }
+                                ],
+                                "basename": "all_qc_files",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/all_qc_files"
+                            },
+                            {
+                                "size": 17137699,
+                                "class": "File",
+                                "basename": "sequence_qc_mqc.html",
+                                "checksum": "sha1$03aadbd7bbff0d88123dc3a5251bc24daaa736f4",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.html"
+                            },
+                            {
+                                "size": 2631,
+                                "class": "File",
+                                "basename": "qc_criteria.csv",
+                                "checksum": "sha1$b18ceb3b1ec0dde7e04820db970d7ccbc7c725ae",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/qc_criteria.csv"
+                            },
+                            {
+                                "size": 3722092,
+                                "class": "File",
+                                "basename": "minor_contamination_sites_mqc.html",
+                                "checksum": "sha1$9d9d7410b6d7b0aaf7da459e2dae875300d5cec9",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/minor_contamination_sites_mqc.html"
+                            },
+                            {
+                                "size": 1011,
+                                "class": "File",
+                                "basename": "hotspot_table.tsv",
+                                "checksum": "sha1$8058debda928498363dd8f8e00d8fb5addc352eb",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/hotspot_table.tsv"
+                            },
+                            {
+                                "size": 1159,
+                                "class": "File",
+                                "basename": "sequence_qc_mqc.yaml",
+                                "checksum": "sha1$bc7b85aa3c000697839d8bf2b147886508b2149b",
+                                "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats/sequence_qc_mqc.yaml"
+                            }
+                        ],
+                        "basename": "aggregate_parsed_stats",
+                        "location": "file:///path/to/multiqc_1.10.1.7/aggregate_parsed_stats"
+                    }
+                ],
+                "nameext": "",
+                "basename": "multiqc_1.10.1.7",
+                "location": "file:///path/to/multiqc_1.10.1.7",
+                "nameroot": "tmp-outrbgldaa7"
+            },
+            "notify": false,
+            "files": [
+                "00320482-1189-4703-af59-7c498579d25b",
+                "0192dbe4-9211-4689-9fc2-54e8b5fec376",
+                "01d6eb62-bf18-4969-ad08-1149f56efa55",
+                "05b357a0-097b-4d11-83aa-1c591e005d89",
+                "06a4ef18-1583-4a58-8ec2-1e26afef9300",
+                "070aee15-b49b-4a62-9189-fb3fe2d2cb8b",
+                "098ae134-da9f-456a-b1b0-baa5e3a6adac",
+                "0b435865-c25d-4f84-8a1b-952c3bb12bf8",
+                "0dd2890e-cf1e-4724-a3e3-beb6818281d4",
+                "0ef1f934-7fc9-46db-a7f2-587dbb565cc1",
+                "16e92cf9-4447-47b6-bca1-e28840e91886",
+                "1abc1222-c5a4-423d-bd98-98db5215491a",
+                "1d12a82d-b0df-4aca-a18f-2774003c9565",
+                "1dfe16be-e182-4d9d-a702-663d386a0ec6",
+                "1f816efc-8b2c-4207-bf84-9d59567e1a61",
+                "1fd44e01-39b2-4684-9dae-425b50bdd399",
+                "216797a4-ef00-4f80-86db-21ffc5f93d22",
+                "21c00595-0b9e-49da-8813-63706ea984e0",
+                "22b73516-fa67-4c7c-8c25-5bf6f1c64ce4",
+                "271d9d34-82bf-4ba3-8cdb-879aa5576348",
+                "2a0d9e23-e963-4504-b83f-347d573abc44",
+                "2bb61510-13f9-4e54-be04-af593e86b7e8",
+                "2d86d17c-2673-422c-9533-43dea9f29d16",
+                "2de5f242-722a-46ee-8f0d-32465cfd05f9",
+                "2e5a2100-1c26-4160-8883-132f58594de2",
+                "2f2fef0a-50e8-4ee1-9d78-37e54f3c9281",
+                "30c23522-a400-4062-aa02-dfe7ae9fe350",
+                "3129dcbe-81f8-4c31-86e4-f5793eff7a2a",
+                "328d153b-500a-4f1b-a5c1-8c07af338c9f",
+                "352f0673-eb91-448a-9267-648a6024b264",
+                "35d98d86-9940-4516-b3c9-26e38f2c4356",
+                "35f0a75e-54e7-4d33-912f-6d6c3aecde8f",
+                "3f1e37b8-9594-414e-95f9-a96a82f4d5de",
+                "3fd33504-5044-4599-85f2-30bbf8331031",
+                "4266b420-aefc-4e9d-976b-4f3298fa7030",
+                "43fda4d9-9690-41f4-8d01-0072f82b01ba",
+                "44b622da-38c1-49c0-91d6-e0db7533d8a3",
+                "4d328247-33b1-4b1c-a8c4-ab64f745e5b1",
+                "5353b781-b2fd-4b79-b4a1-8e352a8da07d",
+                "537ceba2-efba-4fc3-8458-0fb37fb038f1",
+                "540b57a9-ecd5-4cb1-ba8a-f5c0d3deb844",
+                "542111b9-84cc-4dd6-bcfe-2c05bcf3e820",
+                "546cb090-849d-4666-8a64-c42312de2ced",
+                "571f4537-32b3-4405-84d2-4d1a6e2e1d75",
+                "5a9afe72-ca85-4b6b-928f-fcdf1a81b410",
+                "5c7269b6-35e9-4c7d-96d5-56450fb29b2c",
+                "5c73d2f1-4cb6-447b-ac06-d4a6277cc700",
+                "5f4e52b9-1565-43d9-a6ce-ee6e8b25c368",
+                "63ec69e8-2b7a-4a22-bbe3-5166452c99a3",
+                "64c44e08-ac57-4c3a-b29e-6eb87ecbb35e",
+                "6ad7bfa2-8510-4c12-ace9-ee9c4b66b976",
+                "6caa918e-54b8-410b-b3c5-1f34e92c382c",
+                "705ffd22-7c46-4326-99f0-9e93403d0ccd",
+                "70f160e1-3524-4482-9464-f9466cba6d5c",
+                "72e11ab4-e64c-471a-9ac0-bedff458d1e3",
+                "77b35489-f2be-4b67-8cb5-0d2fffcbcc89",
+                "7a60f2eb-e089-4b43-8abe-050fa10d9698",
+                "7f9d27be-9e6b-42d8-ab31-bc78889d5d4b",
+                "8371c4e4-bd7c-4c99-859b-a2d05b48b745",
+                "83e77a7d-0b19-475f-a87e-557842b5d034",
+                "872c7a2c-9a0e-439a-b5cb-a3c2e5024b65",
+                "88c11136-5bc1-47d1-b96d-e60ed0f7a61f",
+                "8a2ae876-9370-4c41-907e-2f1314281ac2",
+                "8cbfa99e-39c7-4f5b-8f64-91c983078ebd",
+                "92824aa2-60cc-47bb-899a-328b62091f52",
+                "92ea7feb-b11b-4881-a149-ac58e2b7f639",
+                "94864c2b-ee0d-41ee-b297-382a8194ffee",
+                "953664f4-ed7a-4927-a73d-3efd513537af",
+                "95f651f4-5946-457d-9665-d378654c5bbc",
+                "96c5b06c-6ec5-413c-82ef-58df883f7805",
+                "977a5e70-bb53-4317-a2f8-15ca3f332bd2",
+                "9a25e11e-6d5e-489c-a5a8-66993bea46e1",
+                "9cd3e6e7-cf1d-4f66-991e-47f78b3d7bb2",
+                "9e83542d-2b96-4af3-9f1a-da99e44e770a",
+                "a04ebbcf-d89b-4976-8a88-ca06ee102bbd",
+                "a5b05aa6-66fb-405a-bba0-5c27fdda65c7",
+                "a7eaa642-0842-4e81-9751-cea38baadcda",
+                "aa4c007a-acf8-4364-8f3d-b7767f1efb67",
+                "ad8cb652-7802-416f-b572-b75ce7729d65",
+                "af6731f3-9666-448b-b6cc-6f621d39a8da",
+                "af6c95f7-d184-4c08-8237-e252858dc573",
+                "b46ac409-3149-45da-aeb4-79ad9c932c61",
+                "bc6b7408-4a01-4def-8bf0-310a9774dcc6",
+                "bdca8c5a-ad2c-4545-90ee-a64b0d6879bf",
+                "bf790770-6486-4818-917a-ddc3049bd45d",
+                "bfd0c018-dbd7-4059-8dc5-5ef93092b13a",
+                "c0a8ef51-0ef9-423e-870b-6e31bd6187e5",
+                "c66aa4ff-538b-487f-b1e8-f4c61cb8d2c0",
+                "cc7741d7-0759-43fd-9b50-2a32642a4247",
+                "ce1bbf63-eee4-4da9-a046-4d079edc81c2",
+                "cf875ba9-d605-4d83-bb6a-a9ddbf799c12",
+                "d1b18aa4-3a19-4d72-8dbd-d9bdef019491",
+                "d215c45c-5052-4d7f-9db2-68c3eedbe152",
+                "d32550dc-da8e-4edc-bb45-453d7bcc6446",
+                "d3f46eeb-83a5-4ac5-b569-bce725666563",
+                "d58ef08c-0708-439b-9bc8-91798e9284b3",
+                "db6eca37-fb96-4a2c-8889-82cc39ab0832",
+                "dc396ae6-f2c0-45b2-970d-f1a9528046de",
+                "dd76b718-50b0-4545-906e-5d2dc5b8d270",
+                "e07c03cf-6467-4cbd-a7a7-7a2947026dc0",
+                "e2fc61be-2ce8-486a-a4ad-48fa77ba6270",
+                "e59d2bd9-0d1f-44d7-9461-db6c54494605",
+                "e69a8dfb-e681-4780-98e9-715b294c0eeb",
+                "e726910c-a7ad-4a5d-87ec-eb48139485c2",
+                "e9124724-f16a-454c-a516-a5919e6a8989",
+                "e9f81e38-90a0-4edf-9301-6337760138f9",
+                "eb6e3d88-098b-42af-91ab-bb470b86273a",
+                "ebd56f4f-e683-41c0-a170-6c093a5e206e",
+                "edc7e2b5-79d5-4f98-8461-2065bf5c395f",
+                "f67a0493-b361-4ab1-9a0b-1281001912f0",
+                "f696c948-7868-416e-ae11-3244a47d7642",
+                "f9236d2a-a037-40c9-b62a-5181365717da",
+                "fcdadcfa-3ea2-4886-a637-ed3cc986eb00",
+                "fce05d8f-7647-472f-acfe-59d602b73777",
+                "fdf2e664-4753-4593-ab85-31577486a5f9",
+                "ff546779-12bc-476c-bd11-6036186287b8"
+            ]
+        }
+    }
+]

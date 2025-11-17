@@ -22,11 +22,11 @@ Beagle is a backend service for managing files, pipelines and runs.
   - Creating RUNs from pipelines
 - Run
   - Creating run (choosing pipeline, choosing inputs)
-  - Submitting job to rabix executor
-  - Receiving updates about job status from rabix
+  - Submitting job to [ridgeback executor](https://github.com/mskcc/ridgeback)
+  - Receiving updates about job status from ridgeback
   - List outputs generated from run
-- LIMS integration
-  - Periodically fetch new samples from LIMS and create File objects in Beagle DB
+- SMILE integration
+  - Periodically fetch new samples from SMILE and create File objects in Beagle DB
   - Try to pair fails, and create runs
   - Notify if there are some errors with files or file metadata
 
@@ -37,11 +37,13 @@ Beagle is a backend service for managing files, pipelines and runs.
 ## Setup
 
 - Requirements
+
   - PostgreSQL==11
   - RabbitMQ
   - python 3
 
 - Instructions
+
   - virtualenv beagle
   - pip install -r requirements.txt
   - setup your environment using the [environment page](docs/ENVIRONMENT_VARIABLES.md)
@@ -75,12 +77,13 @@ cd beagle
 make install
 ```
 
-- If using a m1 mac, install with: 
+- If using a m1 mac, install with:
+
 ```
 make install-m1
 ```
 
-and activate the conda environment: 
+and activate the conda environment:
 
 ```
 conda activate beagle
@@ -119,10 +122,12 @@ make db-init BEAGLE_DB_NAME=db-dev
 Some environment variables needed for full functionality are not included; you should save these separately and `source` them before running the Makefile. These variables are:
 
 ```
-BEAGLE_LIMS_USERNAME
-BEAGLE_LIMS_PASSWORD
-BEAGLE_LIMS_URL
+BEAGLE_METADB_NATS_URL
+BEAGLE_NATS_SSL_CERTFILE
+BEAGLE_NATS_SSL_KEYFILE
+BEAGLE_METADB_USERNAME
+BEAGLE_METADB_PASSWORD
 BEAGLE_AUTH_LDAP_SERVER_URI
 ```
 
-Beagle can run without these, but it will not be able to access IGO LIMS and LDAP server for authentication.
+Beagle can run without these, but it will not be able to access SMILE and LDAP server for authentication.

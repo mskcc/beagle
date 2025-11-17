@@ -1,0 +1,90 @@
+{
+    "collapsed_bam": {{ collapsed_bam }},
+    "duplex_bam": {{ duplex_bam }},
+    "group_reads_by_umi_bam": {{ group_reads_by_umi_bam }},
+    "simplex_bam": {{ simplex_bam }},
+    "uncollapsed_bam_base_recal": {{ uncollapsed_bam_base_recal }},
+
+    "sample_group": {{ sample_group }},
+    "sample_name": {{ sample_name }},
+    "sample_sex": {{ sample_sex }},
+
+    "samples-json": {{samples_json_content}},
+
+    "multiqc_config": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/multiqc_config/versions/v1.0/config_ch.yaml"
+    },
+    "mosdepth_bed": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/panel_bed_file_athena_CH_nodup.bed"
+    },
+    "biometrics_bed_file": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed"
+    },
+    "biometrics_vcf_file": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf"
+    },
+    "biometrics_json": true,
+    "biometrics_plot": true,
+
+    "hsmetrics_coverage_cap": 30000,
+    "hsmetrics_minimum_base_quality": 1,
+    "hsmetrics_minimum_mapping_quality": 1,
+
+    "noise_sites_bed": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed"
+    },
+    "bait_intervals": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list"
+    },
+    "target_intervals": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list"
+    },
+
+    "reference": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cch/hg19/Homo_sapiens_assembly19.fasta",
+      "secondaryFiles": [
+        {"class": "File", "location": "iris:///data1/core005/assets/cch/hg19/Homo_sapiens_assembly19.fasta.fai"},
+        {"class": "File", "location": "iris:///data1/core005/assets/cch/hg19/Homo_sapiens_assembly19.dict"}
+      ]
+    },
+
+    "hotspots_maf": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-ch-pd-v1.maf"
+    },
+
+    "sequence_qc_min_basq": 1,
+    "sequence_qc_min_mapq": 1,
+    "sequence_qc_threshold": null,
+    "sequence_qc_truncate": null,  
+    "collapsed_biometrics_coverage_threshold": null,
+    "collapsed_biometrics_major_threshold": null,
+    "collapsed_biometrics_min_base_quality": null,
+    "collapsed_biometrics_min_coverage": null,
+    "collapsed_biometrics_min_homozygous_thresh": null,
+    "collapsed_biometrics_min_mapping_quality": null,
+    "collapsed_biometrics_minor_threshold": null,
+
+    "duplex_biometrics_major_threshold": null,
+    "duplex_biometrics_min_base_quality": null,
+    "duplex_biometrics_min_coverage": null,
+    "duplex_biometrics_min_homozygous_thresh": null,
+    "duplex_biometrics_min_mapping_quality": null,
+    "duplex_biometrics_minor_threshold": null,
+    "fragment_count": 1,
+    "filter_duplicate": 0,
+    "omaf": true,
+    "generic_counting": true,
+    "athena_thresholds": [250,500,1000,1500,2000],
+    "athena_threshold": 500,
+    "athena_summary": true,
+    "athena_cores": 4
+}

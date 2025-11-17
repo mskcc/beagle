@@ -4,11 +4,8 @@ from rest_framework import serializers
 from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
-from beagle_etl.models import Job, JobStatus
-from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
 from beagle_etl.metadata.validator import MetadataValidator
-
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -277,6 +274,18 @@ class CreateFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ("path", "file_type", "size", "file_group", "metadata", "checksum")
+
+
+class CreateFileFormSerializer(CreateFileSerializer):
+    class Meta:
+        model = File
+        fields = ("path", "file_type", "file_group", "metadata")
+
+
+class CreateFileFormSerializer(CreateFileSerializer):
+    class Meta:
+        model = File
+        fields = ("path", "file_type", "file_group", "metadata")
 
 
 class UpdateFileSerializer(serializers.Serializer):

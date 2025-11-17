@@ -1,0 +1,2223 @@
+[
+	{
+		"model": "file_system.file",
+		"pk": "372b5016-f57a-4370-a393-b3c7d1a94898",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.602Z",
+			"modified_date": "2022-04-26T01:18:26.602Z",
+			"file_name": "A-000000_fastp_report.json",
+			"path": "/test/path/A-000000_fastp_report.json",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$b41d1a153ce33da56e250fe43c58b3c44b387e12",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "ee7fec9a-b565-4083-ac4d-ed48df44f7c7",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.623Z",
+			"modified_date": "2022-04-26T01:18:26.623Z",
+			"file": "372b5016-f57a-4370-a393-b3c7d1a94898",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "b692e6a6-b274-4475-a78e-b270ba8e7559",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.842Z",
+			"modified_date": "2022-04-26T01:18:26.842Z",
+			"file_name": "A-000000_collapsed_duplex_aln_metrics.txt",
+			"path": "/path/to/A-000000_collapsed_duplex_aln_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$39349fb7548bd41dcc424d0bcb6abf4a79789a9c",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "3f0cee14-3885-4f23-a6ef-a303d02e9060",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.852Z",
+			"modified_date": "2022-04-26T01:18:26.852Z",
+			"file": "b692e6a6-b274-4475-a78e-b270ba8e7559",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "055b62b1-edd7-4c92-8384-2731e760b8e1",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.991Z",
+			"modified_date": "2022-04-26T01:18:26.991Z",
+			"file_name": "A-000000_umi_family_size.hist",
+			"path": "/path/to/A-000000_umi_family_size.hist",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$300fe2ea3bf4097629140721028cc691eeca4226",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "acd2cdeb-4c91-4116-b3d0-fb1242116fe4",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.003Z",
+			"modified_date": "2022-04-26T01:18:27.003Z",
+			"file": "055b62b1-edd7-4c92-8384-2731e760b8e1",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "13b3d13e-8884-436c-8877-a4b07fad85c0",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.183Z",
+			"modified_date": "2022-04-26T01:18:27.183Z",
+			"file_name": "A-000000.family_sizes.txt",
+			"path": "/path/to/A-000000.family_sizes.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$f48ddac6e09361c189a47bdc57909338f4624cd8",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "b181e645-3184-4534-b814-b62eaff067a2",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.194Z",
+			"modified_date": "2022-04-26T01:18:27.194Z",
+			"file": "13b3d13e-8884-436c-8877-a4b07fad85c0",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "8e61df96-6471-4181-b407-0dfa6ea86c37",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.521Z",
+			"modified_date": "2022-04-26T01:18:26.521Z",
+			"file_name": "A-000000_fastp_report.html",
+			"path": "/path/to/A-000000_fastp_report.html",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$77f1b3a3dc7af4443ae2919a862370f8a35b1e8a",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "a6fba8fe-3b76-47df-9f30-0e6117bad723",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.561Z",
+			"modified_date": "2022-04-26T01:18:26.561Z",
+			"file": "8e61df96-6471-4181-b407-0dfa6ea86c37",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "1541fcc1-224b-43da-8fb4-6079ebadc4a5",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.106Z",
+			"modified_date": "2022-04-26T01:18:27.106Z",
+			"file_name": "A-000000_collapsed_duplex.bai",
+			"path": "/path/to/A-000000_collapsed_duplex.bai",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$3cc36216890fe81c613fde5fffda5e314283ed93",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "99cff6a5-7a49-4922-96c1-f9b19c6fa859",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.115Z",
+			"modified_date": "2022-04-26T01:18:27.115Z",
+			"file": "1541fcc1-224b-43da-8fb4-6079ebadc4a5",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "f4979046-71ce-47c9-b8d6-952eed533b9d",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.069Z",
+			"modified_date": "2022-04-26T01:18:27.069Z",
+			"file_name": "A-000000_collapsed_duplex.bam",
+			"path": "/path/to/A-000000_collapsed_duplex.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$eb5c1e63215c1db33b01ea8ba83bd1b5a6edabe4",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "ac5c395a-7bad-4109-b050-2fc010dfd6a0",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.079Z",
+			"modified_date": "2022-04-26T01:18:27.079Z",
+			"file": "f4979046-71ce-47c9-b8d6-952eed533b9d",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "f1751e4f-703d-4791-b6b4-944418767ba9",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.144Z",
+			"modified_date": "2022-04-26T01:18:27.144Z",
+			"file_name": "A-000000.umi_counts.txt",
+			"path": "/path/to/A-000000.umi_counts.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$b5794a9fc79fd87faaa20f7494393a0a560ceff7",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "27cddfeb-18e1-4af4-9c56-883eb5b5e44c",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.155Z",
+			"modified_date": "2022-04-26T01:18:27.155Z",
+			"file": "f1751e4f-703d-4791-b6b4-944418767ba9",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "65a6de66-fd47-4124-a945-0527750c8827",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.219Z",
+			"modified_date": "2022-04-26T01:18:27.219Z",
+			"file_name": "A-000000.duplex_yield_metrics.txt",
+			"path": "/path/to/A-000000.duplex_yield_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$fb9754fb8edc908a2ebbe0d8315066a02831a9d3",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "b5a4cabb-ec56-47ab-b30d-d65bc499618f",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.230Z",
+			"modified_date": "2022-04-26T01:18:27.230Z",
+			"file": "65a6de66-fd47-4124-a945-0527750c8827",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "e45077b4-382f-4526-86c7-56e03c093a09",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.258Z",
+			"modified_date": "2022-04-26T01:18:27.258Z",
+			"file_name": "A-000000.duplex_umi_counts.txt",
+			"path": "/path/to/A-000000.duplex_umi_counts.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$0f20a3c4de068bfca8345cf46f6b1493f82a2cce",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "9308b91e-c5bf-438f-866f-46c5ceba2fdf",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.270Z",
+			"modified_date": "2022-04-26T01:18:27.270Z",
+			"file": "e45077b4-382f-4526-86c7-56e03c093a09",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "2ec63ecb-7941-452e-8acb-f996fff24867",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.658Z",
+			"modified_date": "2022-04-26T01:18:26.658Z",
+			"file_name": "A-000000_uncollapsed_BR_alignment_summary_metrics.txt",
+			"path": "/path/to/A-000000_uncollapsed_BR_alignment_summary_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$7d79458a6fecafb362fa29acbdd9dfcd5fc137a6",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "2fc8dcb7-afc4-4b2e-a1fc-71d1b759fcbd",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.669Z",
+			"modified_date": "2022-04-26T01:18:26.669Z",
+			"file": "2ec63ecb-7941-452e-8acb-f996fff24867",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "e4168c27-dc3f-4231-a88a-70b8d50d4588",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.707Z",
+			"modified_date": "2022-04-26T01:18:26.708Z",
+			"file_name": "A-000000_uncollapsed_FM.bam",
+			"path": "/path/to/A-000000_uncollapsed_FM.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$8ba451ad272066fd3a3cc4e0219413232b6bf413",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "85777e97-6c94-45fc-b1e0-0d0175f64194",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.719Z",
+			"modified_date": "2022-04-26T01:18:26.719Z",
+			"file": "e4168c27-dc3f-4231-a88a-70b8d50d4588",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "fbcc4978-f04a-45a1-8e38-f5ad0e559db0",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.762Z",
+			"modified_date": "2022-04-26T01:18:26.762Z",
+			"file_name": "A-000000_uncollapsed_FM.bai",
+			"path": "/path/to/A-000000_uncollapsed_FM.bai",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$4737eaf2c09fca6b86553a7976c35ddbbfc46f5b",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "7d333044-a62d-4613-a658-64fea76454b0",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.775Z",
+			"modified_date": "2022-04-26T01:18:26.775Z",
+			"file": "fbcc4978-f04a-45a1-8e38-f5ad0e559db0",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "0af65313-ee37-4df7-8693-1531f888f770",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.804Z",
+			"modified_date": "2022-04-26T01:18:26.804Z",
+			"file_name": "A-000000_uncollapsed_MD_metrics.txt",
+			"path": "/path/to/A-000000_uncollapsed_MD_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$048f0c86cddc98e087df9ecab6878c2827d26d81",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "ef08a277-9464-45c0-862b-9bf6c44cfc71",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.814Z",
+			"modified_date": "2022-04-26T01:18:26.814Z",
+			"file": "0af65313-ee37-4df7-8693-1531f888f770",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "87a4aeb8-f9f7-4abc-b2e0-75a04dfeb25b",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.878Z",
+			"modified_date": "2022-04-26T01:18:26.878Z",
+			"file_name": "A-000000_collapsed_aln_metrics.txt",
+			"path": "/path/to/A-000000_collapsed_aln_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$bc57bf12b7b6378def9bc4315640eb73c7aaef10",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "4f7e3525-3e46-449d-a748-6d11328e895f",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.887Z",
+			"modified_date": "2022-04-26T01:18:26.887Z",
+			"file": "87a4aeb8-f9f7-4abc-b2e0-75a04dfeb25b",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "56c3c58a-3a83-472f-acd4-c6bacca63ca4",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.915Z",
+			"modified_date": "2022-04-26T01:18:26.915Z",
+			"file_name": "A-000000_collapsed_simplex.bam",
+			"path": "/path/to/A-000000_collapsed_simplex.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$ef9099348dd8394069bdff07660eabd6f6144997",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "5dcbae73-1d83-4a2c-b3a1-6288790759ef",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.926Z",
+			"modified_date": "2022-04-26T01:18:26.926Z",
+			"file": "56c3c58a-3a83-472f-acd4-c6bacca63ca4",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "bf6a29ae-9e82-4499-9582-5139c2ae150a",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.953Z",
+			"modified_date": "2022-04-26T01:18:26.953Z",
+			"file_name": "A-000000_collapsed_simplex.bai",
+			"path": "/path/to/A-000000_collapsed_simplex.bai",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$bae77c45a07104122c97dafccea087ef41d7f73f",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "d5bb3158-235a-44eb-b7de-23a799281d86",
+		"fields": {
+			"created_date": "2022-04-26T01:18:26.963Z",
+			"modified_date": "2022-04-26T01:18:26.963Z",
+			"file": "bf6a29ae-9e82-4499-9582-5139c2ae150a",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "a823cd02-7c6b-400d-aea3-0ed14d78e172",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.031Z",
+			"modified_date": "2022-04-26T01:18:27.031Z",
+			"file_name": "A-000000_collapsed_grouped.bam",
+			"path": "/path/to/A-000000_collapsed_grouped.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$21a54e5c798eecc571aeceeccf41a49cd1a2e6ad",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "0e0410de-6afa-4311-988a-9fc7edbd2d15",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.042Z",
+			"modified_date": "2022-04-26T01:18:27.042Z",
+			"file": "a823cd02-7c6b-400d-aea3-0ed14d78e172",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "6a2f1fea-70a1-466d-8601-791a22b3453f",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.297Z",
+			"modified_date": "2022-04-26T01:18:27.297Z",
+			"file_name": "A-000000_collapsed_simplex_aln_metrics.txt",
+			"path": "/path/to/A-000000_collapsed_simplex_aln_metrics.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$3d33bcd188b75fe5c8d230cd3e0d1c7c658ed2ed",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "6f5f9bdc-d7dd-4366-9f6a-321dd3c7bf7d",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.307Z",
+			"modified_date": "2022-04-26T01:18:27.307Z",
+			"file": "6a2f1fea-70a1-466d-8601-791a22b3453f",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "ed3f9b27-53fd-4c02-9e7a-4bbe2ccc92da",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.353Z",
+			"modified_date": "2022-04-26T01:18:27.353Z",
+			"file_name": "A-000000.duplex_family_sizes.txt",
+			"path": "/path/to/A-000000.duplex_family_sizes.txt",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$cee56c9688a59cfdba33b87f1f0fd41feb6dbe97",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "7e8bb81a-66f8-4af9-af95-c099506ed2c9",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.367Z",
+			"modified_date": "2022-04-26T01:18:27.367Z",
+			"file": "ed3f9b27-53fd-4c02-9e7a-4bbe2ccc92da",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "2b9e1a76-2a10-4c0f-979d-39322e765351",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.402Z",
+			"modified_date": "2022-04-26T01:18:27.402Z",
+			"file_name": "A-000000_collapsed_FM.bam",
+			"path": "/path/to/A-000000_collapsed_FM.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$f5d129f8af5c5c80e6bd3e8ba7f1a84a4bc7fd7b",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "19d30acf-fa35-4f06-b2d3-3643e3402ad1",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.412Z",
+			"modified_date": "2022-04-26T01:18:27.412Z",
+			"file": "2b9e1a76-2a10-4c0f-979d-39322e765351",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "bc9e35b2-c8e2-41d7-9db2-2e8489e68967",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.441Z",
+			"modified_date": "2022-04-26T01:18:27.441Z",
+			"file_name": "A-000000_collapsed_FM.bai",
+			"path": "/path/to/A-000000_collapsed_FM.bai",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$8a888ab7e83d0f078f73bc70df435e72553b18bd",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "88511709-07d3-49d7-8296-fdd82f913ef8",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.450Z",
+			"modified_date": "2022-04-26T01:18:27.450Z",
+			"file": "bc9e35b2-c8e2-41d7-9db2-2e8489e68967",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "41fe9c6b-67ab-446f-b011-3455ea92c1b5",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.475Z",
+			"modified_date": "2022-04-26T01:18:27.475Z",
+			"file_name": "A-000000_uncollapsed_BR.bam",
+			"path": "/path/to/A-000000_uncollapsed_BR.bam",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$a801b9f0eb93fb401902b8f5df55d54c58506a2b",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "a4b85aec-9bef-4f61-a440-9e88f28242c3",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.486Z",
+			"modified_date": "2022-04-26T01:18:27.486Z",
+			"file": "41fe9c6b-67ab-446f-b011-3455ea92c1b5",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "e721bb49-19c8-4d80-a0d8-e71807041782",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.510Z",
+			"modified_date": "2022-04-26T01:18:27.510Z",
+			"file_name": "A-000000_uncollapsed_BR.bai",
+			"path": "/path/to/A-000000_uncollapsed_BR.bai",
+			"file_type": 7,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$9a0e6fc2676c777011ed5f2ab9cc600db183327f",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "e593fa96-435c-4363-a89c-4b16ae7bdaca",
+		"fields": {
+			"created_date": "2022-04-26T01:18:27.523Z",
+			"modified_date": "2022-04-26T01:18:27.523Z",
+			"file": "e721bb49-19c8-4d80-a0d8-e71807041782",
+			"version": 0,
+			"latest": true,
+			"metadata": {
+				"sex": "F",
+				"ciTag": "A-000000",
+				"baitSet": "null",
+				"barcodeId": null,
+				"primaryId": "12405_C_25",
+				"dnaInputNg": 0,
+				"captureName": null,
+				"barcodeIndex": null,
+				"cmoPatientId": "A-000000",
+				"igoRequestId": "12405_C",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"libraryVolume": 0,
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": 0,
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": 0,
+				"libraryConcentrationNgul": 0
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "7734f8b9-9677-4b45-a16c-7bd239be8076",
+		"fields": {
+			"created_date": "2022-04-21T17:51:12.167Z",
+			"modified_date": "2022-04-21T17:51:12.167Z",
+			"file_name": "Homo_sapiens_assembly19.fasta",
+			"path": "/path/to/Homo_sapiens_assembly19.fasta",
+			"file_type": 25,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": null,
+			"request_id": null,
+			"patient_id": null,
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "d231416a-070c-4881-980b-cbdd470df860",
+		"fields": {
+			"created_date": "2022-04-21T17:51:12.186Z",
+			"modified_date": "2022-04-21T17:51:12.186Z",
+			"file": "7734f8b9-9677-4b45-a16c-7bd239be8076",
+			"version": 0,
+			"latest": true,
+			"metadata": {}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "6cc2770d-ea69-4e07-b151-a6d9d3cabea5",
+		"fields": {
+			"created_date": "2022-04-21T17:50:24.670Z",
+			"modified_date": "2022-04-21T17:50:24.670Z",
+			"file_name": "Mills_and_1000G_gold_standard.indels.b37.vcf",
+			"path": "/path/to/Mills_and_1000G_gold_standard.indels.b37.vcf",
+			"file_type": 16,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": null,
+			"request_id": null,
+			"patient_id": null,
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "b7b5e43f-e1e9-4e3e-a50f-3d61720cb248",
+		"fields": {
+			"created_date": "2022-04-21T17:50:24.682Z",
+			"modified_date": "2022-04-21T17:50:24.682Z",
+			"file": "6cc2770d-ea69-4e07-b151-a6d9d3cabea5",
+			"version": 0,
+			"latest": true,
+			"metadata": {}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "75acbec9-879f-4ef6-b58d-f4aef823cd39",
+		"fields": {
+			"created_date": "2022-04-21T17:49:37.840Z",
+			"modified_date": "2022-04-21T17:49:37.840Z",
+			"file_name": "dbsnp_137.b37.vcf",
+			"path": "/path/to/dbsnp_137.b37.vcf",
+			"file_type": 16,
+			"size": 0,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": null,
+			"request_id": null,
+			"patient_id": null,
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "d3eb804c-25b0-40cf-92a1-04d71e644198",
+		"fields": {
+			"created_date": "2022-04-21T17:49:37.862Z",
+			"modified_date": "2022-04-21T17:49:37.862Z",
+			"file": "75acbec9-879f-4ef6-b58d-f4aef823cd39",
+			"version": 0,
+			"latest": true,
+			"metadata": {}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "47546e00-ab64-4a0d-9d81-ceec6343557c",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.606Z",
+			"modified_date": "2022-04-07T16:28:17.797Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L004_R2_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L004_R2_001.fastq.gz",
+			"file_type": 26,
+			"size": 1438844886,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$ac9f2d8a0cad548fcec1f4aa6bdf35fcf54989d9",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "9affdf4f-6fa3-4a73-b00b-0253de7187f9",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.631Z",
+			"modified_date": "2022-04-07T13:57:44.903Z",
+			"file": "47546e00-ab64-4a0d-9d81-ceec6343557c",
+			"version": 4,
+			"latest": false,
+			"metadata": {
+				"R": "R2",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "Not imported from SMILE",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "A-000000",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "Not imported from SMILE",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "Not imported from SMILE",
+				"smileRequestId": "Not imported from SMILE",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"externalSampleId": "A-000000",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "4f906512-aad4-47b5-8a02-284ca9bb48f2",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.484Z",
+			"modified_date": "2022-04-07T16:28:17.785Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L004_R1_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L004_R1_001.fastq.gz",
+			"file_type": 26,
+			"size": 1363942913,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$1d885a2328d0bf711493106f73f693c753e45684",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "52b0ed23-7caa-47c8-85f6-64e95ea5b090",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.510Z",
+			"modified_date": "2022-04-07T13:57:44.859Z",
+			"file": "4f906512-aad4-47b5-8a02-284ca9bb48f2",
+			"version": 3,
+			"latest": false,
+			"metadata": {
+				"R": "R1",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "Not imported from SMILE",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "A-000000",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "Not imported from SMILE",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "Not imported from SMILE",
+				"smileRequestId": "Not imported from SMILE",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"externalSampleId": "A-000000",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "85b15d48-7ce6-479d-b37b-530bf12c0479",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.201Z",
+			"modified_date": "2022-04-07T16:28:17.760Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L003_R1_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L003_R1_001.fastq.gz",
+			"file_type": 26,
+			"size": 1358679419,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$c8c634c60dcfaf25a3313f9863f2420915a7f548",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "f79df19c-a428-4e84-bcf2-f28d4d92b3bc",
+		"fields": {
+			"created_date": "2022-04-07T13:57:44.797Z",
+			"modified_date": "2022-06-23T23:04:38.516Z",
+			"file": "85b15d48-7ce6-479d-b37b-530bf12c0479",
+			"version": 6,
+			"latest": true,
+			"metadata": {
+				"R": "R1",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "2022-03-28",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "12405_B_17",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "c6120833-601e-49bd-abca-a70fc04cdcce",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "98858465-5c90-4ff0-8c23-8ef9b560d083",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"additionalProperties": {
+					"isCmoSample": "true",
+					"igoRequestId": "12405_C"
+				},
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "8f3f40ac-470f-49d3-a374-77ffe24fb95e",
+		"fields": {
+			"created_date": "2022-03-28T22:02:09.677Z",
+			"modified_date": "2022-04-07T16:28:17.726Z",
+			"file_name": "A-000000_IGO_A-000000_S132_L002_R2_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S132_L002_R2_001.fastq.gz",
+			"file_type": 26,
+			"size": 109630998,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$78824f7fe833d575cb19c42d4b56fae1b2041e44",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "5d8fb93b-afc8-4468-8548-dfbc0dd43900",
+		"fields": {
+			"created_date": "2022-03-28T22:02:09.702Z",
+			"modified_date": "2022-04-07T13:57:44.688Z",
+			"file": "8f3f40ac-470f-49d3-a374-77ffe24fb95e",
+			"version": 4,
+			"latest": false,
+			"metadata": {
+				"R": "R2",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "DIANA_0458",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-11",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "H3WMVDSX3",
+				"importDate": "Not imported from SMILE",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "A-000000",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "Not imported from SMILE",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "Not imported from SMILE",
+				"smileRequestId": "Not imported from SMILE",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"externalSampleId": "A-000000",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "ae838088-4f47-4786-b4bb-90519bb21ac4",
+		"fields": {
+			"created_date": "2022-03-28T22:02:09.978Z",
+			"modified_date": "2022-04-07T16:28:17.737Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L002_R1_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L002_R1_001.fastq.gz",
+			"file_type": 26,
+			"size": 1361990148,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$3c678df7934766924773683ed2b875cf5c6735d0",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "6e15d490-61f9-44a6-9ea2-761acb026a74",
+		"fields": {
+			"created_date": "2022-04-07T13:57:44.720Z",
+			"modified_date": "2022-06-23T23:04:59.875Z",
+			"file": "ae838088-4f47-4786-b4bb-90519bb21ac4",
+			"version": 6,
+			"latest": true,
+			"metadata": {
+				"R": "R1",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "2022-03-28",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "12405_B_17",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "c6120833-601e-49bd-abca-a70fc04cdcce",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "98858465-5c90-4ff0-8c23-8ef9b560d083",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"additionalProperties": {
+					"isCmoSample": "true",
+					"igoRequestId": "12405_C"
+				},
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "e04b61b4-6107-4dcf-bcae-5791716351f2",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.089Z",
+			"modified_date": "2022-04-07T16:28:17.748Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L002_R2_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L002_R2_001.fastq.gz",
+			"file_type": 26,
+			"size": 1432836440,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$504229720dc4946c881bdfac37712f2dcc06148d",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "aa41c5b4-4b4d-432a-9418-0630e51c704d",
+		"fields": {
+			"created_date": "2022-04-07T13:57:44.761Z",
+			"modified_date": "2022-06-23T23:04:59.453Z",
+			"file": "e04b61b4-6107-4dcf-bcae-5791716351f2",
+			"version": 6,
+			"latest": true,
+			"metadata": {
+				"R": "R2",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "2022-03-28",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "12405_B_17",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "c6120833-601e-49bd-abca-a70fc04cdcce",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "98858465-5c90-4ff0-8c23-8ef9b560d083",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"additionalProperties": {
+					"isCmoSample": "true",
+					"igoRequestId": "12405_C"
+				},
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "ef623c82-6540-4f1f-87cd-2ce41227ad51",
+		"fields": {
+			"created_date": "2022-03-28T22:02:10.334Z",
+			"modified_date": "2022-04-07T16:28:17.772Z",
+			"file_name": "A-000000_IGO_A-000000_S269_L003_R2_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S269_L003_R2_001.fastq.gz",
+			"file_type": 26,
+			"size": 1434304230,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$e37ccc88fc1a7447e998f583f384caa594b5df43",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "eba0f829-62f1-4cb0-af3e-d93a80062f3e",
+		"fields": {
+			"created_date": "2022-04-07T13:57:44.830Z",
+			"modified_date": "2022-06-23T23:04:38.506Z",
+			"file": "ef623c82-6540-4f1f-87cd-2ce41227ad51",
+			"version": 6,
+			"latest": true,
+			"metadata": {
+				"R": "R2",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "RUTH_0079",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-21",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "HGLGWDSX3",
+				"importDate": "2022-03-28",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "12405_B_17",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "c6120833-601e-49bd-abca-a70fc04cdcce",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "98858465-5c90-4ff0-8c23-8ef9b560d083",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"additionalProperties": {
+					"isCmoSample": "true",
+					"igoRequestId": "12405_C"
+				},
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	},
+	{
+		"model": "file_system.file",
+		"pk": "fec2876f-2c75-4933-a3f8-8e503710880d",
+		"fields": {
+			"created_date": "2022-03-28T22:02:09.519Z",
+			"modified_date": "2022-04-07T16:28:17.713Z",
+			"file_name": "A-000000_IGO_A-000000_S132_L002_R1_001.fastq.gz",
+			"path": "/path/to/A-000000_IGO_A-000000_S132_L002_R1_001.fastq.gz",
+			"file_type": 26,
+			"size": 101214458,
+			"file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
+			"checksum": "sha1$b78b748416a36921fb0b1bcb233e601614e9f323",
+			"request_id": null,
+			"patient_id": null,
+			"samples": [
+				"2d8a8e1d-f2ac-48ba-85be-135123315b67"
+			]
+		}
+	},
+	{
+		"model": "file_system.filemetadata",
+		"pk": "ad219d25-292e-4165-85a0-15a8ff87166a",
+		"fields": {
+			"created_date": "2022-04-07T13:57:44.663Z",
+			"modified_date": "2022-06-23T23:05:00.004Z",
+			"file": "fec2876f-2c75-4933-a3f8-8e503710880d",
+			"version": 6,
+			"latest": true,
+			"metadata": {
+				"R": "R1",
+				"sex": "F",
+				"ciTag": "A-000000",
+				"runId": "DIANA_0458",
+				"tubeId": "",
+				"baitSet": "null",
+				"piEmail": "",
+				"runDate": "2022-03-11",
+				"runMode": null,
+				"species": "Human",
+				"platform": "Illumina",
+				"barcodeId": null,
+				"genePanel": "CustomCapture",
+				"primaryId": "12405_C_25",
+				"qcReports": [],
+				"datasource": "igo",
+				"dnaInputNg": null,
+				"flowCellId": "H3WMVDSX3",
+				"importDate": "2022-03-28",
+				"readLength": null,
+				"sampleName": "A-000000",
+				"sampleType": "Normal",
+				"captureName": null,
+				"igoComplete": true,
+				"labHeadName": "Eli Diamond",
+				"sampleClass": "Blood",
+				"barcodeIndex": null,
+				"cmoInfoIgoId": "12405_B_17",
+				"cmoPatientId": "A-000000",
+				"igoProjectId": "12405",
+				"igoRequestId": "12405_C",
+				"labHeadEmail": "diamone1@mskcc.org",
+				"libraryIgoId": null,
+				"oncotreeCode": "HS",
+				"preservation": "EDTA-Streck",
+				"sampleOrigin": "Whole Blood",
+				"cmoSampleName": "A-000000",
+				"flowCellLanes": [],
+				"libraryVolume": null,
+				"sampleAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "igoId"
+					},
+					{
+						"value": "A-000000",
+						"namespace": "investigatorId"
+					}
+				],
+				"smileSampleId": "c6120833-601e-49bd-abca-a70fc04cdcce",
+				"tumorOrNormal": "Tumor",
+				"captureInputNg": null,
+				"cfDNA2dBarcode": null,
+				"collectionYear": "",
+				"patientAliases": [
+					{
+						"value": "A-000000",
+						"namespace": "cmoId"
+					}
+				],
+				"qcAccessEmails": "skicmopm@mskcc.org",
+				"smilePatientId": "98858465-5c90-4ff0-8c23-8ef9b560d083",
+				"tissueLocation": "",
+				"dataAnalystName": "",
+				"dataAccessEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,siglera@mskcc.org",
+				"dataAnalystEmail": "",
+				"investigatorName": "Allison Sigler",
+				"sequencingCenter": "MSKCC",
+				"cmoSampleIdFields": {
+					"recipe": "CustomCapture",
+					"sampleType": "DNA",
+					"naToExtract": "",
+					"normalizedPatientId": "MRN_REDACTED"
+				},
+				"investigatorEmail": "siglera@mskcc.org",
+				"otherContactEmails": "skicmopm@mskcc.org,shahr2@mskcc.org,skicmopm@mskcc.org",
+				"projectManagerName": "",
+				"additionalProperties": {
+					"isCmoSample": "true",
+					"igoRequestId": "12405_C"
+				},
+				"investigatorSampleId": "A-000000",
+				"captureConcentrationNm": null,
+				"libraryConcentrationNgul": null
+			}
+		}
+	}
+]

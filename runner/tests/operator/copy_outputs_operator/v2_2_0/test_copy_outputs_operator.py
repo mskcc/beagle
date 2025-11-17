@@ -77,7 +77,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
@@ -108,7 +108,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
@@ -137,7 +137,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )

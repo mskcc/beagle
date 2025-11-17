@@ -142,8 +142,8 @@ class Patient:
                     {
                         "sample": cmo_sample_name,
                         "target": target,
-                        "fastq_pe1": {"class": "File", "location": f"juno://{fastqs.r1[i].path}"},
-                        "fastq_pe2": {"class": "File", "location": f"juno://{fastqs.r2[i].path}"},
+                        "fastq_pe1": {"class": "File", "location": f"iris://{fastqs.r1[i].path}"},
+                        "fastq_pe2": {"class": "File", "location": f"iris://{fastqs.r2[i].path}"},
                         "num_fq_pairs": num_fq_pairs,
                     }
                 )

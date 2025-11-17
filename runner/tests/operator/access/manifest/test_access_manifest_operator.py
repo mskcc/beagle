@@ -54,7 +54,7 @@ class TestAcessManifestOperator(TestCase):
             input_json = job.inputs
             self.assertEqual(len(input_json["manifest_data"]), 2)
             # Check contents
-            manifest_path = input_json["manifest_data"]["location"].replace("juno:", "")
+            manifest_path = input_json["manifest_data"]["location"].replace("iris:", "")
             with open(manifest_path, mode="r", newline="", encoding="utf-8") as file:
                 content = file.read()
             header = content.split("\r\n")[0]

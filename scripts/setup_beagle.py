@@ -14,7 +14,7 @@ from django.conf import settings
 SMILE_URL = os.environ["SMILE_URL"]
 DMP2CMO_URL = os.environ["DMP2CMO_URL"]
 DMP2CMO_TOKEN = os.environ["DMP2CMO_TOKEN"]
-STORAGE_NAME = "juno"
+STORAGE_NAME = "iris"
 STORAGE_TYPE = StorageType.LOCAL
 OPERATOR_TRIGGER_RUN_TYPE = {"aggregate": TriggerRunType.AGGREGATE, "individual": TriggerRunType.INDIVIDUAL}
 OPERATOR_TRIGGER_AGGREGATE_CONDITION = {
@@ -61,6 +61,7 @@ BEAGLE_URL = os.environ["BEAGLE_URL"]
 BEAGLE_USERNAME = os.environ["BEAGLE_USERNAME"]
 BEAGLE_PASSWORD = os.environ["BEAGLE_PASSWORD"]
 JIRA_BOARD = os.environ["JIRA_PROJECT"]
+LOG_DIR = os.environ["LOG_DIR"]
 basic_auth = HTTPBasicAuth(BEAGLE_USERNAME, BEAGLE_PASSWORD)
 
 
@@ -117,6 +118,7 @@ def set_pipelines(notifier, operators, pipelines):
             entrypoint=entrypoint,
             output_file_group=output_file_group,
             output_directory=output_directory,
+            log_directory=LOG_DIR,
             operator=operator,
             default=True,
         )

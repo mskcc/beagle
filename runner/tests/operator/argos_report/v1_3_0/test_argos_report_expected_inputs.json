@@ -1,0 +1,23 @@
+  {
+    "request_id": "BALTO_REQID",
+    "tumor_ids": [
+      "s_C_ABCDEF_X001_d",
+      "s_C_GHIJKL_X001_d"
+    ],
+    "normal_ids": [
+      "s_C_ABCDEF_N001_d",
+      "s_C_GHIJKL_N001_d"
+    ],
+    "portal_dir": {
+      "class": "Directory",
+      "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/portal"
+    },
+    "analysis_dir": {
+      "class": "Directory",
+      "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/analysis"
+    },
+    "oncokb_file": {
+      "class": "File",
+      "location": "iris:///tmp/oncokb/dir/oncokb.db.v230427.rds"
+    }
+  }

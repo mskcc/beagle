@@ -268,10 +268,98 @@
     "pk": 26,
     "fields": {
       "active": true,
+      "recipes": "[\"CMO-CH\"]",
+      "class_name": "runner.operator.cmo_ch.v2_2_0.nucleo.CMOCHNucleoOperator",
+      "version": "v2.2.0",
+      "slug": "CMOCHNucleoOperator_2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 27,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_2_0.qc.CMOCHNucleoOperatorQC",
+      "version": "v2.2.0",
+      "slug": "CMOCHNucleoOperatorQC_2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 28,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_2_0.chip_var.CMOCHChipVarOperator",
+      "version": "v2.2.0",
+      "slug": "CMOCHChipVarOperator_v2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 29,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.access.v2_2_0.nucleo.AccessNucleoOperator",
+      "version": "v2.2.0",
+      "slug": "AccessNucleoOperator_2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 30,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.access.v2_2_0.qc.AccessQCOperator",
+      "version": "v2.2.0",
+      "slug": "AccessQCOperator_v2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 31,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.cmo_ch.v2_2_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+      "version": "v2.2.0",
+      "slug": "CMOCHNucleoOperatorQcAgg_2_2_0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 32,
+    "fields": {
+      "active": true,
       "recipes": "[\"None\"]",
       "class_name": "runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator",
       "version": "v2.2.0",
       "slug": "CopyOutputsOperator_v2.2.0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 33,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.copy_outputs_operator.v2_3_0.copy_outputs_operator.CopyOutputsOperator",
+      "version": "v2.3.0",
+      "slug": "CopyOutputsOperator_v2.3.0"
+    }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 34,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.chronos_operator_v2.chronos_operator.ChronosOperator",
+      "version": "0.2.0",
+      "slug": "ChronosOperator"
     }
   }
 ]

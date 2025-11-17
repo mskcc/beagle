@@ -14,6 +14,10 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import AllowAny
+from django.views.generic.edit import CreateView
+from core.models import UserRegistrationRequest
+from django.contrib import messages
+from django.shortcuts import render
 
 
 class BeagleTokenObtainPairView(TokenObtainPairView):
@@ -74,3 +78,15 @@ class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = UserRegistrationRequestSerializer
     queryset = UserRegistrationRequest.objects.order_by("created_date").all()
     permission_classes = (AllowAny,)
+
+
+class UserFormView(CreateView):
+    model = UserRegistrationRequest
+    template_name = "admin/register.html"
+    fields = ["username", "first_name", "last_name"]
+    success_url = "/"
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "User registered sucessfully")
+        return render(self.request, "admin/register_success.html", self.get_context_data())
