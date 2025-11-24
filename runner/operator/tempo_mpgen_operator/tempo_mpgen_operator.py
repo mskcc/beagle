@@ -57,7 +57,7 @@ class TempoMPGenOperator(Operator):
         This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_TAG_METADATA_KEY), False)) & Q(
+        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_NAME_METADATA_KEY), False)) & Q(
             ("metadata__{}__isnull".format(settings.CMO_SAMPLE_CLASS_METADATA_KEY), False)
         )
         return query
@@ -222,7 +222,7 @@ class TempoMPGenOperator(Operator):
     def create_unpaired_txt_file(self):
         # Add runDate
         fields = [
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
@@ -279,7 +279,7 @@ class TempoMPGenOperator(Operator):
 
     def create_conflict_samples_txt_file(self):
         fields = [
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
