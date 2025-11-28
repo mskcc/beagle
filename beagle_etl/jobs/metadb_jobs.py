@@ -28,6 +28,8 @@ from notifier.events import (
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
+    ETLImportCompleteEvent,
+    ETLImportPartiallyCompleteEvent,
 )
 from notifier.tasks import send_notification, notifier_start
 from notifier.helper import get_emails_to_notify
@@ -40,7 +42,6 @@ from beagle_etl.models import (
     RequestCallbackJob,
     RequestCallbackJobStatus,
     initialize_normalizer,
-    CopyFileTask,
 )
 from file_system.serializers import UpdateFileSerializer
 from file_system.exceptions import MetadataValidationException
@@ -161,7 +162,7 @@ def new_request(message_id):
     for idx, sample in enumerate(samples):
         igocomplete = sample.get("igoComplete")
         try:
-            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel)
+            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel, log)
             sample_status = {
                 "type": "SAMPLE",
                 "igocomplete": igocomplete,
@@ -248,7 +249,7 @@ def new_request(message_id):
         delivery_date = datetime.now()
     data["deliveryDate"] = delivery_date
 
-    smile_job_status = message.status
+    smile_job_status = SmileMessageStatus.COMPLETED
 
     for idx, sample in enumerate(data.get("samples")):
         sample_id = sample["primaryId"]
@@ -269,7 +270,6 @@ def new_request(message_id):
                     logger.info("Adding file %s" % fastq_location)
                     try:
                         create_or_update_file(
-                            message,
                             fastq_location,
                             request_id,
                             settings.IMPORT_FILE_GROUP,
@@ -280,8 +280,10 @@ def new_request(message_id):
                             run,
                             request_metadata,
                             R1_or_R2(fastq),
+                            log,
                         )
                     except Exception as e:
+                        smile_job_status = SmileMessageStatus.FAILED
                         logger.error(e)
         sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
         if sample:
@@ -300,6 +302,7 @@ def new_request(message_id):
         try:
             create_pooled_normal(message, pn, str(settings.POOLED_NORMAL_FILE_GROUP))
         except Exception as e:
+            smile_job_status = SmileMessageStatus.FAILED
             pooled_normal_jobs.append(
                 {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
             )
@@ -312,15 +315,14 @@ def new_request(message_id):
         request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
     )
 
-    if (
-        CopyFileTask.objects.filter(smile_message=message).count() == 0
-        and smile_job_status != SmileMessageStatus.FAILED
-    ):
-        smile_job_status = SmileMessageStatus.COMPLETED
-
     message.status = smile_job_status
     message.log = log
     message.save()
+
+    fastq_metadata = fetch_fastq_metadata(request_id)
+    create_request_callback_instance(
+        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+    )
 
 
 # Run Operator
@@ -843,7 +845,6 @@ def update_sample_job(message_id, job_group, job_group_notifier):
                         new_metadata = copy.deepcopy(f.metadata)
                         new_metadata.update(request_metadata)
                     create_or_update_file(
-                        message,
                         fastq_location,
                         request_id,
                         settings.IMPORT_FILE_GROUP,
@@ -990,91 +991,90 @@ def create_pooled_normal(message, filepath, file_group_id):
         logger.info("File already exist %s." % filepath)
 
 
-def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
+def validate_sample(sample_id, libraries, igocomplete, gene_panel, log="", redelivery=False):
     conflict = False
     missing_fastq = False
-    files_unavailable = False
     permission_error = False
     permission_error_files = []
-    missing_files = []
     failed_runs = []
     conflict_files = []
 
     pattern = re.compile(settings.PRIMARY_ID_REGEX)
     if not pattern.fullmatch(sample_id):
         logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
+        log += f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}\n"
         raise IncorrectlyFormattedPrimaryId(
             f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
         )
 
     if not libraries:
+        log += f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty.\n"
         if igocomplete:
             raise ErrorInconsistentDataException(
                 f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty."
             )
         else:
             raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty.")
+
     for library in libraries:
         runs = library.get("runs")
         if not runs:
             logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
+            log += f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.\n"
             if igocomplete:
                 raise ErrorInconsistentDataException(
                     f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty."
                 )
             else:
                 raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
+
         run_dict = convert_to_dict(runs)
+
         for run in run_dict.values():
             fastqs = run.get("fastqs")
             if not fastqs:
                 logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Fastqs empty.")
+                log += f"Failed to fetch SampleManifest for sampleId:{sample_id}. Fastqs empty.\n"
                 missing_fastq = True
                 run_id = run["runId"] if run["runId"] else "None"
                 failed_runs.append(run_id)
                 continue
-    #         else:
-    #             if not redelivery:
-    #                 for fastq in fastqs:
-    #                     # Check do files exist
-    #                     try:
-    #                         fastq_location = locate_file(fastq)
-    #                     except FailedToLocateTheFileException as e:
-    #                         files_unavailable = True
-    #                         missing_files.append(fastq)
-    #                         continue
-    #                     # Check files permissions
-    #                     try:
-    #                         check_file_permissions(fastq_location)
-    #                     except FailedToCopyFilePermissionDeniedException as e:
-    #                         permission_error = True
-    #                         permission_error_files.append(fastq)
-    #                         continue
-    #                     # Check is file already registered
-    #                     try:
-    #                         file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
-    #                     except File.DoesNotExist:
-    #                         continue
-    #                     logger.info("Processing %s" % fastq)
-    #                     if file_search:
-    #                         conflict = True
-    #                         conflict_files.append((file_search.path, str(file_search.id)))
+            else:
+                if not redelivery:
+                    for fastq in fastqs:
+                        fastq_location = fix_path_iris(fastq)
+                        try:
+                            check_file_permissions(fastq_location)
+                        except FailedToCopyFilePermissionDeniedException as e:
+                            permission_error = True
+                            permission_error_files.append(fastq)
+                            log += f"Bad permissions {fastq}\n"
+                            continue
+                        # Check is file already registered
+                        try:
+                            file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
+                        except File.DoesNotExist:
+                            continue
+
+                        logger.info("Processing %s" % fastq)
+                        if file_search:
+                            log += f"File {fastq} already registered\n"
+                            conflict = True
+                            conflict_files.append((file_search.path, str(file_search.id)))
     if missing_fastq:
         raise ErrorInconsistentDataException(
             f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
         )
-    # if files_unavailable:
-    #     raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
-    # if permission_error:
-    #     raise FailedToCopyFilePermissionDeniedException(
-    #         f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
-    #     )
-    # if not redelivery:
-    #     if conflict:
-    #         res_str = ""
-    #         for f in conflict_files:
-    #             res_str += "%s: %s" % (f[0], f[1])
-    #         raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
+    if permission_error:
+        raise FailedToCopyFilePermissionDeniedException(
+            f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
+        )
+    if not redelivery:
+        if conflict:
+            res_str = ""
+            for f in conflict_files:
+                res_str += "%s: %s" % (f[0], f[1])
+            raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
 
 
 def R1_or_R2(filename):
@@ -1121,7 +1121,7 @@ def convert_to_dict(runs):
 
 
 def create_or_update_file(
-    message, path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
+    path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r, log=""
 ):
     try:
         lims_metadata = copy.deepcopy(data)
@@ -1139,12 +1139,14 @@ def create_or_update_file(
         metadata = normalize_metadata(metadata)
     except Exception as e:
         logger.error("Failed to parse metadata for file %s path" % path)
+        log += f"Failed to create file {path}. Error {str(e)}\n"
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     try:
         logger.info(metadata)
         # validator.validate(get_metadata_schema().schema)
     except MetadataValidationException as e:
         logger.error("Failed to create file %s. Error %s" % (path, str(e)))
+        log += f"Failed to create file {path}. Error {str(e)}\n"
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
     else:
         recipe = metadata.get(settings.RECIPE_METADATA_KEY, "")
@@ -1152,13 +1154,19 @@ def create_or_update_file(
         new_path = CopyService.remap(recipe, fastq_location)  # Get copied file path
         f = FileRepository.filter(path=new_path).first()
         if not f:
-            file_object = create_file_object(new_path, file_group_id, metadata, file_type)
+            try:
+                if path != new_path:
+                    CopyService.copy(fastq_location, new_path)
+            except Exception as e:
+                if "Permission denied" in str(e):
+                    log += f"Failed to copy file {path}. Error {str(e)}\n"
+                    raise FailedToCopyFilePermissionDeniedException("Failed to copy file %s. Error %s" % (path, str(e)))
+                else:
+                    log += f"Failed to copy file {path}. Error {str(e)}\n"
+                    raise FailedToCopyFileException("Failed to copy file %s. Error %s" % (path, str(e)))
+            create_file_object(new_path, file_group_id, metadata, file_type)
         else:
-            file_object = f.file
-            update_file_object(file_object, f.file.path, metadata)
-
-        if path != new_path:
-            CopyService.create_copy_task(message, file_object, fastq_location, new_path)
+            update_file_object(f.file, f.file.path, metadata)
 
 
 def format_metadata(original_metadata):
@@ -1185,6 +1193,7 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
+        calculate_checksum.delay(str(file.id), path)
         return file
     else:
         raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
@@ -1209,3 +1218,19 @@ def update_file_object(file_object, path, metadata):
             "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors)
         )
     return file
+
+
+@shared_task
+def calculate_checksum(file_id, path):
+    try:
+        checksum = sha1(path)
+    except FailedToCalculateChecksum as e:
+        logger.info("Failed to calculate checksum for file: %s: %s", file_id, path)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    try:
+        f = File.objects.get(id=file_id)
+        f.checksum = checksum
+        f.save(update_fields=["checksum"])
+    except File.DoesNotExist:
+        logger.info("Failed to calculate checksum. Error: File %s not found", file_id)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
