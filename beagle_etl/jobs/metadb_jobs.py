@@ -321,7 +321,7 @@ def new_request(message_id):
 
     fastq_metadata = fetch_fastq_metadata(request_id)
     create_request_callback_instance(
-        request_id, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
+        request_id, message, recipe, sample_jobs, job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
 
 
@@ -708,6 +708,9 @@ def update_job(request_id):
     recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
     _generate_ticket_description(
         request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
+    )
+    create_request_callback_instance(
+        request_id, None, recipe, [], job_group, job_group_notifier, fastq_metadata=fastq_metadata
     )
 
 
