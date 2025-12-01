@@ -84,6 +84,8 @@ services:
       - logrotate_path:/logrotate
       - db_backup_path:/db_backup
     entrypoint: ["/bin/sh", "-c"]
+    security_opt:
+      - seccomp=unconfined
     command:
       - |
         chown -R ${DOCKER_UID}:${DOCKER_GID} /postgres
@@ -100,6 +102,8 @@ services:
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
+    security_opt:
+      - seccomp=unconfined
     volumes:
       - postgres_path:/var/lib/postgresql/data/
     environment:
@@ -170,6 +174,8 @@ services:
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
+    security_opt:
+      - seccomp=unconfined
     volumes:
       - logs_path:/logs
       - pgbouncer_path:/etc/pgbouncer
@@ -215,6 +221,8 @@ services:
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
+    security_opt:
+      - seccomp=unconfined
     expose:
       - "11211"
     command: ["memcached"]
@@ -229,6 +237,8 @@ services:
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
+    security_opt:
+      - seccomp=unconfined
     volumes:
       - rabbitmq_path:/var/lib/rabbitmq/
       - logs_path:/var/log/rabbitmq/
@@ -266,11 +276,16 @@ services:
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
+    security_opt:
+      - seccomp=unconfined
     env_file: .env
     group_add:
       - ${DOCKER_GROUP_1}
       - ${DOCKER_GROUP_2}
       - ${DOCKER_GROUP_3}
+      - ${DOCKER_GROUP_4}
+      - ${DOCKER_GROUP_5}
+      - ${DOCKER_GROUP_6}
     environment:
       - BEAGLE_DB_URL=beagle_pgbouncer
       - BEAGLE_MEMCACHED_HOST=beagle_memcached
