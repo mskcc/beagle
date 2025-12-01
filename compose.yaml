@@ -11,6 +11,11 @@ x-beagle_celery: &beagle_celery
     - ${DOCKER_GROUP_1}
     - ${DOCKER_GROUP_2}
     - ${DOCKER_GROUP_3}
+    - ${DOCKER_GROUP_4}
+    - ${DOCKER_GROUP_5}
+    - ${DOCKER_GROUP_6}
+  security_opt:
+    - seccomp=unconfined
   environment:
     - BEAGLE_DB_URL=beagle_pgbouncer
     - BEAGLE_MEMCACHED_HOST=beagle_memcached
