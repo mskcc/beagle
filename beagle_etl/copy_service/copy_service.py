@@ -30,13 +30,6 @@ class CopyService(object):
         copyfile(path_from, path_to)
         os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
-        if settings.COPY_GROUP_OWNERSHIP:
-            uid = os.getuid()
-            gid = grp.getgrnam(settings.COPY_GROUP_OWNERSHIP).gr_gid
-            for dirpath in newly_created:
-                chown(dirpath, group=gid)
-            os.chown(path_to, uid=uid, gid=gid)
-
     @staticmethod
     def create_copy_task(smile_message, file_object, source, destination):
         task = CopyFileTask.objects.create(
