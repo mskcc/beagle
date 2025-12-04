@@ -607,6 +607,7 @@ def update_request_job(message_id, job_group, job_group_notifier):
             pooled_normal_jobs.append(
                 {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
             )
+    message.sample_status = sample_status_list
     message.status = SmileMessageStatus.COMPLETED
     message.save()
 
@@ -826,6 +827,7 @@ def update_sample_job(message_id, job_group, job_group_notifier):
 
     logger.info("Parsing sample: %s" % primary_id)
     libraries = latest.pop("libraries")
+    message.status = SmileMessageStatus.COMPLETED
     for library in libraries:
         logger.info("Processing library %s" % library)
         runs = library.pop("runs")
@@ -866,6 +868,7 @@ def update_sample_job(message_id, job_group, job_group_notifier):
                     send_notification.delay(update)
                     send_notification.delay(diff_details_event)
                 except Exception as e:
+                    message.status = SmileMessageStatus.FAILED
                     logger.error(e)
 
     # Remove unnecessary files
@@ -874,7 +877,6 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         logger.info(f"Removing file {fi}.")
         File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
 
-    message.status = SmileMessageStatus.COPY_FILES
     message.save()
     sample_status = {
         "type": "SAMPLE",
@@ -884,6 +886,8 @@ def update_sample_job(message_id, job_group, job_group_notifier):
         "message": "File %s request metadata updated",
         "code": None,
     }
+    message.sample_status = sample_status
+    message.save()
     return [sample_status]
 
 
