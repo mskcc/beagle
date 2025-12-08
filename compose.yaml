@@ -24,6 +24,7 @@ x-beagle_celery: &beagle_celery
     - BEAGLE_LOG_PATH=/beagle/celery/logs/django_server.log
     - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
   volumes:
+    - /ifs:/ifs
     - logs_path:/beagle/celery/logs/
     - celery_path:/beagle/celery/
     - ${BEAGLE_SHARED_TMPDIR}:/tmp
