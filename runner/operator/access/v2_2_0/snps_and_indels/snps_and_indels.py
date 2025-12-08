@@ -586,7 +586,7 @@ class AccessV2LegacySNV(Operator):
             tumor_bam_duplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][0].path)]
             tumor_bam_simplex = [_create_cwl_bam_object(sample_info["tumor_bam"][0][1].path)]
             tumor_sample_name = [sample_info["tumor_bam"][0][0].file_name.split("_")[0]]
-            tumor_duplex_id = [sample_info["tumor_bam"][0][0].file_name.split("_")[0] + "-DUPLEX"]
+            tumor_duplex_id = [sample_info["tumor_bam"][0][0].file_name.split("_")[0]]
             tumor_simplex_id = [sample_info["tumor_bam"][0][1].file_name.split("_")[0] + "-SIMPLEX"]
 
             normal_bam_duplex = [_create_cwl_bam_object(sample_info["normal_bam"][0][0].path)]
