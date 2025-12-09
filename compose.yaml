@@ -384,6 +384,7 @@ services:
           -l info \
           -Q ${BEAGLE_DEFAULT_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_DEFAULT_QUEUE}.log \
+          --max-tasks-per-child=30 \
           --pidfile $$PIDFILE \
           --concurrency=100 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
@@ -406,6 +407,7 @@ services:
           -Q ${BEAGLE_CHECK_FILES_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_CHECK_FILES_QUEUE}.log \
           --pidfile $$PIDFILE \
+          --max-tasks-per-child=30 \
           --concurrency=1 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}
     healthcheck:
@@ -427,6 +429,7 @@ services:
           -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_JOB_SCHEDULER_QUEUE}.log \
           --pidfile $$PIDFILE \
+          --max-tasks-per-child=30 \
           --concurrency=1 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE}
     healthcheck:
@@ -470,6 +473,7 @@ services:
           -Q ${BEAGLE_RUNNER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_RUNNER_QUEUE}.log \
           --pidfile $$PIDFILE \
+          --max-tasks-per-child=30 \
           --concurrency=30 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE}
     healthcheck:
