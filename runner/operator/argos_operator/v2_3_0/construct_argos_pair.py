@@ -57,7 +57,7 @@ def normalize_igo_text_field(igo_text):
 
 
 # TODO: This is ARGOS-formatted, note the confusing IDs
-def format_sample(data, specimen_type):
+def format_sample(data, specimen_type, sample_name_suffix=""):
     sample = dict()
     sample["ID"] = data["SM"]  # TODO: change someday
     sample["CN"] = data["CN"]
@@ -73,7 +73,7 @@ def format_sample(data, specimen_type):
     sample["RG_ID"] = data["ID"]
     sample["adapter"] = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG"
     sample["adapter2"] = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
-    sample["bwa_output"] = sample["ID"] + ".bam"
+    sample["bwa_output"] = sample["ID"] + sample_name_suffix + ".bam"
     sample["request_id"] = data["request_id"]
     sample["specimen_type"] = data["specimen_type"]
 
@@ -115,7 +115,7 @@ def construct_argos_jobs(samples, pairs=None, logger=None):
         pi_email = tumor["pi_email"]
         job = dict()
         tumor_specimen_type = normalize_igo_text_field(pairs["tumor"][i]["specimen_type"])
-        normal_sample = format_sample(normal, tumor_specimen_type)
+        normal_sample = format_sample(normal, tumor_specimen_type, sample_name_suffix=f".{tumor["SM"]}")
         tumor_sample = format_sample(tumor, tumor_specimen_type)
         job["tumor"] = tumor_sample
         job["normal"] = normal_sample
