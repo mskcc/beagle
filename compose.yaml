@@ -3,6 +3,7 @@ name: "Beagle Services ${BEAGLE_DEPLOYMENT}"
 x-beagle_celery: &beagle_celery
   image: mskcc/beagle:${BEAGLE_VERSION}
   restart: always
+  init: true
   user: "${DOCKER_UID}:${DOCKER_GID}"
   networks:
     - voyager_net
