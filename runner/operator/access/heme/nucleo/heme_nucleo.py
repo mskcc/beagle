@@ -45,6 +45,7 @@ def group_by_sample_id(samples):
         sample_pairs[sample["metadata"][settings.SAMPLE_ID_METADATA_KEY]].append(sample)
     return sample_pairs
 
+
 def calc_avg(sample_files, field):
     samples_with_field = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
     field_count = len(samples_with_field)
