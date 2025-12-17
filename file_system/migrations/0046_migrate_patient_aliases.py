@@ -10,7 +10,7 @@ def migrate_patient_aliases(apps, schema_editor):
     Fqs = FileRepository.objects.filter(
         file_group=settings.IMPORT_FILE_GROUP
     )
-    for f in Fqs.objects.all():
+    for f in Fqs:
         metadata = f.metadata or {}
 
         if update_patient_aliases(metadata):
