@@ -6,16 +6,13 @@ from file_system.helper.flatten_patient_aliases import update_patient_aliases
 
 
 def migrate_patient_aliases(apps, schema_editor):
-    FileRepository = apps.get_model("file_system", "FileRepository")
-    Fqs = FileRepository.objects.filter(
-        file_group=settings.IMPORT_FILE_GROUP
-    )
-    for f in Fqs:
-        metadata = f.metadata or {}
-
-        if update_patient_aliases(metadata):
-            f.metadata = metadata
-            f.save(update_fields=["metadata"])
+    FileMetadata = apps.get_model("file_system", "FileMetadata")
+    Fqs = FileMetadata.objects.filter(file__file_group=settings.IMPORT_FILE_GROUP)
+    for fm in Fqs:
+        metadata = fm.metadata or None
+        if metadata and update_patient_aliases(metadata):
+            fm.metadata = metadata
+            fm.save(update_fields=["metadata"])
 
 
 class Migration(migrations.Migration):
