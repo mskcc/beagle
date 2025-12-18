@@ -52,7 +52,6 @@ jobs:
           BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX: /igo/delivery
           BEAGLE_FASTQ_IRIS_LOCATION_PREFIX: /igo/delivery
     - name: Black check
-      uses: psf/black@stable
+      uses: psf/black@22.3.0
       with:
         options: "--check"
-        version: "22.3.0"
