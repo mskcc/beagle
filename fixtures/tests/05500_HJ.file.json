@@ -11,8 +11,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c3478a841a75b947002a6e03541c83611e23762e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -27,8 +28,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4c0ae6b267dcc70077e094a61b76f9e0dc008c5e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -43,8 +45,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d8e0f9ebf1354db9c619c43252a237f60eb6b81a",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -59,8 +62,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1b3e7676b4b6ac98b57e8601af06a962bffad5e2",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -75,8 +79,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$31e57ed715d73781789a3d42471211318b84429e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -91,8 +96,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$103bea27aa8c7ce947ebd6f8ed59e7397256ee65",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -107,8 +113,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f4c96e9b67b8795be58d47ea6a2fbcfef193f761",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -123,8 +130,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d984a3d9f010a6ca423d1bb27d1f5070f4fd58f4",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -139,8 +147,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$98c85c42aabac0fd63fb02e55c63610df3fb6c74",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -155,8 +164,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$efa524a94bccbb6990eb1d6e7cb2ddde44d7bf7b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -171,8 +181,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e26cef005565d17ff03bcb199f0dec63c1b0535a",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -187,8 +198,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5e19fd6a5560c815b501cc47b5ff31124db4f6c7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -203,8 +215,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d4161a6c63c19d67b6effca9ec24e6bfcd52eabb",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -219,8 +232,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fc98d1d817edcd310580813957192de1c86af60a",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -235,8 +249,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6976221566a4caf69f4f666203aadfcdbfdf6a90",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -251,8 +266,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4d3d476d4a696d21c1c925b595242b6f45c67b44",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -267,8 +283,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$26b51ac673e766f2f58410729ad2d95131bf6138",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -283,8 +300,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3433b0ef54ad227ee54ef1f834eac613d120154f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -299,8 +317,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f936a5d0cf8245fe614c6eb83dc75589d2fc0f00",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -315,8 +334,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$487594108c89d21be3e82f7485e1b6c497641133",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -331,8 +351,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a5b818daf72f42d54ecd9d88fdaaed84a31ff8fc",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -347,8 +368,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ce6ae146be3ad99db097a12602a94980f0f8414f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -363,8 +385,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e0754f30cf00791b7e4f486cff67ad3f480e2ba6",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -379,8 +402,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4d1f17b7eedb93692f7230f60ab40532699b9285",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -395,8 +419,9 @@
       "size": 6755800758,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$db06113a3343b99edcfe833a12f80718580775dc",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -411,8 +436,9 @@
       "size": 7035290287,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$4496a195d99f755eb031d9442dcae5629009fe4f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -427,8 +453,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7db66b14b04f2f0c99b610e70341579f6a33658c",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -443,8 +470,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5434cafce2581c77b649507be991d952df7c5dca",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -459,8 +487,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c2e106f72c5f2ab1d20f58ef2349e9b904c53853",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -475,8 +504,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ef91aeee8508788c85deaf865f22c31aa4f52010",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -491,8 +521,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4555c32b50377dea07ded9dfccfb43aaee176ceb",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -507,8 +538,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1be2ecaca4188bfa2eb8d4f503cc570865208cee",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -523,8 +555,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f70ed0210d7f8b57e80478c9c14522df14488d06",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -539,8 +572,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0192c005795f0975ac5ed249ddb8d1adc149e935",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -555,8 +589,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bba17ef2f9f41ed524be4b4ab91cf97087cadee1",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -571,8 +606,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5345ab8fb42e53b8bc3d3c9af48810ecfdaeb435",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -587,8 +623,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1fc227b316fbb9cf219394bae3bf0c18d72ab73e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -603,8 +640,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$11842d22c932d7b3b910a06e5e56d56cfe1c97f7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -619,8 +657,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a14365429d02bea0ae1b67a911e64485c0bf93ed",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -635,8 +674,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bda2f8a494a4b774508396840bd016f7617c9786",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -651,8 +691,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cf53639b953fb147284facf4363f41f854054829",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -667,8 +708,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c4d2fd820b58115f36dab01b3a8c8ca218e75d54",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -683,8 +725,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b9519d9bd57c603ec5f469e17f62f048828f8d0e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -699,8 +742,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$105c87baa5022e9fe0693a99ee80fa4827298592",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -715,8 +759,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d6bd9970a8ca7a68b6386267e8aacbd83d292072",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -731,8 +776,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$840fc5c6f03e323df17d9e2464e595e1e6d1c82c",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -747,8 +793,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$660c82a24a08f57f673e673010ff175fa963fb63",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -763,8 +810,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$40304152a774b6f4f91b94bf6e6d44f527934541",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -779,8 +827,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$68360c327586e2f2a1a86d70ef7fcff67efaace6",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -795,8 +844,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$eea045772db5b0a740577c762638f1373cbad07e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -811,8 +861,9 @@
       "size": 9070799529,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$5a7b4933887b97500ed236950abc467a2e24c1eb",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -827,8 +878,9 @@
       "size": 9544813499,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$eb809ba8a47a1caadda5c71a67e25ecf0dc47f27",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -843,8 +895,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$706d901b16d1bbd4851ad65adff5fed8d9f92d13",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -859,8 +912,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$efdf948bc5bfbcd56c6a20b475b326c06629e5e5",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -875,8 +929,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$931fcd1e4c3c036c0804872469183806577d4bd3",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -891,8 +946,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$34806b76fc09953255cb408c0d967954334103a8",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -907,8 +963,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4e8ee15830b6d8eaabea5ab8e320f9c91a36fabf",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -923,8 +980,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$48e699daca6790dfabd08492a5e77e57d084227d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -939,8 +997,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$32d6faaca6018ea1d8588cc5c7b32c71bb4fcc4f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -955,8 +1014,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9702bd5bfd012a3d5804990ce2b4aba56c0e44de",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -971,8 +1031,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5747342df70be196a4405964e55d291c700eb17d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -987,8 +1048,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$99b93d753c2fcc3d4203d252a98e569085f0598b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1003,8 +1065,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7cef8ea7652dbdac8e58324279285fd0b6e6e7b7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1019,8 +1082,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$281e5eb6e55f39a865c31a80c2cb101163876037",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1035,8 +1099,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$19cbc82f6b05610af728c4e63e620f54fefa8003",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1051,8 +1116,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d1b14634914cce523698a049abee888e61fb9992",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1067,8 +1133,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$996c641f269b9daf3efae207af41f4d8d74ba366",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1083,8 +1150,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d8eb2c8dc8898bfbc84d4caf1110b7e68470d84d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1099,8 +1167,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c2b4f220c7cbf7b6a48ac868c1e3eeaf064e3bf9",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1115,8 +1184,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4325d6885fea76344c5cf1806ed136588d40a425",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1131,8 +1201,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b43524c13a756a5b193f77285b52683198b045a7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1147,8 +1218,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ad36136e8c962967f5d2289f6f62a2ac0fff2657",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1163,8 +1235,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$791901e9ade6d50467d0365febe9b47b8d0c8280",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1179,8 +1252,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e93742ffeab6aca4206fc63fd4e37881fcb1b23d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1195,8 +1269,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0c0a6ed659acb7273c2800a6cf50871ddd708f80",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1211,8 +1286,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9584e689f310190f00c099423553c8d9c83eb6e0",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1227,8 +1303,9 @@
       "size": 6483650588,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$7c310a5e343141a617260d2024576feefcd0f730",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1243,8 +1320,9 @@
       "size": 6633267292,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$5ab0d76ac4dabb7d0f62a1ba4b1c0e48c90bd809",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1259,8 +1337,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a6f05ead059203d042da5bb2a55a0635826e2c80",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1275,8 +1354,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$298731de5863261260499d70335d904ed3eb45f0",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1291,8 +1371,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5785f09714be1a9f985dda7be0e679d13195a8b7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1307,8 +1388,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0d6b8f0e5a19fed2de7b7e812b7b0d976a16ea1e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1323,8 +1405,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$95eab7006e7a5bcad51d5b9f1737f0118b6bee50",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1339,8 +1422,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$86673f41e94855164a9d618b684f76c699dc4480",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1355,8 +1439,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1efc47e9bc4c83d16422554dcc285b5c4e17bab0",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1371,8 +1456,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ad0260f24bb453b9c91a64265cc191b17ba8b693",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1387,8 +1473,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a9c4f29cacfdc9dca3c80a953e4cb0d2ab90c8ed",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1403,8 +1490,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$40b0f4bfdb13d3f96933d111e1ddabc300b975a2",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1419,8 +1507,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0a695b99795557c6a43e1c0abf82c4b0445740d0",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1435,8 +1524,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fa12a0b6891a0ca6eaeb402c4eccc4ac0153ccb9",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1451,8 +1541,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fc1176d508a6f3929c97ae5bbfe17d2eb4a649df",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1467,8 +1558,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fded4f2ee39df82a46b880bcae8733ec0b937ff8",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1483,8 +1575,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8d8a67ed337b3c9f12e35150322683e920585a37",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1499,8 +1592,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e164117ad0d42bd7a1d2e5eddfbb6c2d004524b0",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1515,8 +1609,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$27238b3280c8f61ba97341bcf02dabee7074b23a",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1531,8 +1626,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$df783fa66a11cdf96dd0ccded82c781026bc144e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1547,8 +1643,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f0dfb4a9d886c28ea0218e1abe50c5ad04e0d904",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1563,8 +1660,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$853b57e5542e82283a6af816b8973940054c3d37",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1579,8 +1677,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e37c60738bc183b1105ffffd275a41b14f761fdb",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1595,8 +1694,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a9f265ff4e01eafea532da04d0b8abc8a9815692",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1611,8 +1711,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$15930fb5eff8033b2dd4e37bb770a235c0046f5f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1627,8 +1728,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$31efaf9ad1ddc17947b650ab1b9e6af97d800839",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1643,8 +1745,9 @@
       "size": 7500067095,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$6b15f90a8152998ecc1aaeee003ad38156ac5824",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1659,8 +1762,9 @@
       "size": 7745354685,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$594368b9c1f847db3c0f49aba4e1a65c21e30ccd",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1675,8 +1779,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d211f6d1af744f00be85b871db56e01b12899726",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1691,8 +1796,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0a99c512aba579807149694def6aa52af472960f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1707,8 +1813,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7c5c70ce747f384d0b8dd14b87616ce42f33beaa",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1723,8 +1830,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fd040dc8ec38a231bb65c9575e4eb26f072d30fa",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1739,8 +1847,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ecfb73e1bf8feb3b3164908145f6c03b5c7ab711",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1755,8 +1864,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f6977eba1650d543798a513a3113e95b525a2e98",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1771,8 +1881,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$80ff96b3d60df23242b36e4b156767161d585726",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1787,8 +1898,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4fe6527d0b338d49b0539f68aedef96c187229f5",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1803,8 +1915,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cf30ea65d9ea9e62089d6596d5f0ad8ba9cdd079",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1819,8 +1932,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f180303c2fa879d4cbb1d9377316c5ff96f68d18",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1835,8 +1949,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b007755608f5a3d9fc3988dc591156992fdd273b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1851,8 +1966,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$24663ad436137746a312677ef0c901e970ca72ab",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1867,8 +1983,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dfe61e140df168980b5fb41df802e2638602599c",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1883,8 +2000,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ecc09f78527272fac583ba39dff6e6e9740bf275",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1899,8 +2017,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9ba5000f673fa49240b11466437fe7270b84b6a5",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1915,8 +2034,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a49a066cdcc198af722ac7a22a98ed7f8bdf659a",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1931,8 +2051,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8a6dc0007567fcd4c38a3ebe6a10abd4cab48fc6",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1947,8 +2068,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$50bb7a1faeedb145a8043b393492507f3154d517",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1963,8 +2085,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bcdc47ddd9ba1278e99b9ed246c95d4df1a25e3e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1979,8 +2102,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ca80f7d97c0135b1282b2cdf5f83af629a58dd1f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -1995,8 +2119,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f3c81a2bdb7cad0ffd763079c9d6ba0bfb137094",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2011,8 +2136,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6e205daae9691edfee6c75f869413d8caf59e86f",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2027,8 +2153,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cbbee8db37454bf8655ac2219d7d3af0e640785d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2043,8 +2170,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2647292aa0fad68f290d04bd7bb26b67963766b3",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2059,8 +2187,9 @@
       "size": 6555419932,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$026a058c889a13ee691adc379f475b3e6b8ae7bd",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2075,8 +2204,9 @@
       "size": 6762095359,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$c5686ff398afeb363de06dbdce7fb63d138a52ff",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2091,8 +2221,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c87611909cc0cef389a23cf6cdc70f750c11b415",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2107,8 +2238,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8350f2c2ff5170075ecd559f1ca50752f00e9921",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2123,8 +2255,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$92c550e640318e16bcfe0498d2bd461e44c29bd2",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2139,8 +2272,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$76eeedeebc30beb3c448fe8254fc8b80f70c9f0e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2155,8 +2289,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$aa88af4394a26b41c1ad92fd9498c37b59c21094",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2171,8 +2306,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a3564ac1d2eb847dc5029c8a6436b9fcf3b35503",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2187,8 +2323,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d36f5c4c2f6ace77564f49918586c98cb1d17edf",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2203,8 +2340,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$193cd1331d638382a4fbe09409163df4ab7a9a13",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2219,8 +2357,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3413e4ea9882382db66dc98fd98e5c632f417163",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2235,8 +2374,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$33a3dcdca2850cb6ceaec4012c92964ce0d6a7bf",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2251,8 +2391,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$20d9f327b55176fa3a2b35892038aaae9ba77334",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2267,8 +2408,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5ee280ca3a5e427a6e98128399317bf843e08809",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2283,8 +2425,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$772e0963c3afd91ded00656a4a3445edf0fb36ef",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2299,8 +2442,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f05b1a5b4ec779148ab0eb5fb3cbbc16cd7d0c02",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2315,8 +2459,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cd4a6b5a14b61ed9dd2ef7df8896ca726b29d805",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2331,8 +2476,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$46809ee42e128a6cc1a0e447f5363a910cb7cb1b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2347,8 +2493,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$751067f3f8a9ecd495eb776f8ce6828cc1816e47",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2363,8 +2510,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$008ec16ed5ffdc6ec1e37797ab37334b5ce9f833",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2379,8 +2527,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c104056a6f610fa9ce4fb11c4f8f83f16f960714",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2395,8 +2544,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e23ab28df75d0fae67673510d91d4b65d6851499",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2411,8 +2561,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b051c4ab0a4f7d6179ac47976688d8d7ac11dc09",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2427,8 +2578,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$926220bb8d716fa3f6de31662ef04ef240b16720",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2443,8 +2595,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$90c0a5b396b4f9a4f25205613e34c5e01a3cc392",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2459,8 +2612,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b4a2b191f55f4d3fb486e3bec29768302b31fcb8",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2475,8 +2629,9 @@
       "size": 7145146387,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$a2660807df3d684bd8d7f9fd5e148ffb96411a01",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2491,8 +2646,9 @@
       "size": 7447726042,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$53d7b23658a0ca654e673cc33607901013cbcdd7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2507,8 +2663,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d83d2fd061d79b9e3883c602974f3dedde186550",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2523,8 +2680,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$75cb7545498c374e2a8459ed4018db09bc3aaaed",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2539,8 +2697,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8965b4feb0818ee5ca0f0e911cdc53fec09aec9b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2555,8 +2714,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$45d9879fdde2dce9b78d7deb60e6a94e2ba547ea",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2571,8 +2731,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$620ba9265d4521368db565694e83fec3714b4e2d",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2587,8 +2748,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ed98452b42b41932680413fe91b69232a04c5e87",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2603,8 +2765,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4bb36cdc33d9bf2a23ed6f8b7d048cc4a084ac84",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2619,8 +2782,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$eada95c6cc4cce94ef5ab604d8b1ebaa9a582e4b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2635,8 +2799,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f8fef2a00601b02f23c78d4c47b851c89c4dc63b",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2651,8 +2816,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fc428ec7ad57d23cf11d8d88c06dfb298390db44",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2667,8 +2833,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b08eb2a7a859bc7230f9af909499ead346fae08e",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2683,8 +2850,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c253f1ce0aebd27d0b5956c68b73077af6a4c7af",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2699,8 +2867,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$abff70813374d4236210ad7cc5fb2546b4162173",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2715,8 +2884,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$03e708e321f3e47bcd669ffa31a475a1a08581c1",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2731,8 +2901,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b2c347fb11dbda8b00b2edaad77e9c0c9f80a0d4",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2747,8 +2918,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$702f09b9728108ccc0e7d709278d09e166ee85b7",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2763,8 +2935,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e8ddf2bfdcb9e09de3647b08744357cbb32db141",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2779,8 +2952,9 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$936f980b48509e78792d0c083f07190f53989630",
-      "request": null,
-      "patient": null
+      "request_id": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2795,9 +2969,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$50b9cc76faf43e6ff5f1b7091eed63ea3cda112c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2812,9 +2987,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$163187427a319d010ac328cc72edbe5cbc8fa5fe",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2829,9 +3005,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c2970ceebb3c2375c08b8da1b34d89bf9f22b976",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2846,9 +3023,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$88920fd88f76479cb60f15b4efce14f72325a6b9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2863,9 +3041,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f7c37d72291baab932880fef983a2d96fbecde46",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2880,9 +3059,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$81bc2029a26a95176de0131914a95796f8757ab9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2897,9 +3077,10 @@
       "size": 7461166349,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$d854a3cf2e52906b2c3c0220392dfcf9dfa62672",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2914,9 +3095,10 @@
       "size": 7746076354,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$e2d8a7306ed091eaf98929e27d8d48f70dafab55",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2931,9 +3113,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$17024a9dd822d24d8b57d7cdb1d82451d3af8d05",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2948,9 +3131,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2cee964a40d9692f64d626ae57c4569679e5d186",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2965,9 +3149,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c050ff0c6057e8533e945be544dd8727eaba7e17",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2982,9 +3167,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c3c4a522cd39831fb959b6cacc1ca5cba7da7a4b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -2999,9 +3185,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9e5c4f51752aa6ab466b469bf1c2e85ec5b0298d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3016,9 +3203,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a4391314bd3b76c81b29d2c2c9d5f023968a2e0d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3033,9 +3221,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b233a77dbd692785c36843c2796fbb73f4957f84",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3050,9 +3239,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2f75a3552768c49e6ab3cadb08fef23ab2952e8c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3067,9 +3257,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a6c5e4b2275aa54e645d1c5ae155426dd46c616e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3084,9 +3275,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9693d5373c3883e9f6603ac30cc5d848e982bea0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3101,9 +3293,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$79923185074cf84af979a9d23d53f677aa4625ee",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3118,9 +3311,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5e7c1843e46001c2372141ecd5dca2319546c405",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3135,9 +3329,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$635543e2459f3507b61145afee1540aacfcb1c62",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3152,9 +3347,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3c7d0952b8c1755eeb9d0c1e4fa72e7a57de8370",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3169,9 +3365,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$97e6091ed60b8170d55d5d4e0d07c26247909f2d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3186,9 +3383,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7de6975d700299f2f443021ed9f031c8b9d6553f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3203,9 +3401,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b76e84dd71f0c183d5a4040740b33f528eda6289",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3220,9 +3419,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$996d968291c933917b2fe1da6663e2eb98e30dab",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3237,9 +3437,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$323da439fef60b5b6cbca387d9ca0bd167887a0c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3254,9 +3455,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$44e5e8ec766e36a1f487c0a73194352f12d115eb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3271,9 +3473,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e4218b98470fb8a97c836bbd77314f61ae47eed9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3288,9 +3491,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b2f07ad51173b5bf5a9a36a1eeca07be16d34ed4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3305,9 +3509,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a1c0b490fe37c44f5dc43d16b1d08f2e05f5e47c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3322,9 +3527,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$88d4e7607974239d5b29e14cf8fd2b8eb02b6b96",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3339,9 +3545,10 @@
       "size": 7399487342,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$b9445f3603c72db3a5a6fc48eeb192280f580f32",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3356,9 +3563,10 @@
       "size": 7696036425,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$dc5401aa8ac8b9f2c2e7cf9b683113d206e20c1d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3373,9 +3581,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4b00a46cb194187982cee30a80e3c9f658b20a95",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3390,9 +3599,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$14471ed68248acf685dad26581f4f1234108ce8b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3407,9 +3617,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6885e60e9c54876283bdb5662373815a270a609f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3424,9 +3635,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fd36ee9bd2548833b1f148880a3b91b93c36c8c3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3441,9 +3653,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4db5a33cb00a1a989e5ebc5eec06c0f0c8991ea6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3458,9 +3671,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7d7b5b505dff775e91049313e4c27cb61b3c81c4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3475,9 +3689,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0ffadfc1d9239273f8d7ea864242855cc8a4c3d3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3492,9 +3707,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ed2b59f716b02bfa21a1c09c6811f1a39907dff9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3509,9 +3725,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fac37c76e74fb39be727091e0adffd9a13a19ecd",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3526,9 +3743,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4d8310a94a27b488bab078c9518c07d3487a7a56",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3543,9 +3761,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5ace7019c4d17b23a8c1993005367a3473abed91",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3560,9 +3779,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$20eeac47383100fcf5f4d051c5ca720decede476",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3577,9 +3797,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$92964b11a62bb79d02f2239b5af101c1735eb4fe",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3594,9 +3815,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5438a67b059b14675de0353c13797b54a4caade4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3611,9 +3833,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3060f8304250274f96a08350e1d8f7676e689b50",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3628,9 +3851,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3933397513af7a64516d0fec116072dc6e111bbb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3645,9 +3869,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dc0d802e3c2da8fcb6bbb5ab7bbe5ca5273e9894",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3662,9 +3887,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3d00b2cfafebaab4815a75676fbdf5de80f26f5b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3679,9 +3905,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6c4ab02b47130b57ebd2991264573e7b98541f67",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3696,9 +3923,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$08e129e5bd61a5903c2d784f195deca4a8f4b2a8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3713,9 +3941,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ad604692b0679415f90d30ec9c94922ef2297121",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3730,9 +3959,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e758cde3f1a3adf6eb32e41aa0be5d08ff877e6f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3747,9 +3977,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c5f4f3a4e6705c66c6a068f52abc564b07c28c9b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3764,9 +3995,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e8d00f5f39da187cdf7e6001d20dd6ee487fbb5f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3781,9 +4013,10 @@
       "size": 7240434999,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$d6c69ad01ec9971896fe4b930ddd134ce4686a90",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3798,9 +4031,10 @@
       "size": 7406165191,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$cb4a913c4340c0fae2de61c58cc7df2f8842ed6c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3815,9 +4049,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$51e9d73d9b38223369a153c0fcf718e328dcea66",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3832,9 +4067,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ec3ba89e8f87170f08d04a106e943779d049e595",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3849,9 +4085,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e8bb5e988db07de4ef483ef6a77dc17827a76f57",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3866,9 +4103,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1ee7d25731b2d35c04de06e25106965f05a9ae81",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3883,9 +4121,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$489f3aa48e17fe0390a830b8c1107b494e97ec83",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3900,9 +4139,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4f54702609a0f736d9ef03c477b23e587a967f10",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3917,9 +4157,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$27cd82f7299c18b569dc6aa531f976a00ce3e489",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3934,9 +4175,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f777f4a1b889c3ec64d9b5f95d4b0bd78185b73d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3951,9 +4193,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d666e8f68aa3ba2a74bd67c853b0a5c0f5e862e7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3968,9 +4211,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$953a64acc138eb5d7c971c645e2956e6c24571e8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -3985,9 +4229,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$65a0334818755a971963d8da044250df426362d6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4002,9 +4247,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$90d6cc25b32b6efaac7b253a7322e2d7fb7e7570",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4019,9 +4265,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$372b70eb32826707861305080f622323a030aad3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4036,9 +4283,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$24f64e07dc3b8c027d02a43821f51203fe5625d0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4053,9 +4301,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4c001b2aa31f11287d7377c088a69d4be37f4b94",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4070,9 +4319,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$66398a5ae00d1e6dfbe5c0b77c4f39ad7e20e91b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4087,9 +4337,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$64bd4ecf276372676dc8cd193220c946135976c2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4104,9 +4355,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ad21d538f7c3784298cd03acd68d580bda93c88a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4121,9 +4373,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$16c790ecbc543d4f9c1d3875a5fed316559a2ba0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4138,9 +4391,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$43cd168e65675fdffebc7b4a793ccaaaabaa6ff1",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4155,9 +4409,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$81700a2d7d042cc166a0ea1f1d64b7e623e04ee4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4172,9 +4427,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$28c713b2b6f67b18b5a6ccd92576e9183a1bd964",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4189,9 +4445,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2447aec602927815f8a4f22bb9454652c383784e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4206,9 +4463,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$df90f2c09fc09aba2201d4e6659be8b0fa9fa640",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4223,9 +4481,10 @@
       "size": 7866394575,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$b2d05cc8aa856ddee3b09e8ba2ca6ff5ab72d8e3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4240,9 +4499,10 @@
       "size": 8196986833,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$96f9318df342e54ecae300536fe7770da3347f55",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4257,9 +4517,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f7410d408adcf998308068ee773d1f8e053b6aaa",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4274,9 +4535,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$007ad9aa5deec1a75ecfb0eb1dbd2771f86e5d03",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4291,9 +4553,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$321ffe14b1c6388570176052896f9f0b9c8e80c5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4308,9 +4571,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7440a299a6e414687ebe7d03414a436fbdcb994d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4325,9 +4589,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a780f200fe1f36a7f5965ad3eb0799b6d82e9ca0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4342,9 +4607,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$484e39a0595c9ad3b7f2d52d250b42753485adf4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4359,9 +4625,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$736af21c8fdcc848862f7e93709c56e07db86c06",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4376,9 +4643,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8747420237c44e176baa6e554090005d47075da7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4393,9 +4661,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6356ba3f0a9f776a93d769f399eacfe084ca5e8f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4410,9 +4679,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dc783771fc7f9715004908de6c0eb9ee75bfb79e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4427,9 +4697,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cb7334da1f0d3201904eb411deec06ad2b84ba62",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4444,9 +4715,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b816be12a3c64b51301a124b638e3a26fd1a19e5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4461,9 +4733,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3820c9c1b195d14aca9d3de5294540e00f25f748",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4478,9 +4751,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b2cf68ca049032693351a2f24e51f2567a37e5e6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4495,9 +4769,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5c238fa46de369fa7ee6df13b0a29feffee73ce3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4512,9 +4787,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$48ea739010e00ffa7aa447e50b10363479ad7322",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4529,9 +4805,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8e0672b5f7b2d667bb1a097a843ded7e7c064627",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4546,9 +4823,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f8f144e3f5919f2bb929546fb284f5d5d495e0a8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4563,9 +4841,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2b3184a14618033e98d16801f70fc2e7ed43d868",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4580,9 +4859,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3612d47d85773b55ea79812b79aa406fb2c9e177",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4597,9 +4877,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d609aaf069b2f1270717637eef4c55dfaa724cd7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4614,9 +4895,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7d9e50ff0792f224fd146a08ecf45329fba4becb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4631,9 +4913,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e0adbf5a381f6c38bd8f980223c56db8fff3f921",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4648,9 +4931,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f2084330a84840aeca979c7f79fad02c73268821",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4665,9 +4949,10 @@
       "size": 8098560303,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$06a1823e97adafc5e84738d3d2893ef32efa7b7e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4682,9 +4967,10 @@
       "size": 8424994493,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$160f6eea4e25377ab5c14316a3d3d8bc7d589568",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4699,9 +4985,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a439c8627297f57ded04b08322ac3587ca59fc6c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4716,9 +5003,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d768811cf13d07748580fa8c2bca2529cdc72f05",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4733,9 +5021,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$287f731a400d2209dcafc2e7e9ebabeed44c48e2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4750,9 +5039,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4700ee9b08978886fb64263a5770561185bc303c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4767,9 +5057,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c1be4ad0ee6a6da7a829be09db5f082ee56eefbc",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4784,9 +5075,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1365d59e1aee8e42240749f245744252fa3f53a2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4801,9 +5093,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$76299484fc37c3a3840092f5328b6b987009c478",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4818,9 +5111,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e44f1d8dd1648db06d80c870050fb719dc101c3a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4835,9 +5129,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f7860c31fcb7242af0051d4b85455f0ff0ce5059",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4852,9 +5147,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bcd91950e1eca84e54655820c0997f08bd16ce08",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4869,9 +5165,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3e543051c228d385ce1ead9c98fae2e8675aa96b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4886,9 +5183,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9085c1f1b12d275cbfbfcdc405a4c6430101eec5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4903,9 +5201,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$0363c24e3966802aba577146a91e38c96ec28311",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4920,9 +5219,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$543fdc3dd60d379c37b67c4df31bd544f8427d65",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4937,9 +5237,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6de094e18750093536d24dd85b75e53686c28067",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4954,9 +5255,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d5f08b31c863eab490dc465c05b116111bf7efe9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4971,9 +5273,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e2feb4d9921695f715b08b51b5352ad58853b071",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -4988,9 +5291,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d101bbb3f035dabd58fa3269a5127cd1c8f603a6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5005,9 +5309,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c0087924d69597665718eff3b7b94ded1649a526",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5022,9 +5327,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f5a5687c2a2a721519b19bd0623e40f84f9651fb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5039,9 +5345,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8d6541e7c4cbc76f8169cfa74585502a84ce23b3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5056,9 +5363,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7a8e759a6a46ae3b50a3e0efcd06f2c487729743",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5073,9 +5381,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ba460a8956f41505319e62c25e8808167bf48029",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5090,9 +5399,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a5454ec4b5066a93f767e404a9bbb3f86d9aeb45",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5107,9 +5417,10 @@
       "size": 7330780802,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$2d6feba4f2388c5d769160f4ce7a9b9841fcd70d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5124,9 +5435,10 @@
       "size": 7794499717,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$8d446eb955aee38e6d15d15ff47205fa4a5a40f6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5141,9 +5453,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$436620399a15db59a5d70347a9f349f5bbc1725e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5158,9 +5471,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7a782bdcf3206f2cc8169272c3f544cb46d6c325",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5175,9 +5489,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f9f556465102483b24dda1a23e32db7f8b0430d8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5192,9 +5507,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c47f06db22166b87e3a5a9a44858facd29cc9628",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5209,9 +5525,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4af87a6304d5e17d516785e724144397e015b857",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5226,9 +5543,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8f3749f97f4db39da21b58262a199f1990ff4cd9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5243,9 +5561,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$003a8d41a4156acdec719d3ccab5e7acd3e4f932",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5260,9 +5579,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e5950051070fdb72a7a6a4720fe86c25bb6e71c6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5277,9 +5597,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$21b4010267a78f1fc21737853602792220f73a6b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5294,9 +5615,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1988fd227260d7a9aa270c8f9d0e70bccb3624d6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5311,9 +5633,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d4e22e270d5461743d88c555c97b5840df2f1512",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5328,9 +5651,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$086c567fe85a2291dffa5cc395dcc3d63647cbb8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5345,9 +5669,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$584b046a1ca14ed8d3ce161d38dabffe7d65573a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5362,9 +5687,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f94fd9d593c76b3a4f231b6122db99adcfcb372a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5379,9 +5705,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b0cbe019d2864e6560676c16a42d71a883738fb1",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5396,9 +5723,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e37b5159163a425e72686def4cc121204232aff8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5413,9 +5741,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$49cd8bdc3db304786a7a5ae8589c92fa1ac27a1f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5430,9 +5759,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dff9c6b78202fd4d50e4dc8c1cedcd61ff2c5de7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5447,9 +5777,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e0b3dd4bd8ad68a7c7a9526d05c5ae39c80c58b6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5464,9 +5795,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$468f468c488fe21afaa4c2911c9ca00ccbb0e0c6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5481,9 +5813,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c06012ff0740c05b8e99c862c47621ce771c47eb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5498,9 +5831,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$aadab455bdf16bd94f66de6d3dea67f5b1b95a0c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5515,9 +5849,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f4b77bb57bc3c4a5e98e66918664f33836c14d00",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5532,9 +5867,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$01cefce1d9f773328a4264c8730e8cf94a48e982",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5549,9 +5885,10 @@
       "size": 7694833582,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$0807c215047f736142b56f1a6c429b626f1d7d8b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5566,9 +5903,10 @@
       "size": 8067385655,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$6e40a86cc640581b69dec0677695f24180b207ee",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5583,9 +5921,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$18ec08c40b5f463568fda68c3ee6334c7d53ac5e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5600,9 +5939,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$621a23ef2e0491d0d9f60790c34e89e4385a9ecd",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5617,9 +5957,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c86744db34a84eca76c90165fe4d5f6cc7dd2513",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5634,9 +5975,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$768c5e7ddb0abe09c50c713a96be170006821cec",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5651,9 +5993,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ccc870b120fa10b7fb4edfa2a92fa6f3a1feae32",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5668,9 +6011,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e230a5759bb973bcffcdc3bb53b59f2e854ae19b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5685,9 +6029,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$589b9b42b3050be08bcf6dc7a5d9ef6fc51205fc",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5702,9 +6047,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5c56e9be05e4582037f8755939974c7b583fb5cb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5719,9 +6065,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$476310c5de977def6a47b39dfb6ba2f97da01d8c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5736,9 +6083,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$37558d322d720c7fc778e757dceb51d37111dedf",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5753,9 +6101,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7833ec03e54229a86d8930b70ea1377210561494",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5770,9 +6119,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8e30237405144a1c5ca234fa824a32216dc75c76",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5787,9 +6137,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$21fd402c363894bbf194dd18a4736a80382e29dd",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5804,9 +6155,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8201d8f3c2deae83e2d0bdd2a8bb5f732ffeb81f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5821,9 +6173,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$67281555cac61effd3ab8860e54917ba91af3d29",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5838,9 +6191,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8cce33b49bff581ad87a2334956ff508e5853057",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5855,9 +6209,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2c531ccb505f6cf621b019f0167498edd8571bb0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5872,9 +6227,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2d308bd61bbbc5666990bc03e3ab57895dd89f49",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5889,9 +6245,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b1cb548a7b549e40a337eed5a7f76cf17afe76a1",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5906,9 +6263,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$75122ee4f7f4c3462bd0837a7a77e4ca57c0d9c9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5923,9 +6281,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1e3e581b7919dd99e4344d2b643eaa542478ac84",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5940,9 +6299,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7d06320e9eac2d6f0e8fffcfe47f251dc5151436",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5957,9 +6317,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2fe29cf9ab9dd8153c0d27d119f7fc932dab2fe9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5974,9 +6335,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d65744898a2cfbb2c705cc3bb840a207181c48bc",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -5991,9 +6353,10 @@
       "size": 7861438013,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$9f0e4ffd02b626e52dfff0da7defa72fd95e7c92",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6008,9 +6371,10 @@
       "size": 8084590268,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$c9249dcda36bab3ee9ef2856d4aa6f553a62eccf",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6025,9 +6389,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$aa5ade897e51ad14961323a9648729e43f21bfc0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6042,9 +6407,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bee145bebae93a9c545a56b86d29ff602cd00d44",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6059,9 +6425,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a77dd45c074a400f33041180966e24c314efe6e2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6076,9 +6443,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2e06707c0fd782cbcb5834e10537d5391f849079",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6093,9 +6461,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$605fe001a26a7a3725788e1d5cab240f28e62f11",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6110,9 +6479,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bb447a0d1a0ca2c0a335c0f6274c9304ad3fe788",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6127,9 +6497,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e2be95e45fe82fad48d35208d40941fbc0d568b4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6144,9 +6515,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5ad44193c3728f6ecd4679454d3f05c32fab7c25",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6161,9 +6533,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$70a089ae73c5e1f197dec2da315987b6691c3344",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6178,9 +6551,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7fea030a0d17fdc28abf0ffa36d16be37d1130f1",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6195,9 +6569,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$37ec12631a7a586cb90d774c4fa7373b7d0ef0ba",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6212,9 +6587,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3ee0a7f3c6b0b389eba167bd3bd3bb8bc5001ead",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6229,9 +6605,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8d8ba9848fa42f35db461961141cc7302ccd98b3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6246,9 +6623,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$86094179629ece6cabd58deccaed4705104935b0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6263,9 +6641,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dc28df58704f2b0be0b47a5935e8ad0edae58580",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6280,9 +6659,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$46f17b1df1044cb6cf12187e4d96a24dc78b098d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6297,9 +6677,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$77355a6a3a9433207eca1275e88266d3de29af30",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6314,9 +6695,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$317cf56907a6ce69c19de23fe1d170391ce4f220",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6331,9 +6713,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$803d27b2954fbaf9ba147ca93d96494a18b9dc47",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6348,9 +6731,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2151b85589850c7b7f645b1e76bbdf1686c46f3e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6365,9 +6749,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d70e6fc1b3cd6537715402035b266327dfa69e2c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6382,9 +6767,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$40fc64f373410b479f3b95915984b314fcd1fa57",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6399,9 +6785,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$07b6df5a9240ea49308c6556b21962fd540b39c8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6416,9 +6803,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$940428f835dfa792f7476974fb5a951cf15c76b7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6433,9 +6821,10 @@
       "size": 8485238645,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$31bba34ac9d60ffd912bd89cbabffaffd423f7ac",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6450,9 +6839,10 @@
       "size": 8927804367,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$623fc49026b841c3ddcaa9406d2114d9ae4d71a6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6467,9 +6857,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a89c4c1ef659fe6031a427b7829848bcfda7f31d",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6484,9 +6875,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1d023ad3d79c4daf21eedc288054934152160ee5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6501,9 +6893,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cd42c81feb7cdb4accd1b86e64538ed66fccc3c0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6518,9 +6911,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$767d538bff2eb615229ed98af71034f414e79975",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6535,9 +6929,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5647b7708d2c1adaac5f39bf7ef1302631ad1496",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6552,9 +6947,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7e2d2e42147327a0af3591edca227a306f955a54",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6569,9 +6965,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2dfdf3975e43867a54eda130bd094aee35cfbe8f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6586,9 +6983,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2e6a54774f2563f1214be37fe64012f8012239e7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6603,9 +7001,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$622c267587c85d93e0d4689d299c0be6cbf9aa20",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6620,9 +7019,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7aee03382dc6a5fa1cf5681588b805ed7b7d3c0a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6637,9 +7037,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e9535b03cf993139338cf28fe5ea0cb1b76a5e98",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6654,9 +7055,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ab6043654562399366c3e388a228b4e7beb3051c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6671,9 +7073,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b0ee414c0b7660995fd1392ba89e23a008fb56b8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6688,9 +7091,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$92b7af326198bda78887954143ac68149e9f83de",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6705,9 +7109,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$30ba136873da794882e2aa8affba39d9122b279f",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6722,9 +7127,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c9336213d96f15cd9d25e85d63e35c1745590c0b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6739,9 +7145,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4c64edd45a9d0a103db2ccdbb06a039fd8f87bd2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6756,9 +7163,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4fd7115c972286ad504d7a9f0e2daa63a0189674",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6773,9 +7181,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4e79d0775981afd48c7fbdf4fc957e7427e03669",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6790,9 +7199,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2111c1c94824ad7f4858daf6c54f01544639c92e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6807,9 +7217,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b9f086ef7646911538b9a1cbf7ee7eca877d3713",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6824,9 +7235,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$95db53dffe18221e5f6ac15a4a24374e1ff08d64",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6841,9 +7253,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$e0b4055d06ad614cf292395917f7162413793e66",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6858,9 +7271,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ffb6468b8bb0a33169580af24ed585903c15a52b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6875,9 +7289,10 @@
       "size": 8190966277,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$ae90ee567b02939cc31984069b4b72254f2ee82b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6892,9 +7307,10 @@
       "size": 8612411242,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$9d04bcc37129b442bcc5ea3e309a501d54edbfa4",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6909,9 +7325,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cc1b54fd3926b24ce6047b4cb2ea497cddb39615",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6926,9 +7343,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fd4b9528194d9f6abf6e698b4bbceb391d861c75",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6943,9 +7361,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ac0c59bec3fb360e61a84e65a810e12712fbb5e9",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6960,9 +7379,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8f5d5aab2f6bcf9b4e7a733d3aa3e8c15482a4db",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6977,9 +7397,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$800cba4808407bf4fba321f1ced1ca1607924e7a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -6994,9 +7415,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$552bc3672c65f71a009e394023bf61738ec9f9eb",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7011,9 +7433,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$1516f5342fd9d441211610267c54e0c1ef347de6",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7028,9 +7451,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$43ab8ef8176e3b692a23c0bed02691fad9b8f833",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7045,9 +7469,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$158e185fd0560e59eef17885210b92e72cd78678",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7062,9 +7487,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$ef8e788ac097b3fe03e32d1616cf3a326078f934",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7079,9 +7505,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$2ad0af80dd8cc3b124cd11dcd9770085f0597aad",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7096,9 +7523,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$47bced0dabac607feeaa082e2ef9ee2b9c0a51b8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7113,9 +7541,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d7fb0e3b6f97d83bc693f62eeac2004905e22af5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7130,9 +7559,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$aecf489e3e788434f55a28def997e057f9ba837e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7147,9 +7577,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$94002794df1f4a39ccae93c3c032e5fb5364887a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7164,9 +7595,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$a2fda58218317c0da95fad1d79f44f4ea544745c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7181,9 +7613,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$78d0c500e0555764288f666abd5f297f7125f74b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7198,9 +7631,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$fc5a6073bc9f8c9fa11e6b6af4fdb8625568848c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7215,9 +7649,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$7be448631d01406b3f30736a4c3d3f3bb95089e2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7232,9 +7667,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$67be0d19fa24a4819e4d153ce4ec455f9721651a",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7249,9 +7685,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$d6323ba78f3e2749d145f6dc2c1e6cf7db2011ae",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7266,9 +7703,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9ff2c00102c26eb88e535eccf659760b68581413",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7283,9 +7721,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3747f3153e65ab227330fd48ae27328b837f6b00",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7300,9 +7739,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$429b5fe944e4f41b50fb7c3e7a39c9629342a4a3",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7317,9 +7757,10 @@
       "size": 8939676842,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$99d7ccd7e8969f1d855fc7900a273581929d2700",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7334,9 +7775,10 @@
       "size": 9344592073,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$18f6f689d42ff6393a1cc5419e3330f0fc5fda17",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7351,9 +7793,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$86180ce87001c942280fc15830b9278a7210b077",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7368,9 +7811,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$5c25c8b2f48ffcb0ae44e4359c15d4412352b687",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7385,9 +7829,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c31a563f95525296f95546102fd673ff10c55593",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7402,9 +7847,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b8d183918e76efd657268a61b4d73795b3f11696",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7419,9 +7865,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$cc7b0c3e2e5e52194f816304f0614818729fefcc",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7436,9 +7883,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$8916382e5a5315b164c5ec34b562ce7d25ecb448",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7453,9 +7901,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$98da4b33e73a8a0c38a6230b9fb5e983a6381994",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7470,9 +7919,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$3ccd19dbe49754caed21855bb190e4ff6dce46fa",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7487,9 +7937,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$424394f3a3150a54f942b8139ce3c60472e15c12",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7504,9 +7955,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$73ec90580de2b275f773e7f9915f9204fbca1a97",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7521,9 +7973,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$c7182d86a80bfddedcb62f1538d8e3eab060183c",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7538,9 +7991,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$efadca2d626be00b4dc02f402c251b2c8fac808b",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7555,9 +8009,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$6a4fc0367097c97edd4737eca23067ea0d84b6b0",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7572,9 +8027,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b9258a5dcbdc6f8fdfdd8c65db5e0852f6b3db70",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7589,9 +8045,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$24824e34d3ef6d869ed421e8eee1cf3e435cd354",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7606,9 +8063,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$bc14c957a6819819e8037c5302ab59b45373a1a2",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7623,9 +8081,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$9ee71853e056961e5a46f875de2b9548655ada69",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7640,9 +8099,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$24f54b5000b9a085ba3ac01a239393d1afd02c84",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7657,9 +8117,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$4e520c8a5c42963502b76fad2450db216aa467d5",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7674,9 +8135,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$dc56eaffbb56462816dcaa6c0d023604bae0b500",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7691,9 +8153,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$374a2fbacf85dc105eea22c8aed2393bf93e6a87",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7708,9 +8171,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$f71d696eb33ac2cc6be81695b2b4735e5ce5ade8",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7725,9 +8189,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$b7b1effd240199e383c4345c287687ed0ad8964e",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7742,9 +8207,10 @@
       "size": 0,
       "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
       "checksum": "sha1$57efe2eab878639f5db2a4d41b6b4d3c503b0869",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7759,9 +8225,10 @@
       "size": 8305637392,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$1785b684fba84ff0911aece4c37b9d1179f69c30",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   },
   {
@@ -7776,9 +8243,10 @@
       "size": 8676114173,
       "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a",
       "checksum": "sha1$7b86151c7f4be0bde8a928cf078296981232a9a7",
-      "request": null,
-      "sample": null,
-      "patient": null
+      "request_id": null,
+      "samples": null,
+      "patient_id": null,
+      "samples": []
     }
   }
 ]

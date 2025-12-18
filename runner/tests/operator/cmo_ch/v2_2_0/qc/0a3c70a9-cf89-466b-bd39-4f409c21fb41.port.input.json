@@ -1,0 +1,2019 @@
+[
+    {
+        "model": "runner.port",
+        "pk": "08499686-a0ef-4038-a0ab-c6f6a156de97",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.522Z",
+            "modified_date": "2022-04-26T01:18:27.747Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_no_edge_complex_indel",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1c94dd11-1e44-4c26-a6cb-eb5e89bc9e0c",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.525Z",
+            "modified_date": "2022-04-26T01:18:27.752Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_maximum_mixmatch_rate",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "float"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "bd56d485-3e8f-40a9-92b7-deb13219b9c9",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.527Z",
+            "modified_date": "2022-04-26T01:18:27.757Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_maximum_average_depth",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "72576eba-9292-4b0c-a445-7f5a929a1148",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.532Z",
+            "modified_date": "2022-04-26T01:18:27.767Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_bam_index",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "cbe76169-705a-4f83-953c-508cdb3a4e89",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.537Z",
+            "modified_date": "2022-04-26T01:18:27.777Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "merge_sam_files_sort_order",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f8d49723-87d5-4aad-8050-9ee933becace",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.540Z",
+            "modified_date": "2022-04-26T01:18:27.783Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_merge_sam_files_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_merged.sam",
+            "value": "A-000000-N001-d_uncollapsed_merged.sam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7b0e7023-f8c9-44bd-9575-667003cd20b8",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.543Z",
+            "modified_date": "2022-04-26T01:18:27.788Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_intervals",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8ef1529f-8bed-4d2d-84c5-ad6e0de35912",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.787Z",
+            "modified_date": "2022-04-26T01:18:27.802Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "sequencing-center",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "58e7db3c-4fa6-4753-9052-6efba67bb1d9",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.790Z",
+            "modified_date": "2022-04-26T01:18:27.808Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "run-date",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "193a9c77-5791-4390-8daf-199b2d8cc135",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.793Z",
+            "modified_date": "2022-04-26T01:18:27.813Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "sample",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d",
+            "value": "A-000000-N001-d",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e12825e5-1858-4809-aebc-faf7f25314c8",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.796Z",
+            "modified_date": "2022-04-26T01:18:27.818Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "read-structures",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string?"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "33e85df1-e01b-46d8-84d8-051b780b3abf",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.799Z",
+            "modified_date": "2022-04-26T01:18:27.823Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "read-group-id",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d",
+            "value": "A-000000-N001-d",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "2c7770ae-2951-4be7-a576-720444121a98",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.802Z",
+            "modified_date": "2022-04-26T01:18:27.828Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_gatk_merge_bam_alignment_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_merged.bam",
+            "value": "A-000000-N001-d_collapsed_merged.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d2e00239-8057-4675-94c1-bf63dc27d269",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.805Z",
+            "modified_date": "2022-04-26T01:18:27.833Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_output_file_name_simplex_aln_metrics",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_simplex_aln_metrics.txt",
+            "value": "A-000000-N001-d_collapsed_simplex_aln_metrics.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ac7b9b86-47d0-40c3-9dd4-49d0771e75cb",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.808Z",
+            "modified_date": "2022-04-26T01:18:27.838Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "base_recalibrator_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_BR_data.txt",
+            "value": "A-000000-N001-d_BR_data.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5f352830-a247-4d7c-bbfd-d9471d9dae64",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.776Z",
+            "modified_date": "2022-04-26T01:18:27.846Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "reference_sequence",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "File"
+            },
+            "template": null,
+            "secondary_files": [
+                ".amb",
+                ".fai",
+                ".sa",
+                "^.dict",
+                ".ann",
+                ".bwt",
+                ".pac"
+            ],
+            "db_value": {
+                "class": "File",
+                "location": "bid://7734f8b9-9677-4b45-a16c-7bd239be8076"
+            },
+            "value": {
+                "path": "/path/to/Homo_sapiens_assembly19.fasta",
+                "class": "File"
+            },
+            "notify": false,
+            "files": [
+                "7734f8b9-9677-4b45-a16c-7bd239be8076"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e463b7c2-7ecd-48b2-b08f-d62335a68591",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.549Z",
+            "modified_date": "2022-04-26T01:18:27.531Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_group_reads_by_umi_strategy",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "5f0cb8fb-eabd-4398-bc33-6f21abde266c",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.552Z",
+            "modified_date": "2022-04-26T01:18:27.539Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_group_reads_by_umi_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_grouped.bam",
+            "value": "A-000000-N001-d_collapsed_grouped.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "aac14640-c4f2-4302-845a-2b231dfd1806",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.555Z",
+            "modified_date": "2022-04-26T01:18:27.547Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_group_reads_by_umi_family_size_histogram",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_umi_family_size.hist",
+            "value": "A-000000-N001-d_umi_family_size.hist",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a6d13287-f5d2-4bab-807c-57ead6d84fe7",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.558Z",
+            "modified_date": "2022-04-26T01:18:27.555Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_output_prefix",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d",
+            "value": "A-000000-N001-d",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b9ba0d8c-ffda-434a-81c2-6c6cee734640",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.560Z",
+            "modified_date": "2022-04-26T01:18:27.564Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_collect_duplex_seq_metrics_duplex_umi_counts",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "57bbb21f-d9d0-4101-a10d-b855cab74d0e",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.563Z",
+            "modified_date": "2022-04-26T01:18:27.571Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_postprocessing_output_file_name_simplex",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_simplex.bam",
+            "value": "A-000000-N001-d_collapsed_simplex.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b691323d-e6d1-4528-8387-12b2f9b70b2c",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.568Z",
+            "modified_date": "2022-04-26T01:18:27.578Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_alignment_summary_metrics_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_aln_metrics.txt",
+            "value": "A-000000-N001-d_collapsed_aln_metrics.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "29149b4b-8392-4d31-9332-6434681888b5",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.572Z",
+            "modified_date": "2022-04-26T01:18:27.583Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_contig_anchor",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a0aec242-0fed-414d-b774-702d4b097b9f",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.580Z",
+            "modified_date": "2022-04-26T01:18:27.590Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_abra2_output_bams",
+            "port_type": 0,
+            "schema": null,
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collasped_IR.bam",
+            "value": "A-000000-N001-d_collasped_IR.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1177a87b-e88c-4808-9c3e-112cb2d525d0",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.592Z",
+            "modified_date": "2022-04-26T01:18:27.597Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_reverse_per_base_tags_simplex_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e5379b23-1028-465c-bd0d-0e3bf83b1a31",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.599Z",
+            "modified_date": "2022-04-26T01:18:27.602Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_output_file_name_simplex_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_simplex-duplex.bam",
+            "value": "A-000000-N001-d_collapsed_simplex-duplex.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b5db8945-7800-4a91-97a0-eee7fb7614e7",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.606Z",
+            "modified_date": "2022-04-26T01:18:27.609Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_output_file_name_duplex_aln_metrics",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_duplex_aln_metrics.txt",
+            "value": "A-000000-N001-d_collapsed_duplex_aln_metrics.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c3e6ba5a-e457-4402-8668-01e375602026",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.613Z",
+            "modified_date": "2022-04-26T01:18:27.616Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_output_file_name_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_duplex.bam",
+            "value": "A-000000-N001-d_collapsed_duplex.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "4755ec5a-1976-457e-acca-014c3e21416b",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.619Z",
+            "modified_date": "2022-04-26T01:18:27.622Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_min_reads_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int?"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a91793b4-cd66-4c1d-8ef7-28321750d5a6",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.626Z",
+            "modified_date": "2022-04-26T01:18:27.629Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_min_base_quality_simplex_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "62553033-0d52-42e5-923c-d8b3fedd2e08",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.633Z",
+            "modified_date": "2022-04-26T01:18:27.635Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_min_base_quality_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8ce80bb6-a415-4d24-b595-8fde050459a3",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.639Z",
+            "modified_date": "2022-04-26T01:18:27.640Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_bwa_mem_output",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed.sam",
+            "value": "A-000000-N001-d_collapsed.sam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "2483829a-a4f5-4ce2-92d0-7e22af4321e3",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.645Z",
+            "modified_date": "2022-04-26T01:18:27.646Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_filter_consensus_read_min_reads_simplex_duplex",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int?"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ad492275-d676-4021-8183-7a22843cc881",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.651Z",
+            "modified_date": "2022-04-26T01:18:27.652Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "picard_addRG_sort_order",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f304b656-238c-4aea-8b69-11a1ca2cc6df",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.657Z",
+            "modified_date": "2022-04-26T01:18:27.657Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "disable_trim_poly_g",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "04099c10-4027-4db7-a26c-bf916f78df79",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.499Z",
+            "modified_date": "2022-04-26T01:18:27.664Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "bwa_mem_K",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8501ecf2-b10b-4f52-a09f-1e3caab27207",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.502Z",
+            "modified_date": "2022-04-26T01:18:27.669Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_gatk_merge_bam_alignment_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_merged.bam",
+            "value": "A-000000-N001-d_uncollapsed_merged.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "ac954533-4ce5-485a-a70d-b1a46d601063",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.505Z",
+            "modified_date": "2022-04-26T01:18:27.675Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "optical_duplicate_pixel_distance",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "cf0842d3-3ab1-4fab-ac5a-0ccb6a4de2f0",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.508Z",
+            "modified_date": "2022-04-26T01:18:27.681Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_mark_duplicates_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_MD.bam",
+            "value": "A-000000-N001-d_uncollapsed_MD.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7fa53345-5cf2-4fee-899b-94f54ed8b6af",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.511Z",
+            "modified_date": "2022-04-26T01:18:27.686Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_mark_duplicates_duplication_metrics_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_MD_metrics.txt",
+            "value": "A-000000-N001-d_uncollapsed_MD_metrics.txt",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c0f6b478-083a-44bc-9722-c607e0962abb",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.514Z",
+            "modified_date": "2022-04-26T01:18:27.691Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "bedtools_merge_distance_between_features",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "348edd29-7b44-421e-8560-211ae5943784",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.517Z",
+            "modified_date": "2022-04-26T01:18:27.697Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "bedtools_genomecov_option_bedgraph",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "aabaae5a-fefc-4af8-b6cc-737e71dca3ba",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.663Z",
+            "modified_date": "2022-04-26T01:18:27.702Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "disable_quality_filtering",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "db528ccf-c526-4a3d-a7dc-6a083d23a684",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.668Z",
+            "modified_date": "2022-04-26T01:18:27.707Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_base_recalibrator_add_output_sam_program_record",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "e1ba715a-2448-40f2-83c2-1d24481f2953",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.674Z",
+            "modified_date": "2022-04-26T01:18:27.712Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_collect_aln_summary_metrics_bqsr_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8d0039d6-36d9-4be0-b858-d1e0e2802ecf",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.679Z",
+            "modified_date": "2022-04-26T01:18:27.717Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_no_sort",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "eb150465-aa48-49e9-815d-e48ffe620661",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.684Z",
+            "modified_date": "2022-04-26T01:18:27.723Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "temporary_directory",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c510b02b-db7a-4d37-84b2-c5d3d6d3d86c",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.689Z",
+            "modified_date": "2022-04-26T01:18:27.728Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_async_io",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a906a083-3281-47dc-8b3b-d25524a27235",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.693Z",
+            "modified_date": "2022-04-26T01:18:27.733Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_max_len_read2",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "bc76f470-c5e6-4d5a-ac8a-9f618b96b337",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.697Z",
+            "modified_date": "2022-04-26T01:18:27.737Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_max_len_read1",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "3c998e34-c57c-4de6-bcd8-f0937c3dd7f1",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.519Z",
+            "modified_date": "2022-04-26T01:18:27.742Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "apply_bqsr_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_BR.bam",
+            "value": "A-000000-N001-d_uncollapsed_BR.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "1f0f28c4-02ee-4685-8cc1-e002da3d7537",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.530Z",
+            "modified_date": "2022-04-26T01:18:27.762Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_consensus_sequence",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "2c520ae7-f18a-4223-b137-12d13329d454",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.535Z",
+            "modified_date": "2022-04-26T01:18:27.772Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_picard_fixmateinformation_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_FM.bam",
+            "value": "A-000000-N001-d_uncollapsed_FM.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0b75b891-05a5-4fe4-be11-60c93d21befd",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.782Z",
+            "modified_date": "2022-04-26T01:18:27.796Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "gatk_base_recalibrator_known_sites",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": [
+                    "null",
+                    "array"
+                ]
+            },
+            "template": null,
+            "secondary_files": [
+                ".idx"
+            ],
+            "db_value": [
+                {
+                    "class": "File",
+                    "location": "bid://75acbec9-879f-4ef6-b58d-f4aef823cd39"
+                },
+                {
+                    "class": "File",
+                    "location": "bid://6cc2770d-ea69-4e07-b151-a6d9d3cabea5"
+                }
+            ],
+            "value": [
+                {
+                    "path": "/path/to/dbsnp_137.b37.vcf",
+                    "class": "File"
+                },
+                {
+                    "path": "/path/to/Mills_and_1000G_gold_standard.indels.b37.vcf",
+                    "class": "File"
+                }
+            ],
+            "notify": false,
+            "files": [
+                "6cc2770d-ea69-4e07-b151-a6d9d3cabea5",
+                "75acbec9-879f-4ef6-b58d-f4aef823cd39"
+            ]
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c1a0a2e8-f750-41e8-9ffb-a07445a7504b",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.381Z",
+            "modified_date": "2022-04-26T01:18:27.855Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "platform-unit",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "None",
+            "value": "None",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "818ef53a-b2fe-4c5a-acb7-ddeb3e1b5126",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.404Z",
+            "modified_date": "2022-04-26T01:18:27.895Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_picard_SamToFastq_R1_output_fastq",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_R1_fastq.gz",
+            "value": "A-000000-N001-d_uncollapsed_R1_fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c73ae761-3650-497b-bd65-a21aaa45f065",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.385Z",
+            "modified_date": "2022-04-26T01:18:27.863Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "platform-model",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "novaseq",
+            "value": "novaseq",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "7afd02b4-f0d4-4bde-bb5d-a947c76ede01",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.390Z",
+            "modified_date": "2022-04-26T01:18:27.871Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "platform",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c7a13cf6-0f76-4a89-98db-d53741031338",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.395Z",
+            "modified_date": "2022-04-26T01:18:27.879Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "library",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "None",
+            "value": "None",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6781f7f4-fd6c-4c08-9250-723989868ab5",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.400Z",
+            "modified_date": "2022-04-26T01:18:27.887Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "validation_stringency",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "225bac5b-ccce-4b44-b05f-ca8360fbb723",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.409Z",
+            "modified_date": "2022-04-26T01:18:27.902Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_picard_SamToFastq_R2_output_fastq",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_R2_fastq.gz",
+            "value": "A-000000-N001-d_uncollapsed_R2_fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "8caa5baf-e3c9-4781-8c88-c3bbcf1098d1",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.413Z",
+            "modified_date": "2022-04-26T01:18:27.910Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_read2_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_trimmed_R2.fastq.gz",
+            "value": "A-000000-N001-d_trimmed_R2.fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "acd8f4c6-7eac-4ce5-af40-692dd9fedb80",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.418Z",
+            "modified_date": "2022-04-26T01:18:27.918Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_read2_adapter_sequence",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+            "value": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "95a7a651-88be-4da9-8219-d3aca120492f",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.422Z",
+            "modified_date": "2022-04-26T01:18:27.926Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_read1_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_trimmed_R1.fastq.gz",
+            "value": "A-000000-N001-d_trimmed_R1.fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "15df4d9b-4e5f-4655-a6ae-54c8eb0bf92e",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.427Z",
+            "modified_date": "2022-04-26T01:18:27.933Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_call_duplex_consensus_reads_min_reads",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int?"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "85afb9e3-7d0e-40ff-8c93-45273b5aa648",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.431Z",
+            "modified_date": "2022-04-26T01:18:27.940Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_call_duplex_consensus_reads_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_unmapped.bam",
+            "value": "A-000000-N001-d_collapsed_unmapped.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f87f52c2-7dc3-487e-b322-c839ffc39ef0",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.436Z",
+            "modified_date": "2022-04-26T01:18:27.947Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_gatk_sam_to_fastq_output_name_R2",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_R2_fastq.gz",
+            "value": "A-000000-N001-d_collapsed_R2_fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0bf2e84c-5057-460a-9ae6-1f96d2d277a8",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.440Z",
+            "modified_date": "2022-04-26T01:18:27.954Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_gatk_sam_to_fastq_output_name_R1",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_R1_fastq.gz",
+            "value": "A-000000-N001-d_collapsed_R1_fastq.gz",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "18f699b9-f09e-43fb-b011-758e66f0a942",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.443Z",
+            "modified_date": "2022-04-26T01:18:27.961Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_picard_fixmate_information_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed_FM.bam",
+            "value": "A-000000-N001-d_collapsed_FM.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "b602b82b-4a67-45b2-9666-2e96e6ca1bba",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.447Z",
+            "modified_date": "2022-04-26T01:18:27.968Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "BC_picard_addRG_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_collapsed.bam",
+            "value": "A-000000-N001-d_collapsed.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "6cc7b708-d73e-4f71-b016-572ee4ec0f27",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.451Z",
+            "modified_date": "2022-04-26T01:18:27.974Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_read1_adapter_sequence",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+            "value": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "87e5d2c2-f543-4633-8ed4-cf46da32da18",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.455Z",
+            "modified_date": "2022-04-26T01:18:27.981Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_minimum_read_length",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "68a99a56-9db9-4a0e-ba04-dbf6894e9272",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.459Z",
+            "modified_date": "2022-04-26T01:18:27.988Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_html_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_fastp_report.html",
+            "value": "A-000000-N001-d_fastp_report.html",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "d54273be-8152-4d62-8eb3-669283882a62",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.463Z",
+            "modified_date": "2022-04-26T01:18:27.996Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fastp_json_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_fastp_report.json",
+            "value": "A-000000-N001-d_fastp_report.json",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "3381ad4d-9c1a-4cb3-a461-90b988e4eda7",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.467Z",
+            "modified_date": "2022-04-26T01:18:28.005Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "sort_order",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "0ee0a62c-380e-48f8-9f17-2ac506688042",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.470Z",
+            "modified_date": "2022-04-26T01:18:28.013Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "bwa_mem_T",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "int"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "502bb3f3-c52e-450d-a7b6-2ac3d43f97cb",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.474Z",
+            "modified_date": "2022-04-26T01:18:28.022Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "bwa_mem_Y",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "a21aeaac-9744-4deb-a5ce-9bac03474725",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.477Z",
+            "modified_date": "2022-04-26T01:18:28.031Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_window_size",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "87fbc899-5558-43ba-9c72-bae2bdd3a607",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.481Z",
+            "modified_date": "2022-04-26T01:18:28.039Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_soft_clip_contig",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "87d52160-99dd-4fd2-bfcd-b561a2ec4d02",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.484Z",
+            "modified_date": "2022-04-26T01:18:28.047Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "abra2_scoring_gap_alignments",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f51a6bfc-9c15-4699-88fa-f02d990bef21",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.487Z",
+            "modified_date": "2022-04-26T01:18:28.054Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_abra2_output_bams",
+            "port_type": 0,
+            "schema": null,
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed_IR.bam",
+            "value": "A-000000-N001-d_uncollapsed_IR.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f8440b43-3f57-4c1e-8aae-277e77c3dfd5",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.490Z",
+            "modified_date": "2022-04-26T01:18:28.062Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_picard_addRG_output_file_name",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed.bam",
+            "value": "A-000000-N001-d_uncollapsed.bam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "57dddc80-27b2-486b-bcc7-a925d71f8586",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.493Z",
+            "modified_date": "2022-04-26T01:18:28.069Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "create_bam_index",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": null,
+            "value": null,
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "c4b281a1-75e5-42fa-99d7-6e4fd71d0cb4",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.496Z",
+            "modified_date": "2022-04-26T01:18:28.076Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "UBG_bwa_mem_output",
+            "port_type": 0,
+            "schema": {
+                "type": [
+                    "null",
+                    "array"
+                ],
+                "items": "string"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": "A-000000-N001-d_uncollapsed.sam",
+            "value": "A-000000-N001-d_uncollapsed.sam",
+            "notify": false,
+            "files": []
+        }
+    },
+    {
+        "model": "runner.port",
+        "pk": "f6fb6a81-2f3e-4d2b-845a-569fcf232085",
+        "fields": {
+            "created_date": "2022-04-25T15:55:44.814Z",
+            "modified_date": "2022-04-26T01:18:28.099Z",
+            "run": "0a3c70a9-cf89-466b-bd39-4f409c21fb41",
+            "name": "fgbio_fastq_to_bam_input",
+            "port_type": 0,
+            "schema": {
+                "type": "array",
+                "items": "array"
+            },
+            "template": null,
+            "secondary_files": [],
+            "db_value": [
+                [
+                    {
+                        "class": "File",
+                        "location": "bid://fec2876f-2c75-4933-a3f8-8e503710880d"
+                    },
+                    {
+                        "class": "File",
+                        "location": "bid://8f3f40ac-470f-49d3-a374-77ffe24fb95e"
+                    }
+                ],
+                [
+                    {
+                        "class": "File",
+                        "location": "bid://ae838088-4f47-4786-b4bb-90519bb21ac4"
+                    },
+                    {
+                        "class": "File",
+                        "location": "bid://e04b61b4-6107-4dcf-bcae-5791716351f2"
+                    }
+                ],
+                [
+                    {
+                        "class": "File",
+                        "location": "bid://85b15d48-7ce6-479d-b37b-530bf12c0479"
+                    },
+                    {
+                        "class": "File",
+                        "location": "bid://ef623c82-6540-4f1f-87cd-2ce41227ad51"
+                    }
+                ],
+                [
+                    {
+                        "class": "File",
+                        "location": "bid://4f906512-aad4-47b5-8a02-284ca9bb48f2"
+                    },
+                    {
+                        "class": "File",
+                        "location": "bid://47546e00-ab64-4a0d-9d81-ceec6343557c"
+                    }
+                ]
+            ],
+            "value": [
+                [
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S132_L002_R1_001.fastq.gz",
+                        "class": "File"
+                    },
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S132_L002_R2_001.fastq.gz",
+                        "class": "File"
+                    }
+                ],
+                [
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L002_R1_001.fastq.gz",
+                        "class": "File"
+                    },
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L002_R2_001.fastq.gz",
+                        "class": "File"
+                    }
+                ],
+                [
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L003_R1_001.fastq.gz",
+                        "class": "File"
+                    },
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L003_R2_001.fastq.gz",
+                        "class": "File"
+                    }
+                ],
+                [
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L004_R1_001.fastq.gz",
+                        "class": "File"
+                    },
+                    {
+                        "path": "/path/to/A-000000_IGO_A-000000_S269_L004_R2_001.fastq.gz",
+                        "class": "File"
+                    }
+                ]
+            ],
+            "notify": false,
+            "files": [
+                "47546e00-ab64-4a0d-9d81-ceec6343557c",
+                "4f906512-aad4-47b5-8a02-284ca9bb48f2",
+                "85b15d48-7ce6-479d-b37b-530bf12c0479",
+                "8f3f40ac-470f-49d3-a374-77ffe24fb95e",
+                "ae838088-4f47-4786-b4bb-90519bb21ac4",
+                "e04b61b4-6107-4dcf-bcae-5791716351f2",
+                "ef623c82-6540-4f1f-87cd-2ce41227ad51",
+                "fec2876f-2c75-4933-a3f8-8e503710880d"
+            ]
+        }
+    }
+]

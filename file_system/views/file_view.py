@@ -11,6 +11,7 @@ from file_system.models import File, FileMetadata
 from file_system.exceptions import FileNotFoundException
 from file_system.serializers import (
     CreateFileSerializer,
+    CreateFileFormSerializer,
     UpdateFileSerializer,
     FileSerializer,
     FileQuerySerializer,
@@ -155,6 +156,7 @@ class FileView(
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(request_body=CreateFileFormSerializer)
     def create(self, request, *args, **kwargs):
         serializer = CreateFileSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
