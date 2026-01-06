@@ -9,7 +9,7 @@ from django.db.models import Prefetch, Q
 from django.test import TestCase, override_settings
 
 from file_system.models import File, FileGroup, FileMetadata, FileType, PooledNormal
-from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import (
+from runner.operator.argos_operator.v2_3_0.bin.retrieve_samples_by_query import (
     build_dmp_query,
     build_preservation_query,
     build_run_id_query,
@@ -17,7 +17,7 @@ from runner.operator.argos_operator.v2_2_0.bin.retrieve_samples_by_query import 
     get_pooled_normals,
     get_preservation_type,
 )
-from runner.tests.operator.argos_operator.v2_2_0.test_pair_request import UUIDEncoder
+from runner.tests.operator.argos_operator.v2_3_0.test_pair_request import UUIDEncoder
 
 
 class TestRetrieveSamplesByQuery(TestCase):
