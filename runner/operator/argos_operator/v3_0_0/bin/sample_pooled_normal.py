@@ -32,7 +32,7 @@ REQUIRED_KEYS = [
     "runId",
 ]
 
-
+# Load pooled normals data once at module level
 def load_csv_to_global_dict(filepath):
     global POOLED_NORMALS  # contains table from assets/pooled_normals.csv
     with open(filepath, newline="", encoding="utf-8") as f:
@@ -44,6 +44,9 @@ def load_csv_to_global_dict(filepath):
             POOLED_NORMALS[sample_name]["pooled_normals_paths"] = (
                 POOLED_NORMALS[sample_name]["pooled_normals_paths"].strip("{}").split(",")
             )
+
+# Load the data once when module is imported
+load_csv_to_global_dict(CSV_PATH)
 
 
 class SamplePooledNormal:
