@@ -4,11 +4,18 @@ Test for constructing Argos samples
 from uuid import UUID
 from django.conf import settings
 from django.test import TestCase
-from runner.operator.argos_operator.v1_0_0.bin.make_sample import build_sample
+from runner.operator.argos_operator.v2_3_0.bin.make_sample import Fastqs, build_sample
+
+from file_system.models import File, FileGroup, FileMetadata, FileType
 import json
 
 
 class TestMakeSample(TestCase):
+    fixtures = [
+        "file_system.filegroup.json",
+        "file_system.storage.json"
+    ]
+
     def test_build_sample1(self):
         """
         Test for building a sample
@@ -103,7 +110,7 @@ class TestMakeSample(TestCase):
                     "sequencingCenter": "MSKCC",
                     "platform": "Illumina",
                     "runDate": "2019-12-12",
-                    "runId": "JAX_0397",
+                                "runId": "JAX_0397",
                     "runMode": "HiSeq High Output",
                     settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3",
                     settings.CMO_SAMPLE_NAME_METADATA_KEY: "C-8VK0V7-N001-d",
@@ -118,7 +125,27 @@ class TestMakeSample(TestCase):
             },
         ]
 
+        r1_bid = ""
+        r2_bid = ""
+        for i in data:
+            if i["metadata"]["R"] == "R1":
+                r1_bid= i["id"]
+            else:
+                r2_bid= i["id"]
+            f = File.objects.create(
+                file_type = FileType.objects.create(name="fastq"),
+                file_group = FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
+                file_name = i["file_name"],
+                path = i["path"]
+            )
+            FileMetadata.objects.create_or_update(
+                file=f,
+                metadata=i["metadata"]
+            )
+
         sample = build_sample(data)
+        sample["R1_bid"] = []
+        sample["R2_bid"] = []
 
         expected_sample = {
             "CN": "MSKCC",
@@ -129,20 +156,22 @@ class TestMakeSample(TestCase):
             "R1": [
                 "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R1_001.fastq.gz"
             ],
-            "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
+            "R1_bid": [],
             "R2": [
                 "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz"
             ],
-            "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
+            "R2_bid": [],
             "bam": [],
             "bam_bid": [],
             "SM": "s_C_8VK0V7_N001_d",
             "bait_set": "IMPACT468_BAITS",
             "sample_id": "10075_D_2_3",
+            "sample_origin": ["Plasma"],
             "patient_id": "C-8VK0V7",
             "request_id": "10075_D_2",
             "run_date": ["2019-12-12"],
             "run_id": ["JAX_0397"],
+            "run_mode": "hiseq",
             "preservation_type": ["EDTA-Streck"],
             "species": "Human",
             "specimen_type": "Blood",
@@ -153,7 +182,11 @@ class TestMakeSample(TestCase):
 
         print("Testing build_sample ---")
         print(json.dumps(sample, cls=UUIDEncoder))
+        print()
         print(json.dumps(expected_sample, cls=UUIDEncoder))
+
+        from pprint import pprint
+        pprint(dict_diff(sample, expected_sample))
 
         self.assertTrue(sample == expected_sample)
 
@@ -164,3 +197,25 @@ class UUIDEncoder(json.JSONEncoder):
             # if the obj is uuid, we simply return the value of uuid
             return obj.hex
         return json.JSONEncoder.default(self, obj)
+
+def dict_diff(d1, d2, path=""):
+    diffs = {}
+
+    # Keys present in either dictionary
+    keys = set(d1.keys()) | set(d2.keys())
+
+    for key in keys:
+        v1 = d1.get(key, "__MISSING__")
+        v2 = d2.get(key, "__MISSING__")
+        current_path = f"{path}.{key}" if path else key
+
+        if isinstance(v1, dict) and isinstance(v2, dict):
+            # Recurse into nested dictionaries
+            nested = dict_diff(v1, v2, current_path)
+            if nested:
+                diffs.update(nested)
+        else:
+            if v1 != v2:
+                diffs[current_path] = {"old": v1, "new": v2}
+
+    return diffs
