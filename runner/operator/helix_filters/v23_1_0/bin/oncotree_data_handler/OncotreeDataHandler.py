@@ -7,20 +7,22 @@ import requests
 class OncotreeDataHandler:
     def __init__(self):
         self.oncotree = self.fetch_oncotree_data()
-        self.oncotree["TISSUE"] = OncotreeNode({
-            "code": "TISSUE",
-            "color": None,
-            "name": "Tissue",
-            "mainType": None,
-            "externalReferences": {"UMLS": ["C0040300"], "NCI": ["C12801"]},
-            "tissue": None,
-            "children": {},
-            "parent": None,
-            "history": [],
-            "level": 0,
-            "revocations": [],
-            "precursors": [],
-        })
+        self.oncotree["TISSUE"] = OncotreeNode(
+            {
+                "code": "TISSUE",
+                "color": None,
+                "name": "Tissue",
+                "mainType": None,
+                "externalReferences": {"UMLS": ["C0040300"], "NCI": ["C12801"]},
+                "tissue": None,
+                "children": {},
+                "parent": None,
+                "history": [],
+                "level": 0,
+                "revocations": [],
+                "precursors": [],
+            }
+        )
 
     def fetch_oncotree_data(self):
         oncotree_dir = os.path.dirname(__file__)
