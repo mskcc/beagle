@@ -5,11 +5,11 @@ import logging
 from pathlib import Path
 from jinja2 import Template
 from beagle import settings
-from runner.operator.access import create_cwl_file_object
 from runner.operator.operator import Operator
 from runner.models import RunStatus, Port, Run
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
+from runner.operator.access import create_cwl_file_object
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +48,11 @@ meta_fields = [
 ]
 
 
-class HemeNucleoQcOperator(Operator):
+class HemeChipVarOperator(Operator):
     """
-    Operator for the Heme QC workflow:
+    Operator for the Heme chipvar workflow:
 
-    https://github.com/msk-access/access_qc_generation/blob/master/access_qc.cwl
+    https://github.com/msk-access/chip-var/blob/develop/chip-var.cwl
 
     This Operator will search for Nucleo Bam files based on an IGO Request ID
     """
@@ -64,7 +64,7 @@ class HemeNucleoQcOperator(Operator):
         return [
             RunCreator(
                 **{
-                    "name": "Heme Nucleo QC: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
+                    "name": "Heme ChipVar: %s, %i of %i" % (self.request_id, i + 1, len(sample_inputs)),
                     "app": self.get_pipeline_id(),
                     "inputs": job,
                     "output_metadata": output_metadata,
@@ -75,6 +75,7 @@ class HemeNucleoQcOperator(Operator):
         ]
 
     def get_nucleo_outputs(self):
+        # was the pipeline triggered from a chaining operator (runs) or executed with the api via the request id
         if not self.request_id:
             most_recent_runs_for_request = Run.objects.filter(pk__in=self.run_ids)
             self.request_id = most_recent_runs_for_request[0].tags["igoRequestId"]
@@ -92,8 +93,7 @@ class HemeNucleoQcOperator(Operator):
                 .operator_run.runs.all()
             )
             if not len(most_recent_runs_for_request):
-                raise Exception("No matching Heme Nucleo runs found for request {}".format(self.request_id))
-
+                raise Exception("No matching Nucleo runs found for request {}".format(self.request_id))
         inputs = []
         for r in most_recent_runs_for_request:
             inp = self.construct_sample_inputs(r)
@@ -119,36 +119,49 @@ class HemeNucleoQcOperator(Operator):
             template = Template(file.read())
 
         nucleo_output_port_names = [
-            "uncollapsed_bam",
-            "fgbio_group_reads_by_umi_bam",
-            "fgbio_collapsed_bam",
             "fgbio_filter_consensus_reads_duplex_bam",
-            "fgbio_postprocessing_simplex_bam",
         ]
         qc_input_port_names = [
-            "uncollapsed_bam_base_recal",
-            "group_reads_by_umi_bam",
-            "collapsed_bam",
-            "duplex_bam",
-            "simplex_bam",
+            "input_bam_case",
         ]
         bams = {}
         for o, i in zip(nucleo_output_port_names, qc_input_port_names):
             # We are running a multi-sample workflow on just one sample,
             # so we create single-element lists here
-            bam = [self.parse_nucleo_output_ports(run, o)]
+            bam = self.parse_nucleo_output_ports(run, o)
             bams[i] = json.dumps(bam)
-
-        sample_sex = run.output_metadata["sex"]
         sample_name = run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
-        sample_group = "-".join(sample_name.split("-")[0:2])
+        concat_output_name = sample_name + "_concat.vcf.gz"
+        vardict_output_vcf_name = sample_name + "_vardict.vcf"
+        snpsift_countOpName = sample_name + "_snpsift_cosmic.vcf"
+        snpsift_prevalOpName = sample_name + "_snpsift_preval.vcf"
+        opOncoKbMafName = sample_name + "_oncoKB.maf"
+        output_mappability_filename = sample_name + "_mappability.maf"
+        output_complexity_filename = sample_name + "_complexity.maf"
+        output_vcf2mafName = sample_name + "_vcf2maf.maf"
+        output_panmyeloid_maf = sample_name + "_panmyeloid.maf"
+        output_47kchpd_maf = sample_name + "_47kchpd.maf"
+        output_hotspot_maf = sample_name + "_hotspot.maf"
+        output_filter_maf = sample_name + "_filter.maf"
+        output_tag_maf = sample_name + "_tag.maf"
         samples_json_content = self.create_sample_json(run)
 
         input_file = template.render(
-            sample_sex=json.dumps([sample_sex]),
-            sample_name=json.dumps([sample_name]),
-            sample_group=json.dumps([sample_group]),
+            sample_name=json.dumps(sample_name),
+            concat_output_name=json.dumps(concat_output_name),
+            vardict_output_vcf_name=json.dumps(vardict_output_vcf_name),
+            snpsift_countOpName=json.dumps(snpsift_countOpName),
+            snpsift_prevalOpName=json.dumps(snpsift_prevalOpName),
+            opOncoKbMafName=json.dumps(opOncoKbMafName),
+            output_mappability_filename=json.dumps(output_mappability_filename),
+            output_complexity_filename=json.dumps(output_complexity_filename),
+            output_vcf2mafName=json.dumps(output_vcf2mafName),
             samples_json_content=json.dumps(samples_json_content),
+            output_maf_name_panmyeloid=json.dumps(output_panmyeloid_maf),
+            output_47kchpd_maf_name=json.dumps(output_47kchpd_maf),
+            output_hotspot_maf_name=json.dumps(output_hotspot_maf),
+            output_maf_name_filter=json.dumps(output_filter_maf),
+            output_maf_name_tag=json.dumps(output_tag_maf),
             **bams,
         )
         sample_input = json.loads(input_file)
@@ -156,7 +169,7 @@ class HemeNucleoQcOperator(Operator):
 
     # @staticmethod
     # def create_cwl_file_object(file_path):
-    #     return {"class": "File", "location": "iris://" + file_path}
+    #     return {"class": "File", "location": "juno://" + file_path}
 
     def create_sample_json(self, run):
         j = run.output_metadata
@@ -172,7 +185,7 @@ class HemeNucleoQcOperator(Operator):
             if type(j[f]) is str and "," in j[f]:
                 j[f] = j[f].replace(",", ";")
         # Use some double quotes to make JSON compatible
-        j["qcReports"] = "na"
+        j["qcReports"] = []
         out = json.dumps([j])
 
         tmpdir = os.path.join(settings.BEAGLE_SHARED_TMPDIR, str(uuid.uuid4()))
