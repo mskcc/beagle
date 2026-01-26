@@ -29,7 +29,7 @@ class TempoSample(Sample):
             self.bait_set = self._get_bait_sets().pop()
             self.specimen_type = self.metadata[settings.SAMPLE_CLASS_METADATA_KEY][0]
             self.sample_class = self.metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY][0]
-            self.cmo_sample_name = self.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY][0]
+            self.cmo_sample_name = self.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY][0]
             self.run_mode = self.remapped_run_mode.pop()
             self.patient_id = self.metadata[settings.PATIENT_ID_METADATA_KEY][0]
 
@@ -86,7 +86,7 @@ class TempoSample(Sample):
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
             settings.CMO_SAMPLE_CLASS_METADATA_KEY,
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
         ]
         for key in fields_to_check:
             values = self.metadata[key]
@@ -157,7 +157,7 @@ class TempoSample(Sample):
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
             settings.CMO_SAMPLE_CLASS_METADATA_KEY,
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
         ]
         s = ""
         metadata = self.dedupe_metadata_values()

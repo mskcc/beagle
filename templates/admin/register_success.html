@@ -1,0 +1,37 @@
+<html lang="en-us" data-lt-installed="true">
+   <head>
+      <title> | Django site admin</title>
+      <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+      <link rel="stylesheet" href="/static/admin/css/login.css">
+      <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+      <meta name="robots" content="NONE,NOARCHIVE">
+   </head>
+   <body class=" login" data-admin-utc-offset="-14400">
+      <!-- Container -->
+      <div id="container">
+         <!-- Header -->
+         <div id="header">
+            <div id="branding">
+               <h1 id="site-name"><a href="/admin/">User Registration</a></h1>
+            </div>
+         </div>
+         <!-- END Header -->
+         <!-- Content -->
+         <div id="content" class="colM">
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+         </div>
+         <!-- END Content -->
+         <div id="footer"></div>
+      </div>
+      <!-- END Container -->
+   </body>
+</html>

@@ -2,13 +2,13 @@
 
 from django.db import migrations
 from beagle_etl.jobs import TYPES
-from beagle_etl.models import JobStatus
 
 
 def remove_old_pool_normal_jobs(apps, _):
+    # Changed because there is no more Job model
     Job = apps.get_model("beagle_etl", "Job")
 
-    failed_pool_normal_jobs = Job.objects.filter(run=TYPES["POOLED_NORMAL"], status=JobStatus.FAILED)
+    failed_pool_normal_jobs = Job.objects.filter(run=TYPES["POOLED_NORMAL"], status=4)
     for job in failed_pool_normal_jobs:
         if job.message.get("message", "").startswith("Invalid metadata runId"):
             print(job.id)
@@ -23,5 +23,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(remove_old_pool_normal_jobs),
+        # Disabled because there is no Job model anymore. Kept for reference
+        # migrations.RunPython(remove_old_pool_normal_jobs),
     ]

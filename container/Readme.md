@@ -15,7 +15,6 @@ If you do not have a singularity installed locally but you have docker you can u
 
 `docker run --privileged -it -v /path/to/beagle:/beagle:rw  --entrypoint "/bin/bash" quay.io/singularity/singularity:v3.6.4`
 
-
 Building Pooling Service
 
 ```
@@ -37,6 +36,7 @@ export SINGULARITYENV_MAX_CLIENT_CONN=<db_max_client_connections>
 The following prepended singularity environment variables must be set so that the instance can run properly.
 
 Note: Singularity passes environment variables to the SIF container by prepending variable names with `SINGULARITYENV_`. For example, to set `BEAGLE_PORT` in the container, you must set `SINGULARITYENV_BEAGLE_PORT`.
+
 ```
 SINGULARITYENV_BEAGLE_DB_NAME
 SINGULARITYENV_BEAGLE_DB_USERNAME
@@ -53,13 +53,14 @@ SINGULARITYENV_BEAGLE_NOTIFIERS
 SINGULARITYENV_GIT_SSH_COMMAND
 SINGULARITYENV_BEAGLE_AUTH_LDAP_SERVER_URI
 SINGULARITYENV_BEAGLE_RIDGEBACK_URL
-SINGULARITYENV_BEAGLE_RABIX_URL
-SINGULARITYENV_BEAGLE_RABIX_PATH
 SINGULARITYENV_BEAGLE_RABBITMQ_USERNAME
 SINGULARITYENV_BEAGLE_RABBITMQ_PASSWORD
 SINGULARITYENV_BEAGLE_CELERY_BROKER_URL
-SINGULARITYENV_BEAGLE_LIMS_USERNAME
-SINGULARITYENV_BEAGLE_LIMS_PASSWORD
+SINGULARITYENV_BEAGLE_METADB_NATS_URL
+SINGULARITYENV_BEAGLE_NATS_SSL_CERTFILE
+SINGULARITYENV_BEAGLE_NATS_SSL_KEYFILE
+SINGULARITYENV_BEAGLE_METADB_USERNAME
+SINGULARITYENV_BEAGLE_METADB_PASSWORD
 SINGULARITYENV_BEAGLE_RUNNER_QUEUE
 SINGULARITYENV_BEAGLE_DEFAULT_QUEUE
 SINGULARITYENV_BEAGLE_JOB_SCHEDULER_QUEUE
@@ -72,7 +73,7 @@ SINGULARITYENV_JIRA_PROJECT
 The following are mandatory environmental variables for use with `beagle` and `celery`:
 
 ```
-SINGULARITYENV_BEAGLE_PATH # beagle install to use 
+SINGULARITYENV_BEAGLE_PATH # beagle install to use
 SINGULARITYENV_BEAGLE_CELERY_LOG_PATH # location of where to store log files for celery
 SINGULARITYENV_BEAGLE_CELERY_PID_PATH # where to store pid files for celery workers
 SINGULARITYENV_BEAGLE_BEAT_SCHEDULE_PATH # where to store schedule of celery beat
@@ -84,6 +85,7 @@ For more detailed information about beagles environment, you can use the beagle 
 #### Running an instance
 
 Running the following command will create a beagle instance named `beagle`
+
 ```
 singularity instance start beagle.sif beagle
 ```
@@ -99,6 +101,7 @@ http://silo:4001
 #### Starting the beagle service, celery
 
 To start beagle and its celery component:
+
 ```
 singularity run --app beagle-start instance://beagle
 singularity run --app celery-start instance://beagle
@@ -107,14 +110,17 @@ singularity run --app celery-start instance://beagle
 #### Viewing and stopping celery
 
 Use `celery-env` to view current running celery processes:
+
 ```
 singularity run --app celery-env instance://beagle
 ```
 
 To stop all celery processes running for `$SINGULARITYENV_BEAGLE_CELERY_EVENT_QUEUE_PREFIX`, use `celery-stop`:
+
 ```
 singularity run --app celery-stop instance://beagle
 ```
 
 #### Running Filebeat
+
 See https://app.gitbook.com/@mskcc-1/s/experimental-dev/filebeat

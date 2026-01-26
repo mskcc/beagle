@@ -1,48 +1,48 @@
+import datetime
 import logging
 from distutils.util import strtobool
-from django.db.models import Q
-import datetime
 from functools import reduce
-from django.shortcuts import get_object_or_404
-from beagle.pagination import time_filter
+
 from django.conf import settings
-from django.db import transaction
-from django.db.models import Prefetch, Count
 from django.core.exceptions import ValidationError
-from rest_framework import status
-from rest_framework import mixins
+from django.db import transaction
+from django.db.models import Count, Prefetch, Q
+from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import mixins, status
+from rest_framework.decorators import action
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+
+from beagle.common import fix_query_list
+from beagle.pagination import time_filter
+from notifier.events import AddPipelineToDescriptionEvent, RunStartedEvent
+from notifier.helper import generate_sample_data_content
+from notifier.models import JobGroup, JobGroupNotifier
+from notifier.tasks import notifier_start, send_notification
+from runner.models import Operator, OperatorErrors, OperatorRun, Pipeline, Port, Run, RunStatus
+from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
-from runner.tasks import (
-    create_run_task,
-    create_jobs_from_operator,
-    run_routine_operator_job,
-    terminate_job_task,
-    submit_job,
-    create_jobs_from_request,
-    create_jobs_from_pairs,
-    create_aion_job,
-    create_tempo_mpgen_job,
-)
-from runner.models import Run, Port, Pipeline, RunStatus, OperatorErrors, Operator, OperatorRun
 from runner.serializers import (
-    RunSerializerPartial,
-    RunSerializerFull,
-    OperatorErrorSerializer,
-    RunApiListSerializer,
-    RequestIdsOperatorSerializer,
-    RunIdsOperatorSerializer,
     AionOperatorSerializer,
+    ArgosPairingSerializer,
+    CWLJsonSerializer,
+    OperatorErrorSerializer,
+    OperatorLatestSamplesQuerySerializer,
+    OperatorRunSerializer,
+    OperatorSampleQuerySerializer,
+    PairOperatorSerializer,
+    RequestIdsOperatorSerializer,
+    RestartRunSerializer,
+    RunApiListSerializer,
+    RunIdsOperatorSerializer,
+    RunSamplesSerializer,
     RunSerializerCWLInput,
     RunSerializerCWLOutput,
-    CWLJsonSerializer,
+    RunSerializerFull,
+    RunSerializerPartial,
     TempoMPGenOperatorSerializer,
-    ArgosPairingSerializer,
-    PairOperatorSerializer,
-    RestartRunSerializer,
-    RunSamplesSerializer,
-    OperatorRunSerializer,
-    OperatorLatestSamplesQuerySerializer,
-    OperatorSampleQuerySerializer,
     TerminateRunSerializer,
 )
 from rest_framework.generics import GenericAPIView
@@ -57,6 +57,18 @@ from notifier.helper import generate_sample_data_content
 from drf_yasg.utils import swagger_auto_schema
 from beagle.common import fix_query_list
 from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
+from file_system.models import FileGroup
+from runner.tasks import (
+    create_aion_job,
+    create_jobs_from_operator,
+    create_jobs_from_pairs,
+    create_jobs_from_request,
+    create_run_task,
+    create_tempo_mpgen_job,
+    run_routine_operator_job,
+    submit_job,
+    terminate_job_task,
+)
 
 
 def query_from_dict(query_filter, queryset, input_list):
@@ -364,6 +376,10 @@ class RequestOperatorViewSet(GenericAPIView):
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
 
         errors = []
+        if file_group_id and not FileGroup.objects.filter(id=file_group_id).exists():
+            errors.append("file group id does not exist, this field is optional")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
         if not request_ids:
             errors.append("request_ids needs to be specified")
         if not pipeline:
@@ -634,7 +650,7 @@ class ArgosPairingViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_2_0.construct_argos_pair import construct_argos_jobs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
@@ -660,7 +676,7 @@ class ArgosMappingViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_2_0.construct_argos_pair import construct_argos_jobs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
@@ -686,8 +702,8 @@ class ArgosDataClinicalViewSet(GenericAPIView):
         operator_model = Operator.objects.get(slug=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() and compile_pairs() are sloppily separate from the Operator module
-        from runner.operator.argos_operator.v2_2_0.construct_argos_pair import construct_argos_jobs
-        from runner.operator.argos_operator.v2_2_0.bin.pair_request import compile_pairs
+        from runner.operator.argos_operator.v2_2_1.bin.pair_request import compile_pairs
+        from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
 
         files, cnt_tumors = operator.get_files(operator.request_id)
         data = operator.build_data_list(files)
