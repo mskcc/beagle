@@ -1,0 +1,812 @@
+[
+  {
+    "model": "file_system.file",
+    "pk": "2a7576a4-ff38-41ce-a9db-b7e26d54008b",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L003_R1_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L003_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "53645a64-9431-4970-aba4-dea99e3e3433",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "2a7576a4-ff38-41ce-a9db-b7e26d54008b",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "f5cf3e8c-51e5-4738-ab25-7f1bac12c52b",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L003_R2_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L003_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "6ab2d359-1f92-4db4-bccd-a25b9ab14dba",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "f5cf3e8c-51e5-4738-ab25-7f1bac12c52b",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "7931c91c-a139-41f7-9358-1fde937a34b2",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L002_R1_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L002_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "84a0aa56-27fe-4701-b617-e25b07746601",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "7931c91c-a139-41f7-9358-1fde937a34b2",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "fd1ad1c3-7747-4c1b-98b2-7e490f3855bd",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L002_R2_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L002_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "331d7e8b-4713-4684-ad1b-7470e888a2b5",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "fd1ad1c3-7747-4c1b-98b2-7e490f3855bd",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "9eb5d506-3e2e-4e7b-9aec-b42e7c84063f",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L001_R1_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L001_R1_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "b4e41a80-417c-488f-87a9-e587ff1b3161",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "9eb5d506-3e2e-4e7b-9aec-b42e7c84063f",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R1",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  },
+  {
+    "model": "file_system.file",
+    "pk": "09400aae-5c6d-4c19-92c1-fbfd6c2ff91c",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file_name": "Sample_001_L001_R2_001.fastq.gz",
+      "path": "/data/test/FASTQ/RUN_001/Project_A/Sample_001/Sample_001_L001_R2_001.fastq.gz",
+      "file_type": 1,
+      "size": 0,
+      "file_group": "40ad84eb-0694-446b-beac-59e35e154f3c",
+      "checksum": "",
+      "request_id": null,
+      "patient_id": null
+    }
+  },
+  {
+    "model": "file_system.filemetadata",
+    "pk": "37a8016f-673b-4b03-b6e7-58637b23a650",
+    "fields": {
+      "created_date": "2021-01-01T10:00:00.000Z",
+      "modified_date": "2021-01-01T10:00:00.000Z",
+      "file": "09400aae-5c6d-4c19-92c1-fbfd6c2ff91c",
+      "version": 0,
+      "latest": true,
+      "metadata": {
+        "R": "R2",
+        "sex": "Female",
+        "ciTag": "s_C_TEST_T002_d01",
+        "runId": "RUN_001",
+        "status": {
+          "validationReport": "{}",
+          "validationStatus": true
+        },
+        "tubeId": "",
+        "baitSet": "IDT_Exome_v2_FP_BAITS",
+        "piEmail": "",
+        "runDate": "2021-01-15",
+        "runMode": "NovaSeq X 10B",
+        "species": "Human",
+        "platform": "Illumina",
+        "barcodeId": null,
+        "genePanel": "WES_Human",
+        "primaryId": "53333_B_1",
+        "qcReports": [
+          {
+            "din": null,
+            "comments": "Test comment",
+            "qcReportType": "LIBRARY",
+            "IGORecommendation": "Pass",
+            "investigatorDecision": "Continue processing"
+          }
+        ],
+        "datasource": "igo",
+        "dnaInputNg": null,
+        "flowCellId": "TESTFLOW001",
+        "importDate": "2021-01-20",
+        "readLength": "100/8/8/100",
+        "sampleName": "TEST-SAMPLE-001",
+        "sampleType": "Normal",
+        "captureName": null,
+        "igoComplete": true,
+        "labHeadName": "Test Researcher",
+        "sampleClass": "Blood",
+        "barcodeIndex": null,
+        "cmoInfoIgoId": "TEST_001",
+        "cmoPatientId": "TEST-P-001",
+        "igoProjectId": "10001",
+        "igoRequestId": "53333_B",
+        "labHeadEmail": "test@example.com",
+        "libraryIgoId": "10001_A_1_1",
+        "oncotreeCode": "TEST",
+        "preservation": "Fresh",
+        "sampleOrigin": "Blood",
+        "cmoSampleName": "C-TEST-T002-d01",
+        "flowCellLanes": [
+          1,
+          2,
+          3
+        ],
+        "libraryVolume": null,
+        "sampleAliases": [
+          {
+            "value": "TEST-SAMPLE-001",
+            "namespace": "investigatorId"
+          },
+          {
+            "value": "TEST_001",
+            "namespace": "igoId"
+          }
+        ],
+        "smileSampleId": "00000000-0000-0000-0000-000000000001",
+        "tumorOrNormal": "Tumor",
+        "captureInputNg": null,
+        "cfDNA2dBarcode": null,
+        "collectionYear": "2020",
+        "patientAliases": [
+          {
+            "value": "TEST-P-001",
+            "namespace": "dmpId"
+          },
+          {
+            "value": "TEST-CMO-001",
+            "namespace": "cmoId"
+          }
+        ],
+        "qcAccessEmails": "test1@example.com,test2@example.com",
+        "smilePatientId": "00000000-0000-0000-0000-000000000100",
+        "tissueLocation": "",
+        "dataAnalystName": "",
+        "dataAccessEmails": "test1@example.com,test2@example.com",
+        "dataAnalystEmail": "",
+        "investigatorName": "Test Investigator",
+        "sequencingCenter": "TEST",
+        "cmoSampleIdFields": {
+          "recipe": "WES_Human",
+          "sampleType": "Test Type",
+          "naToExtract": "",
+          "normalizedPatientId": "ANON_PATIENT_001"
+        },
+        "investigatorEmail": "investigator@example.com",
+        "otherContactEmails": "test1@example.com,test2@example.com",
+        "projectManagerName": "",
+        "additionalProperties": {
+          "altId": "ALT-001",
+          "isCmoSample": "true",
+          "igoRequestId": "53333_B"
+        },
+        "investigatorSampleId": "TEST-SAMPLE-001",
+        "captureConcentrationNm": null,
+        "libraryConcentrationNgul": 50.0
+      },
+      "user": null
+    }
+  }
+]

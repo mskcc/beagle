@@ -57,7 +57,7 @@ class TempoMPGenOperator(Operator):
         This is for legacy purposes - if FileMetadata don't contain sampleTy[e or ciTag,
         remove them from the file set
         """
-        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_TAG_METADATA_KEY), False)) & Q(
+        query = Q(("metadata__{}__isnull".format(settings.CMO_SAMPLE_NAME_METADATA_KEY), False)) & Q(
             ("metadata__{}__isnull".format(settings.CMO_SAMPLE_CLASS_METADATA_KEY), False)
         )
         return query
@@ -146,7 +146,6 @@ class TempoMPGenOperator(Operator):
         pickle_file = os.path.join(self.OUTPUT_DIR, "patients_data_pickle")
         fh = open(pickle_file, "wb")
         pickle.dump(self.patients, fh)
-        os.chmod(pickle_file, 0o777)
         self.register_tmp_file(pickle_file)
 
         input_json["pickle_data"] = {"class": "File", "location": "juno://" + pickle_file}
@@ -194,7 +193,6 @@ class TempoMPGenOperator(Operator):
         output = os.path.join(self.OUTPUT_DIR, fname)
         with open(output, "w+") as fh:
             fh.write(s)
-        os.chmod(output, 0o777)
         self.register_tmp_file(output)
         # if self.job_group_notifier_id:
         # upload_file_event = UploadAttachmentEvent(self.job_group_notifier_id, fname, s).to_dict()
@@ -209,7 +207,6 @@ class TempoMPGenOperator(Operator):
         output = PAIRING_FILE_LOCATION
         with open(output, "w+") as fh:
             fh.write(pairing_file_str)
-        os.chmod(output, 0o777)
 
     def register_tmp_file(self, path):
         fname = os.path.basename(path)
@@ -225,7 +222,7 @@ class TempoMPGenOperator(Operator):
     def create_unpaired_txt_file(self):
         # Add runDate
         fields = [
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,
@@ -282,7 +279,7 @@ class TempoMPGenOperator(Operator):
 
     def create_conflict_samples_txt_file(self):
         fields = [
-            settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            settings.CMO_SAMPLE_NAME_METADATA_KEY,
             settings.PATIENT_ID_METADATA_KEY,
             settings.SAMPLE_ID_METADATA_KEY,
             settings.SAMPLE_CLASS_METADATA_KEY,

@@ -350,5 +350,16 @@
       "version": "v2.3.0",
       "slug": "CopyOutputsOperator_v2.3.0"
     }
+  },
+  {
+    "model": "beagle_etl.operator",
+    "pk": 34,
+    "fields": {
+      "active": true,
+      "recipes": "[\"None\"]",
+      "class_name": "runner.operator.chronos_operator_v2.chronos_operator.ChronosOperator",
+      "version": "0.2.0",
+      "slug": "ChronosOperator"
+    }
   }
 ]

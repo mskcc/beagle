@@ -3,6 +3,7 @@ name: "Beagle Services ${BEAGLE_DEPLOYMENT}"
 x-beagle_celery: &beagle_celery
   image: mskcc/beagle:${BEAGLE_VERSION}
   restart: always
+  init: true
   user: "${DOCKER_UID}:${DOCKER_GID}"
   networks:
     - voyager_net
@@ -11,6 +12,9 @@ x-beagle_celery: &beagle_celery
     - ${DOCKER_GROUP_1}
     - ${DOCKER_GROUP_2}
     - ${DOCKER_GROUP_3}
+    - ${DOCKER_GROUP_4}
+    - ${DOCKER_GROUP_5}
+    - ${DOCKER_GROUP_6}
   environment:
     - BEAGLE_DB_URL=beagle_pgbouncer
     - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -21,6 +25,7 @@ x-beagle_celery: &beagle_celery
     - BEAGLE_LOG_PATH=/beagle/celery/logs/django_server.log
     - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
   volumes:
+    - /ifs:/ifs
     - logs_path:/beagle/celery/logs/
     - celery_path:/beagle/celery/
     - ${BEAGLE_SHARED_TMPDIR}:/tmp
@@ -46,7 +51,7 @@ x-beagle_celery: &beagle_celery
   healthcheck:
     test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status || exit 1"
     interval: 30s
-    timeout: 3s
+    timeout: 10s
     retries: 3
   depends_on:
     beagle_pgbouncer:
@@ -155,7 +160,7 @@ services:
           "sh -c 'pg_isready -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'",
         ]
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
     depends_on:
       - beagle_create_volumes
@@ -202,7 +207,7 @@ services:
           "sh -c 'pg_isready -h 0.0.0.0 -U ${BEAGLE_DB_USERNAME} -d ${BEAGLE_DB_NAME} -p 5432'",
         ]
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_memcached:
     image: mskcc/memcached-nc:1.6.39
@@ -216,7 +221,7 @@ services:
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "11211"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
   beagle_rabbitmq:
     image: rabbitmq:4.0.6-management-alpine
@@ -251,7 +256,7 @@ services:
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_running"]
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
     depends_on:
       - beagle_create_volumes
@@ -266,6 +271,9 @@ services:
       - ${DOCKER_GROUP_1}
       - ${DOCKER_GROUP_2}
       - ${DOCKER_GROUP_3}
+      - ${DOCKER_GROUP_4}
+      - ${DOCKER_GROUP_5}
+      - ${DOCKER_GROUP_6}
     environment:
       - BEAGLE_DB_URL=beagle_pgbouncer
       - BEAGLE_MEMCACHED_HOST=beagle_memcached
@@ -312,7 +320,7 @@ services:
       test:
         ["CMD-SHELL", "curl -sSf http://localhost:${BEAGLE_PORT}/ || exit 1"]
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
     depends_on:
       beagle_pgbouncer:
@@ -348,7 +356,7 @@ services:
           "ps -p $(pgrep -F /beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.beagle_beat.pid)",
         ]
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
     depends_on:
       beagle_pgbouncer:
@@ -382,7 +390,7 @@ services:
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE} || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_celery_check_files_queue:
     <<: *beagle_celery
@@ -403,7 +411,7 @@ services:
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE} || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_celery_job_scheduler_queue:
     <<: *beagle_celery
@@ -424,7 +432,7 @@ services:
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_JOB_SCHEDULER_QUEUE} || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_echo_consumer:
     <<: *beagle_celery
@@ -435,7 +443,7 @@ services:
     healthcheck:
       test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_echo_consumer' || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_smile_consumer:
     <<: *beagle_celery
@@ -446,7 +454,7 @@ services:
     healthcheck:
       test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_smile_consumer' || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_celery_runner_queue:
     <<: *beagle_celery
@@ -467,7 +475,7 @@ services:
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_RUNNER_QUEUE} || exit 1"
       interval: 30s
-      timeout: 3s
+      timeout: 10s
       retries: 3
   beagle_logrotate:
     image: mskcc/voyager-compose-utils:1.0.1
@@ -501,7 +509,7 @@ services:
     healthcheck:
       test: "find /logs/last_completed_logrotate_cron -type f -mtime -2 | read"
       interval: 12h
-      timeout: 5h
+      timeout: 10s
       retries: 3
     depends_on:
       beagle_celery_beat:
@@ -532,7 +540,7 @@ services:
     healthcheck:
       test: "find /logs/last_completed_db_backup_cron -type f -mtime -2 | read"
       interval: 12h
-      timeout: 5h
+      timeout: 10s
       retries: 3
     depends_on:
       beagle_pgbouncer:
@@ -560,7 +568,7 @@ services:
     healthcheck:
       test: "find /logs/last_completed_db_monthly_backup_cron -type f -mtime -15 | read"
       interval: 840h
-      timeout: 5h
+      timeout: 10s
       retries: 3
     depends_on:
       beagle_pgbouncer:

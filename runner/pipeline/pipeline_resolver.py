@@ -3,6 +3,7 @@ import git
 import uuid
 import shutil
 import logging
+from django.conf import settings
 from runner.cache.github_cache import GithubCache
 
 
@@ -25,7 +26,7 @@ class PipelineResolver(object):
         return dirname
 
     def _dir_name(self):
-        base = os.environ.get("TMPDIR", "/tmp")
+        base = settings.BEAGLE_TMPDIR
         dirname = os.path.join(base, str(uuid.uuid4()))
         os.mkdir(dirname)
         return dirname
