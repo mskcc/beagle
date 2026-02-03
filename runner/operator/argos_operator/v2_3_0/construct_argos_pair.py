@@ -115,7 +115,7 @@ def construct_argos_jobs(samples, pairs=None, logger=None):
         pi_email = tumor["pi_email"]
         job = dict()
         tumor_specimen_type = normalize_igo_text_field(pairs["tumor"][i]["specimen_type"])
-        normal_sample = format_sample(normal, tumor_specimen_type, sample_name_suffix=f".{tumor["SM"]}")
+        normal_sample = format_sample(normal, tumor_specimen_type, sample_name_suffix=f'.{tumor["SM"]}')
         tumor_sample = format_sample(tumor, tumor_specimen_type)
         job["tumor"] = tumor_sample
         job["normal"] = normal_sample
