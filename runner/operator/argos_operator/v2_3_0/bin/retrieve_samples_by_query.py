@@ -414,5 +414,6 @@ def build_dmp_query(patient_id, bait_set):
     query = assay & patient & normal
     return query
 
+
 def is_list_empty(lst):
     return all(not bool(item) for item in lst)

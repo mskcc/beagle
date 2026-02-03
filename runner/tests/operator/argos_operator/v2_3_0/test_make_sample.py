@@ -11,10 +11,7 @@ import json
 
 
 class TestMakeSample(TestCase):
-    fixtures = [
-        "file_system.filegroup.json",
-        "file_system.storage.json"
-    ]
+    fixtures = ["file_system.filegroup.json", "file_system.storage.json"]
 
     def test_build_sample1(self):
         """
@@ -110,7 +107,7 @@ class TestMakeSample(TestCase):
                     "sequencingCenter": "MSKCC",
                     "platform": "Illumina",
                     "runDate": "2019-12-12",
-                                "runId": "JAX_0397",
+                    "runId": "JAX_0397",
                     "runMode": "HiSeq High Output",
                     settings.SAMPLE_ID_METADATA_KEY: "10075_D_2_3",
                     settings.CMO_SAMPLE_NAME_METADATA_KEY: "C-8VK0V7-N001-d",
@@ -129,19 +126,16 @@ class TestMakeSample(TestCase):
         r2_bid = ""
         for i in data:
             if i["metadata"]["R"] == "R1":
-                r1_bid= i["id"]
+                r1_bid = i["id"]
             else:
-                r2_bid= i["id"]
+                r2_bid = i["id"]
             f = File.objects.create(
-                file_type = FileType.objects.create(name="fastq"),
-                file_group = FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
-                file_name = i["file_name"],
-                path = i["path"]
+                file_type=FileType.objects.create(name="fastq"),
+                file_group=FileGroup.objects.get(id=settings.IMPORT_FILE_GROUP),
+                file_name=i["file_name"],
+                path=i["path"],
             )
-            FileMetadata.objects.create_or_update(
-                file=f,
-                metadata=i["metadata"]
-            )
+            FileMetadata.objects.create_or_update(file=f, metadata=i["metadata"])
 
         sample = build_sample(data)
         sample["R1_bid"] = []
@@ -186,6 +180,7 @@ class TestMakeSample(TestCase):
         print(json.dumps(expected_sample, cls=UUIDEncoder))
 
         from pprint import pprint
+
         pprint(dict_diff(sample, expected_sample))
 
         self.assertTrue(sample == expected_sample)
@@ -197,6 +192,7 @@ class UUIDEncoder(json.JSONEncoder):
             # if the obj is uuid, we simply return the value of uuid
             return obj.hex
         return json.JSONEncoder.default(self, obj)
+
 
 def dict_diff(d1, d2, path=""):
     diffs = {}
