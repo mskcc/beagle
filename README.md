@@ -136,7 +136,6 @@ Beagle can run without these, but it will not be able to access SMILE and LDAP s
 
 In macOS:
 
-````
 ```
 brew install podman
 podman machine init
