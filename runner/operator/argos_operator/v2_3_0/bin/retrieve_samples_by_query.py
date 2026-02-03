@@ -415,5 +415,9 @@ def build_dmp_query(patient_id, bait_set):
     return query
 
 
+# Return True if every element in `lst` is falsy (e.g., 0, False, None, '', [], {}, etc.).
+# Equivalent to “is the list empty or does it contain only empty/falsey items?”.
+# 
+# This handles messy metadata cases, where metadata values could be any of the falsy elements
 def is_list_empty(lst):
     return all(not bool(item) for item in lst)
