@@ -562,7 +562,7 @@ services:
       - |
         mkdir -p /db_backup/monthly_archive
         cat > /db_backup/db_monthly_backup.cron <<EOF
-        ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_MONTHLY_BACKUP_CRON} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_monthly_backup_cron
+        ${DB_MONTHLY_BACKUP_CRON} python3 /usr/bin/voyager-compose-utils/db_backup.py beagle_backup /db_backup/monthly_archive ${DB_BACKUP_MAX} pg_dump beagle_postgres 5432 ${BEAGLE_DB_NAME} ${BEAGLE_DB_USERNAME} && touch /logs/last_completed_db_monthly_backup_cron
         EOF
         supercronic /db_backup/db_monthly_backup.cron >> /logs/db_monthly_backup_cron.log 2>&1
     healthcheck:
