@@ -1,10 +1,7 @@
 import os
-import grp
 import logging
-from shutil import copyfile, chown
+from shutil import copyfile
 from django.conf import settings
-from echo_client.messages import CopyTask
-from echo_client.echo_client import EchoClient
 from beagle_etl.models import CopyFileTask
 
 
@@ -20,10 +17,8 @@ class CopyService(object):
         splitted_path = dirname.split("/")
         subpaths = ["/".join(splitted_path[:i]) for i in range(2, len(splitted_path) + 1)]
         subpaths_iter = iter(subpaths)
-        newly_created = []
         for subpath in subpaths_iter:
             if not os.path.exists(subpath):
-                newly_created = [subpath] + list(subpaths_iter)
                 os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION)
                 break
 
@@ -31,29 +26,24 @@ class CopyService(object):
         os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
     @staticmethod
-    def create_copy_task(smile_message, file_object, source, destination):
-        task = CopyFileTask.objects.create(
-            smile_message=smile_message, file_object=file_object, source=source, destination=destination
-        )
-        copy_task = CopyTask(source, destination, id=str(task.id))
-        client = EchoClient()
-        try:
-            client.publish(copy_task)
-        except Exception as e:
-            smile_message.log += str(e)
-
-    @staticmethod
-    def remap(recipe, path, mapping=settings.DEFAULT_MAPPING):
-        prefix, dst = CopyService.get_mapping(recipe, path, mapping)
+    def remap(gene_panel, path, mapping=settings.DEFAULT_MAPPING):
+        prefix, dst = CopyService._get_mapping(gene_panel, path, mapping)
         if prefix and dst:
             path = path.replace(prefix, dst)
         logger.info("New path {path}".format(path=path))
         return path
 
     @staticmethod
-    def get_mapping(recipe, path, mapping=settings.DEFAULT_MAPPING):
-        recipe_mapping = mapping.get(recipe, {})
+    def _get_mapping(gene_panel, path, mapping=settings.DEFAULT_MAPPING):
+        recipe_mapping = mapping.get(gene_panel, {})
         for prefix, dst in recipe_mapping.items():
             if path.startswith(prefix):
                 return prefix, dst
         return None, None
+
+    @staticmethod
+    def get_reverse_mapping(gene_panel, path, mapping=settings.DEFAULT_MAPPING):
+        recipe_mapping = mapping.get(gene_panel, {})
+        for prefix, dst in recipe_mapping.items():
+            if path.startswith(dst):
+                return dst, prefix

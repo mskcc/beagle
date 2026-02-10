@@ -1,8 +1,8 @@
 from django.test import TestCase
-from beagle_etl.copy_service import CopyService
+from file_manager.copy_service import CopyService
 
 
-class JobViewTest(TestCase):
+class CopyServiceTest(TestCase):
     def setUp(self):
         self.mapping = dict()
         self.recipe = "IMPACT468"
