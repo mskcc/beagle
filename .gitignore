@@ -20,3 +20,7 @@ Miniconda3*
 *.db
 static/
 .env*
+src/celerybeat-schedule
+src/echo_client.log
+src/smile_client.log
+src/staticfiles/
